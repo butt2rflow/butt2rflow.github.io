@@ -39,3 +39,99 @@
 - All 3 new articles need Excalidraw diagrams created (use excalidraw skill)
 - PDF generation for new articles not yet done
 - Memory files updated: series plan, VIX hedge reality, option P&L philosophy, VIX long decay
+
+## 2026-04-04 (Session 2)
+
+### Session: Full Editorial Review + Kmong Prep
+
+**Series 1 Editorial Overhaul:**
+- 1편: AI 섹션 삭제, 파론도 역설 70줄→15줄 축소, "=리밸런싱" 등식 제거, L118 중복 제거
+- 2편: 변경 없음 (목차만 업데이트)
+- 3편: "살아남기" 도입부 회수, 마틴게일 30줄→13줄 축소, f*=0.5 유도 추가, 결론→4편 예고로 교체
+- 4편: 제목 변경 "엣지 없는 게임, 엣지 있는 시장"
+
+**Series 2-3 Editorial:**
+- "이전 시리즈(변동성, 기하 평균, 그리고 켈리)" 역참조 21회→~10회 축약
+- S2-2편: VolVol 신호 규칙 간소화, VIX 경고 49줄→8줄
+- S3-1편: "5편" 번호 혼란 수정, S2→S3 전환 문구 수정
+- S3-2편: TQQQ 스왑 파이낸싱 비용 추가(~11-13%), "만기일 역설" 중복 제거
+- 코드블록 비교표 3개 → 마크다운 테이블로 변환 (GulimChe 정렬 문제)
+
+**Consistency Fixes (beginner+editor review):**
+- "캘리/켈리" 혼용 → 전체 "캘리"로 통일 (4편, 5편)
+- "WVF" 미정의 용어 삭제 (6편)
+- "꼬리 위험" 잘못된 시리즈 참조 수정 (7편)
+- "기억하시나요?" 패턴 제거 (8편)
+- Stutzer "34% 수익률" → "누적 +34%"로 명시 (1편)
+
+**Series Renaming:**
+- "변동성, 기하 평균, 그리고 켈리" → "원칙편: 왜 변동성이 돈이 되는가"
+- "변동성을 다루는 도구들" → "실행편: VIX를 읽고 비중을 조절하라"
+- "옵션과 변동성" → "확장편: 옵션으로 한 단계 더"
+- 8개 파일 전체에서 YAML, TOC, 본문 참조 일괄 변경
+
+**VolVol Google Sheets → Excalidraw:**
+- S2-2편 구글 시트 링크 제거, VolVol 로직 플로차트(Excalidraw) 생성
+- 화살표 타겟 검증 후 수정 (calc→MA 분기 화살표)
+
+**PDF Pipeline Update:**
+- generate_pdfs.py: 시리즈별 합본 3개로 분리 (series1_principles, series2_execution, series3_options)
+- 기존 full_series_combined.pdf 대신 시리즈별 독립 합본
+- 시리즈별 커버, 목차, 면책조항 자동 생성
+- CSS 헤더 하드코딩 시리즈명 제거
+
+**Kmong Listing Prep:**
+- 상품 설명 4개 작성 (listing_series1~3.md, listing_bundle.md)
+- 썸네일 4개 제작 (Excalidraw, 시리즈별 색상 코드: 파랑/초록/보라/금색)
+- 가격: 원칙편 9,900원, 실행편 6,900원, 확장편 6,900원, 번들 16,900원
+- 크몽 등록 가이드 + 이메일 드래프트 작성 (kmong/ 폴더)
+
+**Memory Updates:**
+- feedback_excalidraw_centering.md → feedback_excalidraw_rendering_rules.md (화살표 타겟 검증 추가)
+
+**Notes for Next Session:**
+- 감마 익스포져 시리즈 리라이트 (4편: 감마 스퀴즈, GEX 기초 1/2, 0DTE SPX)
+- 크몽 등록 대기 (와이프 계좌 — 회원가입/전문가등록 요청 이메일 발송 완료)
+- 시리즈 추가 수정 후 최종 PDF 재생성 필요
+
+## 2026-04-04 (Session 1)
+
+### Session: Excalidraw Diagrams + Series 2-3 Polish + Part 8
+
+**Excalidraw Diagrams (32 new):**
+- Series 2 Part 1 (6): 서울vs제주 분포, HV vs IV, VIX 온도계, SVXY 붕괴, 변동성의 두 얼굴, 시리즈 연결도
+- Series 2 Part 2 (12): 변동성-기대수익, 변동성 타겟팅, 역변동성 가중, IVTS 세 구역, VolVol, 볼볼 무한매수법, Vomma Zone, 듀얼 모멘텀, LRS, VIX 롱 하락, 신호 결합, ETF 조합
+- Series 3 Part 1 (7): 옵션 4요소, Moneyness, OTM/ATM/ITM 전략, IV-프리미엄, 만기vs현재 P&L, 시간감쇠, 옵션 4역할
+- Series 3 Part 2 (7): LEAP 비용구조, 델타-레버리지, TQQQ vs LEAP, Protective Put 타이밍, theta 관계, 시장별 전략조합, 시리즈 엣지 연결
+
+**New Article: 8편 옵션 실전 — LEAP, 보험, 그리고 수확**
+- LEAP Deep ITM 콜 = 저비용 레버리지 (변동성 드래그 없음, 파산 방지)
+- Protective Put = VIX 낮을 때 사는 폭락 보험
+- Covered Call = theta 수확 (커버드콜 ETF 대안 포함)
+- 세 전략의 IVTS 구역별 조합
+
+**Beginner-Friendliness Fixes (20 edits across 4 files):**
+- 6편 VolVol 섹션: 이동평균/볼린저밴드/골든크로스 정의 추가
+- 용어 정의: VIX3M, 상대/절대 모멘텀, 무한매수법, Vomma, delta, 내재가치
+- Contango/Backwardation 호텔 예약 비유 추가
+- 시리즈 참조 모호함 해결 (항상 시리즈 이름 명시)
+- 8편 "최대 손실 무제한" 오류 수정 → "투자 원금"
+
+**Duplicate Code Block Removal (12 blocks):**
+- 5편 3개, 6편 6개, 7편 3개 — Excalidraw 다이어그램과 중복된 코드블록 삭제
+
+**VIX Strategy Updates:**
+- VIX 단독 매수 = 기우제 비유 추가 (시간감쇄 구조적 손실)
+- VIX 활용 시 양동 전략(롱+숏) 필수 명시
+- "VIX 양동 전략" 예고 삭제 → "LEAP, Protective Put, 커버드콜" 예고로 교체
+- ZVOL vs SVOL 비교 리포트 작성 (pdfs/ZVOL_vs_SVOL_Report.md)
+
+**PDF Generation:**
+- 8개 개별 PDF + 합본 (5,707 KB) 재생성 완료
+- generate_pdfs.py에 8편 추가, COVERS 업데이트
+
+**Notes for Next Session:**
+- ZVOL vs SVOL 시뮬레이션 대기 (user 검토 중)
+- VIX 양동 전략 상세 (deep ITM $10-11 콜 + ZVOL DRIP) — 시뮬레이션 결과 후 결정
+- 동적 헷지 아이디어 (IVTS Warning 시에만 VIX 콜) — user가 생각 중
+- 5-7편에 standalone 시각적 코드블록 ~6개 Excalidraw 변환 미완료
