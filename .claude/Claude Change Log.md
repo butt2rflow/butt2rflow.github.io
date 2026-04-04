@@ -1,5 +1,57 @@
 # Claude Change Log — BlogMigration
 
+## 2026-04-04 (Session 3)
+
+### Session: Gamma Series Rewrite + Full Editorial Review + Kmong Finalization
+
+**Gamma Series (심화편) — 4편 리라이트 from scratch:**
+- 1편: 감마 — 델타의 가속도 (속도/가속도 비유, GME 감마 스퀴즈, ATM/만기 관계)
+- 2편: 마켓메이커의 동적 헷지 (환전소 비유, 소방관/방화범, 자기강화 루프)
+- 3편: GEX — 시장을 움직이는 보이지 않는 손 (GEX 공식, 4가지 가정, 플립 포인트, 개별 종목 GEX 경고)
+- 4편: 0DTE — 감마 폭탄의 시대 (거래량 폭증, 장중 감마 증폭, Charm/Vanna 소개)
+
+**3x Review Cycle (팩트체크 + 고급투자자 + 편집자):**
+- 감마 300-500x → 100-150x (이론적 근거 1/sqrt(T) 기반)
+- SPX ADV +139% → +170% (CBOE 공식)
+- 2편 달러 델타 → share equivalent 통일
+- GEX 가정 2의 0DTE 시대 구조적 약화 경고 추가
+- 개별 종목 GEX 무의미 — 가정 2가 리테일 콜 매수로 깨짐
+- "음의 피드백 루프" → "자기강화 루프" (학술 정의 수정)
+- MM 관점 명시 강화 (2편 선언 + 3편/4편 주어 추가)
+- 마켓메이커 설명 확장 (환전소 비유, 유동성 공급 역할)
+- Charm/Vanna 간략 소개 추가 (4편)
+- GEX 데이터 소스 표 추가 (SpotGamma, SqueezeMetrics 등)
+
+**7 Excalidraw Diagrams for Gamma Series:**
+- diag_gamma1_delta_vs_gamma, diag_gamma1_gamma_atm_curve
+- diag_gamma2_market_maker_role, diag_gamma2_hedge_direction, diag_gamma2_feedback_loop
+- diag_gamma3_gex_profile
+- diag_gamma4_intraday_gamma
+
+**Full 4-Series Editorial Review (8.4/10 overall):**
+- 원칙편 9.0, 실행편 7.7, 확장편 8.5, 심화편 8.5
+- Best article: 원칙편 4편 "엣지 없는 게임, 엣지 있는 시장"
+- Weakest: 실행편 2편 (8개 전략 과밀) → 분리 완료
+
+**실행편 2편→3편 분리:**
+- 2편: "비중 조절의 원리 — 후행 신호 전략" (변동성 타겟팅, 역변동성 가중)
+- 3편: "선행 신호와 실전" (IVTS, VolVol, Vomma Zone, 모멘텀 결합, 한국 가이드)
+- 전체 시리즈 13편 체제로 확장
+
+**PDF Pipeline:**
+- generate_pdfs.py: 13개 개별 + 4개 합본으로 업데이트
+- PDF 내부 .md 링크 → 텍스트 참조로 자동 변환 (깨진 링크 방지)
+
+**Kmong Package Updated:**
+- 실행편 2편→3편, 50p+, 번들 9편 160p+
+- 썸네일 2개 재생성
+
+**Notes for Next Session:**
+- 크몽 등록 대기 (와이프 회원가입/전문가등록 진행 중)
+- 심화편 크몽 판매 전략: 번들 구매자 보너스로 포지셔닝
+- GEX 플립 가격 계산기 (Python) — CBOE 데이터 샘플 필요
+- 실행편 2편 파일명이 아직 "변동성 타겟 전략"으로 되어 있음 (내용은 후행 신호만)
+
 ## 2026-04-03
 
 ### Session: PDF Review Pass + New Series Planning
