@@ -45,14 +45,22 @@
 - butt2rflow/butt2rflow.github.io repo 생성
 - GitHub Actions 자동 배포 설정
 
+**Additional Work (continued session):**
+
+- 실행편 2편: SPY 변동성 타겟팅 백테스트 (Sharpe 0.56→0.79, MDD -55%→-36%)
+- 실행편 3편: 구조 재편 (핵심 3개 집중, 모멘텀 축소, IVTS 사례 추가)
+- TradingView Pine Script 3개: BF_VolVol, BF_COR_TermStructure, BF_COR_DeltaSkew
+- 0DTE/Skew/심리변동성/Almanac 깊이 보강
+- 몬테카를로: 정확한 VaR ($844 5th pct), Hedging Wings: Convexity 설명 + 데드 존 $19.10
+- Almanac: IS vs OOS 백테스트 (75% 방향 일치)
+- "한국" 불필요 강조 제거, IV Surface 다이어그램 겹침 수정
+- 외부 링크 전체 검증, 구글시트 edit→copy, pdfs/ 정리
+- 최종 평가: 7.5 → 8.0+ (8.5 목표 개선 적용)
+
 **Notes for Next Session:**
-1. 실행편 3편 구조 재편 (핵심 3개 집중 + 나머지 분리) — 진행 중
-2. 실행편 2편 백테스트 데이터 추가
-3. 0DTE Charm/Vanna 보강
-4. Skew/심리변동성/Almanac 깊이 보강
-5. 크몽 상품 등록 (전문가 등록 완료, 서비스 등록 대기)
-6. TradingView Pine Script 재구성 (BF_VolVol, BF_COR_TermStructure)
-7. CBOE COR 데이터 파이썬 접근 방법 조사
+1. 크몽 상품 등록 (전문가 등록 완료, 서비스 등록 대기)
+2. Pine Script TradingView에서 실제 테스트
+3. CBOE COR 데이터 파이썬 접근 방법 조사
 
 ---
 
