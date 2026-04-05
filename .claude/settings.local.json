@@ -5,7 +5,14 @@
       "WebFetch(domain:kmong.com)",
       "WebFetch(domain:www.cmegroup.com)",
       "WebFetch(domain:en.wikipedia.org)",
-      "WebFetch(domain:www.barchart.com)"
+      "WebFetch(domain:www.barchart.com)",
+      "WebFetch(domain:butt2rflow.github.io)",
+      "WebFetch(domain:pixabay.com)",
+      "WebFetch(domain:unsplash.com)",
+      "WebFetch(domain:www.vecteezy.com)",
+      "WebFetch(domain:www.amazon.com)",
+      "WebFetch(domain:www.google.com)",
+      "WebFetch(domain:www.cboe.com)"
     ]
   }
 }

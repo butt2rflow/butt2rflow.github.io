@@ -1,5 +1,61 @@
 # Claude Change Log — BlogMigration
 
+## 2026-04-05 (Session 5)
+
+### Session: Kmong + MkDocs Launch + Full Polish Pipeline
+
+**Kmong Package:**
+- 크몽 가입 완료, 패키지 불일치 3건 수정 (번들 가격/편수/페이지수)
+- 시리즈 4 (심화편) 추가: listing_series4.md, thumb_series4.png
+- 번들 업데이트: 3→4시리즈, 16,900→19,900원 (35% 할인)
+- 등록 가이드 5개 상품으로 업데이트
+
+**Series 1-4 Editor Review + Fixes:**
+- 4-part 원칙편: 조사 오류, 오귀속, 표기 불일치 수정
+- 시리즈 2 실행편: Part 2에서 270줄 중복 삭제, 깨진 링크 수정
+- 시리즈 3 확장편: 잘못된 시리즈 참조 4곳 수정, TQQQ 수수료 0.86→0.88%
+- 모든 시리즈 PDF 재생성 (17개, 블로그 URL 삽입)
+
+**Standalone Posts Polish (7 posts):**
+- 저작권 이미지 49개 제거 → 18개 Excalidraw 신규 제작
+- COT (4 Excalidraw), Skew (4), FedWatch (2), Hedging Wings (5), 심리변동성 (3)
+- 몬테카를로: 파이썬 차트 5개 (matplotlib), 팩트체크 3건 수정
+- Almanac: 파이썬 월별 seasonality 차트 4개, 네이버 이미지 12개 추출
+
+**MkDocs GitHub Pages:**
+- butt2rflow.github.io 라이브 배포
+- 7개 포스트 + 시리즈 1편 무료 + 시리즈 미리보기 4개
+- 테마: 앰버 헤더 + 라이트 모드 고정
+- butterflow 로고 (Vecteezy, attribution 포함)
+- navigation.instant 추가
+
+**Fact-Check Corrections:**
+- VIX 설명: "ATM 단일 지점" → "광범위한 OTM, 분산스왑 복제 구조"
+- 섀넌 석사 논문 1938→1937, MIT 복귀 1958→1956
+- 맥스웰의 도깨비 1871→1867, Vanguard 보고서 2019→2015
+- COR 모니터링: 간격 설명 반대로 되어있던 것 수정
+
+**Content Improvements:**
+- Hedging Wings: 사전 지식 체크리스트, SPY $540 구체 예시, IV 시나리오 테이블, 실행 난이도 경고, Second Leg Down 출처 추가
+- 심리변동성 지수: TradingView BF_COR_TermStructure 차트 추가
+- Almanac 네이버 카페 링크 삭제
+
+**GitHub Account:**
+- gfunctionfinance → butt2rflow 유저네임 변경
+- butt2rflow/butt2rflow.github.io repo 생성
+- GitHub Actions 자동 배포 설정
+
+**Notes for Next Session:**
+1. 실행편 3편 구조 재편 (핵심 3개 집중 + 나머지 분리) — 진행 중
+2. 실행편 2편 백테스트 데이터 추가
+3. 0DTE Charm/Vanna 보강
+4. Skew/심리변동성/Almanac 깊이 보강
+5. 크몽 상품 등록 (전문가 등록 완료, 서비스 등록 대기)
+6. TradingView Pine Script 재구성 (BF_VolVol, BF_COR_TermStructure)
+7. CBOE COR 데이터 파이썬 접근 방법 조사
+
+---
+
 ## 2026-04-04 (Session 4)
 
 ### Session: GEX Diagram Fix + PDF Rename + Standalone Posts Polish
