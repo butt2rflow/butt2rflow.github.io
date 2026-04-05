@@ -1,5 +1,28 @@
 # Claude Change Log — BlogMigration
 
+## 2026-04-05 (Session 6)
+
+### Session: COR IV Surface Diagram Fix + Color Audit
+
+**COR IV Surface Diagram Fix:**
+- diag_cor_iv_surface: 개별 점 라벨 추가 (COR1M, COR6M, COR9M, COR1Y, COR3MD10/30/70/90)
+- 기존에는 VIX, COR3M만 라벨 있었음 → 전체 8개 라벨 추가
+- create_cor_diagrams.py 소스도 동기화 (라벨 포함하도록 수정)
+- PNG 재생성 완료 (1810x884)
+
+**크몽 썸네일 vs MkDocs 테마 컬러 비교:**
+- Gold/amber 톤 일치 (#f59e0b ↔ Material amber)
+- 크몽 파란 액센트 바(#3b82f6)는 MkDocs에 없음
+- 크몽 다크 배경(#1a1a2e) vs MkDocs 라이트 — 의도적 차이
+- 결론: 큰 불일치 없음, 플랫폼별 차이는 의도적
+
+**Notes for Next Session:**
+1. 크몽 상품 등록 (전문가 등록 완료, 서비스 등록 대기)
+2. Pine Script TradingView에서 실제 테스트
+3. 크몽/MkDocs 액센트 컬러 통일 여부 (선택사항)
+
+---
+
 ## 2026-04-05 (Session 5)
 
 ### Session: Kmong + MkDocs Launch + Full Polish Pipeline
