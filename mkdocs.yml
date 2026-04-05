@@ -8,14 +8,14 @@ theme:
   language: ko
   palette:
     - scheme: slate
-      primary: custom
-      accent: custom
+      primary: black
+      accent: amber
       toggle:
         icon: material/weather-sunny
         name: 라이트 모드
     - scheme: default
-      primary: custom
-      accent: custom
+      primary: black
+      accent: amber
       toggle:
         icon: material/weather-night
         name: 다크 모드

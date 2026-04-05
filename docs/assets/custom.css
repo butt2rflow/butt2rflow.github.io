@@ -1,54 +1,4 @@
-/* butterflow — Dark Navy + Gold theme */
-
-/* Custom color scheme */
-:root {
-  --md-primary-fg-color: #1a1a2e;
-  --md-primary-fg-color--light: #2d2d4a;
-  --md-primary-fg-color--dark: #0f0f1a;
-  --md-accent-fg-color: #f59e0b;
-  --md-accent-fg-color--transparent: #f59e0b1a;
-}
-
-[data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #1a1a2e;
-  --md-primary-fg-color--light: #2d2d4a;
-  --md-primary-fg-color--dark: #0f0f1a;
-  --md-accent-fg-color: #f59e0b;
-  --md-accent-fg-color--transparent: #f59e0b1a;
-  --md-default-bg-color: #16162a;
-  --md-default-bg-color--light: #1e1e38;
-}
-
-[data-md-color-scheme="default"] {
-  --md-primary-fg-color: #1a1a2e;
-  --md-primary-fg-color--light: #2d2d4a;
-  --md-primary-fg-color--dark: #0f0f1a;
-  --md-accent-fg-color: #f59e0b;
-  --md-accent-fg-color--transparent: #f59e0b1a;
-}
-
-/* Header */
-.md-header {
-  background-color: #1a1a2e;
-}
-
-/* Tabs */
-.md-tabs {
-  background-color: #0f0f1a;
-}
-
-/* Links — gold accent */
-.md-typeset a {
-  color: #f59e0b;
-}
-.md-typeset a:hover {
-  color: #fbbf24;
-}
-
-/* Nav active item */
-.md-nav__link--active {
-  color: #f59e0b !important;
-}
+/* butterflow — Black + Amber theme (minimal overrides) */
 
 /* Images */
 img {
@@ -64,46 +14,19 @@ img {
   line-height: 1.8;
 }
 
-/* Table styling */
+/* Table */
 .md-typeset table:not([class]) {
   font-size: 0.8rem;
 }
 
-/* Table header — dark navy */
-.md-typeset table:not([class]) th {
-  background-color: #1a1a2e;
-  color: #ffffff;
-}
-
-/* Blockquote accent — gold */
+/* Blockquote — amber accent */
 .md-typeset blockquote {
   border-left-color: #f59e0b;
 }
 
-/* Code blocks */
-.md-typeset code {
-  background-color: #2d2d4a;
-  color: #fbbf24;
-}
-
-[data-md-color-scheme="default"] .md-typeset code {
-  background-color: #f3f4f6;
-  color: #1a1a2e;
-}
-
-/* Footer */
-.md-footer {
-  background-color: #0f0f1a;
-}
-
-/* Search bar */
-.md-search__input {
-  background-color: #2d2d4a;
-}
-
-/* Logo in header — slight glow */
+/* Logo — cream circle background */
 .md-header__button.md-logo img {
   border-radius: 50%;
-  background: #fff8e1;
-  padding: 2px;
+  background: #fffbeb;
+  padding: 3px;
 }
