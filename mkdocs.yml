@@ -79,5 +79,8 @@ nav:
   - 시장 데이터:
     - posts/cot.md
     - posts/fedwatch.md
+  - 도구:
+    - posts/monte-carlo.md
+    - posts/almanac.md
 
 copyright: "&copy; 2024-2026 butterflow. All rights reserved."

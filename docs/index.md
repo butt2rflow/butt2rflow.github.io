@@ -23,6 +23,11 @@ title: Home
 - [**COT 리포트**](posts/cot.md) — 선물시장에서 기관의 의중 읽기
 - [**FedWatch Tool**](posts/fedwatch.md) — Fed Fund 선물로 금리 예측하기
 
+### 도구
+
+- [**몬테카를로 시뮬레이션**](posts/monte-carlo.md) — 파이썬으로 투자 백테스팅 (구글시트 + Python)
+- [**Almanac Trader**](posts/almanac.md) — 구글시트 Seasonality 분석 도구
+
 ---
 
 ## 시리즈 (유료 전자책)
