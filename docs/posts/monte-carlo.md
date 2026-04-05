@@ -1,7 +1,7 @@
 ---
 title: "몬테 카를로(Monte Carlo) 시뮬레이션 백테스팅"
 date: 2021-05-03
-tags: [simulation]
+tags: [monte-carlo, simulation, python, google-sheets, backtesting, probability]
 lang: ko
 ---
 

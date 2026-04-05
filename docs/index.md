@@ -37,8 +37,8 @@ title: Home
 | 시리즈 | 내용 | 편수 |
 |:-------|:-----|:-----|
 | [**원칙편**](series/s1-shannons-demon.md) | 섀넌의 도깨비부터 캘리 기준까지 | 4편 (1편 무료) |
-| [실행편](series/s2-preview.md) | VIX를 읽고 ETF+현금으로 비중 조절 | 3편 |
-| [확장편](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 |
-| [심화편](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 |
+| [**실행편**](series/s2-preview.md) | VIX를 읽고 ETF+현금으로 비중 조절 | 3편 |
+| [**확장편**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 |
+| [**심화편**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 |
 
 > 전체 시리즈는 [크몽](https://kmong.com)에서 PDF로 구매할 수 있습니다.
