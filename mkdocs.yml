@@ -1,0 +1,83 @@
+site_name: butterflow 투자 노트
+site_url: https://butt2rflow.github.io
+site_description: 변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙
+site_author: butterflow
+
+theme:
+  name: material
+  language: ko
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: 다크 모드
+    - scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: 라이트 모드
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+  font:
+    text: Noto Sans KR
+    code: JetBrains Mono
+  icon:
+    logo: material/chart-line
+
+plugins:
+  - search:
+      lang:
+        - ko
+        - en
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/butt2rflow
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+extra_css:
+  - assets/custom.css
+
+nav:
+  - Home: index.md
+  - 시리즈:
+    - series/index.md
+    - 원칙편 (무료 1편):
+      - series/s1-shannons-demon.md
+    - 실행편 (미리보기): series/s2-preview.md
+    - 확장편 (미리보기): series/s3-preview.md
+    - 심화편 (미리보기): series/s4-preview.md
+  - 옵션 분석:
+    - posts/skew.md
+    - posts/hedging-wings.md
+    - posts/implied-correlation.md
+  - 시장 데이터:
+    - posts/cot.md
+    - posts/fedwatch.md
+
+copyright: "&copy; 2024-2026 butterflow. All rights reserved."

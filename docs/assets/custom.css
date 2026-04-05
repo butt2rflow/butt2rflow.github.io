@@ -1,0 +1,23 @@
+/* butterflow custom styles */
+img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 12px auto;
+  display: block;
+}
+
+/* Korean typography */
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+/* Table styling */
+.md-typeset table:not([class]) {
+  font-size: 0.8rem;
+}
+
+/* Blockquote accent */
+.md-typeset blockquote {
+  border-left-color: var(--md-primary-fg-color);
+}
