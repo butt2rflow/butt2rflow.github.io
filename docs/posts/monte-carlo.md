@@ -7,7 +7,7 @@ lang: ko
 
 # 몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
 
-> 구글 시트 링크: [MonteCarlo](https://docs.google.com/spreadsheets/d/1zRjhKI5rt5RERUXul56Fu0ECCkDkookHDSpaRsxc-RQ/edit?usp=sharing) (시뮬레이션 데이터 때문에 무거운 파일입니다)
+> 구글 시트 링크: [MonteCarlo](https://docs.google.com/spreadsheets/d/1zRjhKI5rt5RERUXul56Fu0ECCkDkookHDSpaRsxc-RQ/copy) (시뮬레이션 데이터 때문에 무거운 파일입니다)
 
 ---
 
