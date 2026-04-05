@@ -29,8 +29,8 @@ theme:
   font:
     text: Noto Sans KR
     code: JetBrains Mono
-  icon:
-    logo: material/chart-line
+  logo: assets/butterflow.png
+  favicon: assets/butterflow.png
 
 plugins:
   - search:
