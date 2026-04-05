@@ -14,9 +14,9 @@ title: Home
 
 ### 옵션 분석
 
-- [**변동성 Skew**](posts/skew.md) — S&P500 지수 옵션의 "썩소"와 Implied Correlation
-- [**Hedging the Wings**](posts/hedging-wings.md) — 저비용 테일 리스크 헷지 (1:2 Put Ratio)
-- [**시장 심리 변동성 지수**](posts/implied-correlation.md) — COR3M, IV Surface, Delta Skew
+- [**변동성 Skew**](posts/skew.md) — S&P500 지수 옵션의 "썩소"와 Implied Correlation, CBOE SKEW Index
+- [**Hedging the Wings**](posts/hedging-wings.md) — 저비용 테일 리스크 헷지 (1:2 Put Ratio, SPY 구체 예시)
+- [**시장 심리 변동성 지수**](posts/implied-correlation.md) — COR3M, IV Surface, Delta Skew + TradingView Pine Script
 
 ### 시장 데이터 도구
 
@@ -25,8 +25,8 @@ title: Home
 
 ### 도구
 
-- [**몬테카를로 시뮬레이션**](posts/monte-carlo.md) — 파이썬으로 투자 백테스팅 (구글시트 + Python)
-- [**Almanac Trader**](posts/almanac.md) — 구글시트 Seasonality 분석 도구
+- [**몬테카를로 시뮬레이션**](posts/monte-carlo.md) — 구글시트 + Python으로 투자 백테스팅
+- [**Almanac Trader**](posts/almanac.md) — 월별 Seasonality 분석 (구글시트 + Python)
 
 ---
 
