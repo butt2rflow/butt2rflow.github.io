@@ -1,5 +1,57 @@
 # Claude Change Log — BlogMigration
 
+## 2026-04-04 (Session 4)
+
+### Session: GEX Diagram Fix + PDF Rename + Standalone Posts Polish
+
+**GEX Profile Diagram Redesign:**
+- Strike labels (3800-4200) placed on x-axis with proper spacing
+- "SPX 현재가" moved above x-axis with downward arrow
+- Flip point, zone labels (풋/콜 OI), 자석/가속기 효과 repositioned
+- Multiple rounds of positioning feedback from user
+
+**PDF Filename Convention:**
+- `{number}_{name}.pdf` → `s{series}_{seq}_{name}.pdf` (e.g., `s4_03_gex.pdf`)
+- generate_pdfs.py SERIES config updated, old files cleaned up
+
+**GEX Article Fix:**
+- Limit #5 numbering unified with 1-4 (bold standalone → numbered list)
+
+**Standalone Posts Polished (5 posts):**
+1. 변동성 Skew (2023-01-14) — 6 images, Smile vs Smirk, Conditional Correlation
+   - Fact-check: NASDAQ 1999 "100% 상승" claim removed (unverified)
+2. Hedging the Wings (2023-01-17) — 15 images, 1:2 put ratio spread
+   - Fact-check: 10 delta put cost "연 20%" → ATM은 18-30%, 10 delta는 1.5-2%
+3. 시장 심리 변동성 지수 (2023-02-12) — 14 images, COR3M, IV Surface
+   - Fact-check: COR3MD 누락 추가 (Delta Skew 4→5개)
+4. COT — 선물시장에서 현물시장 살펴보기 (2021-07-04) — 5 images, D-COT/TFF
+   - Fact-check: "화요일 2시"→"화요일 장마감", Southwest 2019→2008/70%, 13F 5-6개월→1.5-4.5개월, "larger traders"→"Non-Commercial"
+5. Fed Fund 선물과 FedWatch Tool (2023-03-26) — 16 images, 2부작 합본
+   - Fact-check: EFFR "평균"→"중앙값" (2016 변경), ZQF4→ZQH3, IMM 공식 명확화
+
+**Merged/Deleted Posts:**
+- `Fed Fund 선물과 EFFR.md` → FedWatch 글에 합본
+- `5월 28일 Smart Money Dumb Money.md` → COT 글에 흡수
+
+**Skipped:**
+- 미국 채권 경매 일정 (시사 스냅샷, 교육 가치 낮음)
+
+**Content Strategy Decision:**
+- MkDocs: s1 1편(섀넌) 전문 공개 + s2-s4 미리보기 + standalone 전체 공개
+- Kmong: s1-s4 합본 PDF 유료 판매
+- 퍼널: 검색 유입 → MkDocs → 시리즈 맛보기 → Kmong 구매
+
+**Evaluated for Future:**
+- 몬테카를로 시뮬레이션 → 파이썬 버전 추가 예정 (교육 가치 높음)
+- Almanac Trader → 구글시트 카테고리 보존, 가벼운 polish
+
+**Notes for Next Session:**
+- MkDocs 세팅 + polish된 글 배치
+- docs/ 폴더 구조 생성, mkdocs.yml 작성
+- 섀넌 1편 전문 + 나머지 시리즈 미리보기 페이지 생성
+- standalone 글들 docs/posts/로 배치
+- GitHub Pages 배포 설정
+
 ## 2026-04-04 (Session 3)
 
 ### Session: Gamma Series Rewrite + Full Editorial Review + Kmong Finalization
