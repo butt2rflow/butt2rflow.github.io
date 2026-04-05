@@ -1,11 +1,11 @@
 ---
-title: "구글시트 — Almanac Trader (Seasonality 분석 도구)"
+title: "Almanac Trader — Seasonality 분석 (구글시트 + Python)"
 date: 2021-06-06
-tags: [google-sheets, seasonality, almanac, presidential-cycle]
+tags: [google-sheets, python, seasonality, almanac, presidential-cycle]
 lang: ko
 ---
 
-# 구글시트 — Almanac Trader (Seasonality 분석 도구)
+# Almanac Trader — Seasonality 분석 도구
 
 ---
 
@@ -19,11 +19,11 @@ lang: ko
 
 위 질문의 답: 2월 1일에는 **76.2%** 즉 10번 중 7.62번의 확률로 상승장이었습니다.
 
-이런 seasonality 데이터는 과거 주가 데이터만 있으면 직접 만들 수 있습니다. 그래서 구글 시트로 만들어봤습니다.
+이런 seasonality 데이터는 과거 주가 데이터만 있으면 직접 만들 수 있습니다.
 
 ---
 
-## 구글 시트 사용법
+## 구글 시트 버전
 
 > **Almanac Trader 구글 시트 복사하기:** [Google Sheets 링크](https://docs.google.com/spreadsheets/d/13rne6WEWYdma8cTmxUdkctY1LPcmogp-kcXiPH4VzNs/copy)
 
@@ -41,52 +41,73 @@ lang: ko
 
 미국 시장에서는 4년 주기의 대통령 선거가 시장에 영향을 미친다고 알려져 있습니다. 역사적으로 **선거 다음 해(Election Year + 1)**가 가장 약한 해로 기록되어 왔습니다. 이 필터를 적용하면 해당 주기에 해당하는 연도만 추출하여 seasonality를 계산합니다.
 
----
+### Seasonality 차트 읽는 법
 
-## Seasonality 테이블 읽는 법
+차트는 두 부분으로 구성됩니다:
 
-표의 각 날짜에는 두 개의 숫자가 쌍으로 표기됩니다:
-
-| 숫자 | 의미 | 예시 |
-|:----|:-----|:-----|
-| **첫 번째** | 해당 날짜에 상승장이었던 확률 (%) | 76.2% = 10번 중 7.6번 상승 |
-| **두 번째** | 해당 날짜의 LOG 수익률 합계 | +0.34 = 누적 상승 경향 |
-
-차트는 LOG 수익률을 누적하여 1년 동안의 수익 추세를 시각적으로 보여줍니다.
+| 영역 | 의미 |
+|:----|:-----|
+| **상단 (누적 LOG 수익률)** | 1년간의 수익 추세. 우상향이면 해당 구간에서 역사적으로 상승 경향 |
+| **하단 (상승일 비율)** | 각 날짜에 상승장이었던 확률. 50% 이상(초록)이면 상승 우세, 미만(빨강)이면 하락 우세 |
 
 > 이 데이터는 절대적인 수치보다는 **해당일의 추세 방향**을 참조하는 용도로 사용하는 것이 적절합니다.
 
 ---
 
-## 지수 Seasonality 예시
+## 파이썬 버전
 
-### S&P500 (1999~2020, 대통령 선거 다음 해)
+구글 시트의 제약 없이 파이썬으로 동일한 분석을 실행할 수 있습니다. `yfinance`로 데이터를 받아 seasonality를 계산합니다.
 
-![S&P500 Seasonality](../assets/diagrams/alm_03.png)
+### S&P 500 — 대통령 선거 다음 해 (2001~2025)
 
-### Nasdaq Composite (2008~2020, 대통령 선거 다음 해)
+![S&P 500 Seasonality (대통령 선거 다음 해)](../assets/diagrams/alm_py_sp500.png)
 
-![Nasdaq Seasonality](../assets/diagrams/alm_05.png)
+### Nasdaq Composite — 대통령 선거 다음 해 (2009~2025)
+
+![Nasdaq Seasonality (대통령 선거 다음 해)](../assets/diagrams/alm_py_nasdaq.png)
+
+### AMZN (2008~2025)
+
+![AMZN Seasonality](../assets/diagrams/alm_py_amzn.png)
+
+### S&P 500 — 전체 연도 (1999~2025)
+
+![S&P 500 Seasonality (전체)](../assets/diagrams/alm_py_sp500_all.png)
+
+### 핵심 코드
+
+```python
+import numpy as np
+import pandas as pd
+import yfinance as yf
+
+# 데이터 다운로드
+data = yf.download("^GSPC", start="1999-01-01", end="2025-12-31")
+data['log_return'] = np.log(data['Close'] / data['Close'].shift(1))
+
+# 대통령 선거 다음 해 필터
+election_years = set(range(2000, 2025, 4))
+valid_years = {y + 1 for y in election_years}
+data = data[data.index.year.isin(valid_years)]
+
+# 월/일별 seasonality 계산
+data['month'] = data.index.month
+data['day'] = data.index.day
+seasonality = data.groupby(['month', 'day']).agg(
+    win_rate=('log_return', lambda x: (x > 0).mean() * 100),
+    log_return_sum=('log_return', 'sum')
+)
+```
 
 ---
 
-## 개별 종목 Seasonality
+## 마무리
 
-개별 종목도 seasonality가 있는 경우가 많습니다. Market Index 드롭다운에서 티커를 직접 입력하면 개별 종목의 seasonality를 계산할 수 있습니다.
+Seasonality는 **과거 데이터의 경향**이지 미래를 보장하지 않습니다. 하지만 수십 년간의 데이터에서 반복적으로 나타나는 패턴은 참고할 가치가 있습니다. 특히:
 
-### AMZN (2008~2020)
-
-![AMZN Seasonality 차트](../assets/diagrams/alm_10.png)
-
-### DIS (2008~2020)
-
-![DIS Seasonality 차트](../assets/diagrams/alm_11.png)
-
-### XOM (2008~2020, 장기 우하향 중)
-
-![XOM Seasonality 차트](../assets/diagrams/alm_12.png)
-
-XOM(ExxonMobil)은 2014년부터 2020년까지 장기 하락 추세에 있었기 때문에, seasonality 차트에서도 전반적으로 우하향하는 패턴이 나타납니다. Seasonality는 과거 데이터의 경향이므로, 종목 자체의 장기 추세를 함께 고려해야 합니다.
+- **대통령 선거 주기**: 선거 다음 해와 중간선거 해의 패턴이 다름
+- **종목별 차이**: AMZN처럼 장기 상승 종목은 seasonality도 우상향, XOM처럼 장기 하락 종목은 우하향 — 종목 자체의 추세를 함께 고려해야 합니다
+- **실전 활용**: 절대적 매매 신호가 아닌, 다른 분석 도구와 함께 **추세 방향 참조** 용도로 사용
 
 ---
 
