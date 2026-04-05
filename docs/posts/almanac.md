@@ -92,5 +92,4 @@ XOM(ExxonMobil)은 2014년부터 2020년까지 장기 하락 추세에 있었기
 
 ## 참고
 
-- 구글 시트 제작 과정: [카페 글 링크](https://cafe.naver.com/laserinvestors/202)
-- 책 참조: [Stock Trader's Almanac 2021 (Amazon)](https://www.amazon.com/Stock-Traders-Almanac-2021-Investor/dp/111977876X)
+- [Stock Trader's Almanac 2021 (Amazon)](https://www.amazon.com/Stock-Traders-Almanac-2021-Investor/dp/111977876X)
