@@ -18,5 +18,5 @@ title: 실행편 — VIX를 읽고 비중을 조절하라
 - 폭락장에서 기계적으로 대응할 수 있는 규칙을 만들고 싶은 분
 - 증권사에서 바로 실행할 수 있는 전략을 찾는 분
 
-[이 시리즈만 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
+[실행편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
 [전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }

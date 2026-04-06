@@ -17,5 +17,5 @@ title: 확장편 — 옵션으로 한 단계 더
 - TQQQ 대신 더 저렴하고 안전한 레버리지 방법을 찾는 분
 - 커버드콜 ETF(JEPI, QYLD)가 뭔지 원리부터 이해하고 싶은 분
 
-[이 시리즈만 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
+[확장편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
 [전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
