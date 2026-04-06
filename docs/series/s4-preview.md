@@ -19,4 +19,4 @@ title: 심화편 — 감마가 시장을 움직인다
 - GEX, 감마 스퀴즈 같은 용어를 뉴스에서 봤는데 원리가 궁금한 분
 - 0DTE 옵션이 왜 시장 구조를 바꾸고 있는지 알고 싶은 분
 
-> 전체 시리즈 PDF는 [크몽](https://kmong.com)에서 구매할 수 있습니다.
+> 전체 시리즈 PDF는 [Gumroad](https://butt2rflow.gumroad.com/l/dbkyt)에서 구매할 수 있습니다.

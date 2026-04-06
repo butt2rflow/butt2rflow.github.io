@@ -41,4 +41,4 @@ title: Home
 | [**확장편**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 |
 | [**심화편**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 |
 
-> 전체 시리즈는 [크몽](https://kmong.com)에서 PDF로 구매할 수 있습니다.
+> 전체 시리즈는 [Gumroad](https://butt2rflow.gumroad.com/l/dbkyt)에서 PDF로 구매할 수 있습니다.

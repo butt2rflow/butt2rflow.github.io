@@ -18,4 +18,4 @@ title: 실행편 — VIX를 읽고 비중을 조절하라
 - 폭락장에서 기계적으로 대응할 수 있는 규칙을 만들고 싶은 분
 - 증권사에서 바로 실행할 수 있는 전략을 찾는 분
 
-> 전체 시리즈 PDF는 [크몽](https://kmong.com)에서 구매할 수 있습니다.
+> 전체 시리즈 PDF는 [Gumroad](https://butt2rflow.gumroad.com/l/dbkyt)에서 구매할 수 있습니다.
