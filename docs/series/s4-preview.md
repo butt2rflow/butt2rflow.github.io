@@ -19,5 +19,5 @@ title: 심화편 — 감마가 시장을 움직인다
 - GEX, 감마 스퀴즈 같은 용어를 뉴스에서 봤는데 원리가 궁금한 분
 - 0DTE 옵션이 왜 시장 구조를 바꾸고 있는지 알고 싶은 분
 
-[이 시리즈만 구매 ($4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
-[전체 세트 구매 ($13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
+[이 시리즈만 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
+[전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
