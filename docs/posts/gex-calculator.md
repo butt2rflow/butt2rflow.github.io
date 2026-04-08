@@ -71,7 +71,7 @@ GEX 계산은 두 가지를 가정합니다:
 | **How to import** | CBOE 다운로드 가이드 (스크린샷 포함) | 읽기 전용 |
 | **OptionChain Import** | CBOE CSV 데이터 붙여넣는 곳 | **여기에 데이터 import** |
 | **GammaExposure Calc** | GEX 자동 계산 | 결과 확인 |
-| **GammaExposure Graph** | 설정 + 요약 대시보드 | 결과 확인 |
+| **GammaExposure Graph** | 설정 + 요약 대시보드 + **Gamma Flip** | 결과 확인 |
 | **MaxPain Calc** | Max Pain 자동 계산 | 결과 확인 |
 | **Gamma Profile Summary** | 최종 요약 (Top strikes, OI 분포) | **여기서 결과 읽기** |
 | **0DTE Strategy Patterns** | 장중 0DTE(당일 만기) 감마 패턴 | [다음 글](./gex-0dte-patterns.md) 참조 |
@@ -137,13 +137,15 @@ Total GEX:     -$22,379,905,641   ← 전체 숏 감마
 
 → 지수가 1% 움직이면 MM이 **$22.4B** 규모의 매매를 해야 합니다. 이 매매가 움직임을 더 증폭시킵니다.
 
-**Max Pain:**
+**Max Pain / Gamma Flip:**
 
 ```
-Max Pain = 6,000
+Max Pain     = 6,000
+Gamma Flip   = 없음 (전 구간 숏 감마)
 ```
 
-→ 만기일에 옵션 매수자 전체가 최소 이익을 얻는 가격. 현재가(5,976.97)와 가까우면 "핀닝" 가능성.
+→ Max Pain: 만기일에 옵션 매수자 전체가 최소 이익을 얻는 가격. 현재가(5,976.97)와 가까우면 "핀닝" 가능성.
+→ Gamma Flip: 이 데이터에서는 ATM 근처의 Net GEX가 전부 음수이므로 플립 포인트가 없습니다. 풋 OI가 압도적인 날에는 이렇게 나옵니다. 콜 OI가 우세한 구간이 있는 날에는 구체적인 행사가가 표시됩니다.
 
 **Top 5 행사가 (Net GEX 기준):**
 
@@ -231,13 +233,13 @@ Call GEX = SUMPRODUCT(
 | 플립 포인트 **위** | 롱 감마 (소방관) | 변동성 억제, 안정적 |
 | 플립 포인트 **아래** | 숏 감마 (방화범) | 변동성 증폭, 급변 가능 |
 
-시트 수식 (누적합):
+시트에서는 `GammaExposure Calc` 탭의 AH열이 이 누적합을 자동 계산합니다:
 
 ```
-= SUMPRODUCT((Strike열 >= 이_행사가) * Net_GEX열)
+AH2 = MAP(L2:L258, LAMBDA(k, SUMPRODUCT((L$2:L$258>=k)*IF(ISNUMBER(V$2:V$258),V$2:V$258,0))))
 ```
 
-이 누적합이 양수에서 음수로 바뀌는 지점이 플립 포인트입니다.
+각 행사가에 대해 "이 가격 이상의 모든 Net GEX 합계"를 구합니다. 이 값이 양수에서 음수로 바뀌는 지점이 플립 포인트이며, `GammaExposure Graph` 탭의 **Gamma Flip** 셀에 자동 표시됩니다.
 
 !!! note "플립 포인트가 없는 경우"
     Total GEX가 전 구간에서 음수이면 플립 포인트가 존재하지 않습니다. MM이 모든 가격대에서 숏 감마입니다.
