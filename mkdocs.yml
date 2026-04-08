@@ -74,5 +74,7 @@ nav:
   - 도구:
     - posts/monte-carlo.md
     - posts/almanac.md
+    - posts/gex-calculator.md
+    - posts/gex-0dte-patterns.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"
