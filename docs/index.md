@@ -27,6 +27,9 @@ title: Home
 
 - [**몬테카를로 시뮬레이션**](posts/monte-carlo.md) — 구글시트 + Python으로 투자 백테스팅
 - [**Almanac Trader**](posts/almanac.md) — 월별 Seasonality 분석 (구글시트 + Python)
+- [**GEX 직접 계산하기**](posts/gex-calculator.md) — Google Sheets + Python으로 감마 노출 계산
+- [**0DTE 감마 패턴**](posts/gex-0dte-patterns.md) — 장중 GEX는 어떻게 변하는가
+- [**변동성 대시보드**](posts/volatility-dashboard.md) — Correlation + Skew 추적 (Google Sheets + Python)
 
 ---
 
