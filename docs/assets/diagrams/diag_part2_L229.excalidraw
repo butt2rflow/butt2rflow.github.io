@@ -242,7 +242,7 @@
       "y": 534.0,
       "width": 314.0,
       "height": 52,
-      "text": "가진 돈이 많을수록 추가 $1의 효용이 작아진다\n--> 로그 효용(Logarithmic Utility)",
+      "text": "가진 돈이 많을수록 추가 $1의 효용이 작아진다\n--> 체감 효용(Logarithmic Utility)",
       "fontSize": 15,
       "fontFamily": 1,
       "textAlign": "center",
@@ -262,7 +262,7 @@
       "link": null,
       "locked": false,
       "baseline": 15,
-      "originalText": "가진 돈이 많을수록 추가 $1의 효용이 작아진다\n--> 로그 효용(Logarithmic Utility)"
+      "originalText": "가진 돈이 많을수록 추가 $1의 효용이 작아진다\n--> 체감 효용(Logarithmic Utility)"
     }
   ],
   "appState": {

@@ -17,6 +17,7 @@ title: 실행편 — VIX를 읽고 비중을 조절하라
 - VIX가 공포지수라는 건 아는데, 실제 투자에 어떻게 쓰는지 모르는 분
 - 폭락장에서 기계적으로 대응할 수 있는 규칙을 만들고 싶은 분
 - 증권사에서 바로 실행할 수 있는 전략을 찾는 분
+- **수학 공식이 싫은 분** — 이 시리즈의 공식은 나눗셈이 전부입니다
 
 [실행편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
 [전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }

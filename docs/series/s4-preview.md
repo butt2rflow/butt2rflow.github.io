@@ -18,6 +18,7 @@ title: 심화편 — 감마가 시장을 움직인다
 - 옵션 기초는 아는데, 마켓메이커가 시장에 미치는 영향을 이해하고 싶은 분
 - GEX, 감마 스퀴즈 같은 용어를 뉴스에서 봤는데 원리가 궁금한 분
 - 0DTE 옵션이 왜 시장 구조를 바꾸고 있는지 알고 싶은 분
+- **수학 공식이 싫은 분** — 4편 전체에서 공식은 곱셈 2개뿐, 나머지는 비유와 그림으로 설명합니다
 
 [심화편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
 [전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }

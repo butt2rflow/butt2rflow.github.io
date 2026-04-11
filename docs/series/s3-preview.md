@@ -16,6 +16,7 @@ title: 확장편 — 옵션으로 한 단계 더
 - 옵션이 위험하다고만 들었는데, 장기 투자에 어떻게 쓰는지 알고 싶은 분
 - TQQQ 대신 더 저렴하고 안전한 레버리지 방법을 찾는 분
 - 커버드콜 ETF(JEPI, QYLD)가 뭔지 원리부터 이해하고 싶은 분
+- **수학 공식이 싫은 분** — 블랙-숄즈 공식 없이 보험 비유로 옵션을 설명합니다
 
 [확장편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
 [전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
