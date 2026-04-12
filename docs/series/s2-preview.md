@@ -19,5 +19,4 @@ title: 실행편 — VIX를 읽고 비중을 조절하라
 - 증권사에서 바로 실행할 수 있는 전략을 찾는 분
 - **수학 공식이 싫은 분** — 이 시리즈의 공식은 나눗셈이 전부입니다
 
-[실행편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
-[전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
+<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->

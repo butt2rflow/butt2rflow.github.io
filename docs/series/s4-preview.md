@@ -20,5 +20,4 @@ title: 심화편 — 감마가 시장을 움직인다
 - 0DTE 옵션이 왜 시장 구조를 바꾸고 있는지 알고 싶은 분
 - **수학 공식이 싫은 분** — 4편 전체에서 공식은 곱셈 2개뿐, 나머지는 비유와 그림으로 설명합니다
 
-[심화편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
-[전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
+<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->

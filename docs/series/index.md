@@ -24,4 +24,4 @@ title: 시리즈 안내
 3. 캘리의 기준 (Kelly's Criterion)이 주는 교훈
 4. 엣지 없는 게임, 엣지 있는 시장
 
-> 전체 시리즈 PDF는 [Gumroad](https://butt2rflow.gumroad.com/l/dbkyt)에서 구매할 수 있습니다.
+<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->

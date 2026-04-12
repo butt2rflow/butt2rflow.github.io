@@ -18,5 +18,4 @@ title: 확장편 — 옵션으로 한 단계 더
 - 커버드콜 ETF(JEPI, QYLD)가 뭔지 원리부터 이해하고 싶은 분
 - **수학 공식이 싫은 분** — 블랙-숄즈 공식 없이 보험 비유로 옵션을 설명합니다
 
-[확장편 구매 (US\$4.99)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
-[전체 세트 구매 (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
+<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->
