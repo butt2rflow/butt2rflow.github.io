@@ -225,3 +225,7 @@ paths = 1000 * np.exp(np.cumsum(random_returns, axis=1))
 5. 충분히 많이 반복하면 대수의 법칙에 의해 통계적 확률에 수렴
 
 금융 실전에서는 경험적 분포에 추가 파라미터(변동성 클러스터링, 점프 모델 등)를 결합하여 더 정교한 시뮬레이션을 수행합니다. 하지만 원리는 여기서 다룬 "Hello World"와 정확히 같습니다.
+
+---
+
+*다음 글: [Almanac Trader — Seasonality 분석](almanac.md)*

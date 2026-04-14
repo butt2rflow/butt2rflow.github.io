@@ -238,3 +238,7 @@ print(snap)
 - [SqueezeMetrics GEX 백서 (PDF)](https://squeezemetrics.com/monitor/docs)
 
 *Cboe, SPX, VIX는 Cboe Exchange, Inc.의 등록 상표입니다. 이 글은 Cboe와 제휴 또는 보증 관계가 없습니다.*
+
+---
+
+*이전 글: [GEX 직접 계산하기 — Google Sheets + Python](gex-calculator.md) | 다음 글: [변동성 대시보드 — Correlation + Skew 추적](volatility-dashboard.md)*

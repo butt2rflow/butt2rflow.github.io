@@ -337,3 +337,7 @@ print("  ← 높음" if skew_val > 150 else "  ← 경계" if skew_val > 140 els
 - [Cboe Implied Correlation Indices](https://www.cboe.com/us/indices/implied/)
 
 *Cboe, VIX는 Cboe Exchange, Inc.의 등록 상표입니다. SPX, S&P 500은 S&P Global의 등록 상표입니다. 이 글은 Cboe 또는 S&P Global과 제휴 또는 보증 관계가 없습니다. 지수 데이터 출처: Cboe Global Indices.*
+
+---
+
+*이전 글: [0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가](gex-0dte-patterns.md)*
