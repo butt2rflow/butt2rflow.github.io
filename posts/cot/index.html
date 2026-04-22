@@ -1,0 +1,1556 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/cot/">
+      
+      
+        <link rel="prev" href="../implied-correlation/">
+      
+      
+        <link rel="next" href="../fedwatch/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>COT — 선물시장에서 현물시장 살펴보기 - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cot" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              COT — 선물시장에서 현물시장 살펴보기
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../skew/" class="md-tabs__link">
+          
+  
+  
+  옵션 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    옵션 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cot_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COT 리포트란
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cot-legacy-d-cot-tff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COT 리포트의 진화 — Legacy → D-COT → TFF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="COT 리포트의 진화 — Legacy → D-COT → TFF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legacy-cot-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy COT — 초기 3개 범주
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-cot-2009" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-COT — 마켓메이커 분리 (2009년)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tff-cot-2010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TFF — 금융선물 전용 COT (2010년)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        사우스웨스트 항공의 교훈
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실전 해석 — 기관의 의중 읽기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13F와의 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cot_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마무리 — COT를 실전에 활용하는 법
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cot_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COT 리포트란
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cot-legacy-d-cot-tff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COT 리포트의 진화 — Legacy → D-COT → TFF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="COT 리포트의 진화 — Legacy → D-COT → TFF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legacy-cot-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy COT — 초기 3개 범주
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-cot-2009" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-COT — 마켓메이커 분리 (2009년)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tff-cot-2010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TFF — 금융선물 전용 COT (2010년)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        사우스웨스트 항공의 교훈
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실전 해석 — 기관의 의중 읽기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13F와의 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cot_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마무리 — COT를 실전에 활용하는 법
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cot">COT — 선물시장에서 현물시장 살펴보기<a class="headerlink" href="#cot" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="cot_1">COT 리포트란<a class="headerlink" href="#cot_1" title="Permanent link">&para;</a></h2>
+<p>선물(futures — 미래의 특정 시점에 정해진 가격으로 사거나 팔기로 약속하는 계약)시장에서 일정 규모 이상의 참여자들은 매주 <strong>화요일 장마감</strong> 시점의 미결제약정(OI: Open Interest — 아직 청산되지 않고 남아 있는 계약 수)을 미국 상품선물거래위원회(CFTC: Commodity Futures Trading Commission)에 보고할 의무가 있습니다. 보고 의무가 있는 참여자들은 CFTC Form 40을 통해서 선물시장에서 비즈니스의 목적을 명시하여 제출하며, CFTC 스태프는 이 보고서를 기준으로 각 시장 참여자들의 비즈니스 범주(category)를 결정합니다.</p>
+<p>이렇게 매주 선물시장의 참여자들이 보고하는 미결제약정을 각각의 비즈니스 범주로 나눠서 롱 포지션(가격 상승에 베팅한 매수)과 숏 포지션(가격 하락에 베팅한 매도)의 총합계를 보여주는 것을 <strong>COT(Commitments of Traders) 리포트</strong>라고 하며, 매주 <strong>금요일 미 동부시간 3:30 PM</strong>에 발표됩니다.</p>
+<hr />
+<h2 id="cot-legacy-d-cot-tff">COT 리포트의 진화 — Legacy → D-COT → TFF<a class="headerlink" href="#cot-legacy-d-cot-tff" title="Permanent link">&para;</a></h2>
+<p>COT 리포트는 세 차례에 걸쳐 진화해왔습니다.</p>
+<p><img alt="COT 리포트의 진화" src="../../assets/diagrams/diag_cot_evolution.png" /></p>
+<h3 id="legacy-cot-3">Legacy COT — 초기 3개 범주<a class="headerlink" href="#legacy-cot-3" title="Permanent link">&para;</a></h3>
+<p>COT 리포트에서는 비즈니스 범주를 다음과 같이 세 가지로 나눕니다:</p>
+<ol>
+<li><strong>Commercial</strong> — 현물을 직접 사고 파는 거래를 하는 참여자 (헷저 — 위험을 줄이기 위해 반대 방향 거래를 동시에 가지는 참여자)</li>
+<li><strong>Non-Commercial</strong> — 현물 거래와 상관없이 선물을 투기 목적으로 거래하는 대형 참여자</li>
+<li><strong>Nonreportable</strong> — 보고 기준 미만의 소규모 참여자</li>
+</ol>
+<p>그런데 Legacy COT 리포트에서는 현물을 직접 사고 파는 거래를 하지는 않지만 선물 거래에서 매수자와 매도자 사이에서 항상 거래 상대방이 되어주는 중개 역할의 <strong>마켓메이커(MM: Market Maker)</strong>의 미결제약정이 Commercial로 포함되면서, Legacy COT 리포트에서 큰 의미를 찾는 것은 한계가 있었습니다.</p>
+<h3 id="d-cot-2009">D-COT — 마켓메이커 분리 (2009년)<a class="headerlink" href="#d-cot-2009" title="Permanent link">&para;</a></h3>
+<p>2009년 9월 4일, CFTC는 비즈니스 범주를 더 세분화하는 <strong>D-COT(Disaggregated COT)</strong> 리포트를 시작합니다. D-COT 리포트에서는 비즈니스 범주가 네 가지로 나뉩니다:</p>
+<ol>
+<li><strong>Producer/Merchant/Processor/User</strong> — 현물을 직접 사고 파는 참여자</li>
+<li><strong>Swap Dealers</strong> — 마켓메이커</li>
+<li><strong>Managed Money</strong> — 단기 트레이딩으로 수익을 목적으로 하는 참여자</li>
+<li><strong>Other Reportables</strong> — 기타 대형 참여자</li>
+</ol>
+<p>마켓메이커의 미결제약정이 현물 거래자들과 분리되면서, D-COT 리포트에서 <strong>Producer/Merchant/Processor/User의 포지션이 가지는 의미가 생기기 시작합니다.</strong> 상식적으로 현물을 실제로 사고 파는 참여자들이 현물의 미래 가격이라고 할 수 있는 선물을 가장 잘 예측할 수 있는 그룹이라는 것을 쉽게 짐작할 수 있습니다.</p>
+<h3 id="tff-cot-2010">TFF — 금융선물 전용 COT (2010년)<a class="headerlink" href="#tff-cot-2010" title="Permanent link">&para;</a></h3>
+<p>CFTC는 2010년 7월 22일부터 <strong>TFF(Traders in Financial Futures)</strong> 리포트를 시작합니다. TFF 리포트는 선물시장에서 금융상품인 환율선물, 채권선물, 시장지수선물의 COT 리포트입니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">범주</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Dealer/Intermediary</strong></td>
+<td style="text-align: left;">마켓메이커</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Asset Manager/Institutional</strong></td>
+<td style="text-align: left;">연금, 기부금 등을 운영하는 대형 기관투자자 — 이른바 <strong>스마트 머니(Smart Money)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Leveraged Funds</strong></td>
+<td style="text-align: left;">단기 트레이딩으로 수익을 목적으로 하는 헷지펀드 등</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Other Reportables</strong></td>
+<td style="text-align: left;">기타 대형 참여자 (기업 재무팀, 중앙은행, 소형 은행 등)</td>
+</tr>
+</tbody>
+</table>
+<p>일반적으로 TFF에서 <strong>Asset Manager/Institutional이 스마트 머니(Smart Money)</strong>라고 불리며, Leveraged Funds를 덤 머니(Dumb Money)라고 하기도 합니다.</p>
+<hr />
+<h2 id="_1">사우스웨스트 항공의 교훈<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>COT 리포트의 Producer/Merchant 범주에 속하는 기업이 실제로 어떻게 선물을 활용하는지, 항공사 사례를 통해 봅니다.</p>
+<p>항공유 가격을 선물로 헷지(위험 회피)하는 것으로 유명한 <strong>사우스웨스트 항공(LUV)</strong>의 예를 봅니다. 항공사는 기름(현물)을 실제로 사고 파는 Producer/Merchant/Processor/User의 범주로 선물 시장에 참여합니다.</p>
+<p>항공사는 비즈니스 특성상 기름 가격이 떨어지기를 원하기 때문에 현물인 기름 가격에 숏 포지션을 가진다고 할 수 있습니다. 항공사는 <strong>기름 가격이 폭등할 것을 예상할 때</strong> 기름 <strong>선물에 롱 포지션을 오픈</strong>하여 헷지합니다.</p>
+<p><strong>2008년</strong> 사우스웨스트 항공은 기름 선물의 롱 포지션을 미리 오픈했기 때문에, 기름 가격이 폭등할 때도 기름 선물 헷지가 폭등한 기름 가격의 약 <strong>70%</strong>를 커버해주었습니다. 반면에 아메리칸 항공(AAL)은 기름 선물을 통한 아무런 헷지가 없었고, 폭등하는 기름 가격을 그대로 다 지불해야 했으며 재정 상황이 크게 악화되는 위기를 겪게 됩니다.</p>
+<p>만약 기름 가격이 폭등한 것이 아니라 폭락했다면, 사우스웨스트 항공은 반대로 기름 가격이 떨어지는 혜택을 받지 못했을 것입니다. 하지만 비즈니스 관점에서는 예상치 못한 비용의 증가로 수익률이 어디까지 악화될지 예측 불가능한 상황보다는, <strong>미리 계산된 비용으로 수익률을 예상 및 관리할 수 있는 상황</strong>을 더 선호합니다.</p>
+<hr />
+<h2 id="_2">실전 해석 — 기관의 의중 읽기<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>앞서 항공사의 기름 선물 헷지를 봤는데, 같은 원리가 주식시장에도 적용됩니다. 기관투자자들은 선물시장을 헷지 목적으로 사용합니다. 현물(주식시장)에서 롱 포지션을 오픈하고, 선물시장에서 숏 포지션을 오픈하여 변동성을 제어하는 헷지 포지션을 유지합니다.</p>
+<p><img alt="현물과 선물의 헷지 관계" src="../../assets/diagrams/diag_cot_hedge_logic.png" /></p>
+<p>앞서 항공사 비즈니스는 기름 가격이 떨어지기를 원하기 때문에 기름 가격 폭등을 헷지하기 위해 기름 선물에 롱 포지션을 오픈했습니다. 같은 논리로:</p>
+<blockquote>
+<p><strong>기관투자자는 주가가 올라가기를 원하기 때문에 기본적으로 주식시장에 롱 포지션이고, 주가 하락을 예상할 때 헷지 목적으로 선물시장에 숏 포지션을 오픈합니다.</strong></p>
+</blockquote>
+<p><img alt="TFF 시그널 읽는 법" src="../../assets/diagrams/diag_cot_signals.png" /></p>
+<p>물론 아무리 기관들이라도 모든 것을 다 정확하게 예상할 수는 없겠지만, 적어도 기관들의 동향을 <strong>일주일 단위로</strong> 확인할 수 있다는 것은 상당히 큰 의미가 됩니다.</p>
+<p><img alt="주요 지수선물 TFF 데이터" src="../../assets/diagrams/cot_img_04.png" /></p>
+<p><img alt="주요 지수선물 포지셔닝 추이" src="../../assets/diagrams/cot_img_05.png" /></p>
+<hr />
+<h2 id="13f">13F와의 비교<a class="headerlink" href="#13f" title="Permanent link">&para;</a></h2>
+<p>기관투자자의 포지션을 확인하는 또 다른 방법으로 13F 보고서가 있는데, TFF와 비교해 봅니다. 모든 기관투자자들은 <strong>분기마다</strong> 미국 SEC에 제출하는 기관 보유 종목 보고서인 13F를 통해서 롱 포지션 보고의 의무가 있습니다. (숏 포지션은 보고 의무 없음) 13F는 분기말 후 45일 이내에 제출해야 하므로, 확인 가능한 데이터는 <strong>약 1.5~4.5개월 전</strong> 기관투자자들의 롱 포지션입니다.</p>
+<p>반면 TFF 리포트는 <strong>매주</strong> 업데이트되며, 롱과 숏 <strong>모두</strong> 확인할 수 있어 기관투자자들의 최근 동향을 훨씬 빠르게 파악할 수 있습니다.</p>
+<p><img alt="COT/TFF vs 13F 비교" src="../../assets/diagrams/diag_cot_vs_13f.png" /></p>
+<hr />
+<h2 id="cot_2">마무리 — COT를 실전에 활용하는 법<a class="headerlink" href="#cot_2" title="Permanent link">&para;</a></h2>
+<p>COT/TFF 리포트는 기관투자자의 포지셔닝을 <strong>매주</strong> 확인할 수 있는 몇 안 되는 공개 데이터입니다. 핵심을 정리하면:</p>
+<ul>
+<li><strong>Asset Manager의 숏 포지션 추세</strong>를 주간 단위로 추적하라</li>
+<li>숏이 누적되면 기관이 하락을 대비하고 있다는 신호, 숏이 줄어들면 상승을 예측하고 있다는 신호</li>
+<li>13F보다 <strong>훨씬 빠르고(주간 vs 분기)</strong>, <strong>숏 포지션까지</strong> 확인 가능</li>
+<li>COT 데이터는 CFTC 웹사이트(cftc.gov)에서 직접 확인하거나, Barchart.com 등의 차트에서 시각적으로 확인 가능</li>
+</ul>
+<p>단, COT는 <strong>방향을 가리키는 나침반이지, 타이밍을 알려주는 시계가 아닙니다.</strong> 기관도 항상 맞지는 않으며, 3일 전 데이터라는 시차도 있습니다. 다른 신호(변동성 지수(VIX) — 시장의 공포 수준을 나타내는 지수, 기술적 분석 등)와 함께 조합해서 사용하는 것이 가장 효과적입니다.</p>
+<hr />
+<p><em>다음 글: <a href="../fedwatch/">Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

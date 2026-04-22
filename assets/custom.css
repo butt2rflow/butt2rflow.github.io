@@ -1,0 +1,33 @@
+/* butterflow — Warm & Bright theme */
+
+img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 12px auto;
+  display: block;
+}
+
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.md-typeset table:not([class]) {
+  font-size: 0.8rem;
+}
+
+.md-typeset blockquote {
+  border-left-color: #f59e0b;
+}
+
+.md-header__button.md-logo img {
+  border-radius: 50%;
+  background: #fff;
+  padding: 3px;
+}
+
+.md-typeset .md-button {
+  padding: 0.35em 0.9em;
+  font-size: 0.75rem;
+  margin: 0.2em 0.3em 0.2em 0;
+}

@@ -1,0 +1,2302 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/gex-calculator/">
+      
+      
+        <link rel="prev" href="../almanac/">
+      
+      
+        <link rel="next" href="../gex-0dte-patterns/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>GEX 직접 계산하기 — Google Sheets + Python - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gex-google-sheets-python" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GEX 직접 계산하기 — Google Sheets + Python
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../skew/" class="md-tabs__link">
+          
+  
+  
+  옵션 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    옵션 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 미리보기: 완성된 도구
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gex-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        핵심 개념: GEX가 뭔지 3분 요약
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="핵심 개념: GEX가 뭔지 3분 요약">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mm-market-maker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마켓메이커(MM: Market Maker)와 감마
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX 공식의 핵심 가정
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1단계: 구글 시트 복사
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cboe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2단계: CBOE에서 옵션 체인 다운로드
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3단계: 구글 시트에 데이터 넣기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4단계: 결과 확인 — GEX 자동 계산
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4단계: 결과 확인 — GEX 자동 계산">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        대시보드에서 읽을 수 있는 것
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        뜯어보기: 수식이 실제로 무엇을 계산하는지
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="뜯어보기: 수식이 실제로 무엇을 계산하는지">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gex-gammaexposure-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX 계산 (GammaExposure Calc 탭)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5975-gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 5,975에서 GEX가 폭발하는가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        감마 플립 포인트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-pain-maxpain-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Pain (MaxPain Calc 탭)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        매일 사용하는 법
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python 버전: 자동화
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gex_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX 계산의 한계
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마무리
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        다음 글
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 미리보기: 완성된 도구
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gex-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        핵심 개념: GEX가 뭔지 3분 요약
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="핵심 개념: GEX가 뭔지 3분 요약">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mm-market-maker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마켓메이커(MM: Market Maker)와 감마
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX 공식의 핵심 가정
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1단계: 구글 시트 복사
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cboe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2단계: CBOE에서 옵션 체인 다운로드
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3단계: 구글 시트에 데이터 넣기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4단계: 결과 확인 — GEX 자동 계산
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4단계: 결과 확인 — GEX 자동 계산">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        대시보드에서 읽을 수 있는 것
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        뜯어보기: 수식이 실제로 무엇을 계산하는지
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="뜯어보기: 수식이 실제로 무엇을 계산하는지">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gex-gammaexposure-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX 계산 (GammaExposure Calc 탭)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5975-gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 5,975에서 GEX가 폭발하는가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        감마 플립 포인트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-pain-maxpain-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Pain (MaxPain Calc 탭)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        매일 사용하는 법
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python 버전: 자동화
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gex_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX 계산의 한계
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마무리
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        다음 글
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gex-google-sheets-python">GEX 직접 계산하기 — Google Sheets + Python<a class="headerlink" href="#gex-google-sheets-python" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>구글 시트 복사하기:</strong> <a href="https://docs.google.com/spreadsheets/d/1ZrnHpTddR4hwF3_QY6U5MxpjSzLiqG3n5aZkJ8GskTU/copy">GammaExposureAndMaxPain</a></p>
+</blockquote>
+<p>이 글에서는 Cboe의 무료 옵션 체인 데이터로 <strong>GEX 프로파일, 감마 플립 포인트, Max Pain</strong>을 자동 계산하는 구글 시트 도구를 만듭니다. 단계별로 따라 만들면서 각 계산의 의미를 이해하고, 완성된 시트는 매일 데이터만 갱신하면 바로 쓸 수 있습니다.</p>
+<p>필요한 것:</p>
+<ul>
+<li>Google 계정 (시트 복사용)</li>
+<li>(선택) Python 3 + pandas, matplotlib</li>
+</ul>
+<hr />
+<h2 id="30">30초 미리보기: 완성된 도구<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
+<p>시트를 복사하고 데이터를 넣으면 이런 결과를 볼 수 있습니다 (아래 용어는 이 글에서 모두 설명합니다 — 지금은 "이런 결과를 볼 수 있구나" 정도만 확인하세요):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">지표</th>
+<th style="text-align: left;">예시 값</th>
+<th style="text-align: left;">의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Total GEX</strong></td>
+<td style="text-align: left;">-$22.4B</td>
+<td style="text-align: left;">MM이 숏 감마 — 변동성 증폭 모드</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Max Pain</strong></td>
+<td style="text-align: left;">6,000</td>
+<td style="text-align: left;">만기일에 주가가 끌려가는 자석 가격</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MM 헷지 규모</strong></td>
+<td style="text-align: left;">1% 당 $22.4B</td>
+<td style="text-align: left;">지수 1% 변동 시 MM이 사고팔아야 하는 금액</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Put/Call Ratio</strong></td>
+<td style="text-align: left;">1.17</td>
+<td style="text-align: left;">풋 거래량이 콜보다 많음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Top GEX 행사가</strong></td>
+<td style="text-align: left;">5,975 (-$22.2B)</td>
+<td style="text-align: left;">감마가 가장 집중된 가격대</td>
+</tr>
+</tbody>
+</table>
+<p>지금부터 이 결과가 어떻게 나오는지 단계별로 따라갑니다.</p>
+<hr />
+<h2 id="gex-3">핵심 개념: GEX가 뭔지 3분 요약<a class="headerlink" href="#gex-3" title="Permanent link">&para;</a></h2>
+<h3 id="mm-market-maker">마켓메이커(MM: Market Maker)와 감마<a class="headerlink" href="#mm-market-maker" title="Permanent link">&para;</a></h3>
+<p>옵션 시장에서 MM은 매수자와 매도자 사이에서 항상 거래 상대방이 되어주는 중개 역할입니다. 주가가 오를지 내릴지에 베팅하지 않고(방향성 배팅 없음), 대신 기초자산(SPX 선물 등)으로 방향성 위험을 상쇄(델타(Delta — 주가 $1 변동 시 옵션 가격 변동폭)를 헷지)합니다.</p>
+<p><strong>감마(Gamma)</strong>는 주가가 $1 움직일 때 델타가 얼마나 변하는지 — 즉 옵션 민감도의 가속도입니다. MM이 감마를 보유하면 주가 변동마다 헷지 물량이 바뀌어 추가 매매가 발생합니다. 주가가 올랐는데 MM이 선물을 더 사야 한다면(같은 방향) 상승이 가속되고, 반대로 팔아야 한다면 상승에 브레이크가 걸립니다:</p>
+<ul>
+<li><strong>MM 롱 감마</strong>: 주가 상승 → 선물 매도(역방향) → 변동성 <strong>억제</strong> (소방관)</li>
+<li><strong>MM 숏 감마</strong>: 주가 상승 → 선물 매수(순방향) → 변동성 <strong>증폭</strong> (방화범)</li>
+</ul>
+<h3 id="gex">GEX 공식의 핵심 가정<a class="headerlink" href="#gex" title="Permanent link">&para;</a></h3>
+<p>GEX 계산은 두 가지를 가정합니다:</p>
+<ol>
+<li><strong>콜옵션 미결제약정(OI: Open Interest — 아직 청산되지 않은 계약 수)</strong> = 투자자가 매도(SPX/NDX에서는 기관이 보유 주식에 대해 콜옵션을 파는 전략(커버드콜)이 지배적), MM이 매수 → <strong>MM 롱 감마 (+)</strong></li>
+<li><strong>풋옵션 OI</strong> = 투자자가 매수(보험), MM이 매도 → <strong>MM 숏 감마 (-)</strong></li>
+</ol>
+<p>따라서: <strong>Net GEX = Call GEX(+) - Put GEX(-)</strong>. 콜 GEX는 MM에게 안정 효과(+), 풋 GEX는 변동 효과(-)이므로, 둘을 빼서 순효과를 구합니다.</p>
+<p>양수면 MM이 소방관, 음수면 방화범.</p>
+<p><img alt="MM 감마 포지션에 따른 시장 영향" src="../diagrams/diag_gex_mm_gamma.png" /></p>
+<div class="admonition warning">
+<p class="admonition-title">SPX/NDX 전용</p>
+<p>이 가정은 대형 지수 옵션에서만 유효합니다. 개별 종목(TSLA, NVDA 등)에서는 리테일이 콜을 매수하므로 가정 1이 뒤집힙니다. 이 도구는 <strong>SPX, NDX, RUT</strong>에만 사용하세요.</p>
+</div>
+<hr />
+<h2 id="1">1단계: 구글 시트 복사<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="https://docs.google.com/spreadsheets/d/1ZrnHpTddR4hwF3_QY6U5MxpjSzLiqG3n5aZkJ8GskTU/copy">이 링크</a>를 클릭 → "사본 만들기"</li>
+<li>복사된 시트에 <strong>7개 탭</strong>이 있습니다:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">탭</th>
+<th style="text-align: left;">역할</th>
+<th style="text-align: left;">당신이 할 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>How to import</strong></td>
+<td style="text-align: left;">CBOE 다운로드 가이드 (스크린샷 포함)</td>
+<td style="text-align: left;">읽기 전용</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OptionChain Import</strong></td>
+<td style="text-align: left;">CBOE CSV 데이터 붙여넣는 곳</td>
+<td style="text-align: left;"><strong>여기에 데이터 import</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>GammaExposure Calc</strong></td>
+<td style="text-align: left;">GEX 자동 계산</td>
+<td style="text-align: left;">결과 확인</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>GammaExposure Graph</strong></td>
+<td style="text-align: left;">설정 + 요약 대시보드 + <strong>Gamma Flip</strong></td>
+<td style="text-align: left;">결과 확인</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MaxPain Calc</strong></td>
+<td style="text-align: left;">Max Pain 자동 계산</td>
+<td style="text-align: left;">결과 확인</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Gamma Profile Summary</strong></td>
+<td style="text-align: left;">최종 요약 (Top strikes, OI 분포)</td>
+<td style="text-align: left;"><strong>여기서 결과 읽기</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>0DTE Strategy Patterns</strong></td>
+<td style="text-align: left;">장중 0DTE(당일 만기) 감마 패턴</td>
+<td style="text-align: left;"><a href="../gex-0dte-patterns/">다음 글</a> 참조</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-cboe">2단계: CBOE에서 옵션 체인 다운로드<a class="headerlink" href="#2-cboe" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="https://www.cboe.com/delayed_quotes/spx/quote_table">CBOE SPX 옵션 체인</a> 페이지 접속</li>
+<li><strong>Options Range</strong>를 <code>Near The Money</code> → <strong><code>All</code></strong>로 변경</li>
+<li><strong>Expiration</strong>을 <strong><code>All</code></strong>로 변경 (모든 만기 포함)</li>
+<li><strong>View Chain</strong> 클릭 → 옵션 체인 생성 대기 (수 초~수십 초)</li>
+<li>페이지 맨 아래 <strong>Download CSV</strong> 클릭 → 로컬에 저장</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">언제 받는 게 좋을까</p>
+<p><strong>장 마감 후 (미국 동부 16:00 이후)</strong>에 받으면 당일 종가 기준 데이터를 얻습니다. CBOE delayed quotes는 15분 지연 무료 데이터이므로, 장중에는 실시간이 아닙니다.</p>
+</div>
+<hr />
+<h2 id="3">3단계: 구글 시트에 데이터 넣기<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<ol>
+<li>구글 시트에서 <strong><code>OptionChain Import</code></strong> 탭 클릭</li>
+<li><strong>File → Import</strong> 메뉴</li>
+<li><strong>Upload</strong> → <strong>Browse</strong> → 방금 받은 CSV 파일 선택</li>
+<li>Import location: <strong><code>Replace current sheet</code></strong> 선택</li>
+<li><strong>Import data</strong> 클릭</li>
+</ol>
+<p>완료되면 <code>OptionChain Import</code> 탭에 이런 데이터가 채워집니다:</p>
+<div class="highlight"><pre><span></span><code>Expiration Date | Calls         | Last | ... | Gamma | OI    | Strike | Puts          | Last | ... | Gamma | OI
+Fri Jun 13 2025 | SPXW250613C.. | 1.18 | ... | 0.128 | 769   | 5975   | SPXW250613P.. | 0.48 | ... | 0.128 | 4720
+Fri Jun 20 2025 | SPXW250620C.. | 45.2 | ... | 0.008 | 1203  | 5975   | SPXW250620P.. | 38.5 | ... | 0.008 | 2841
+...
+</code></pre></div>
+<p>같은 행사가(5,975)에 만기가 다른 행이 <strong>수십 개</strong> 있는 것이 정상입니다.</p>
+<hr />
+<h2 id="4-gex">4단계: 결과 확인 — GEX 자동 계산<a class="headerlink" href="#4-gex" title="Permanent link">&para;</a></h2>
+<p>데이터를 넣으면 나머지 탭이 자동으로 계산됩니다. <strong><code>Gamma Profile Summary</code></strong> 탭으로 이동하세요.</p>
+<h3 id="_1">대시보드에서 읽을 수 있는 것<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p><strong>총 감마 상태:</strong></p>
+<div class="highlight"><pre><span></span><code>Call GEX 총합:    $4,477,749,074   (MM 롱 감마 기여)
+Put GEX 총합:   $26,857,654,715   (MM 숏 감마 기여)
+Total GEX:     -$22,379,905,641   ← 전체 숏 감마
+</code></pre></div>
+<p>→ Total GEX가 <strong>음수</strong> = MM이 전체적으로 숏 감마 = 방화범 모드</p>
+<p><strong>헷지 규모 해석:</strong></p>
+<div class="highlight"><pre><span></span><code>&quot;Market makers need to SELL $22.4Bn worth of index for each 1% move DOWN,
+ and BUY $22.4Bn for each 1% move UP.&quot;
+</code></pre></div>
+<p>→ 지수가 1% 움직이면 MM이 <strong>$22.4B</strong> 규모의 매매를 해야 합니다. 이 매매가 움직임을 더 증폭시킵니다.</p>
+<p><strong>Max Pain / Gamma Flip:</strong></p>
+<div class="highlight"><pre><span></span><code>Max Pain     = 6,000
+Gamma Flip   = 없음 (전 구간 숏 감마)
+</code></pre></div>
+<p>→ Max Pain: 만기일에 옵션 매수자 전체가 가장 적게 버는 가격 — 쉽게 말해, 옵션을 산 사람들이 가장 울상인 가격입니다. 현재가(5,976.97)와 가까우면 만기일에 주가가 특정 행사가에 붙어 움직이지 않는 현상("핀닝(pinning)") 가능성.
+→ Gamma Flip: 이 데이터에서는 ATM 근처의 Net GEX가 전부 음수이므로 플립 포인트가 없습니다. 풋 OI가 압도적인 날에는 이렇게 나옵니다. 콜 OI가 우세한 구간이 있는 날에는 구체적인 행사가가 표시됩니다.</p>
+<p><strong>Top 5 행사가 (Net GEX 기준):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">행사가</th>
+<th style="text-align: right;">Net GEX</th>
+<th style="text-align: left;">해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">5,975</td>
+<td style="text-align: right;">-$22.2B</td>
+<td style="text-align: left;">ATM — 0DTE 감마 집중</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,970</td>
+<td style="text-align: right;">-$77.4M</td>
+<td style="text-align: left;">숏 감마 가속</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,980</td>
+<td style="text-align: right;">-$67.7M</td>
+<td style="text-align: left;">숏 감마 가속</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,960</td>
+<td style="text-align: right;">-$19.3M</td>
+<td style="text-align: left;">하방 압력</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,950</td>
+<td style="text-align: right;">-$14.5M</td>
+<td style="text-align: left;">하방 지지선 후보</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OI 분포:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">콜 OI 상위</th>
+<th style="text-align: left;">풋 OI 상위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">6,100 (12,787)</td>
+<td style="text-align: left;">6,000 (8,247)</td>
+</tr>
+<tr>
+<td style="text-align: left;">6,150 (11,673)</td>
+<td style="text-align: left;">5,975 (4,720)</td>
+</tr>
+<tr>
+<td style="text-align: left;">6,140 (9,143)</td>
+<td style="text-align: left;">5,960 (2,546)</td>
+</tr>
+</tbody>
+</table>
+<p>→ 콜 OI는 현재가 <strong>위</strong>에 집중, 풋 OI는 현재가 <strong>부근</strong>에 집중. 전형적인 숏 감마 구조.</p>
+<p><strong>GEX 프로파일 차트:</strong> 위 데이터를 행사가별로 시각화하면 다음 프로파일이 됩니다.</p>
+<p><img alt="SPX GEX 프로파일 — ATM 부근 숏 감마 집중 구조" src="../../assets/diagrams/gex_profile.png" /></p>
+<p>상단: ATM(5,975)에 0DTE 감마가 집중되어 -$22.2B 스파이크. 하단: ATM 제외 확대 — 주변 행사가의 GEX 분포. 빨간색 = 숏 감마(변동성 증폭), 파란색 = 롱 감마(변동성 억제).</p>
+<hr />
+<h2 id="_2">뜯어보기: 수식이 실제로 무엇을 계산하는지<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>결과를 확인했으니, 이제 시트가 내부적으로 무엇을 하는지 이해합니다.</p>
+<h3 id="gex-gammaexposure-calc">GEX 계산 (<code>GammaExposure Calc</code> 탭)<a class="headerlink" href="#gex-gammaexposure-calc" title="Permanent link">&para;</a></h3>
+<p>각 행사가 K에 대해, 모든 만기의 데이터를 합산합니다:</p>
+<div class="highlight"><pre><span></span><code>Call GEX(K) = Σ (Gamma_i x Call_OI_i x 100 x K)
+Put GEX(K)  = Σ (Gamma_i x Put_OI_i x 100 x K)
+Net GEX(K)  = Call GEX(K) - Put GEX(K)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">항목</th>
+<th style="text-align: left;">의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Gamma_i</code></td>
+<td style="text-align: left;">만기 i에서의 감마 (0DTE면 극대, 30DTE면 작음)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OI_i</code></td>
+<td style="text-align: left;">만기 i에서의 미결제약정</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>x 100</code></td>
+<td style="text-align: left;">옵션 1계약 = 100주</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>x K</code></td>
+<td style="text-align: left;">감마($1당 델타 변화)를 해당 행사가 수준의 <strong>달러 규모</strong>로 환산</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="GEX 공식 분해" src="../diagrams/diag_gex_formula.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">GEX 공식 변형</p>
+<p>SpotGamma 등에서는 <code>Gamma x OI x 100 x S^2 x 0.01</code> (S = 현재가)을 사용하여 "1% 변동당 헷지 금액"을 직접 산출합니다. 이 시트는 <code>x K</code>(행사가)를 사용하는 변형으로, 행사가별 달러 감마를 비교하는 데 적합합니다. 절대 금액은 다르지만 <strong>프로파일의 형태와 플립 포인트는 동일</strong>합니다.</p>
+</div>
+<p>구글 시트 수식 (<code>GammaExposure Calc</code> 탭, 행사가별 중복 제거 섹션):</p>
+<div class="highlight"><pre><span></span><code>Call GEX = SUMPRODUCT(
+  (OptionChain!$K:$K = L2) *       ← 행사가 일치
+  OptionChain!$J:$J *              ← Call Gamma
+  OptionChain!$K2:$K2 *            ← Call OI
+  100 * L2                         ← x 100 x 행사가
+)
+</code></pre></div>
+<h3 id="5975-gex">왜 5,975에서 GEX가 폭발하는가<a class="headerlink" href="#5975-gex" title="Permanent link">&para;</a></h3>
+<p>행사가 5,975의 데이터:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">만기</th>
+<th style="text-align: right;">Gamma</th>
+<th style="text-align: right;">Call OI</th>
+<th style="text-align: right;">Put OI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>0DTE (Jun 13)</strong></td>
+<td style="text-align: right;"><strong>0.1281</strong></td>
+<td style="text-align: right;">769</td>
+<td style="text-align: right;">4,720</td>
+</tr>
+<tr>
+<td style="text-align: left;">1주 (Jun 20)</td>
+<td style="text-align: right;">0.0080</td>
+<td style="text-align: right;">1,203</td>
+<td style="text-align: right;">2,841</td>
+</tr>
+<tr>
+<td style="text-align: left;">1개월 (Jul 18)</td>
+<td style="text-align: right;">0.0025</td>
+<td style="text-align: right;">587</td>
+<td style="text-align: right;">1,156</td>
+</tr>
+</tbody>
+</table>
+<p>만기가 가까울수록 감마가 급증합니다 — 시간이 얼마 남지 않은 옵션은 주가 변동에 극도로 민감해지기 때문입니다. 0DTE의 감마(0.1281)가 1주 만기(0.0080)보다 <strong>16배</strong> 큽니다. OI에 곱하면 0DTE 한 만기가 GEX의 대부분을 결정합니다.</p>
+<h3 id="_3">감마 플립 포인트<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>높은 행사가부터 아래로 내려가면서 Net GEX 누적합이 양수에서 음수로 전환되는 가격</strong></p>
+</blockquote>
+<p>이 가격이 MM의 행동이 뒤바뀌는 경계선입니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">현재가 위치</th>
+<th style="text-align: left;">MM 상태</th>
+<th style="text-align: left;">시장 특성</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">플립 포인트 <strong>위</strong></td>
+<td style="text-align: left;">롱 감마 (소방관)</td>
+<td style="text-align: left;">변동성 억제, 안정적</td>
+</tr>
+<tr>
+<td style="text-align: left;">플립 포인트 <strong>아래</strong></td>
+<td style="text-align: left;">숏 감마 (방화범)</td>
+<td style="text-align: left;">변동성 증폭, 급변 가능</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="감마 플립 포인트 개념" src="../diagrams/diag_gex_flip_point.png" /></p>
+<p>시트에서는 <code>GammaExposure Calc</code> 탭의 AH열이 이 누적합을 자동 계산합니다:</p>
+<div class="highlight"><pre><span></span><code>AH2 = MAP(L2:L258, LAMBDA(k, SUMPRODUCT((L$2:L$258&gt;=k)*IF(ISNUMBER(V$2:V$258),V$2:V$258,0))))
+</code></pre></div>
+<p>각 행사가에 대해 "이 가격 이상의 모든 Net GEX 합계"를 구합니다. 이 값이 양수에서 음수로 바뀌는 지점이 플립 포인트이며, <code>GammaExposure Graph</code> 탭의 <strong>Gamma Flip</strong> 셀에 자동 표시됩니다.</p>
+<div class="admonition note">
+<p class="admonition-title">플립 포인트가 없는 경우</p>
+<p>Total GEX가 전 구간에서 음수이면 플립 포인트가 존재하지 않습니다. MM이 모든 가격대에서 숏 감마입니다.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">단순화된 근사</p>
+<p>이 방법은 현재 옵션 체인의 감마를 고정하고 누적합을 구하는 근사입니다. 정밀한 방법은 각 가상 현재가에서 블랙-숄즈 모형(BSM: Black-Scholes-Merton)으로 감마를 재계산하여 총 GEX를 구하지만, 계산량이 크고 결과 차이는 대부분 소폭입니다.</p>
+</div>
+<h3 id="max-pain-maxpain-calc">Max Pain (<code>MaxPain Calc</code> 탭)<a class="headerlink" href="#max-pain-maxpain-calc" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>옵션 매수자 전체의 내재가치 합계가 최소가 되는 만기 정산 가격</strong> (= MM 이익이 최대인 가격)</p>
+</blockquote>
+<p>각 가상 정산가 S에 대해:</p>
+<div class="highlight"><pre><span></span><code>콜 내재가치(S) = Σ_K max(S - K, 0) x Call_OI(K) x 100
+풋 내재가치(S) = Σ_K max(K - S, 0) x Put_OI(K) x 100
+총 내재가치(S) = 콜 내재가치 + 풋 내재가치
+</code></pre></div>
+<p><strong>Max Pain = 총 내재가치가 최소인 S</strong> (옵션 매수자가 가장 적게 버는 가격 = MM이 가장 많이 버는 가격)</p>
+<p>시트에서 <code>dollar value sum</code> 컬럼이 이 값이고, 가장 작은 행의 행사가가 Max Pain입니다.</p>
+<hr />
+<h2 id="_4">매일 사용하는 법<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시점</th>
+<th style="text-align: left;">할 일</th>
+<th style="text-align: left;">소요 시간</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">장 마감 후</td>
+<td style="text-align: left;">CBOE에서 CSV 다운로드</td>
+<td style="text-align: left;">1분</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">구글 시트 <code>OptionChain Import</code> 탭에 import</td>
+<td style="text-align: left;">1분</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><code>Gamma Profile Summary</code> 탭에서 결과 확인</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">다음 날 장 시작 전</td>
+<td style="text-align: left;">Total GEX 부호 + 플립 포인트 + Max Pain 확인</td>
+<td style="text-align: left;">1분</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3분이면 당일 GEX 상태를 파악할 수 있습니다.</strong></p>
+<p>확인할 체크리스트:</p>
+<ul>
+<li>[ ] Total GEX 부호: 양수(안정) vs 음수(불안정)</li>
+<li>[ ] 플립 포인트: 현재가보다 위인지 아래인지</li>
+<li>[ ] Max Pain: 현재가와 얼마나 가까운지</li>
+<li>[ ] Top 5 행사가: 지지/저항으로 작용할 가격대</li>
+</ul>
+<hr />
+<h2 id="python">Python 버전: 자동화<a class="headerlink" href="#python" title="Permanent link">&para;</a></h2>
+<p>매일 수동으로 하기 번거로우면 Python으로 자동화할 수 있습니다. CBOE CSV를 넣으면 GEX, 플립 포인트, Max Pain을 한 번에 계산합니다.</p>
+<details><summary>파이썬 전체 코드 (GEX + Max Pain + 차트)</summary>
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mticker</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_cboe_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CBOE SPX 옵션 체인 CSV를 파싱합니다.&quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;expiry&#39;</span><span class="p">,</span> <span class="s1">&#39;call_symbol&#39;</span><span class="p">,</span> <span class="s1">&#39;call_last&#39;</span><span class="p">,</span> <span class="s1">&#39;call_net&#39;</span><span class="p">,</span> <span class="s1">&#39;call_bid&#39;</span><span class="p">,</span> <span class="s1">&#39;call_ask&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;call_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;call_iv&#39;</span><span class="p">,</span> <span class="s1">&#39;call_delta&#39;</span><span class="p">,</span> <span class="s1">&#39;call_gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;call_oi&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;strike&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;put_symbol&#39;</span><span class="p">,</span> <span class="s1">&#39;put_last&#39;</span><span class="p">,</span> <span class="s1">&#39;put_net&#39;</span><span class="p">,</span> <span class="s1">&#39;put_bid&#39;</span><span class="p">,</span> <span class="s1">&#39;put_ask&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;put_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;put_iv&#39;</span><span class="p">,</span> <span class="s1">&#39;put_delta&#39;</span><span class="p">,</span> <span class="s1">&#39;put_gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;put_oi&#39;</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">,</span> <span class="s1">&#39;call_gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;put_gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;call_oi&#39;</span><span class="p">,</span> <span class="s1">&#39;put_oi&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;call_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;put_volume&#39;</span><span class="p">]:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_gex</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;행사가별 GEX 계산 (모든 만기 합산).&quot;&quot;&quot;</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;call_gex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;call_gamma&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;call_oi&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;put_gex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;put_gamma&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;put_oi&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span>
+
+    <span class="n">gex</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;strike&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">call_gex</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;call_gex&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+        <span class="n">put_gex</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;put_gex&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+        <span class="n">call_oi</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;call_oi&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+        <span class="n">put_oi</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;put_oi&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+        <span class="n">call_volume</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;call_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+        <span class="n">put_volume</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;put_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;net_gex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;call_gex&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;put_gex&#39;</span><span class="p">]</span>
+    <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;total_gex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;call_gex&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;put_gex&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">gex</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_gamma_flip</span><span class="p">(</span><span class="n">gex</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;높은 행사가부터 누적하여 Net GEX가 +에서 -로 전환되는 행사가.&quot;&quot;&quot;</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gex</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;strike&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">g</span><span class="p">[</span><span class="s1">&#39;cum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;net_gex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">sign_change</span> <span class="o">=</span> <span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">&#39;cum&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">&#39;cum&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sign_change</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">sign_change</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span> <span class="s1">&#39;strike&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_max_pain</span><span class="p">(</span><span class="n">gex</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;총 옵션 내재가치가 최소인 행사가.&quot;&quot;&quot;</span>
+    <span class="n">strikes</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">call_oi</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;call_oi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">put_oi</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;put_oi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">pain</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">strikes</span><span class="p">:</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">strikes</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">call_oi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">strikes</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">put_oi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">pain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cp</span> <span class="o">+</span> <span class="n">pp</span><span class="p">)</span>
+    <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;pain&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pain</span>
+    <span class="k">return</span> <span class="n">gex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gex</span><span class="p">[</span><span class="s1">&#39;pain&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">(),</span> <span class="s1">&#39;strike&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_gex</span><span class="p">(</span><span class="n">gex</span><span class="p">,</span> <span class="n">spot</span><span class="p">,</span> <span class="n">flip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_pain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;GEX 프로파일 차트.&quot;&quot;&quot;</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="n">spot</span> <span class="o">*</span> <span class="mf">0.05</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[(</span><span class="n">gex</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">spot</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">gex</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spot</span> <span class="o">+</span> <span class="n">margin</span><span class="p">)]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#2196F3&#39;</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;#F44336&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;net_gex&#39;</span><span class="p">]]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">],</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;net_gex&#39;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">spot</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SPX: </span><span class="si">{</span><span class="n">spot</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">flip</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">flip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#FF9800&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Gamma Flip: </span><span class="si">{</span><span class="n">flip</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_pain</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">max_pain</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#9C27B0&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Max Pain: </span><span class="si">{</span><span class="n">max_pain</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Strike&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Net GEX ($)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;SPX Gamma Exposure Profile&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mticker</span><span class="o">.</span><span class="n">FuncFormatter</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">x</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">B&#39;</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1e9</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">x</span><span class="o">/</span><span class="mf">1e6</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">M&#39;</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gex_profile.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c1"># === 실행 ===</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">parse_cboe_csv</span><span class="p">(</span><span class="s1">&#39;spx_options.csv&#39;</span><span class="p">)</span>  <span class="c1"># CBOE CSV 경로</span>
+<span class="n">gex</span> <span class="o">=</span> <span class="n">calc_gex</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">spot</span> <span class="o">=</span> <span class="mf">5976.97</span>
+
+<span class="n">flip</span> <span class="o">=</span> <span class="n">find_gamma_flip</span><span class="p">(</span><span class="n">gex</span><span class="p">)</span>
+<span class="n">mp</span> <span class="o">=</span> <span class="n">calc_max_pain</span><span class="p">(</span><span class="n">gex</span><span class="p">)</span>
+<span class="n">total</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">&#39;net_gex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total GEX:    $</span><span class="si">{</span><span class="n">total</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gamma Flip:   </span><span class="si">{</span><span class="n">flip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max Pain:     </span><span class="si">{</span><span class="n">mp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Put/Call Vol:  </span><span class="si">{</span><span class="n">gex</span><span class="p">[</span><span class="s1">&#39;put_volume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gex</span><span class="p">[</span><span class="s1">&#39;call_volume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plot_gex</span><span class="p">(</span><span class="n">gex</span><span class="p">,</span> <span class="n">spot</span><span class="p">,</span> <span class="n">flip</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
+</code></pre></div>
+
+</details>
+
+<hr />
+<h2 id="gex_1">GEX 계산의 한계<a class="headerlink" href="#gex_1" title="Permanent link">&para;</a></h2>
+<p>이 도구를 사용할 때 반드시 알아야 할 점:</p>
+<ol>
+<li>
+<p><strong>OI는 어제 장 마감 기준</strong> — 장중 대량 거래가 반영되지 않습니다. → <a href="../gex-0dte-patterns/">다음 글: 0DTE 감마 패턴</a>에서 장중 보정 방법</p>
+</li>
+<li>
+<p><strong>CBOE Gamma는 블랙-숄즈 모형(BSM) 기반</strong> — 이론적 감마입니다. 실제 MM이 사용하는 감마와 다를 수 있습니다.</p>
+</li>
+<li>
+<p><strong>OI의 방향을 모릅니다</strong> — 누가 매수이고 매도인지 공개 데이터로는 알 수 없습니다. "콜 = MM 매수, 풋 = MM 매도" 가정에 의존합니다.</p>
+</li>
+<li>
+<p><strong>0DTE가 지배적</strong> — ATM 0DTE 감마가 극대이므로, GEX가 당일 만기 하나에 좌우됩니다. 장중에 0DTE OI가 변하면 GEX도 크게 변합니다.</p>
+</li>
+<li>
+<p><strong>절대적 매매 신호가 아닙니다</strong> — GEX는 "MM의 예상 포지션"을 추정하는 방향성 지표입니다. 단독으로 매매 결정에 사용하지 마세요.</p>
+</li>
+</ol>
+<hr />
+<h2 id="_5">마무리<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>이 도구로 할 수 있는 것:</p>
+<ol>
+<li><strong>매일 3분</strong>으로 GEX 상태 파악 — Total GEX 부호, 플립 포인트, Max Pain</li>
+<li><strong>지지/저항 후보 식별</strong> — GEX가 큰 행사가 = MM 헷지가 집중되는 가격대</li>
+<li><strong>MM 행동 방향 추정</strong> — 숏 감마(변동성 증폭) vs 롱 감마(변동성 억제)</li>
+<li><strong>장중 급변동의 맥락 이해</strong> — "왜 갑자기?"에 대한 구조적 답</li>
+</ol>
+<p>GEX는 단기 매매 신호가 아닙니다. 장기 투자자에게 GEX의 가치는 <strong>시장의 급변동을 구조적으로 이해하고, 공포에 흔들리지 않는 것</strong>입니다. 지수가 갑자기 -2% 빠졌을 때 "0DTE 감마 헷지 물량이구나"라고 판단할 수 있으면, 패닉에 팔지 않고 리밸런싱 원칙을 지킬 수 있습니다.</p>
+<hr />
+<h2 id="_6">다음 글<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>아침에 계산한 GEX는 출발점입니다. <strong>장중에 0DTE 옵션이 대량 거래되면 GEX가 어떻게 변하는가?</strong> BTO/STO 패턴이 MM의 감마 포지션을 어떻게 밀어내는지, 아침 GEX에 장중 보정을 적용하는 방법을 다룹니다.</p>
+<p>→ <a href="../gex-0dte-patterns/">0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가</a></p>
+<hr />
+<h2 id="_7">참고<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://squeezemetrics.com/monitor/docs">SqueezeMetrics GEX 백서 (PDF)</a></li>
+<li><a href="https://www.cboe.com/delayed_quotes/spx/quote_table">Cboe SPX Options — Delayed Quotes</a></li>
+</ul>
+<p><em>Cboe, SPX, VIX는 Cboe Exchange, Inc.의 등록 상표입니다. 이 글은 Cboe와 제휴 또는 보증 관계가 없습니다.</em></p>
+<hr />
+<p><em>이전 글: <a href="../almanac/">Almanac Trader — Seasonality 분석</a> | 다음 글: <a href="../gex-0dte-patterns/">0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

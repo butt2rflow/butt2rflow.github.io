@@ -1,0 +1,1930 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/series/s1-shannons-demon/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../s2-preview/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>1. 섀넌의 도깨비 (Shannon's Demon) - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-shannons-demon" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1. 섀넌의 도깨비 (Shannon's Demon)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../posts/skew/" class="md-tabs__link">
+          
+  
+  
+  옵션 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../posts/cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../posts/monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        클로드 섀넌 — 정보 시대를 연 천재
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 지금 이 이야기가 중요한가?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shannons-demon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        섀넌의 도깨비 (Shannon's Demon)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="섀넌의 도깨비 (Shannon&#39;s Demon)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        섀넌의 사고 실험
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        리밸런싱 단계별 계산 예시
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 "도깨비"인가?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "그래서 당신은 이 방법으로 투자하나요?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        변동성 수확 — 어떻게 작동하는가?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        추가 예시: 변동성 크기에 따른 수익률 차이
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고: 파론도의 역설 — 지는 게임의 조합
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실전에서의 변동성 수확
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="실전에서의 변동성 수확">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        잃어버린 10년 — 리밸런싱이 빛난 시기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        시장 중립의 핵심 원리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buy-low-and-sell-high-volatility-pumping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마치면서 — 싸게 사서 비싸게 팔아라 (Buy low and sell high) = Volatility Pumping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이어지는 3편 — 원칙편 전편
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    옵션 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts/volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        클로드 섀넌 — 정보 시대를 연 천재
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 지금 이 이야기가 중요한가?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shannons-demon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        섀넌의 도깨비 (Shannon's Demon)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="섀넌의 도깨비 (Shannon&#39;s Demon)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        섀넌의 사고 실험
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        리밸런싱 단계별 계산 예시
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 "도깨비"인가?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "그래서 당신은 이 방법으로 투자하나요?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        변동성 수확 — 어떻게 작동하는가?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        추가 예시: 변동성 크기에 따른 수익률 차이
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고: 파론도의 역설 — 지는 게임의 조합
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실전에서의 변동성 수확
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="실전에서의 변동성 수확">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        잃어버린 10년 — 리밸런싱이 빛난 시기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        시장 중립의 핵심 원리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buy-low-and-sell-high-volatility-pumping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마치면서 — 싸게 사서 비싸게 팔아라 (Buy low and sell high) = Volatility Pumping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이어지는 3편 — 원칙편 전편
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1-shannons-demon">1. 섀넌의 도깨비 (Shannon's Demon)<a class="headerlink" href="#1-shannons-demon" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>시리즈 목차</strong></p>
+<ol>
+<li><strong>섀넌의 도깨비 (Shannon's Demon)</strong> ← 현재 글</li>
+<li>상트페테르부르크의 역설과 기하 평균</li>
+<li>캘리의 기준 (Kelly's Criterion)이 주는 교훈</li>
+<li>엣지 없는 게임, 엣지 있는 시장</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="_1">클로드 섀넌 — 정보 시대를 연 천재<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>클로드 섀넌(Claude Shannon)이라는 이름은 대부분의 사람들에게 낯설 것입니다. 하지만 지금 이 글을 읽고 있는 스마트폰, 컴퓨터, 인터넷 — 이 모든 것의 이론적 토대를 만든 사람이 바로 이 사람입니다.</p>
+<p><img alt="클로드 섀넌 (Claude Shannon, 1916-2001)" src="../../assets/diagrams/photo_shannon.jpg" />
+<small>Image: Bell Labs / Wikimedia Commons, Public Domain</small></p>
+<p><img alt="섀넌 업적 타임라인" src="../../assets/diagrams/diag_part1_L021.png" /></p>
+<p>19세기 영국의 수학자 조지 불(George Boole)은 참/거짓, 0과 1만으로 논리를 표현하는 체계를 만들었습니다 — 이것이 오늘날 <strong>불 대수(Boolean algebra)</strong>라 불리는 것으로, 현대 컴퓨터의 수학적 기원입니다. 섀넌은 1937년 MIT 석사 논문에서 이 추상적인 수학 체계를 전기 스위치 회로(Switching circuit)로 구현할 수 있다는 것을 증명하여, 현대 반도체 회로 설계 기술의 출발점을 만들었습니다.</p>
+<p>1948년, 섀넌은 벨 연구소에서 세기의 걸작 "A Mathematical Theory of Communication"을 발표합니다. 이 논문에서 모든 형태의 정보를 <strong>"비트"</strong>로 변환하여 효율적으로 통신할 수 있다는 것을 밝혔으며, <strong>엔트로피(Entropy)</strong>라는 개념을 창시했습니다. 이를 기점으로 정보 통신 분야는 획기적인 발전을 이루게 되었고, 섀넌은 <strong>정보 통신의 아버지</strong>라 불리게 되었습니다.</p>
+<hr />
+<h2 id="_2">왜 지금 이 이야기가 중요한가?<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>AI가 뉴스를 분석하고, 알고리즘이 밀리초 단위로 매매하는 시대입니다. 정보의 전달 속도가 빛에 가까워진 지금, <strong>남들보다 먼저 정보를 알아서 돈을 버는 전략 — 이른바 정보 우위(Information Edge) — 은 개인 투자자에게 사실상 불가능</strong>해졌습니다.</p>
+<p>그렇다면 개인 투자자에게 남은 것은 무엇일까요?</p>
+<p>정보 이론의 아버지인 섀넌이 60년 전에 보여준 답은 놀랍도록 단순합니다: <strong>미래를 예측할 필요가 없는 전략</strong>. 주가가 오를지 내릴지 전혀 몰라도, 수학적 원리만으로 수익을 만들어낼 수 있는 구조적 우위(Structural Edge — 예측이 아닌 수학적 구조에서 오는 유리함)가 존재합니다.</p>
+<p>이 시리즈에서 다루는 세 가지 개념 — 리밸런싱, 기하 평균(복리 수익률을 반영하는 평균), 캘리의 기준(Kelly's Criterion — 최적 투자 비중을 계산하는 공식) — 은 모두 <strong>정보가 아닌 수학에 기반한 전략</strong>입니다. AI가 아무리 발전해도 변동성은 사라지지 않고, 복리의 수학도 바뀌지 않습니다.</p>
+<hr />
+<h2 id="shannons-demon">섀넌의 도깨비 (Shannon's Demon)<a class="headerlink" href="#shannons-demon" title="Permanent link">&para;</a></h2>
+<p>1956년 섀넌은 MIT로 돌아가서 연구에 집중하게 됩니다. 섀넌은 그의 천재성을 투자에서도 발휘한 것으로 유명합니다. 노벨 경제학상 수상자인 폴 새뮤얼슨(Paul Samuelson)과 그의 제자들은 효율적 시장 가설(Efficient Market Hypothesis — 모든 정보가 이미 주가에 반영되어 있으므로 누구도 시장을 이길 수 없다는 이론)에 근거하여 그 누구도 시장을 이길 수 없다고 주장하였는데, 그들에게 섀넌의 존재는 악몽과도 같았다고 합니다.</p>
+<p>섀넌은 MIT에 재직하면서 1966년과 1971년 두 차례에 걸쳐서 <strong>과학적인 투자(Scientific Investing)</strong>에 관한 강연을 했다고 합니다. MIT 커뮤니티에는 이미 섀넌의 투자 성공 스토리가 널리 알려져 있었기에 예상을 넘는 인파가 몰렸고, 강연 장소는 MIT의 가장 큰 강의실로 옮겨져야 했습니다.</p>
+<h3 id="_3">섀넌의 사고 실험<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>섀넌의 강연 주제는 다음과 같았습니다:</p>
+<p>주식 시장에서 돈을 버는 방법은 매우 간단합니다. 주가가 올라가는 상승장에서는 낮은 가격에 사서 높은 가격에 팔고(Buy low and sell high), 주가가 내려가는 하락장에서는 공매도(Sell short — 주식을 빌려서 먼저 팔고, 나중에 싸게 사서 갚는 방법)를 하면 됩니다. 여기서 우리는 주식 가격이 올라가는지 내려가는지 "정확하게 예측"만 하면 되지만, "정확하게 예측"하는 것이 불가능하기 때문에 돈을 버는 간단한 방법 따위는 존재하지 않습니다.</p>
+<p>하지만 섀넌은 강연에서 이렇게 <strong>"정확하게 예측"하는 것이 불가능한 랜덤 워크(Random walk — 주가가 동전 던지기처럼 무작위로 움직인다는 모델)에서 돈을 버는 방법</strong>을 제시합니다.</p>
+<p>다음과 같은 가상의 주가 변동 모델을 사용합니다:</p>
+<ol>
+<li>주가는 랜덤 워크로 움직인다.</li>
+<li>상승하는 날(확률 50%)에는 전일 대비 <strong>2배</strong>가 된다.</li>
+<li>하락하는 날(확률 50%)에는 전일 대비 <strong>1/2</strong>이 된다.</li>
+<li>최종일의 주가는 시작일의 주가와 동일하다 — 즉 장기 보유 수익률은 <strong>0%</strong>이다.</li>
+</ol>
+<p>섀넌의 전략: 초기 투자금의 <strong>50%를 주식에, 50%를 현금에</strong> 배분하고, <strong>매일 50:50 비율을 유지하도록 리밸런싱</strong>합니다.</p>
+<h3 id="_4">리밸런싱 단계별 계산 예시<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><img alt="섀넌의 리밸런싱 전략" src="../../assets/diagrams/shannon_rebalancing.png" /></p>
+<p>초기 투자금 $1,000으로 시작합니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">구분</th>
+<th style="text-align: right;">주식</th>
+<th style="text-align: right;">현금</th>
+<th style="text-align: right;">합계</th>
+<th style="text-align: right;">리밸런싱 후 주식</th>
+<th style="text-align: right;">리밸런싱 후 현금</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Day 0</strong></td>
+<td style="text-align: right;">$500.00</td>
+<td style="text-align: right;">$500.00</td>
+<td style="text-align: right;">$1,000.00</td>
+<td style="text-align: right;">$500.00</td>
+<td style="text-align: right;">$500.00</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Day 1</strong> ×2</td>
+<td style="text-align: right;">$1,000.00</td>
+<td style="text-align: right;">$500.00</td>
+<td style="text-align: right;">$1,500.00</td>
+<td style="text-align: right;">$750.00</td>
+<td style="text-align: right;">$750.00</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Day 2</strong> ×½</td>
+<td style="text-align: right;">$375.00</td>
+<td style="text-align: right;">$750.00</td>
+<td style="text-align: right;">$1,125.00</td>
+<td style="text-align: right;">$562.50</td>
+<td style="text-align: right;">$562.50</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Day 3</strong> ×2</td>
+<td style="text-align: right;">$1,125.00</td>
+<td style="text-align: right;">$562.50</td>
+<td style="text-align: right;">$1,687.50</td>
+<td style="text-align: right;">$843.75</td>
+<td style="text-align: right;">$843.75</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Day 4</strong> ×½</td>
+<td style="text-align: right;">$421.88</td>
+<td style="text-align: right;">$843.75</td>
+<td style="text-align: right;">$1,265.63</td>
+<td style="text-align: right;">$632.81</td>
+<td style="text-align: right;">$632.81</td>
+</tr>
+</tbody>
+</table>
+<p><strong>비교:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">전략</th>
+<th style="text-align: right;">Day 0</th>
+<th style="text-align: right;">Day 4</th>
+<th style="text-align: right;">수익률</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">단순 보유 (Buy&amp;Hold)</td>
+<td style="text-align: right;">$1,000.00</td>
+<td style="text-align: right;">$1,000.00</td>
+<td style="text-align: right;">0.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>섀넌 리밸런싱</strong></td>
+<td style="text-align: right;">$1,000.00</td>
+<td style="text-align: right;">$1,265.63</td>
+<td style="text-align: right;"><strong>+26.6%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>주가는 제자리걸음인데 리밸런싱만으로 <strong>26.6% 수익</strong>이 발생했습니다!</p>
+<p>핵심 원리를 그림으로 보면:</p>
+<p><img alt="리밸런싱 메커니즘" src="../../assets/diagrams/diag_part1_L113.png" /></p>
+<p>이 리밸런싱 효과는 장기적으로 어떤 차이를 만들까요? 아래 그래프는 동일한 변동성 환경에서 리밸런싱(파란선)과 단순 보유(빨간선)의 자산 성장 경로를 비교한 것입니다:</p>
+<p><img alt="장기 수익률 비교 (로그 스케일)" src="../../assets/diagrams/diag_part1_L146.png" /></p>
+<p>이 50:50 리밸런싱 포트폴리오를 <strong>섀넌의 도깨비(Shannon's Demon)</strong>라고 부릅니다.</p>
+<h3 id="_5">왜 "도깨비"인가?<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><img alt="맥스웰의 도깨비 (Maxwell's Demon)" src="../../assets/diagrams/photo_maxwell_demon.png" />
+<small>Image: Wikimedia Commons, CC BY-SA</small></p>
+<p>이 이름은 스코틀랜드의 물리학자 제임스 클러크 맥스웰이 1867년 열역학 제2법칙을 위반하는 것이 가능한가에 관한 사고 실험인 <strong>맥스웰의 도깨비(Maxwell's Demon)</strong>에서 유래했습니다. 맥스웰의 도깨비에서 가상의 도깨비가 속도가 빠른 분자와 느린 분자를 서로 다른 방에 분리하는 것처럼, 섀넌의 도깨비에서는 주가가 랜덤 워크를 통해서 상승·하락을 반복할 때마다 가상의 도깨비가 50:50으로 리밸런싱합니다.</p>
+<h3 id="_6">"그래서 당신은 이 방법으로 투자하나요?"<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>강연이 끝나고 수많은 질문이 쏟아졌습니다. 가장 먼저 나온 질문은 당연히 섀넌 본인이 실제로 이 방법을 쓰느냐였습니다. 섀넌의 답변:</p>
+<blockquote>
+<p>"아니요, 거래 수수료가 너무 커요."</p>
+<p>— "Naw," said Shannon. "The commissions would kill you."</p>
+</blockquote>
+<p>하루 만에 2배가 되고 다시 하루 만에 반토막이 나는 극단적 변동성의 주식이 실제로 존재한다면, 거래 수수료가 아무리 비싸도 문제가 되지 않았을 것입니다. 하지만 <strong>현실에 그런 주식은 존재하지 않습니다.</strong></p>
+<h3 id="_7">변동성 수확 — 어떻게 작동하는가?<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>금융 공학에서 이처럼 <strong>변동성</strong>을 <strong>리밸런싱</strong>을 통해 수익으로 전환하는 투자 기법을 <strong>변동성 수확(Volatility Pumping)</strong>이라고 합니다. 리밸런싱 프리미엄(Rebalancing Premium)이라고도 부릅니다.</p>
+<p>수학적으로 계산하면, 50:50 리밸런싱 포트폴리오의 수익률은 리밸런싱 기간마다 약 <strong>6%</strong>로 계산됩니다. 240회 반복하면 (1.06)^240 ≈ <strong>$1,184,152</strong> — 즉 $1이 $118만이 됩니다.</p>
+<h3 id="_8">추가 예시: 변동성 크기에 따른 수익률 차이<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>변동성이 클수록 리밸런싱의 수익률이 높아진다는 것을 확인해봅니다. 각각 50% 확률로 상승/하락하며, 최종일에 원점으로 돌아오는 주식들을 비교합니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">변동성 모델</th>
+<th style="text-align: right;">상승일 배수</th>
+<th style="text-align: right;">하락일 배수</th>
+<th style="text-align: right;">1회 리밸런싱 수익</th>
+<th style="text-align: right;">240회 후 수익</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">낮은 변동성</td>
+<td style="text-align: right;">×1.1</td>
+<td style="text-align: right;">×(1/1.1)</td>
+<td style="text-align: right;">~0.1%</td>
+<td style="text-align: right;">~27%</td>
+</tr>
+<tr>
+<td style="text-align: left;">중간 변동성</td>
+<td style="text-align: right;">×1.5</td>
+<td style="text-align: right;">×(1/1.5)</td>
+<td style="text-align: right;">~2.0%</td>
+<td style="text-align: right;">~11,500%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>섀넌 모델</strong></td>
+<td style="text-align: right;">×2.0</td>
+<td style="text-align: right;">×(1/2.0)</td>
+<td style="text-align: right;">~6.0%</td>
+<td style="text-align: right;"><strong>~118,415,200%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">극단적 변동성</td>
+<td style="text-align: right;">×3.0</td>
+<td style="text-align: right;">×(1/3.0)</td>
+<td style="text-align: right;">~12.5%</td>
+<td style="text-align: right;">천문학적 수치</td>
+</tr>
+</tbody>
+</table>
+<p><strong>핵심:</strong> 리밸런싱은 변동성을 연료로 사용합니다. 변동성이 없으면 수익도 없습니다.</p>
+<h2 id="_9">참고: 파론도의 역설 — 지는 게임의 조합<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<p><img alt="파론도의 역설" src="../../assets/diagrams/parrondo_paradox.png" /></p>
+<p>1996년 스페인의 물리학자 후안 파론도(Juan Parrondo)는 흥미로운 현상을 발견합니다: <strong>각각은 지는 게임이라도 적절히 조합하면 이기는 게임이 될 수 있다.</strong></p>
+<p>파론도의 역설은 리밸런싱과 정확히 같은 메커니즘은 아니지만, 핵심 직관을 공유합니다 — <strong>개별적으로는 불리한 자산들이 결합과 재조정을 통해 유리해질 수 있다는 것입니다.</strong></p>
+<p>콜로라도 대학의 Michael Stutzer 교수는 이 현상을 실제 시장에 적용하여 시뮬레이션한 결과를 발표했습니다 ("The Paradox of Diversification", <a href="http://leeds-faculty.colorado.edu/stutzer/Papers/ParadoxOfDiversification.PDF">원문 PDF</a>):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">종목</th>
+<th style="text-align: right;">수익률</th>
+<th style="text-align: right;">변동성</th>
+<th style="text-align: left;">역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">고변동성 주식</td>
+<td style="text-align: right;">-43%</td>
+<td style="text-align: right;">40%</td>
+<td style="text-align: left;">등락폭 공급원</td>
+</tr>
+<tr>
+<td style="text-align: left;">저변동성 채권</td>
+<td style="text-align: right;">-0.001%</td>
+<td style="text-align: right;">~0%</td>
+<td style="text-align: left;">안정 자산</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>50:50 리밸런싱</strong></td>
+<td style="text-align: right;"><strong>+34%</strong></td>
+<td style="text-align: right;">—</td>
+<td style="text-align: left;"><strong>합치면 이긴다!</strong></td>
+</tr>
+</tbody>
+</table>
+<p>-43%와 -0.001%를 50:50 비율로 매년 리밸런싱하여 30년 투자한 결과(10,000 샘플 경로), <strong>누적 +34%의 수익률</strong>을 보여줍니다. 등락폭이 리밸런싱의 연료로 작동한다는 것을 보여주는 실증 사례입니다.</p>
+<hr />
+<h2 id="_10">실전에서의 변동성 수확<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<p>변동성을 리밸런싱으로 수익 전환하는 기법은 실제 금융 시장에서도 다양한 형태로 활용되고 있습니다.</p>
+<h3 id="10">잃어버린 10년 — 리밸런싱이 빛난 시기<a class="headerlink" href="#10" title="Permanent link">&para;</a></h3>
+<p>2000년에서 2010년까지 미국 주식 시장은 "잃어버린 10년(The Lost Decade)"이라 불립니다. 닷컴 버블 붕괴(2000-2002)와 글로벌 금융 위기(2008-2009), 두 번의 대폭락을 겪으며 S&amp;P 500은 10년간 수익률이 사실상 <strong>0%에 가까웠습니다.</strong></p>
+<p><img alt="S&amp;P 500 잃어버린 10년" src="../../assets/diagrams/diag_part1_L333.png" /></p>
+<p>그런데 이 "잃어버린 10년" 동안, <strong>주식 60% + 채권 40%의 단순한 포트폴리오를 매년 리밸런싱한 투자자는 연평균 약 +2.5~3.5%의 수익률</strong>을 기록했습니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">전략</th>
+<th style="text-align: right;">2000-2010 누적 수익률</th>
+<th style="text-align: right;">연평균 수익률</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">S&amp;P 500 단순 보유</td>
+<td style="text-align: right;">약 -9.1%</td>
+<td style="text-align: right;">-0.95%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>60/40 리밸런싱 (매년)</strong></td>
+<td style="text-align: right;"><strong>약 +30%</strong></td>
+<td style="text-align: right;"><strong>+2.6%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">60/40 리밸런싱 안 함</td>
+<td style="text-align: right;">약 +15%</td>
+<td style="text-align: right;">+1.4%</td>
+</tr>
+</tbody>
+</table>
+<p>핵심은 <strong>리밸런싱을 한 포트폴리오가 안 한 포트폴리오보다 높은 수익</strong>을 보였다는 것입니다. 주식이 폭락한 2002년과 2009년에 채권을 팔아 싸진 주식을 사들이고, 주식이 회복하면 일부를 팔아 채권으로 옮기는 — 바로 <strong>섀넌의 도깨비가 기계적으로 하는 일</strong>을 한 셈입니다.</p>
+<blockquote>
+<p>Vanguard의 연구 보고서 "Best practices for portfolio rebalancing" (2015)에 따르면, 리밸런싱의 프리미엄은 자산 간 상관관계가 낮고 변동성이 클수록 커지며, 이는 변동성 수확의 수학적 예측과 정확히 일치합니다.</p>
+</blockquote>
+<h3 id="_11">시장 중립의 핵심 원리<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>섀넌의 50:50 포트폴리오는 시장 방향에 대해 <strong>절반만 노출</strong>된 상태에서 변동성을 수익으로 전환합니다. 이것을 <strong>시장 노출도</strong>라고 합니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">포지션</th>
+<th style="text-align: center;">시장 노출도</th>
+<th style="text-align: left;">의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">주식 100%</td>
+<td style="text-align: center;">100%</td>
+<td style="text-align: left;">시장과 완전히 동행</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>섀넌의 50:50 포트폴리오</strong></td>
+<td style="text-align: center;"><strong>50%</strong></td>
+<td style="text-align: left;"><strong>절반은 변동성에서 수익</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">현금 100%</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: left;">시장과 완전히 무관</td>
+</tr>
+</tbody>
+</table>
+<p>시장 노출을 줄인 만큼, 그 빈 자리를 <strong>변동성이 채워주는 것</strong> — 이것이 변동성 수확의 본질이며, 다양한 시장 중립 전략과 같은 원리를 공유합니다.</p>
+<hr />
+<h2 id="buy-low-and-sell-high-volatility-pumping">마치면서 — 싸게 사서 비싸게 팔아라 (Buy low and sell high) = Volatility Pumping<a class="headerlink" href="#buy-low-and-sell-high-volatility-pumping" title="Permanent link">&para;</a></h2>
+<p>"싸게 사서 비싸게 팔아라" — 너무나 당연한 승리 공식이지만, 실제 투자에서는 사람의 본성과 정면으로 충돌합니다. 주가가 폭락하면 공포에 팔고, 폭등하면 탐욕에 사게 되기 때문입니다.</p>
+<p>섀넌의 도깨비는 이 문제에 대한 명쾌한 답을 줍니다: <strong>리밸런싱이라는 기계적 규칙으로 "Buy low, sell high"를 감정 없이 실행하는 것입니다.</strong> 그리고 이 전략이 작동하기 위한 절대적 전제 조건이 있습니다:</p>
+<blockquote>
+<p><strong>현금, 또는 현금에 상응하는 저변동성 자산(채권)의 비중 확보.</strong></p>
+<p>현금이 없으면 폭락 시 살 수 없고, 주식이 없으면 폭등 시 팔 수 없습니다.
+현금 비중은 리밸런싱의 <strong>연료</strong>이자, 시장에서 <strong>살아남기 위한 조건</strong>입니다.</p>
+</blockquote>
+<p><img alt="포트폴리오 전략 세 가지 렌즈" src="../../assets/diagrams/diag_part1_L385.png" /></p>
+<p>그렇다면 리밸런싱의 수학적 기반은 무엇일까요? 왜 산술 평균(기대값)이 아닌 <strong>기하 평균</strong>으로 생각해야 하는 걸까요?</p>
+<blockquote>
+<p>다음 글에서는 이 질문의 답을 찾기 위해 300년 전 한 수학자 가문의 이야기 — <strong>상트페테르부르크의 역설</strong>에서 시작합니다.</p>
+</blockquote>
+<hr />
+<h2 id="3">이어지는 3편 — 원칙편 전편<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p>1편(무료)이 마음에 드셨다면, 다음 3편에서 수학적 기반과 실전 적용을 마무리합니다.</p>
+<ul>
+<li><strong>2편 상트페테르부르크의 역설</strong> — 기하 평균이 왜 산술 평균보다 중요한가</li>
+<li><strong>3편 캘리의 기준</strong> — 최적 비중은 얼마이며, 왜 절반만 걸어야 하는가</li>
+<li><strong>4편 엣지 없는 게임, 엣지 있는 시장</strong> — 시장에는 어떤 구조적 엣지가 남아 있는가</li>
+</ul>
+<p>원칙편 전체는 <strong>65페이지 · 다이어그램 48장+</strong>입니다.</p>
+<p><a class="md-button md-button--primary" href="https://kmong.com/gig/762026">크몽 원칙편 구매</a>
+<a class="md-button" href="https://butt2rflow.gumroad.com/l/aejfrj">Gumroad (Overseas)</a></p>
+<p>전 13편 번들(179p)이 더 경제적입니다:</p>
+<p><a class="md-button md-button--primary" href="https://kmong.com/gig/762066">크몽 번들 구매</a>
+<a class="md-button" href="https://butt2rflow.gumroad.com/l/dbkyt">Gumroad Bundle (Overseas)</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1987 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/hedging-wings/">
+      
+      
+        <link rel="prev" href="../skew/">
+      
+      
+        <link rel="next" href="../implied-correlation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Hedging the Wings — 저비용 테일 리스크 헷지 - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hedging-the-wings" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hedging the Wings — 저비용 테일 리스크 헷지
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../skew/" class="md-tabs__link">
+          
+  
+  
+  옵션 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    옵션 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 글을 읽기 전에
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fat-tail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정규분포와 Fat Tail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-put-ratio-spread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        핵심 아이디어: 1:2 Put Ratio Spread
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="핵심 아이디어: 1:2 Put Ratio Spread">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구조
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPY로 보는 구체적 예시
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 숏 포지션인가? — IV 변화의 마법
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="왜 숏 포지션인가? — IV 변화의 마법">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        롱 포지션의 함정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iv_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        숏 포지션 — IV 상승이 아군
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iv-spy-540-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IV 변화 시나리오 (SPY $540 기준, 만기 2주 전)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        변동성 Skew의 시너지
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 10 델타 Put인가?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실전 구축: 5단계
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        비용 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마무리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 글을 읽기 전에
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fat-tail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정규분포와 Fat Tail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-put-ratio-spread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        핵심 아이디어: 1:2 Put Ratio Spread
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="핵심 아이디어: 1:2 Put Ratio Spread">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구조
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPY로 보는 구체적 예시
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 숏 포지션인가? — IV 변화의 마법
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="왜 숏 포지션인가? — IV 변화의 마법">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        롱 포지션의 함정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iv_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        숏 포지션 — IV 상승이 아군
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iv-spy-540-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IV 변화 시나리오 (SPY $540 기준, 만기 2주 전)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        변동성 Skew의 시너지
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 10 델타 Put인가?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실전 구축: 5단계
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        비용 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        마무리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hedging-the-wings">Hedging the Wings — 저비용 테일 리스크 헷지<a class="headerlink" href="#hedging-the-wings" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>이 글은 Hari P. Krishnan의 <a href="https://www.amazon.com/Second-Leg-Down-Strategies-Profiting/dp/1119219086"><strong>The Second Leg Down: Strategies for Profiting after a Market Sell-Off</strong></a> (Wiley, 2017)의 핵심 내용을 요약·정리한 것입니다.</p>
+<p>이전 글: <a href="../skew/">변동성 Skew — S&amp;P500 지수 옵션의 썩소</a></p>
+</blockquote>
+<hr />
+<h2 id="_1">이 글을 읽기 전에<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>다음 개념을 이해하고 있으면 이 글을 따라가기 쉽습니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">사전 지식</th>
+<th style="text-align: left;">수준</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Put 옵션</td>
+<td style="text-align: left;">필수</td>
+<td style="text-align: left;">특정 가격에 팔 수 있는 권리 (= 하락 보험)</td>
+</tr>
+<tr>
+<td style="text-align: left;">내재변동성(IV)</td>
+<td style="text-align: left;">필수</td>
+<td style="text-align: left;">옵션 가격에 녹아든 시장의 변동성 기대치</td>
+</tr>
+<tr>
+<td style="text-align: left;">델타(Delta)</td>
+<td style="text-align: left;">필수</td>
+<td style="text-align: left;">주가 $1 변동 시 옵션 가격 변동폭 (10D = ITM 확률 ~10%)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Spread</td>
+<td style="text-align: left;">권장</td>
+<td style="text-align: left;">두 개 이상의 옵션을 조합한 전략</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="../skew/">변동성 Skew</a></td>
+<td style="text-align: left;">권장</td>
+<td style="text-align: left;">이전 글 — 지수 옵션의 IV가 왜 비대칭인지</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="fat-tail">정규분포와 Fat Tail<a class="headerlink" href="#fat-tail" title="Permanent link">&para;</a></h2>
+<p>주가의 수익률은 이론적으로 정규분포(벨 커브)를 따른다고 가정하지만, 현실에서는 평균에서 3~5 시그마(표준편차 — 평균에서 얼마나 벗어났는지를 나타내는 단위) 바깥의 <strong>극단적 사건이 이론보다 훨씬 자주 발생</strong>합니다.</p>
+<p><img alt="정규분포 vs Fat Tail" src="../../assets/diagrams/diag_hw_fat_tail.png" /></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시그마</th>
+<th style="text-align: left;">정규분포 이론 확률</th>
+<th style="text-align: left;">실제 시장에서는?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">3 시그마</td>
+<td style="text-align: left;">0.3% (1000일에 3번)</td>
+<td style="text-align: left;">훨씬 더 자주</td>
+</tr>
+<tr>
+<td style="text-align: left;">4 시그마</td>
+<td style="text-align: left;">0.006% (거의 불가능)</td>
+<td style="text-align: left;">2008 금융위기, 2020 코로나</td>
+</tr>
+<tr>
+<td style="text-align: left;">5 시그마</td>
+<td style="text-align: left;">0.00006%</td>
+<td style="text-align: left;">1987 블랙 먼데이 (하루 -22%)</td>
+</tr>
+</tbody>
+</table>
+<p>분포 그래프의 양 끝이 마치 날개처럼 생겨서, 이 "뚱뚱한 꼬리(Fat Tail)" 부분을 보호하는 것을 <strong>"Hedging the Wings"</strong>라고 합니다. 매달 내는 자동차 보험처럼 사고가 나지 않아도 계속 유지하는 보험입니다. 핵심 조건:
+- 테일 이벤트는 <strong>언제 올지 모르므로</strong> 상시 헷지 유지 필요
+- 따라서 반드시 <strong>저비용</strong>이어야 함</p>
+<blockquote>
+<p><strong>실행 난이도 안내:</strong> 이 전략은 옵션 경험이 있는 투자자를 대상으로 합니다. SPX 지수 옵션 또는 SPY ETF 옵션으로 실행 가능하며 (SPY는 계약 단위가 작아 개인투자자에게 접근하기 쉽습니다), 아래 이유로 일반 개인투자자에게는 실행이 쉽지 않습니다:</p>
+<ul>
+<li><strong>멀티 레그 관리</strong>: 2개 이상의 옵션 포지션 동시 관리 + 롤오버 필요</li>
+<li><strong>슬리피지(주문 체결 시 가격 차이)</strong>: 각 레그마다 매수-매도 호가 차이(bid-ask spread) 발생, OTM put에서 특히 심화</li>
+<li><strong>어정쩡한 하락 구간</strong>: 완만한 하락 시 손실 가능</li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="12-put-ratio-spread">핵심 아이디어: 1:2 Put Ratio Spread<a class="headerlink" href="#12-put-ratio-spread" title="Permanent link">&para;</a></h2>
+<h3 id="_2">구조<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>1:2 Put Ratio Spread는 <strong>행사가가 다른 put 옵션 2종류를 조합</strong>하는 전략입니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">포지션</th>
+<th style="text-align: left;">높은 행사가 Put (25D)</th>
+<th style="text-align: left;">낮은 행사가 Put (10D)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>롱</strong></td>
+<td style="text-align: left;">1계약 매수</td>
+<td style="text-align: left;">2계약 매도</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>숏</strong> (이 글의 핵심)</td>
+<td style="text-align: left;">1계약 매도</td>
+<td style="text-align: left;">2계약 매수</td>
+</tr>
+</tbody>
+</table>
+<p>쉽게 말하면:
+- <strong>롱</strong> = "비싼 보험 1개 사고, 싼 보험 2개 팔기" → 보험료 차이로 수익 추구
+- <strong>숏</strong> = "비싼 보험 1개 팔고, 싼 보험 2개 사기" → <strong>폭락 시 싼 보험 2개가 폭등</strong></p>
+<h3 id="spy">SPY로 보는 구체적 예시<a class="headerlink" href="#spy" title="Permanent link">&para;</a></h3>
+<p>SPY가 $540일 때:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">레그</th>
+<th style="text-align: left;">행사가</th>
+<th style="text-align: left;">델타</th>
+<th style="text-align: left;">매매</th>
+<th style="text-align: left;">가격 (예시)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">레그 A</td>
+<td style="text-align: left;">$510 (25D)</td>
+<td style="text-align: left;">-0.25</td>
+<td style="text-align: left;"><strong>1계약 매도</strong></td>
+<td style="text-align: left;">$4.50 수취</td>
+</tr>
+<tr>
+<td style="text-align: left;">레그 B</td>
+<td style="text-align: left;">$490 (10D)</td>
+<td style="text-align: left;">-0.10</td>
+<td style="text-align: left;"><strong>2계약 매수</strong></td>
+<td style="text-align: left;">$1.80 x 2 = $3.60 지불</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>순비용</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><strong>$0.90 수취 (크레딧 — 받는 돈)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>이 포지션은 진입 시 <strong>$0.90 크레딧</strong>(받는 돈)을 수취하면서 시작합니다. 만기 4주 후 상황별 결과:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시나리오</th>
+<th style="text-align: left;">SPY 가격</th>
+<th style="text-align: left;">결과</th>
+<th style="text-align: left;">예상 손익</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">횡보/소폭 상승</td>
+<td style="text-align: left;"><span class="arithmatex">\(535~\)</span>550</td>
+<td style="text-align: left;">모든 옵션 소멸</td>
+<td style="text-align: left;"><strong>+$0.90</strong> (크레딧)</td>
+</tr>
+<tr>
+<td style="text-align: left;">완만한 하락 (-3%)</td>
+<td style="text-align: left;">$524</td>
+<td style="text-align: left;">$510 put OTM 유지</td>
+<td style="text-align: left;"><strong>+$0.90</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>위험 구간 (-5~7%)</strong></td>
+<td style="text-align: left;"><strong><span class="arithmatex">\(503~\)</span>513</strong></td>
+<td style="text-align: left;"><strong>$510 put ITM, $490 put OTM</strong></td>
+<td style="text-align: left;"><strong>-<span class="arithmatex">\(3~\)</span>7</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">급락 (-10%)</td>
+<td style="text-align: left;">$486</td>
+<td style="text-align: left;">$490 put 2개 &gt; $510 put 1개</td>
+<td style="text-align: left;"><strong>+<span class="arithmatex">\(5~\)</span>10</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">폭락 (-20%)</td>
+<td style="text-align: left;">$432</td>
+<td style="text-align: left;">2개 매수 put 폭등</td>
+<td style="text-align: left;"><strong>+$30+</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>위험 구간 (-5~7%)에 주의:</strong> SPY가 $510 근처에서 멈추면 매도한 $510 put만 내가격(ITM: In The Money)이고 매수한 $490 put은 OTM인 "데드 존"에 빠집니다. 이 구간의 최대 손실은 <strong>매도한 $510과 매수한 <span class="arithmatex">\(490의 행사가 차이(\)</span>20) - 크레딧($0.90) = 약 $19.10</strong> (계약당)입니다. 이것이 이 전략에서 가장 불리한 시나리오이며, 만기 전 롤오버로 회피해야 하는 이유입니다.</p>
+</blockquote>
+<hr />
+<h2 id="iv">왜 숏 포지션인가? — IV 변화의 마법<a class="headerlink" href="#iv" title="Permanent link">&para;</a></h2>
+<h3 id="_3">롱 포지션의 함정<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p><img alt="1:2 Put Ratio 롱 — IV 변화의 함정" src="../../assets/diagrams/diag_hw_pnl_iv_trap.png" /></p>
+<p>이전 글에서 다뤘듯이, 교과서 PNL은 변동성이 변하지 않는다고 가정하여 <strong>IV를 상수로 고정</strong>하고 그립니다. 하지만 실전에서는 시장이 흔들리면 IV가 상승하고, 롱 포지션은 거의 <strong>전 구간에서 손실</strong>이 발생합니다.</p>
+<h3 id="iv_1">숏 포지션 — IV 상승이 아군<a class="headerlink" href="#iv_1" title="Permanent link">&para;</a></h3>
+<p><img alt="발상의 전환 — 숏 포지션은 IV 상승 시 수익" src="../../assets/diagrams/diag_hw_pnl_short.png" /></p>
+<p>숏 포지션은 <strong>IV가 올라가면 수익</strong>입니다. 테일 이벤트에서 IV가 슈팅하면 PNL이 수익 쪽으로 이동합니다.</p>
+<h3 id="iv-spy-540-2">IV 변화 시나리오 (SPY $540 기준, 만기 2주 전)<a class="headerlink" href="#iv-spy-540-2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">VIX 변화</th>
+<th style="text-align: left;">IV 변화</th>
+<th style="text-align: left;">레그 A (매도 1개) 손익</th>
+<th style="text-align: left;">레그 B (매수 2개) 손익</th>
+<th style="text-align: left;"><strong>합산</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">VIX 15 → 15 (불변)</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">+$0.30 (시간가치 감소분(theta) 수익)</td>
+<td style="text-align: left;">-$0.20 (theta 비용)</td>
+<td style="text-align: left;"><strong>+$0.10</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">VIX 15 → 25 (+10)</td>
+<td style="text-align: left;">+10pt</td>
+<td style="text-align: left;">-$2.00</td>
+<td style="text-align: left;">+$3.50</td>
+<td style="text-align: left;"><strong>+$1.50</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">VIX 15 → 40 (+25)</td>
+<td style="text-align: left;">+25pt</td>
+<td style="text-align: left;">-$5.00</td>
+<td style="text-align: left;">+$12.00</td>
+<td style="text-align: left;"><strong>+$7.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p>VIX가 15에서 40으로 슈팅하면(2020 코로나 수준), 매수한 10D put 2개의 가격이 매도한 25D put 1개보다 <strong>훨씬 더 빠르게</strong> 올라갑니다. Skew 효과로 낮은 행사가(10D)의 IV가 더 많이 상승하기 때문입니다.</p>
+<hr />
+<h2 id="skew">변동성 Skew의 시너지<a class="headerlink" href="#skew" title="Permanent link">&para;</a></h2>
+<p><img alt="변동성 Skew와 숏 포지션의 시너지" src="../../assets/diagrams/diag_hw_skew_effect.png" /></p>
+<p>폭락 시 <a href="../skew/">변동성 Skew</a>가 가팔라지면 추가 이점:</p>
+<ol>
+<li><strong>IV 상승</strong>: 전체 옵션 가격 상승 → 매수 2개가 매도 1개보다 더 수혜</li>
+<li><strong>Skew 가팔라짐</strong>: 낮은 행사가(10D) put의 IV가 높은 행사가(25D) put보다 <strong>더 많이</strong> 상승</li>
+</ol>
+<p>결과: <strong>폭락이 깊을수록 헷지 성능이 기하급수적으로 강화</strong></p>
+<hr />
+<h2 id="10-put">왜 10 델타 Put인가?<a class="headerlink" href="#10-put" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">항목</th>
+<th style="text-align: left;">10 델타 Put</th>
+<th style="text-align: left;">25 델타 Put</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">주간 손해 (보험료)</td>
+<td style="text-align: left;"><strong>작음</strong></td>
+<td style="text-align: left;">큼</td>
+</tr>
+<tr>
+<td style="text-align: left;">헷지 성능 (폭락 시)</td>
+<td style="text-align: left;">양호</td>
+<td style="text-align: left;">약간 더 좋음</td>
+</tr>
+<tr>
+<td style="text-align: left;">비용 효율</td>
+<td style="text-align: left;"><strong>더 높음</strong></td>
+<td style="text-align: left;">낮음</td>
+</tr>
+<tr>
+<td style="text-align: left;">기관 수요</td>
+<td style="text-align: left;">적음</td>
+<td style="text-align: left;"><strong>매우 높음</strong> → 항상 비싸게 거래</td>
+</tr>
+<tr>
+<td style="text-align: left;">IV vs 실현변동성(RV: Realized Volatility)</td>
+<td style="text-align: left;">비교적 공정하게 거래</td>
+<td style="text-align: left;">IV &gt; RV (옵션이 이론보다 비싸게 거래)</td>
+</tr>
+</tbody>
+</table>
+<p>25D put은 기관 수요 때문에 항상 비싸게(= 과대 평가) 거래됩니다. 따라서 25D를 <strong>매도</strong>하고 상대적으로 저평가된 10D를 <strong>매수</strong>하는 구조가 비용 효율적입니다.</p>
+<hr />
+<h2 id="5">실전 구축: 5단계<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<p><img alt="상시 헷지 포지션 구축 — 5단계" src="../../assets/diagrams/diag_hw_construction.png" /></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">단계</th>
+<th style="text-align: left;">내용</th>
+<th style="text-align: left;">구체 예시 (SPY $540 기준)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">S&amp;P500 옵션 선택</td>
+<td style="text-align: left;">SPY (개인) 또는 SPX (기관)</td>
+</tr>
+<tr>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">만기 4주 남은 옵션 체인</td>
+<td style="text-align: left;">28일 후 만기 옵션</td>
+</tr>
+<tr>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">10D put 2계약 매수</td>
+<td style="text-align: left;">SPY $490 put x 2</td>
+</tr>
+<tr>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">25D put 1계약 매도</td>
+<td style="text-align: left;">SPY $510 put x 1</td>
+</tr>
+<tr>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">1~2주 후 롤오버</td>
+<td style="text-align: left;">기존 포지션 청산 → 새 4주 만기로 재진입</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_4">비용 비교<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">헷지 방법</th>
+<th style="text-align: center;">연간 비용</th>
+<th style="text-align: left;">폭락 시 수익 구조</th>
+<th style="text-align: left;">비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ATM put 상시 매수</td>
+<td style="text-align: center;">18~30%</td>
+<td style="text-align: left;">선형 (1:1)</td>
+<td style="text-align: left;">극도로 비쌈</td>
+</tr>
+<tr>
+<td style="text-align: left;">10D put 상시 매수</td>
+<td style="text-align: center;">1.5~2%</td>
+<td style="text-align: left;">선형 (1:1)</td>
+<td style="text-align: left;">대부분 만기 소멸</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1:2 Put Ratio 숏</strong></td>
+<td style="text-align: center;"><strong>2~3%</strong></td>
+<td style="text-align: left;"><strong>볼록(Convex) — 떨어질수록 수익 가속</strong></td>
+<td style="text-align: left;">폭락이 깊을수록 가속 수익</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>"10D put이 1.5~2%인데 왜 더 비싼 2~3%짜리를 쓰는가?"</strong></p>
+<p>핵심 차이는 <strong>수익 구조</strong>입니다. 10D put 단일 매수는 주가 하락에 비례해서 선형으로 수익이 나지만, 1:2 ratio 숏은 <strong>IV 상승 + Skew 가팔라짐</strong>의 두 효과가 복합 작용하여 폭락이 깊을수록 <strong>가속적으로</strong> 수익이 커집니다 (볼록성/Convexity). 2008년이나 2020년 같은 -30% 이상 폭락에서 10D put 단일 매수 대비 <strong>2~5배의 수익</strong>이 가능합니다. 연 0.5~1% 추가 비용으로 테일 이벤트에서의 헷지 성능이 기하급수적으로 강화되는 것입니다.</p>
+</blockquote>
+<hr />
+<h2 id="_5">마무리<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시장 상황</th>
+<th style="text-align: left;">1:2 숏 포지션 반응</th>
+<th style="text-align: left;">이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">횡보/소폭 상승</td>
+<td style="text-align: left;">소폭 수익 (크레딧)</td>
+<td style="text-align: left;">theta + 옵션 소멸</td>
+</tr>
+<tr>
+<td style="text-align: left;">완만한 하락 (-3~7%)</td>
+<td style="text-align: left;"><strong>소폭 손실 가능</strong></td>
+<td style="text-align: left;">25D put이 ITM 근접</td>
+</tr>
+<tr>
+<td style="text-align: left;">급락 (-10%+)</td>
+<td style="text-align: left;"><strong>수익</strong></td>
+<td style="text-align: left;">IV 상승 + Skew 효과</td>
+</tr>
+<tr>
+<td style="text-align: left;">폭락 (-20%+)</td>
+<td style="text-align: left;"><strong>큰 수익</strong></td>
+<td style="text-align: left;">두 효과 기하급수적 강화</td>
+</tr>
+</tbody>
+</table>
+<p><strong>핵심 원리:</strong> 비싼 보험(25D)을 팔고 싼 보험(10D) 2개를 사서, 평상시에는 보험료 차이로 비용을 줄이고, 폭락 시에는 싼 보험 2개가 폭등하여 헷지 성능을 발휘합니다.</p>
+<p><strong>마지막 팁:</strong> 이미 폭락이 시작된 후 뒤늦게 헷지가 필요하다면, put 단일 매수 대신 1:2 put ratio <strong>"롱"</strong> 포지션을 고려하세요. 이 글에서 설명한 롱 포지션의 단점들이 오히려 <strong>장점</strong>으로 작용합니다. 이미 IV가 높은 상태에서는 IV가 더 올라갈 여지가 적고 내려올 가능성이 크므로, 롱 포지션의 IV 하락 방향 성향이 오히려 유리하게 작용합니다.</p>
+<hr />
+<p><strong>참고문헌:</strong> Hari P. Krishnan, <em>The Second Leg Down: Strategies for Profiting after a Market Sell-Off</em>, Wiley Finance Series, 2017. ISBN 978-1119219088.</p>
+<p><em>다음 글: <a href="../implied-correlation/">시장 심리 변동성 지수 — Implied Correlation과 IV Surface</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

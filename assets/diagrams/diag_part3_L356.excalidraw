@@ -1,0 +1,253 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 246.8, "y": 6.0, "width": 266.4, "height": 38,
+      "text": "실험의 교훈 — 한 장의 그림",
+      "fontSize": 22, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e40af", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 702385, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_good",
+      "x": 200, "y": 70, "width": 360, "height": 60,
+      "strokeColor": "#16a34a", "backgroundColor": "#dcfce7",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 946933, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_good",
+      "x": 286.0, "y": 90, "width": 188.0, "height": 20,
+      "text": "유리한 게임 (승률 60%)",
+      "fontSize": 16, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 350166, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "text",
+      "id": "plus",
+      "x": 360.2, "y": 133.0, "width": 39.6, "height": 44,
+      "text": "+",
+      "fontSize": 28, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 339550, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_bad",
+      "x": 200, "y": 175, "width": 360, "height": 60,
+      "strokeColor": "#dc2626", "backgroundColor": "#fee2e2",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 868243, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_bad",
+      "x": 319.6, "y": 195, "width": 120.8, "height": 20,
+      "text": "잘못된 금액 관리",
+      "fontSize": 16, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 399039, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "text",
+      "id": "equals",
+      "x": 360.2, "y": 238.0, "width": 39.6, "height": 44,
+      "text": "=",
+      "fontSize": 28, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 161283, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_bust",
+      "x": 200, "y": 275, "width": 360, "height": 60,
+      "strokeColor": "#dc2626", "backgroundColor": "#fee2e2",
+      "fillStyle": "solid", "strokeWidth": 3, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 732836, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_bust",
+      "x": 342.0, "y": 293, "width": 76.0, "height": 24,
+      "text": "파산",
+      "fontSize": 20, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 780390, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "text",
+      "id": "lbl_results",
+      "x": 142.75, "y": 374.5, "width": 114.5, "height": 31,
+      "text": "61명 중 결과:",
+      "fontSize": 15, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 476614, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_r1",
+      "x": 50, "y": 420, "width": 300, "height": 60,
+      "strokeColor": "#dc2626", "backgroundColor": "#fee2e2",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 443058, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_r1",
+      "x": 140, "y": 440, "width": 120, "height": 20,
+      "text": "파산 x 17명",
+      "fontSize": 16, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 719151, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "pct_r1",
+      "x": 365, "y": 441, "width": 90, "height": 18,
+      "text": "28% 파산!",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 428812, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_r2",
+      "x": 50, "y": 495, "width": 300, "height": 60,
+      "strokeColor": "#ca8a04", "backgroundColor": "#fef9c3",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 150679, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_r2",
+      "x": 150, "y": 515, "width": 100, "height": 20,
+      "text": "x 31명",
+      "fontSize": 16, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#ca8a04", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 682364, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "pct_r2",
+      "x": 360, "y": 516, "width": 110, "height": 18,
+      "text": "51% 손실/보합",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#ca8a04", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 110291, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_r3",
+      "x": 50, "y": 570, "width": 300, "height": 60,
+      "strokeColor": "#16a34a", "backgroundColor": "#dcfce7",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 381506, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_r3",
+      "x": 140, "y": 590, "width": 120, "height": 20,
+      "text": "성공 x 13명",
+      "fontSize": 16, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 793159, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "pct_r3",
+      "x": 365, "y": 591, "width": 110, "height": 18,
+      "text": "21% → $250!",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 152785, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "box_kelly",
+      "x": 50, "y": 660, "width": 660, "height": 60,
+      "strokeColor": "#16a34a", "backgroundColor": "#dcfce7",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 836750, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "txt_kelly",
+      "x": 170, "y": 680, "width": 420, "height": 20,
+      "text": "켈리의 20%만 걸었다면? → 대부분 성공 쪽에 있었을 것!",
+      "fontSize": 15, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 321762, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

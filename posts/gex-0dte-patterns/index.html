@@ -1,0 +1,2062 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/gex-0dte-patterns/">
+      
+      
+        <link rel="prev" href="../gex-calculator/">
+      
+      
+        <link rel="next" href="../volatility-dashboard/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가 - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#0dte-gex" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../skew/" class="md-tabs__link">
+          
+  
+  
+  옵션 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    옵션 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0dte-gex_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 0DTE가 GEX를 지배하는가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0dte-cboe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0DTE 시장의 구조: Cboe 공식 데이터
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0dte-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0DTE 거래 4가지 유형
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장중 3단계 패턴
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="장중 3단계 패턴">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-09301000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1단계: 포지션 구축기 (09:30~10:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-10301300" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2단계: 균형기 (10:30~13:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-14001530" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3단계: 청산기 (14:00~15:30)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        아침 GEX + 장중 보정: 체크리스트
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="아침 GEX + 장중 보정: 체크리스트">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gex_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장 시작 전 (아침 GEX 확인)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#30-09301000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장 시작 30분 (09:30~10:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10001400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장중 (10:00~14:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14001600" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장 마감 전 (14:00~16:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        경고 신호 정리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        직접 관찰하는 법
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="직접 관찰하는 법">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 1: 브로커 옵션 체인 관찰 (수동)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-python-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 2: Python Volume 스냅샷
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        핵심
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0dte-gex_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 0DTE가 GEX를 지배하는가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0dte-cboe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0DTE 시장의 구조: Cboe 공식 데이터
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0dte-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0DTE 거래 4가지 유형
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장중 3단계 패턴
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="장중 3단계 패턴">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-09301000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1단계: 포지션 구축기 (09:30~10:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-10301300" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2단계: 균형기 (10:30~13:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-14001530" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3단계: 청산기 (14:00~15:30)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        아침 GEX + 장중 보정: 체크리스트
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="아침 GEX + 장중 보정: 체크리스트">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gex_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장 시작 전 (아침 GEX 확인)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#30-09301000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장 시작 30분 (09:30~10:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10001400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장중 (10:00~14:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14001600" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        장 마감 전 (14:00~16:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        경고 신호 정리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        직접 관찰하는 법
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="직접 관찰하는 법">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 1: 브로커 옵션 체인 관찰 (수동)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-python-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 2: Python Volume 스냅샷
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        핵심
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="0dte-gex">0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가<a class="headerlink" href="#0dte-gex" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>구글 시트:</strong> <a href="https://docs.google.com/spreadsheets/d/1ZrnHpTddR4hwF3_QY6U5MxpjSzLiqG3n5aZkJ8GskTU/copy">GammaExposureAndMaxPain</a> → <code>0DTE Strategy Patterns</code> 탭 (직접 기록용 템플릿)</p>
+</blockquote>
+<hr />
+<p><a href="../gex-calculator/">GEX 직접 계산하기</a>에서 만든 도구는 <strong>전일 장 마감 기준 스냅샷</strong>입니다. 아침에 계산한 GEX가 -$22.4B이라고 해서 장중에도 그대로일까요?</p>
+<p>SPX 옵션의 <strong>43~62%가 0DTE(당일 만기)</strong>입니다 (Cboe, 2023~2025). 장이 열리면 0DTE 옵션이 대량으로 개설되고 소멸됩니다. 이 거래가 시장조성자(MM: Market Maker)의 감마 포지션을 실시간으로 바꿉니다. 매일 아침 찍는 체온이 오후에는 달라질 수 있듯이, 아침에 측정한 GEX(감마 노출 — 시장 전체에 걸려 있는 감마의 총량)도 장중에 계속 바뀝니다. 아침 GEX만 보면 장중 급변동의 원인을 설명할 수 없습니다.</p>
+<p>이 글에서는 0DTE 거래의 <strong>장중 패턴</strong>을 이해하고, 아침 GEX에 장중 보정을 적용하는 체크리스트를 만듭니다.</p>
+<hr />
+<h2 id="0dte-gex_1">왜 0DTE가 GEX를 지배하는가<a class="headerlink" href="#0dte-gex_1" title="Permanent link">&para;</a></h2>
+<p>감마는 만기까지 남은 시간이 짧을수록 커집니다. 고무줄을 짧게 잡을수록 같은 힘에 더 크게 튀는 것과 비슷합니다. 직관적으로 만기가 절반으로 줄면 감마는 약 1.4배, 1/10로 줄면 약 3배로 커진다고 기억하세요 (수학적으로 1/sqrt(T)에 비례):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">잔존 만기</th>
+<th style="text-align: center;">등가격(ATM) 감마 (3개월 대비)</th>
+<th style="text-align: left;">근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">3개월 (63일)</td>
+<td style="text-align: center;">1x</td>
+<td style="text-align: left;">기준</td>
+</tr>
+<tr>
+<td style="text-align: left;">1주일 (5일)</td>
+<td style="text-align: center;">~4x</td>
+<td style="text-align: left;">sqrt(63/5) = 3.5</td>
+</tr>
+<tr>
+<td style="text-align: left;">1일</td>
+<td style="text-align: center;">~8x</td>
+<td style="text-align: left;">sqrt(63/1) = 7.9</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>0DTE 장 시작 (6.5h 남음)</strong></td>
+<td style="text-align: center;"><strong>~8x</strong></td>
+<td style="text-align: left;">sqrt(63/~1)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>0DTE 장 중반 (4h 남음)</strong></td>
+<td style="text-align: center;"><strong>~10x</strong></td>
+<td style="text-align: left;">sqrt(63/0.6)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>0DTE 장 마감 1h 전</strong></td>
+<td style="text-align: center;"><strong>~20x</strong></td>
+<td style="text-align: left;">sqrt(63/0.15)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>장 마감 직전 (10min)</strong></td>
+<td style="text-align: center;"><strong>~50x</strong></td>
+<td style="text-align: left;">sqrt(63/0.03)</td>
+</tr>
+</tbody>
+</table>
+<p>GEX = Gamma x 미결제약정(OI) x 100 x Strike이므로, 0DTE 옵션의 OI가 <strong>조금만 변해도 GEX 전체가 크게 흔들립니다.</strong> 이것이 "아침 GEX ≠ 장중 GEX"인 이유입니다.</p>
+<p><img alt="0DTE 장중 시간대별 ATM 감마 배율 비교" src="../diagrams/diag_0dte_gamma_scaling.png" /></p>
+<hr />
+<h2 id="0dte-cboe">0DTE 시장의 구조: Cboe 공식 데이터<a class="headerlink" href="#0dte-cboe" title="Permanent link">&para;</a></h2>
+<p>Cboe가 Open-Close 데이터를 분석하여 공개한 0DTE 거래 특성입니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">항목</th>
+<th style="text-align: left;">수치</th>
+<th style="text-align: left;">출처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">0DTE 비중 (SPX 전체 대비)</td>
+<td style="text-align: left;">43% (2023) → 62% (2025.08)</td>
+<td style="text-align: left;">Cboe</td>
+</tr>
+<tr>
+<td style="text-align: left;">리테일 비중</td>
+<td style="text-align: left;">~50-60%</td>
+<td style="text-align: left;">"0DTEs Decoded" (2025.05)</td>
+</tr>
+<tr>
+<td style="text-align: left;">제한적 리스크 전략 사용</td>
+<td style="text-align: left;">~95%</td>
+<td style="text-align: left;">"0DTEs Decoded"</td>
+</tr>
+<tr>
+<td style="text-align: left;">Single Leg 비중</td>
+<td style="text-align: left;">~45-50%</td>
+<td style="text-align: left;">"Evolution of Same Day Options Trading"</td>
+</tr>
+<tr>
+<td style="text-align: left;">스프레드(Vertical 등) 비중</td>
+<td style="text-align: left;">~50-55%</td>
+<td style="text-align: left;">"Evolution of Same Day Options Trading"</td>
+</tr>
+<tr>
+<td style="text-align: left;">매수/매도 균형</td>
+<td style="text-align: left;">"remarkably balanced"</td>
+<td style="text-align: left;">"0DTEs Decoded"</td>
+</tr>
+</tbody>
+</table>
+<p>핵심: 0DTE 거래는 대부분 <strong>개인투자자(리테일)</strong>가, <strong>제한적 리스크 전략</strong>으로, <strong>매수와 매도가 비교적 균형</strong> 있게 참여합니다. 하지만 장중 <strong>시간대별로</strong> 이 균형이 달라집니다 — 이것이 GEX 변화의 원인입니다.</p>
+<hr />
+<h2 id="0dte-4">0DTE 거래 4가지 유형<a class="headerlink" href="#0dte-4" title="Permanent link">&para;</a></h2>
+<p>옵션 거래는 OI(미결제약정)에 미치는 영향에 따라 4가지로 나뉩니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">거래 유형</th>
+<th style="text-align: left;">뜻</th>
+<th style="text-align: left;">OI 영향</th>
+<th style="text-align: left;">MM 감마 영향</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>BTO</strong> (Buy To Open)</td>
+<td style="text-align: left;">신규 매수</td>
+<td style="text-align: left;">OI <strong>증가</strong></td>
+<td style="text-align: left;">MM 매도 → <strong>숏 감마 추가</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>STO</strong> (Sell To Open)</td>
+<td style="text-align: left;">신규 매도</td>
+<td style="text-align: left;">OI <strong>증가</strong></td>
+<td style="text-align: left;">MM 매수 → <strong>롱 감마 추가</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">STC (Sell To Close)</td>
+<td style="text-align: left;">매수 청산</td>
+<td style="text-align: left;">OI 감소</td>
+<td style="text-align: left;">기존 숏 감마 <strong>해제</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">BTC (Buy To Close)</td>
+<td style="text-align: left;">매도 청산</td>
+<td style="text-align: left;">OI 감소</td>
+<td style="text-align: left;">기존 롱 감마 <strong>해제</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>핵심: BTO가 많으면 MM 숏 감마(가격이 움직이는 방향으로 따라가야 하는 포지션 — 움직임을 증폭)가 누적되고, STO가 많으면 롱 감마(움직임을 완충하는 포지션)가 누적됩니다.</strong> STC/BTC는 기존 포지션을 닫으므로 감마를 해제합니다.</p>
+<p><img alt="0DTE 거래 유형과 MM 감마 영향" src="../diagrams/diag_0dte_order_flow.png" /></p>
+<p>이 비율이 장중에 어떻게 변하는지가 GEX 보정의 열쇠입니다.</p>
+<hr />
+<h2 id="3">장중 3단계 패턴<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p>0DTE 거래는 시장 구조에서 잘 알려진 <strong>U자형 거래량 패턴</strong>(장 시작·마감에 거래 집중, 장중 소강)을 따릅니다. 여기에 0DTE 특유의 BTO/STO 비율 변화가 결합됩니다.</p>
+<p><img alt="장중 3단계 U자형 패턴" src="../diagrams/diag_0dte_ushape_pattern.png" /></p>
+<h3 id="1-09301000">1단계: 포지션 구축기 (09:30~10:00)<a class="headerlink" href="#1-09301000" title="Permanent link">&para;</a></h3>
+<ul>
+<li>거래량이 하루 중 <strong>최대</strong> (U자형의 왼쪽)</li>
+<li>전일 마감 후 발생한 가격 차이(오버나이트 갭)에 대응하는 <strong>신규 매수(BTO)가 집중</strong>됨</li>
+<li>MM이 이 매수의 상대편을 받으면서 <strong>숏 감마 빠르게 누적</strong></li>
+<li><strong>이 시간대에 아침 GEX 대비 가장 큰 괴리 발생</strong></li>
+</ul>
+<h3 id="2-10301300">2단계: 균형기 (10:30~13:00)<a class="headerlink" href="#2-10301300" title="Permanent link">&para;</a></h3>
+<ul>
+<li>거래량 감소 (U자형의 바닥)</li>
+<li>아침에 열린 포지션 중 일부가 수익 실현(STC)으로 닫힘</li>
+<li>신규 개설과 청산이 균형 → <strong>GEX 변화 제한적</strong></li>
+</ul>
+<h3 id="3-14001530">3단계: 청산기 (14:00~15:30)<a class="headerlink" href="#3-14001530" title="Permanent link">&para;</a></h3>
+<ul>
+<li>거래량 다시 증가 (U자형의 오른쪽)</li>
+<li>0DTE 만기가 다가오면서 투자자들이 <strong>대거 청산</strong> (BTC, STC 급증)</li>
+<li>포지션이 닫히면서 기존 감마 해제</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">장 마감 전 역설</p>
+<p>마지막 남은 사람 한 명이 빈 극장에서 박수를 치면, 소수여도 엄청나게 크게 울립니다. 포지션은 닫히는데(OI 감소), 남은 포지션의 감마는 극대화됩니다. 예를 들어, 100계약 x 0.05 감마 = 5이지만, 장 마감 직전 20계약 x 0.50 감마 = 10으로, 계약 수가 줄었는데 총 영향은 오히려 커집니다. 특히 <strong>ATM 근처에 남아있는 소수의 계약</strong>은 계약당 감마가 폭증하여, OI x Gamma의 곱이 줄어들지 않을 수 있습니다. 깊은 OTM 포지션은 감마가 거의 0이므로 이 효과는 ATM 근처에 OI가 집중된 경우에 강하게 나타납니다.</p>
+</div>
+<hr />
+<h2 id="gex">아침 GEX + 장중 보정: 체크리스트<a class="headerlink" href="#gex" title="Permanent link">&para;</a></h2>
+<h3 id="gex_1">장 시작 전 (아침 GEX 확인)<a class="headerlink" href="#gex_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <a href="../gex-calculator/">GEX 직접 계산하기</a>로 Total GEX 부호 확인</li>
+<li>[ ] 플립 포인트 대비 현재가 위치 확인</li>
+<li>[ ] Max Pain 확인</li>
+</ul>
+<h3 id="30-09301000">장 시작 30분 (09:30~10:00)<a class="headerlink" href="#30-09301000" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] 0DTE 거래량이 평소보다 높은가? (구축기의 강도)</li>
+<li>[ ] 콜/풋 중 어느 쪽에 매수가 집중되는가?</li>
+<li>[ ] 아침 GEX가 이미 숏 감마면 → 변동성 확대 경고</li>
+</ul>
+<h3 id="10001400">장중 (10:00~14:00)<a class="headerlink" href="#10001400" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Volume이 감소하고 안정되면 GEX 변화 제한적</li>
+<li>[ ] Volume이 감소하지 않고 계속 높으면 → 비정상, 주의</li>
+</ul>
+<h3 id="14001600">장 마감 전 (14:00~16:00)<a class="headerlink" href="#14001600" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] 대량 청산이 시작되면 기존 감마 해제</li>
+<li>[ ] 하지만 감마 스케일링(시간 감쇠)으로 잔여 포지션의 영향 증폭</li>
+<li>[ ] <strong>이 시간대에 아침 GEX만 보고 판단하면 오판 위험</strong></li>
+</ul>
+<h3 id="_1">경고 신호 정리<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">신호</th>
+<th style="text-align: left;">의미</th>
+<th style="text-align: left;">대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">아침 숏 감마 + 09:30 거래량 급증</td>
+<td style="text-align: left;">숏 감마 심화 가능</td>
+<td style="text-align: left;">변동성 확대 대비</td>
+</tr>
+<tr>
+<td style="text-align: left;">15:00 이후 대량 청산</td>
+<td style="text-align: left;">감마 해제</td>
+<td style="text-align: left;">급변동 후 안정화 가능</td>
+</tr>
+<tr>
+<td style="text-align: left;">아침 롱 감마 + 장중 안정적</td>
+<td style="text-align: left;">롱 감마 유지</td>
+<td style="text-align: left;">변동성 억제, 안정적</td>
+</tr>
+<tr>
+<td style="text-align: left;">장중 Volume이 U자 바닥에서 급증</td>
+<td style="text-align: left;">예상 밖 이벤트</td>
+<td style="text-align: left;">감마 구조 변화 가능, 주의</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_2">직접 관찰하는 법<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>장중 0DTE 패턴을 추적하려면 BTO/STO 구분이 필요한데, 이것은 공개 데이터만으로는 <strong>정확히 알 수 없습니다.</strong> Cboe의 Open-Close 데이터(유료)가 유일한 공식 소스입니다.</p>
+<p>하지만 무료로 <strong>근사치</strong>를 관찰할 수 있는 방법이 있습니다:</p>
+<h3 id="1">방법 1: 브로커 옵션 체인 관찰 (수동)<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>대부분의 브로커(TOS, IBKR 등)에서 옵션 체인의 Volume을 실시간으로 볼 수 있습니다.</p>
+<ol>
+<li>30분 간격으로 0DTE ATM 부근 행사가의 <strong>Volume</strong> 스냅샷 기록</li>
+<li>Volume 증가분의 방향은 체결 데이터(Time &amp; Sales)에서 추정:</li>
+<li>Ask 이상 체결 = 매수 주도 (BTO 가능성 높음)</li>
+<li>Bid 이하 체결 = 매도 주도 (STO 가능성 높음)</li>
+<li>주의: 이 방법은 근사치입니다 — Ask 이상 체결이라도 STC(기존 롱 청산)일 수 있어 BTO와 정확히 구분할 수 없습니다</li>
+<li>OI 변화는 다음 날 확인 (장중에는 갱신되지 않음)</li>
+</ol>
+<p>구글 시트의 <code>0DTE Strategy Patterns</code> 탭을 템플릿으로 사용하여, 관찰한 데이터를 기록하고 패턴을 쌓아갈 수 있습니다.</p>
+<h3 id="2-python-volume">방법 2: Python Volume 스냅샷<a class="headerlink" href="#2-python-volume" title="Permanent link">&para;</a></h3>
+<p>Cboe CSV를 장중에 수동으로 여러 번 받아서 Volume 변화를 추적합니다. (Cboe delayed quotes는 15분 지연이며, 자동 스크래핑은 이용약관상 금지됩니다.)</p>
+<details><summary>Python: 0DTE Volume 스냅샷 코드</summary>
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">snapshot_volume</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cboe CSV에서 0DTE ATM 근처 Volume 스냅샷.&quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;expiry&#39;</span><span class="p">,</span> <span class="s1">&#39;call_symbol&#39;</span><span class="p">,</span> <span class="s1">&#39;call_last&#39;</span><span class="p">,</span> <span class="s1">&#39;call_net&#39;</span><span class="p">,</span> <span class="s1">&#39;call_bid&#39;</span><span class="p">,</span> <span class="s1">&#39;call_ask&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;call_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;call_iv&#39;</span><span class="p">,</span> <span class="s1">&#39;call_delta&#39;</span><span class="p">,</span> <span class="s1">&#39;call_gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;call_oi&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;strike&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;put_symbol&#39;</span><span class="p">,</span> <span class="s1">&#39;put_last&#39;</span><span class="p">,</span> <span class="s1">&#39;put_net&#39;</span><span class="p">,</span> <span class="s1">&#39;put_bid&#39;</span><span class="p">,</span> <span class="s1">&#39;put_ask&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;put_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;put_iv&#39;</span><span class="p">,</span> <span class="s1">&#39;put_delta&#39;</span><span class="p">,</span> <span class="s1">&#39;put_gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;put_oi&#39;</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;strike&#39;</span><span class="p">,</span> <span class="s1">&#39;call_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;put_volume&#39;</span><span class="p">]:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 오늘 만기만 필터 (0DTE)</span>
+    <span class="c1"># Cboe 형식: &quot;Fri Jun 13 2025&quot; — 요일 제외하고 월/일/년으로 매칭</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span><span class="s1"> %Y&#39;</span><span class="p">)</span>  <span class="c1"># e.g., &quot;Jun 13 2025&quot;</span>
+    <span class="n">dte0</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;expiry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">today</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">dte0</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span>
+        <span class="s1">&#39;call_volume&#39;</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;put_volume&#39;</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span>
+    <span class="p">})</span>
+    <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp</span>
+    <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;call_volume&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;put_volume&#39;</span><span class="p">]</span>
+    <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;put_call_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;put_volume&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;call_volume&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">summary</span>
+
+
+<span class="c1"># 30분 간격으로 실행</span>
+<span class="n">snap</span> <span class="o">=</span> <span class="n">snapshot_volume</span><span class="p">(</span><span class="s1">&#39;spx_options_1000.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;10:00&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">snap</span><span class="p">)</span>
+</code></pre></div>
+
+</details>
+
+<p>이 코드는 <strong>총 Volume과 Put/Call Ratio</strong>만 캡처합니다. BTO/STO 구분은 불가능하지만, "콜이 급증하는지 풋이 급증하는지"는 파악할 수 있습니다. 여러 시점의 스냅샷을 비교하면 Volume 증가 속도와 방향을 추정할 수 있습니다.</p>
+<hr />
+<h2 id="_3">정리<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">아침 GEX만 볼 때</th>
+<th style="text-align: left;">장중 패턴까지 볼 때</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>정보</strong></td>
+<td style="text-align: left;">전일 마감 스냅샷</td>
+<td style="text-align: left;">장중 변화 방향</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>빈 구간</strong></td>
+<td style="text-align: left;">장중 전체</td>
+<td style="text-align: left;">없음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>장 마감 전 급변동</strong></td>
+<td style="text-align: left;">"왜?"</td>
+<td style="text-align: left;">"0DTE 감마 구조 + 시간 스케일링"</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>판단 근거</strong></td>
+<td style="text-align: left;">Total GEX 부호만</td>
+<td style="text-align: left;">부호 + 장중 이동 방향</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">핵심<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>아침 GEX는 출발점</strong>이지 정답이 아닙니다.</li>
+<li><strong>장 시작 30분의 거래량과 방향</strong>이 당일 감마 변화의 가장 강한 신호입니다.</li>
+<li><strong>장 마감 전 30분</strong>은 OI가 줄어도 감마가 폭증합니다. 숫자가 아닌 구조를 보세요.</li>
+<li>두 도구를 결합하면: <strong>아침 스냅샷 + 장중 관찰 = 더 나은 추정</strong></li>
+</ol>
+<p>이 도구들은 단기 트레이딩용이 아닙니다. 장기 투자자가 장중 급변동을 보고 "왜?"라는 질문에 구조적으로 답할 수 있게 해주는 <strong>이해의 도구</strong>입니다. 원인을 알면 공포에 팔지 않습니다.</p>
+<hr />
+<h2 id="_5">참고<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../gex-calculator/">GEX 직접 계산하기 — Google Sheets + Python</a></li>
+<li><a href="https://www.cboe.com/delayed_quotes/spx/quote_table">Cboe SPX Options — Delayed Quotes</a></li>
+<li><a href="https://www.cboe.com/insights/posts/0-dt-es-decoded-positioning-trends-and-market-impact/">Cboe "0DTEs Decoded" (2025.05)</a></li>
+<li><a href="https://www.cboe.com/insights/posts/the-evolution-of-same-day-options-trading/">Cboe "The Evolution of Same Day Options Trading"</a></li>
+<li><a href="https://squeezemetrics.com/monitor/docs">SqueezeMetrics GEX 백서 (PDF)</a></li>
+</ul>
+<p><em>Cboe, SPX, VIX는 Cboe Exchange, Inc.의 등록 상표입니다. 이 글은 Cboe와 제휴 또는 보증 관계가 없습니다.</em></p>
+<hr />
+<p><em>이전 글: <a href="../gex-calculator/">GEX 직접 계산하기 — Google Sheets + Python</a> | 다음 글: <a href="../volatility-dashboard/">변동성 대시보드 — Correlation + Skew 추적</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

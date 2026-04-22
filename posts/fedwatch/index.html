@@ -1,0 +1,1682 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/fedwatch/">
+      
+      
+        <link rel="prev" href="../cot/">
+      
+      
+        <link rel="next" href="../monte-carlo/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리 - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fed-fund-cme-fedwatch-tool" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../skew/" class="md-tabs__link">
+          
+  
+  
+  옵션 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    옵션 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-fffederal-funds-effr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: FF(Federal Funds) 선물과 EFFR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: FF(Federal Funds) 선물과 EFFR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FF 선물이란
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#effr-effective-federal-funds-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EFFR (Effective Federal Funds Rate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fomc-effr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FOMC 금리 결정과 EFFR의 관계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ff_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FF 선물의 정산과 내재금리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-cme-fedwatch-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: CME FedWatch Tool의 금리 예측
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: CME FedWatch Tool의 금리 예측">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fedwatch-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FedWatch Tool이란
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        내재금리에서 확률 추출하기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        확률 계산
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-fffederal-funds-effr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: FF(Federal Funds) 선물과 EFFR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: FF(Federal Funds) 선물과 EFFR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FF 선물이란
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#effr-effective-federal-funds-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EFFR (Effective Federal Funds Rate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fomc-effr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FOMC 금리 결정과 EFFR의 관계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ff_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FF 선물의 정산과 내재금리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-cme-fedwatch-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: CME FedWatch Tool의 금리 예측
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: CME FedWatch Tool의 금리 예측">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fedwatch-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FedWatch Tool이란
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        내재금리에서 확률 추출하기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        확률 계산
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fed-fund-cme-fedwatch-tool">Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리<a class="headerlink" href="#fed-fund-cme-fedwatch-tool" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="part-1-fffederal-funds-effr">Part 1: FF(Federal Funds) 선물과 EFFR<a class="headerlink" href="#part-1-fffederal-funds-effr" title="Permanent link">&para;</a></h2>
+<p>FOMC(Federal Open Market Committee: 미국 연방공개시장위원회)에서 금리를 올릴지 내릴지 — 이것은 주식, 채권, 환율 모두에 영향을 미치는 가장 중요한 변수입니다. 시장 참여자들이 금리 방향을 어떻게 예측하는지를 보여주는 도구가 바로 FF 선물과 FedWatch Tool입니다.</p>
+<h3 id="ff">FF 선물이란<a class="headerlink" href="#ff" title="Permanent link">&para;</a></h3>
+<p>미국 최대 선물/옵션 거래소인 CME(Chicago Mercantile Exchange) 그룹에서 티커명 <strong>ZQ</strong>인 30 Day Federal Funds 선물을 상장하여 거래를 주관합니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">항목</th>
+<th style="text-align: left;">내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">계약 단위</td>
+<td style="text-align: left;">$5,000,000 (선물 1계약이 대표하는 명목 금액)</td>
+</tr>
+<tr>
+<td style="text-align: left;">가격 방식</td>
+<td style="text-align: left;">금리를 가격으로 바꾸는 계산법인 IMM(International Monetary Market) 지수</td>
+</tr>
+<tr>
+<td style="text-align: left;">정산</td>
+<td style="text-align: left;">해당 계약월의 모든 영업일 EFFR 산술평균으로 현금 정산</td>
+</tr>
+</tbody>
+</table>
+<p>FF 선물의 가격은 CME에서 자체 개발한 IMM 지수 방식으로 계산합니다:</p>
+<div class="highlight"><pre><span></span><code>FF 선물 가격 = 100 - (계약월 EFFR 산술평균)
+</code></pre></div>
+<p>예를 들어 EFFR이 4.58%이면, FF 선물 가격은 IMM 지수로 95.42 (100 - 4.58)가 됩니다.</p>
+<h3 id="effr-effective-federal-funds-rate">EFFR (Effective Federal Funds Rate)<a class="headerlink" href="#effr-effective-federal-funds-rate" title="Permanent link">&para;</a></h3>
+<p>EFFR은 미국 은행끼리 하루짜리 돈을 빌릴 때 실제로 적용되는 금리 — 이것이 <strong>실효 연방기금금리(Effective Federal Funds Rate)</strong>입니다. Fed의 뉴욕 연방준비은행(FRBNY)에서 매일 공시하며, 전 거래일에 은행 등 예탁기관들(Depository institutions) 사이에서 성사된 담보 없는 하루짜리 초단기 대출(overnight unsecured loan) 이자율의 <strong>거래 규모가 큰 것에 더 비중을 두고 구한 대표값(거래량 가중 중앙값)</strong>으로 계산합니다.</p>
+<blockquote>
+<p>EFFR은 뉴욕 연준 웹사이트(newyorkfed.org)에서 매일 확인할 수 있습니다.</p>
+</blockquote>
+<h3 id="fomc-effr">FOMC 금리 결정과 EFFR의 관계<a class="headerlink" href="#fomc-effr" title="Permanent link">&para;</a></h3>
+<p>FOMC 회의에서 금리가 결정되면, 그 <strong>다음 영업일</strong>부터 EFFR에 반영됩니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">FOMC 회의</th>
+<th style="text-align: left;">결정</th>
+<th style="text-align: left;">EFFR 변화</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2022년 12월 13~14일</td>
+<td style="text-align: left;">50bps(0.50%p) 인상</td>
+<td style="text-align: left;">3.83% → 4.33% (12/15~)</td>
+</tr>
+<tr>
+<td style="text-align: left;">2023년 1월 31일~2월 1일</td>
+<td style="text-align: left;">25bps(0.25%p) 인상</td>
+<td style="text-align: left;">4.33% → 4.58% (2/2~)</td>
+</tr>
+<tr>
+<td style="text-align: left;">2023년 3월 21~22일</td>
+<td style="text-align: left;">25bps(0.25%p) 인상</td>
+<td style="text-align: left;">4.58% → 4.83% (3/23~)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>bps(basis point)란?</strong> 1bp = 0.01%p. 즉 25bps = 0.25%p, 50bps = 0.50%p 입니다.</p>
+</blockquote>
+<h3 id="ff_1">FF 선물의 정산과 내재금리<a class="headerlink" href="#ff_1" title="Permanent link">&para;</a></h3>
+<p>FF 선물의 정산은 해당 계약월의 다음 달 첫 날에, 계약월 동안의 모든 영업일 EFFR 산술평균을 계산하여 현금 정산합니다.</p>
+<p><img alt="FF 선물의 IMM 지수와 정산" src="../../assets/diagrams/diag_fw_imm_settlement.png" /></p>
+<p>FF 선물의 가격에는 해당 계약월 동안 EFFR에 대한 <strong>시장의 기대치가 반영</strong>되어 있습니다. 한 계약당 $5,000,000인 FF 선물을 거래하는 큰 손들은 부지런히 금리를 예측하여 FF 선물의 예상 가격 기준을 세우고 거래합니다.</p>
+<p>FOMC 회의에서 결정되는 금리는 해당 월 FF 선물의 정산가격에 영향을 미치며, 이후 모든 FF 선물계약의 가격을 결정합니다. 따라서 FF 선물 가격에는 트레이더들의 금리 예측이 반영됩니다 — 정산은 실제 EFFR 평균으로 하지만, 만기 전에 거래되는 선물 가격에는 미래 금리에 대한 예측이 녹아 있는 것입니다. 이 선물 가격 안에 '숨어있는' 금리 예상치를 <strong>내재금리(Implied Rate)</strong>라고 합니다.</p>
+<hr />
+<h2 id="part-2-cme-fedwatch-tool">Part 2: CME FedWatch Tool의 금리 예측<a class="headerlink" href="#part-2-cme-fedwatch-tool" title="Permanent link">&para;</a></h2>
+<h3 id="fedwatch-tool">FedWatch Tool이란<a class="headerlink" href="#fedwatch-tool" title="Permanent link">&para;</a></h3>
+<p>CME 그룹은 FF 선물 가격을 바탕으로 FOMC 회의에서 결정되는 금리에 대한 시장 참여자들의 기대치를 반영하는 <strong>FedWatch Tool</strong>을 제공합니다. FedWatch Tool은 CME 웹사이트(cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html)에서 무료로 확인할 수 있습니다.</p>
+<p>FedWatch Tool은 내부적으로 동전 던지기처럼 두 가지 결과(인상 or 동결)만 놓고 확률을 나누는 방식인 <strong>이진확률트리(Binary probability tree)</strong>를 사용하여 최종 금리의 확률을 예측합니다.</p>
+<h3 id="_1">내재금리에서 확률 추출하기<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>실제 사례로 확인해 봅니다. 시간을 2023년 3월 20일로 돌려봅니다. 다음 날인 3월 21일 FOMC 회의의 금리 결정을 아직 알 수 없는 상태입니다. 또한 새로 결정될 금리는 FOMC 회의 다음 날인 3월 23일부터 EFFR에 반영됩니다.</p>
+<p>3월 20일 기준으로 FF 3월 선물계약(ZQH3)의 가격은 95.3625였습니다. 여기서 100을 빼면 <strong>월평균 내재금리 4.6375%</strong>가 됩니다.</p>
+<p>3월은 31일인데, FOMC 이전 22일은 금리가 확정이고, FOMC 이후 9일만 새 금리가 적용됩니다. 31일 중 9일만 변수 — 이 비중을 이용해서 역산하는 것이 핵심 아이디어입니다.</p>
+<details><summary>계산 과정 펼치기</summary>
+
+3월 1일부터 3월 22일까지 22일 동안의 EFFR은 계산의 편의상 모두 4.58%라고 가정합니다. FOMC 이후 갱신될 EFFR을 R이라고 정의하면:
+
+<div class="highlight"><pre><span></span><code>월평균 내재금리 = (22일 x 4.58 + 9일 x R) / 31일
+</code></pre></div>
+
+여기서 월평균 내재금리 4.6375%를 대입하면 R을 역산할 수 있습니다.
+
+</details>
+
+<p>각 시나리오별 내재금리:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시나리오</th>
+<th style="text-align: left;">R (FOMC 후 EFFR)</th>
+<th style="text-align: left;">월평균 내재금리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>(A)</strong> 금리 동결</td>
+<td style="text-align: left;">4.58%</td>
+<td style="text-align: left;">4.58%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>(B-1)</strong> 25bps 인상</td>
+<td style="text-align: left;">4.83%</td>
+<td style="text-align: left;">4.6526%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>(B-2)</strong> 50bps 인상</td>
+<td style="text-align: left;">5.08%</td>
+<td style="text-align: left;">4.7252%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>(C)</strong> 25bps 인하</td>
+<td style="text-align: left;">4.33%</td>
+<td style="text-align: left;">4.5074%</td>
+</tr>
+</tbody>
+</table>
+<p>실제 월평균 내재금리 4.6375%는 (A) 금리 동결(4.58%)과 (B-1) 25bps 인상(4.6526%) 사이의 값입니다. 금리시장의 트레이더들이 3월 FOMC에서 <strong>"금리 동결"과 "25bps 인상"의 두 가지 가능성</strong>을 보고 있다는 것을 암시합니다. (이진확률, Binary probability)</p>
+<h3 id="_2">확률 계산<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p><img alt="FedWatch 이진확률 추출" src="../../assets/diagrams/diag_fw_probability.png" /></p>
+<div class="highlight"><pre><span></span><code>FFER Start = 4.58%
+내재금리 (Implied Rate) = 4.6375%
+</code></pre></div>
+<p><strong>25bps 금리 인상 확률:</strong></p>
+<details><summary>확률 공식 유도 펼치기</summary>
+
+<div class="highlight"><pre><span></span><code>P(인상) = (내재금리 - FFER Start) / 25bps
+        = (4.6375 - 4.58) / 0.25
+        = 0.0575 / 0.25
+        = 23%
+</code></pre></div>
+
+FedWatch Tool은 이진확률을 가정하기 때문에:
+
+<div class="highlight"><pre><span></span><code>P(동결) = 1 - P(인상) = 1 - 23% = 77%
+</code></pre></div>
+
+</details>
+
+<p>즉 내재금리가 현재 금리에서 25bps 구간의 23% 지점에 있다는 뜻입니다. 0%면 동결 확실, 100%면 인상 확실 — 23%면 "인상 가능성은 있지만 동결 쪽에 훨씬 무게"입니다.</p>
+<p>3월 20일 기준으로 금리시장 참여자들은 3월 FOMC에서 <strong>금리 동결 77%, 25bps 인상 23%</strong>의 확률을 보고 있었습니다.</p>
+<hr />
+<h2 id="_3">정리<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">개념</th>
+<th style="text-align: left;">핵심</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>EFFR</strong></td>
+<td style="text-align: left;">뉴욕 연준이 매일 공시하는 실효 연방기금금리 (거래량 가중 중앙값)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FF 선물</strong></td>
+<td style="text-align: left;">EFFR의 월평균에 대한 시장 기대치를 반영하는 선물 (티커: ZQ)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>IMM 지수</strong></td>
+<td style="text-align: left;">FF 선물 가격 = 100 - 월평균 EFFR</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FedWatch Tool</strong></td>
+<td style="text-align: left;">FF 선물의 내재금리에서 이진확률트리로 FOMC 금리 결정 확률을 추출</td>
+</tr>
+</tbody>
+</table>
+<p>FF 선물 가격 하나에서 FOMC 금리 결정의 확률을 역산할 수 있다는 것이 핵심입니다. 이 방법론을 여러 FOMC 회의에 걸쳐 연쇄적으로 적용하면, 향후 수개월간의 금리 경로 확률을 추출할 수 있습니다. 예를 들어 3월 FF 선물에서 3월 FOMC 확률을 구하고, 그 결과를 5월 FF 선물에 넣으면 5월 FOMC 확률도 구할 수 있습니다. 뉴스에서 "금리 인상 확률 90%"라고 할 때, 그 숫자가 바로 이 FF 선물에서 나온 것입니다.</p>
+<blockquote>
+<p>FedWatch Tool은 CME 웹사이트에서 실시간으로 확인할 수 있으며, 금리 결정 전 시장 심리를 파악하는 데 유용합니다. 다만 FF 선물 가격은 실시간으로 변하므로, FedWatch 확률도 시시각각 변합니다 — 고정된 예측이 아니라 <strong>시장의 현재 컨센서스</strong>라는 점을 기억하세요.</p>
+</blockquote>
+<hr />
+<p><em>이전 글: <a href="../cot/">COT — 선물시장에서 현물시장 살펴보기</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
