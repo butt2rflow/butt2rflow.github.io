@@ -43,11 +43,11 @@ title: Home
 
 | 시리즈 | 내용 | 편수 | 크몽 | Gumroad |
 |:-------|:-----|:-----|:-----|:--------|
-| [**원칙편 (65p)**](series/s1-shannons-demon.md) | 섀넌의 도깨비부터 캘리 기준까지 | 4편 (1편 무료) | [₩12,000](https://kmong.com/gig/762026) | [$6.99](https://butt2rflow.gumroad.com/l/aejfrj) |
-| [**실행편 (37p)**](series/s2-preview.md) | VIX를 읽고 ETF+현금으로 비중 조절 | 3편 | [₩10,000](https://kmong.com/gig/762058) | [$4.99](https://butt2rflow.gumroad.com/l/ozijat) |
-| [**확장편 (35p)**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 | [₩10,000](https://kmong.com/gig/762059) | [$4.99](https://butt2rflow.gumroad.com/l/ozuyjb) |
-| [**심화편 (42p)**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 | [₩10,000](https://kmong.com/gig/762062) | [$4.99](https://butt2rflow.gumroad.com/l/cwwzss) |
-| **전 13편 번들 (179p)** | 원칙편 + 실행편 + 확장편 + 심화편 | 13편 | [**₩29,000**](https://kmong.com/gig/762066) | [**$13.99**](https://butt2rflow.gumroad.com/l/dbkyt) |
+| [**원칙편 (65p)**](series/s1-shannons-demon.md) | 섀넌의 도깨비부터 캘리 기준까지 | 4편 (1편 무료) | [구매](https://kmong.com/gig/762026) | [Buy](https://butt2rflow.gumroad.com/l/aejfrj) |
+| [**실행편 (37p)**](series/s2-preview.md) | VIX를 읽고 ETF+현금으로 비중 조절 | 3편 | [구매](https://kmong.com/gig/762058) | [Buy](https://butt2rflow.gumroad.com/l/ozijat) |
+| [**확장편 (35p)**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 | [구매](https://kmong.com/gig/762059) | [Buy](https://butt2rflow.gumroad.com/l/ozuyjb) |
+| [**심화편 (42p)**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 | [구매](https://kmong.com/gig/762062) | [Buy](https://butt2rflow.gumroad.com/l/cwwzss) |
+| **전 13편 번들 (179p)** | 원칙편 + 실행편 + 확장편 + 심화편 | 13편 | [**구매**](https://kmong.com/gig/762066) | [**Buy**](https://butt2rflow.gumroad.com/l/dbkyt) |
 
-[크몽 전체 세트 구매 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
-[Gumroad Bundle (US$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+[크몽 전체 세트 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }

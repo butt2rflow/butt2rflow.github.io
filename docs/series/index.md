@@ -33,8 +33,8 @@ title: 시리즈 안내
 3. 캘리의 기준 (Kelly's Criterion)이 주는 교훈
 4. 엣지 없는 게임, 엣지 있는 시장
 
-[크몽 원칙편 (₩12,000)](https://kmong.com/gig/762026){ .md-button .md-button--primary }
-[Gumroad (US$6.99)](https://butt2rflow.gumroad.com/l/aejfrj){ .md-button }
+[크몽 원칙편 구매](https://kmong.com/gig/762026){ .md-button .md-button--primary }
+[Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/aejfrj){ .md-button }
 
 ---
 
@@ -46,7 +46,7 @@ title: 시리즈 안내
 2. **비중 조절의 원리 — 후행 신호 전략** — 변동성 타겟팅, SPY 백테스트 (2006~2025)
 3. **선행 신호와 실전** — IVTS 세 구역, VolVol, Vomma Zone, TradingView Pine Script
 
-[미리보기 페이지 →](s2-preview.md) · [크몽 실행편 (₩10,000)](https://kmong.com/gig/762058){ .md-button .md-button--primary } [Gumroad (US$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
+[미리보기 페이지 →](s2-preview.md) · [크몽 실행편 구매](https://kmong.com/gig/762058){ .md-button .md-button--primary } [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
 
 ---
 
@@ -57,7 +57,7 @@ title: 시리즈 안내
 1. **옵션의 본질 — 보험, 시간, 변동성** — moneyness, 시간 감쇠
 2. **옵션 실전 — LEAP, 보험, 수확** — Deep ITM 레버리지, Protective Put, Covered Call, TQQQ 숨겨진 비용
 
-[미리보기 페이지 →](s3-preview.md) · [크몽 확장편 (₩10,000)](https://kmong.com/gig/762059){ .md-button .md-button--primary } [Gumroad (US$4.99)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
+[미리보기 페이지 →](s3-preview.md) · [크몽 확장편 구매](https://kmong.com/gig/762059){ .md-button .md-button--primary } [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
 
 ---
 
@@ -70,7 +70,7 @@ title: 시리즈 안내
 3. **GEX (Gamma Exposure) — 보이지 않는 손** — 플립 포인트
 4. **0DTE — 감마 폭탄의 시대** — 당일 만기 옵션이 바꾼 시장 구조
 
-[미리보기 페이지 →](s4-preview.md) · [크몽 심화편 (₩10,000)](https://kmong.com/gig/762062){ .md-button .md-button--primary } [Gumroad (US$4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
+[미리보기 페이지 →](s4-preview.md) · [크몽 심화편 구매](https://kmong.com/gig/762062){ .md-button .md-button--primary } [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
 
 ---
 
@@ -78,11 +78,11 @@ title: 시리즈 안내
 
 <img src="../assets/covers/bundle.png" alt="번들 표지" style="max-width:280px; float:right; margin-left:20px;">
 
-**179페이지 · 다이어그램 90장+ · 개별 구매 대비 약 30% 할인.**
+**179페이지 · 다이어그램 90장+ · 개별 구매보다 저렴.**
 
-원칙편부터 심화편까지 순서대로 읽을 수 있도록 번호와 목차가 통합된 단일 PDF. 개별 구매보다 저렴합니다.
+원칙편부터 심화편까지 순서대로 읽을 수 있도록 번호와 목차가 통합된 단일 PDF.
 
-[**크몽 번들 (₩29,000)**](https://kmong.com/gig/762066){ .md-button .md-button--primary }
-[**Gumroad Bundle (US$13.99)**](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+[**크몽 번들 구매**](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[**Gumroad Bundle (Overseas)**](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
 
 <div style="clear:both;"></div>

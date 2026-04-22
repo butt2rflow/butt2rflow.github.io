@@ -27,10 +27,10 @@ title: 실행편 — VIX를 읽고 비중을 조절하라
 
 백테스트 차트, IVTS 구역 맵, Pine Script 전체 코드 포함.
 
-[크몽 실행편 (₩10,000)](https://kmong.com/gig/762058){ .md-button .md-button--primary }
-[Gumroad (US\$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
+[크몽 실행편 구매](https://kmong.com/gig/762058){ .md-button .md-button--primary }
+[Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
 
 원칙편 + 실행편 + 확장편 + 심화편을 한 번에:
 
-[크몽 번들 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
-[Gumroad Bundle (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+[크몽 번들 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle (Overseas)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }

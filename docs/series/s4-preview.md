@@ -28,10 +28,10 @@ title: 심화편 — 감마가 시장을 움직인다
 
 감마 스퀴즈 메커니즘, GEX 프로파일, 플립 포인트, 0DTE 시장 구조 변화.
 
-[크몽 심화편 (₩10,000)](https://kmong.com/gig/762062){ .md-button .md-button--primary }
-[Gumroad (US\$4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
+[크몽 심화편 구매](https://kmong.com/gig/762062){ .md-button .md-button--primary }
+[Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
 
 원칙편 + 실행편 + 확장편 + 심화편을 한 번에:
 
-[크몽 번들 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
-[Gumroad Bundle (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+[크몽 번들 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle (Overseas)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
