@@ -35,13 +35,19 @@ title: Home
 
 ## 시리즈 (유료 전자책)
 
-체계적으로 투자 원칙을 배우고 싶다면:
+**변동성을 연료로 쓰는 법 — 수학과 데이터로 풀어 쓴 개인 투자자용 완결 시리즈.**
 
-| 시리즈 | 내용 | 편수 |
-|:-------|:-----|:-----|
-| [**원칙편**](series/s1-shannons-demon.md) | 섀넌의 도깨비부터 캘리 기준까지 | 4편 (1편 무료) |
-| [**실행편**](series/s2-preview.md) | VIX를 읽고 ETF+현금으로 비중 조절 | 3편 |
-| [**확장편**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 |
-| [**심화편**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 |
+- 총 **13편 / 179페이지**, 다이어그램 **90장+**
+- 공식은 **사칙연산 수준**, 나머지는 비유와 그림
+- **한국 구매자**는 크몽, **해외**는 Gumroad에서 구매
 
-<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->
+| 시리즈 | 내용 | 편수 | 크몽 | Gumroad |
+|:-------|:-----|:-----|:-----|:--------|
+| [**원칙편 (65p)**](series/s1-shannons-demon.md) | 섀넌의 도깨비부터 캘리 기준까지 | 4편 (1편 무료) | [₩12,000](https://kmong.com/gig/762026) | [$6.99](https://butt2rflow.gumroad.com/l/aejfrj) |
+| [**실행편 (37p)**](series/s2-preview.md) | VIX를 읽고 ETF+현금으로 비중 조절 | 3편 | [₩10,000](https://kmong.com/gig/762058) | [$4.99](https://butt2rflow.gumroad.com/l/ozijat) |
+| [**확장편 (35p)**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 | [₩10,000](https://kmong.com/gig/762059) | [$4.99](https://butt2rflow.gumroad.com/l/ozuyjb) |
+| [**심화편 (42p)**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 | [₩10,000](https://kmong.com/gig/762062) | [$4.99](https://butt2rflow.gumroad.com/l/cwwzss) |
+| **전 13편 번들 (179p)** | 원칙편 + 실행편 + 확장편 + 심화편 | 13편 | [**₩29,000**](https://kmong.com/gig/762066) | [**$13.99**](https://butt2rflow.gumroad.com/l/dbkyt) |
+
+[크몽 전체 세트 구매 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle (US$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }

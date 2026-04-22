@@ -18,4 +18,18 @@ title: 확장편 — 옵션으로 한 단계 더
 - 커버드콜 ETF(JEPI, QYLD)가 뭔지 원리부터 이해하고 싶은 분
 - **수학 공식이 싫은 분** — 블랙-숄즈 공식 없이 보험 비유로 옵션을 설명합니다
 
-<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->
+---
+
+## 구매
+
+**확장편 2편 · 35페이지 · 다이어그램 14장+**
+
+moneyness 시각화, LEAP vs TQQQ 비용 비교, Covered Call/Protective Put 손익 곡선.
+
+[크몽 확장편 (₩10,000)](https://kmong.com/gig/762059){ .md-button .md-button--primary }
+[Gumroad (US\$4.99)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
+
+원칙편 + 실행편 + 확장편 + 심화편을 한 번에:
+
+[크몽 번들 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }

@@ -20,4 +20,18 @@ title: 심화편 — 감마가 시장을 움직인다
 - 0DTE 옵션이 왜 시장 구조를 바꾸고 있는지 알고 싶은 분
 - **수학 공식이 싫은 분** — 4편 전체에서 공식은 곱셈 2개뿐, 나머지는 비유와 그림으로 설명합니다
 
-<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->
+---
+
+## 구매
+
+**심화편 4편 · 42페이지 · 다이어그램 11장+**
+
+감마 스퀴즈 메커니즘, GEX 프로파일, 플립 포인트, 0DTE 시장 구조 변화.
+
+[크몽 심화편 (₩10,000)](https://kmong.com/gig/762062){ .md-button .md-button--primary }
+[Gumroad (US\$4.99)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
+
+원칙편 + 실행편 + 확장편 + 심화편을 한 번에:
+
+[크몽 번들 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }

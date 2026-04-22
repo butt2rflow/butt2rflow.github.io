@@ -19,4 +19,18 @@ title: 실행편 — VIX를 읽고 비중을 조절하라
 - 증권사에서 바로 실행할 수 있는 전략을 찾는 분
 - **수학 공식이 싫은 분** — 이 시리즈의 공식은 나눗셈이 전부입니다
 
-<!-- 구매 링크: 크몽 등록 후 업데이트 예정 -->
+---
+
+## 구매
+
+**실행편 3편 · 37페이지 · 다이어그램 19장+**
+
+백테스트 차트, IVTS 구역 맵, Pine Script 전체 코드 포함.
+
+[크몽 실행편 (₩10,000)](https://kmong.com/gig/762058){ .md-button .md-button--primary }
+[Gumroad (US\$4.99)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
+
+원칙편 + 실행편 + 확장편 + 심화편을 한 번에:
+
+[크몽 번들 (₩29,000)](https://kmong.com/gig/762066){ .md-button .md-button--primary }
+[Gumroad Bundle (US\$13.99)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
