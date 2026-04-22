@@ -25,3 +25,9 @@ img {
   background: #fff;
   padding: 3px;
 }
+
+.md-typeset .md-button {
+  padding: 0.35em 0.9em;
+  font-size: 0.75rem;
+  margin: 0.2em 0.3em 0.2em 0;
+}
