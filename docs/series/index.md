@@ -46,7 +46,10 @@ title: 시리즈 안내
 2. **비중 조절의 원리 — 후행 신호 전략** — 변동성 타겟팅, SPY 백테스트 (2006~2025)
 3. **선행 신호와 실전** — IVTS 세 구역, VolVol, Vomma Zone, TradingView Pine Script
 
-[미리보기 페이지 →](s2-preview.md) · [크몽 실행편 구매](https://kmong.com/gig/762058){ .md-button .md-button--primary } [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
+[미리보기 페이지 →](s2-preview.md)
+
+[크몽 실행편 구매](https://kmong.com/gig/762058){ .md-button .md-button--primary }
+[Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozijat){ .md-button }
 
 ---
 
@@ -57,7 +60,10 @@ title: 시리즈 안내
 1. **옵션의 본질 — 보험, 시간, 변동성** — moneyness, 시간 감쇠
 2. **옵션 실전 — LEAP, 보험, 수확** — Deep ITM 레버리지, Protective Put, Covered Call, TQQQ 숨겨진 비용
 
-[미리보기 페이지 →](s3-preview.md) · [크몽 확장편 구매](https://kmong.com/gig/762059){ .md-button .md-button--primary } [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
+[미리보기 페이지 →](s3-preview.md)
+
+[크몽 확장편 구매](https://kmong.com/gig/762059){ .md-button .md-button--primary }
+[Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/ozuyjb){ .md-button }
 
 ---
 
@@ -70,7 +76,10 @@ title: 시리즈 안내
 3. **GEX (Gamma Exposure) — 보이지 않는 손** — 플립 포인트
 4. **0DTE — 감마 폭탄의 시대** — 당일 만기 옵션이 바꾼 시장 구조
 
-[미리보기 페이지 →](s4-preview.md) · [크몽 심화편 구매](https://kmong.com/gig/762062){ .md-button .md-button--primary } [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
+[미리보기 페이지 →](s4-preview.md)
+
+[크몽 심화편 구매](https://kmong.com/gig/762062){ .md-button .md-button--primary }
+[Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/cwwzss){ .md-button }
 
 ---
 
