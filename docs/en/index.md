@@ -30,7 +30,7 @@ In an age where AI dominates the markets in milliseconds, the *information edge*
 
 ## Principles — Why Volatility Pays (Part 1 free)
 
-<img src="../assets/covers/series1.png" alt="Principles cover" style="max-width:280px; float:right; margin-left:20px;">
+<img src="../assets/covers/series1_en.png" alt="Principles cover" style="max-width:280px; float:right; margin-left:20px;">
 
 1. **[Shannon's Demon](s1-shannons-demon.md)** — How to make money in a random walk **(free)**
 2. The St. Petersburg Paradox and the Geometric Mean
@@ -45,7 +45,7 @@ In an age where AI dominates the markets in milliseconds, the *information edge*
 
 ## Execution — Read VIX, Size Positions
 
-<img src="../assets/covers/series2.png" alt="Execution cover" style="max-width:280px; float:right; margin-left:20px;">
+<img src="../assets/covers/series2_en.png" alt="Execution cover" style="max-width:280px; float:right; margin-left:20px;">
 
 1. **Volatility — Friend or Foe?** — HV vs IV, how to read VIX, the SVXY 2018 collapse
 2. **Position Sizing — The Trailing-Signal Playbook** — Volatility targeting, inverse-vol weighting, SPY backtest 2006–2025
@@ -61,7 +61,7 @@ In an age where AI dominates the markets in milliseconds, the *information edge*
 
 ## Extension — One Step Further With Options
 
-<img src="../assets/covers/series3.png" alt="Extension cover" style="max-width:280px; float:right; margin-left:20px;">
+<img src="../assets/covers/series3_en.png" alt="Extension cover" style="max-width:280px; float:right; margin-left:20px;">
 
 1. **The Nature of Options — Insurance, Time, and Volatility** — Strike, expiration, moneyness, IV, theta, the time-value paradox
 2. **Options in Practice — LEAP, Insurance, and Harvesting** — Three strategies for the long-term investor
@@ -76,7 +76,7 @@ In an age where AI dominates the markets in milliseconds, the *information edge*
 
 ## Depth — Gamma Moves the Market
 
-<img src="../assets/covers/series4.png" alt="Depth cover" style="max-width:280px; float:right; margin-left:20px;">
+<img src="../assets/covers/series4_en.png" alt="Depth cover" style="max-width:280px; float:right; margin-left:20px;">
 
 1. **Gamma — The Acceleration of Delta** — Gamma fundamentals and the gamma squeeze
 2. **Dynamic Hedging by Market Makers** — Short gamma = arsonist, long gamma = firefighter
@@ -93,7 +93,7 @@ In an age where AI dominates the markets in milliseconds, the *information edge*
 
 ## Complete Bundle — All four series
 
-<img src="../assets/covers/bundle.png" alt="Bundle cover" style="max-width:280px; float:right; margin-left:20px;">
+<img src="../assets/covers/bundle_en.png" alt="Bundle cover" style="max-width:280px; float:right; margin-left:20px;">
 
 **167 pages · 90+ diagrams · 33% off vs. buying each series individually.**
 
