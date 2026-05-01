@@ -64,6 +64,13 @@ nav:
     - 실행편 (미리보기): series/s2-preview.md
     - 확장편 (미리보기): series/s3-preview.md
     - 심화편 (미리보기): series/s4-preview.md
+  - English:
+    - en/index.md
+    - "Principles (free part 1)":
+      - en/s1-shannons-demon.md
+    - "Execution (preview)": en/s2-preview.md
+    - "Extension (preview)": en/s3-preview.md
+    - "Depth (preview)": en/s4-preview.md
   - 옵션 분석:
     - posts/skew.md
     - posts/hedging-wings.md
