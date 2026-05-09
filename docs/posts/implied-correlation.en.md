@@ -10,6 +10,8 @@ series-prev: "[Hedging the Wings](hedging-wings.md)"
 
 > Related: [Volatility Skew](skew.md) | [Hedging the Wings](hedging-wings.md)
 
+> 📚 **Where this article fits**: this is the *concept and taxonomy* of COR/SKEW indices. The *day-to-day monitoring tool* is [Volatility Dashboard](volatility-dashboard.md). They're a pair.
+
 ---
 
 ## What implied volatility actually is

@@ -82,13 +82,14 @@ nav:
     - posts/portfolio-return.md
     - posts/expected-return.md
     - posts/derivatives-leverage-cost.md
-  - "Options Analysis":
-    - posts/skew.md
-    - posts/hedging-wings.md
-    - posts/implied-correlation.md
   - "Market Data":
     - posts/cot.md
     - posts/fedwatch.md
+  - "Options 101":
+    - posts/options-basics.md
+    - posts/skew.md
+    - posts/hedging-wings.md
+    - posts/implied-correlation.md
   - Tools:
     - posts/monte-carlo.md
     - posts/almanac.md

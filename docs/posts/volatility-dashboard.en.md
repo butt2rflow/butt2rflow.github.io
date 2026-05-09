@@ -11,6 +11,8 @@ lang: en
 
 If you track Cboe's published implied correlation (COR) indices and the SKEW index every day, you can read **shifts in market participants' psychology before the news catches up**. This article walks through building a volatility dashboard in Google Sheets, and gives you a one-minute daily routine for reading three signals.
 
+> 📚 **Where this article fits**: this is the *tracking & interpretation tool*. The *taxonomy and conceptual background* of the indices is in [Market-Sentiment Volatility Indices](implied-correlation.md). They're a pair.
+
 ---
 
 ## 30-second preview: the three things to check daily

@@ -10,6 +10,8 @@ series-prev: "[Hedging the Wings](hedging-wings.md)"
 
 > 관련 글: [변동성 Skew](skew.md) | [Hedging the Wings](hedging-wings.md)
 
+> 📚 **이 글의 위치**: COR/SKEW *개념과 분류 체계* 정리 (이 글). *매일 추적·해석하는 도구*는 [변동성 대시보드](volatility-dashboard.md). 둘이 짝.
+
 ---
 
 ## 내재변동성(IV)이란

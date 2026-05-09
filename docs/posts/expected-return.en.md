@@ -13,6 +13,8 @@ series-next: "[Cost of Leverage in Derivatives](derivatives-leverage-cost.md)"
 
 > If the [previous article](portfolio-return.md) covered TWR and MWR, this article is the next step — *expected value*. Estimating future returns by *probability-weighting* the outcomes.
 
+> 📚 **Where this article fits**: this is the *analytical* approach — estimate a probability model from historical data and derive an analytical conclusion. The *simulation tool* using the same data lives in [Monte Carlo Simulation](monte-carlo.md). This article: analysis. That article: simulation.
+
 ---
 
 ## 1. Expected value vs average — what's the difference?

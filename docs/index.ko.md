@@ -63,6 +63,7 @@ title: Home
 
 ### 옵션 분석
 
+- [**옵션의 기초**](posts/options-basics.md) — 자동차 보험 비유로 풀어 보는 콜·풋·행사가·델타 (옵션 처음이라면 *여기부터*)
 - [**변동성 Skew**](posts/skew.md) — S&P500 지수 옵션의 "썩소"와 Implied Correlation, CBOE SKEW Index
 - [**Hedging the Wings**](posts/hedging-wings.md) — 저비용 테일 리스크 헷지 (1:2 Put Ratio, SPY 구체 예시)
 - [**시장 심리 변동성 지수**](posts/implied-correlation.md) — COR3M, IV Surface, Delta Skew + TradingView Pine Script
@@ -98,6 +99,8 @@ title: Home
 | [**확장편 (35p)**](series/s3-preview.md) | LEAP, Protective Put, Covered Call | 2편 | [구매](https://kmong.com/gig/762059) | [Buy](https://butt2rflow.gumroad.com/l/ozuyjb) |
 | [**심화편 (42p)**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 | [구매](https://kmong.com/gig/762062) | [Buy](https://butt2rflow.gumroad.com/l/cwwzss) |
 | **전 13편 번들 (179p)** | 원칙편 + 실행편 + 확장편 + 심화편 | 13편 | [**구매**](https://kmong.com/gig/762066) | [**Buy**](https://butt2rflow.gumroad.com/l/dbkyt) |
+
+> 💡 **번들 = 개별 구매 대비 약 33% 할인**. 4개 시리즈 따로 사는 것보다 한 번에 사는 게 훨씬 저렴합니다.
 
 [크몽 전체 세트 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
 [Gumroad Bundle](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
