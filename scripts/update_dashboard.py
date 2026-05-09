@@ -253,6 +253,34 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path)
     ax.grid(alpha=0.3)
     ax.set_xlim(-15, max(vx["DTE"].max() if len(vx) else 30, 30) + 15)
 
+    # Fixed Y-axis range (17–30) so the visual position of the curve
+    # encodes the absolute volatility level day-to-day, not just the
+    # shape. Auto-expand only when actual data falls outside.
+    Y_MIN_DEFAULT, Y_MAX_DEFAULT = 17.0, 30.0
+    all_values = list(vx["Price"].dropna()) if len(vx) else []
+    if not np.isnan(vix_spot):
+        all_values.append(vix_spot)
+    if all_values:
+        data_min = min(all_values)
+        data_max = max(all_values)
+        # Use the wider of (default range) and (data range with margin)
+        y_min = min(Y_MIN_DEFAULT, data_min - 1.0)
+        y_max = max(Y_MAX_DEFAULT, data_max + 1.0)
+    else:
+        y_min, y_max = Y_MIN_DEFAULT, Y_MAX_DEFAULT
+    ax.set_ylim(y_min, y_max)
+
+    # Annotate "fixed scale" hint at bottom-left, away from legend (top-left)
+    # and shape badge (bottom-right)
+    ax.text(0.02, 0.04,
+            f"Y-axis: fixed at {Y_MIN_DEFAULT:.0f}–{Y_MAX_DEFAULT:.0f}"
+            + ("" if (y_min == Y_MIN_DEFAULT and y_max == Y_MAX_DEFAULT)
+               else f" (expanded to {y_min:.0f}–{y_max:.0f})"),
+            transform=ax.transAxes, fontsize=8, color="#6b7280",
+            ha="left", va="bottom",
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
+                      edgecolor="#d1d5db", alpha=0.85))
+
     plt.tight_layout()
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
