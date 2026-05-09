@@ -4,6 +4,38 @@ title: Home
 
 # butterflow Investment Notes
 
+<!-- DASHBOARD_START -->
+## 📊 Live Volatility Dashboard
+
+> **As of 2026-05-08** · Auto-updates daily after the US close · [Full article →](posts/volatility-dashboard.md)
+
+### VIX Futures Term Structure
+
+| Field | Value | State |
+|:------|------:|:------|
+| VIX spot | 17.19 | — |
+| Front month (2026-05-19) | 19.22 | — |
+| M2 − M1 spread | +1.47 | 🟢 Contango (normal) |
+
+![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)
+
+*Source: Cboe CFE settlement. A reliable alternative to Vixcentral.*
+
+---
+
+### COR + SKEW Dashboard
+
+| Signal | Value | State |
+|:-------|------:|:------|
+| **Term Structure** (COR1Y − COR1M) | 6.2 | 🟢 Normal |
+| **COR90D** (synchronization) | 33.1 | 🟢 Normal |
+| **SKEW** (tail risk) | 138.2 | 🟢 Normal |
+
+![Volatility dashboard](assets/diagrams_en/vol_dashboard.png)
+
+---
+<!-- DASHBOARD_END -->
+
 **Notes for the retail investor who treats volatility as fuel, not as enemy.**
 
 Math- and data-driven investment principles. In an age where AI dominates markets in milliseconds, some things don't change — the math of compounding, the structure of volatility, and time as a weapon.

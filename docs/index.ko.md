@@ -4,6 +4,38 @@ title: Home
 
 # butterflow 투자 노트
 
+<!-- DASHBOARD_START -->
+## 📊 변동성 라이브 대시보드
+
+> **2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [자세히 →](posts/volatility-dashboard.md)
+
+### VIX Futures Term Structure
+
+| 항목 | 값 | 상태 |
+|:-----|---:|:-----|
+| VIX 현물 | 17.19 | — |
+| Front month (2026-05-19) | 19.22 | — |
+| M2 − M1 스프레드 | +1.47 | 🟢 콘탱고 (정상) |
+
+![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)
+
+*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능.*
+
+---
+
+### COR + SKEW 대시보드
+
+| 신호 | 값 | 상태 |
+|:-----|---:|:-----|
+| **Term Structure** (COR1Y − COR1M) | 6.2 | 🟢 정상 |
+| **COR90D** (동조화 수준) | 33.1 | 🟢 정상 |
+| **SKEW** (꼬리 위험) | 138.2 | 🟢 정상 |
+
+![변동성 대시보드](assets/diagrams/vol_dashboard.png)
+
+---
+<!-- DASHBOARD_END -->
+
 **변동성을 적이 아닌 연료로 바라보는 개인 투자자를 위한 기록.**
 
 수학과 데이터에 기반한 투자 원칙을 연구하고 정리합니다. AI가 시장을 지배하는 시대에도 변하지 않는 것 — 복리의 수학, 변동성의 구조, 그리고 시간이라는 무기.

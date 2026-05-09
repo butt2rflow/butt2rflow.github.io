@@ -1,0 +1,460 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Daily live-dashboard updater.
+
+Pulls fresh end-of-day data from yfinance (Cboe COR + SKEW indices) and
+the Cboe VIX-futures settlement CSV, regenerates two charts, and patches
+the home pages (index.ko.md, index.en.md) with the latest signals.
+
+Charts use English labels so they render on any machine without Korean
+fonts; surrounding markdown stays in the page's language.
+
+Run from project root:
+    venv/Scripts/python.exe scripts/update_dashboard.py
+"""
+from __future__ import annotations
+
+import io
+import re
+import urllib.request
+from pathlib import Path
+
+import matplotlib
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT_KO = ROOT / "docs" / "assets" / "diagrams"
+OUT_EN = ROOT / "docs" / "assets" / "diagrams_en"
+
+matplotlib.rcParams["axes.unicode_minus"] = False
+plt.rcParams.update({"figure.facecolor": "white"})
+
+LOOKBACK_MONTHS = 6
+
+# Cboe publishes clean CSVs at this pattern; way more reliable than yfinance
+# for these indices (yfinance returns 1-row history for COR* indices).
+CBOE_INDEX_URL = "https://cdn.cboe.com/api/global/us_indices/daily_prices/{}_History.csv"
+TENOR_INDICES = ["COR1M", "COR3M", "COR6M", "COR9M", "COR1Y"]
+# COR3M doubles as the ATM baseline on the Delta Skew chart (Cboe doesn't
+# publish a COR3MD index — the 50-delta ATM is COR3M itself).
+SKEW_INDICES = ["COR10D", "COR30D", "COR3M", "COR70D", "COR90D", "SKEW"]
+SKEW_RENAME = {"COR3M": "COR3MD"}
+
+CBOE_SETTLEMENT_URL = "https://www.cboe.com/us/futures/market_statistics/settlement/csv/"
+
+
+# ============================================================
+# Data fetching
+# ============================================================
+def _fetch_cboe_index(name: str) -> pd.Series:
+    """Pull the full daily Close history for a Cboe index from the CDN CSV."""
+    url = CBOE_INDEX_URL.format(name)
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            df = pd.read_csv(io.BytesIO(r.read()))
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] {name}: {e}")
+        return pd.Series(dtype=float)
+
+    df["DATE"] = pd.to_datetime(df["DATE"])
+    if "CLOSE" in df.columns:
+        col = "CLOSE"
+    else:
+        # SKEW.csv has only one numeric column called by the index name
+        candidates = [c for c in df.columns if c.upper() not in {"DATE"}]
+        col = candidates[-1] if candidates else df.columns[-1]
+    s = pd.Series(pd.to_numeric(df[col], errors="coerce").values, index=df["DATE"])
+    return s.dropna()
+
+
+def _trim_to_lookback(df: pd.DataFrame) -> pd.DataFrame:
+    cutoff = pd.Timestamp.now() - pd.DateOffset(months=LOOKBACK_MONTHS)
+    return df[df["DATE"] >= cutoff].reset_index(drop=True)
+
+
+def fetch_cor_skew():
+    tenor_data = {name: _fetch_cboe_index(name) for name in TENOR_INDICES}
+    tenor = pd.DataFrame(tenor_data)
+    tenor.index.name = "DATE"
+    tenor = tenor.dropna(how="all").reset_index()
+
+    skew_data = {SKEW_RENAME.get(name, name): _fetch_cboe_index(name) for name in SKEW_INDICES}
+    skew = pd.DataFrame(skew_data)
+    skew.index.name = "DATE"
+    skew = skew.dropna(how="all").reset_index()
+
+    return _trim_to_lookback(tenor), _trim_to_lookback(skew)
+
+
+def fetch_vix_futures():
+    """Pull today's Cboe settlement CSV and return monthly VX contracts."""
+    req = urllib.request.Request(CBOE_SETTLEMENT_URL, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        df = pd.read_csv(io.BytesIO(r.read()))
+
+    monthly_pat = re.compile(r"^VX/[A-Z]\d+$")
+    vx = df[(df["Product"] == "VX") & df["Symbol"].astype(str).str.match(monthly_pat)].copy()
+    vx["Expiration Date"] = pd.to_datetime(vx["Expiration Date"])
+    vx["Price"] = pd.to_numeric(vx["Price"], errors="coerce")
+    vx = vx.dropna(subset=["Price"]).sort_values("Expiration Date").reset_index(drop=True)
+
+    today = pd.Timestamp.now(tz="US/Eastern").normalize().tz_localize(None)
+    vx["DTE"] = (vx["Expiration Date"] - today).dt.days
+    vx = vx[vx["DTE"] >= 0].reset_index(drop=True)
+    return vx
+
+
+def fetch_vix_spot() -> float:
+    s = _fetch_cboe_index("VIX")
+    return float(s.iloc[-1]) if len(s) else float("nan")
+
+
+# ============================================================
+# Charts
+# ============================================================
+def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path):
+    fig, axes = plt.subplots(
+        3, 1, figsize=(14, 11), sharex=True,
+        gridspec_kw={"height_ratios": [1, 1, 0.8]},
+    )
+    for col, color, lw in [
+        ("COR1M", "#F44336", 2), ("COR3M", "#FF9800", 1.5),
+        ("COR6M", "#FFC107", 1.2), ("COR9M", "#4CAF50", 1.2),
+        ("COR1Y", "#2196F3", 2),
+    ]:
+        if col in tenor.columns:
+            axes[0].plot(tenor["DATE"], tenor[col], label=col, linewidth=lw, color=color)
+    if "COR1M" in tenor.columns and "COR1Y" in tenor.columns:
+        axes[0].fill_between(tenor["DATE"], tenor["COR1M"], tenor["COR1Y"],
+                             where=tenor["COR1M"] < tenor["COR1Y"], alpha=0.1, color="green", label="_")
+        axes[0].fill_between(tenor["DATE"], tenor["COR1M"], tenor["COR1Y"],
+                             where=tenor["COR1M"] >= tenor["COR1Y"], alpha=0.15, color="red", label="Inverted")
+    axes[0].set_ylabel("Implied Correlation (%)", fontsize=10)
+    axes[0].set_title("Term Structure — COR1M to COR1Y (tightening = caution)", fontsize=12)
+    axes[0].legend(loc="upper left", fontsize=8, ncol=3)
+    axes[0].grid(alpha=0.3)
+
+    for col, color, lw in [
+        ("COR10D", "#F44336", 1.2), ("COR30D", "#FF9800", 1.2),
+        ("COR3MD", "#FFC107", 1.5), ("COR70D", "#4CAF50", 1.2),
+        ("COR90D", "#2196F3", 2),
+    ]:
+        if col in skew.columns:
+            axes[1].plot(skew["DATE"], skew[col], label=col, linewidth=lw, color=color)
+    axes[1].axhline(50, color="red", ls="--", alpha=0.4, label="COR90D stress (50)")
+    axes[1].set_ylabel("Implied Correlation (%)", fontsize=10)
+    axes[1].set_title("Delta Skew — COR10D to COR90D (COR90D > 50 = stressed)", fontsize=12)
+    axes[1].legend(loc="upper left", fontsize=8, ncol=3)
+    axes[1].grid(alpha=0.3)
+
+    if "SKEW" in skew.columns:
+        axes[2].plot(skew["DATE"], skew["SKEW"], color="#9C27B0", linewidth=2, label="SKEW")
+        axes[2].fill_between(skew["DATE"], skew["SKEW"], 150,
+                             where=skew["SKEW"] > 150, alpha=0.15, color="red")
+    axes[2].axhline(140, color="orange", ls="--", alpha=0.5, label="Caution (140)")
+    axes[2].axhline(150, color="red", ls="--", alpha=0.5, label="High (150)")
+    axes[2].set_ylabel("SKEW Index", fontsize=10)
+    axes[2].set_title("SKEW — tail-risk indicator", fontsize=12)
+    axes[2].legend(loc="upper left", fontsize=8)
+    axes[2].grid(alpha=0.3)
+
+    axes[2].xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
+    axes[2].xaxis.set_major_locator(mdates.MonthLocator())
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
+def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path):
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # Plot VIX spot at DTE=0
+    if not np.isnan(vix_spot):
+        ax.plot([0], [vix_spot], "o", color="#1e40af", markersize=12,
+                label=f"VIX spot ({vix_spot:.2f})", zorder=5)
+
+    # Plot futures curve
+    ax.plot(vx["DTE"], vx["Price"], "o-", color="#dc2626", linewidth=2,
+            markersize=8, label="VIX futures", zorder=4)
+
+    # Annotate each contract
+    for _, row in vx.iterrows():
+        ax.annotate(
+            f"{row['Expiration Date'].strftime('%b')}\n{row['Price']:.2f}",
+            xy=(row["DTE"], row["Price"]),
+            xytext=(0, 10), textcoords="offset points",
+            ha="center", fontsize=8,
+        )
+
+    # Determine shape
+    front = vx.iloc[0]["Price"] if len(vx) else float("nan")
+    back = vx.iloc[-1]["Price"] if len(vx) else float("nan")
+    if not np.isnan(vix_spot) and len(vx) >= 2:
+        if vix_spot > front:
+            shape = "Backwardation"
+            shape_color = "#dc2626"
+        elif back > front:
+            shape = "Contango"
+            shape_color = "#16a34a"
+        else:
+            shape = "Mixed"
+            shape_color = "#6b7280"
+        ax.text(0.98, 0.05, f"Shape: {shape}", transform=ax.transAxes,
+                fontsize=14, ha="right", va="bottom", fontweight="bold",
+                bbox=dict(boxstyle="round", facecolor=shape_color, alpha=0.2,
+                          edgecolor=shape_color))
+
+    ax.set_xlabel("Days to expiration", fontsize=11)
+    ax.set_ylabel("VIX futures price", fontsize=11)
+    today_str = pd.Timestamp.now(tz="US/Eastern").strftime("%Y-%m-%d")
+    ax.set_title(f"VIX Futures Term Structure — settlement {today_str}",
+                 fontsize=13, fontweight="bold")
+    ax.legend(loc="upper left", fontsize=10)
+    ax.grid(alpha=0.3)
+    ax.set_xlim(-15, max(vx["DTE"].max() if len(vx) else 30, 30) + 15)
+
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
+# ============================================================
+# Signals
+# ============================================================
+def compute_cor_skew_signals(tenor, skew):
+    latest_t = tenor.dropna(subset=["COR1M", "COR1Y"]).iloc[-1]
+    latest_s = skew.dropna(subset=["COR90D", "SKEW"]).iloc[-1]
+    spread = latest_t["COR1Y"] - latest_t["COR1M"]
+    cor90d = latest_s["COR90D"]
+    skew_v = latest_s["SKEW"]
+
+    def state(value, ok_max, caution_max, *, reverse=False):
+        if reverse:
+            if value < 0:
+                return "danger"
+            if value < 5:
+                return "caution"
+            return "ok"
+        if value >= caution_max:
+            return "danger"
+        if value >= ok_max:
+            return "caution"
+        return "ok"
+
+    return {
+        "date": pd.Timestamp(max(latest_t["DATE"], latest_s["DATE"])).strftime("%Y-%m-%d"),
+        "spread": spread,
+        "spread_state": state(spread, 0, 0, reverse=True),
+        "cor1m": latest_t["COR1M"], "cor1y": latest_t["COR1Y"],
+        "cor90d": cor90d,
+        "cor90d_state": state(cor90d, 40, 50),
+        "skew": skew_v,
+        "skew_state": state(skew_v, 140, 150),
+    }
+
+
+def compute_vix_signals(vx, vix_spot):
+    if len(vx) < 2:
+        return None
+    front = float(vx.iloc[0]["Price"])
+    second = float(vx.iloc[1]["Price"])
+    spread_2_1 = second - front
+    if not np.isnan(vix_spot) and vix_spot > front:
+        shape = "backwardation"
+    elif spread_2_1 > 0:
+        shape = "contango"
+    else:
+        shape = "mixed"
+    return {
+        "vix_spot": vix_spot,
+        "front": front,
+        "front_expiry": vx.iloc[0]["Expiration Date"].strftime("%Y-%m-%d"),
+        "spread_2_1": spread_2_1,
+        "shape": shape,
+        "n_contracts": len(vx),
+    }
+
+
+# ============================================================
+# Home-page patching
+# ============================================================
+EMOJI = {"ok": "🟢", "caution": "🟡", "danger": "🔴"}
+START_MARK = "<!-- DASHBOARD_START -->"
+END_MARK = "<!-- DASHBOARD_END -->"
+KO_LABEL = {"ok": "정상", "caution": "경계", "danger": "스트레스"}
+EN_LABEL = {"ok": "Normal", "caution": "Caution", "danger": "Stressed"}
+SHAPE_KO = {"contango": "콘탱고 (정상)", "backwardation": "백워데이션 (스트레스)", "mixed": "혼합"}
+SHAPE_EN = {"contango": "Contango (normal)", "backwardation": "Backwardation (stress)", "mixed": "Mixed"}
+SHAPE_EMOJI = {"contango": "🟢", "backwardation": "🔴", "mixed": "🟡"}
+
+
+def render_section_ko(cs, vs):
+    spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
+    parts = [
+        START_MARK,
+        "## 📊 변동성 라이브 대시보드",
+        "",
+        f"> **{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
+        "[자세히 →](posts/volatility-dashboard.md)",
+        "",
+    ]
+    if vs:
+        parts += [
+            "### VIX Futures Term Structure",
+            "",
+            "| 항목 | 값 | 상태 |",
+            "|:-----|---:|:-----|",
+            f"| VIX 현물 | {vs['vix_spot']:.2f} | — |",
+            f"| Front month ({vs['front_expiry']}) | {vs['front']:.2f} | — |",
+            f"| M2 − M1 스프레드 | {vs['spread_2_1']:+.2f} | "
+            f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_KO[vs['shape']]} |",
+            "",
+            "![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)",
+            "",
+            "*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능.*",
+            "",
+            "---",
+            "",
+        ]
+    parts += [
+        "### COR + SKEW 대시보드",
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **Term Structure** (COR1Y − COR1M) | {cs['spread']:.1f} | "
+        f"{EMOJI[cs['spread_state']]} {spread_label} |",
+        f"| **COR90D** (동조화 수준) | {cs['cor90d']:.1f} | "
+        f"{EMOJI[cs['cor90d_state']]} {KO_LABEL[cs['cor90d_state']]} |",
+        f"| **SKEW** (꼬리 위험) | {cs['skew']:.1f} | "
+        f"{EMOJI[cs['skew_state']]} {KO_LABEL[cs['skew_state']]} |",
+        "",
+        "![변동성 대시보드](assets/diagrams/vol_dashboard.png)",
+        "",
+        "---",
+        END_MARK,
+    ]
+    return "\n".join(parts)
+
+
+def render_section_en(cs, vs):
+    spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
+    parts = [
+        START_MARK,
+        "## 📊 Live Volatility Dashboard",
+        "",
+        f"> **As of {cs['date']}** · Auto-updates daily after the US close · "
+        "[Full article →](posts/volatility-dashboard.md)",
+        "",
+    ]
+    if vs:
+        parts += [
+            "### VIX Futures Term Structure",
+            "",
+            "| Field | Value | State |",
+            "|:------|------:|:------|",
+            f"| VIX spot | {vs['vix_spot']:.2f} | — |",
+            f"| Front month ({vs['front_expiry']}) | {vs['front']:.2f} | — |",
+            f"| M2 − M1 spread | {vs['spread_2_1']:+.2f} | "
+            f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_EN[vs['shape']]} |",
+            "",
+            "![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)",
+            "",
+            "*Source: Cboe CFE settlement. A reliable alternative to Vixcentral.*",
+            "",
+            "---",
+            "",
+        ]
+    parts += [
+        "### COR + SKEW Dashboard",
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **Term Structure** (COR1Y − COR1M) | {cs['spread']:.1f} | "
+        f"{EMOJI[cs['spread_state']]} {spread_label} |",
+        f"| **COR90D** (synchronization) | {cs['cor90d']:.1f} | "
+        f"{EMOJI[cs['cor90d_state']]} {EN_LABEL[cs['cor90d_state']]} |",
+        f"| **SKEW** (tail risk) | {cs['skew']:.1f} | "
+        f"{EMOJI[cs['skew_state']]} {EN_LABEL[cs['skew_state']]} |",
+        "",
+        "![Volatility dashboard](assets/diagrams_en/vol_dashboard.png)",
+        "",
+        "---",
+        END_MARK,
+    ]
+    return "\n".join(parts)
+
+
+def patch_home(path: Path, section: str) -> bool:
+    text = path.read_text(encoding="utf-8")
+    pattern = re.compile(re.escape(START_MARK) + r".*?" + re.escape(END_MARK), re.DOTALL)
+    if pattern.search(text):
+        new_text = pattern.sub(section, text)
+    else:
+        fm_match = re.match(r"^---\n.*?\n---\n", text, re.DOTALL)
+        offset = fm_match.end() if fm_match else 0
+        h1_match = re.search(r"\n# .+?\n", text[offset:])
+        insert_at = offset + (h1_match.end() if h1_match else 0)
+        new_text = text[:insert_at] + "\n" + section + "\n" + text[insert_at:]
+    if new_text != text:
+        path.write_text(new_text, encoding="utf-8")
+        return True
+    return False
+
+
+# ============================================================
+# Main
+# ============================================================
+def main():
+    print("Fetching COR + SKEW data...")
+    tenor, skew = fetch_cor_skew()
+    print(f"  Tenor: {len(tenor)} rows, Skew: {len(skew)} rows")
+
+    print("Fetching VIX futures settlement...")
+    try:
+        vx = fetch_vix_futures()
+        print(f"  VIX futures: {len(vx)} contracts")
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] Cboe fetch failed: {e}")
+        vx = pd.DataFrame()
+
+    vix_spot = fetch_vix_spot()
+    print(f"  VIX spot: {vix_spot:.2f}")
+
+    print("Rendering charts...")
+    render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png")
+    print(f"  Saved: {OUT_KO / 'vol_dashboard.png'}")
+    # Same chart (English labels) for both languages
+    import shutil
+    shutil.copy2(OUT_KO / "vol_dashboard.png", OUT_EN / "vol_dashboard.png")
+    print(f"  Copied: {OUT_EN / 'vol_dashboard.png'}")
+
+    if len(vx) > 0:
+        render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png")
+        print(f"  Saved: {OUT_KO / 'vix_term_structure.png'}")
+        shutil.copy2(OUT_KO / "vix_term_structure.png", OUT_EN / "vix_term_structure.png")
+        print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
+
+    print("Computing signals...")
+    cs = compute_cor_skew_signals(tenor, skew)
+    vs = compute_vix_signals(vx, vix_spot) if len(vx) > 0 else None
+    print(f"  COR/SKEW: spread={cs['spread']:.2f}, COR90D={cs['cor90d']:.2f}, SKEW={cs['skew']:.2f}")
+    if vs:
+        print(f"  VIX TS: spot={vs['vix_spot']:.2f}, front={vs['front']:.2f}, "
+              f"M2-M1={vs['spread_2_1']:+.2f}, shape={vs['shape']}")
+
+    print("Patching home pages...")
+    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs))
+    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs))
+    print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
+    print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
+    print("Done.")
+
+
+if __name__ == "__main__":
+    main()

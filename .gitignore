@@ -16,6 +16,8 @@ gumroad/
 _archive/
 *.zip
 *.py
+# But the live-dashboard updater needs to run in CI, so track it
+!scripts/update_dashboard.py
 blogstyle.css
 RachetEffect.gif
 .claude/
