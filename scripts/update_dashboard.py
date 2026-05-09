@@ -332,6 +332,8 @@ def render_section_ko(cs, vs):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
+        '<div class="live-dash" markdown>',
+        "",
         "## 📊 변동성 라이브 대시보드",
         "",
         f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
@@ -379,6 +381,8 @@ def render_section_ko(cs, vs):
         "",
         "![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)",
         "",
+        "</div>",
+        "",
         "---",
         END_MARK,
     ]
@@ -389,6 +393,8 @@ def render_section_en(cs, vs):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
+        '<div class="live-dash" markdown>',
+        "",
         "## 📊 Live Volatility Dashboard",
         "",
         f"<small>**As of {cs['date']}** · Auto-updates daily after the US close · "
@@ -435,6 +441,8 @@ def render_section_en(cs, vs):
         "</div>",
         "",
         "![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)",
+        "",
+        "</div>",
         "",
         "---",
         END_MARK,

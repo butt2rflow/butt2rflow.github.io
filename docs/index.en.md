@@ -26,6 +26,8 @@ title: Home
 </div>
 
 <!-- DASHBOARD_START -->
+<div class="live-dash" markdown>
+
 ## 📊 Live Volatility Dashboard
 
 <small>**As of 2026-05-08** · Auto-updates daily after the US close · [Full article →](posts/volatility-dashboard.md)</small>
@@ -61,6 +63,8 @@ title: Home
 </div>
 
 ![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)
+
+</div>
 
 ---
 <!-- DASHBOARD_END -->

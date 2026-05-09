@@ -26,6 +26,8 @@ title: Home
 </div>
 
 <!-- DASHBOARD_START -->
+<div class="live-dash" markdown>
+
 ## 📊 변동성 라이브 대시보드
 
 <small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [자세히 →](posts/volatility-dashboard.md)</small>
@@ -61,6 +63,8 @@ title: Home
 </div>
 
 ![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)
+
+</div>
 
 ---
 <!-- DASHBOARD_END -->
