@@ -4,26 +4,9 @@ title: Home
 
 # butterflow Investment Notes
 
-<div class="tradingview-widget-container">
-  <div class="tradingview-widget-container__widget"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-  {
-  "symbols": [
-    {"description": "S&P 500", "proName": "SP:SPX"},
-    {"description": "VIX", "proName": "CBOE:VIX"},
-    {"description": "SKEW", "proName": "CBOE:SKEW"},
-    {"description": "COR3M", "proName": "CBOE:COR3M"},
-    {"description": "COR90D", "proName": "CBOE:COR90D"},
-    {"description": "VVIX", "proName": "CBOE:VVIX"}
-  ],
-  "showSymbolLogo": true,
-  "isTransparent": false,
-  "displayMode": "compact",
-  "colorTheme": "light",
-  "locale": "en"
-}
-  </script>
-</div>
+**Notes for the retail investor who treats volatility as fuel, not as enemy.**
+
+Math- and data-driven investment principles. In an age where AI dominates markets in milliseconds, some things don't change — the math of compounding, the structure of volatility, and time as a weapon.
 
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
@@ -68,12 +51,6 @@ title: Home
 
 ---
 <!-- DASHBOARD_END -->
-
-**Notes for the retail investor who treats volatility as fuel, not as enemy.**
-
-Math- and data-driven investment principles. In an age where AI dominates markets in milliseconds, some things don't change — the math of compounding, the structure of volatility, and time as a weapon.
-
----
 
 ## Free articles
 
