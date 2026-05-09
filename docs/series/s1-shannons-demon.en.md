@@ -121,6 +121,8 @@ In quantitative finance, the technique of converting volatility into return thro
 
 Mathematically, a 50:50 rebalancing portfolio in Shannon's setup earns roughly **6%** per rebalance cycle. Over 240 cycles, (1.06)^240 ≈ **$1,184,152**. A single dollar grows to $1.18 million.
 
+> ⚠️ **That 6% is a *theoretical* number.** It's what falls out of Shannon's ×2/×½ model (every period either doubles or halves) — real stock markets don't move like that. In actual markets the rebalancing premium runs roughly **0.1–2% per year**, depending on asset volatility (you can verify this in the "Lost Decade 60/40" example below: ~+1–2%/year). The point is the *mechanism*, not the number.
+
 ### Volatility size matters
 
 The bigger the volatility, the bigger the rebalancing return. Below are stocks that all return 0% on a buy & hold basis (each day 50% up, 50% down, ending where they started), but with different volatility:

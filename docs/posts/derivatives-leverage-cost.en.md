@@ -13,6 +13,8 @@ series-prev: "[Expected Return — QQQ vs TQQQ](expected-return.md)"
 !!! note "Difficulty heads-up"
     This is the densest article in the series. Options vocabulary (ATM, ITM, delta, time value) shows up frequently — each is briefly explained where it appears, but skim the [glossary](#glossary) at the bottom first if any of these terms are unfamiliar. Take it slow.
 
+    If options are entirely new to you, read the [Extension series (S3)](../series/s3-preview.md) — *The Nature of Options: insurance, time, volatility* — first. The dependency runs that way: S3 is the *foundation*, this article is the *application*.
+
 ---
 
 ## The 30-second version — where you buy your leverage decides everything
