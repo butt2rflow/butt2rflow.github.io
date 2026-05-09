@@ -32,6 +32,8 @@ The chart above auto-updates every business day. It uses **official settlement p
 
 **The point**: VIX spot is the expected volatility *at one point in time*. VIX futures price *future expected volatility* — different prices at different expirations. Connect those prices and you get a **term structure** curve.
 
+> 📝 **A note on terminology**: technically, **VIX is a pure *index*** — a number *computed* from S&P 500 option prices, not a directly tradeable asset. The phrase "VIX spot" is industry shorthand for *the current value of the VIX index*, used in contrast to *VIX futures* (forward values). Other indices like KOSPI 200 or S&P 500 follow the same convention — they're called "spot" in derivatives-trading contexts even though the indices themselves aren't directly tradeable.
+
 ---
 
 ## Contango vs Backwardation — what the curve says
