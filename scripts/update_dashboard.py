@@ -386,7 +386,7 @@ def render_section_ko(cs, vs):
             "",
             "| 항목 | 값 | 상태 |",
             "|:-----|---:|:-----|",
-            f"| VIX 현물 | {vs['vix_spot']:.2f} | — |",
+            f"| VIX 지수 | {vs['vix_spot']:.2f} | — |",
             f"| Front (M1, {vs['front_expiry']}) | {vs['front']:.2f} | — |",
             f"| **M2 − M1** (단기) | {vs['spread_2_1']:+.2f} | "
             f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_KO[vs['shape']]} |",
