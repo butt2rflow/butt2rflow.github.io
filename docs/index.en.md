@@ -28,9 +28,11 @@ title: Home
 <!-- DASHBOARD_START -->
 ## 📊 Live Volatility Dashboard
 
-> **As of 2026-05-08** · Auto-updates daily after the US close · [Full article →](posts/volatility-dashboard.md)
+<small>**As of 2026-05-08** · Auto-updates daily after the US close · [Full article →](posts/volatility-dashboard.md)</small>
 
 ### VIX Futures Term Structure
+
+<small markdown>
 
 | Field | Value | State |
 |:------|------:|:------|
@@ -38,13 +40,17 @@ title: Home
 | Front month (2026-05-19) | 19.22 | — |
 | M2 − M1 spread | +1.47 | 🟢 Contango (normal) |
 
+</small>
+
 ![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)
 
-*Source: Cboe CFE settlement — a reliable alternative to vixcentral · [Reading guide →](posts/vix-term-structure.md)*
+<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · [Reading guide →](posts/vix-term-structure.md)*</small>
 
 ---
 
 ### COR + SKEW Dashboard
+
+<small markdown>
 
 | Signal | Value | State |
 |:-------|------:|:------|
@@ -52,7 +58,9 @@ title: Home
 | **COR90D** (synchronization) | 33.1 | 🟢 Normal |
 | **SKEW** (tail risk) | 138.2 | 🟢 Normal |
 
-![Volatility dashboard](assets/diagrams_en/vol_dashboard.png)
+</small>
+
+![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)
 
 ---
 <!-- DASHBOARD_END -->
@@ -64,6 +72,13 @@ Math- and data-driven investment principles. In an age where AI dominates market
 ---
 
 ## Free articles
+
+### Returns 101
+
+- [**Returns, Compounding, and Log Charts**](posts/log-return.md) — Why arithmetic and log returns are different and why log charts exist
+- [**How is my portfolio actually doing?**](posts/portfolio-return.md) — TWR vs MWR, same trade two answers
+- [**Expected Return — QQQ vs TQQQ**](posts/expected-return.md) — A probability view of leverage and vol drag
+- [**Cost of Leverage in Derivatives**](posts/derivatives-leverage-cost.md) — Same 3×, wildly different bills
 
 ### Options analysis
 

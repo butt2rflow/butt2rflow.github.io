@@ -28,9 +28,11 @@ title: Home
 <!-- DASHBOARD_START -->
 ## 📊 변동성 라이브 대시보드
 
-> **2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [자세히 →](posts/volatility-dashboard.md)
+<small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [자세히 →](posts/volatility-dashboard.md)</small>
 
 ### VIX Futures Term Structure
+
+<small markdown>
 
 | 항목 | 값 | 상태 |
 |:-----|---:|:-----|
@@ -38,13 +40,17 @@ title: Home
 | Front month (2026-05-19) | 19.22 | — |
 | M2 − M1 스프레드 | +1.47 | 🟢 콘탱고 (정상) |
 
+</small>
+
 ![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)
 
-*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · [해석 가이드 →](posts/vix-term-structure.md)*
+<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · [해석 가이드 →](posts/vix-term-structure.md)*</small>
 
 ---
 
 ### COR + SKEW 대시보드
+
+<small markdown>
 
 | 신호 | 값 | 상태 |
 |:-----|---:|:-----|
@@ -52,7 +58,9 @@ title: Home
 | **COR90D** (동조화 수준) | 33.1 | 🟢 정상 |
 | **SKEW** (꼬리 위험) | 138.2 | 🟢 정상 |
 
-![변동성 대시보드](assets/diagrams/vol_dashboard.png)
+</small>
+
+![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)
 
 ---
 <!-- DASHBOARD_END -->
@@ -64,6 +72,13 @@ title: Home
 ---
 
 ## 무료 콘텐츠
+
+### 수익률 기초
+
+- [**수익률, 복리, 그리고 로그차트**](posts/log-return.md) — 산술수익률 vs 로그수익률, 복리, 로그차트가 한 묶음인 이유
+- [**내 포트폴리오의 수익률은?**](posts/portfolio-return.md) — TWR vs MWR, 같은 거래 두 가지 답
+- [**수익률의 기댓값**](posts/expected-return.md) — 확률 모델로 본 QQQ vs TQQQ
+- [**파생상품의 레버리지 사용료**](posts/derivatives-leverage-cost.md) — 같은 3배라도 비용은 70배 차이
 
 ### 옵션 분석
 

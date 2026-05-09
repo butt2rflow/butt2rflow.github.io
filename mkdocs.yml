@@ -90,6 +90,11 @@ nav:
   - "Market Data":
     - posts/cot.md
     - posts/fedwatch.md
+  - "Returns 101":
+    - posts/log-return.md
+    - posts/portfolio-return.md
+    - posts/expected-return.md
+    - posts/derivatives-leverage-cost.md
   - Tools:
     - posts/monte-carlo.md
     - posts/almanac.md
