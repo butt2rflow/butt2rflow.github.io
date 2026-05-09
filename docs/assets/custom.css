@@ -185,3 +185,90 @@ img {
   max-width: 100% !important;
   border-radius: 4px;
 }
+
+/* ==========================================================================
+   VIX history player — slider + play/pause + speed control on home dashboard
+   ========================================================================== */
+
+#vix-history-player {
+  margin: 0.5rem 0;
+}
+
+.vix-history-player__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.6rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.78rem;
+}
+
+.vix-history-player__play {
+  background: #1e40af;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vix-history-player__play:hover {
+  background: #1e3a8a;
+}
+
+.vix-history-player__date {
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  min-width: 6rem;
+  text-align: center;
+}
+
+.vix-history-player__slider {
+  flex: 1;
+  min-width: 8rem;
+  cursor: pointer;
+}
+
+.vix-history-player__counter {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-family: "JetBrains Mono", monospace;
+  white-space: nowrap;
+}
+
+.vix-history-player__speed {
+  font-size: 0.74rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.vix-history-player__image {
+  margin: 0.3rem 0;
+}
+
+.vix-history-player__image img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.vix-history-empty {
+  padding: 0.8rem;
+  background: #fef3c7;
+  border: 1px dashed #d4a017;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  color: #6b7280;
+  text-align: center;
+}

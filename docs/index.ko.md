@@ -30,7 +30,9 @@ title: Home
 
 ![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)
 
-<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · [해석 가이드 →](posts/vix-term-structure.md)*</small>
+<div id="vix-history-player"></div>
+
+<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · 지난 1년 곡선을 슬라이더/▶로 재생 가능 · [해석 가이드 →](posts/vix-term-structure.md)*</small>
 
 ---
 

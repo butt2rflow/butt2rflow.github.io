@@ -16,7 +16,9 @@ Run from project root:
 from __future__ import annotations
 
 import io
+import json
 import re
+import shutil
 import urllib.request
 from pathlib import Path
 
@@ -112,6 +114,57 @@ def fetch_vix_futures():
 def fetch_vix_spot() -> float:
     s = _fetch_cboe_index("VIX")
     return float(s.iloc[-1]) if len(s) else float("nan")
+
+
+# Number of past trading days to keep in the rolling VIX TS animation.
+# Each daily PNG is ~80–150 KB, so 365 days ≈ 30–50 MB in repo. GitHub
+# repos handle up to ~1 GB comfortably, so feel free to extend if you
+# want multi-year scrubbing.
+VIX_HISTORY_RETENTION_DAYS = 365
+
+
+def archive_vix_history(today_chart: Path) -> None:
+    """Copy today's VIX TS chart to docs/assets/diagrams[_en]/vix_history/<date>.png,
+    then prune anything older than VIX_HISTORY_RETENTION_DAYS, then write
+    a manifest.json the homepage's JS player reads."""
+    today_str = pd.Timestamp.now(tz="US/Eastern").strftime("%Y-%m-%d")
+
+    for parent in [OUT_KO, OUT_EN]:
+        archive_dir = parent / "vix_history"
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        # Save today's snapshot under the date filename
+        dst = archive_dir / f"{today_str}.png"
+        try:
+            shutil.copy2(today_chart, dst)
+        except Exception as e:  # noqa: BLE001
+            print(f"  [WARN] could not archive {dst}: {e}")
+            continue
+
+        # Prune files older than retention window
+        cutoff = pd.Timestamp.now() - pd.Timedelta(days=VIX_HISTORY_RETENTION_DAYS)
+        kept = []
+        for f in sorted(archive_dir.glob("*.png")):
+            try:
+                file_date = pd.Timestamp(f.stem)
+            except ValueError:
+                continue  # ignore non-date filenames
+            if file_date < cutoff:
+                f.unlink()
+                print(f"  Pruned: {f.name}")
+            else:
+                kept.append(f.stem)
+
+        kept = sorted(kept)
+        manifest = {
+            "dates": kept,
+            "latest": kept[-1] if kept else None,
+            "retention_days": VIX_HISTORY_RETENTION_DAYS,
+        }
+        (archive_dir / "manifest.json").write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        print(f"  Archive {parent.name}: {len(kept)} days, latest={manifest['latest']}")
 
 
 # ============================================================
@@ -403,7 +456,10 @@ def render_section_ko(cs, vs):
             "",
             "![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)",
             "",
+            '<div id="vix-history-player"></div>',
+            "",
             "<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · "
+            "지난 1년 곡선을 슬라이더/▶로 재생 가능 · "
             "[해석 가이드 →](posts/vix-term-structure.md)*</small>",
             "",
             "---",
@@ -472,7 +528,10 @@ def render_section_en(cs, vs):
             "",
             "![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)",
             "",
+            '<div id="vix-history-player"></div>',
+            "",
             "<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · "
+            "Use the slider/▶ to scrub through up to 1 year of past curves · "
             "[Reading guide →](posts/vix-term-structure.md)*</small>",
             "",
             "---",
@@ -557,6 +616,7 @@ def main():
         print(f"  Saved: {OUT_KO / 'vix_term_structure.png'}")
         shutil.copy2(OUT_KO / "vix_term_structure.png", OUT_EN / "vix_term_structure.png")
         print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
+        archive_vix_history(OUT_KO / "vix_term_structure.png")
 
     print("Computing signals...")
     cs = compute_cor_skew_signals(tenor, skew)

@@ -74,6 +74,7 @@ extra_css:
 
 extra_javascript:
   - assets/sidebar-widget.js
+  - assets/vix-history-player.js
 
 nav:
   - Home: index.md

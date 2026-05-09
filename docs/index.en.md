@@ -30,7 +30,9 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)
 
-<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · [Reading guide →](posts/vix-term-structure.md)*</small>
+<div id="vix-history-player"></div>
+
+<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · Use the slider/▶ to scrub through up to 1 year of past curves · [Reading guide →](posts/vix-term-structure.md)*</small>
 
 ---
 
