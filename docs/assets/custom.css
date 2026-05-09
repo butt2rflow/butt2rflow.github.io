@@ -69,6 +69,23 @@ img {
 .md-typeset .live-dash img {
   margin: 0.2rem auto !important;
   max-width: 92%;
+  display: block;
+}
+
+/* Center-align tables and content blocks within the dashboard so charts
+   and tables share visual alignment */
+.md-typeset .live-dash .dash-tight {
+  text-align: center !important;
+}
+
+.md-typeset .live-dash > h2,
+.md-typeset .live-dash > h3 {
+  text-align: center !important;
+}
+
+.md-typeset .live-dash > p:has(small),
+.md-typeset .live-dash > p {
+  text-align: center !important;
 }
 
 .md-typeset .live-dash small {
@@ -87,7 +104,7 @@ img {
 
 .md-typeset .dash-tight table:not([class]) {
   font-size: 0.72rem !important;
-  margin: 0.15rem 0 !important;
+  margin: 0.15rem auto !important;
   width: auto !important;
   display: inline-table;
 }

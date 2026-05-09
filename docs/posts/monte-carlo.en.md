@@ -226,6 +226,8 @@ The five key ideas of Monte Carlo simulation:
 
 Production financial Monte Carlos add layers on top of this — volatility clustering, jump models, regime switches. But the core mechanism is exactly the "Hello World" we built here.
 
+> **The natural application is backtesting actual investment strategies — covered in** [Execution series (S2) — VIX volatility targeting](../series/s2-preview.md)**.** A 2006–2025 SPY backtest moves Sharpe from 0.56 to 0.79 and max drawdown from −55% to −36%.
+
 ---
 
 *Next: [The Almanac Trader — Seasonality analysis](almanac.md)*

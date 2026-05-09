@@ -199,6 +199,8 @@ bgcolor(skew_spread > 25 ? color.new(color.red, 85) :
 
 The IV surface is a real-time map of the options market's collective psychology. The COR indices put numbers on specific points of that map — giving you a tool to read participant intent faster than the news cycle.
 
+> 💡 **The COR1M–COR1Y, COR10D–COR90D, and SKEW indices discussed here are tracked daily on the [home-page live dashboard](../index.md).** Pulled directly from Cboe settlement data — an ad-free alternative to vixcentral.
+
 ---
 
 *Previous: [Hedging the Wings](hedging-wings.md) | Related: [Volatility Skew](skew.md)*

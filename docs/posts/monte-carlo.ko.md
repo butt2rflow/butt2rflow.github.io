@@ -226,6 +226,8 @@ paths = 1000 * np.exp(np.cumsum(random_returns, axis=1))
 
 금융 실전에서는 경험적 분포에 추가 파라미터(변동성 클러스터링, 점프 모델 등)를 결합하여 더 정교한 시뮬레이션을 수행합니다. 하지만 원리는 여기서 다룬 "Hello World"와 정확히 같습니다.
 
+> **이 시뮬레이션 도구를 본격적인 투자 전략 백테스팅에 응용하는 사례는** [실행편 (S2 시리즈) — VIX 변동성 타겟팅](../series/s2-preview.md)**에서 다룹니다.** SPY 2006~2025년 백테스트로 Sharpe 0.56→0.79, MDD −55%→−36%까지 개선하는 실전 데이터.
+
 ---
 
 *다음 글: [Almanac Trader — Seasonality 분석](almanac.md)*

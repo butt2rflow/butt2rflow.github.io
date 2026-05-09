@@ -146,6 +146,8 @@ So as of March 20, the rates market priced the March FOMC at **77% hold, 23% hik
 The point is that you can recover the market's view on the next FOMC decision from a single FF futures price. Chain that reasoning across multiple meetings — use the March contract for March FOMC, then feed the result into the May contract for May FOMC — and you can extract the full rate path the market is currently pricing for the months ahead. When a headline says "90% probability of a hike," that number comes from this calculation.
 
 > FedWatch updates in real time on the CME website, which makes it useful for reading sentiment going into a meeting. Just remember: FF futures prices are tick-by-tick, so FedWatch probabilities move tick-by-tick too. It's not a fixed forecast — it's the **market's current consensus**.
+>
+> 🔗 **See today's probabilities live**: [CME FedWatch Tool](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html)
 
 ---
 

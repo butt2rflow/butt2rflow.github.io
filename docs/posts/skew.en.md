@@ -126,4 +126,6 @@ CBOE publishes the **SKEW Index**, a single number that quantifies how much extr
 
 ---
 
+> Next, we'll **turn this asymmetry (skew) into *money*** — the 1:2 Put Ratio Spread, walked through with concrete SPY numbers (at $540). The "skew steepens in a sell-off" insight from this article is exactly the mechanism that makes the strategy work.
+
 *Next: [Hedging the Wings — Cheap Tail-Risk Insurance](hedging-wings.md)*
