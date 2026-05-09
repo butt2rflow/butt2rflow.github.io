@@ -11,7 +11,6 @@ theme:
     primary: amber
     accent: deep orange
   features:
-    - navigation.instant
     - navigation.tabs
     - navigation.top
     - navigation.sections
@@ -25,10 +24,30 @@ theme:
   favicon: assets/butterflow.png
 
 plugins:
-  - search:
-      lang:
-        - ko
-        - en
+  - search
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: ko
+          name: "🇰🇷 한국어"
+          build: true
+          default: true
+          site_name: "butterflow 투자 노트"
+          nav_translations:
+            Home: 홈
+            Series: 시리즈
+            Posts: 글
+            "Options Analysis": 옵션 분석
+            "Market Data": 시장 데이터
+            Tools: 도구
+            Principles: 원칙편 (무료 1편)
+            "Execution (preview)": 실행편 (미리보기)
+            "Extension (preview)": 확장편 (미리보기)
+            "Depth (preview)": 심화편 (미리보기)
+        - locale: en
+          name: "🇺🇸 English"
+          build: true
+          site_name: "butterflow Investment Notes"
 
 markdown_extensions:
   - admonition
@@ -57,28 +76,21 @@ extra_css:
 
 nav:
   - Home: index.md
-  - 시리즈:
+  - Series:
     - series/index.md
-    - 원칙편 (무료 1편):
+    - Principles:
       - series/s1-shannons-demon.md
-    - 실행편 (미리보기): series/s2-preview.md
-    - 확장편 (미리보기): series/s3-preview.md
-    - 심화편 (미리보기): series/s4-preview.md
-  - English:
-    - en/index.md
-    - "Principles (free part 1)":
-      - en/s1-shannons-demon.md
-    - "Execution (preview)": en/s2-preview.md
-    - "Extension (preview)": en/s3-preview.md
-    - "Depth (preview)": en/s4-preview.md
-  - 옵션 분석:
+    - "Execution (preview)": series/s2-preview.md
+    - "Extension (preview)": series/s3-preview.md
+    - "Depth (preview)": series/s4-preview.md
+  - "Options Analysis":
     - posts/skew.md
     - posts/hedging-wings.md
     - posts/implied-correlation.md
-  - 시장 데이터:
+  - "Market Data":
     - posts/cot.md
     - posts/fedwatch.md
-  - 도구:
+  - Tools:
     - posts/monte-carlo.md
     - posts/almanac.md
     - posts/gex-calculator.md

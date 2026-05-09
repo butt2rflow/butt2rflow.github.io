@@ -5,10 +5,15 @@ site/
 naver_export/
 naver_images/
 polished/
+polished_en/
 docs-site/
 pdfs/
+pdfs_en/
+pdfs_kmong/
 ppts/
 kmong/
+gumroad/
+_archive/
 *.zip
 *.py
 blogstyle.css
