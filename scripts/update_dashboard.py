@@ -299,6 +299,14 @@ def compute_vix_signals(vx, vix_spot):
     front = float(vx.iloc[0]["Price"])
     second = float(vx.iloc[1]["Price"])
     spread_2_1 = second - front
+    # Mid-curve spread (V7 - V4) — relevant for VXZ/VIXM mid-term VIX ETFs
+    spread_7_4 = None
+    if len(vx) >= 7:
+        spread_7_4 = float(vx.iloc[6]["Price"]) - float(vx.iloc[3]["Price"])
+    # Whole-curve steepness (V7 - V1)
+    spread_7_1 = None
+    if len(vx) >= 7:
+        spread_7_1 = float(vx.iloc[6]["Price"]) - front
     if not np.isnan(vix_spot) and vix_spot > front:
         shape = "backwardation"
     elif spread_2_1 > 0:
@@ -310,6 +318,8 @@ def compute_vix_signals(vx, vix_spot):
         "front": front,
         "front_expiry": vx.iloc[0]["Expiration Date"].strftime("%Y-%m-%d"),
         "spread_2_1": spread_2_1,
+        "spread_7_4": spread_7_4,
+        "spread_7_1": spread_7_1,
         "shape": shape,
         "n_contracts": len(vx),
     }
@@ -349,9 +359,17 @@ def render_section_ko(cs, vs):
             "| 항목 | 값 | 상태 |",
             "|:-----|---:|:-----|",
             f"| VIX 현물 | {vs['vix_spot']:.2f} | — |",
-            f"| Front month ({vs['front_expiry']}) | {vs['front']:.2f} | — |",
-            f"| M2 − M1 스프레드 | {vs['spread_2_1']:+.2f} | "
+            f"| Front (M1, {vs['front_expiry']}) | {vs['front']:.2f} | — |",
+            f"| **M2 − M1** (단기) | {vs['spread_2_1']:+.2f} | "
             f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_KO[vs['shape']]} |",
+        ]
+        if vs.get("spread_7_4") is not None:
+            shape74 = "contango" if vs["spread_7_4"] > 0 else ("backwardation" if vs["spread_7_4"] < 0 else "mixed")
+            parts.append(
+                f"| **M7 − M4** (중기, VXZ 영역) | {vs['spread_7_4']:+.2f} | "
+                f"{SHAPE_EMOJI[shape74]} {SHAPE_KO[shape74]} |"
+            )
+        parts += [
             "",
             "</div>",
             "",
@@ -410,9 +428,17 @@ def render_section_en(cs, vs):
             "| Field | Value | State |",
             "|:------|------:|:------|",
             f"| VIX spot | {vs['vix_spot']:.2f} | — |",
-            f"| Front month ({vs['front_expiry']}) | {vs['front']:.2f} | — |",
-            f"| M2 − M1 spread | {vs['spread_2_1']:+.2f} | "
+            f"| Front (M1, {vs['front_expiry']}) | {vs['front']:.2f} | — |",
+            f"| **M2 − M1** (short-term) | {vs['spread_2_1']:+.2f} | "
             f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_EN[vs['shape']]} |",
+        ]
+        if vs.get("spread_7_4") is not None:
+            shape74 = "contango" if vs["spread_7_4"] > 0 else ("backwardation" if vs["spread_7_4"] < 0 else "mixed")
+            parts.append(
+                f"| **M7 − M4** (mid-term, VXZ zone) | {vs['spread_7_4']:+.2f} | "
+                f"{SHAPE_EMOJI[shape74]} {SHAPE_EN[shape74]} |"
+            )
+        parts += [
             "",
             "</div>",
             "",

@@ -22,8 +22,9 @@ Math- and data-driven investment principles. In an age where AI dominates market
 | Field | Value | State |
 |:------|------:|:------|
 | VIX spot | 17.19 | — |
-| Front month (2026-05-19) | 19.22 | — |
-| M2 − M1 spread | +1.47 | 🟢 Contango (normal) |
+| Front (M1, 2026-05-19) | 19.22 | — |
+| **M2 − M1** (short-term) | +1.47 | 🟢 Contango (normal) |
+| **M7 − M4** (mid-term, VXZ zone) | +0.79 | 🟢 Contango (normal) |
 
 </div>
 
