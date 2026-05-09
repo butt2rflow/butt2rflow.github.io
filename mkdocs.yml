@@ -74,15 +74,16 @@ extra:
 extra_css:
   - assets/custom.css
 
+extra_javascript:
+  - assets/sidebar-widget.js
+
 nav:
   - Home: index.md
-  - Series:
-    - series/index.md
-    - Principles:
-      - series/s1-shannons-demon.md
-    - "Execution (preview)": series/s2-preview.md
-    - "Extension (preview)": series/s3-preview.md
-    - "Depth (preview)": series/s4-preview.md
+  - "Returns 101":
+    - posts/log-return.md
+    - posts/portfolio-return.md
+    - posts/expected-return.md
+    - posts/derivatives-leverage-cost.md
   - "Options Analysis":
     - posts/skew.md
     - posts/hedging-wings.md
@@ -90,11 +91,6 @@ nav:
   - "Market Data":
     - posts/cot.md
     - posts/fedwatch.md
-  - "Returns 101":
-    - posts/log-return.md
-    - posts/portfolio-return.md
-    - posts/expected-return.md
-    - posts/derivatives-leverage-cost.md
   - Tools:
     - posts/monte-carlo.md
     - posts/almanac.md
@@ -102,5 +98,12 @@ nav:
     - posts/gex-0dte-patterns.md
     - posts/volatility-dashboard.md
     - posts/vix-term-structure.md
+  - Series:
+    - series/index.md
+    - Principles:
+      - series/s1-shannons-demon.md
+    - "Execution (preview)": series/s2-preview.md
+    - "Extension (preview)": series/s3-preview.md
+    - "Depth (preview)": series/s4-preview.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"

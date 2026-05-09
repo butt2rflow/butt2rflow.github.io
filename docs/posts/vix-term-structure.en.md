@@ -81,7 +81,7 @@ Reading: "Volatility is extreme right now, and we expect it to settle down later
 Backwardation occurs **less than 20% of the time**. When it does, the market is in panic:
 
 - **October 2008**: Global Financial Crisis. Front-month VIX futures near 80, backwardation of +13 pts (the largest on record)
-- **February 5, 2018**: "Volmageddon" — VIX +115% in a day, [SVXY −90%](skew.md), brief backwardation
+- **February 5, 2018**: "Volmageddon" — VIX +115% in a day, SVXY −90% (the vol-short ETF collapse), brief backwardation
 - **March 2020**: COVID panic, VIX hit 82
 - **January–February 2022**: brief backwardation right before the Ukraine invasion
 - **April 2025**: just after the Trump tariff announcement

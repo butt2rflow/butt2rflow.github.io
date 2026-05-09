@@ -31,3 +31,108 @@ img {
   font-size: 0.75rem;
   margin: 0.2em 0.3em 0.2em 0;
 }
+
+/* ==========================================================================
+   Live dashboard block on the home page — aggressive compression
+   ========================================================================== */
+
+.md-typeset .live-dash {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.md-typeset .live-dash h2 {
+  font-size: 1rem !important;
+  margin: 0.5rem 0 0.2rem 0 !important;
+  padding: 0 !important;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.md-typeset .live-dash h3 {
+  font-size: 0.85rem !important;
+  margin: 0.4rem 0 0.15rem 0 !important;
+  padding: 0 !important;
+  font-weight: 700;
+  color: #525252;
+  line-height: 1.3;
+}
+
+.md-typeset .live-dash p {
+  margin: 0.15rem 0 !important;
+}
+
+.md-typeset .live-dash hr {
+  margin: 0.3rem 0 !important;
+}
+
+.md-typeset .live-dash img {
+  margin: 0.2rem auto !important;
+  max-width: 92%;
+}
+
+.md-typeset .live-dash small {
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+.md-typeset .live-dash .headerlink {
+  display: none;
+}
+
+/* Tables inside dash-tight (used inside live-dash for the signal tables) */
+.md-typeset .dash-tight {
+  margin: 0.25rem 0 !important;
+}
+
+.md-typeset .dash-tight table:not([class]) {
+  font-size: 0.72rem !important;
+  margin: 0.15rem 0 !important;
+  width: auto !important;
+  display: inline-table;
+}
+
+.md-typeset .dash-tight table:not([class]) th,
+.md-typeset .dash-tight table:not([class]) td {
+  padding: 0.18em 0.55em !important;
+  line-height: 1.3 !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.md-typeset .dash-tight table:not([class]) thead th {
+  padding-top: 0.25em !important;
+  padding-bottom: 0.25em !important;
+}
+
+.md-typeset .dash-tight p {
+  margin: 0.1rem 0 !important;
+}
+
+/* ==========================================================================
+   Sidebar TradingView ticker widget — injected on homepage only
+   ========================================================================== */
+
+.sidebar-tv-widget {
+  margin: 1rem 0.6rem 1.5rem 0.6rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-tv-widget__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #525252;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-tv-widget .tradingview-widget-container {
+  width: 100%;
+}
+
+/* TradingView ticker tape is naturally horizontal; let it scroll within the
+   sidebar without bursting the container */
+.sidebar-tv-widget iframe {
+  max-width: 100% !important;
+  border-radius: 4px;
+}
