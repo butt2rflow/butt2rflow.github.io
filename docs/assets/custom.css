@@ -126,6 +126,38 @@ img {
 }
 
 /* ==========================================================================
+   Mobile responsive — disable inline float:right images on narrow screens
+   so Korean text doesn't get squeezed into a one-char-per-line column
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .md-typeset img[style*="float"] {
+    float: none !important;
+    max-width: 100% !important;
+    width: auto !important;
+    margin: 1rem auto !important;
+    display: block;
+  }
+
+  /* Series index uses cover images with inline float — strip the float so
+     the bullet lists below them flow normally instead of wrapping
+     character-by-character beside a narrow image */
+  .md-typeset img[style*="max-width:280px"],
+  .md-typeset img[style*="max-width: 280px"] {
+    float: none !important;
+    max-width: 70% !important;
+    margin: 1rem auto !important;
+    display: block;
+  }
+
+  /* Ensure the 'clear:both' divs after floated images don't introduce
+     weird gaps on mobile */
+  .md-typeset div[style*="clear:both"] {
+    display: none;
+  }
+}
+
+/* ==========================================================================
    Sidebar TradingView ticker widget — injected on homepage only
    ========================================================================== */
 
