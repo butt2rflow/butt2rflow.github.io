@@ -4,6 +4,27 @@ title: Home
 
 # butterflow 투자 노트
 
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+  "symbols": [
+    {"description": "S&P 500", "proName": "SP:SPX"},
+    {"description": "VIX", "proName": "CBOE:VIX"},
+    {"description": "SKEW", "proName": "CBOE:SKEW"},
+    {"description": "COR3M", "proName": "CBOE:COR3M"},
+    {"description": "COR90D", "proName": "CBOE:COR90D"},
+    {"description": "VVIX", "proName": "CBOE:VVIX"}
+  ],
+  "showSymbolLogo": true,
+  "isTransparent": false,
+  "displayMode": "compact",
+  "colorTheme": "light",
+  "locale": "kr"
+}
+  </script>
+</div>
+
 <!-- DASHBOARD_START -->
 ## 📊 변동성 라이브 대시보드
 
@@ -19,7 +40,7 @@ title: Home
 
 ![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)
 
-*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능.*
+*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · [해석 가이드 →](posts/vix-term-structure.md)*
 
 ---
 
@@ -62,6 +83,7 @@ title: Home
 - [**GEX 직접 계산하기**](posts/gex-calculator.md) — Google Sheets + Python으로 감마 노출 계산
 - [**0DTE 감마 패턴**](posts/gex-0dte-patterns.md) — 장중 GEX는 어떻게 변하는가
 - [**변동성 대시보드**](posts/volatility-dashboard.md) — Correlation + Skew 추적 (Google Sheets + Python)
+- [**VIX Futures Term Structure**](posts/vix-term-structure.md) — 콘탱고/백워데이션 해석 (vixcentral 대안)
 
 ---
 

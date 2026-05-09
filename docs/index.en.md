@@ -4,6 +4,27 @@ title: Home
 
 # butterflow Investment Notes
 
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+  "symbols": [
+    {"description": "S&P 500", "proName": "SP:SPX"},
+    {"description": "VIX", "proName": "CBOE:VIX"},
+    {"description": "SKEW", "proName": "CBOE:SKEW"},
+    {"description": "COR3M", "proName": "CBOE:COR3M"},
+    {"description": "COR90D", "proName": "CBOE:COR90D"},
+    {"description": "VVIX", "proName": "CBOE:VVIX"}
+  ],
+  "showSymbolLogo": true,
+  "isTransparent": false,
+  "displayMode": "compact",
+  "colorTheme": "light",
+  "locale": "en"
+}
+  </script>
+</div>
+
 <!-- DASHBOARD_START -->
 ## 📊 Live Volatility Dashboard
 
@@ -19,7 +40,7 @@ title: Home
 
 ![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)
 
-*Source: Cboe CFE settlement. A reliable alternative to Vixcentral.*
+*Source: Cboe CFE settlement — a reliable alternative to vixcentral · [Reading guide →](posts/vix-term-structure.md)*
 
 ---
 
@@ -62,6 +83,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**Calculating GEX Yourself**](posts/gex-calculator.md) — Gamma exposure with Google Sheets + Python
 - [**0DTE Gamma Patterns**](posts/gex-0dte-patterns.md) — How GEX shifts intraday
 - [**Volatility Dashboard**](posts/volatility-dashboard.md) — Tracking Correlation + Skew (Google Sheets + Python)
+- [**VIX Futures Term Structure**](posts/vix-term-structure.md) — Reading contango/backwardation (vixcentral alternative)
 
 ---
 

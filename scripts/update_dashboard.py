@@ -317,7 +317,8 @@ def render_section_ko(cs, vs):
             "",
             "![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)",
             "",
-            "*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능.*",
+            "*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · "
+            "[해석 가이드 →](posts/vix-term-structure.md)*",
             "",
             "---",
             "",
@@ -365,7 +366,8 @@ def render_section_en(cs, vs):
             "",
             "![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)",
             "",
-            "*Source: Cboe CFE settlement. A reliable alternative to Vixcentral.*",
+            "*Source: Cboe CFE settlement — a reliable alternative to vixcentral · "
+            "[Reading guide →](posts/vix-term-structure.md)*",
             "",
             "---",
             "",
