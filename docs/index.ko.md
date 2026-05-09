@@ -32,7 +32,7 @@ title: Home
 
 ### VIX Futures Term Structure
 
-<small markdown>
+<div class="dash-tight" markdown>
 
 | 항목 | 값 | 상태 |
 |:-----|---:|:-----|
@@ -40,7 +40,7 @@ title: Home
 | Front month (2026-05-19) | 19.22 | — |
 | M2 − M1 스프레드 | +1.47 | 🟢 콘탱고 (정상) |
 
-</small>
+</div>
 
 ![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)
 
@@ -50,7 +50,7 @@ title: Home
 
 ### COR + SKEW 대시보드
 
-<small markdown>
+<div class="dash-tight" markdown>
 
 | 신호 | 값 | 상태 |
 |:-----|---:|:-----|
@@ -58,7 +58,7 @@ title: Home
 | **COR90D** (동조화 수준) | 33.1 | 🟢 정상 |
 | **SKEW** (꼬리 위험) | 138.2 | 🟢 정상 |
 
-</small>
+</div>
 
 ![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)
 

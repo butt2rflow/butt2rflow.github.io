@@ -11,7 +11,7 @@ series-next: "[Expected Return — QQQ vs TQQQ](expected-return.md)"
 
 > Have you ever calculated your own return and gotten a different number than your brokerage app? They're both correct — they're answering **different questions**.
 
-![Returns are different different](../assets/diagrams_en/cafe_8429_01.gif)
+![Wait, why don't these match?](../assets/diagrams_en/cafe_8429_01.gif)
 
 This article unpacks that difference using pictures.
 
@@ -138,13 +138,17 @@ Used for fund comparison and manager evaluation. The returns you see on Mornings
 
 ### One-line summary: "money in = money out"
 
-Translate the first law of thermodynamics (energy conservation) to dollars:
+Picture a piggy bank. You drop coins in, take coins out, drop more in — when you finally smash it open and count, *what comes out matches what went in* (assuming no interest). Money in = money out.
+
+Apply the same idea to a portfolio:
 
 > **money flowing in = money flowing out + money remaining**
 
 If you sell everything at the end of the period, "money remaining" goes to zero, and:
 
 > **money in = money out** ⇔ **sum of cash flows = 0**
+
+(Physics calls this *conservation of energy*, but you don't need to memorize that — the point is just that *the total is zero*.)
 
 You discount each cash flow back to today using IRR (internal rate of return), and find the IRR that makes the sum equal zero. That's MWR.
 
@@ -250,7 +254,7 @@ Sum log returns over 3 years → annualize → 9.82%/year
 
 | | TWR | MWR |
 |:--|:----|:----|
-| **9.82% vs 6.70%** | Asset's run | Your timing-and-amount-included result |
+| **9.82% vs 6.70%** | Asset's run | Includes your timing and contributions |
 | **The year-2 $10 add-on** | Effect stripped out | Effect included → drags result down |
 | **Message** | "The fund ran well" | "But your entry timing was rough" |
 
@@ -260,7 +264,7 @@ The asset returned +9.82%. But the $10 you added in year 2 only got 1 year to ru
 
 | Question | Look at |
 |:---------|:--------|
-| "Is this fund run well?" | **TWR** (manager evaluation) |
+| "Is this fund well-run?" | **TWR** (manager evaluation) |
 | "How much did I actually earn?" | **MWR** (personal result) |
 | "Comparing two ETFs" | **TWR** (cash-flow effect removed) |
 | "What my brokerage app shows" | Usually **MWR** (only needs trade history) |

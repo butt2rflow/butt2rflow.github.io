@@ -32,7 +32,7 @@ title: Home
 
 ### VIX Futures Term Structure
 
-<small markdown>
+<div class="dash-tight" markdown>
 
 | Field | Value | State |
 |:------|------:|:------|
@@ -40,7 +40,7 @@ title: Home
 | Front month (2026-05-19) | 19.22 | — |
 | M2 − M1 spread | +1.47 | 🟢 Contango (normal) |
 
-</small>
+</div>
 
 ![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)
 
@@ -50,7 +50,7 @@ title: Home
 
 ### COR + SKEW Dashboard
 
-<small markdown>
+<div class="dash-tight" markdown>
 
 | Signal | Value | State |
 |:-------|------:|:------|
@@ -58,7 +58,7 @@ title: Home
 | **COR90D** (synchronization) | 33.1 | 🟢 Normal |
 | **SKEW** (tail risk) | 138.2 | 🟢 Normal |
 
-</small>
+</div>
 
 ![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)
 

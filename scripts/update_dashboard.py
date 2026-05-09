@@ -117,27 +117,56 @@ def fetch_vix_spot() -> float:
 # ============================================================
 # Charts
 # ============================================================
-def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path):
+def fetch_spx() -> pd.Series:
+    """Pull S&P 500 close history from Cboe (no auth needed)."""
+    s = _fetch_cboe_index("SPX")
+    return s
+
+
+def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path,
+                    spx: pd.Series | None = None):
+    # 4 panels now (with SPX paired at top), shared x-axis with date labels
+    n_panels = 4 if spx is not None and len(spx) else 3
     fig, axes = plt.subplots(
-        3, 1, figsize=(14, 11), sharex=True,
-        gridspec_kw={"height_ratios": [1, 1, 0.8]},
+        n_panels, 1, figsize=(14, 12 if n_panels == 4 else 11), sharex=True,
+        gridspec_kw={"height_ratios": [0.7, 1, 1, 0.8] if n_panels == 4 else [1, 1, 0.8]},
     )
+
+    panel = 0
+    if n_panels == 4:
+        # Trim SPX to lookback window
+        cutoff = pd.Timestamp.now() - pd.DateOffset(months=LOOKBACK_MONTHS)
+        spx_trim = spx[spx.index >= cutoff]
+        axes[panel].plot(spx_trim.index, spx_trim.values, color="#1e40af",
+                         linewidth=1.8, label="S&P 500")
+        axes[panel].fill_between(spx_trim.index, spx_trim.values, spx_trim.min(),
+                                 alpha=0.08, color="#1e40af")
+        axes[panel].set_ylabel("S&P 500", fontsize=10)
+        axes[panel].set_title("S&P 500 — reference price (paired with vol indicators below)", fontsize=11)
+        axes[panel].legend(loc="upper left", fontsize=8)
+        axes[panel].grid(alpha=0.3)
+        panel += 1
+    cor_panel_start = panel
+    # Re-bind axes index variables for the rest of the function
+    cor_ax = axes[panel]
+    skew_ax = axes[panel + 1]
+    skew_idx_ax = axes[panel + 2]
     for col, color, lw in [
         ("COR1M", "#F44336", 2), ("COR3M", "#FF9800", 1.5),
         ("COR6M", "#FFC107", 1.2), ("COR9M", "#4CAF50", 1.2),
         ("COR1Y", "#2196F3", 2),
     ]:
         if col in tenor.columns:
-            axes[0].plot(tenor["DATE"], tenor[col], label=col, linewidth=lw, color=color)
+            cor_ax.plot(tenor["DATE"], tenor[col], label=col, linewidth=lw, color=color)
     if "COR1M" in tenor.columns and "COR1Y" in tenor.columns:
-        axes[0].fill_between(tenor["DATE"], tenor["COR1M"], tenor["COR1Y"],
-                             where=tenor["COR1M"] < tenor["COR1Y"], alpha=0.1, color="green", label="_")
-        axes[0].fill_between(tenor["DATE"], tenor["COR1M"], tenor["COR1Y"],
-                             where=tenor["COR1M"] >= tenor["COR1Y"], alpha=0.15, color="red", label="Inverted")
-    axes[0].set_ylabel("Implied Correlation (%)", fontsize=10)
-    axes[0].set_title("Term Structure — COR1M to COR1Y (tightening = caution)", fontsize=12)
-    axes[0].legend(loc="upper left", fontsize=8, ncol=3)
-    axes[0].grid(alpha=0.3)
+        cor_ax.fill_between(tenor["DATE"], tenor["COR1M"], tenor["COR1Y"],
+                            where=tenor["COR1M"] < tenor["COR1Y"], alpha=0.1, color="green", label="_")
+        cor_ax.fill_between(tenor["DATE"], tenor["COR1M"], tenor["COR1Y"],
+                            where=tenor["COR1M"] >= tenor["COR1Y"], alpha=0.15, color="red", label="Inverted")
+    cor_ax.set_ylabel("Implied Correlation (%)", fontsize=10)
+    cor_ax.set_title("Term Structure — COR1M to COR1Y (tightening = caution)", fontsize=11)
+    cor_ax.legend(loc="upper left", fontsize=8, ncol=3)
+    cor_ax.grid(alpha=0.3)
 
     for col, color, lw in [
         ("COR10D", "#F44336", 1.2), ("COR30D", "#FF9800", 1.2),
@@ -145,27 +174,32 @@ def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path):
         ("COR90D", "#2196F3", 2),
     ]:
         if col in skew.columns:
-            axes[1].plot(skew["DATE"], skew[col], label=col, linewidth=lw, color=color)
-    axes[1].axhline(50, color="red", ls="--", alpha=0.4, label="COR90D stress (50)")
-    axes[1].set_ylabel("Implied Correlation (%)", fontsize=10)
-    axes[1].set_title("Delta Skew — COR10D to COR90D (COR90D > 50 = stressed)", fontsize=12)
-    axes[1].legend(loc="upper left", fontsize=8, ncol=3)
-    axes[1].grid(alpha=0.3)
+            skew_ax.plot(skew["DATE"], skew[col], label=col, linewidth=lw, color=color)
+    skew_ax.axhline(50, color="red", ls="--", alpha=0.4, label="COR90D stress (50)")
+    skew_ax.set_ylabel("Implied Correlation (%)", fontsize=10)
+    skew_ax.set_title("Delta Skew — COR10D to COR90D (COR90D > 50 = stressed)", fontsize=11)
+    skew_ax.legend(loc="upper left", fontsize=8, ncol=3)
+    skew_ax.grid(alpha=0.3)
 
     if "SKEW" in skew.columns:
-        axes[2].plot(skew["DATE"], skew["SKEW"], color="#9C27B0", linewidth=2, label="SKEW")
-        axes[2].fill_between(skew["DATE"], skew["SKEW"], 150,
-                             where=skew["SKEW"] > 150, alpha=0.15, color="red")
-    axes[2].axhline(140, color="orange", ls="--", alpha=0.5, label="Caution (140)")
-    axes[2].axhline(150, color="red", ls="--", alpha=0.5, label="High (150)")
-    axes[2].set_ylabel("SKEW Index", fontsize=10)
-    axes[2].set_title("SKEW — tail-risk indicator", fontsize=12)
-    axes[2].legend(loc="upper left", fontsize=8)
-    axes[2].grid(alpha=0.3)
+        skew_idx_ax.plot(skew["DATE"], skew["SKEW"], color="#9C27B0", linewidth=2, label="SKEW")
+        skew_idx_ax.fill_between(skew["DATE"], skew["SKEW"], 150,
+                                 where=skew["SKEW"] > 150, alpha=0.15, color="red")
+    skew_idx_ax.axhline(140, color="orange", ls="--", alpha=0.5, label="Caution (140)")
+    skew_idx_ax.axhline(150, color="red", ls="--", alpha=0.5, label="High (150)")
+    skew_idx_ax.set_ylabel("SKEW Index", fontsize=10)
+    skew_idx_ax.set_title("SKEW — tail-risk indicator", fontsize=11)
+    skew_idx_ax.legend(loc="upper left", fontsize=8)
+    skew_idx_ax.grid(alpha=0.3)
 
-    axes[2].xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
-    axes[2].xaxis.set_major_locator(mdates.MonthLocator())
-    plt.xticks(rotation=45)
+    # x-axis date labels — bi-weekly + minor weekly grid for readability
+    last_ax = axes[-1]
+    last_ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.MO, interval=2))
+    last_ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+    last_ax.xaxis.set_minor_locator(mdates.WeekdayLocator(byweekday=mdates.MO))
+    plt.setp(last_ax.get_xticklabels(), rotation=35, ha="right")
+    last_ax.tick_params(axis="x", which="major", labelsize=9)
+
     plt.tight_layout()
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
@@ -300,13 +334,15 @@ def render_section_ko(cs, vs):
         START_MARK,
         "## 📊 변동성 라이브 대시보드",
         "",
-        f"> **{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
-        "[자세히 →](posts/volatility-dashboard.md)",
+        f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
+        "[자세히 →](posts/volatility-dashboard.md)</small>",
         "",
     ]
     if vs:
         parts += [
             "### VIX Futures Term Structure",
+            "",
+            '<div class="dash-tight" markdown>',
             "",
             "| 항목 | 값 | 상태 |",
             "|:-----|---:|:-----|",
@@ -315,16 +351,20 @@ def render_section_ko(cs, vs):
             f"| M2 − M1 스프레드 | {vs['spread_2_1']:+.2f} | "
             f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_KO[vs['shape']]} |",
             "",
+            "</div>",
+            "",
             "![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)",
             "",
-            "*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · "
-            "[해석 가이드 →](posts/vix-term-structure.md)*",
+            "<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · "
+            "[해석 가이드 →](posts/vix-term-structure.md)*</small>",
             "",
             "---",
             "",
         ]
     parts += [
         "### COR + SKEW 대시보드",
+        "",
+        '<div class="dash-tight" markdown>',
         "",
         "| 신호 | 값 | 상태 |",
         "|:-----|---:|:-----|",
@@ -335,7 +375,9 @@ def render_section_ko(cs, vs):
         f"| **SKEW** (꼬리 위험) | {cs['skew']:.1f} | "
         f"{EMOJI[cs['skew_state']]} {KO_LABEL[cs['skew_state']]} |",
         "",
-        "![변동성 대시보드](assets/diagrams/vol_dashboard.png)",
+        "</div>",
+        "",
+        "![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)",
         "",
         "---",
         END_MARK,
@@ -349,13 +391,15 @@ def render_section_en(cs, vs):
         START_MARK,
         "## 📊 Live Volatility Dashboard",
         "",
-        f"> **As of {cs['date']}** · Auto-updates daily after the US close · "
-        "[Full article →](posts/volatility-dashboard.md)",
+        f"<small>**As of {cs['date']}** · Auto-updates daily after the US close · "
+        "[Full article →](posts/volatility-dashboard.md)</small>",
         "",
     ]
     if vs:
         parts += [
             "### VIX Futures Term Structure",
+            "",
+            '<div class="dash-tight" markdown>',
             "",
             "| Field | Value | State |",
             "|:------|------:|:------|",
@@ -364,16 +408,20 @@ def render_section_en(cs, vs):
             f"| M2 − M1 spread | {vs['spread_2_1']:+.2f} | "
             f"{SHAPE_EMOJI[vs['shape']]} {SHAPE_EN[vs['shape']]} |",
             "",
+            "</div>",
+            "",
             "![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)",
             "",
-            "*Source: Cboe CFE settlement — a reliable alternative to vixcentral · "
-            "[Reading guide →](posts/vix-term-structure.md)*",
+            "<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · "
+            "[Reading guide →](posts/vix-term-structure.md)*</small>",
             "",
             "---",
             "",
         ]
     parts += [
         "### COR + SKEW Dashboard",
+        "",
+        '<div class="dash-tight" markdown>',
         "",
         "| Signal | Value | State |",
         "|:-------|------:|:------|",
@@ -384,7 +432,9 @@ def render_section_en(cs, vs):
         f"| **SKEW** (tail risk) | {cs['skew']:.1f} | "
         f"{EMOJI[cs['skew_state']]} {EN_LABEL[cs['skew_state']]} |",
         "",
-        "![Volatility dashboard](assets/diagrams_en/vol_dashboard.png)",
+        "</div>",
+        "",
+        "![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)",
         "",
         "---",
         END_MARK,
@@ -428,8 +478,12 @@ def main():
     vix_spot = fetch_vix_spot()
     print(f"  VIX spot: {vix_spot:.2f}")
 
+    print("Fetching S&P 500 reference series...")
+    spx = fetch_spx()
+    print(f"  SPX history: {len(spx)} rows")
+
     print("Rendering charts...")
-    render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png")
+    render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
     print(f"  Saved: {OUT_KO / 'vol_dashboard.png'}")
     # Same chart (English labels) for both languages
     import shutil

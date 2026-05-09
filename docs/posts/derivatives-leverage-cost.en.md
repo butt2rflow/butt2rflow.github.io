@@ -10,6 +10,9 @@ series-prev: "[Expected Return — QQQ vs TQQQ](expected-return.md)"
 
 > "TQQQ's expense ratio is 0.88%, so it's cheap, right?" — On the surface. But the *real* cost goes far beyond that. Leverage itself has a *price*. And depending on which derivative you use, that price ranges from **under 1% to over 70% per year**. There's even a way to get paid for using it.
 
+!!! note "Difficulty heads-up"
+    This is the densest article in the series. Options vocabulary (ATM, ITM, delta, time value) shows up frequently — each is briefly explained where it appears, but skim the [glossary](#glossary) at the bottom first if any of these terms are unfamiliar. Take it slow.
+
 ---
 
 ## The 30-second version — where you buy your leverage decides everything
@@ -22,7 +25,7 @@ Suppose you want roughly 3× exposure (or similar market exposure) to the same m
 | **Swap contracts (used by TQQQ)** | 3× | **~9.9% / yr** |
 | **SPX ATM call (1-year expiration)** | 5.32× | **18.79% / yr** |
 | **SPX deep-ITM call (1-year expiration)** | 1.87× | **0.80% / yr** |
-| **Synthetic long (long call + short put)** | 6.78× | **0% or *negative* (you receive credit)** |
+| **Synthetic long (long call + short put)** | 6.89× | **0% or *negative* (you receive credit)** |
 
 **More than a 70× spread on the cost of buying the same exposure to the same market.** This article walks through how each method gets to its number.
 
@@ -180,11 +183,11 @@ Net cost:                  -$14.00 → -$1,400 per 100-share contract (you recei
 | Margin (IBKR) | $59,175 (= $69,575 − $1,400 credit) |
 | Delta | 1.00 (synthetic = 100% of underlying) |
 | Market exposure | $407,909 |
-| **Leverage** | **6.78×** |
+| **Leverage** | **6.89×** |
 
-> **6.78× leverage AND a $1,400 credit upfront.**
+> **6.89× leverage AND a $1,400 credit upfront.**
 
-This is possible when there's *skew* in the option market. In the example above, the strike ($4,100) is slightly off the exact ATM ($4,080) — the put is richer than the call, and selling the put gives more credit than buying the call costs. Not always available, but option-market skew creates these windows often.
+This is possible when there's *skew* in the option market. In the example above, the strike ($4,100) is slightly off the exact ATM ($4,080) — the put is richer than the call, and selling the put gives more credit than buying the call costs. Not always available, but skew opens these windows fairly often.
 
 > Hedge funds use synthetic positions extensively as [hedging tools](https://www.optionsplaybook.com/option-strategies/synthetic-long-stock/).
 
@@ -198,7 +201,7 @@ This is possible when there's *skew* in the option market. In the example above,
 | Swap (TQQQ) | 3× | ~10% | (built into ETF price) | Costs explode in rate-hike cycles |
 | ATM call (1Y) | 5.32× | 18.8% | $38,325 | Risk of full time-value loss |
 | **Deep ITM call (1Y)** | **1.87×** | **0.80%** | $211,080 | **The "Pelosi trade"** — minimal time value |
-| **Synthetic long** | **6.78×** | **0% to −** | $59,175 | Exploits market skew |
+| **Synthetic long** | **6.89×** | **0% to −** | $59,175 | Exploits market skew |
 
 ### Key insights
 
@@ -242,6 +245,8 @@ The [previous article](expected-return.md) showed that *time horizon* matters mo
 ---
 
 *Previous: [Expected Return — A Probability View of QQQ vs TQQQ](expected-return.md) | Related: [Extension series (S3) — Options in practice](../series/s3-preview.md)*
+
+<a id="glossary"></a>
 
 *Glossary*:
 - *Cost of carry* — the risk-free cost of holding an asset (net of dividends and interest)

@@ -137,7 +137,9 @@ But still **more than 2×**. Vol drag *doesn't quite eat* the positive compoundi
 
 Even with a normally-distributed return shape, **rare extreme moves** (sustained bull/bear runs) pull the *expectation* up.
 
-> The market runs *on math*. Lower-probability events necessarily pay more — like a lottery: lower odds of winning the jackpot means a bigger jackpot.
+> The market runs *on math*. Lower-probability events necessarily pay more — like a lottery, where lower odds of winning the jackpot mean a bigger jackpot.
+>
+> *(One critical difference, though: a lottery has a negative expected value — buyers lose money on average. Leveraged ETFs have a positive expected value because the rare upside payoff is large enough to outweigh the typical decay.)*
 
 The exponential up-runs in leveraged ETFs are rare, but a single one of them more than compensates for many sideways windows of decay.
 
@@ -152,7 +154,7 @@ The exponential up-runs in leveraged ETFs are rare, but a single one of them mor
 | Monthly expected return | ~**−1.6%** | ~**−5.5%** |
 | TQQQ/QQQ | | ~3.4× (negative) |
 
-In a sustained bear year, TQQQ is *worse than 3×* — both positive compounding (working in the down direction) and vol drag amplify.
+In a sustained bear year, TQQQ is *worse than 3×* — compounding amplifies in both directions, and vol drag piles on.
 
 ### Bull year (2020-04-01 to 2021-03-31)
 
