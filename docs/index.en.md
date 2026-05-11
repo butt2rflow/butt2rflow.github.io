@@ -59,11 +59,11 @@ Math- and data-driven investment principles. In an age where AI dominates market
 <div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2" markdown>
 <div class="dash-tight" markdown>
 
-| Trigger | Now | Fired |
+| Trigger | Now | Tier / Fired |
 |:---|---:|:---:|
-| VIX > 50 (sustained 5d) | 17.2 (5d min 17.1) | ❌ |
-| COR90D > 55 AND SKEW > 150 | 33.1 / 138.2 | ❌ |
-| 30-day SPX drawdown ≥ 20% | +0.0% | ❌ |
+| VIX sustained 5d — 40+ ×½ / 50+ ×1 / 60+ ×1½ | 17.2 (5d min 17.1) | 🟢 Inactive (0) |
+| COR90D > 55 AND SKEW > 150 | 33.1 / 138.2 | ❌ (0) |
+| 30-day SPX drawdown ≥ 20% | +0.0% | ❌ (0) |
 | **Tactical reserve (20%)** | **🟢 0% deploy (Inactive)** | — |
 
 </div>
@@ -71,7 +71,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 <div class="tactical-composite"><strong>📊 Combined total (Main 80% + Tactical 20%)</strong>: <strong>Equity <span data-total-equity>68</span>% / Cash <span data-total-cash>32</span>%</strong></div>
 </div>
 
-<small>*Tactical bucket (20% of total capital) held separately as *offensive cash to monetise the time edge*. Each fired trigger deploys 1/3 in laddered tranches. Combined total above updates live with the Main card toggles · [Read more →](posts/cash-allocation.md)*</small>
+<small>*Tactical bucket (20% of total) held as *offensive cash to monetise the time edge*. T1 (VIX sustained) is laddered 40/50/60 with weights ½/1/1½; T2 and T3 are binary 0/1. Total weight ÷ 3 → deploy %, capped at 100. Combined total above updates live with the Main card toggles · [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 

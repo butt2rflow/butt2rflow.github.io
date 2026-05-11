@@ -564,25 +564,36 @@ def compute_kelly_signal(vix_spot: float, cs: dict | None,
 
 
 def compute_tactical_signal(vix_hist, cs, spx):
-    """Tactical-bucket trigger status — three composite extreme-stress
-    conditions, each contributing one tranche (1/3) toward full deployment.
+    """Tactical-bucket trigger status — laddered T1 + two binary triggers.
 
-    T1: VIX > 50 sustained 5 trading days (single-day spike doesn't count)
-    T2: COR90D > 55 AND SKEW > 150 (cross-asset stress)
-    T3: 30-day SPX cumulative drawdown ≥ 20% (price-action capitulation)
-    """
-    # T1
+    T1: VIX sustained 5 trading days, three tiers
+        VIX > 40 (sustained) → weight 0.5  (mild stress, partial entry)
+        VIX > 50 (sustained) → weight 1.0  (full standard tranche)
+        VIX > 60 (sustained) → weight 1.5  (deep stress, extra-large tranche)
+    T2: COR90D > 55 AND SKEW > 150 (cross-asset stress) → weight 1.0
+    T3: 30-day SPX cumulative drawdown ≥ 20% (price capitulation) → weight 1.0
+
+    Total weight summed, capped, then mapped to deploy % via /3 × 100."""
+    # T1 — laddered
     if vix_hist is not None and len(vix_hist) >= 5:
         recent_vix = vix_hist.tail(5)
-        t1 = bool((recent_vix > 50).all())
         vix_5d_min = float(recent_vix.min())
         vix_now = float(vix_hist.iloc[-1])
+        if (recent_vix > 60).all():
+            t1_weight, t1_tier_ko, t1_tier_en = 1.5, "60+ 단계 (×1.5)", "60+ tier (×1.5)"
+        elif (recent_vix > 50).all():
+            t1_weight, t1_tier_ko, t1_tier_en = 1.0, "50+ 단계 (×1.0)", "50+ tier (×1.0)"
+        elif (recent_vix > 40).all():
+            t1_weight, t1_tier_ko, t1_tier_en = 0.5, "40+ 단계 (×0.5)", "40+ tier (×0.5)"
+        else:
+            t1_weight, t1_tier_ko, t1_tier_en = 0.0, "미발동 (0)", "Inactive (0)"
     else:
-        t1 = False
+        t1_weight = 0.0
+        t1_tier_ko, t1_tier_en = "미발동 (0)", "Inactive (0)"
         vix_5d_min = float("nan")
         vix_now = float("nan")
 
-    # T2
+    # T2 binary
     if cs:
         t2 = bool(cs["cor90d"] > 55 and cs["skew"] > 150)
         cor90d = float(cs["cor90d"])
@@ -592,9 +603,9 @@ def compute_tactical_signal(vix_hist, cs, spx):
         cor90d = float("nan")
         skew_v = float("nan")
 
-    # T3
+    # T3 binary
     if spx is not None and len(spx) >= 2:
-        window = spx.tail(31)  # 30 trading days plus today
+        window = spx.tail(31)
         peak = float(window.max())
         current = float(window.iloc[-1])
         drawdown_pct = (current - peak) / peak * 100
@@ -603,14 +614,20 @@ def compute_tactical_signal(vix_hist, cs, spx):
         drawdown_pct = float("nan")
         t3 = False
 
-    n_triggers = int(t1) + int(t2) + int(t3)
-    deploy_pct = int(round(n_triggers * 100 / 3))
-    state, label_ko, label_en = {
-        0: ("ok",       "대기",          "Inactive"),
-        1: ("caution",  "1차 발동",      "Tranche 1"),
-        2: ("warning",  "2차 발동",      "Tranche 2"),
-        3: ("danger",   "Capitulation",  "Capitulation"),
-    }[n_triggers]
+    total_weight = t1_weight + (1.0 if t2 else 0.0) + (1.0 if t3 else 0.0)
+    deploy_pct = int(round(min(total_weight / 3 * 100, 100)))
+
+    # State buckets — 5 levels by deploy_pct
+    if deploy_pct == 0:
+        state, label_ko, label_en = "ok", "대기", "Inactive"
+    elif deploy_pct < 34:
+        state, label_ko, label_en = "caution", "1차 발동", "Tranche 1"
+    elif deploy_pct < 67:
+        state, label_ko, label_en = "warning", "2차 발동", "Tranche 2"
+    elif deploy_pct < 100:
+        state, label_ko, label_en = "danger", "3차 발동", "Tranche 3"
+    else:
+        state, label_ko, label_en = "danger", "Capitulation", "Capitulation"
 
     return {
         "vix_now": vix_now,
@@ -618,8 +635,13 @@ def compute_tactical_signal(vix_hist, cs, spx):
         "cor90d": cor90d,
         "skew": skew_v,
         "spx_drawdown_30d_pct": drawdown_pct,
-        "t1": t1, "t2": t2, "t3": t3,
-        "n_triggers": n_triggers,
+        "t1_weight": t1_weight,
+        "t1_tier_ko": t1_tier_ko,
+        "t1_tier_en": t1_tier_en,
+        "t1": t1_weight > 0,
+        "t2": t2,
+        "t3": t3,
+        "total_weight": total_weight,
         "deploy_pct": deploy_pct,
         "state": state,
         "label_ko": label_ko,
@@ -746,14 +768,20 @@ def _initial_composite(ks: dict | None, ts: dict) -> tuple[int, int]:
 
 
 def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
-    """Tactical bucket card — offensive deploy signal + composite total."""
-    mark = lambda b: "✅" if b else "❌"  # noqa: E731
+    """Tactical bucket card — offensive deploy signal + composite total.
+
+    T1 (VIX sustained) is laddered: 40+ ×0.5, 50+ ×1.0, 60+ ×1.5.
+    T2/T3 are binary ×1.0."""
+    mark2 = lambda b: "✅ (×1.0)" if b else "❌ (0)"  # noqa: E731
     drawdown_str = (f"{ts['spx_drawdown_30d_pct']:+.1f}%"
                     if not np.isnan(ts['spx_drawdown_30d_pct']) else "—")
     vix_disp = (f"{ts['vix_now']:.1f} (5일 최저 {ts['vix_5d_min']:.1f})"
                 if not np.isnan(ts['vix_now']) else "—")
     cor_skew_disp = (f"{ts['cor90d']:.1f} / {ts['skew']:.1f}"
                      if not np.isnan(ts['cor90d']) else "—")
+    t1_mark = ("🟢 " if ts["t1_weight"] == 0 else
+               "🟡 " if ts["t1_weight"] == 0.5 else
+               "🟠 " if ts["t1_weight"] == 1.0 else "🔴 ") + ts["t1_tier_ko"]
     total_eq, total_cash = _initial_composite(ks, ts)
     return [
         "### ⚡ 공격 자본 (Tactical Bucket) — 위기 발동 신호",
@@ -762,11 +790,11 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}" markdown>',
         '<div class="dash-tight" markdown>',
         "",
-        "| 트리거 | 현재 | 충족 |",
+        "| 트리거 | 현재 | 단계 / 충족 |",
         "|:---|---:|:---:|",
-        f"| VIX > 50 (5일 지속) | {vix_disp} | {mark(ts['t1'])} |",
-        f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
-        f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark(ts['t3'])} |",
+        f"| VIX 5일 지속 — 40+ ×½ / 50+ ×1 / 60+ ×1½ | {vix_disp} | {t1_mark} |",
+        f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark2(ts['t2'])} |",
+        f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark2(ts['t3'])} |",
         f"| **공격 자본 (전체의 20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% 투입 ({ts['label_ko']})** | — |",
         "",
         "</div>",
@@ -779,7 +807,8 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         "</div>",
         "",
         "<small>*공격 자본(전체의 20%)은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
-        "충족 트리거 수만큼 1/3씩 단계 투입 (laddered deploy). "
+        "T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. "
+        "총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. "
         "위 합산은 메인 카드 토글 선택에 따라 실시간 갱신 · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
@@ -789,13 +818,16 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
 
 
 def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
-    mark = lambda b: "✅" if b else "❌"  # noqa: E731
+    mark2 = lambda b: "✅ (×1.0)" if b else "❌ (0)"  # noqa: E731
     drawdown_str = (f"{ts['spx_drawdown_30d_pct']:+.1f}%"
                     if not np.isnan(ts['spx_drawdown_30d_pct']) else "—")
     vix_disp = (f"{ts['vix_now']:.1f} (5d min {ts['vix_5d_min']:.1f})"
                 if not np.isnan(ts['vix_now']) else "—")
     cor_skew_disp = (f"{ts['cor90d']:.1f} / {ts['skew']:.1f}"
                      if not np.isnan(ts['cor90d']) else "—")
+    t1_mark = ("🟢 " if ts["t1_weight"] == 0 else
+               "🟡 " if ts["t1_weight"] == 0.5 else
+               "🟠 " if ts["t1_weight"] == 1.0 else "🔴 ") + ts["t1_tier_en"]
     total_eq, total_cash = _initial_composite(ks, ts)
     return [
         "### ⚡ Tactical Bucket — Offensive Deploy Signal",
@@ -804,11 +836,11 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
         f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}" markdown>',
         '<div class="dash-tight" markdown>',
         "",
-        "| Trigger | Now | Fired |",
+        "| Trigger | Now | Tier / Fired |",
         "|:---|---:|:---:|",
-        f"| VIX > 50 (sustained 5d) | {vix_disp} | {mark(ts['t1'])} |",
-        f"| COR90D > 55 AND SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
-        f"| 30-day SPX drawdown ≥ 20% | {drawdown_str} | {mark(ts['t3'])} |",
+        f"| VIX sustained 5d — 40+ ×½ / 50+ ×1 / 60+ ×1½ | {vix_disp} | {t1_mark} |",
+        f"| COR90D > 55 AND SKEW > 150 | {cor_skew_disp} | {mark2(ts['t2'])} |",
+        f"| 30-day SPX drawdown ≥ 20% | {drawdown_str} | {mark2(ts['t3'])} |",
         f"| **Tactical reserve (20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% deploy ({ts['label_en']})** | — |",
         "",
         "</div>",
@@ -820,8 +852,9 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
         f'</div>',
         "</div>",
         "",
-        "<small>*Tactical bucket (20% of total capital) held separately as *offensive cash to monetise the time edge*. "
-        "Each fired trigger deploys 1/3 in laddered tranches. "
+        "<small>*Tactical bucket (20% of total) held as *offensive cash to monetise the time edge*. "
+        "T1 (VIX sustained) is laddered 40/50/60 with weights ½/1/1½; T2 and T3 are binary 0/1. "
+        "Total weight ÷ 3 → deploy %, capped at 100. "
         "Combined total above updates live with the Main card toggles · "
         "[Read more →](posts/cash-allocation.md)*</small>",
         "",
@@ -1198,7 +1231,8 @@ def main():
               f"{ks['base_pct']['quarter']}/{ks['base_pct']['half']}/{ks['base_pct']['full']}%, "
               f"states corskew={ks['cor_skew_state']}/vixts={ks['vix_ts_state']}/volvol={ks['volvol_state']}")
     if ts:
-        print(f"  Tactical: triggers T1/T2/T3={int(ts['t1'])}/{int(ts['t2'])}/{int(ts['t3'])}, "
+        print(f"  Tactical: T1 w={ts['t1_weight']} ({ts['t1_tier_en']}), "
+              f"T2={int(ts['t2'])}, T3={int(ts['t3'])}, total={ts['total_weight']}, "
               f"deploy={ts['deploy_pct']}% ({ts['label_en']}), "
               f"SPX 30d dd={ts['spx_drawdown_30d_pct']:+.1f}%")
 

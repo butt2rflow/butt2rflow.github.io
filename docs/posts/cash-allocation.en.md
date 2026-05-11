@@ -196,14 +196,16 @@ So **split cash into two kinds** — that completes the structure the series arg
 ### Tactical bucket operating rules
 
 - **Size**: 10–20% of total. Too large destabilises the main framework; too small makes deployment irrelevant.
-- **Composite triggers** (multi-condition, not a single indicator):
-    - VIX > 50 *sustained* (single-day spike doesn't count; require 5+ days)
-    - COR90D > 55 AND SKEW > 150 simultaneously
-    - 30-day cumulative SPX decline ≥ 20%
-- **Laddered deploy** — never deploy all at once; split into tranches:
-    - 1st trigger met → deploy 1/3 of tactical bucket
-    - VIX continues +10 points → another 1/3
-    - VIX +10 again, or clear capitulation → final 1/3
+- **Composite triggers** — T1 is laddered, T2/T3 binary:
+    - **T1 (VIX sustained 5 days, tiered)**
+        - 5-day VIX min > **40** → weight **0.5** (mild partial entry)
+        - 5-day VIX min > **50** → weight **1.0** (standard tranche)
+        - 5-day VIX min > **60** → weight **1.5** (deep stress, large tranche)
+    - **T2 (cross-asset stress)**: COR90D > 55 AND SKEW > 150 simultaneously → weight **1.0**
+    - **T3 (price capitulation)**: 30-day cumulative SPX decline ≥ **20%** → weight **1.0**
+- **Laddered deploy** — total weight ÷ 3 → deploy %, capped at 100:
+    - e.g., 5-day VIX min = 45 (T1=0.5) + COR/SKEW fired (T2=1.0) + SPX −22% (T3=1.0) → total 2.5 → 83% deploy
+    - All signals max (VIX 60+, T2, T3) → total 3.5 → cap 100% (capitulation)
 - **Refill gradually in recovery** — once vol calms, refill tactical bucket from the main framework's exposure-reduction proceeds or from gains. Don't leave it empty forever after one deployment.
 - **Pre-defined rules only** — no "feel". Deploy *only* on pre-specified conditions. If conditions aren't met, sit still. (Blocks emotional entries.)
 

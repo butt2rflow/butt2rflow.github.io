@@ -59,11 +59,11 @@ title: Home
 <div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2" markdown>
 <div class="dash-tight" markdown>
 
-| 트리거 | 현재 | 충족 |
+| 트리거 | 현재 | 단계 / 충족 |
 |:---|---:|:---:|
-| VIX > 50 (5일 지속) | 17.2 (5일 최저 17.1) | ❌ |
-| COR90D > 55 + SKEW > 150 | 33.1 / 138.2 | ❌ |
-| 30일 SPX 누적 −20% | +0.0% | ❌ |
+| VIX 5일 지속 — 40+ ×½ / 50+ ×1 / 60+ ×1½ | 17.2 (5일 최저 17.1) | 🟢 미발동 (0) |
+| COR90D > 55 + SKEW > 150 | 33.1 / 138.2 | ❌ (0) |
+| 30일 SPX 누적 −20% | +0.0% | ❌ (0) |
 | **공격 자본 (전체의 20%)** | **🟢 0% 투입 (대기)** | — |
 
 </div>
@@ -71,7 +71,7 @@ title: Home
 <div class="tactical-composite"><strong>📊 전체 합산 (메인 80% + 공격 20%)</strong>: <strong>주식 <span data-total-equity>68</span>% / 현금 <span data-total-cash>32</span>%</strong></div>
 </div>
 
-<small>*공격 자본(전체의 20%)은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. 충족 트리거 수만큼 1/3씩 단계 투입 (laddered deploy). 위 합산은 메인 카드 토글 선택에 따라 실시간 갱신 · [자세히 →](posts/cash-allocation.md)*</small>
+<small>*공격 자본(전체의 20%)은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. 총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. 위 합산은 메인 카드 토글 선택에 따라 실시간 갱신 · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 
