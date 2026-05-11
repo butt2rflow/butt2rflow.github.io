@@ -50,12 +50,13 @@ title: Home
 
 ![Kelly × VIX 곡선](assets/diagrams/kelly_curve.png)
 
-<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
+<small>*위 비중은 **메인 포트폴리오 (전체의 80%) 기준** — Tactical reserve(나머지 20%)는 다음 카드에서 별도 관리, 합산 비중은 Tactical 카드 하단 참조. Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 
 ### ⚡ Tactical Bucket — 공격 모드 신호
 
+<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
 <div class="dash-tight" markdown>
 
 | 트리거 | 현재 | 충족 |
@@ -63,11 +64,14 @@ title: Home
 | VIX > 50 (5일 지속) | 17.2 (5일 최저 17.1) | ❌ |
 | COR90D > 55 + SKEW > 150 | 33.1 / 138.2 | ❌ |
 | 30일 SPX 누적 −20% | +0.0% | ❌ |
-| **권장 deploy** | **🟢 0% (대기)** | — |
+| **Tactical reserve (20%)** | **🟢 0% deploy (대기)** | — |
 
 </div>
 
-<small>*Tactical bucket(전체 자본의 10–20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. 충족 트리거 수만큼 1/3씩 laddered deploy · [자세히 →](posts/cash-allocation.md)*</small>
+<div class="tactical-composite"><strong>📊 전체 합산 (Main 80% + Tactical 20%)</strong>: <strong>주식 <span data-total-equity>68</span>% / 현금 <span data-total-cash>32</span>%</strong></div>
+</div>
+
+<small>*Tactical bucket(전체 자본의 20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. 충족 트리거 수만큼 1/3씩 laddered deploy. 위 합산은 Main 카드의 토글 선택에 따라 실시간 갱신 · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 

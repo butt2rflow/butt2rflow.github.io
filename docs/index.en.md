@@ -50,12 +50,13 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ![Kelly × VIX curve](assets/diagrams_en/kelly_curve.png)
 
-<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
+<small>*This mix applies to the **main portfolio (80% of total)** — the Tactical reserve (remaining 20%) is managed in the next card; combined total appears at the bottom of the Tactical card. Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 
 ### ⚡ Tactical Bucket — Offensive Deploy Signal
 
+<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
 <div class="dash-tight" markdown>
 
 | Trigger | Now | Fired |
@@ -63,11 +64,14 @@ Math- and data-driven investment principles. In an age where AI dominates market
 | VIX > 50 (sustained 5d) | 17.2 (5d min 17.1) | ❌ |
 | COR90D > 55 AND SKEW > 150 | 33.1 / 138.2 | ❌ |
 | 30-day SPX drawdown ≥ 20% | +0.0% | ❌ |
-| **Recommended deploy** | **🟢 0% (Inactive)** | — |
+| **Tactical reserve (20%)** | **🟢 0% deploy (Inactive)** | — |
 
 </div>
 
-<small>*Tactical bucket (10–20% of total capital) held separately as *offensive cash to monetise the time edge*. Each fired trigger deploys 1/3 in laddered tranches · [Read more →](posts/cash-allocation.md)*</small>
+<div class="tactical-composite"><strong>📊 Combined total (Main 80% + Tactical 20%)</strong>: <strong>Equity <span data-total-equity>68</span>% / Cash <span data-total-cash>32</span>%</strong></div>
+</div>
+
+<small>*Tactical bucket (20% of total capital) held separately as *offensive cash to monetise the time edge*. Each fired trigger deploys 1/3 in laddered tranches. Combined total above updates live with the Main card toggles · [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 

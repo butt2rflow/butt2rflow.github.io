@@ -54,6 +54,12 @@ RISK_DISCOUNT_PROFILES = {
 }
 RISK_DISCOUNT_DEFAULT = "standard"
 
+# Capital layering — the Cash card's percentages apply to the MAIN portion;
+# the Tactical bucket is a separate reserve sized at TACTICAL_FRAC of total.
+# JS composes the true total equity = MAIN × kelly_eq + TACTICAL × deploy.
+MAIN_FRAC = 0.80
+TACTICAL_FRAC = 0.20
+
 # Cboe publishes clean CSVs at this pattern; way more reliable than yfinance
 # for these indices (yfinance returns 1-row history for COR* indices).
 CBOE_INDEX_URL = "https://cdn.cboe.com/api/global/us_indices/daily_prices/{}_History.csv"
@@ -720,7 +726,9 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         "",
         f"![Kelly × VIX 곡선]({diagrams_path}/kelly_curve.png)",
         "",
-        "<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier "
+        "<small>*위 비중은 **메인 포트폴리오 (전체의 80%) 기준** — Tactical reserve(나머지 20%)는 "
+        "다음 카드에서 별도 관리, 합산 비중은 Tactical 카드 하단 참조. "
+        "Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier "
         "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
         "**교육 목적 · 투자 권유 아님** · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
@@ -730,8 +738,15 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
     ]
 
 
-def render_tactical_card_ko(ts: dict) -> list[str]:
-    """Tactical bucket card — offensive deploy signal."""
+def _initial_composite(ks: dict | None, ts: dict) -> tuple[int, int]:
+    """Initial composite total (no discount applied — JS recomputes on load)."""
+    kelly_eq = ks["base_pct"]["half"] if ks else 0
+    total_eq = min(round(MAIN_FRAC * kelly_eq + TACTICAL_FRAC * ts["deploy_pct"]), 100)
+    return total_eq, 100 - total_eq
+
+
+def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
+    """Tactical bucket card — offensive deploy signal + composite total."""
     mark = lambda b: "✅" if b else "❌"  # noqa: E731
     drawdown_str = (f"{ts['spx_drawdown_30d_pct']:+.1f}%"
                     if not np.isnan(ts['spx_drawdown_30d_pct']) else "—")
@@ -739,9 +754,12 @@ def render_tactical_card_ko(ts: dict) -> list[str]:
                 if not np.isnan(ts['vix_now']) else "—")
     cor_skew_disp = (f"{ts['cor90d']:.1f} / {ts['skew']:.1f}"
                      if not np.isnan(ts['cor90d']) else "—")
+    total_eq, total_cash = _initial_composite(ks, ts)
     return [
         "### ⚡ Tactical Bucket — 공격 모드 신호",
         "",
+        f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
+        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
         '<div class="dash-tight" markdown>',
         "",
         "| 트리거 | 현재 | 충족 |",
@@ -749,12 +767,20 @@ def render_tactical_card_ko(ts: dict) -> list[str]:
         f"| VIX > 50 (5일 지속) | {vix_disp} | {mark(ts['t1'])} |",
         f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
         f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark(ts['t3'])} |",
-        f"| **권장 deploy** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_ko']})** | — |",
+        f"| **Tactical reserve (20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% deploy ({ts['label_ko']})** | — |",
         "",
         "</div>",
         "",
-        "<small>*Tactical bucket(전체 자본의 10–20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. "
-        "충족 트리거 수만큼 1/3씩 laddered deploy · "
+        f'<div class="tactical-composite">'
+        f'<strong>📊 전체 합산 (Main 80% + Tactical 20%)</strong>: '
+        f'<strong>주식 <span data-total-equity>{total_eq}</span>% / '
+        f'현금 <span data-total-cash>{total_cash}</span>%</strong>'
+        f'</div>',
+        "</div>",
+        "",
+        "<small>*Tactical bucket(전체 자본의 20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. "
+        "충족 트리거 수만큼 1/3씩 laddered deploy. "
+        "위 합산은 Main 카드의 토글 선택에 따라 실시간 갱신 · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
         "---",
@@ -762,7 +788,7 @@ def render_tactical_card_ko(ts: dict) -> list[str]:
     ]
 
 
-def render_tactical_card_en(ts: dict) -> list[str]:
+def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     mark = lambda b: "✅" if b else "❌"  # noqa: E731
     drawdown_str = (f"{ts['spx_drawdown_30d_pct']:+.1f}%"
                     if not np.isnan(ts['spx_drawdown_30d_pct']) else "—")
@@ -770,9 +796,12 @@ def render_tactical_card_en(ts: dict) -> list[str]:
                 if not np.isnan(ts['vix_now']) else "—")
     cor_skew_disp = (f"{ts['cor90d']:.1f} / {ts['skew']:.1f}"
                      if not np.isnan(ts['cor90d']) else "—")
+    total_eq, total_cash = _initial_composite(ks, ts)
     return [
         "### ⚡ Tactical Bucket — Offensive Deploy Signal",
         "",
+        f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
+        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
         '<div class="dash-tight" markdown>',
         "",
         "| Trigger | Now | Fired |",
@@ -780,12 +809,20 @@ def render_tactical_card_en(ts: dict) -> list[str]:
         f"| VIX > 50 (sustained 5d) | {vix_disp} | {mark(ts['t1'])} |",
         f"| COR90D > 55 AND SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
         f"| 30-day SPX drawdown ≥ 20% | {drawdown_str} | {mark(ts['t3'])} |",
-        f"| **Recommended deploy** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_en']})** | — |",
+        f"| **Tactical reserve (20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% deploy ({ts['label_en']})** | — |",
         "",
         "</div>",
         "",
-        "<small>*Tactical bucket (10–20% of total capital) held separately as *offensive cash to monetise the time edge*. "
-        "Each fired trigger deploys 1/3 in laddered tranches · "
+        f'<div class="tactical-composite">'
+        f'<strong>📊 Combined total (Main 80% + Tactical 20%)</strong>: '
+        f'<strong>Equity <span data-total-equity>{total_eq}</span>% / '
+        f'Cash <span data-total-cash>{total_cash}</span>%</strong>'
+        f'</div>',
+        "</div>",
+        "",
+        "<small>*Tactical bucket (20% of total capital) held separately as *offensive cash to monetise the time edge*. "
+        "Each fired trigger deploys 1/3 in laddered tranches. "
+        "Combined total above updates live with the Main card toggles · "
         "[Read more →](posts/cash-allocation.md)*</small>",
         "",
         "---",
@@ -807,7 +844,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
     if ks:
         parts += render_kelly_card_ko(ks, "assets/diagrams")
     if ts:
-        parts += render_tactical_card_ko(ts)
+        parts += render_tactical_card_ko(ts, ks)
     if vs:
         parts += [
             "### VIX Futures Term Structure",
@@ -949,7 +986,9 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         "",
         f"![Kelly × VIX curve]({diagrams_path}/kelly_curve.png)",
         "",
-        "<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier "
+        "<small>*This mix applies to the **main portfolio (80% of total)** — the Tactical reserve "
+        "(remaining 20%) is managed in the next card; combined total appears at the bottom of the Tactical card. "
+        "Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier "
         "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
         "**Educational — not investment advice.** "
         "[Read more →](posts/cash-allocation.md)*</small>",
@@ -974,7 +1013,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
     if ks:
         parts += render_kelly_card_en(ks, "assets/diagrams_en")
     if ts:
-        parts += render_tactical_card_en(ts)
+        parts += render_tactical_card_en(ts, ks)
     if vs:
         parts += [
             "### VIX Futures Term Structure",

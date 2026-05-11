@@ -41,6 +41,24 @@
     set('[data-kelly-d="volvol"]', dVV.toFixed(2));
     set("[data-kelly-equity]", equity);
     set("[data-kelly-cash]", cash);
+
+    // Composite total — main portfolio + tactical reserve. The tactical card
+    // exposes its deploy % and the main/tactical split via data attributes.
+    const tacticalCard = document.querySelector(".tactical-card");
+    if (tacticalCard) {
+      const deployPct = parseFloat(tacticalCard.dataset.deployPct) || 0;
+      const mainFrac = parseFloat(tacticalCard.dataset.mainFrac) || 0.80;
+      const tacticalFrac = parseFloat(tacticalCard.dataset.tacticalFrac) || 0.20;
+      const totalEquity = Math.min(
+        Math.round(mainFrac * equity + tacticalFrac * deployPct),
+        100
+      );
+      const totalCash = 100 - totalEquity;
+      const teEl = tacticalCard.querySelector("[data-total-equity]");
+      const tcEl = tacticalCard.querySelector("[data-total-cash]");
+      if (teEl) teEl.textContent = totalEquity;
+      if (tcEl) tcEl.textContent = totalCash;
+    }
   }
 
   function setActive(card, attr, value) {

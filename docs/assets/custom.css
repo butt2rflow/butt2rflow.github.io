@@ -373,3 +373,23 @@ img {
   font-size: 0.78rem;
   color: #78350f;
 }
+
+/* Tactical bucket card — offensive deploy signal */
+.md-typeset .tactical-card {
+  margin: 0.3rem auto 0.5rem;
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+}
+
+.md-typeset .tactical-composite {
+  display: inline-block;
+  margin: 0.4rem auto 0.2rem;
+  padding: 0.35rem 0.7rem;
+  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #14532d;
+  font-variant-numeric: tabular-nums;
+}
