@@ -756,7 +756,7 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
                      if not np.isnan(ts['cor90d']) else "—")
     total_eq, total_cash = _initial_composite(ks, ts)
     return [
-        "### ⚡ Tactical Bucket — 공격 모드 신호",
+        "### ⚡ 공격 자본 (Tactical Bucket) — 위기 발동 신호",
         "",
         f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
         f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
@@ -767,20 +767,20 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         f"| VIX > 50 (5일 지속) | {vix_disp} | {mark(ts['t1'])} |",
         f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
         f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark(ts['t3'])} |",
-        f"| **Tactical reserve (20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% deploy ({ts['label_ko']})** | — |",
+        f"| **공격 자본 (전체의 20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% 투입 ({ts['label_ko']})** | — |",
         "",
         "</div>",
         "",
         f'<div class="tactical-composite">'
-        f'<strong>📊 전체 합산 (Main 80% + Tactical 20%)</strong>: '
+        f'<strong>📊 전체 합산 (메인 80% + 공격 20%)</strong>: '
         f'<strong>주식 <span data-total-equity>{total_eq}</span>% / '
         f'현금 <span data-total-cash>{total_cash}</span>%</strong>'
         f'</div>',
         "</div>",
         "",
-        "<small>*Tactical bucket(전체 자본의 20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. "
-        "충족 트리거 수만큼 1/3씩 laddered deploy. "
-        "위 합산은 Main 카드의 토글 선택에 따라 실시간 갱신 · "
+        "<small>*공격 자본(전체의 20%)은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
+        "충족 트리거 수만큼 1/3씩 단계 투입 (laddered deploy). "
+        "위 합산은 메인 카드 토글 선택에 따라 실시간 갱신 · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
         "---",
