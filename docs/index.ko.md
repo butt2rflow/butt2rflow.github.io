@@ -54,6 +54,23 @@ title: Home
 
 ---
 
+### ⚡ Tactical Bucket — 공격 모드 신호
+
+<div class="dash-tight" markdown>
+
+| 트리거 | 현재 | 충족 |
+|:---|---:|:---:|
+| VIX > 50 (5일 지속) | 17.2 (5일 최저 17.1) | ❌ |
+| COR90D > 55 + SKEW > 150 | 33.1 / 138.2 | ❌ |
+| 30일 SPX 누적 −20% | +0.0% | ❌ |
+| **권장 deploy** | **🟢 0% (대기)** | — |
+
+</div>
+
+<small>*Tactical bucket(전체 자본의 10–20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. 충족 트리거 수만큼 1/3씩 laddered deploy · [자세히 →](posts/cash-allocation.md)*</small>
+
+---
+
 ### VIX Futures Term Structure
 
 <div class="dash-tight" markdown>

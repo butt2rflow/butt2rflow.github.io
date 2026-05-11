@@ -203,6 +203,8 @@ Shannon's Demon offers a clean answer: **execute "buy low, sell high" mechanical
 > Without cash, you can't buy when the market crashes. Without stock, you can't sell when it rallies.
 > Cash is the **fuel** for rebalancing — and it's also the condition for **surviving** the market in the first place.
 
+More precisely, that *cash fuel* comes in two flavours — a **defensive** reserve that keeps you alive through the cascade, and a **tactical** reserve that monetises your time edge at the eye of the crisis. Splitting cash into these two buckets is what completes the "volatility as fuel" thesis (see the [Cash Allocation article](../posts/cash-allocation.md) Section 4 deep-dive).
+
 ![Three lenses on portfolio strategy](../assets/diagrams_en/diag_part1_L385.png)
 
 So what's the mathematical foundation underneath rebalancing? Why should we think in terms of the **geometric mean**, not the arithmetic mean (the expected value)?

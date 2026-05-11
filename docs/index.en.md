@@ -54,6 +54,23 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ---
 
+### ⚡ Tactical Bucket — Offensive Deploy Signal
+
+<div class="dash-tight" markdown>
+
+| Trigger | Now | Fired |
+|:---|---:|:---:|
+| VIX > 50 (sustained 5d) | 17.2 (5d min 17.1) | ❌ |
+| COR90D > 55 AND SKEW > 150 | 33.1 / 138.2 | ❌ |
+| 30-day SPX drawdown ≥ 20% | +0.0% | ❌ |
+| **Recommended deploy** | **🟢 0% (Inactive)** | — |
+
+</div>
+
+<small>*Tactical bucket (10–20% of total capital) held separately as *offensive cash to monetise the time edge*. Each fired trigger deploys 1/3 in laddered tranches · [Read more →](posts/cash-allocation.md)*</small>
+
+---
+
 ### VIX Futures Term Structure
 
 <div class="dash-tight" markdown>

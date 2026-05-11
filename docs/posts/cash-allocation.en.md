@@ -164,21 +164,50 @@ Common question — would shifting from Half to Full mid-crash be reckless?
 
 **Math has a defensible answer.** Forward μ−r likely expands as prices fall — a 5% → 8–10% jump is reasonable in deep drawdowns. Full Kelly at VIX 60 with μ−r = 10% gives ~28%; Half Kelly at the same VIX with μ−r = 5% gives 7%. The 4× difference is meaningful, but absolute risk stays modest given the 80%+ cash you're already holding.
 
-**Practical risks are real, though:**
+**Don't modulate the fraction itself, though:**
 
 - **Catching falling knives** — VIX > 60 *looks* like a bottom, but 2008 had two such spikes a year apart. "Deep enough?" only resolves with hindsight.
 - **Estimation-error paradox** — σ is most uncertain precisely when μ estimation is also most uncertain. Bumping fraction at the moment of maximum estimation noise is the opposite of conservative.
 - **Behavioural risk** — touching the toggle at peak fear is by definition an emotional act. The whole point of a fixed fraction is to remove that lever.
 - **Backfit triggers** — "VIX > 50 sustained 5 days" reads well in hindsight but is fitted to past crises; no guarantee it generalises.
 
-**Cleaner alternatives:**
+### Tactical bucket is the framework's *essential complement*
 
-| Approach | How | Trade-off |
+Stopping here misses something important. Recall the series' two core claims:
+
+1. **Long-run upward drift** — over long-enough windows, equities beat bonds/cash.
+2. **Time is the retail edge** — retail investors have a *structural* advantage in being able to wait without redemption pressure.
+
+Combining the two implies: **forward risk premium expands most precisely at peak crisis**. Without a mechanism to deploy capital in that moment, you claim a time edge but *don't use it when it's most valuable* — a self-contradiction.
+
+**What the defensive framework alone misses:**
+
+- Kelly × VIX auto-deleverage takes you 100% → 2% during a crash ✓ (cascade absorbed)
+- VIX cools → auto-rebuild — but you buy back at *recovery* prices, *not bottom* prices
+- Net: vol drag avoided, but real buy-low never happens. Of [Shannon's Demon](../series/s1-shannons-demon.md)'s "rebalancing = buy low + sell high", only sell-high engaged.
+
+So **split cash into two kinds** — that completes the structure the series argues for:
+
+| Bucket | Role | Mechanism |
 |:---|:---|:---|
-| **A. Leave it alone (recommended)** | The framework has already lifted cash. Half + auto-deleverage absorbs the cascade and re-deploys on recovery. | Simplest. Consistent with the Principles "No-Edge" philosophy. |
-| **B. Separate *tactical bucket*** | Keep main portfolio at Half. Hold a "crisis-buy reserve" (10–20% of total) deployed on triggers (VIX > 50, etc.). | Kelly fraction stays fixed. Isolates the contrarian instinct from the structural framework. |
+| **Main (~80%)** | Defensive — *fuel for survival* | Kelly × VIX + risk signals. Auto-deleverage / auto-re-entry. |
+| **Tactical (~20%)** | Offensive — *fuel for attack* | Composite extreme triggers (VIX, COR/SKEW, SPX drawdown), laddered deploy. Monetises the time edge. |
 
-> **Bottom line**: A by default. Add B if you want a disciplined outlet for the "buy the panic" instinct. *Don't dynamically modulate the Kelly fraction itself — that breaks the framework's core design (emotion removed, consistent ratio).*
+### Tactical bucket operating rules
+
+- **Size**: 10–20% of total. Too large destabilises the main framework; too small makes deployment irrelevant.
+- **Composite triggers** (multi-condition, not a single indicator):
+    - VIX > 50 *sustained* (single-day spike doesn't count; require 5+ days)
+    - COR90D > 55 AND SKEW > 150 simultaneously
+    - 30-day cumulative SPX decline ≥ 20%
+- **Laddered deploy** — never deploy all at once; split into tranches:
+    - 1st trigger met → deploy 1/3 of tactical bucket
+    - VIX continues +10 points → another 1/3
+    - VIX +10 again, or clear capitulation → final 1/3
+- **Refill gradually in recovery** — once vol calms, refill tactical bucket from the main framework's exposure-reduction proceeds or from gains. Don't leave it empty forever after one deployment.
+- **Pre-defined rules only** — no "feel". Deploy *only* on pre-specified conditions. If conditions aren't met, sit still. (Blocks emotional entries.)
+
+> **Bottom line**: Never modulate the Kelly fraction itself. *Instead*, pair the main framework with a tactical bucket. The framework owns *survival*; the tactical bucket *monetises the time edge*. Together, the two are what completes the series' "**volatility as fuel**" thesis.
 
 ---
 

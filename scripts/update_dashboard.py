@@ -557,6 +557,70 @@ def compute_kelly_signal(vix_spot: float, cs: dict | None,
     }
 
 
+def compute_tactical_signal(vix_hist, cs, spx):
+    """Tactical-bucket trigger status — three composite extreme-stress
+    conditions, each contributing one tranche (1/3) toward full deployment.
+
+    T1: VIX > 50 sustained 5 trading days (single-day spike doesn't count)
+    T2: COR90D > 55 AND SKEW > 150 (cross-asset stress)
+    T3: 30-day SPX cumulative drawdown ≥ 20% (price-action capitulation)
+    """
+    # T1
+    if vix_hist is not None and len(vix_hist) >= 5:
+        recent_vix = vix_hist.tail(5)
+        t1 = bool((recent_vix > 50).all())
+        vix_5d_min = float(recent_vix.min())
+        vix_now = float(vix_hist.iloc[-1])
+    else:
+        t1 = False
+        vix_5d_min = float("nan")
+        vix_now = float("nan")
+
+    # T2
+    if cs:
+        t2 = bool(cs["cor90d"] > 55 and cs["skew"] > 150)
+        cor90d = float(cs["cor90d"])
+        skew_v = float(cs["skew"])
+    else:
+        t2 = False
+        cor90d = float("nan")
+        skew_v = float("nan")
+
+    # T3
+    if spx is not None and len(spx) >= 2:
+        window = spx.tail(31)  # 30 trading days plus today
+        peak = float(window.max())
+        current = float(window.iloc[-1])
+        drawdown_pct = (current - peak) / peak * 100
+        t3 = drawdown_pct <= -20
+    else:
+        drawdown_pct = float("nan")
+        t3 = False
+
+    n_triggers = int(t1) + int(t2) + int(t3)
+    deploy_pct = int(round(n_triggers * 100 / 3))
+    state, label_ko, label_en = {
+        0: ("ok",       "대기",          "Inactive"),
+        1: ("caution",  "1차 발동",      "Tranche 1"),
+        2: ("warning",  "2차 발동",      "Tranche 2"),
+        3: ("danger",   "Capitulation",  "Capitulation"),
+    }[n_triggers]
+
+    return {
+        "vix_now": vix_now,
+        "vix_5d_min": vix_5d_min,
+        "cor90d": cor90d,
+        "skew": skew_v,
+        "spx_drawdown_30d_pct": drawdown_pct,
+        "t1": t1, "t2": t2, "t3": t3,
+        "n_triggers": n_triggers,
+        "deploy_pct": deploy_pct,
+        "state": state,
+        "label_ko": label_ko,
+        "label_en": label_en,
+    }
+
+
 def compute_vix_signals(vx, vix_spot):
     if len(vx) < 2:
         return None
@@ -592,7 +656,7 @@ def compute_vix_signals(vx, vix_spot):
 # ============================================================
 # Home-page patching
 # ============================================================
-EMOJI = {"ok": "🟢", "caution": "🟡", "danger": "🔴"}
+EMOJI = {"ok": "🟢", "caution": "🟡", "warning": "🟠", "danger": "🔴"}
 START_MARK = "<!-- DASHBOARD_START -->"
 END_MARK = "<!-- DASHBOARD_END -->"
 KO_LABEL = {"ok": "정상", "caution": "경계", "danger": "스트레스"}
@@ -666,7 +730,70 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
     ]
 
 
-def render_section_ko(cs, vs, vvs, ks):
+def render_tactical_card_ko(ts: dict) -> list[str]:
+    """Tactical bucket card — offensive deploy signal."""
+    mark = lambda b: "✅" if b else "❌"  # noqa: E731
+    drawdown_str = (f"{ts['spx_drawdown_30d_pct']:+.1f}%"
+                    if not np.isnan(ts['spx_drawdown_30d_pct']) else "—")
+    vix_disp = (f"{ts['vix_now']:.1f} (5일 최저 {ts['vix_5d_min']:.1f})"
+                if not np.isnan(ts['vix_now']) else "—")
+    cor_skew_disp = (f"{ts['cor90d']:.1f} / {ts['skew']:.1f}"
+                     if not np.isnan(ts['cor90d']) else "—")
+    return [
+        "### ⚡ Tactical Bucket — 공격 모드 신호",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 트리거 | 현재 | 충족 |",
+        "|:---|---:|:---:|",
+        f"| VIX > 50 (5일 지속) | {vix_disp} | {mark(ts['t1'])} |",
+        f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
+        f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark(ts['t3'])} |",
+        f"| **권장 deploy** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_ko']})** | — |",
+        "",
+        "</div>",
+        "",
+        "<small>*Tactical bucket(전체 자본의 10–20%)을 *시간 에지를 행사하는 공격용 현금*으로 별도 운용. "
+        "충족 트리거 수만큼 1/3씩 laddered deploy · "
+        "[자세히 →](posts/cash-allocation.md)*</small>",
+        "",
+        "---",
+        "",
+    ]
+
+
+def render_tactical_card_en(ts: dict) -> list[str]:
+    mark = lambda b: "✅" if b else "❌"  # noqa: E731
+    drawdown_str = (f"{ts['spx_drawdown_30d_pct']:+.1f}%"
+                    if not np.isnan(ts['spx_drawdown_30d_pct']) else "—")
+    vix_disp = (f"{ts['vix_now']:.1f} (5d min {ts['vix_5d_min']:.1f})"
+                if not np.isnan(ts['vix_now']) else "—")
+    cor_skew_disp = (f"{ts['cor90d']:.1f} / {ts['skew']:.1f}"
+                     if not np.isnan(ts['cor90d']) else "—")
+    return [
+        "### ⚡ Tactical Bucket — Offensive Deploy Signal",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Trigger | Now | Fired |",
+        "|:---|---:|:---:|",
+        f"| VIX > 50 (sustained 5d) | {vix_disp} | {mark(ts['t1'])} |",
+        f"| COR90D > 55 AND SKEW > 150 | {cor_skew_disp} | {mark(ts['t2'])} |",
+        f"| 30-day SPX drawdown ≥ 20% | {drawdown_str} | {mark(ts['t3'])} |",
+        f"| **Recommended deploy** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_en']})** | — |",
+        "",
+        "</div>",
+        "",
+        "<small>*Tactical bucket (10–20% of total capital) held separately as *offensive cash to monetise the time edge*. "
+        "Each fired trigger deploys 1/3 in laddered tranches · "
+        "[Read more →](posts/cash-allocation.md)*</small>",
+        "",
+        "---",
+        "",
+    ]
+
+
+def render_section_ko(cs, vs, vvs, ks, ts=None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
@@ -679,6 +806,8 @@ def render_section_ko(cs, vs, vvs, ks):
     ]
     if ks:
         parts += render_kelly_card_ko(ks, "assets/diagrams")
+    if ts:
+        parts += render_tactical_card_ko(ts)
     if vs:
         parts += [
             "### VIX Futures Term Structure",
@@ -830,7 +959,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
     ]
 
 
-def render_section_en(cs, vs, vvs, ks):
+def render_section_en(cs, vs, vvs, ks, ts=None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
@@ -844,6 +973,8 @@ def render_section_en(cs, vs, vvs, ks):
     ]
     if ks:
         parts += render_kelly_card_en(ks, "assets/diagrams_en")
+    if ts:
+        parts += render_tactical_card_en(ts)
     if vs:
         parts += [
             "### VIX Futures Term Structure",
@@ -1001,6 +1132,7 @@ def main():
     vs = compute_vix_signals(vx, vix_spot) if len(vx) > 0 else None
     vvs = compute_volvol_signal(volvol_df)
     ks = compute_kelly_signal(vix_spot, cs, vs, vvs)
+    ts = compute_tactical_signal(vix_hist, cs, spx)
 
     if len(vx) > 0:
         render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png")
@@ -1026,10 +1158,14 @@ def main():
         print(f"  Kelly: VIX={ks['vix']:.1f}, base Q/H/F = "
               f"{ks['base_pct']['quarter']}/{ks['base_pct']['half']}/{ks['base_pct']['full']}%, "
               f"states corskew={ks['cor_skew_state']}/vixts={ks['vix_ts_state']}/volvol={ks['volvol_state']}")
+    if ts:
+        print(f"  Tactical: triggers T1/T2/T3={int(ts['t1'])}/{int(ts['t2'])}/{int(ts['t3'])}, "
+              f"deploy={ts['deploy_pct']}% ({ts['label_en']}), "
+              f"SPX 30d dd={ts['spx_drawdown_30d_pct']:+.1f}%")
 
     print("Patching home pages...")
-    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs, vvs, ks))
-    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs, vvs, ks))
+    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs, vvs, ks, ts))
+    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs, vvs, ks, ts))
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
     print("Done.")
