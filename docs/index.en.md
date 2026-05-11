@@ -11,9 +11,48 @@ Math- and data-driven investment principles. In an age where AI dominates market
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
 
-## 📊 Live Volatility Dashboard
+## 📊 Live Dashboard
 
 <small>**As of 2026-05-08** · Auto-updates daily after the US close · [Full article →](posts/volatility-dashboard.md)</small>
+
+### 💰 Suggested Cash / Equity Mix
+
+<div class="kelly-card"
+     data-vix="17.2"
+     data-base-quarter="42"
+     data-base-half="85"
+     data-base-full="100"
+     data-state-corskew="ok"
+     data-state-vixts="ok"
+     data-state-volvol="ok">
+  <div class="kelly-controls">
+    <span class="kelly-label">Kelly:</span>
+    <button class="kelly-pill" data-kelly-set="quarter">¼</button>
+    <button class="kelly-pill is-active" data-kelly-set="half">½</button>
+    <button class="kelly-pill" data-kelly-set="full">Full</button>
+    <span class="kelly-divider">·</span>
+    <span class="kelly-label">Risk sensitivity:</span>
+    <button class="kelly-pill" data-discount-set="loose">Loose</button>
+    <button class="kelly-pill is-active" data-discount-set="standard">Standard</button>
+    <button class="kelly-pill" data-discount-set="tight">Tight</button>
+  </div>
+  <table class="kelly-table">
+    <thead><tr><th>Step</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>① Kelly × VIX base (VIX 17.2)</td><td><strong><span data-kelly-base>85</span>%</strong></td></tr>
+      <tr><td>② COR/SKEW 🟢 Normal</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
+      <tr><td>③ VIX TS 🟢 Contango (normal)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
+      <tr><td>④ VolVol 🟢 Calm</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
+      <tr class="kelly-final"><td><strong>Suggested mix</strong></td><td><strong>Equity <span data-kelly-equity>85</span>% / Cash <span data-kelly-cash>15</span>%</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+![Kelly × VIX curve](assets/diagrams_en/kelly_curve.png)
+
+<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
+
+---
 
 ### VIX Futures Term Structure
 

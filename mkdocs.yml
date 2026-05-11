@@ -75,6 +75,7 @@ extra_css:
 extra_javascript:
   - assets/sidebar-widget.js
   - assets/vix-history-player.js
+  - assets/kelly-toggle.js
 
 nav:
   - Home: index.md
@@ -98,6 +99,7 @@ nav:
     - posts/gex-0dte-patterns.md
     - posts/volatility-dashboard.md
     - posts/vix-term-structure.md
+    - posts/cash-allocation.md
   - Series:
     - series/index.md
     - Principles:

@@ -37,6 +37,23 @@ plt.rcParams.update({"figure.facecolor": "white"})
 
 LOOKBACK_MONTHS = 6
 
+# Kelly × Vol — f* = (μ−r)/σ² with σ = VIX/100 (annualized forward-looking),
+# capped at 100% (no leverage suggestion for retail audience).
+EQUITY_PREMIUM = 0.05
+KELLY_CAP = 1.00
+KELLY_FRACTIONS = [("quarter", 0.25, "Quarter (¼)"),
+                   ("half",    0.50, "Half (½)"),
+                   ("full",    1.00, "Full")]
+# Multiplicative discount profiles applied per risk-signal group. The JS
+# toggle on the dashboard reads these via data attributes so the user can
+# pick a sensitivity level — Python only ships base values + group states.
+RISK_DISCOUNT_PROFILES = {
+    "loose":    {"ok": 1.00, "caution": 0.95, "danger": 0.85},
+    "standard": {"ok": 1.00, "caution": 0.90, "danger": 0.75},
+    "tight":    {"ok": 1.00, "caution": 0.85, "danger": 0.65},
+}
+RISK_DISCOUNT_DEFAULT = "standard"
+
 # Cboe publishes clean CSVs at this pattern; way more reliable than yfinance
 # for these indices (yfinance returns 1-row history for COR* indices).
 CBOE_INDEX_URL = "https://cdn.cboe.com/api/global/us_indices/daily_prices/{}_History.csv"
@@ -359,6 +376,51 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path)
     plt.close()
 
 
+def kelly_weight_at(vix: float, fraction: float) -> float:
+    """Kelly-fraction equity weight at given VIX, capped at KELLY_CAP."""
+    if vix is None or np.isnan(vix) or vix <= 0:
+        return float("nan")
+    sigma2 = (vix / 100.0) ** 2
+    f_star = EQUITY_PREMIUM / sigma2
+    return min(fraction * f_star, KELLY_CAP)
+
+
+def render_kelly_curve(vix_spot: float, out_path: Path):
+    """Three Kelly fractions vs VIX, with current-VIX markers on each curve."""
+    vix_range = np.linspace(5, 60, 220)
+    colors = {"quarter": "#16a34a", "half": "#0ea5e9", "full": "#7c3aed"}
+    fig, ax = plt.subplots(figsize=(12, 4.6))
+    for key, frac, label in KELLY_FRACTIONS:
+        weights = np.array([kelly_weight_at(v, frac) for v in vix_range]) * 100
+        lw = 2.4 if key == "half" else 1.6
+        ls = "-" if key == "half" else "--"
+        ax.plot(vix_range, weights, color=colors[key], linewidth=lw, linestyle=ls,
+                label=f"{label} Kelly")
+    if not np.isnan(vix_spot):
+        for key, frac, _ in KELLY_FRACTIONS:
+            w = kelly_weight_at(vix_spot, frac) * 100
+            ax.plot([vix_spot], [w], "o", color=colors[key], markersize=9, zorder=5)
+        w_half = kelly_weight_at(vix_spot, 0.5) * 100
+        ax.annotate(f"VIX {vix_spot:.1f}\nHalf → {w_half:.0f}%",
+                    xy=(vix_spot, w_half), xytext=(12, 10), textcoords="offset points",
+                    fontsize=9, color="#0ea5e9",
+                    bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
+                              edgecolor="#0ea5e9", alpha=0.9))
+    for boundary in (14, 20, 28, 40):
+        ax.axvline(boundary, color="#9ca3af", ls=":", linewidth=0.9, alpha=0.5)
+    ax.set_xlabel("VIX (forward-looking σ × 100)", fontsize=10)
+    ax.set_ylabel("Equity weight — cash = 100% − equity (%)", fontsize=10)
+    ax.set_title(f"Kelly × VIX — equity weight curves (μ−r = {EQUITY_PREMIUM*100:.0f}%, σ = VIX/100)",
+                 fontsize=11)
+    ax.set_xlim(5, 60)
+    ax.set_ylim(0, 105)
+    ax.legend(loc="upper right", fontsize=9)
+    ax.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
 def render_volvol(vv: pd.DataFrame, out_path: Path):
     """VolVol = VVIX/VIX with 5DMA and 20-day Bollinger Bands."""
     cutoff = pd.Timestamp.now() - pd.DateOffset(months=LOOKBACK_MONTHS)
@@ -452,6 +514,49 @@ def compute_volvol_signal(vv: pd.DataFrame):
     }
 
 
+def _worst(states):
+    """Return worst of a list of states (danger > caution > ok)."""
+    order = {"ok": 0, "caution": 1, "danger": 2}
+    inv = {v: k for k, v in order.items()}
+    return inv[max(order[s] for s in states)] if states else "ok"
+
+
+def compute_kelly_signal(vix_spot: float, cs: dict | None,
+                        vs: dict | None, vvs: dict | None) -> dict | None:
+    """Base Kelly weights at three fractions + risk-signal group states.
+
+    The dashboard JS computes the final equity weight at runtime from the
+    user-selected fraction × user-selected discount profile, so Python only
+    ships the building blocks: base[%] per fraction and the worst-sub-signal
+    state per group (ok / caution / danger)."""
+    if vix_spot is None or np.isnan(vix_spot) or vix_spot <= 0:
+        return None
+
+    cor_skew_state = _worst([cs["spread_state"], cs["cor90d_state"],
+                             cs["skew_state"]]) if cs else "ok"
+    if vs:
+        vix_ts_state = {"backwardation": "danger",
+                        "mixed": "caution",
+                        "contango": "ok"}.get(vs["shape"], "ok")
+    else:
+        vix_ts_state = "ok"
+    volvol_state = vvs["state"] if vvs else "ok"
+
+    fractions = {}
+    for key, frac, _ in KELLY_FRACTIONS:
+        fractions[key] = round(kelly_weight_at(vix_spot, frac) * 100)
+    overall_state = _worst([cor_skew_state, vix_ts_state, volvol_state])
+    return {
+        "vix": vix_spot,
+        "base_pct": fractions,
+        "cor_skew_state": cor_skew_state,
+        "vix_ts_state": vix_ts_state,
+        "volvol_state": volvol_state,
+        "vix_ts_shape": vs["shape"] if vs else None,
+        "state": overall_state,
+    }
+
+
 def compute_vix_signals(vx, vix_spot):
     if len(vx) < 2:
         return None
@@ -497,18 +602,84 @@ SHAPE_EN = {"contango": "Contango (normal)", "backwardation": "Backwardation (st
 SHAPE_EMOJI = {"contango": "🟢", "backwardation": "🔴", "mixed": "🟡"}
 
 
-def render_section_ko(cs, vs, vvs):
+VOLVOL_STATE_KO = {"ok": "안도", "caution": "전환", "danger": "긴장"}
+VOLVOL_STATE_EN = {"ok": "Calm", "caution": "Transition", "danger": "Stressed"}
+
+
+def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
+    """Cash-allocation card HTML — JS toggles compute final equity weight."""
+    vix = ks["vix"]
+    bp = ks["base_pct"]
+    cs_state = ks["cor_skew_state"]
+    vts_state = ks["vix_ts_state"]
+    vv_state = ks["volvol_state"]
+    shape_ko = SHAPE_KO.get(ks["vix_ts_shape"], "—")
+    return [
+        "### 💰 권장 현금/주식 비중",
+        "",
+        f'<div class="kelly-card"\n'
+        f'     data-vix="{vix:.1f}"\n'
+        f'     data-base-quarter="{bp["quarter"]}"\n'
+        f'     data-base-half="{bp["half"]}"\n'
+        f'     data-base-full="{bp["full"]}"\n'
+        f'     data-state-corskew="{cs_state}"\n'
+        f'     data-state-vixts="{vts_state}"\n'
+        f'     data-state-volvol="{vv_state}">\n'
+        f'  <div class="kelly-controls">\n'
+        f'    <span class="kelly-label">Kelly:</span>\n'
+        f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
+        f'    <button class="kelly-pill is-active" data-kelly-set="half">½</button>\n'
+        f'    <button class="kelly-pill" data-kelly-set="full">Full</button>\n'
+        f'    <span class="kelly-divider">·</span>\n'
+        f'    <span class="kelly-label">위험 민감도:</span>\n'
+        f'    <button class="kelly-pill" data-discount-set="loose">느슨</button>\n'
+        f'    <button class="kelly-pill is-active" data-discount-set="standard">기본</button>\n'
+        f'    <button class="kelly-pill" data-discount-set="tight">빡빡</button>\n'
+        f'  </div>\n'
+        f'  <table class="kelly-table">\n'
+        f'    <thead><tr><th>단계</th><th>값</th></tr></thead>\n'
+        f'    <tbody>\n'
+        f'      <tr><td>① Kelly × VIX 베이스 (VIX {vix:.1f})</td>'
+        f'<td><strong><span data-kelly-base>{bp["half"]}</span>%</strong></td></tr>\n'
+        f'      <tr><td>② COR/SKEW {EMOJI[cs_state]} {KO_LABEL[cs_state]}</td>'
+        f'<td>× <span data-kelly-d="corskew">1.00</span></td></tr>\n'
+        f'      <tr><td>③ VIX TS {SHAPE_EMOJI.get(ks["vix_ts_shape"], "—")} {shape_ko}</td>'
+        f'<td>× <span data-kelly-d="vixts">1.00</span></td></tr>\n'
+        f'      <tr><td>④ VolVol {EMOJI[vv_state]} {VOLVOL_STATE_KO[vv_state]}</td>'
+        f'<td>× <span data-kelly-d="volvol">1.00</span></td></tr>\n'
+        f'      <tr class="kelly-final"><td><strong>권장 비중</strong></td>'
+        f'<td><strong>주식 <span data-kelly-equity>{bp["half"]}</span>% / '
+        f'현금 <span data-kelly-cash>{100 - bp["half"]}</span>%</strong></td></tr>\n'
+        f'    </tbody>\n'
+        f'  </table>\n'
+        f'</div>',
+        "",
+        f"![Kelly × VIX 곡선]({diagrams_path}/kelly_curve.png)",
+        "",
+        "<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier "
+        "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
+        "**교육 목적 · 투자 권유 아님** · "
+        "[자세히 →](posts/cash-allocation.md)*</small>",
+        "",
+        "---",
+        "",
+    ]
+
+
+def render_section_ko(cs, vs, vvs, ks):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
         '<div class="live-dash" markdown>',
         "",
-        "## 📊 변동성 라이브 대시보드",
+        "## 📊 라이브 대시보드",
         "",
         f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
         "[자세히 →](posts/volatility-dashboard.md)</small>",
         "",
     ]
+    if ks:
+        parts += render_kelly_card_ko(ks, "assets/diagrams")
     if vs:
         parts += [
             "### VIX Futures Term Structure",
@@ -597,18 +768,79 @@ def render_section_ko(cs, vs, vvs):
     return "\n".join(parts)
 
 
-def render_section_en(cs, vs, vvs):
+def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
+    vix = ks["vix"]
+    bp = ks["base_pct"]
+    cs_state = ks["cor_skew_state"]
+    vts_state = ks["vix_ts_state"]
+    vv_state = ks["volvol_state"]
+    shape_en = SHAPE_EN.get(ks["vix_ts_shape"], "—")
+    return [
+        "### 💰 Suggested Cash / Equity Mix",
+        "",
+        f'<div class="kelly-card"\n'
+        f'     data-vix="{vix:.1f}"\n'
+        f'     data-base-quarter="{bp["quarter"]}"\n'
+        f'     data-base-half="{bp["half"]}"\n'
+        f'     data-base-full="{bp["full"]}"\n'
+        f'     data-state-corskew="{cs_state}"\n'
+        f'     data-state-vixts="{vts_state}"\n'
+        f'     data-state-volvol="{vv_state}">\n'
+        f'  <div class="kelly-controls">\n'
+        f'    <span class="kelly-label">Kelly:</span>\n'
+        f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
+        f'    <button class="kelly-pill is-active" data-kelly-set="half">½</button>\n'
+        f'    <button class="kelly-pill" data-kelly-set="full">Full</button>\n'
+        f'    <span class="kelly-divider">·</span>\n'
+        f'    <span class="kelly-label">Risk sensitivity:</span>\n'
+        f'    <button class="kelly-pill" data-discount-set="loose">Loose</button>\n'
+        f'    <button class="kelly-pill is-active" data-discount-set="standard">Standard</button>\n'
+        f'    <button class="kelly-pill" data-discount-set="tight">Tight</button>\n'
+        f'  </div>\n'
+        f'  <table class="kelly-table">\n'
+        f'    <thead><tr><th>Step</th><th>Value</th></tr></thead>\n'
+        f'    <tbody>\n'
+        f'      <tr><td>① Kelly × VIX base (VIX {vix:.1f})</td>'
+        f'<td><strong><span data-kelly-base>{bp["half"]}</span>%</strong></td></tr>\n'
+        f'      <tr><td>② COR/SKEW {EMOJI[cs_state]} {EN_LABEL[cs_state]}</td>'
+        f'<td>× <span data-kelly-d="corskew">1.00</span></td></tr>\n'
+        f'      <tr><td>③ VIX TS {SHAPE_EMOJI.get(ks["vix_ts_shape"], "—")} {shape_en}</td>'
+        f'<td>× <span data-kelly-d="vixts">1.00</span></td></tr>\n'
+        f'      <tr><td>④ VolVol {EMOJI[vv_state]} {VOLVOL_STATE_EN[vv_state]}</td>'
+        f'<td>× <span data-kelly-d="volvol">1.00</span></td></tr>\n'
+        f'      <tr class="kelly-final"><td><strong>Suggested mix</strong></td>'
+        f'<td><strong>Equity <span data-kelly-equity>{bp["half"]}</span>% / '
+        f'Cash <span data-kelly-cash>{100 - bp["half"]}</span>%</strong></td></tr>\n'
+        f'    </tbody>\n'
+        f'  </table>\n'
+        f'</div>',
+        "",
+        f"![Kelly × VIX curve]({diagrams_path}/kelly_curve.png)",
+        "",
+        "<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier "
+        "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
+        "**Educational — not investment advice.** "
+        "[Read more →](posts/cash-allocation.md)*</small>",
+        "",
+        "---",
+        "",
+    ]
+
+
+def render_section_en(cs, vs, vvs, ks):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
         '<div class="live-dash" markdown>',
         "",
-        "## 📊 Live Volatility Dashboard",
+        "## 📊 Live Dashboard",
         "",
         f"<small>**As of {cs['date']}** · Auto-updates daily after the US close · "
         "[Full article →](posts/volatility-dashboard.md)</small>",
         "",
     ]
+    if ks:
+        parts += render_kelly_card_en(ks, "assets/diagrams_en")
     if vs:
         parts += [
             "### VIX Futures Term Structure",
@@ -761,6 +993,7 @@ def main():
     cs = compute_cor_skew_signals(tenor, skew)
     vs = compute_vix_signals(vx, vix_spot) if len(vx) > 0 else None
     vvs = compute_volvol_signal(volvol_df)
+    ks = compute_kelly_signal(vix_spot, cs, vs, vvs)
 
     if len(vx) > 0:
         render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png")
@@ -769,6 +1002,12 @@ def main():
         print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
         archive_vix_history(OUT_KO / "vix_term_structure.png", cs["date"])
 
+    if ks:
+        render_kelly_curve(vix_spot, OUT_KO / "kelly_curve.png")
+        print(f"  Saved: {OUT_KO / 'kelly_curve.png'}")
+        shutil.copy2(OUT_KO / "kelly_curve.png", OUT_EN / "kelly_curve.png")
+        print(f"  Copied: {OUT_EN / 'kelly_curve.png'}")
+
     print(f"  COR/SKEW: spread={cs['spread']:.2f}, COR90D={cs['cor90d']:.2f}, SKEW={cs['skew']:.2f}")
     if vs:
         print(f"  VIX TS: spot={vs['vix_spot']:.2f}, front={vs['front']:.2f}, "
@@ -776,10 +1015,14 @@ def main():
     if vvs:
         print(f"  VolVol: 5DMA={vvs['ma5']:.3f}, BB-mid={vvs['ma20']:.3f}, "
               f"state={vvs['state']}, crossed={vvs.get('crossed')}")
+    if ks:
+        print(f"  Kelly: VIX={ks['vix']:.1f}, base Q/H/F = "
+              f"{ks['base_pct']['quarter']}/{ks['base_pct']['half']}/{ks['base_pct']['full']}%, "
+              f"states corskew={ks['cor_skew_state']}/vixts={ks['vix_ts_state']}/volvol={ks['volvol_state']}")
 
     print("Patching home pages...")
-    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs, vvs))
-    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs, vvs))
+    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs, vvs, ks))
+    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs, vvs, ks))
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
     print("Done.")

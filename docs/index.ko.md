@@ -11,9 +11,48 @@ title: Home
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
 
-## 📊 변동성 라이브 대시보드
+## 📊 라이브 대시보드
 
 <small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [자세히 →](posts/volatility-dashboard.md)</small>
+
+### 💰 권장 현금/주식 비중
+
+<div class="kelly-card"
+     data-vix="17.2"
+     data-base-quarter="42"
+     data-base-half="85"
+     data-base-full="100"
+     data-state-corskew="ok"
+     data-state-vixts="ok"
+     data-state-volvol="ok">
+  <div class="kelly-controls">
+    <span class="kelly-label">Kelly:</span>
+    <button class="kelly-pill" data-kelly-set="quarter">¼</button>
+    <button class="kelly-pill is-active" data-kelly-set="half">½</button>
+    <button class="kelly-pill" data-kelly-set="full">Full</button>
+    <span class="kelly-divider">·</span>
+    <span class="kelly-label">위험 민감도:</span>
+    <button class="kelly-pill" data-discount-set="loose">느슨</button>
+    <button class="kelly-pill is-active" data-discount-set="standard">기본</button>
+    <button class="kelly-pill" data-discount-set="tight">빡빡</button>
+  </div>
+  <table class="kelly-table">
+    <thead><tr><th>단계</th><th>값</th></tr></thead>
+    <tbody>
+      <tr><td>① Kelly × VIX 베이스 (VIX 17.2)</td><td><strong><span data-kelly-base>85</span>%</strong></td></tr>
+      <tr><td>② COR/SKEW 🟢 정상</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
+      <tr><td>③ VIX TS 🟢 콘탱고 (정상)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
+      <tr><td>④ VolVol 🟢 안도</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
+      <tr class="kelly-final"><td><strong>권장 비중</strong></td><td><strong>주식 <span data-kelly-equity>85</span>% / 현금 <span data-kelly-cash>15</span>%</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+![Kelly × VIX 곡선](assets/diagrams/kelly_curve.png)
+
+<small>*Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
+
+---
 
 ### VIX Futures Term Structure
 
