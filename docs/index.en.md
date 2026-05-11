@@ -87,6 +87,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)
 
+<small>*Cboe COR + SKEW indices — market diversification and tail-risk view · [Full guide →](posts/volatility-dashboard.md)*</small>
+
 ---
 
 ### VolVol — VVIX / VIX ratio
@@ -102,7 +104,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ![VolVol history](assets/diagrams_en/volvol.png)
 
-<small>*5-day MA above the 20-day BB middle = vol is decompressing (calm regime); below = vol is building (stressed). A cross through the middle band marks a sentiment shift. **Not an official index — a 'psychological' confirmation signal**, best read alongside VIX TS and COR/SKEW rather than as a standalone trading trigger.*</small>
+<small>*5-day MA above the 20-day BB middle = vol is decompressing (calm regime); below = vol is building (stressed). A cross through the middle band marks a sentiment shift. **Not an official index — a 'psychological' confirmation signal**, best read alongside VIX TS and COR/SKEW rather than as a standalone trading trigger · [Read more →](posts/cash-allocation.md)*</small>
 
 </div>
 

@@ -13,7 +13,7 @@ title: Home
 
 ## 📊 라이브 대시보드
 
-<small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [프레임워크 설명 →](posts/cash-allocation.md)</small>
+<small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신</small>
 
 ### 💰 권장 현금/주식 비중
 
@@ -87,6 +87,8 @@ title: Home
 
 ![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)
 
+<small>*Cboe COR + SKEW 지수로 본 시장 분산 효과와 꼬리 위험 · [자세히 →](posts/volatility-dashboard.md)*</small>
+
 ---
 
 ### VolVol — VVIX / VIX 비율 지표
@@ -102,7 +104,7 @@ title: Home
 
 ![VolVol 시계열](assets/diagrams/volvol.png)
 
-<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, 아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. **공식 지표가 아닌 '심리적' 보조 신호** — 단독 매매 판단보다는 VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도.*</small>
+<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, 아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. **공식 지표가 아닌 '심리적' 보조 신호** — 단독 매매 판단보다는 VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도 · [자세히 →](posts/cash-allocation.md)*</small>
 
 </div>
 

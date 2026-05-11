@@ -674,8 +674,7 @@ def render_section_ko(cs, vs, vvs, ks):
         "",
         "## 📊 라이브 대시보드",
         "",
-        f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
-        "[프레임워크 설명 →](posts/cash-allocation.md)</small>",
+        f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신</small>",
         "",
     ]
     if ks:
@@ -730,6 +729,9 @@ def render_section_ko(cs, vs, vvs, ks):
         "",
         "![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)",
         "",
+        "<small>*Cboe COR + SKEW 지수로 본 시장 분산 효과와 꼬리 위험 · "
+        "[자세히 →](posts/volatility-dashboard.md)*</small>",
+        "",
     ]
     if vvs:
         cross_note = " · 최근 5일 내 크로스 발생" if vvs.get("crossed") else ""
@@ -756,7 +758,8 @@ def render_section_ko(cs, vs, vvs, ks):
             "<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, "
             "아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. "
             "**공식 지표가 아닌 '심리적' 보조 신호** — 단독 매매 판단보다는 "
-            "VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도.*</small>",
+            "VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도 · "
+            "[자세히 →](posts/cash-allocation.md)*</small>",
             "",
         ]
     parts += [
@@ -891,6 +894,9 @@ def render_section_en(cs, vs, vvs, ks):
         "",
         "![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)",
         "",
+        "<small>*Cboe COR + SKEW indices — market diversification and tail-risk view · "
+        "[Full guide →](posts/volatility-dashboard.md)*</small>",
+        "",
     ]
     if vvs:
         cross_note = " · crossed in last 5 days" if vvs.get("crossed") else ""
@@ -917,7 +923,8 @@ def render_section_en(cs, vs, vvs, ks):
             "<small>*5-day MA above the 20-day BB middle = vol is decompressing (calm regime); "
             "below = vol is building (stressed). A cross through the middle band marks a sentiment shift. "
             "**Not an official index — a 'psychological' confirmation signal**, best read alongside "
-            "VIX TS and COR/SKEW rather than as a standalone trading trigger.*</small>",
+            "VIX TS and COR/SKEW rather than as a standalone trading trigger · "
+            "[Read more →](posts/cash-allocation.md)*</small>",
             "",
         ]
     parts += [
