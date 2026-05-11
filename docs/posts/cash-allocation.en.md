@@ -206,6 +206,12 @@ So **split cash into two kinds** — that completes the structure the series arg
 - **Laddered deploy** — total weight ÷ 3 → deploy %, capped at 100:
     - e.g., 5-day VIX min = 45 (T1=0.5) + COR/SKEW fired (T2=1.0) + SPX −22% (T3=1.0) → total 2.5 → 83% deploy
     - All signals max (VIX 60+, T2, T3) → total 3.5 → cap 100% (capitulation)
+- **State labels** — deploy % maps to 5 tiers:
+
+    | Deploy % | 0% | 1–33% | 34–66% | 67–99% | 100% |
+    |:---|:---:|:---:|:---:|:---:|:---:|
+    | State | 🟢 Inactive | 🟡 Tranche 1 | 🟠 Tranche 2 | 🔴 Tranche 3 | 🔴 Capitulation |
+
 - **Refill gradually in recovery** — once vol calms, refill tactical bucket from the main framework's exposure-reduction proceeds or from gains. Don't leave it empty forever after one deployment.
 - **Pre-defined rules only** — no "feel". Deploy *only* on pre-specified conditions. If conditions aren't met, sit still. (Blocks emotional entries.)
 
