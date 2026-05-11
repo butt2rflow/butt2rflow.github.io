@@ -89,7 +89,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ---
 
-### VolVol (vol-of-vol)
+### VolVol — VVIX / VIX ratio
 
 <div class="dash-tight" markdown>
 

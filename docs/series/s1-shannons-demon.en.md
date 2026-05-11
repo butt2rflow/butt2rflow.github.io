@@ -209,6 +209,9 @@ So what's the mathematical foundation underneath rebalancing? Why should we thin
 
 > The next article looks for the answer in a 300-year-old story about a family of mathematicians — beginning with **the St. Petersburg Paradox**.
 
+!!! tip "Preview — vol drag and cash allocation"
+    The core arithmetic-vs-geometric-mean intuition from Parts 2–3, and the *quantitative* answer to "how much cash, exactly?", are available now in the free article [**Vol-Based Cash Allocation — Kelly meets risk signals**](../posts/cash-allocation.md), Section 1 (vol drag).
+
 ---
 
 ## The remaining 3 articles in Principles

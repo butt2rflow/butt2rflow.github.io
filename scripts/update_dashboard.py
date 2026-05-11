@@ -739,7 +739,7 @@ def render_section_ko(cs, vs, vvs, ks):
         parts += [
             "---",
             "",
-            "### VolVol (변동성의 변동성)",
+            "### VolVol — VVIX / VIX 비율 지표",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -900,7 +900,7 @@ def render_section_en(cs, vs, vvs, ks):
         parts += [
             "---",
             "",
-            "### VolVol (vol-of-vol)",
+            "### VolVol — VVIX / VIX ratio",
             "",
             '<div class="dash-tight" markdown>',
             "",

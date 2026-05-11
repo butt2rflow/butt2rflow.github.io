@@ -7,7 +7,7 @@ lang: en
 
 # Vol-Based Cash Allocation — Kelly meets risk signals
 
-> **Where this fits**: Series [Part 3 — Kelly's formula](../series/s1-shannons-demon.md) gave the Kelly fraction; this article plugs **VIX into σ** to turn it into a daily cash/equity allocation. It's the math behind the first card on the live dashboard.
+> **Where this fits**: The [Principles series](../series/index.md) Part 3 (Kelly's Criterion, paid) gives the Kelly fraction; this article plugs **VIX into σ** to turn it into a daily cash/equity allocation. [Part 1 — Shannon's Demon](../series/s1-shannons-demon.md) closes with "cash is the fuel for rebalancing"; this article is the *how-much* answer. It's the math behind the first card on the live dashboard.
 
 ---
 
@@ -142,7 +142,7 @@ When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). 
 1. **Estimation error in μ and σ**: realised average return often runs below estimate; realised vol can run above. Full Kelly is exquisitely sensitive — small errors compound.
 2. **Drawdown volatility**: Full Kelly has maximum long-run growth, but the *path* is violent. -50% to -70% drawdowns are normal — most people cannot hold through them.
 
-Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see series [Part 4 — No-Edge](../series/s1-shannons-demon.md)).
+Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see the [Principles series](../series/index.md) Part 4 "No Edge in the Game" — paid).
 
 | Fraction | Calm (VIX 17) | Stress (VIX 30) | Crisis (VIX 40) |
 |:---|---:|---:|---:|
@@ -153,7 +153,7 @@ Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see series 
 The dashboard's first toggle picks one of these:
 
 - **Quarter**: Conservative. Most robust to estimation error. Used by many institutional desks.
-- **Half**: Matches the series "No-Edge" article's tone. Default — balances long-run growth against drawdown.
+- **Half**: Matches the conservative tone of Principles Part 4 ("No Edge in the Game"). Default — balances long-run growth against drawdown.
 - **Full**: Theoretical max. Only if you have strong conviction in μ/σ estimates *and* the mental/liquidity buffer for big drawdowns.
 
 > **Pick your fraction once and barely change it.** The point is not to react to markets by changing the fraction — it's to let the *same* fraction produce different weights as vol moves.
@@ -177,11 +177,13 @@ The three groups on the dashboard:
 
 | Group | What it watches | 🟢 Normal | 🟡 Caution | 🔴 Stressed |
 |:---|:---|:---|:---|:---|
-| **COR/SKEW** | Term-structure spread · COR90D · SKEW | Calm | Mild correlation | Diversification breaks |
-| **VIX TS shape** | Futures-curve shape (M1 vs spot, etc.) | Contango | Mixed | Backwardation |
-| **VolVol** | VVIX/VIX 5DMA vs 20-day BB middle | Calm | Transition | Stressed |
+| **COR/SKEW** | Term-structure spread · COR90D · SKEW | All sub-signals normal | Any one caution | Any one danger |
+| **VIX TS shape** | M1 vs VIX spot, M2 − M1 | Contango (M2 > M1, spot < M1) | Mixed (M2 ≤ M1 but spot ≤ M1) | Backwardation (spot > M1) |
+| **VolVol** | VVIX/VIX 5DMA vs 20-day BB middle | 5DMA > middle | Cross within last 5 days | 5DMA < middle |
 
 Each group's worst sub-signal sets the group state, and the state maps to a multiplier on the Kelly base.
+
+> **Indicator deep-dives**: COR/SKEW in the [Implied Correlation article](implied-correlation.md), VIX TS shape in the [VIX Futures Term Structure article](vix-term-structure.md), VolVol (VVIX/VIX ratio with 5DMA + 20-day BB) in the [live-dashboard VolVol card](../index.md) and upcoming Execution series Part 3 — *Vol-of-vol and market sentiment* (paid).
 
 ---
 
@@ -198,7 +200,7 @@ How aggressively those multipliers bite is **your risk-aversion choice**. Three 
 Reading:
 
 - **Loose**: weak reaction to signals. Even all-red leaves you at 61% of the Kelly base. For people who don't want to rotate frequently.
-- **Standard**: matches the series's conservative tone. All-red reduces to ~42% of base — e.g., 86% becomes ~36%.
+- **Standard**: matches the [Principles series](../series/index.md) conservative tone. All-red reduces to ~42% of base — e.g., 86% becomes ~36%.
 - **Tight**: strong reaction. All-red drops to 27% of base. For people whose top priority is avoiding tail losses.
 
 > **Picking**: if you hate frequent rebalancing → *Loose*; if "risk signal = big cash" is your philosophy → *Tight*; otherwise → *Standard*.
@@ -250,7 +252,7 @@ Both selections are saved in browser `localStorage`, so they persist across visi
 
 This framework **automates a mathematical intuition** — it is not a back-tested production system.
 
-1. **μ = 5% assumption**: if the future equity premium is 3–4% (which many estimates suggest), this overstates the optimal weight. Pick Quarter Kelly to bake in extra conservatism.
+1. **μ − r = 5% assumption**: if the future equity premium is 3–4% (which many estimates suggest), this overstates the optimal weight. Pick Quarter-Kelly to bake in extra conservatism.
 2. **VRP bias**: VIX averages 3–5 vol points *above* realised vol (the Volatility Risk Premium). So Kelly base runs slightly conservative — generally safe, but not exactly optimal.
 3. **VIX is 30-day forward**: longer holding horizons (6+ months) would want a different σ proxy (e.g., VIX futures average).
 4. **Signals aren't independent**: COR/SKEW, VIX TS, and VolVol all view the same underlying stress through different lenses. The multiplicative discount could over-react. The chosen multipliers (≥ 0.75 in Standard) are deliberately mild for this reason.

@@ -89,7 +89,7 @@ title: Home
 
 ---
 
-### VolVol (변동성의 변동성)
+### VolVol — VVIX / VIX 비율 지표
 
 <div class="dash-tight" markdown>
 
@@ -161,3 +161,7 @@ title: Home
 
 [크몽 전체 세트 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
 [Gumroad Bundle](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+
+---
+
+*모든 콘텐츠는 교육 목적으로만 제공됩니다. 특정 금융상품에 대한 투자 권유나 매수·매도 추천이 아니며, 모든 투자에는 원금 손실의 위험이 있습니다.*

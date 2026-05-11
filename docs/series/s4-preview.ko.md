@@ -76,3 +76,7 @@ GEX = Gamma × OI × 100 × Strike
 
 [크몽 번들 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
 [Gumroad Bundle (Overseas)](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+
+---
+
+*교육 목적의 콘텐츠입니다. 투자 권유가 아니며, 모든 투자에는 원금 손실의 위험이 있습니다.*
