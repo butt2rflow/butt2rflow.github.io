@@ -13,7 +13,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ## 📊 Live Dashboard
 
-<small>**As of 2026-05-08** · Auto-updates daily after the US close · [Full article →](posts/volatility-dashboard.md)</small>
+<small>**As of 2026-05-08** · Auto-updates daily after the US close · [Framework details →](posts/cash-allocation.md)</small>
 
 ### 💰 Suggested Cash / Equity Mix
 

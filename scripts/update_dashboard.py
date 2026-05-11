@@ -675,7 +675,7 @@ def render_section_ko(cs, vs, vvs, ks):
         "## 📊 라이브 대시보드",
         "",
         f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신 · "
-        "[자세히 →](posts/volatility-dashboard.md)</small>",
+        "[프레임워크 설명 →](posts/cash-allocation.md)</small>",
         "",
     ]
     if ks:
@@ -836,7 +836,7 @@ def render_section_en(cs, vs, vvs, ks):
         "## 📊 Live Dashboard",
         "",
         f"<small>**As of {cs['date']}** · Auto-updates daily after the US close · "
-        "[Full article →](posts/volatility-dashboard.md)</small>",
+        "[Framework details →](posts/cash-allocation.md)</small>",
         "",
     ]
     if ks:

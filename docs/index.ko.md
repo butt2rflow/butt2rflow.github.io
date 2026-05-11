@@ -13,7 +13,7 @@ title: Home
 
 ## 📊 라이브 대시보드
 
-<small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [자세히 →](posts/volatility-dashboard.md)</small>
+<small>**2026-05-08 기준** · 미국 장 마감 후 매일 자동 갱신 · [프레임워크 설명 →](posts/cash-allocation.md)</small>
 
 ### 💰 권장 현금/주식 비중
 
