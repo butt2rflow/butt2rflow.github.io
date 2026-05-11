@@ -281,17 +281,19 @@ img {
   border: 1px solid #fcd34d;
   background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
   border-radius: 8px;
-  padding: 0.7rem 0.9rem;
-  margin: 0.5rem 0 0.7rem;
+  padding: 0.5rem 0.7rem;
+  margin: 0.3rem auto 0.5rem;
+  text-align: center;
 }
 
 .kelly-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3rem;
-  margin-bottom: 0.6rem;
-  font-size: 0.74rem;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
 }
 
 .kelly-label {
@@ -306,8 +308,8 @@ img {
 }
 
 .md-typeset .kelly-pill {
-  font-size: 0.74rem;
-  padding: 0.18rem 0.55rem;
+  font-size: 0.7rem;
+  padding: 0.12rem 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 999px;
   background: white;
@@ -330,23 +332,27 @@ img {
 }
 
 .md-typeset .kelly-table {
-  width: 100%;
-  margin: 0;
-  font-size: 0.78rem;
+  width: auto;
+  margin: 0.15rem auto;
+  font-size: 0.72rem;
   border-collapse: collapse;
+  display: inline-table;
 }
 
 .md-typeset .kelly-table th,
 .md-typeset .kelly-table td {
-  padding: 0.3rem 0.5rem;
-  border-bottom: 1px solid #fde68a;
+  padding: 0.18em 0.55em;
+  line-height: 1.3;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.md-typeset .kelly-table th {
+.md-typeset .kelly-table thead th {
   background: transparent;
   font-weight: 600;
   color: #78350f;
   text-align: left;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
 }
 
 .md-typeset .kelly-table th:last-child,
@@ -357,8 +363,7 @@ img {
 
 .md-typeset .kelly-table tr.kelly-final td {
   border-top: 2px solid #f59e0b;
-  border-bottom: none;
-  padding-top: 0.45rem;
-  font-size: 0.86rem;
+  padding-top: 0.28em;
+  font-size: 0.78rem;
   color: #78350f;
 }
