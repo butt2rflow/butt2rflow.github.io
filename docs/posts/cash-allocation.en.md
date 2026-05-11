@@ -19,7 +19,76 @@ lang: en
 
 ---
 
-## 1. Kelly's formula in one line
+## 1. Why volatility is itself a loss — vol drag and the geometric mean
+
+The σ² in Kelly's formula isn't arbitrary. It maps directly to a concrete mechanism: **volatility itself erodes wealth, even when the average return is unchanged.** This is the *real* reason institutions and "smart money" raise cash when vol rises.
+
+### Arithmetic vs geometric mean
+
+There are two ways to average returns:
+
+- **Arithmetic mean**: simple yearly average. "On average, what % per year?"
+- **Geometric mean**: the *compounded* return. "What multiple of my capital after 10 years?"
+
+Compounding is multiplicative, so what actually shows up in your account is the **geometric** mean. And the two diverge as volatility rises:
+
+```
+Geometric ≈ Arithmetic − σ² / 2
+```
+
+This gap is called **vol drag** (or "variance drain", negative compounding). The fact that σ enters *squared* is the whole story.
+
+### Money disappears in sideways markets
+
+| Scenario | Year 1 | Year 2 | Arithmetic mean | Geometric (actual P&L) |
+|:---|---:|---:|---:|---:|
+| Low vol | +5% | −5% | 0% | **−0.13%** |
+| Mid vol | +15% | −15% | 0% | **−1.13%** |
+| **High vol** | +30% | −30% | 0% | **−4.6%** |
+| Crisis-level | +50% | −50% | 0% | **−13.4%** |
+
+All rows have arithmetic mean 0%, but *actual capital* shrinks faster as vol rises. Look at the last row: +50% then −50% feels like break-even, but capital goes 100 → 150 → 75. **25% loss over 2 years, with zero expected return**.
+
+Money evaporating while you do nothing — that's vol drag.
+
+### Annual drag by VIX level
+
+vol drag per year ≈ σ²/2:
+
+| σ | VIX regime | Drag (annual) |
+|:---|:---|---:|
+| 16% | Calm VIX | **−1.3%** (tolerable) |
+| 20% | Mild stress | −2.0% |
+| 25% | Caution | **−3.1%** (meaningful) |
+| 30% | Stressed | −4.5% |
+| 40% | Crisis | **−8.0%** (overwhelming) |
+
+S&P 500's long-run *arithmetic* mean is ~9%. In a crisis-level vol regime (VIX 40), the 8% drag **eats almost the entire expected return**. Just holding becomes a loss.
+
+### Why smart money reacts to vol signals
+
+Retail investors typically think in *arithmetic* terms: "long-run average is +9%, so just hold". Institutions and hedge funds think in *geometric* terms (= actual long-run growth rate) or in *probability of survival*. They know mathematically that **same arithmetic mean with different vol = completely different long-run outcome**.
+
+Smart-money reasoning:
+> "Arithmetic expectation +5% but σ=40% → vol drag is 8% → geometric mean is negative → **holding guarantees long-run loss** → raise cash now."
+
+That's the mechanism. Smart money exits early on vol signals not because of news headlines, but because of multiplicative arithmetic.
+
+### Direct link to Kelly
+
+Once you see this, the σ² in Kelly's formula becomes self-evident:
+
+```
+f* = (μ − r) / σ²
+```
+
+The denominator σ² *is* the magnitude of vol drag. Kelly is saying: "trim exposure by exactly the amount that variance is eating, so that geometric growth is maximised." Why σ² and not σ? Because vol drag is σ²/2 — same term.
+
+> **Takeaway**: vol creates multiplicative loss (vol drag) → institutions think in geometric terms and react early to vol signals → Kelly's σ² formalises this reaction curve mathematically.
+
+---
+
+## 2. Kelly's formula in one line
 
 Kelly maximises the long-run growth rate of a portfolio under a return distribution. For continuous assets like equities:
 
@@ -40,7 +109,7 @@ For the S&P 500, long-run μ ≈ 9%, r ≈ 4%, so **μ − r = 5%** is a reasona
 
 ---
 
-## 2. What to plug into σ — VIX
+## 3. What to plug into σ — VIX
 
 Kelly needs *forward-looking* σ. Historical realised vol tells you the past; you need the future.
 
@@ -66,7 +135,7 @@ When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). 
 
 ---
 
-## 3. Kelly fraction — the first user toggle
+## 4. Kelly fraction — the first user toggle
 
 **Full Kelly (f\* as-is) is theoretically optimal but practically dangerous** for retail. Two reasons:
 
@@ -91,7 +160,7 @@ The dashboard's first toggle picks one of these:
 
 ---
 
-## 4. Why VIX alone isn't enough
+## 5. Why VIX alone isn't enough
 
 VIX alone misses **"smoke without fire"** setups. Example:
 
@@ -116,7 +185,7 @@ Each group's worst sub-signal sets the group state, and the state maps to a mult
 
 ---
 
-## 5. Risk sensitivity — the second user toggle
+## 6. Risk sensitivity — the second user toggle
 
 How aggressively those multipliers bite is **your risk-aversion choice**. Three profiles:
 
@@ -136,7 +205,7 @@ Reading:
 
 ---
 
-## 6. Final formula — one line
+## 7. Final formula — one line
 
 ```
 Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
@@ -154,7 +223,7 @@ Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
 
 ---
 
-## 7. How to use the live dashboard
+## 8. How to use the live dashboard
 
 The first card on the [live dashboard](../index.md) recomputes this every day.
 
@@ -177,7 +246,7 @@ Both selections are saved in browser `localStorage`, so they persist across visi
 
 ---
 
-## 8. Caveats
+## 9. Caveats
 
 This framework **automates a mathematical intuition** — it is not a back-tested production system.
 
