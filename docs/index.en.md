@@ -13,7 +13,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ## 📊 Live Dashboard
 
-<small>**As of 2026-05-08** · Auto-updates daily after the US close · [Framework details →](posts/cash-allocation.md)</small>
+<small>**As of 2026-05-11** · Auto-updates daily after the US close · [Framework details →](posts/cash-allocation.md)</small>
 
 ### 💰 Suggested Cash / Equity Mix
 
@@ -82,9 +82,9 @@ Math- and data-driven investment principles. In an age where AI dominates market
 | Field | Value | State |
 |:------|------:|:------|
 | VIX spot | 17.19 | — |
-| Front (M1, 2026-05-19) | 19.22 | — |
-| **M2 − M1** (short-term) | +1.47 | 🟢 Contango (normal) |
-| **M7 − M4** (mid-term, VXZ zone) | +0.79 | 🟢 Contango (normal) |
+| Front (M1, 2026-05-19) | 19.47 | — |
+| **M2 − M1** (short-term) | +1.52 | 🟢 Contango (normal) |
+| **M7 − M4** (mid-term, VXZ zone) | +0.75 | 🟢 Contango (normal) |
 
 </div>
 
@@ -100,7 +100,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 | Signal | Value | State |
 |:-------|------:|:------|
-| **Term Structure** (COR1Y − COR1M) | 6.2 | 🟢 Normal |
+| **Term Structure** (COR1Y − COR1M) | 5.3 | 🟢 Normal |
 | **COR90D** (synchronization) | 33.1 | 🟢 Normal |
 | **SKEW** (tail risk) | 138.2 | 🟢 Normal |
 
