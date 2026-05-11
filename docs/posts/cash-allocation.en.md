@@ -158,6 +158,28 @@ The dashboard's first toggle picks one of these:
 
 > **Pick your fraction once and barely change it.** The point is not to react to markets by changing the fraction — it's to let the *same* fraction produce different weights as vol moves.
 
+### Deep dive: Is it reckless to bump fraction up during a crash?
+
+Common question — would shifting from Half to Full mid-crash be reckless?
+
+**Math has a defensible answer.** Forward μ−r likely expands as prices fall — a 5% → 8–10% jump is reasonable in deep drawdowns. Full Kelly at VIX 60 with μ−r = 10% gives ~28%; Half Kelly at the same VIX with μ−r = 5% gives 7%. The 4× difference is meaningful, but absolute risk stays modest given the 80%+ cash you're already holding.
+
+**Practical risks are real, though:**
+
+- **Catching falling knives** — VIX > 60 *looks* like a bottom, but 2008 had two such spikes a year apart. "Deep enough?" only resolves with hindsight.
+- **Estimation-error paradox** — σ is most uncertain precisely when μ estimation is also most uncertain. Bumping fraction at the moment of maximum estimation noise is the opposite of conservative.
+- **Behavioural risk** — touching the toggle at peak fear is by definition an emotional act. The whole point of a fixed fraction is to remove that lever.
+- **Backfit triggers** — "VIX > 50 sustained 5 days" reads well in hindsight but is fitted to past crises; no guarantee it generalises.
+
+**Cleaner alternatives:**
+
+| Approach | How | Trade-off |
+|:---|:---|:---|
+| **A. Leave it alone (recommended)** | The framework has already lifted cash. Half + auto-deleverage absorbs the cascade and re-deploys on recovery. | Simplest. Consistent with the Principles "No-Edge" philosophy. |
+| **B. Separate *tactical bucket*** | Keep main portfolio at Half. Hold a "crisis-buy reserve" (10–20% of total) deployed on triggers (VIX > 50, etc.). | Kelly fraction stays fixed. Isolates the contrarian instinct from the structural framework. |
+
+> **Bottom line**: A by default. Add B if you want a disciplined outlet for the "buy the panic" instinct. *Don't dynamically modulate the Kelly fraction itself — that breaks the framework's core design (emotion removed, consistent ratio).*
+
 ---
 
 ## 5. Why VIX alone isn't enough
@@ -248,7 +270,36 @@ Both selections are saved in browser `localStorage`, so they persist across visi
 
 ---
 
-## 9. Caveats
+## 9. Real-world behavior — first gap vs the cascade
+
+The framework's value lies in the *cascade* that follows the first shock, not the first shock itself. A −3% or −5% gap on day 1 is the entry cost — outside of insiders or lucky timing, no rule-based system can avoid it. The real difference shows up in the *days and weeks after*.
+
+| Phase | Market | Auto-response |
+|:---|:---|:---|
+| **Day 1 gap** | Sudden −5% | Taken at full position (entry cost of a reactive framework) |
+| **Day 2 ~ N** | VIX spikes → σ² × 4 → Kelly base ÷ 4 + all-red signals × 0.42 | Subsequent drops hit an *already shrunken* equity base |
+
+### Historical examples
+
+**March 2020 COVID crash:**
+
+| Date | VIX | Half-Kelly base | Signals | Suggested mix |
+|:---|---:|---:|:---|---:|
+| Feb 14 (calm) | 14 | 100% (cap) | All 🟢 | Equity 100% / Cash 0% |
+| Feb 24 (−3.4% first gap) | 28 | 32% | Some 🟡 | Equity ~25% / Cash ~75% |
+| Mar 16 (bottom) | 82 | 4% | All 🔴 | **Equity ~2% / Cash ~98%** |
+
+VIX 14 → 82 (6×) cuts the suggested weight from 100% to 2%. The additional ~−25% drawdown across this month lands on a *much smaller* equity base, dramatically reducing cumulative loss vs a static fully-invested position.
+
+**September 2008 Lehman week:**
+
+The first week after Lehman's bankruptcy (−10%) is unavoidable. But the additional −25% over the following month lands on an already deleveraged portfolio, so cumulative loss runs roughly half of what a static fully-invested position would take (illustrative).
+
+> **TL;DR**: The framework is a *cascade buffer*, not a forecaster. The first gap is the entry cost; the value is in shrinking the cumulative loss that follows.
+
+---
+
+## 10. Caveats
 
 This framework **automates a mathematical intuition** — it is not a back-tested production system.
 
