@@ -56,7 +56,7 @@ title: Home
 
 ### ⚡ 공격 자본 (Tactical Bucket) — 위기 발동 신호
 
-<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
+<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2" markdown>
 <div class="dash-tight" markdown>
 
 | 트리거 | 현재 | 충족 |

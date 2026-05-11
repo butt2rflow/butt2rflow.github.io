@@ -759,7 +759,7 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         "### ⚡ 공격 자본 (Tactical Bucket) — 위기 발동 신호",
         "",
         f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
-        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
+        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}" markdown>',
         '<div class="dash-tight" markdown>',
         "",
         "| 트리거 | 현재 | 충족 |",
@@ -801,7 +801,7 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
         "### ⚡ Tactical Bucket — Offensive Deploy Signal",
         "",
         f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
-        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
+        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}" markdown>',
         '<div class="dash-tight" markdown>',
         "",
         "| Trigger | Now | Fired |",

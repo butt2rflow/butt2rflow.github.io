@@ -56,7 +56,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ### ⚡ Tactical Bucket — Offensive Deploy Signal
 
-<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
+<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2" markdown>
 <div class="dash-tight" markdown>
 
 | Trigger | Now | Fired |
