@@ -28,8 +28,6 @@ title: Home
 
 </div>
 
-![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)
-
 <div id="vix-history-player"></div>
 
 <small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · 지난 1년 곡선을 슬라이더/▶로 재생 가능 · [해석 가이드 →](posts/vix-term-structure.md)*</small>
@@ -49,6 +47,23 @@ title: Home
 </div>
 
 ![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)
+
+---
+
+### VolVol (변동성의 변동성)
+
+<div class="dash-tight" markdown>
+
+| 신호 | 값 | 상태 |
+|:-----|---:|:-----|
+| **VolVol = VVIX / VIX** (5DMA) | 5.471 | 🟢 안도 (5DMA > 중간선) |
+| BB 중간선 (20일 이평) | 5.332 | — |
+
+</div>
+
+![VolVol 시계열](assets/diagrams/volvol.png)
+
+<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, 아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. **공식 지표가 아닌 '심리적' 보조 신호** — 단독 매매 판단보다는 VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도.*</small>
 
 </div>
 

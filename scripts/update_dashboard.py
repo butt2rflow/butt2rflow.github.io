@@ -111,9 +111,27 @@ def fetch_vix_futures():
     return vx
 
 
-def fetch_vix_spot() -> float:
-    s = _fetch_cboe_index("VIX")
-    return float(s.iloc[-1]) if len(s) else float("nan")
+def fetch_vix_history() -> pd.Series:
+    return _fetch_cboe_index("VIX")
+
+
+def fetch_vvix_history() -> pd.Series:
+    """Cboe VVIX — implied volatility of VIX itself."""
+    return _fetch_cboe_index("VVIX")
+
+
+def compute_volvol_df(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
+    """VolVol indicator from the 2022-08-28 series article:
+    ratio = VVIX / VIX, smoothed with 5-day MA, framed by 20-day BB (±2σ).
+    Cross of 5DMA above/below the BB middle band is the signal."""
+    df = pd.DataFrame({"VVIX": vvix, "VIX": vix}).dropna()
+    df["ratio"] = df["VVIX"] / df["VIX"]
+    df["ma5"] = df["ratio"].rolling(5).mean()
+    df["ma20"] = df["ratio"].rolling(20).mean()
+    std20 = df["ratio"].rolling(20).std()
+    df["bb_upper"] = df["ma20"] + 2 * std20
+    df["bb_lower"] = df["ma20"] - 2 * std20
+    return df
 
 
 # Number of past trading days to keep in the rolling VIX TS animation.
@@ -123,17 +141,19 @@ def fetch_vix_spot() -> float:
 VIX_HISTORY_RETENTION_DAYS = 365
 
 
-def archive_vix_history(today_chart: Path) -> None:
-    """Copy today's VIX TS chart to docs/assets/diagrams[_en]/vix_history/<date>.png,
+def archive_vix_history(today_chart: Path, data_date: str) -> None:
+    """Copy the VIX TS chart to docs/assets/diagrams[_en]/vix_history/<data_date>.png,
     then prune anything older than VIX_HISTORY_RETENTION_DAYS, then write
-    a manifest.json the homepage's JS player reads."""
-    today_str = pd.Timestamp.now(tz="US/Eastern").strftime("%Y-%m-%d")
+    a manifest.json the homepage's JS player reads.
 
+    `data_date` should be the Cboe settlement date the chart represents
+    (not local wall-clock today). On weekends/holidays the settlement CSV
+    still serves Friday's data, so using the wall-clock date would file
+    stale data under a misleading name."""
     for parent in [OUT_KO, OUT_EN]:
         archive_dir = parent / "vix_history"
         archive_dir.mkdir(parents=True, exist_ok=True)
-        # Save today's snapshot under the date filename
-        dst = archive_dir / f"{today_str}.png"
+        dst = archive_dir / f"{data_date}.png"
         try:
             shutil.copy2(today_chart, dst)
         except Exception as e:  # noqa: BLE001
@@ -339,6 +359,37 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path)
     plt.close()
 
 
+def render_volvol(vv: pd.DataFrame, out_path: Path):
+    """VolVol = VVIX/VIX with 5DMA and 20-day Bollinger Bands."""
+    cutoff = pd.Timestamp.now() - pd.DateOffset(months=LOOKBACK_MONTHS)
+    s = vv[vv.index >= cutoff]
+
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    ax.fill_between(s.index, s["bb_lower"], s["bb_upper"],
+                    color="#a78bfa", alpha=0.12, label="20-day BB (±2σ)")
+    ax.plot(s.index, s["ratio"], color="#9ca3af", linewidth=1, linestyle=":",
+            label="VVIX/VIX (raw)", alpha=0.7)
+    ax.plot(s.index, s["ma20"], color="#6b7280", linewidth=1, linestyle="--",
+            label="BB middle (20-day MA)")
+    ax.plot(s.index, s["ma5"], color="#7c3aed", linewidth=2,
+            label="VolVol (5-day MA)")
+    ax.set_ylabel("VVIX / VIX", fontsize=10)
+    ax.set_title("VolVol = VVIX / VIX — 5DMA above middle = calm, below = stressed",
+                 fontsize=11)
+    ax.legend(loc="upper left", fontsize=8, ncol=2)
+    ax.grid(alpha=0.3)
+
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.MO, interval=2))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+    ax.xaxis.set_minor_locator(mdates.WeekdayLocator(byweekday=mdates.MO))
+    plt.setp(ax.get_xticklabels(), rotation=35, ha="right")
+    ax.tick_params(axis="x", which="major", labelsize=9)
+
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
 # ============================================================
 # Signals
 # ============================================================
@@ -371,6 +422,33 @@ def compute_cor_skew_signals(tenor, skew):
         "cor90d_state": state(cor90d, 40, 50),
         "skew": skew_v,
         "skew_state": state(skew_v, 140, 150),
+    }
+
+
+def compute_volvol_signal(vv: pd.DataFrame):
+    """5DMA vs 20-day BB middle: above = ok, below = danger.
+    Mark as 'caution' if a crossover happened in the last 5 trading days
+    (transition state — series flags this as the actionable signal)."""
+    if vv is None or not len(vv):
+        return None
+    df = vv.dropna(subset=["ma5", "ma20"])
+    if not len(df):
+        return None
+    last = df.iloc[-1]
+    ma5, ma20 = float(last["ma5"]), float(last["ma20"])
+    state = "ok" if ma5 >= ma20 else "danger"
+    recent = df.tail(5)
+    diffs = (recent["ma5"] - recent["ma20"]).values
+    crossed = any(diffs[i] * diffs[i + 1] < 0 for i in range(len(diffs) - 1))
+    if crossed:
+        state = "caution"
+    return {
+        "ratio": float(last["ratio"]),
+        "ma5": ma5,
+        "ma20": ma20,
+        "date": pd.Timestamp(last.name).strftime("%Y-%m-%d"),
+        "state": state,
+        "crossed": crossed,
     }
 
 
@@ -419,7 +497,7 @@ SHAPE_EN = {"contango": "Contango (normal)", "backwardation": "Backwardation (st
 SHAPE_EMOJI = {"contango": "🟢", "backwardation": "🔴", "mixed": "🟡"}
 
 
-def render_section_ko(cs, vs):
+def render_section_ko(cs, vs, vvs):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
@@ -454,8 +532,6 @@ def render_section_ko(cs, vs):
             "",
             "</div>",
             "",
-            "![VIX Futures Term Structure](assets/diagrams/vix_term_structure.png)",
-            "",
             '<div id="vix-history-player"></div>',
             "",
             "<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · "
@@ -483,6 +559,36 @@ def render_section_ko(cs, vs):
         "",
         "![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)",
         "",
+    ]
+    if vvs:
+        cross_note = " · 최근 5일 내 크로스 발생" if vvs.get("crossed") else ""
+        ko_state = {"ok": "안도 (5DMA > 중간선)",
+                    "caution": "전환",
+                    "danger": "긴장 (5DMA < 중간선)"}[vvs["state"]]
+        parts += [
+            "---",
+            "",
+            "### VolVol (변동성의 변동성)",
+            "",
+            '<div class="dash-tight" markdown>',
+            "",
+            "| 신호 | 값 | 상태 |",
+            "|:-----|---:|:-----|",
+            f"| **VolVol = VVIX / VIX** (5DMA) | {vvs['ma5']:.3f} | "
+            f"{EMOJI[vvs['state']]} {ko_state}{cross_note} |",
+            f"| BB 중간선 (20일 이평) | {vvs['ma20']:.3f} | — |",
+            "",
+            "</div>",
+            "",
+            "![VolVol 시계열](assets/diagrams/volvol.png)",
+            "",
+            "<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, "
+            "아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. "
+            "**공식 지표가 아닌 '심리적' 보조 신호** — 단독 매매 판단보다는 "
+            "VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도.*</small>",
+            "",
+        ]
+    parts += [
         "</div>",
         "",
         "---",
@@ -491,7 +597,7 @@ def render_section_ko(cs, vs):
     return "\n".join(parts)
 
 
-def render_section_en(cs, vs):
+def render_section_en(cs, vs, vvs):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     parts = [
         START_MARK,
@@ -526,8 +632,6 @@ def render_section_en(cs, vs):
             "",
             "</div>",
             "",
-            "![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)",
-            "",
             '<div id="vix-history-player"></div>',
             "",
             "<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · "
@@ -555,6 +659,36 @@ def render_section_en(cs, vs):
         "",
         "![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)",
         "",
+    ]
+    if vvs:
+        cross_note = " · crossed in last 5 days" if vvs.get("crossed") else ""
+        en_state = {"ok": "Calm (5DMA > middle)",
+                    "caution": "Transition",
+                    "danger": "Stressed (5DMA < middle)"}[vvs["state"]]
+        parts += [
+            "---",
+            "",
+            "### VolVol (vol-of-vol)",
+            "",
+            '<div class="dash-tight" markdown>',
+            "",
+            "| Signal | Value | State |",
+            "|:-------|------:|:------|",
+            f"| **VolVol = VVIX / VIX** (5DMA) | {vvs['ma5']:.3f} | "
+            f"{EMOJI[vvs['state']]} {en_state}{cross_note} |",
+            f"| BB middle (20-day MA) | {vvs['ma20']:.3f} | — |",
+            "",
+            "</div>",
+            "",
+            "![VolVol history](assets/diagrams_en/volvol.png)",
+            "",
+            "<small>*5-day MA above the 20-day BB middle = vol is decompressing (calm regime); "
+            "below = vol is building (stressed). A cross through the middle band marks a sentiment shift. "
+            "**Not an official index — a 'psychological' confirmation signal**, best read alongside "
+            "VIX TS and COR/SKEW rather than as a standalone trading trigger.*</small>",
+            "",
+        ]
+    parts += [
         "</div>",
         "",
         "---",
@@ -596,8 +730,14 @@ def main():
         print(f"  [WARN] Cboe fetch failed: {e}")
         vx = pd.DataFrame()
 
-    vix_spot = fetch_vix_spot()
-    print(f"  VIX spot: {vix_spot:.2f}")
+    print("Fetching VIX + VVIX history...")
+    vix_hist = fetch_vix_history()
+    vvix_hist = fetch_vvix_history()
+    vix_spot = float(vix_hist.iloc[-1]) if len(vix_hist) else float("nan")
+    print(f"  VIX history: {len(vix_hist)} rows, spot: {vix_spot:.2f}")
+    print(f"  VVIX history: {len(vvix_hist)} rows")
+    volvol_df = compute_volvol_df(vvix_hist, vix_hist)
+    print(f"  VolVol (ratio rows after align): {len(volvol_df)}")
 
     print("Fetching S&P 500 reference series...")
     spx = fetch_spx()
@@ -611,24 +751,35 @@ def main():
     shutil.copy2(OUT_KO / "vol_dashboard.png", OUT_EN / "vol_dashboard.png")
     print(f"  Copied: {OUT_EN / 'vol_dashboard.png'}")
 
+    if len(volvol_df):
+        render_volvol(volvol_df, OUT_KO / "volvol.png")
+        print(f"  Saved: {OUT_KO / 'volvol.png'}")
+        shutil.copy2(OUT_KO / "volvol.png", OUT_EN / "volvol.png")
+        print(f"  Copied: {OUT_EN / 'volvol.png'}")
+
+    print("Computing signals...")
+    cs = compute_cor_skew_signals(tenor, skew)
+    vs = compute_vix_signals(vx, vix_spot) if len(vx) > 0 else None
+    vvs = compute_volvol_signal(volvol_df)
+
     if len(vx) > 0:
         render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png")
         print(f"  Saved: {OUT_KO / 'vix_term_structure.png'}")
         shutil.copy2(OUT_KO / "vix_term_structure.png", OUT_EN / "vix_term_structure.png")
         print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
-        archive_vix_history(OUT_KO / "vix_term_structure.png")
+        archive_vix_history(OUT_KO / "vix_term_structure.png", cs["date"])
 
-    print("Computing signals...")
-    cs = compute_cor_skew_signals(tenor, skew)
-    vs = compute_vix_signals(vx, vix_spot) if len(vx) > 0 else None
     print(f"  COR/SKEW: spread={cs['spread']:.2f}, COR90D={cs['cor90d']:.2f}, SKEW={cs['skew']:.2f}")
     if vs:
         print(f"  VIX TS: spot={vs['vix_spot']:.2f}, front={vs['front']:.2f}, "
               f"M2-M1={vs['spread_2_1']:+.2f}, shape={vs['shape']}")
+    if vvs:
+        print(f"  VolVol: 5DMA={vvs['ma5']:.3f}, BB-mid={vvs['ma20']:.3f}, "
+              f"state={vvs['state']}, crossed={vvs.get('crossed')}")
 
     print("Patching home pages...")
-    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs))
-    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs))
+    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs, vvs))
+    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs, vvs))
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
     print("Done.")

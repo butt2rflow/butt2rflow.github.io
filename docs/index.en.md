@@ -28,8 +28,6 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 </div>
 
-![VIX Futures Term Structure](assets/diagrams_en/vix_term_structure.png)
-
 <div id="vix-history-player"></div>
 
 <small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · Use the slider/▶ to scrub through up to 1 year of past curves · [Reading guide →](posts/vix-term-structure.md)*</small>
@@ -49,6 +47,23 @@ Math- and data-driven investment principles. In an age where AI dominates market
 </div>
 
 ![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)
+
+---
+
+### VolVol (vol-of-vol)
+
+<div class="dash-tight" markdown>
+
+| Signal | Value | State |
+|:-------|------:|:------|
+| **VolVol = VVIX / VIX** (5DMA) | 5.471 | 🟢 Calm (5DMA > middle) |
+| BB middle (20-day MA) | 5.332 | — |
+
+</div>
+
+![VolVol history](assets/diagrams_en/volvol.png)
+
+<small>*5-day MA above the 20-day BB middle = vol is decompressing (calm regime); below = vol is building (stressed). A cross through the middle band marks a sentiment shift. **Not an official index — a 'psychological' confirmation signal**, best read alongside VIX TS and COR/SKEW rather than as a standalone trading trigger.*</small>
 
 </div>
 
