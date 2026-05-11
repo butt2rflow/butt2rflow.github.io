@@ -346,11 +346,15 @@ img {
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.md-typeset .kelly-table th,
+.md-typeset .kelly-table td {
+  text-align: left;
+}
+
 .md-typeset .kelly-table thead th {
   background: transparent;
   font-weight: 600;
   color: #78350f;
-  text-align: left;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
 }
