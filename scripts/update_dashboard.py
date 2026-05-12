@@ -172,11 +172,13 @@ def compute_volvol_df(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
     return df
 
 
-# Number of past trading days to keep in the rolling VIX TS animation.
-# Each daily PNG is ~80–150 KB, so 365 days ≈ 30–50 MB in repo. GitHub
-# repos handle up to ~1 GB comfortably, so feel free to extend if you
-# want multi-year scrubbing.
-VIX_HISTORY_RETENTION_DAYS = 365
+# Retention for the VIX TS history archive. None = unlimited (no prune,
+# the archive accumulates indefinitely). Set to an integer to enable
+# rolling-window retention. Each daily PNG is ~80–150 KB, so ~250 trading
+# days/year ≈ 20–40 MB per locale; GitHub repos handle up to ~1 GB
+# comfortably, so unlimited is fine for a decade-plus before needing to
+# revisit.
+VIX_HISTORY_RETENTION_DAYS: int | None = None
 
 
 def _vix_ts_data_snapshot(vx: pd.DataFrame, vix_spot: float,
@@ -219,9 +221,10 @@ def _vix_ts_data_snapshot(vx: pd.DataFrame, vix_spot: float,
 def archive_vix_history(today_chart: Path, data_date: str,
                         vx: pd.DataFrame, vix_spot: float) -> None:
     """Copy the VIX TS chart to docs/assets/diagrams[_en]/vix_history/<data_date>.png
-    AND write the underlying numbers to <data_date>.json. Then prune anything
-    older than VIX_HISTORY_RETENTION_DAYS, then write a manifest.json the
-    homepage's JS player reads.
+    AND write the underlying numbers to <data_date>.json. Optionally prune
+    files older than VIX_HISTORY_RETENTION_DAYS (None = no prune, archive
+    accumulates indefinitely). Rebuild manifest.json from whatever remains —
+    the homepage's JS player reads that.
 
     `data_date` should be the Cboe settlement date the chart represents
     (not local wall-clock today). On weekends/holidays the settlement CSV
@@ -246,15 +249,19 @@ def archive_vix_history(today_chart: Path, data_date: str,
         except Exception as e:  # noqa: BLE001
             print(f"  [WARN] could not archive {json_dst}: {e}")
 
-        # Prune files older than retention window — both PNG and JSON
-        cutoff = pd.Timestamp.now() - pd.Timedelta(days=VIX_HISTORY_RETENTION_DAYS)
+        # Prune files older than retention window — both PNG and JSON.
+        # When VIX_HISTORY_RETENTION_DAYS is None the archive accumulates
+        # indefinitely (current policy) and we just enumerate existing
+        # files for the manifest.
         kept = []
+        cutoff = (pd.Timestamp.now() - pd.Timedelta(days=VIX_HISTORY_RETENTION_DAYS)
+                  if VIX_HISTORY_RETENTION_DAYS is not None else None)
         for f in sorted(archive_dir.glob("*.png")):
             try:
                 file_date = pd.Timestamp(f.stem)
             except ValueError:
                 continue  # ignore non-date filenames
-            if file_date < cutoff:
+            if cutoff is not None and file_date < cutoff:
                 f.unlink()
                 companion = archive_dir / f"{f.stem}.json"
                 if companion.exists():

@@ -97,6 +97,6 @@
     "2026-05-11"
   ],
   "latest": "2026-05-11",
-  "retention_days": 365,
+  "retention_days": null,
   "data_format": "png + json (per-date)"
 }
