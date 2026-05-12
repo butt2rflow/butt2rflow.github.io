@@ -37,8 +37,12 @@ import update_dashboard as ud  # noqa: E402
 # Cboe's settlement CSV (?dt=DATE) returns only contracts that *still*
 # exist in their database — already-expired monthly contracts have been
 # purged. For dates more than ~8 months back the front-end of the curve
-# can be empty, leaving a half-baked chart. Skip those.
-MIN_CONTRACTS = 5
+# can be empty AND/OR the surviving contracts have gaps in the month
+# sequence. Two guards: minimum count + month-chain continuity. The
+# continuity check matters because some dates have 6+ contracts but skip
+# a month or two in the middle, which makes the curve misleading.
+MIN_CONTRACTS = 6
+EARLIEST_KEEP_DATE = "2025-12-22"  # before this, gaps and partial curves dominate
 
 US_MARKET_HOLIDAYS = {
     # 2025
@@ -50,6 +54,25 @@ US_MARKET_HOLIDAYS = {
     "2026-06-19", "2026-07-03", "2026-09-07", "2026-11-26", "2026-11-27",
     "2026-12-24", "2026-12-25",
 }
+
+
+def is_month_chain_continuous(vx: pd.DataFrame) -> bool:
+    """Return True iff the contracts' expiration months form a consecutive
+    chain (no skipped months). Cboe's purge of expired contracts sometimes
+    leaves residual long-dated contracts with gaps — those make misleading
+    curve charts so we drop them."""
+    if vx.empty:
+        return False
+    months = sorted({(d.year, d.month) for d in vx["Expiration Date"]})
+    if len(months) < 2:
+        return True
+    prev = None
+    for y, m in months:
+        cur = y * 12 + m
+        if prev is not None and cur - prev != 1:
+            return False
+        prev = cur
+    return True
 
 
 def fetch_settlement_at(date_str: str) -> pd.DataFrame:
@@ -119,7 +142,12 @@ def main():
     print(f"  {len(vix_hist)} bars, {vix_hist.index.min().date()} → {vix_hist.index.max().date()}")
 
     today = pd.Timestamp.now(tz="US/Eastern").normalize().tz_localize(None)
-    start = today - pd.Timedelta(days=args.days)
+    requested_start = today - pd.Timedelta(days=args.days)
+    earliest = pd.Timestamp(EARLIEST_KEEP_DATE)
+    start = max(requested_start, earliest)
+    if start > requested_start:
+        print(f"Clamping start from {requested_start.date()} → {start.date()} "
+              f"(EARLIEST_KEEP_DATE)")
     business_days = pd.date_range(start=start, end=today, freq="B")
     target_dates = [
         d.strftime("%Y-%m-%d") for d in business_days
@@ -159,6 +187,13 @@ def main():
             skipped_no_data += 1
             print(f"[{i}/{len(target_dates)}] {date_str}: only {len(vx)} contracts "
                   f"(< {MIN_CONTRACTS}), Cboe purged expired front-end — skip")
+            time.sleep(args.sleep)
+            continue
+        if not is_month_chain_continuous(vx):
+            skipped_no_data += 1
+            months = sorted({d.strftime("%Y-%m") for d in vx["Expiration Date"]})
+            print(f"[{i}/{len(target_dates)}] {date_str}: month gaps in chain "
+                  f"({months}) — skip")
             time.sleep(args.sleep)
             continue
 
