@@ -18,18 +18,44 @@
     "90-10": { main: 0.90, tactical: 0.10 },
     "95-5":  { main: 0.95, tactical: 0.05 },
   };
+  // Equity-risk premium (μ−r) used in Kelly base. Python ships pre-computed
+  // base values at μ−r = 5% (conservative); recomputing for 7% / 9% multiplies
+  // by 1.4 / 1.8 respectively, since f* is linear in (μ−r).
+  const PREMIUM_PROFILES = {
+    conservative: { value: 0.05, ratio: 1.0 },
+    standard:     { value: 0.07, ratio: 7 / 5 },
+    aggressive:   { value: 0.09, ratio: 9 / 5 },
+  };
+  // Kelly fraction key → dataset attribute name (camelCased automatically
+  // by the browser, but using single tokens keeps the lookup simple).
+  const KELLY_DATASET_KEY = {
+    quarter:      "baseQuarter",
+    half:         "baseHalf",
+    threequarter: "baseThreequarter",
+    full:         "baseFull",
+  };
+  const KELLY_CAP = 100;  // hard cap, mirrors Python's KELLY_CAP = 1.00
   const DEFAULT_SPLIT = "80-20";
+  const DEFAULT_PREMIUM = "conservative";
   const STORAGE_KELLY = "kelly-fraction";
   const STORAGE_PROFILE = "kelly-discount-profile";
   const STORAGE_SPLIT = "allocation-split";
+  const STORAGE_PREMIUM = "kelly-equity-premium";
 
   function recalc(card) {
     const kelly = card.dataset.kelly || "half";
     const profileKey = card.dataset.discountProfile || "standard";
+    const premiumKey = card.dataset.premium || DEFAULT_PREMIUM;
     const profile = DISCOUNT_PROFILES[profileKey] || DISCOUNT_PROFILES.standard;
+    const premium = PREMIUM_PROFILES[premiumKey] || PREMIUM_PROFILES[DEFAULT_PREMIUM];
 
-    const base = parseFloat(card.dataset["base" + kelly[0].toUpperCase() + kelly.slice(1)]);
-    if (isNaN(base)) return;
+    // Python ships the base at μ−r = 5% (conservative). Scaling by the
+    // premium ratio reproduces the value for 7% / 9% without re-fetching:
+    // f* = (μ−r)/σ² is linear in (μ−r), so doubling μ−r doubles the base
+    // (before the 100% cap).
+    const baseRaw = parseFloat(card.dataset[KELLY_DATASET_KEY[kelly] || "baseHalf"]);
+    if (isNaN(baseRaw)) return;
+    const base = Math.min(Math.round(baseRaw * premium.ratio), KELLY_CAP);
 
     const sCS = card.dataset.stateCorskew || "ok";
     const sVTS = card.dataset.stateVixts || "ok";
@@ -38,7 +64,7 @@
     const dCS = profile[sCS];
     const dVTS = profile[sVTS];
     const dVV = profile[sVV];
-    const equity = Math.min(Math.round(base * dCS * dVTS * dVV), 100);
+    const equity = Math.min(Math.round(base * dCS * dVTS * dVV), KELLY_CAP);
     const cash = 100 - equity;
 
     const set = (sel, val) => {
@@ -118,17 +144,24 @@
   function initCard(card) {
     const savedKelly = localStorage.getItem(STORAGE_KELLY);
     const savedProfile = localStorage.getItem(STORAGE_PROFILE);
-    if (savedKelly) {
+    const savedPremium = localStorage.getItem(STORAGE_PREMIUM);
+    if (savedKelly && KELLY_DATASET_KEY[savedKelly]) {
       card.dataset.kelly = savedKelly;
       setActive(card, "data-kelly-set", savedKelly);
     } else {
       card.dataset.kelly = "half";
     }
-    if (savedProfile) {
+    if (savedProfile && DISCOUNT_PROFILES[savedProfile]) {
       card.dataset.discountProfile = savedProfile;
       setActive(card, "data-discount-set", savedProfile);
     } else {
       card.dataset.discountProfile = "standard";
+    }
+    if (savedPremium && PREMIUM_PROFILES[savedPremium]) {
+      card.dataset.premium = savedPremium;
+      setActive(card, "data-premium-set", savedPremium);
+    } else {
+      card.dataset.premium = DEFAULT_PREMIUM;
     }
 
     card.querySelectorAll("[data-kelly-set]").forEach((btn) => {
@@ -146,6 +179,15 @@
         card.dataset.discountProfile = v;
         setActive(card, "data-discount-set", v);
         localStorage.setItem(STORAGE_PROFILE, v);
+        recalc(card);
+      });
+    });
+    card.querySelectorAll("[data-premium-set]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const v = btn.getAttribute("data-premium-set");
+        card.dataset.premium = v;
+        setActive(card, "data-premium-set", v);
+        localStorage.setItem(STORAGE_PREMIUM, v);
         recalc(card);
       });
     });

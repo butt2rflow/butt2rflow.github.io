@@ -44,6 +44,7 @@ title: Home
      data-vix="18.4"
      data-base-quarter="37"
      data-base-half="74"
+     data-base-threequarter="100"
      data-base-full="100"
      data-state-corskew="ok"
      data-state-vixts="ok"
@@ -52,12 +53,20 @@ title: Home
     <span class="kelly-label">Kelly:</span>
     <button class="kelly-pill" data-kelly-set="quarter">¼</button>
     <button class="kelly-pill is-active" data-kelly-set="half">½</button>
+    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>
     <button class="kelly-pill" data-kelly-set="full">Full</button>
     <span class="kelly-divider">·</span>
     <span class="kelly-label">위험 민감도:</span>
     <button class="kelly-pill" data-discount-set="loose">느슨</button>
     <button class="kelly-pill is-active" data-discount-set="standard">기본</button>
     <button class="kelly-pill" data-discount-set="tight">빡빡</button>
+  </div>
+  <div class="kelly-controls">
+    <span class="kelly-label">기대 프리미엄 μ−r:</span>
+    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>
+    <button class="kelly-pill" data-premium-set="standard">7%</button>
+    <button class="kelly-pill" data-premium-set="aggressive">9%</button>
+    <span class="kelly-help" title="μ−r은 주식 기대 수익률에서 무위험 금리를 뺀 값. 5%(보수)·7%(역사적 평균)·9%(공격적). VIX는 vol risk premium으로 실제 σ보다 3~5pt 높게 표시되므로, 7~9%가 사실상 realized vol Kelly에 더 가까움.">ⓘ</span>
   </div>
   <table class="kelly-table">
     <thead><tr><th>단계</th><th>값</th></tr></thead>
@@ -73,7 +82,7 @@ title: Home
 
 ![Kelly × VIX 곡선](assets/diagrams/kelly_curve.png)
 
-<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, 전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
+<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, 전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. 공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × 위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. 곡선 그림은 μ−r=5% 기준 — 다른 프리미엄 선택해도 카드 숫자는 정확. **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 

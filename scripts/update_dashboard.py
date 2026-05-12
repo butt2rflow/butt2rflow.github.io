@@ -39,11 +39,21 @@ LOOKBACK_MONTHS = 6
 
 # Kelly × Vol — f* = (μ−r)/σ² with σ = VIX/100 (annualized forward-looking),
 # capped at 100% (no leverage suggestion for retail audience).
+# EQUITY_PREMIUM is the default μ−r used for initial Python render + the
+# kelly_curve.png chart. JS exposes the choices in EQUITY_PREMIUM_PROFILES
+# so readers can swap their own assumption on the live dashboard.
 EQUITY_PREMIUM = 0.05
+EQUITY_PREMIUM_PROFILES = {
+    "conservative": 0.05,  # long-run academic estimate, accounts for VIX vol-risk-premium drag
+    "standard":     0.07,  # SPX historical average ex-WWII, roughly matches realized-vol Kelly
+    "aggressive":   0.09,  # bullish / post-1990 SPX, treats VIX premium as fully recoverable
+}
+EQUITY_PREMIUM_DEFAULT = "conservative"
 KELLY_CAP = 1.00
-KELLY_FRACTIONS = [("quarter", 0.25, "Quarter (¼)"),
-                   ("half",    0.50, "Half (½)"),
-                   ("full",    1.00, "Full")]
+KELLY_FRACTIONS = [("quarter",      0.25, "Quarter (¼)"),
+                   ("half",         0.50, "Half (½)"),
+                   ("threequarter", 0.75, "Three-quarter (¾)"),
+                   ("full",         1.00, "Full")]
 # Multiplicative discount profiles applied per risk-signal group. The JS
 # toggle on the dashboard reads these via data attributes so the user can
 # pick a sensitivity level — Python only ships base values + group states.
@@ -462,7 +472,10 @@ def kelly_weight_at(vix: float, fraction: float) -> float:
 def render_kelly_curve(vix_spot: float, out_path: Path):
     """Three Kelly fractions vs VIX, with current-VIX markers on each curve."""
     vix_range = np.linspace(5, 60, 220)
-    colors = {"quarter": "#16a34a", "half": "#0ea5e9", "full": "#7c3aed"}
+    colors = {"quarter":      "#16a34a",
+              "half":         "#0ea5e9",
+              "threequarter": "#f59e0b",
+              "full":         "#7c3aed"}
     fig, ax = plt.subplots(figsize=(12, 4.6))
     for key, frac, label in KELLY_FRACTIONS:
         weights = np.array([kelly_weight_at(v, frac) for v in vix_range]) * 100
@@ -807,6 +820,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'     data-vix="{vix:.1f}"\n'
         f'     data-base-quarter="{bp["quarter"]}"\n'
         f'     data-base-half="{bp["half"]}"\n'
+        f'     data-base-threequarter="{bp["threequarter"]}"\n'
         f'     data-base-full="{bp["full"]}"\n'
         f'     data-state-corskew="{cs_state}"\n'
         f'     data-state-vixts="{vts_state}"\n'
@@ -815,12 +829,20 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'    <span class="kelly-label">Kelly:</span>\n'
         f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
         f'    <button class="kelly-pill is-active" data-kelly-set="half">½</button>\n'
+        f'    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>\n'
         f'    <button class="kelly-pill" data-kelly-set="full">Full</button>\n'
         f'    <span class="kelly-divider">·</span>\n'
         f'    <span class="kelly-label">위험 민감도:</span>\n'
         f'    <button class="kelly-pill" data-discount-set="loose">느슨</button>\n'
         f'    <button class="kelly-pill is-active" data-discount-set="standard">기본</button>\n'
         f'    <button class="kelly-pill" data-discount-set="tight">빡빡</button>\n'
+        f'  </div>\n'
+        f'  <div class="kelly-controls">\n'
+        f'    <span class="kelly-label">기대 프리미엄 μ−r:</span>\n'
+        f'    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>\n'
+        f'    <button class="kelly-pill" data-premium-set="standard">7%</button>\n'
+        f'    <button class="kelly-pill" data-premium-set="aggressive">9%</button>\n'
+        f'    <span class="kelly-help" title="μ−r은 주식 기대 수익률에서 무위험 금리를 뺀 값. 5%(보수)·7%(역사적 평균)·9%(공격적). VIX는 vol risk premium으로 실제 σ보다 3~5pt 높게 표시되므로, 7~9%가 사실상 realized vol Kelly에 더 가까움.">ⓘ</span>\n'
         f'  </div>\n'
         f'  <table class="kelly-table">\n'
         f'    <thead><tr><th>단계</th><th>값</th></tr></thead>\n'
@@ -844,8 +866,9 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         "",
         "<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, "
         "전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. "
-        "Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier "
-        "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
+        "공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × "
+        "위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. "
+        "곡선 그림은 μ−r=5% 기준 — 다른 프리미엄 선택해도 카드 숫자는 정확. "
         "**교육 목적 · 투자 권유 아님** · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
@@ -1153,6 +1176,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'     data-vix="{vix:.1f}"\n'
         f'     data-base-quarter="{bp["quarter"]}"\n'
         f'     data-base-half="{bp["half"]}"\n'
+        f'     data-base-threequarter="{bp["threequarter"]}"\n'
         f'     data-base-full="{bp["full"]}"\n'
         f'     data-state-corskew="{cs_state}"\n'
         f'     data-state-vixts="{vts_state}"\n'
@@ -1161,12 +1185,20 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'    <span class="kelly-label">Kelly:</span>\n'
         f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
         f'    <button class="kelly-pill is-active" data-kelly-set="half">½</button>\n'
+        f'    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>\n'
         f'    <button class="kelly-pill" data-kelly-set="full">Full</button>\n'
         f'    <span class="kelly-divider">·</span>\n'
         f'    <span class="kelly-label">Risk sensitivity:</span>\n'
         f'    <button class="kelly-pill" data-discount-set="loose">Loose</button>\n'
         f'    <button class="kelly-pill is-active" data-discount-set="standard">Standard</button>\n'
         f'    <button class="kelly-pill" data-discount-set="tight">Tight</button>\n'
+        f'  </div>\n'
+        f'  <div class="kelly-controls">\n'
+        f'    <span class="kelly-label">Equity premium μ−r:</span>\n'
+        f'    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>\n'
+        f'    <button class="kelly-pill" data-premium-set="standard">7%</button>\n'
+        f'    <button class="kelly-pill" data-premium-set="aggressive">9%</button>\n'
+        f'    <span class="kelly-help" title="μ−r is the equity-risk premium: 5% (conservative, accounts for VIX vol-risk premium drag), 7% (historical SPX average), 9% (post-1990 / bullish). Because VIX runs 3-5 pts above realized vol, 7-9% is roughly equivalent to Kelly applied to realized rather than implied vol.">ⓘ</span>\n'
         f'  </div>\n'
         f'  <table class="kelly-table">\n'
         f'    <thead><tr><th>Step</th><th>Value</th></tr></thead>\n'
@@ -1190,8 +1222,9 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         "",
         "<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, "
         "and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. "
-        "Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier "
-        "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
+        "Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × "
+        "risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. "
+        "The curve chart is drawn at μ−r=5%; the card numbers reflect whichever premium you pick. "
         "**Educational — not investment advice.** "
         "[Read more →](posts/cash-allocation.md)*</small>",
         "",

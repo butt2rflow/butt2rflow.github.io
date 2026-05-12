@@ -142,12 +142,13 @@ When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). 
 1. **Estimation error in μ and σ**: realised average return often runs below estimate; realised vol can run above. Full Kelly is exquisitely sensitive — small errors compound.
 2. **Drawdown volatility**: Full Kelly has maximum long-run growth, but the *path* is violent. -50% to -70% drawdowns are normal — most people cannot hold through them.
 
-Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see the [Principles series](../series/index.md) Part 4 "No Edge in the Game" — paid).
+Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see the [Principles series](../series/index.md) Part 4 "No Edge in the Game" — paid). The live dashboard also exposes **¾ Kelly** as a compromise — it's the meaningful middle ground in the VIX 19+ region where Half feels over-conservative and Full feels reckless.
 
 | Fraction | Calm (VIX 17) | Stress (VIX 30) | Crisis (VIX 40) |
 |:---|---:|---:|---:|
 | **Quarter (¼)** | 43% | 14% | 8% |
 | **Half (½) ← default** | 86% → 100% (cap) | 28% | 16% |
+| **¾ Kelly** | 100% (cap) | 42% | 23% |
 | **Full (1×)** | 100% (cap) | 56% | 31% |
 
 The dashboard's first toggle picks one of these:
@@ -318,7 +319,8 @@ Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
 
 | Term | Meaning | User toggle |
 |:---|:---|:---|
-| **f** | Kelly fraction (¼ / ½ / 1) | **First toggle** |
+| **f** | Kelly fraction (¼ / ½ / ¾ / 1) | **First toggle** |
+| **μ−r** | Expected equity premium (5% / 7% / 9%) | **Third toggle** |
 | **σ = VIX/100** | Forward-looking vol | (auto) |
 | **d_CS** | COR/SKEW group multiplier | **Second toggle sets the strength** |
 | **d_VTS** | VIX TS shape multiplier | same |
@@ -334,10 +336,11 @@ The first card on the [live dashboard](../index.md) recomputes this every day.
 
 **What you can do inside the card:**
 
-1. **Kelly fraction toggle** (¼ / ½ / Full) — set once and rarely change
-2. **Risk sensitivity toggle** (Loose / Standard / Tight) — set to match your philosophy
-3. **Decision table** — base value, each group's multiplier, final equity/cash split at a glance
-4. **Kelly curve chart** — visualises the VIX → weight relationship with a current-VIX marker
+1. **Kelly fraction toggle** (¼ / ½ / ¾ / Full) — set once and rarely change
+2. **Risk sensitivity toggle** (Loose / Standard / Tight) — how aggressively signals discount
+3. **Equity premium μ−r toggle** (5% / 7% / 9%) — your view on long-run SPX premium. 5% = conservative (accounts for VIX vol-risk-premium drag), 7% = historical, 9% = bullish
+4. **Decision table** — base value, each group's multiplier, final equity/cash split at a glance
+5. **Kelly curve chart** — visualises the VIX → weight relationship (drawn at μ−r = 5%) with a current-VIX marker
 
 Both selections are saved in browser `localStorage`, so they persist across visits.
 
@@ -384,7 +387,7 @@ The first week after Lehman's bankruptcy (−10%) is unavoidable. But the additi
 
 This framework **automates a mathematical intuition** — it is not a back-tested production system.
 
-1. **μ − r = 5% assumption**: if the future equity premium is 3–4% (which many estimates suggest), this overstates the optimal weight. Pick Quarter-Kelly to bake in extra conservatism.
+1. **μ − r assumption is uncertain**: academic estimates of the equity-risk premium span 3–9% across studies. The live dashboard's **μ−r toggle (5% / 7% / 9%)** lets you swap your own view — 5% (default) is conservative and effectively bakes in the VIX vol-risk-premium drag, 7% is the long-run SPX average, 9% is a post-1990 bullish view.
 2. **VRP bias**: VIX averages 3–5 vol points *above* realised vol (the Volatility Risk Premium). So Kelly base runs slightly conservative — generally safe, but not exactly optimal.
 3. **VIX is 30-day forward**: longer holding horizons (6+ months) would want a different σ proxy (e.g., VIX futures average).
 4. **Signals aren't independent**: COR/SKEW, VIX TS, and VolVol all view the same underlying stress through different lenses. The multiplicative discount could over-react. The chosen multipliers (≥ 0.75 in Standard) are deliberately mild for this reason.

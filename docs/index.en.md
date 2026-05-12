@@ -44,6 +44,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
      data-vix="18.4"
      data-base-quarter="37"
      data-base-half="74"
+     data-base-threequarter="100"
      data-base-full="100"
      data-state-corskew="ok"
      data-state-vixts="ok"
@@ -52,12 +53,20 @@ Math- and data-driven investment principles. In an age where AI dominates market
     <span class="kelly-label">Kelly:</span>
     <button class="kelly-pill" data-kelly-set="quarter">¼</button>
     <button class="kelly-pill is-active" data-kelly-set="half">½</button>
+    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>
     <button class="kelly-pill" data-kelly-set="full">Full</button>
     <span class="kelly-divider">·</span>
     <span class="kelly-label">Risk sensitivity:</span>
     <button class="kelly-pill" data-discount-set="loose">Loose</button>
     <button class="kelly-pill is-active" data-discount-set="standard">Standard</button>
     <button class="kelly-pill" data-discount-set="tight">Tight</button>
+  </div>
+  <div class="kelly-controls">
+    <span class="kelly-label">Equity premium μ−r:</span>
+    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>
+    <button class="kelly-pill" data-premium-set="standard">7%</button>
+    <button class="kelly-pill" data-premium-set="aggressive">9%</button>
+    <span class="kelly-help" title="μ−r is the equity-risk premium: 5% (conservative, accounts for VIX vol-risk premium drag), 7% (historical SPX average), 9% (post-1990 / bullish). Because VIX runs 3-5 pts above realized vol, 7-9% is roughly equivalent to Kelly applied to realized rather than implied vol.">ⓘ</span>
   </div>
   <table class="kelly-table">
     <thead><tr><th>Step</th><th>Value</th></tr></thead>
@@ -73,7 +82,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ![Kelly × VIX curve](assets/diagrams_en/kelly_curve.png)
 
-<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
+<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. The curve chart is drawn at μ−r=5%; the card numbers reflect whichever premium you pick. **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 

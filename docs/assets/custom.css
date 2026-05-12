@@ -309,6 +309,17 @@ img {
   margin: 0 0.3rem;
 }
 
+.kelly-help {
+  margin-left: 0.25rem;
+  color: #3b82f6;
+  cursor: help;
+  font-size: 0.8rem;
+}
+
+.kelly-help:hover {
+  color: #1d4ed8;
+}
+
 .md-typeset .kelly-pill {
   font-size: 0.7rem;
   padding: 0.12rem 0.5rem;
