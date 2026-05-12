@@ -9,8 +9,12 @@
   }
 
   function archivePath() {
+    // mkdocs-static-i18n keeps all assets under the single /assets/ root —
+    // both locales' diagrams live there (diagrams/ for ko, diagrams_en/ for
+    // en) and the /en/ prefix only applies to HTML pages. Using "/en/assets/"
+    // would 404 — the EN locale has no separate asset tree.
     return location.pathname.indexOf("/en/") === 0
-      ? "/en/assets/diagrams_en/vix_history/"
+      ? "/assets/diagrams_en/vix_history/"
       : "/assets/diagrams/vix_history/";
   }
 
