@@ -334,9 +334,10 @@ def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path,
     ]:
         if col in skew.columns:
             skew_ax.plot(skew["DATE"], skew[col], label=col, linewidth=lw, color=color)
-    skew_ax.axhline(50, color="red", ls="--", alpha=0.4, label="COR90D stress (50)")
+    skew_ax.axhline(50, color="orange", ls="--", alpha=0.4, label="COR90D caution (50)")
+    skew_ax.axhline(60, color="red", ls="--", alpha=0.4, label="COR90D stress (60)")
     skew_ax.set_ylabel("Implied Correlation (%)", fontsize=10)
-    skew_ax.set_title("Delta Skew — COR10D to COR90D (COR90D > 50 = stressed)", fontsize=11)
+    skew_ax.set_title("Delta Skew — COR10D to COR90D (COR90D > 60 = stressed)", fontsize=11)
     skew_ax.legend(loc="upper left", fontsize=8, ncol=3)
     skew_ax.grid(alpha=0.3)
 
@@ -560,22 +561,27 @@ def compute_cor_skew_signals(tenor, skew):
             return "caution"
         return "ok"
 
-    # Threshold notes (recalibrated 2026-05 against 6-mo Cboe distribution):
-    # - SKEW: median 145 / p75 150 / p95 157 in the post-pandemic regime.
-    #   Old 140/150 fired caution 84%, danger 24% — meaningless. Now 150/158
-    #   fires ~24%/~5%, matching the "caution = top quartile, danger = top
-    #   ventile" intent.
-    # - Spread (COR1Y − COR1M): reverse signal — negative = inverted curve.
-    #   Old <5 caution fired 50% of days (median 4.9), <0 danger fired 23%.
-    #   Now <0 caution / <-5 danger fires ~23%/~5%.
-    # - COR90D: 40/50 keeps the existing calibration (fires ~27%/~7%).
+    # Threshold notes — recalibrated 2026-05 against the full Cboe daily
+    # history, restricted to the post-2020 regime (n ≈ 1600 days). The
+    # pre-2020 distribution looks materially different (SKEW median ~120
+    # vs post-2020 ~140; COR90D similarly elevated) and isn't a useful
+    # baseline for sizing today's risk.
+    # - SKEW (full history 1990–): post-2020 p75 ≈ 148, p95 ≈ 160.
+    #   150/158 fires ~19%/~6% — close to the intended "caution = top
+    #   quartile, danger = top ventile" buckets.
+    # - Spread (COR1Y − COR1M): reverse signal (negative = inverted curve).
+    #   Post-2020 <0 fires ~19%, <-5 fires ~8%.
+    # - COR90D (history from 2006–): post-2020 median 50 — meaning the old
+    #   40/50 thresholds fired caution 72%, danger 51% of days, so "stress"
+    #   was almost always on. Bumped to 50/60 (post-2022 p75/p95) so the
+    #   signal actually distinguishes elevated correlation regimes.
     return {
         "date": pd.Timestamp(max(latest_t["DATE"], latest_s["DATE"])).strftime("%Y-%m-%d"),
         "spread": spread,
         "spread_state": state(spread, 0, -5, reverse=True),
         "cor1m": latest_t["COR1M"], "cor1y": latest_t["COR1Y"],
         "cor90d": cor90d,
-        "cor90d_state": state(cor90d, 40, 50),
+        "cor90d_state": state(cor90d, 50, 60),
         "skew": skew_v,
         "skew_state": state(skew_v, 150, 158),
     }

@@ -112,7 +112,7 @@ Combining all three signals into one chart lets you read structural stress at a 
 
 ![Volatility dashboard — Term Structure + Delta Skew + SKEW combined](../assets/diagrams_en/vol_dashboard.png)
 
-Top: COR1M–COR1Y term structure (when the spacing tightens, that's caution; the red region marks inversion). Middle: COR10D–COR90D delta skew (COR90D crossing the dashed red 50 line is stress). Bottom: SKEW index (150+ is caution, 158+ is stress).
+Top: COR1M–COR1Y term structure (when the spacing tightens, that's caution; the red region marks inversion). Middle: COR10D–COR90D delta skew (COR90D above the orange 50 line = caution, above the red 60 line = stress). Bottom: SKEW index (150+ is caution, 158+ is stress).
 
 ---
 
@@ -152,17 +152,20 @@ spread = 11.12  ← normal
 
 Watch the **absolute level of COR90D** and the **gap between COR90D and COR10D**.
 
-| Metric | Normal | Stressed |
-|:-------|:-------|:---------|
-| **COR90D level** | ≤ 35 | **≥ 50** |
-| **COR90D − COR10D gap** | 25+ (well dispersed) | Narrowing (converging) |
+| Metric | Normal | Caution | Stressed |
+|:-------|:-------|:--------|:---------|
+| **COR90D level** | ≤ ~45 | 50–60 | **≥ 60** |
+| **COR90D − COR10D gap** | 25+ (well dispersed) | Narrowing | Converged (all strikes near 1.0) |
 
-When COR90D (deep-OTM call region) rises above 50, the entire market is synchronizing in one direction. When the gap narrows, correlations across all strikes converge toward 1.0 — you spread your eggs across many baskets, but every basket is sitting on the same shelf, and the shelf is tipping. Diversification stops working.
+When COR90D (deep-OTM call region) rises above **60**, the entire market is synchronizing in one direction. When the gap narrows, correlations across all strikes converge toward 1.0 — you spread your eggs across many baskets, but every basket is sitting on the same shelf, and the shelf is tipping. Diversification stops working.
 
-**Example — stressed (2025-10-16):**
+!!! note "Threshold recalibration (2026-05)"
+    The legacy 35/50 thresholds were calibrated against the pre-2020 distribution. In the post-2020 regime, COR90D's **median is around 50**, p75 ≈ 62, p95 ≈ 79 — so a 50 reading is now the *typical* state, not stress. Updated to 50/60 (p75/p95) so the signal actually marks "top quartile / top ventile" rather than "above average."
+
+**Example — caution (2025-10-16):**
 
 ```
-COR90D = 54.60 ← above 50, stressed
+COR90D = 54.60 ← between 50 and 60, caution (early single-factor regime)
 COR10D = 10.57
 ```
 
@@ -186,9 +189,9 @@ Data source: Cboe Global Indices
 
 | Term Structure | COR90D | SKEW | Market state | Response |
 |:---------------|:-------|:-----|:-------------|:---------|
-| Wide (10+) | ≤35 | Low | **Calm** | Rebalance normally |
-| Narrowing | 40–50 | Rising | **Caution** | Mind the rebalancing timing |
-| Inverted | **≥50** | High | **Stressed** | Volatility incoming, hold the rules |
+| Wide (10+) | ≤ ~45 | < 150 | **Calm** | Rebalance normally |
+| Narrowing (< 5) | 50–60 | 150–158 | **Caution** | Mind the rebalancing timing |
+| Inverted | **≥ 60** | **≥ 158** | **Stressed** | Volatility incoming, hold the rules |
 | Recovering after inversion | Falling | Falling | **Recovery** | Rebalancing opportunity |
 
 The takeaway: **all three signals deteriorating at once is structural stress**. Just one of them moving could be noise.
@@ -208,7 +211,7 @@ The takeaway: **all three signals deteriorating at once is structural stress**. 
 The checklist:
 
 - [ ] Term-structure spread: wide / narrowing / inverted
-- [ ] COR90D level: ≤35 / 40–50 / ≥50
+- [ ] COR90D level: ≤ ~45 (normal) / 50–60 (caution) / ≥ 60 (stressed)
 - [ ] SKEW: normal / caution / high
 - [ ] Are all three deteriorating at once?
 
@@ -289,11 +292,11 @@ print("  ← deeply inverted!" if spread < -5 else "  ← inverted · caution" i
 
 cor90d = latest_skew['COR90D']
 print(f"COR90D: {cor90d:.1f}", end="")
-print("  ← stressed" if cor90d > 50 else "  ← caution" if cor90d > 40 else "  ← normal")
+print("  ← stressed" if cor90d > 60 else "  ← caution" if cor90d > 50 else "  ← normal")
 
 skew_val = latest_skew['SKEW']
 print(f"SKEW: {skew_val:.1f}", end="")
-print("  ← high" if skew_val > 150 else "  ← caution" if skew_val > 140 else "  ← normal")
+print("  ← stressed" if skew_val > 158 else "  ← caution" if skew_val > 150 else "  ← normal")
 ```
 
 </details>
