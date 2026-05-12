@@ -1,0 +1,21 @@
+{
+  "settlement_date": "2025-05-29",
+  "vix_spot": 19.18,
+  "shape": "contango",
+  "spread_M2_M1": 0.04329999999999856,
+  "contracts": [
+    {
+      "symbol": "VX/F6",
+      "expiration": "2026-01-21",
+      "dte": 237,
+      "price": 21.7067
+    },
+    {
+      "symbol": "VX/G6",
+      "expiration": "2026-02-18",
+      "dte": 265,
+      "price": 21.75
+    }
+  ],
+  "source": "Cboe CFE settlement CSV"
+}
