@@ -39,21 +39,22 @@ LOOKBACK_MONTHS = 6
 
 # Kelly × Vol — f* = (μ−r)/σ² with σ = VIX/100 (annualized forward-looking),
 # capped at 100% (no leverage suggestion for retail audience).
-# EQUITY_PREMIUM is the default μ−r used for initial Python render + the
-# kelly_curve.png chart. JS exposes the choices in EQUITY_PREMIUM_PROFILES
-# so readers can swap their own assumption on the live dashboard.
+# EQUITY_PREMIUM is the chart's basis (kelly_curve.png is drawn at 5%);
+# EQUITY_PREMIUM_DEFAULT is what new visitors see on the dashboard cards.
+# Existing visitors' localStorage choices override either.
 EQUITY_PREMIUM = 0.05
 EQUITY_PREMIUM_PROFILES = {
     "conservative": 0.05,  # long-run academic estimate, accounts for VIX vol-risk-premium drag
     "standard":     0.07,  # SPX historical average ex-WWII, roughly matches realized-vol Kelly
     "aggressive":   0.09,  # bullish / post-1990 SPX, treats VIX premium as fully recoverable
 }
-EQUITY_PREMIUM_DEFAULT = "conservative"
+EQUITY_PREMIUM_DEFAULT = "standard"
 KELLY_CAP = 1.00
 KELLY_FRACTIONS = [("quarter",      0.25, "Quarter (¼)"),
                    ("half",         0.50, "Half (½)"),
                    ("threequarter", 0.75, "Three-quarter (¾)"),
                    ("full",         1.00, "Full")]
+KELLY_DEFAULT = "threequarter"
 # Multiplicative discount profiles applied per risk-signal group. The JS
 # toggle on the dashboard reads these via data attributes so the user can
 # pick a sensitivity level — Python only ships base values + group states.
@@ -67,10 +68,12 @@ RISK_DISCOUNT_DEFAULT = "standard"
 # Capital layering — the Cash card's percentages apply to the MAIN portion;
 # the Tactical bucket is a separate reserve sized at TACTICAL_FRAC of total.
 # JS composes the true total equity = MAIN × kelly_eq + TACTICAL × deploy.
-# Default 80/20 (conservative); JS lets the user switch to 90/10 or 95/5
-# from the master bar to trade crisis-buy power for less cash drag.
-MAIN_FRAC = 0.80
-TACTICAL_FRAC = 0.20
+# New-visitor default is 90/10 — a balance between Shannon-style time-edge
+# capture (Main heavy) and meaningful crisis firepower (10% tactical can
+# move ~10pt of total equity when triggers fire). 80/20 and 95/5 remain
+# selectable for readers in withdrawal phase or pure accumulation.
+MAIN_FRAC = 0.90
+TACTICAL_FRAC = 0.10
 
 # Cboe publishes clean CSVs at this pattern; way more reliable than yfinance
 # for these indices (yfinance returns 1-row history for COR* indices).
@@ -813,6 +816,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
     vts_state = ks["vix_ts_state"]
     vv_state = ks["volvol_state"]
     shape_ko = SHAPE_KO.get(ks["vix_ts_shape"], "—")
+    init_eq = _initial_kelly_equity(ks)  # default fraction × default premium, capped
     return [
         "### 💰 메인 통 — 권장 주식/현금 비중",
         "",
@@ -828,8 +832,8 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'  <div class="kelly-controls">\n'
         f'    <span class="kelly-label">Kelly:</span>\n'
         f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
-        f'    <button class="kelly-pill is-active" data-kelly-set="half">½</button>\n'
-        f'    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>\n'
+        f'    <button class="kelly-pill" data-kelly-set="half">½</button>\n'
+        f'    <button class="kelly-pill is-active" data-kelly-set="threequarter">¾</button>\n'
         f'    <button class="kelly-pill" data-kelly-set="full">Full</button>\n'
         f'    <span class="kelly-divider">·</span>\n'
         f'    <span class="kelly-label">위험 민감도:</span>\n'
@@ -839,8 +843,8 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'  </div>\n'
         f'  <div class="kelly-controls">\n'
         f'    <span class="kelly-label">기대 프리미엄 μ−r:</span>\n'
-        f'    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>\n'
-        f'    <button class="kelly-pill" data-premium-set="standard">7%</button>\n'
+        f'    <button class="kelly-pill" data-premium-set="conservative">5%</button>\n'
+        f'    <button class="kelly-pill is-active" data-premium-set="standard">7%</button>\n'
         f'    <button class="kelly-pill" data-premium-set="aggressive">9%</button>\n'
         f'    <span class="kelly-help" title="μ−r은 주식 기대 수익률에서 무위험 금리를 뺀 값. 5%(보수)·7%(역사적 평균)·9%(공격적). VIX는 vol risk premium으로 실제 σ보다 3~5pt 높게 표시되므로, 7~9%가 사실상 realized vol Kelly에 더 가까움.">ⓘ</span>\n'
         f'  </div>\n'
@@ -848,7 +852,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'    <thead><tr><th>단계</th><th>값</th></tr></thead>\n'
         f'    <tbody>\n'
         f'      <tr><td>① Kelly × VIX 베이스 (VIX {vix:.1f})</td>'
-        f'<td><strong><span data-kelly-base>{bp["half"]}</span>%</strong></td></tr>\n'
+        f'<td><strong><span data-kelly-base>{init_eq}</span>%</strong></td></tr>\n'
         f'      <tr><td>② COR/SKEW {EMOJI[cs_state]} {KO_LABEL[cs_state]}</td>'
         f'<td>× <span data-kelly-d="corskew">1.00</span></td></tr>\n'
         f'      <tr><td>③ VIX TS {SHAPE_EMOJI.get(ks["vix_ts_shape"], "—")} {shape_ko}</td>'
@@ -856,8 +860,8 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'      <tr><td>④ VolVol {EMOJI[vv_state]} {VOLVOL_STATE_KO[vv_state]}</td>'
         f'<td>× <span data-kelly-d="volvol">1.00</span></td></tr>\n'
         f'      <tr class="kelly-final"><td><strong>권장 비중</strong></td>'
-        f'<td><strong>주식 <span data-kelly-equity>{bp["half"]}</span>% / '
-        f'현금 <span data-kelly-cash>{100 - bp["half"]}</span>%</strong></td></tr>\n'
+        f'<td><strong>주식 <span data-kelly-equity>{init_eq}</span>% / '
+        f'현금 <span data-kelly-cash>{100 - init_eq}</span>%</strong></td></tr>\n'
         f'    </tbody>\n'
         f'  </table>\n'
         f'</div>',
@@ -877,9 +881,20 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
     ]
 
 
+def _initial_kelly_equity(ks: dict | None) -> int:
+    """Initial Kelly equity % for the default fraction + premium combo.
+    JS overrides this within ms of load; the static value just controls
+    the pre-JS flash and any non-JS clients (search bots, snapshots)."""
+    if not ks:
+        return 0
+    base_at_5pct = ks["base_pct"][KELLY_DEFAULT]
+    premium_ratio = EQUITY_PREMIUM_PROFILES[EQUITY_PREMIUM_DEFAULT] / EQUITY_PREMIUM
+    return min(round(base_at_5pct * premium_ratio), 100)
+
+
 def _initial_composite(ks: dict | None, ts: dict) -> tuple[int, int]:
-    """Initial composite total (no discount applied — JS recomputes on load)."""
-    kelly_eq = ks["base_pct"]["half"] if ks else 0
+    """Initial composite total (no signal discount applied — JS recomputes on load)."""
+    kelly_eq = _initial_kelly_equity(ks)
     total_eq = min(round(MAIN_FRAC * kelly_eq + TACTICAL_FRAC * ts["deploy_pct"]), 100)
     return total_eq, 100 - total_eq
 
@@ -892,7 +907,7 @@ def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
     Split selector (80/20 · 90/10 · 95/5) is purely client-side — initial
     render uses MAIN_FRAC/TACTICAL_FRAC defaults; JS overrides on load if
     localStorage has a saved choice and recomputes."""
-    kelly_eq = ks["base_pct"]["half"]
+    kelly_eq = _initial_kelly_equity(ks)
     deploy = ts["deploy_pct"]
     total_eq, total_cash = _initial_composite(ks, ts)
     main_pct = int(round(MAIN_FRAC * 100))
@@ -907,8 +922,8 @@ def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
         '  </div>',
         '  <div class="allocation-master__split">',
         '    <span class="allocation-master__split-label">분할:</span>',
-        '    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>',
-        '    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>',
+        '    <button class="kelly-pill" data-split-set="80-20">80 / 20</button>',
+        '    <button class="kelly-pill is-active" data-split-set="90-10">90 / 10</button>',
         '    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>',
         '    <a class="allocation-master__split-info" '
         'href="posts/cash-allocation/#choosing-the-split" '
@@ -933,7 +948,7 @@ def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
 
 
 def render_master_bar_en(ks: dict, ts: dict) -> list[str]:
-    kelly_eq = ks["base_pct"]["half"]
+    kelly_eq = _initial_kelly_equity(ks)
     deploy = ts["deploy_pct"]
     total_eq, total_cash = _initial_composite(ks, ts)
     main_pct = int(round(MAIN_FRAC * 100))
@@ -948,8 +963,8 @@ def render_master_bar_en(ks: dict, ts: dict) -> list[str]:
         '  </div>',
         '  <div class="allocation-master__split">',
         '    <span class="allocation-master__split-label">Split:</span>',
-        '    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>',
-        '    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>',
+        '    <button class="kelly-pill" data-split-set="80-20">80 / 20</button>',
+        '    <button class="kelly-pill is-active" data-split-set="90-10">90 / 10</button>',
         '    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>',
         '    <a class="allocation-master__split-info" '
         'href="posts/cash-allocation/#choosing-the-split" '
@@ -1169,6 +1184,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
     vts_state = ks["vix_ts_state"]
     vv_state = ks["volvol_state"]
     shape_en = SHAPE_EN.get(ks["vix_ts_shape"], "—")
+    init_eq = _initial_kelly_equity(ks)
     return [
         "### 💰 Main Bucket — Suggested Equity / Cash Mix",
         "",
@@ -1184,8 +1200,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'  <div class="kelly-controls">\n'
         f'    <span class="kelly-label">Kelly:</span>\n'
         f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
-        f'    <button class="kelly-pill is-active" data-kelly-set="half">½</button>\n'
-        f'    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>\n'
+        f'    <button class="kelly-pill" data-kelly-set="half">½</button>\n'
+        f'    <button class="kelly-pill is-active" data-kelly-set="threequarter">¾</button>\n'
         f'    <button class="kelly-pill" data-kelly-set="full">Full</button>\n'
         f'    <span class="kelly-divider">·</span>\n'
         f'    <span class="kelly-label">Risk sensitivity:</span>\n'
@@ -1195,8 +1211,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'  </div>\n'
         f'  <div class="kelly-controls">\n'
         f'    <span class="kelly-label">Equity premium μ−r:</span>\n'
-        f'    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>\n'
-        f'    <button class="kelly-pill" data-premium-set="standard">7%</button>\n'
+        f'    <button class="kelly-pill" data-premium-set="conservative">5%</button>\n'
+        f'    <button class="kelly-pill is-active" data-premium-set="standard">7%</button>\n'
         f'    <button class="kelly-pill" data-premium-set="aggressive">9%</button>\n'
         f'    <span class="kelly-help" title="μ−r is the equity-risk premium: 5% (conservative, accounts for VIX vol-risk premium drag), 7% (historical SPX average), 9% (post-1990 / bullish). Because VIX runs 3-5 pts above realized vol, 7-9% is roughly equivalent to Kelly applied to realized rather than implied vol.">ⓘ</span>\n'
         f'  </div>\n'
@@ -1204,7 +1220,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'    <thead><tr><th>Step</th><th>Value</th></tr></thead>\n'
         f'    <tbody>\n'
         f'      <tr><td>① Kelly × VIX base (VIX {vix:.1f})</td>'
-        f'<td><strong><span data-kelly-base>{bp["half"]}</span>%</strong></td></tr>\n'
+        f'<td><strong><span data-kelly-base>{init_eq}</span>%</strong></td></tr>\n'
         f'      <tr><td>② COR/SKEW {EMOJI[cs_state]} {EN_LABEL[cs_state]}</td>'
         f'<td>× <span data-kelly-d="corskew">1.00</span></td></tr>\n'
         f'      <tr><td>③ VIX TS {SHAPE_EMOJI.get(ks["vix_ts_shape"], "—")} {shape_en}</td>'
@@ -1212,8 +1228,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'      <tr><td>④ VolVol {EMOJI[vv_state]} {VOLVOL_STATE_EN[vv_state]}</td>'
         f'<td>× <span data-kelly-d="volvol">1.00</span></td></tr>\n'
         f'      <tr class="kelly-final"><td><strong>Suggested mix</strong></td>'
-        f'<td><strong>Equity <span data-kelly-equity>{bp["half"]}</span>% / '
-        f'Cash <span data-kelly-cash>{100 - bp["half"]}</span>%</strong></td></tr>\n'
+        f'<td><strong>Equity <span data-kelly-equity>{init_eq}</span>% / '
+        f'Cash <span data-kelly-cash>{100 - init_eq}</span>%</strong></td></tr>\n'
         f'    </tbody>\n'
         f'  </table>\n'
         f'</div>',

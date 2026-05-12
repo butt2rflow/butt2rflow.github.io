@@ -15,26 +15,26 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 <small>**As of 2026-05-11** · Auto-updates daily after the US close · [Framework details →](posts/cash-allocation.md)</small>
 
-<div class="allocation-master" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
+<div class="allocation-master" data-deploy-pct="0" data-main-frac="0.9" data-tactical-frac="0.1">
   <div class="allocation-master__head">
-    📊 <strong>Today's mix</strong> — Equity <strong><span data-total-equity>59</span>%</strong> / Cash <strong><span data-total-cash>41</span>%</strong>
+    📊 <strong>Today's mix</strong> — Equity <strong><span data-total-equity>90</span>%</strong> / Cash <strong><span data-total-cash>10</span>%</strong>
   </div>
   <div class="allocation-master__split">
     <span class="allocation-master__split-label">Split:</span>
-    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>
-    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>
+    <button class="kelly-pill" data-split-set="80-20">80 / 20</button>
+    <button class="kelly-pill is-active" data-split-set="90-10">90 / 10</button>
     <button class="kelly-pill" data-split-set="95-5">95 / 5</button>
     <a class="allocation-master__split-info" href="posts/cash-allocation/#choosing-the-split" title="Which split should I pick?">ⓘ</a>
   </div>
   <div class="allocation-master__bar" aria-hidden="true">
-    <div class="allocation-master__equity" data-master-equity-fill style="width: 59%"></div>
+    <div class="allocation-master__equity" data-master-equity-fill style="width: 90%"></div>
   </div>
   <div class="allocation-master__formula">
-    <span>Main <span data-main-pct>80</span>% × <span data-kelly-equity-mini>74</span>% equity</span>
+    <span>Main <span data-main-pct>90</span>% × <span data-kelly-equity-mini>100</span>% equity</span>
     <span class="allocation-master__plus">+</span>
-    <span>Tactical <span data-tactical-pct>20</span>% × <span data-deploy-mini>0</span>% deploy</span>
+    <span>Tactical <span data-tactical-pct>10</span>% × <span data-deploy-mini>0</span>% deploy</span>
     <span class="allocation-master__plus">=</span>
-    <strong><span data-total-equity-mini>59</span>% equity</strong>
+    <strong><span data-total-equity-mini>90</span>% equity</strong>
   </div>
 </div>
 
@@ -52,8 +52,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
   <div class="kelly-controls">
     <span class="kelly-label">Kelly:</span>
     <button class="kelly-pill" data-kelly-set="quarter">¼</button>
-    <button class="kelly-pill is-active" data-kelly-set="half">½</button>
-    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>
+    <button class="kelly-pill" data-kelly-set="half">½</button>
+    <button class="kelly-pill is-active" data-kelly-set="threequarter">¾</button>
     <button class="kelly-pill" data-kelly-set="full">Full</button>
     <span class="kelly-divider">·</span>
     <span class="kelly-label">Risk sensitivity:</span>
@@ -63,19 +63,19 @@ Math- and data-driven investment principles. In an age where AI dominates market
   </div>
   <div class="kelly-controls">
     <span class="kelly-label">Equity premium μ−r:</span>
-    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>
-    <button class="kelly-pill" data-premium-set="standard">7%</button>
+    <button class="kelly-pill" data-premium-set="conservative">5%</button>
+    <button class="kelly-pill is-active" data-premium-set="standard">7%</button>
     <button class="kelly-pill" data-premium-set="aggressive">9%</button>
     <span class="kelly-help" title="μ−r is the equity-risk premium: 5% (conservative, accounts for VIX vol-risk premium drag), 7% (historical SPX average), 9% (post-1990 / bullish). Because VIX runs 3-5 pts above realized vol, 7-9% is roughly equivalent to Kelly applied to realized rather than implied vol.">ⓘ</span>
   </div>
   <table class="kelly-table">
     <thead><tr><th>Step</th><th>Value</th></tr></thead>
     <tbody>
-      <tr><td>① Kelly × VIX base (VIX 18.4)</td><td><strong><span data-kelly-base>74</span>%</strong></td></tr>
+      <tr><td>① Kelly × VIX base (VIX 18.4)</td><td><strong><span data-kelly-base>100</span>%</strong></td></tr>
       <tr><td>② COR/SKEW 🟢 Normal</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
       <tr><td>③ VIX TS 🟢 Contango (normal)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
       <tr><td>④ VolVol 🟢 Calm</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
-      <tr class="kelly-final"><td><strong>Suggested mix</strong></td><td><strong>Equity <span data-kelly-equity>74</span>% / Cash <span data-kelly-cash>26</span>%</strong></td></tr>
+      <tr class="kelly-final"><td><strong>Suggested mix</strong></td><td><strong>Equity <span data-kelly-equity>100</span>% / Cash <span data-kelly-cash>0</span>%</strong></td></tr>
     </tbody>
   </table>
 </div>

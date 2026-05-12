@@ -35,18 +35,23 @@
     full:         "baseFull",
   };
   const KELLY_CAP = 100;  // hard cap, mirrors Python's KELLY_CAP = 1.00
-  const DEFAULT_SPLIT = "80-20";
-  const DEFAULT_PREMIUM = "conservative";
+  // New-visitor defaults — chosen to give a sensible "calm market, accumulator"
+  // baseline rather than the most-conservative-possible combo. Existing visitors'
+  // localStorage values take precedence on every key.
+  const DEFAULT_KELLY = "threequarter";
+  const DEFAULT_DISCOUNT = "standard";
+  const DEFAULT_PREMIUM = "standard";
+  const DEFAULT_SPLIT = "90-10";
   const STORAGE_KELLY = "kelly-fraction";
   const STORAGE_PROFILE = "kelly-discount-profile";
   const STORAGE_SPLIT = "allocation-split";
   const STORAGE_PREMIUM = "kelly-equity-premium";
 
   function recalc(card) {
-    const kelly = card.dataset.kelly || "half";
-    const profileKey = card.dataset.discountProfile || "standard";
+    const kelly = card.dataset.kelly || DEFAULT_KELLY;
+    const profileKey = card.dataset.discountProfile || DEFAULT_DISCOUNT;
     const premiumKey = card.dataset.premium || DEFAULT_PREMIUM;
-    const profile = DISCOUNT_PROFILES[profileKey] || DISCOUNT_PROFILES.standard;
+    const profile = DISCOUNT_PROFILES[profileKey] || DISCOUNT_PROFILES[DEFAULT_DISCOUNT];
     const premium = PREMIUM_PROFILES[premiumKey] || PREMIUM_PROFILES[DEFAULT_PREMIUM];
 
     // Python ships the base at μ−r = 5% (conservative). Scaling by the
@@ -149,13 +154,13 @@
       card.dataset.kelly = savedKelly;
       setActive(card, "data-kelly-set", savedKelly);
     } else {
-      card.dataset.kelly = "half";
+      card.dataset.kelly = DEFAULT_KELLY;
     }
     if (savedProfile && DISCOUNT_PROFILES[savedProfile]) {
       card.dataset.discountProfile = savedProfile;
       setActive(card, "data-discount-set", savedProfile);
     } else {
-      card.dataset.discountProfile = "standard";
+      card.dataset.discountProfile = DEFAULT_DISCOUNT;
     }
     if (savedPremium && PREMIUM_PROFILES[savedPremium]) {
       card.dataset.premium = savedPremium;

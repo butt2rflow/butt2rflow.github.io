@@ -15,26 +15,26 @@ title: Home
 
 <small>**2026-05-11 기준** · 미국 장 마감 후 매일 자동 갱신</small>
 
-<div class="allocation-master" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
+<div class="allocation-master" data-deploy-pct="0" data-main-frac="0.9" data-tactical-frac="0.1">
   <div class="allocation-master__head">
-    📊 <strong>오늘의 비중</strong> — 주식 <strong><span data-total-equity>59</span>%</strong> / 현금 <strong><span data-total-cash>41</span>%</strong>
+    📊 <strong>오늘의 비중</strong> — 주식 <strong><span data-total-equity>90</span>%</strong> / 현금 <strong><span data-total-cash>10</span>%</strong>
   </div>
   <div class="allocation-master__split">
     <span class="allocation-master__split-label">분할:</span>
-    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>
-    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>
+    <button class="kelly-pill" data-split-set="80-20">80 / 20</button>
+    <button class="kelly-pill is-active" data-split-set="90-10">90 / 10</button>
     <button class="kelly-pill" data-split-set="95-5">95 / 5</button>
     <a class="allocation-master__split-info" href="posts/cash-allocation/#choosing-the-split" title="어떤 비율을 골라야 하나?">ⓘ</a>
   </div>
   <div class="allocation-master__bar" aria-hidden="true">
-    <div class="allocation-master__equity" data-master-equity-fill style="width: 59%"></div>
+    <div class="allocation-master__equity" data-master-equity-fill style="width: 90%"></div>
   </div>
   <div class="allocation-master__formula">
-    <span>메인 <span data-main-pct>80</span>% × <span data-kelly-equity-mini>74</span>% 주식</span>
+    <span>메인 <span data-main-pct>90</span>% × <span data-kelly-equity-mini>100</span>% 주식</span>
     <span class="allocation-master__plus">+</span>
-    <span>공격 <span data-tactical-pct>20</span>% × <span data-deploy-mini>0</span>% 투입</span>
+    <span>공격 <span data-tactical-pct>10</span>% × <span data-deploy-mini>0</span>% 투입</span>
     <span class="allocation-master__plus">=</span>
-    <strong><span data-total-equity-mini>59</span>% 주식</strong>
+    <strong><span data-total-equity-mini>90</span>% 주식</strong>
   </div>
 </div>
 
@@ -52,8 +52,8 @@ title: Home
   <div class="kelly-controls">
     <span class="kelly-label">Kelly:</span>
     <button class="kelly-pill" data-kelly-set="quarter">¼</button>
-    <button class="kelly-pill is-active" data-kelly-set="half">½</button>
-    <button class="kelly-pill" data-kelly-set="threequarter">¾</button>
+    <button class="kelly-pill" data-kelly-set="half">½</button>
+    <button class="kelly-pill is-active" data-kelly-set="threequarter">¾</button>
     <button class="kelly-pill" data-kelly-set="full">Full</button>
     <span class="kelly-divider">·</span>
     <span class="kelly-label">위험 민감도:</span>
@@ -63,19 +63,19 @@ title: Home
   </div>
   <div class="kelly-controls">
     <span class="kelly-label">기대 프리미엄 μ−r:</span>
-    <button class="kelly-pill is-active" data-premium-set="conservative">5%</button>
-    <button class="kelly-pill" data-premium-set="standard">7%</button>
+    <button class="kelly-pill" data-premium-set="conservative">5%</button>
+    <button class="kelly-pill is-active" data-premium-set="standard">7%</button>
     <button class="kelly-pill" data-premium-set="aggressive">9%</button>
     <span class="kelly-help" title="μ−r은 주식 기대 수익률에서 무위험 금리를 뺀 값. 5%(보수)·7%(역사적 평균)·9%(공격적). VIX는 vol risk premium으로 실제 σ보다 3~5pt 높게 표시되므로, 7~9%가 사실상 realized vol Kelly에 더 가까움.">ⓘ</span>
   </div>
   <table class="kelly-table">
     <thead><tr><th>단계</th><th>값</th></tr></thead>
     <tbody>
-      <tr><td>① Kelly × VIX 베이스 (VIX 18.4)</td><td><strong><span data-kelly-base>74</span>%</strong></td></tr>
+      <tr><td>① Kelly × VIX 베이스 (VIX 18.4)</td><td><strong><span data-kelly-base>100</span>%</strong></td></tr>
       <tr><td>② COR/SKEW 🟢 정상</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
       <tr><td>③ VIX TS 🟢 콘탱고 (정상)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
       <tr><td>④ VolVol 🟢 안도</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
-      <tr class="kelly-final"><td><strong>권장 비중</strong></td><td><strong>주식 <span data-kelly-equity>74</span>% / 현금 <span data-kelly-cash>26</span>%</strong></td></tr>
+      <tr class="kelly-final"><td><strong>권장 비중</strong></td><td><strong>주식 <span data-kelly-equity>100</span>% / 현금 <span data-kelly-cash>0</span>%</strong></td></tr>
     </tbody>
   </table>
 </div>
