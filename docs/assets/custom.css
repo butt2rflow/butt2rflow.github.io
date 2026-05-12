@@ -382,14 +382,85 @@ img {
   text-align: center;
 }
 
-.md-typeset .tactical-composite {
-  display: inline-block;
-  margin: 0.4rem auto 0.2rem;
-  padding: 0.35rem 0.7rem;
-  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
-  border: 1px solid #86efac;
-  border-radius: 6px;
-  font-size: 0.78rem;
-  color: #14532d;
+/* Master allocation bar — composite (main + tactical) anchor at the top of
+   the dashboard. Stacked bar shows the final equity/cash split; formula
+   strip beneath shows the contribution from each bucket. */
+.md-typeset .allocation-master {
+  margin: 0.5rem auto 0.9rem;
+  padding: 0.55rem 0.9rem 0.6rem;
+  max-width: 560px;
+  border: 1px solid #93c5fd;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: 8px;
+  text-align: center;
   font-variant-numeric: tabular-nums;
+}
+
+.allocation-master__head {
+  font-size: 0.92rem;
+  margin-bottom: 0.45rem;
+  color: #1e3a8a;
+}
+
+.allocation-master__split {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+}
+
+.allocation-master__split-label {
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-right: 0.15rem;
+}
+
+.allocation-master__split-info {
+  margin-left: 0.2rem;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: help;
+}
+
+.allocation-master__split-info:hover {
+  color: #1d4ed8;
+}
+
+.allocation-master__bar {
+  position: relative;
+  height: 18px;
+  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.allocation-master__equity {
+  height: 100%;
+  background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+  transition: width 0.3s ease;
+}
+
+.allocation-master__formula {
+  margin-top: 0.45rem;
+  font-size: 0.72rem;
+  color: #475569;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.allocation-master__formula strong {
+  color: #047857;
+}
+
+.allocation-master__plus {
+  color: #94a3b8;
+  font-weight: 600;
 }

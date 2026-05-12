@@ -57,6 +57,8 @@ RISK_DISCOUNT_DEFAULT = "standard"
 # Capital layering — the Cash card's percentages apply to the MAIN portion;
 # the Tactical bucket is a separate reserve sized at TACTICAL_FRAC of total.
 # JS composes the true total equity = MAIN × kelly_eq + TACTICAL × deploy.
+# Default 80/20 (conservative); JS lets the user switch to 90/10 or 95/5
+# from the master bar to trade crisis-buy power for less cash drag.
 MAIN_FRAC = 0.80
 TACTICAL_FRAC = 0.20
 
@@ -707,7 +709,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
     vv_state = ks["volvol_state"]
     shape_ko = SHAPE_KO.get(ks["vix_ts_shape"], "—")
     return [
-        "### 💰 권장 현금/주식 비중",
+        "### 💰 메인 통 — 권장 주식/현금 비중",
         "",
         f'<div class="kelly-card"\n'
         f'     data-vix="{vix:.1f}"\n'
@@ -748,8 +750,8 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         "",
         f"![Kelly × VIX 곡선]({diagrams_path}/kelly_curve.png)",
         "",
-        "<small>*위 비중은 **메인 포트폴리오 (전체의 80%) 기준** — Tactical reserve(나머지 20%)는 "
-        "다음 카드에서 별도 관리, 합산 비중은 Tactical 카드 하단 참조. "
+        "<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, "
+        "전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. "
         "Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier "
         "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
         "**교육 목적 · 투자 권유 아님** · "
@@ -767,6 +769,95 @@ def _initial_composite(ks: dict | None, ts: dict) -> tuple[int, int]:
     return total_eq, 100 - total_eq
 
 
+def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
+    """Composite-total master bar. Sits above Kelly + Tactical cards as the
+    anchor answer — the two cards below explain where each contribution comes
+    from. JS keeps the bar width and the formula spans in sync with toggles.
+
+    Split selector (80/20 · 90/10 · 95/5) is purely client-side — initial
+    render uses MAIN_FRAC/TACTICAL_FRAC defaults; JS overrides on load if
+    localStorage has a saved choice and recomputes."""
+    kelly_eq = ks["base_pct"]["half"]
+    deploy = ts["deploy_pct"]
+    total_eq, total_cash = _initial_composite(ks, ts)
+    main_pct = int(round(MAIN_FRAC * 100))
+    tac_pct = int(round(TACTICAL_FRAC * 100))
+    return [
+        f'<div class="allocation-master" data-deploy-pct="{deploy}" '
+        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
+        '  <div class="allocation-master__head">',
+        '    📊 <strong>오늘의 비중</strong> — '
+        f'주식 <strong><span data-total-equity>{total_eq}</span>%</strong> / '
+        f'현금 <strong><span data-total-cash>{total_cash}</span>%</strong>',
+        '  </div>',
+        '  <div class="allocation-master__split">',
+        '    <span class="allocation-master__split-label">분할:</span>',
+        '    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>',
+        '    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>',
+        '    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>',
+        '    <a class="allocation-master__split-info" '
+        'href="posts/cash-allocation.md#choosing-the-split" '
+        'title="어떤 비율을 골라야 하나?">ⓘ</a>',
+        '  </div>',
+        '  <div class="allocation-master__bar" aria-hidden="true">',
+        f'    <div class="allocation-master__equity" data-master-equity-fill '
+        f'style="width: {total_eq}%"></div>',
+        '  </div>',
+        '  <div class="allocation-master__formula">',
+        f'    <span>메인 <span data-main-pct>{main_pct}</span>% × '
+        f'<span data-kelly-equity-mini>{kelly_eq}</span>% 주식</span>',
+        '    <span class="allocation-master__plus">+</span>',
+        f'    <span>공격 <span data-tactical-pct>{tac_pct}</span>% × '
+        f'<span data-deploy-mini>{deploy}</span>% 투입</span>',
+        '    <span class="allocation-master__plus">=</span>',
+        f'    <strong><span data-total-equity-mini>{total_eq}</span>% 주식</strong>',
+        '  </div>',
+        '</div>',
+        '',
+    ]
+
+
+def render_master_bar_en(ks: dict, ts: dict) -> list[str]:
+    kelly_eq = ks["base_pct"]["half"]
+    deploy = ts["deploy_pct"]
+    total_eq, total_cash = _initial_composite(ks, ts)
+    main_pct = int(round(MAIN_FRAC * 100))
+    tac_pct = int(round(TACTICAL_FRAC * 100))
+    return [
+        f'<div class="allocation-master" data-deploy-pct="{deploy}" '
+        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
+        '  <div class="allocation-master__head">',
+        '    📊 <strong>Today\'s mix</strong> — '
+        f'Equity <strong><span data-total-equity>{total_eq}</span>%</strong> / '
+        f'Cash <strong><span data-total-cash>{total_cash}</span>%</strong>',
+        '  </div>',
+        '  <div class="allocation-master__split">',
+        '    <span class="allocation-master__split-label">Split:</span>',
+        '    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>',
+        '    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>',
+        '    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>',
+        '    <a class="allocation-master__split-info" '
+        'href="posts/cash-allocation.md#choosing-the-split" '
+        'title="Which split should I pick?">ⓘ</a>',
+        '  </div>',
+        '  <div class="allocation-master__bar" aria-hidden="true">',
+        f'    <div class="allocation-master__equity" data-master-equity-fill '
+        f'style="width: {total_eq}%"></div>',
+        '  </div>',
+        '  <div class="allocation-master__formula">',
+        f'    <span>Main <span data-main-pct>{main_pct}</span>% × '
+        f'<span data-kelly-equity-mini>{kelly_eq}</span>% equity</span>',
+        '    <span class="allocation-master__plus">+</span>',
+        f'    <span>Tactical <span data-tactical-pct>{tac_pct}</span>% × '
+        f'<span data-deploy-mini>{deploy}</span>% deploy</span>',
+        '    <span class="allocation-master__plus">=</span>',
+        f'    <strong><span data-total-equity-mini>{total_eq}</span>% equity</strong>',
+        '  </div>',
+        '</div>',
+        '',
+    ]
+
+
 def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
     """Tactical bucket card — offensive deploy signal + composite total.
 
@@ -782,12 +873,10 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
     t1_mark = ("🟢 " if ts["t1_weight"] == 0 else
                "🟡 " if ts["t1_weight"] == 0.5 else
                "🟠 " if ts["t1_weight"] == 1.0 else "🔴 ") + ts["t1_tier_ko"]
-    total_eq, total_cash = _initial_composite(ks, ts)
     return [
-        "### ⚡ 공격 자본 (Tactical Bucket) — 위기 발동 신호",
+        "### ⚡ 공격 통 — 위기 발동 신호",
         "",
-        f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
-        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}" markdown>',
+        f'<div class="tactical-card" markdown>',
         '<div class="dash-tight" markdown>',
         "",
         "| 트리거 | 현재 | 단계 / 충족 |",
@@ -795,21 +884,15 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         f"| VIX 5일 지속 — 40+ ×½ / 50+ ×1 / 60+ ×1½ | {vix_disp} | {t1_mark} |",
         f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark2(ts['t2'])} |",
         f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark2(ts['t3'])} |",
-        f"| **공격 자본 (전체의 20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% 투입 ({ts['label_ko']})** | — |",
+        f"| **공격 통 투입 비중** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_ko']})** | — |",
         "",
         "</div>",
-        "",
-        f'<div class="tactical-composite">'
-        f'<strong>📊 전체 합산 (메인 80% + 공격 20%)</strong>: '
-        f'<strong>주식 <span data-total-equity>{total_eq}</span>% / '
-        f'현금 <span data-total-cash>{total_cash}</span>%</strong>'
-        f'</div>',
         "</div>",
         "",
-        "<small>*공격 자본(전체의 20%)은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
+        "<small>*공격 통은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
         "T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. "
         "총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. "
-        "위 합산은 메인 카드 토글 선택에 따라 실시간 갱신 · "
+        "위 카드의 투입 %는 **공격 통 내부 기준** — 전체 자산 환산과 분할 비율은 페이지 상단 마스터 바 참조 · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
         "---",
@@ -828,12 +911,10 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     t1_mark = ("🟢 " if ts["t1_weight"] == 0 else
                "🟡 " if ts["t1_weight"] == 0.5 else
                "🟠 " if ts["t1_weight"] == 1.0 else "🔴 ") + ts["t1_tier_en"]
-    total_eq, total_cash = _initial_composite(ks, ts)
     return [
         "### ⚡ Tactical Bucket — Offensive Deploy Signal",
         "",
-        f'<div class="tactical-card" data-deploy-pct="{ts["deploy_pct"]}" '
-        f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}" markdown>',
+        f'<div class="tactical-card" markdown>',
         '<div class="dash-tight" markdown>',
         "",
         "| Trigger | Now | Tier / Fired |",
@@ -841,21 +922,15 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
         f"| VIX sustained 5d — 40+ ×½ / 50+ ×1 / 60+ ×1½ | {vix_disp} | {t1_mark} |",
         f"| COR90D > 55 AND SKEW > 150 | {cor_skew_disp} | {mark2(ts['t2'])} |",
         f"| 30-day SPX drawdown ≥ 20% | {drawdown_str} | {mark2(ts['t3'])} |",
-        f"| **Tactical reserve (20%)** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% deploy ({ts['label_en']})** | — |",
+        f"| **Tactical bucket deploy** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_en']})** | — |",
         "",
         "</div>",
-        "",
-        f'<div class="tactical-composite">'
-        f'<strong>📊 Combined total (Main 80% + Tactical 20%)</strong>: '
-        f'<strong>Equity <span data-total-equity>{total_eq}</span>% / '
-        f'Cash <span data-total-cash>{total_cash}</span>%</strong>'
-        f'</div>',
         "</div>",
         "",
-        "<small>*Tactical bucket (20% of total) held as *offensive cash to monetise the time edge*. "
+        "<small>*Tactical bucket holds *offensive cash to monetise the time edge*. "
         "T1 (VIX sustained) is laddered 40/50/60 with weights ½/1/1½; T2 and T3 are binary 0/1. "
         "Total weight ÷ 3 → deploy %, capped at 100. "
-        "Combined total above updates live with the Main card toggles · "
+        "Deploy % shown above is **internal to the tactical bucket** — see the master bar at the top for the whole-portfolio composite and the split selector · "
         "[Read more →](posts/cash-allocation.md)*</small>",
         "",
         "---",
@@ -874,6 +949,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
         f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신</small>",
         "",
     ]
+    if ks and ts:
+        parts += render_master_bar_ko(ks, ts)
     if ks:
         parts += render_kelly_card_ko(ks, "assets/diagrams")
     if ts:
@@ -978,7 +1055,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
     vv_state = ks["volvol_state"]
     shape_en = SHAPE_EN.get(ks["vix_ts_shape"], "—")
     return [
-        "### 💰 Suggested Cash / Equity Mix",
+        "### 💰 Main Bucket — Suggested Equity / Cash Mix",
         "",
         f'<div class="kelly-card"\n'
         f'     data-vix="{vix:.1f}"\n'
@@ -1019,8 +1096,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         "",
         f"![Kelly × VIX curve]({diagrams_path}/kelly_curve.png)",
         "",
-        "<small>*This mix applies to the **main portfolio (80% of total)** — the Tactical reserve "
-        "(remaining 20%) is managed in the next card; combined total appears at the bottom of the Tactical card. "
+        "<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, "
+        "and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. "
         "Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier "
         "(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). "
         "**Educational — not investment advice.** "
@@ -1043,6 +1120,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
         "[Framework details →](posts/cash-allocation.md)</small>",
         "",
     ]
+    if ks and ts:
+        parts += render_master_bar_en(ks, ts)
     if ks:
         parts += render_kelly_card_en(ks, "assets/diagrams_en")
     if ts:

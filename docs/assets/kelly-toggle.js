@@ -10,8 +10,18 @@
     standard: { ok: 1.00, caution: 0.90, danger: 0.75 },
     tight:    { ok: 1.00, caution: 0.85, danger: 0.65 },
   };
+  // Main / Tactical capital split — user-selectable from the master bar.
+  // Trades crisis-buy power (higher tactical %) against cash drag in normal
+  // conditions (lower tactical %). Backing doc: cash-allocation.md#choosing-the-split
+  const SPLIT_PROFILES = {
+    "80-20": { main: 0.80, tactical: 0.20 },
+    "90-10": { main: 0.90, tactical: 0.10 },
+    "95-5":  { main: 0.95, tactical: 0.05 },
+  };
+  const DEFAULT_SPLIT = "80-20";
   const STORAGE_KELLY = "kelly-fraction";
   const STORAGE_PROFILE = "kelly-discount-profile";
+  const STORAGE_SPLIT = "allocation-split";
 
   function recalc(card) {
     const kelly = card.dataset.kelly || "half";
@@ -42,23 +52,61 @@
     set("[data-kelly-equity]", equity);
     set("[data-kelly-cash]", cash);
 
-    // Composite total — main portfolio + tactical reserve. The tactical card
-    // exposes its deploy % and the main/tactical split via data attributes.
-    const tacticalCard = document.querySelector(".tactical-card");
-    if (tacticalCard) {
-      const deployPct = parseFloat(tacticalCard.dataset.deployPct) || 0;
-      const mainFrac = parseFloat(tacticalCard.dataset.mainFrac) || 0.80;
-      const tacticalFrac = parseFloat(tacticalCard.dataset.tacticalFrac) || 0.20;
+    // Composite total — master bar above sits across main + tactical buckets.
+    // It owns the split config (main/tactical fractions) and the tactical
+    // deploy state; this card only contributes the main-bucket equity %.
+    const master = document.querySelector(".allocation-master");
+    if (master) {
+      const deployPct = parseFloat(master.dataset.deployPct) || 0;
+      const mainFrac = parseFloat(master.dataset.mainFrac) || 0.80;
+      const tacticalFrac = parseFloat(master.dataset.tacticalFrac) || 0.20;
       const totalEquity = Math.min(
         Math.round(mainFrac * equity + tacticalFrac * deployPct),
         100
       );
       const totalCash = 100 - totalEquity;
-      const teEl = tacticalCard.querySelector("[data-total-equity]");
-      const tcEl = tacticalCard.querySelector("[data-total-cash]");
-      if (teEl) teEl.textContent = totalEquity;
-      if (tcEl) tcEl.textContent = totalCash;
+      const setMaster = (sel, val) => {
+        const el = master.querySelector(sel);
+        if (el) el.textContent = val;
+      };
+      setMaster("[data-total-equity]", totalEquity);
+      setMaster("[data-total-cash]", totalCash);
+      setMaster("[data-kelly-equity-mini]", equity);
+      setMaster("[data-deploy-mini]", deployPct);
+      setMaster("[data-total-equity-mini]", totalEquity);
+      setMaster("[data-main-pct]", Math.round(mainFrac * 100));
+      setMaster("[data-tactical-pct]", Math.round(tacticalFrac * 100));
+      const fill = master.querySelector("[data-master-equity-fill]");
+      if (fill) fill.style.width = totalEquity + "%";
     }
+  }
+
+  function applySplit(master, splitKey) {
+    const profile = SPLIT_PROFILES[splitKey] || SPLIT_PROFILES[DEFAULT_SPLIT];
+    master.dataset.mainFrac = profile.main;
+    master.dataset.tacticalFrac = profile.tactical;
+    master.querySelectorAll("[data-split-set]").forEach((btn) => {
+      btn.classList.toggle("is-active", btn.getAttribute("data-split-set") === splitKey);
+    });
+    // Trigger Kelly card recalc so the composite total picks up the new split.
+    // The recalc() above reads mainFrac/tacticalFrac off the master bar, so
+    // re-running it from each Kelly card propagates the change everywhere.
+    document.querySelectorAll(".kelly-card").forEach(recalc);
+  }
+
+  function initMaster() {
+    const master = document.querySelector(".allocation-master");
+    if (!master) return;
+    const saved = localStorage.getItem(STORAGE_SPLIT);
+    const initial = saved && SPLIT_PROFILES[saved] ? saved : DEFAULT_SPLIT;
+    master.querySelectorAll("[data-split-set]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const v = btn.getAttribute("data-split-set");
+        localStorage.setItem(STORAGE_SPLIT, v);
+        applySplit(master, v);
+      });
+    });
+    applySplit(master, initial);
   }
 
   function setActive(card, attr, value) {
@@ -106,6 +154,7 @@
   }
 
   function init() {
+    initMaster();
     document.querySelectorAll(".kelly-card").forEach(initCard);
   }
 

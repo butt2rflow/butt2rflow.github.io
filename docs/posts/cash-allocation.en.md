@@ -217,6 +217,50 @@ So **split cash into two kinds** — that completes the structure the series arg
 
 > **Bottom line**: Never modulate the Kelly fraction itself. *Instead*, pair the main framework with a tactical bucket. The framework owns *survival*; the tactical bucket *monetises the time edge*. Together, the two are what completes the series' "**volatility as fuel**" thesis.
 
+### Choosing the split {: #choosing-the-split }
+
+The live-dashboard master bar lets you pick between **80/20 · 90/10 · 95/5**. The trade-off in one line: **cash drag in normal conditions vs crisis-buy firepower**.
+
+**Cash drag (normal regime)**
+
+The tactical bucket sits in 100% cash by default — it only deploys when T1/T2/T3 fire, which is *most days*. Assuming long-run SPX ≈ 9%/yr:
+
+| Split | Idle cash (normal regime) | Annual opportunity cost (CAGR) | 20-year compounded |
+|:---|:---:|:---:|:---:|
+| 80/20 | 20% | −1.8% | ≈ −30% |
+| 90/10 | 10% | −0.9% | ≈ −16% |
+| 95/5  | 5%  | −0.45% | ≈ −8% |
+
+**Crisis firepower**
+
+Even if the tactical bucket fully deploys, its impact on the *total* portfolio depends on the split:
+
+| Split | Max additional buy (whole portfolio) | Intuition |
+|:---|:---:|:---|
+| 80/20 | +20% buy | Meaningful entry at VIX 60 + capitulation |
+| 90/10 | +10% buy | Supplementary; main framework's auto-re-entry does the heavy lifting |
+| 95/5  | +5% buy | Almost symbolic — meaningful only at real capitulation (T3, SPX −20%) |
+
+**Trigger frequency (2010–2024, rough)**
+
+| Trigger | Days fired | % of days |
+|:---|:---:|:---:|
+| T1 VIX>40 sustained 5d | ~25 | 0.6% |
+| T2 COR>55 & SKEW>150 | ~10 | 0.25% |
+| T3 SPX 30d −20% | ~12 | 0.3% |
+
+**99% of days, the tactical bucket = just idle cash**. The question is how much you're willing to immobilise for that 1%.
+
+**Recommendations (by situation)**
+
+| Situation | Split | Why |
+|:---|:---:|:---|
+| Accumulation (long horizon, early career) | **95/5** | Maximise compounding via time edge. Reserve only for real capitulation (T3). |
+| Mid-stage (late accumulation, wealth-building) | **90/10** | Minimise drag while preserving meaningful entry at VIX>60. |
+| Conservative (pre-retirement, withdrawal phase, behavioural concerns) | **80/20** | Sequence-of-returns defence. Crisis firepower + emotional buffer. |
+
+> **Honest take**: 80/20 is largely a *behavioural insurance premium*. Mathematically, Kelly already discounts to half-Kelly with multipliers, and σ=VIX/100 already responds to volatility — so adding another 20% cash buffer is a triple safety margin. If you can hold discipline during real drawdowns, 90/10 or 95/5 is the more rational choice. If you can't, 80/20 is safer.
+
 ---
 
 ## 5. Why VIX alone isn't enough

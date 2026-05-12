@@ -15,14 +15,37 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 <small>**As of 2026-05-11** · Auto-updates daily after the US close · [Framework details →](posts/cash-allocation.md)</small>
 
-### 💰 Suggested Cash / Equity Mix
+<div class="allocation-master" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
+  <div class="allocation-master__head">
+    📊 <strong>Today's mix</strong> — Equity <strong><span data-total-equity>59</span>%</strong> / Cash <strong><span data-total-cash>41</span>%</strong>
+  </div>
+  <div class="allocation-master__split">
+    <span class="allocation-master__split-label">Split:</span>
+    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>
+    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>
+    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>
+    <a class="allocation-master__split-info" href="posts/cash-allocation.md#choosing-the-split" title="Which split should I pick?">ⓘ</a>
+  </div>
+  <div class="allocation-master__bar" aria-hidden="true">
+    <div class="allocation-master__equity" data-master-equity-fill style="width: 59%"></div>
+  </div>
+  <div class="allocation-master__formula">
+    <span>Main <span data-main-pct>80</span>% × <span data-kelly-equity-mini>74</span>% equity</span>
+    <span class="allocation-master__plus">+</span>
+    <span>Tactical <span data-tactical-pct>20</span>% × <span data-deploy-mini>0</span>% deploy</span>
+    <span class="allocation-master__plus">=</span>
+    <strong><span data-total-equity-mini>59</span>% equity</strong>
+  </div>
+</div>
+
+### 💰 Main Bucket — Suggested Equity / Cash Mix
 
 <div class="kelly-card"
-     data-vix="17.2"
-     data-base-quarter="42"
-     data-base-half="85"
+     data-vix="18.4"
+     data-base-quarter="37"
+     data-base-half="74"
      data-base-full="100"
-     data-state-corskew="ok"
+     data-state-corskew="caution"
      data-state-vixts="ok"
      data-state-volvol="ok">
   <div class="kelly-controls">
@@ -39,39 +62,37 @@ Math- and data-driven investment principles. In an age where AI dominates market
   <table class="kelly-table">
     <thead><tr><th>Step</th><th>Value</th></tr></thead>
     <tbody>
-      <tr><td>① Kelly × VIX base (VIX 17.2)</td><td><strong><span data-kelly-base>85</span>%</strong></td></tr>
-      <tr><td>② COR/SKEW 🟢 Normal</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
+      <tr><td>① Kelly × VIX base (VIX 18.4)</td><td><strong><span data-kelly-base>74</span>%</strong></td></tr>
+      <tr><td>② COR/SKEW 🟡 Caution</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
       <tr><td>③ VIX TS 🟢 Contango (normal)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
       <tr><td>④ VolVol 🟢 Calm</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
-      <tr class="kelly-final"><td><strong>Suggested mix</strong></td><td><strong>Equity <span data-kelly-equity>85</span>% / Cash <span data-kelly-cash>15</span>%</strong></td></tr>
+      <tr class="kelly-final"><td><strong>Suggested mix</strong></td><td><strong>Equity <span data-kelly-equity>74</span>% / Cash <span data-kelly-cash>26</span>%</strong></td></tr>
     </tbody>
   </table>
 </div>
 
 ![Kelly × VIX curve](assets/diagrams_en/kelly_curve.png)
 
-<small>*This mix applies to the **main portfolio (80% of total)** — the Tactical reserve (remaining 20%) is managed in the next card; combined total appears at the bottom of the Tactical card. Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
+<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. Half-Kelly @ μ−r=5%, σ=VIX/100. Risk sensitivity = per-group multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 
 ### ⚡ Tactical Bucket — Offensive Deploy Signal
 
-<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2" markdown>
+<div class="tactical-card" markdown>
 <div class="dash-tight" markdown>
 
 | Trigger | Now | Tier / Fired |
 |:---|---:|:---:|
-| VIX sustained 5d — 40+ ×½ / 50+ ×1 / 60+ ×1½ | 17.2 (5d min 17.1) | 🟢 Inactive (0) |
-| COR90D > 55 AND SKEW > 150 | 33.1 / 138.2 | ❌ (0) |
+| VIX sustained 5d — 40+ ×½ / 50+ ×1 / 60+ ×1½ | 18.4 (5d min 17.1) | 🟢 Inactive (0) |
+| COR90D > 55 AND SKEW > 150 | 33.0 / 140.2 | ❌ (0) |
 | 30-day SPX drawdown ≥ 20% | +0.0% | ❌ (0) |
-| **Tactical reserve (20%)** | **🟢 0% deploy (Inactive)** | — |
+| **Tactical bucket deploy** | **🟢 0% (Inactive)** | — |
 
 </div>
-
-<div class="tactical-composite"><strong>📊 Combined total (Main 80% + Tactical 20%)</strong>: <strong>Equity <span data-total-equity>68</span>% / Cash <span data-total-cash>32</span>%</strong></div>
 </div>
 
-<small>*Tactical bucket (20% of total) held as *offensive cash to monetise the time edge*. T1 (VIX sustained) is laddered 40/50/60 with weights ½/1/1½; T2 and T3 are binary 0/1. Total weight ÷ 3 → deploy %, capped at 100. Combined total above updates live with the Main card toggles · [Read more →](posts/cash-allocation.md)*</small>
+<small>*Tactical bucket holds *offensive cash to monetise the time edge*. T1 (VIX sustained) is laddered 40/50/60 with weights ½/1/1½; T2 and T3 are binary 0/1. Total weight ÷ 3 → deploy %, capped at 100. Deploy % shown above is **internal to the tactical bucket** — see the master bar at the top for the whole-portfolio composite and the split selector · [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 
@@ -81,7 +102,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 | Field | Value | State |
 |:------|------:|:------|
-| VIX spot | 17.19 | — |
+| VIX spot | 18.38 | — |
 | Front (M1, 2026-05-19) | 19.47 | — |
 | **M2 − M1** (short-term) | +1.52 | 🟢 Contango (normal) |
 | **M7 − M4** (mid-term, VXZ zone) | +0.75 | 🟢 Contango (normal) |
@@ -101,8 +122,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
 | Signal | Value | State |
 |:-------|------:|:------|
 | **Term Structure** (COR1Y − COR1M) | 5.3 | 🟢 Normal |
-| **COR90D** (synchronization) | 33.1 | 🟢 Normal |
-| **SKEW** (tail risk) | 138.2 | 🟢 Normal |
+| **COR90D** (synchronization) | 33.0 | 🟢 Normal |
+| **SKEW** (tail risk) | 140.2 | 🟡 Caution |
 
 </div>
 
@@ -118,8 +139,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 | Signal | Value | State |
 |:-------|------:|:------|
-| **VolVol = VVIX / VIX** (5DMA) | 5.471 | 🟢 Calm (5DMA > middle) |
-| BB middle (20-day MA) | 5.332 | — |
+| **VolVol = VVIX / VIX** (5DMA) | 5.463 | 🟢 Calm (5DMA > middle) |
+| BB middle (20-day MA) | 5.330 | — |
 
 </div>
 

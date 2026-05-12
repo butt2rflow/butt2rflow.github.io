@@ -15,14 +15,37 @@ title: Home
 
 <small>**2026-05-11 기준** · 미국 장 마감 후 매일 자동 갱신</small>
 
-### 💰 권장 현금/주식 비중
+<div class="allocation-master" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2">
+  <div class="allocation-master__head">
+    📊 <strong>오늘의 비중</strong> — 주식 <strong><span data-total-equity>59</span>%</strong> / 현금 <strong><span data-total-cash>41</span>%</strong>
+  </div>
+  <div class="allocation-master__split">
+    <span class="allocation-master__split-label">분할:</span>
+    <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>
+    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>
+    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>
+    <a class="allocation-master__split-info" href="posts/cash-allocation.md#choosing-the-split" title="어떤 비율을 골라야 하나?">ⓘ</a>
+  </div>
+  <div class="allocation-master__bar" aria-hidden="true">
+    <div class="allocation-master__equity" data-master-equity-fill style="width: 59%"></div>
+  </div>
+  <div class="allocation-master__formula">
+    <span>메인 <span data-main-pct>80</span>% × <span data-kelly-equity-mini>74</span>% 주식</span>
+    <span class="allocation-master__plus">+</span>
+    <span>공격 <span data-tactical-pct>20</span>% × <span data-deploy-mini>0</span>% 투입</span>
+    <span class="allocation-master__plus">=</span>
+    <strong><span data-total-equity-mini>59</span>% 주식</strong>
+  </div>
+</div>
+
+### 💰 메인 통 — 권장 주식/현금 비중
 
 <div class="kelly-card"
-     data-vix="17.2"
-     data-base-quarter="42"
-     data-base-half="85"
+     data-vix="18.4"
+     data-base-quarter="37"
+     data-base-half="74"
      data-base-full="100"
-     data-state-corskew="ok"
+     data-state-corskew="caution"
      data-state-vixts="ok"
      data-state-volvol="ok">
   <div class="kelly-controls">
@@ -39,39 +62,37 @@ title: Home
   <table class="kelly-table">
     <thead><tr><th>단계</th><th>값</th></tr></thead>
     <tbody>
-      <tr><td>① Kelly × VIX 베이스 (VIX 17.2)</td><td><strong><span data-kelly-base>85</span>%</strong></td></tr>
-      <tr><td>② COR/SKEW 🟢 정상</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
+      <tr><td>① Kelly × VIX 베이스 (VIX 18.4)</td><td><strong><span data-kelly-base>74</span>%</strong></td></tr>
+      <tr><td>② COR/SKEW 🟡 경계</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
       <tr><td>③ VIX TS 🟢 콘탱고 (정상)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
       <tr><td>④ VolVol 🟢 안도</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
-      <tr class="kelly-final"><td><strong>권장 비중</strong></td><td><strong>주식 <span data-kelly-equity>85</span>% / 현금 <span data-kelly-cash>15</span>%</strong></td></tr>
+      <tr class="kelly-final"><td><strong>권장 비중</strong></td><td><strong>주식 <span data-kelly-equity>74</span>% / 현금 <span data-kelly-cash>26</span>%</strong></td></tr>
     </tbody>
   </table>
 </div>
 
 ![Kelly × VIX 곡선](assets/diagrams/kelly_curve.png)
 
-<small>*위 비중은 **메인 포트폴리오 (전체의 80%) 기준** — Tactical reserve(나머지 20%)는 다음 카드에서 별도 관리, 합산 비중은 Tactical 카드 하단 참조. Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
+<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, 전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. Half-Kelly @ μ−r=5%, σ=VIX/100. 위험 민감도 = 그룹별 multiplier (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65). **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 
-### ⚡ 공격 자본 (Tactical Bucket) — 위기 발동 신호
+### ⚡ 공격 통 — 위기 발동 신호
 
-<div class="tactical-card" data-deploy-pct="0" data-main-frac="0.8" data-tactical-frac="0.2" markdown>
+<div class="tactical-card" markdown>
 <div class="dash-tight" markdown>
 
 | 트리거 | 현재 | 단계 / 충족 |
 |:---|---:|:---:|
-| VIX 5일 지속 — 40+ ×½ / 50+ ×1 / 60+ ×1½ | 17.2 (5일 최저 17.1) | 🟢 미발동 (0) |
-| COR90D > 55 + SKEW > 150 | 33.1 / 138.2 | ❌ (0) |
+| VIX 5일 지속 — 40+ ×½ / 50+ ×1 / 60+ ×1½ | 18.4 (5일 최저 17.1) | 🟢 미발동 (0) |
+| COR90D > 55 + SKEW > 150 | 33.0 / 140.2 | ❌ (0) |
 | 30일 SPX 누적 −20% | +0.0% | ❌ (0) |
-| **공격 자본 (전체의 20%)** | **🟢 0% 투입 (대기)** | — |
+| **공격 통 투입 비중** | **🟢 0% (대기)** | — |
 
 </div>
-
-<div class="tactical-composite"><strong>📊 전체 합산 (메인 80% + 공격 20%)</strong>: <strong>주식 <span data-total-equity>68</span>% / 현금 <span data-total-cash>32</span>%</strong></div>
 </div>
 
-<small>*공격 자본(전체의 20%)은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. 총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. 위 합산은 메인 카드 토글 선택에 따라 실시간 갱신 · [자세히 →](posts/cash-allocation.md)*</small>
+<small>*공격 통은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. 총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. 위 카드의 투입 %는 **공격 통 내부 기준** — 전체 자산 환산과 분할 비율은 페이지 상단 마스터 바 참조 · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 
@@ -81,7 +102,7 @@ title: Home
 
 | 항목 | 값 | 상태 |
 |:-----|---:|:-----|
-| VIX 현물 | 17.19 | — |
+| VIX 현물 | 18.38 | — |
 | Front (M1, 2026-05-19) | 19.47 | — |
 | **M2 − M1** (단기) | +1.52 | 🟢 콘탱고 (정상) |
 | **M7 − M4** (중기, VXZ 영역) | +0.75 | 🟢 콘탱고 (정상) |
@@ -101,8 +122,8 @@ title: Home
 | 신호 | 값 | 상태 |
 |:-----|---:|:-----|
 | **Term Structure** (COR1Y − COR1M) | 5.3 | 🟢 정상 |
-| **COR90D** (동조화 수준) | 33.1 | 🟢 정상 |
-| **SKEW** (꼬리 위험) | 138.2 | 🟢 정상 |
+| **COR90D** (동조화 수준) | 33.0 | 🟢 정상 |
+| **SKEW** (꼬리 위험) | 140.2 | 🟡 경계 |
 
 </div>
 
@@ -118,8 +139,8 @@ title: Home
 
 | 신호 | 값 | 상태 |
 |:-----|---:|:-----|
-| **VolVol = VVIX / VIX** (5DMA) | 5.471 | 🟢 안도 (5DMA > 중간선) |
-| BB 중간선 (20일 이평) | 5.332 | — |
+| **VolVol = VVIX / VIX** (5DMA) | 5.463 | 🟢 안도 (5DMA > 중간선) |
+| BB 중간선 (20일 이평) | 5.330 | — |
 
 </div>
 
