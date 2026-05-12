@@ -34,6 +34,12 @@ import update_dashboard as ud  # noqa: E402
 # US market closures the Cboe CSV won't have data for. Maintained loosely —
 # fetch_settlement_at returns empty for any missing day anyway, so the
 # list is just an optimisation to skip obvious holidays without an HTTP roundtrip.
+# Cboe's settlement CSV (?dt=DATE) returns only contracts that *still*
+# exist in their database — already-expired monthly contracts have been
+# purged. For dates more than ~8 months back the front-end of the curve
+# can be empty, leaving a half-baked chart. Skip those.
+MIN_CONTRACTS = 5
+
 US_MARKET_HOLIDAYS = {
     # 2025
     "2025-01-01", "2025-01-20", "2025-02-17", "2025-04-18", "2025-05-26",
@@ -147,6 +153,12 @@ def main():
         if vx.empty:
             skipped_no_data += 1
             print(f"[{i}/{len(target_dates)}] {date_str}: settlement CSV empty, skip")
+            time.sleep(args.sleep)
+            continue
+        if len(vx) < MIN_CONTRACTS:
+            skipped_no_data += 1
+            print(f"[{i}/{len(target_dates)}] {date_str}: only {len(vx)} contracts "
+                  f"(< {MIN_CONTRACTS}), Cboe purged expired front-end — skip")
             time.sleep(args.sleep)
             continue
 
