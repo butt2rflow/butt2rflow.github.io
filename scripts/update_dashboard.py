@@ -433,7 +433,7 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
     title_date = settlement_date or pd.Timestamp.now(tz="US/Eastern").strftime("%Y-%m-%d")
     ax.set_title(f"VIX Futures Term Structure — settlement {title_date}",
                  fontsize=13, fontweight="bold")
-    ax.legend(loc="upper left", fontsize=10)
+    ax.legend(loc="upper right", fontsize=10)
     ax.grid(alpha=0.3)
     ax.set_xlim(-15, max(vx["DTE"].max() if len(vx) else 30, 30) + 15)
 
