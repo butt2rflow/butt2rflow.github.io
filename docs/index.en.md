@@ -80,9 +80,9 @@ Math- and data-driven investment principles. In an age where AI dominates market
   </table>
 </div>
 
-![Kelly × VIX curve](assets/diagrams_en/kelly_curve.png)
+<img class="kelly-curve-img" src="assets/diagrams_en/kelly_curve_standard.png" alt="Kelly × VIX curve" data-kelly-curve-prefix="assets/diagrams_en/kelly_curve_">
 
-<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. The curve chart is drawn at μ−r=5%; the card numbers reflect whichever premium you pick. **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
+<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. Both the curve chart and the card numbers update with the selected μ−r. **Educational — not investment advice.** [Read more →](posts/cash-allocation.md)*</small>
 
 ---
 

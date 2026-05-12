@@ -80,9 +80,9 @@ title: Home
   </table>
 </div>
 
-![Kelly × VIX 곡선](assets/diagrams/kelly_curve.png)
+<img class="kelly-curve-img" src="assets/diagrams/kelly_curve_standard.png" alt="Kelly × VIX 곡선" data-kelly-curve-prefix="assets/diagrams/kelly_curve_">
 
-<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, 전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. 공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × 위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. 곡선 그림은 μ−r=5% 기준 — 다른 프리미엄 선택해도 카드 숫자는 정확. **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
+<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, 전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. 공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × 위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. 곡선 그림과 카드 숫자 모두 선택한 μ−r에 동기화됨. **교육 목적 · 투자 권유 아님** · [자세히 →](posts/cash-allocation.md)*</small>
 
 ---
 

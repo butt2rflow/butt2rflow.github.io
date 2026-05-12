@@ -110,6 +110,15 @@
       const fill = master.querySelector("[data-master-equity-fill]");
       if (fill) fill.style.width = totalEquity + "%";
     }
+
+    // Swap the Kelly × VIX curve chart to the variant that matches the
+    // selected μ−r. Python ships kelly_curve_{conservative,standard,
+    // aggressive}.png; the img element carries a data-kelly-curve-prefix
+    // ending in "kelly_curve_" so JS just appends "<profile>.png".
+    const curveImg = document.querySelector(".kelly-curve-img");
+    if (curveImg && curveImg.dataset.kellyCurvePrefix) {
+      curveImg.src = curveImg.dataset.kellyCurvePrefix + premiumKey + ".png";
+    }
   }
 
   function applySplit(master, splitKey) {

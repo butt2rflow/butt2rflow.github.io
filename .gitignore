@@ -8,11 +8,11 @@ site/
 # creates needless conflicts. The deployed site has the freshest version.
 # (vix_history/ is the deliberate exception — that's the accumulating
 # archive the homepage history player reads, so it stays tracked.)
-/docs/assets/diagrams/kelly_curve.png
+/docs/assets/diagrams/kelly_curve*.png
 /docs/assets/diagrams/vol_dashboard.png
 /docs/assets/diagrams/volvol.png
 /docs/assets/diagrams/vix_term_structure.png
-/docs/assets/diagrams_en/kelly_curve.png
+/docs/assets/diagrams_en/kelly_curve*.png
 /docs/assets/diagrams_en/vol_dashboard.png
 /docs/assets/diagrams_en/volvol.png
 /docs/assets/diagrams_en/vix_term_structure.png
@@ -33,6 +33,8 @@ _archive/
 *.py
 # But the live-dashboard updater needs to run in CI, so track it
 !scripts/update_dashboard.py
+# Plus the one-off backfill helper for the VIX TS history archive
+!scripts/backfill_vix_history.py
 blogstyle.css
 RachetEffect.gif
 .claude/

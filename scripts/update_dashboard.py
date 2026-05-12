@@ -463,17 +463,19 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
     plt.close()
 
 
-def kelly_weight_at(vix: float, fraction: float) -> float:
+def kelly_weight_at(vix: float, fraction: float, premium: float = EQUITY_PREMIUM) -> float:
     """Kelly-fraction equity weight at given VIX, capped at KELLY_CAP."""
     if vix is None or np.isnan(vix) or vix <= 0:
         return float("nan")
     sigma2 = (vix / 100.0) ** 2
-    f_star = EQUITY_PREMIUM / sigma2
+    f_star = premium / sigma2
     return min(fraction * f_star, KELLY_CAP)
 
 
-def render_kelly_curve(vix_spot: float, out_path: Path):
-    """Three Kelly fractions vs VIX, with current-VIX markers on each curve."""
+def render_kelly_curve(vix_spot: float, out_path: Path, premium: float = EQUITY_PREMIUM):
+    """Four Kelly fractions vs VIX at the given equity premium. The dashboard
+    ships one PNG per premium profile so the chart in the card can switch
+    in sync with the μ−r toggle."""
     vix_range = np.linspace(5, 60, 220)
     colors = {"quarter":      "#16a34a",
               "half":         "#0ea5e9",
@@ -481,16 +483,16 @@ def render_kelly_curve(vix_spot: float, out_path: Path):
               "full":         "#7c3aed"}
     fig, ax = plt.subplots(figsize=(12, 4.6))
     for key, frac, label in KELLY_FRACTIONS:
-        weights = np.array([kelly_weight_at(v, frac) for v in vix_range]) * 100
+        weights = np.array([kelly_weight_at(v, frac, premium) for v in vix_range]) * 100
         lw = 2.4 if key == "half" else 1.6
         ls = "-" if key == "half" else "--"
         ax.plot(vix_range, weights, color=colors[key], linewidth=lw, linestyle=ls,
                 label=f"{label} Kelly")
     if not np.isnan(vix_spot):
         for key, frac, _ in KELLY_FRACTIONS:
-            w = kelly_weight_at(vix_spot, frac) * 100
+            w = kelly_weight_at(vix_spot, frac, premium) * 100
             ax.plot([vix_spot], [w], "o", color=colors[key], markersize=9, zorder=5)
-        w_half = kelly_weight_at(vix_spot, 0.5) * 100
+        w_half = kelly_weight_at(vix_spot, 0.5, premium) * 100
         ax.annotate(f"VIX {vix_spot:.1f}\nHalf → {w_half:.0f}%",
                     xy=(vix_spot, w_half), xytext=(12, 10), textcoords="offset points",
                     fontsize=9, color="#0ea5e9",
@@ -500,7 +502,7 @@ def render_kelly_curve(vix_spot: float, out_path: Path):
         ax.axvline(boundary, color="#9ca3af", ls=":", linewidth=0.9, alpha=0.5)
     ax.set_xlabel("VIX (forward-looking σ × 100)", fontsize=10)
     ax.set_ylabel("Equity weight — cash = 100% − equity (%)", fontsize=10)
-    ax.set_title(f"Kelly × VIX — equity weight curves (μ−r = {EQUITY_PREMIUM*100:.0f}%, σ = VIX/100)",
+    ax.set_title(f"Kelly × VIX — equity weight curves (μ−r = {premium*100:.0f}%, σ = VIX/100)",
                  fontsize=11)
     ax.set_xlim(5, 60)
     ax.set_ylim(0, 105)
@@ -866,13 +868,16 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'  </table>\n'
         f'</div>',
         "",
-        f"![Kelly × VIX 곡선]({diagrams_path}/kelly_curve.png)",
+        f'<img class="kelly-curve-img" '
+        f'src="{diagrams_path}/kelly_curve_{EQUITY_PREMIUM_DEFAULT}.png" '
+        f'alt="Kelly × VIX 곡선" '
+        f'data-kelly-curve-prefix="{diagrams_path}/kelly_curve_">',
         "",
         "<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, "
         "전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. "
         "공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × "
         "위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. "
-        "곡선 그림은 μ−r=5% 기준 — 다른 프리미엄 선택해도 카드 숫자는 정확. "
+        "곡선 그림과 카드 숫자 모두 선택한 μ−r에 동기화됨. "
         "**교육 목적 · 투자 권유 아님** · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
@@ -1234,13 +1239,16 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'  </table>\n'
         f'</div>',
         "",
-        f"![Kelly × VIX curve]({diagrams_path}/kelly_curve.png)",
+        f'<img class="kelly-curve-img" '
+        f'src="{diagrams_path}/kelly_curve_{EQUITY_PREMIUM_DEFAULT}.png" '
+        f'alt="Kelly × VIX curve" '
+        f'data-kelly-curve-prefix="{diagrams_path}/kelly_curve_">',
         "",
         "<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, "
         "and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. "
         "Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × "
         "risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. "
-        "The curve chart is drawn at μ−r=5%; the card numbers reflect whichever premium you pick. "
+        "Both the curve chart and the card numbers update with the selected μ−r. "
         "**Educational — not investment advice.** "
         "[Read more →](posts/cash-allocation.md)*</small>",
         "",
@@ -1443,10 +1451,15 @@ def main():
                             vx=vx, vix_spot=vix_spot)
 
     if ks:
-        render_kelly_curve(vix_spot, OUT_KO / "kelly_curve.png")
-        print(f"  Saved: {OUT_KO / 'kelly_curve.png'}")
-        shutil.copy2(OUT_KO / "kelly_curve.png", OUT_EN / "kelly_curve.png")
-        print(f"  Copied: {OUT_EN / 'kelly_curve.png'}")
+        # One curve PNG per premium profile so the chart in the Kelly card
+        # can swap in sync with the μ−r toggle. Filenames embed the profile
+        # key (kelly_curve_<profile>.png); HTML img src is set to the
+        # default-profile variant and JS swaps to the other two on toggle.
+        for prof_key, prof_val in EQUITY_PREMIUM_PROFILES.items():
+            fname = f"kelly_curve_{prof_key}.png"
+            render_kelly_curve(vix_spot, OUT_KO / fname, premium=prof_val)
+            shutil.copy2(OUT_KO / fname, OUT_EN / fname)
+            print(f"  Saved: {fname} (μ−r = {prof_val*100:.0f}%)")
 
     print(f"  COR/SKEW: spread={cs['spread']:.2f}, COR90D={cs['cor90d']:.2f}, SKEW={cs['skew']:.2f}")
     if vs:
