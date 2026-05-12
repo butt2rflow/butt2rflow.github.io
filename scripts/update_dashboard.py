@@ -389,17 +389,27 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
                               settlement_date: str | None = None):
     fig, ax = plt.subplots(figsize=(12, 6))
 
+    # Drop near-expiry contracts from the *plotted* curve. By settlement
+    # morning a contract's price has effectively converged to VIX cash
+    # (the AM auction settles into the SPX opening vol), so plotting it
+    # as part of the forward curve creates a misleading line segment
+    # between "today's converged price" and "next month's forward price."
+    # The VIX spot dot still represents the cash side; the futures curve
+    # starts from the first contract with non-trivial time to expiry.
+    EXPIRY_BUFFER_DAYS = 2
+    plot_vx = vx[vx["DTE"] >= EXPIRY_BUFFER_DAYS].reset_index(drop=True)
+
     # Plot VIX spot at DTE=0
     if not np.isnan(vix_spot):
         ax.plot([0], [vix_spot], "o", color="#1e40af", markersize=12,
                 label=f"VIX spot ({vix_spot:.2f})", zorder=5)
 
-    # Plot futures curve
-    ax.plot(vx["DTE"], vx["Price"], "o-", color="#dc2626", linewidth=2,
+    # Plot futures curve (skipping any contract about to settle)
+    ax.plot(plot_vx["DTE"], plot_vx["Price"], "o-", color="#dc2626", linewidth=2,
             markersize=8, label="VIX futures", zorder=4)
 
-    # Annotate each contract
-    for _, row in vx.iterrows():
+    # Annotate each plotted contract
+    for _, row in plot_vx.iterrows():
         ax.annotate(
             f"{row['Expiration Date'].strftime('%b')}\n{row['Price']:.2f}",
             xy=(row["DTE"], row["Price"]),
@@ -407,10 +417,12 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
             ha="center", fontsize=8,
         )
 
-    # Determine shape
-    front = vx.iloc[0]["Price"] if len(vx) else float("nan")
-    back = vx.iloc[-1]["Price"] if len(vx) else float("nan")
-    if not np.isnan(vix_spot) and len(vx) >= 2:
+    # Determine shape — use the *active* curve (post-filter) so that on
+    # settlement days the shape reflects the live forward structure, not
+    # an already-settled front month that's converged to spot.
+    front = plot_vx.iloc[0]["Price"] if len(plot_vx) else float("nan")
+    back = plot_vx.iloc[-1]["Price"] if len(plot_vx) else float("nan")
+    if not np.isnan(vix_spot) and len(plot_vx) >= 2:
         if vix_spot > front:
             shape = "Backwardation"
             shape_color = "#dc2626"
@@ -435,13 +447,13 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
                  fontsize=13, fontweight="bold")
     ax.legend(loc="upper right", fontsize=10)
     ax.grid(alpha=0.3)
-    ax.set_xlim(-15, max(vx["DTE"].max() if len(vx) else 30, 30) + 15)
+    ax.set_xlim(-15, max(plot_vx["DTE"].max() if len(plot_vx) else 30, 30) + 15)
 
     # Fixed Y-axis range (17–30) so the visual position of the curve
     # encodes the absolute volatility level day-to-day, not just the
     # shape. Auto-expand only when actual data falls outside.
     Y_MIN_DEFAULT, Y_MAX_DEFAULT = 17.0, 30.0
-    all_values = list(vx["Price"].dropna()) if len(vx) else []
+    all_values = list(plot_vx["Price"].dropna()) if len(plot_vx) else []
     if not np.isnan(vix_spot):
         all_values.append(vix_spot)
     if all_values:
