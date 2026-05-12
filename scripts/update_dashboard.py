@@ -861,7 +861,7 @@ def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
         '    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>',
         '    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>',
         '    <a class="allocation-master__split-info" '
-        'href="posts/cash-allocation.md#choosing-the-split" '
+        'href="posts/cash-allocation/#choosing-the-split" '
         'title="어떤 비율을 골라야 하나?">ⓘ</a>',
         '  </div>',
         '  <div class="allocation-master__bar" aria-hidden="true">',
@@ -902,7 +902,7 @@ def render_master_bar_en(ks: dict, ts: dict) -> list[str]:
         '    <button class="kelly-pill" data-split-set="90-10">90 / 10</button>',
         '    <button class="kelly-pill" data-split-set="95-5">95 / 5</button>',
         '    <a class="allocation-master__split-info" '
-        'href="posts/cash-allocation.md#choosing-the-split" '
+        'href="posts/cash-allocation/#choosing-the-split" '
         'title="Which split should I pick?">ⓘ</a>',
         '  </div>',
         '  <div class="allocation-master__bar" aria-hidden="true">',

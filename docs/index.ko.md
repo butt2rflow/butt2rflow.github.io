@@ -24,7 +24,7 @@ title: Home
     <button class="kelly-pill is-active" data-split-set="80-20">80 / 20</button>
     <button class="kelly-pill" data-split-set="90-10">90 / 10</button>
     <button class="kelly-pill" data-split-set="95-5">95 / 5</button>
-    <a class="allocation-master__split-info" href="posts/cash-allocation.md#choosing-the-split" title="어떤 비율을 골라야 하나?">ⓘ</a>
+    <a class="allocation-master__split-info" href="posts/cash-allocation/#choosing-the-split" title="어떤 비율을 골라야 하나?">ⓘ</a>
   </div>
   <div class="allocation-master__bar" aria-hidden="true">
     <div class="allocation-master__equity" data-master-equity-fill style="width: 59%"></div>

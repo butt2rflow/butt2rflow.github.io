@@ -1,16 +1,46 @@
 name: Deploy MkDocs
+
+# Runs update_dashboard.py in-CI to regenerate the home-page dashboard
+# (index.{ko,en}.md patches, chart PNGs) fresh from latest market data
+# right before mkdocs gh-deploy. None of those regenerated files are
+# committed back to main — they're written into the CI workspace, the
+# site/ build picks them up, and gh-deploy publishes to the gh-pages
+# branch. This eliminates the cron-vs-human race on rendered artifacts.
+#
+# Persistent state (vix_history/ daily archive) is committed separately
+# by dashboard-update.yml, which is the only workflow that pushes to main.
+
 on:
   push:
     branches: [main]
+  schedule:
+    # Daily at 22:10 UTC — 10 min after dashboard-update.yml, giving
+    # that workflow time to commit the day's vix_history snapshot first.
+    - cron: '10 22 * * 1-5'
+  workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-      - run: pip install mkdocs-material mkdocs-static-i18n
-      - run: mkdocs gh-deploy --force
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install mkdocs-material mkdocs-static-i18n pandas numpy matplotlib
+
+      - name: Regenerate dashboard from latest market data
+        # Patches docs/index.{ko,en}.md and writes the chart PNGs into
+        # the working tree. These files are gitignored on disk (cron's
+        # archive job is the only one that commits anything to main),
+        # so they live only inside this CI run.
+        run: python scripts/update_dashboard.py
+
+      - name: Deploy to gh-pages
+        run: mkdocs gh-deploy --force

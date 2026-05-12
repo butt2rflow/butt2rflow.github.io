@@ -1,17 +1,25 @@
-name: Update live dashboard
+name: Archive daily VIX TS snapshot
+
+# Runs after the US close and persists ONLY the day's VIX TS history
+# (vix_history/<date>.{png,json} + manifest). Rendered home-page artifacts
+# (index.{ko,en}.md, vix_term_structure.png, vol_dashboard.png, etc.) are
+# rebuilt fresh by the deploy workflow on every push — committing them
+# back to main creates needless conflicts with humans editing the same
+# files. The vix_history archive, by contrast, must accumulate over time
+# for the homepage history player, so it stays in git.
 
 on:
   schedule:
     # Daily at 22:00 UTC (≈ 5–6 PM US Eastern, after the 4 PM market close
     # and after Cboe publishes index closes / VIX futures settlements)
     - cron: '0 22 * * 1-5'
-  workflow_dispatch:  # also allow manual triggers
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update:
+  archive:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,22 +34,30 @@ jobs:
       - name: Run dashboard updater
         run: python scripts/update_dashboard.py
 
-      - name: Commit & push if changed
+      - name: Commit & push vix_history archive if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/assets/diagrams/vol_dashboard.png \
-                  docs/assets/diagrams/vix_term_structure.png \
-                  docs/assets/diagrams/vix_history/ \
-                  docs/assets/diagrams_en/vol_dashboard.png \
-                  docs/assets/diagrams_en/vix_term_structure.png \
-                  docs/assets/diagrams_en/vix_history/ \
-                  docs/index.ko.md docs/index.en.md
-          # `git add <dir>/` also stages deletions inside that dir, so the
-          # daily prune of files > 365 days old gets recorded too
+          # Scope: ONLY the persistent VIX TS history archive. Everything
+          # else update_dashboard.py wrote (PNGs in working tree, patched
+          # index.md) is now gitignored — locally produced output, not
+          # tracked content.
+          git add docs/assets/diagrams/vix_history/ \
+                  docs/assets/diagrams_en/vix_history/
           if git diff --cached --quiet; then
-            echo "No changes — nothing to commit."
-          else
-            git commit -m "chore: daily dashboard refresh ($(date -u +%Y-%m-%d))"
-            git push
+            echo "No archive changes — nothing to commit."
+            exit 0
           fi
+          git commit -m "chore: archive VIX TS snapshot ($(date -u +%Y-%m-%d))"
+          # Retry-with-rebase on push: another commit (human or another
+          # automated run) may have landed while this job was building.
+          # vix_history is daily-additive so rebase conflicts are rare.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push attempt $attempt failed — rebasing onto origin/main and retrying"
+            git pull --rebase origin main
+          done
+          echo "Push still failing after 3 attempts" >&2
+          exit 1
