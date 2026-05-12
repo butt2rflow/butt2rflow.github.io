@@ -67,12 +67,12 @@ SKEW measures **the tail-risk premium** the S&P 500 options market is paying for
 
 | SKEW level | What it means |
 |:-----------|:--------------|
-| 120–135 | Normal regime |
-| 140–150 | Caution — institutions are loading up on puts |
-| 150+ | High tail-risk pricing |
+| ≤ ~145 | Normal regime (post-2020 median ≈ 145) |
+| 150–158 | Caution — institutions are loading up on puts (p75 band) |
+| 158+ | High tail-risk pricing (above p95) |
 
-!!! note "SKEW's historical shift"
-    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally, and 130–145 is closer to the new "normal." The thresholds above reflect the current (post-2020) regime.
+!!! note "SKEW's historical shift — thresholds recalibrated (2026-05)"
+    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally — **current median ≈ 145, p75 ≈ 150, p95 ≈ 157**. The legacy 140/150 thresholds became "normal state" and lost their signal value, so the live dashboard now uses **150 caution / 158 stress** (p75/p95 of the current distribution). The table above reflects that recalibration.
 
 !!! note "The SKEW paradox"
     SKEW can actually be **higher during the recovery** than right before the crash. That's because during the crash, institutions already own their puts. After the recovery, they buy fresh puts to hedge against "the next crash." A *low* SKEW reading can therefore be a market-bottom signal.
@@ -112,7 +112,7 @@ Combining all three signals into one chart lets you read structural stress at a 
 
 ![Volatility dashboard — Term Structure + Delta Skew + SKEW combined](../assets/diagrams_en/vol_dashboard.png)
 
-Top: COR1M–COR1Y term structure (when the spacing tightens, that's caution; the red region marks inversion). Middle: COR10D–COR90D delta skew (COR90D crossing the dashed red 50 line is stress). Bottom: SKEW index (140+ is caution, 150+ is high).
+Top: COR1M–COR1Y term structure (when the spacing tightens, that's caution; the red region marks inversion). Middle: COR10D–COR90D delta skew (COR90D crossing the dashed red 50 line is stress). Bottom: SKEW index (150+ is caution, 158+ is stress).
 
 ---
 
@@ -285,7 +285,7 @@ print(f"=== {latest['DATE'].strftime('%Y-%m-%d')} signals ===")
 
 spread = latest['spread']
 print(f"Term-structure spread: {spread:.1f}", end="")
-print("  ← inverted!" if spread < 0 else "  ← caution" if spread < 5 else "  ← normal")
+print("  ← deeply inverted!" if spread < -5 else "  ← inverted · caution" if spread < 0 else "  ← normal")
 
 cor90d = latest_skew['COR90D']
 print(f"COR90D: {cor90d:.1f}", end="")

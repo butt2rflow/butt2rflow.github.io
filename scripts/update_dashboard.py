@@ -342,10 +342,10 @@ def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path,
 
     if "SKEW" in skew.columns:
         skew_idx_ax.plot(skew["DATE"], skew["SKEW"], color="#9C27B0", linewidth=2, label="SKEW")
-        skew_idx_ax.fill_between(skew["DATE"], skew["SKEW"], 150,
-                                 where=skew["SKEW"] > 150, alpha=0.15, color="red")
-    skew_idx_ax.axhline(140, color="orange", ls="--", alpha=0.5, label="Caution (140)")
-    skew_idx_ax.axhline(150, color="red", ls="--", alpha=0.5, label="High (150)")
+        skew_idx_ax.fill_between(skew["DATE"], skew["SKEW"], 158,
+                                 where=skew["SKEW"] > 158, alpha=0.15, color="red")
+    skew_idx_ax.axhline(150, color="orange", ls="--", alpha=0.5, label="Caution (150)")
+    skew_idx_ax.axhline(158, color="red", ls="--", alpha=0.5, label="Stress (158)")
     skew_idx_ax.set_ylabel("SKEW Index", fontsize=10)
     skew_idx_ax.set_title("SKEW — tail-risk indicator", fontsize=11)
     skew_idx_ax.legend(loc="upper left", fontsize=8)
@@ -535,28 +535,49 @@ def compute_cor_skew_signals(tenor, skew):
     cor90d = latest_s["COR90D"]
     skew_v = latest_s["SKEW"]
 
-    def state(value, ok_max, caution_max, *, reverse=False):
+    def state(value, ok_thr, danger_thr, *, reverse=False):
+        """Bucket value into ok/caution/danger by two thresholds.
+
+        Forward (default, *higher* = worse):
+          value <  ok_thr     → ok
+          value <  danger_thr → caution
+          value >= danger_thr → danger
+
+        Reverse (*lower* = worse — for inverted-spread style signals):
+          value >  ok_thr     → ok
+          value >  danger_thr → caution
+          value <= danger_thr → danger
+        """
         if reverse:
-            if value < 0:
+            if value < danger_thr:
                 return "danger"
-            if value < 5:
+            if value < ok_thr:
                 return "caution"
             return "ok"
-        if value >= caution_max:
+        if value >= danger_thr:
             return "danger"
-        if value >= ok_max:
+        if value >= ok_thr:
             return "caution"
         return "ok"
 
+    # Threshold notes (recalibrated 2026-05 against 6-mo Cboe distribution):
+    # - SKEW: median 145 / p75 150 / p95 157 in the post-pandemic regime.
+    #   Old 140/150 fired caution 84%, danger 24% — meaningless. Now 150/158
+    #   fires ~24%/~5%, matching the "caution = top quartile, danger = top
+    #   ventile" intent.
+    # - Spread (COR1Y − COR1M): reverse signal — negative = inverted curve.
+    #   Old <5 caution fired 50% of days (median 4.9), <0 danger fired 23%.
+    #   Now <0 caution / <-5 danger fires ~23%/~5%.
+    # - COR90D: 40/50 keeps the existing calibration (fires ~27%/~7%).
     return {
         "date": pd.Timestamp(max(latest_t["DATE"], latest_s["DATE"])).strftime("%Y-%m-%d"),
         "spread": spread,
-        "spread_state": state(spread, 0, 0, reverse=True),
+        "spread_state": state(spread, 0, -5, reverse=True),
         "cor1m": latest_t["COR1M"], "cor1y": latest_t["COR1Y"],
         "cor90d": cor90d,
         "cor90d_state": state(cor90d, 40, 50),
         "skew": skew_v,
-        "skew_state": state(skew_v, 140, 150),
+        "skew_state": state(skew_v, 150, 158),
     }
 
 

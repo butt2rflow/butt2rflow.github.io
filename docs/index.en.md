@@ -45,7 +45,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
      data-base-quarter="37"
      data-base-half="74"
      data-base-full="100"
-     data-state-corskew="caution"
+     data-state-corskew="ok"
      data-state-vixts="ok"
      data-state-volvol="ok">
   <div class="kelly-controls">
@@ -63,7 +63,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
     <thead><tr><th>Step</th><th>Value</th></tr></thead>
     <tbody>
       <tr><td>① Kelly × VIX base (VIX 18.4)</td><td><strong><span data-kelly-base>74</span>%</strong></td></tr>
-      <tr><td>② COR/SKEW 🟡 Caution</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
+      <tr><td>② COR/SKEW 🟢 Normal</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
       <tr><td>③ VIX TS 🟢 Contango (normal)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
       <tr><td>④ VolVol 🟢 Calm</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
       <tr class="kelly-final"><td><strong>Suggested mix</strong></td><td><strong>Equity <span data-kelly-equity>74</span>% / Cash <span data-kelly-cash>26</span>%</strong></td></tr>
@@ -123,7 +123,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 |:-------|------:|:------|
 | **Term Structure** (COR1Y − COR1M) | 5.3 | 🟢 Normal |
 | **COR90D** (synchronization) | 33.0 | 🟢 Normal |
-| **SKEW** (tail risk) | 140.2 | 🟡 Caution |
+| **SKEW** (tail risk) | 140.2 | 🟢 Normal |
 
 </div>
 

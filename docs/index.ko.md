@@ -45,7 +45,7 @@ title: Home
      data-base-quarter="37"
      data-base-half="74"
      data-base-full="100"
-     data-state-corskew="caution"
+     data-state-corskew="ok"
      data-state-vixts="ok"
      data-state-volvol="ok">
   <div class="kelly-controls">
@@ -63,7 +63,7 @@ title: Home
     <thead><tr><th>단계</th><th>값</th></tr></thead>
     <tbody>
       <tr><td>① Kelly × VIX 베이스 (VIX 18.4)</td><td><strong><span data-kelly-base>74</span>%</strong></td></tr>
-      <tr><td>② COR/SKEW 🟡 경계</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
+      <tr><td>② COR/SKEW 🟢 정상</td><td>× <span data-kelly-d="corskew">1.00</span></td></tr>
       <tr><td>③ VIX TS 🟢 콘탱고 (정상)</td><td>× <span data-kelly-d="vixts">1.00</span></td></tr>
       <tr><td>④ VolVol 🟢 안도</td><td>× <span data-kelly-d="volvol">1.00</span></td></tr>
       <tr class="kelly-final"><td><strong>권장 비중</strong></td><td><strong>주식 <span data-kelly-equity>74</span>% / 현금 <span data-kelly-cash>26</span>%</strong></td></tr>
@@ -123,7 +123,7 @@ title: Home
 |:-----|---:|:-----|
 | **Term Structure** (COR1Y − COR1M) | 5.3 | 🟢 정상 |
 | **COR90D** (동조화 수준) | 33.0 | 🟢 정상 |
-| **SKEW** (꼬리 위험) | 140.2 | 🟡 경계 |
+| **SKEW** (꼬리 위험) | 140.2 | 🟢 정상 |
 
 </div>
 
