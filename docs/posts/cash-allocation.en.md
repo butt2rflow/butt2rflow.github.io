@@ -131,7 +131,9 @@ VIX = 17 → σ ≈ 0.17. VIX = 30 → σ ≈ 0.30.
 
 When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). That's where the rough rule "VIX in the high 20s → cut equity in half" comes from — it's the same curve.
 
-![Kelly × VIX curve](../assets/diagrams_en/kelly_curve.png)
+![Kelly × VIX curve (μ−r=7%, default)](../assets/diagrams_en/kelly_curve_standard.png)
+
+> On the daily dashboard the same curve shape shifts up/down with the 5% / 7% / 9% toggle (full comparison in §6½). The chart above shows the new default — **7%**.
 
 ---
 

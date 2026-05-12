@@ -39,9 +39,11 @@ LOOKBACK_MONTHS = 6
 
 # Kelly × Vol — f* = (μ−r)/σ² with σ = VIX/100 (annualized forward-looking),
 # capped at 100% (no leverage suggestion for retail audience).
-# EQUITY_PREMIUM is the chart's basis (kelly_curve.png is drawn at 5%);
-# EQUITY_PREMIUM_DEFAULT is what new visitors see on the dashboard cards.
-# Existing visitors' localStorage choices override either.
+# EQUITY_PREMIUM is the per-variant chart basis — three PNGs are emitted
+# (kelly_curve_conservative/standard/aggressive.png) and JS swaps between
+# them on the μ−r toggle. EQUITY_PREMIUM_DEFAULT picks which one is the
+# new-visitor default and the initial card value. Existing visitors'
+# localStorage choices override either.
 EQUITY_PREMIUM = 0.05
 EQUITY_PREMIUM_PROFILES = {
     "conservative": 0.05,  # long-run academic estimate, accounts for VIX vol-risk-premium drag
