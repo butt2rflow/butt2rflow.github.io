@@ -322,11 +322,19 @@ The numerator of `f* = (μ−r) / σ²` is the **equity risk premium**: "how muc
 
 The problem: you can't know this number exactly. Academic estimates span **3% to 9%** depending on dataset, time window, and computation method — your choice almost doubles the suggested weight in some regions. The daily dashboard exposes three preset premia:
 
-| Profile | μ−r | Rationale | Half @ VIX 18 | Half @ VIX 22 | Half @ VIX 30 |
-|:---|:---:|:---|---:|---:|---:|
-| **Conservative** | **5%** | Long-run academic estimate (Damodaran et al.). Implicitly absorbs the VIX vol-risk-premium drag — i.e. acknowledges VIX ≈ realised σ + 4pt on average, so you're effectively inflating σ. | 74% | 52% | 28% |
-| **Standard ← default** | **7%** | Long-run SPX historical average ex-WWII. The closest single-number match to "Kelly applied to *realised* vol" once VIX's vol-risk premium is netted out. | 100% (cap) | 72% | 39% |
-| **Aggressive** | **9%** | Post-1990 SPX bullish view. Treats the VIX vol-risk-premium drag as a recoverable inefficiency rather than a baked-in cost. | 100% (cap) | 93% | 50% |
+**Half-Kelly suggested weight** under each μ−r toggle:
+
+| Profile | μ−r | VIX 18 | VIX 22 | VIX 30 |
+|:---|:---:|---:|---:|---:|
+| **Conservative** | 5% | 74% | 52% | 28% |
+| **Standard ← default** | **7%** | 100% (cap) | 72% | 39% |
+| **Aggressive** | 9% | 100% (cap) | 93% | 50% |
+
+Rationale for each:
+
+- **Conservative (5%)** — Long-run academic estimate (Damodaran et al.). Implicitly absorbs VIX's vol-risk-premium drag — since VIX runs ≈ realised σ + 4pt on average, plugging σ = VIX/100 directly already inflates the denominator, making the framework conservative by construction.
+- **Standard (7%) — default** — Long-run SPX historical average ex-WWII. The closest single-number match to "Kelly applied to *realised* vol" once VIX's vol-risk premium is netted out by the higher numerator.
+- **Aggressive (9%)** — Post-1990 SPX bullish view. Treats the VIX vol-risk-premium drag as a recoverable inefficiency rather than a baked-in cost — essentially the "VRP is a bonus" stance.
 
 ### Why 5% is "conservative" — the VIX vol-risk-premium story
 
