@@ -166,26 +166,74 @@ def compute_volvol_df(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
 VIX_HISTORY_RETENTION_DAYS = 365
 
 
-def archive_vix_history(today_chart: Path, data_date: str) -> None:
-    """Copy the VIX TS chart to docs/assets/diagrams[_en]/vix_history/<data_date>.png,
-    then prune anything older than VIX_HISTORY_RETENTION_DAYS, then write
-    a manifest.json the homepage's JS player reads.
+def _vix_ts_data_snapshot(vx: pd.DataFrame, vix_spot: float,
+                          settlement_date: str) -> dict:
+    """Build the structured data record archived alongside each daily PNG.
+    Keeping the underlying numbers (not just the chart image) lets readers
+    re-plot history, run analytics, or diff curves across days without
+    OCR-ing PNGs."""
+    contracts = []
+    for _, row in vx.iterrows():
+        contracts.append({
+            "symbol": str(row["Symbol"]),
+            "expiration": row["Expiration Date"].strftime("%Y-%m-%d"),
+            "dte": int(row["DTE"]),
+            "price": float(row["Price"]),
+        })
+    front = contracts[0]["price"] if contracts else None
+    back = contracts[-1]["price"] if contracts else None
+    spread_2_1 = (contracts[1]["price"] - contracts[0]["price"]
+                  if len(contracts) >= 2 else None)
+    if not np.isnan(vix_spot) and front is not None and back is not None:
+        if vix_spot > front:
+            shape = "backwardation"
+        elif back > front:
+            shape = "contango"
+        else:
+            shape = "mixed"
+    else:
+        shape = None
+    return {
+        "settlement_date": settlement_date,
+        "vix_spot": None if np.isnan(vix_spot) else float(vix_spot),
+        "shape": shape,
+        "spread_M2_M1": None if spread_2_1 is None else float(spread_2_1),
+        "contracts": contracts,
+        "source": "Cboe CFE settlement CSV",
+    }
+
+
+def archive_vix_history(today_chart: Path, data_date: str,
+                        vx: pd.DataFrame, vix_spot: float) -> None:
+    """Copy the VIX TS chart to docs/assets/diagrams[_en]/vix_history/<data_date>.png
+    AND write the underlying numbers to <data_date>.json. Then prune anything
+    older than VIX_HISTORY_RETENTION_DAYS, then write a manifest.json the
+    homepage's JS player reads.
 
     `data_date` should be the Cboe settlement date the chart represents
     (not local wall-clock today). On weekends/holidays the settlement CSV
     still serves Friday's data, so using the wall-clock date would file
     stale data under a misleading name."""
+    snapshot = _vix_ts_data_snapshot(vx, vix_spot, data_date)
     for parent in [OUT_KO, OUT_EN]:
         archive_dir = parent / "vix_history"
         archive_dir.mkdir(parents=True, exist_ok=True)
-        dst = archive_dir / f"{data_date}.png"
+        png_dst = archive_dir / f"{data_date}.png"
+        json_dst = archive_dir / f"{data_date}.json"
         try:
-            shutil.copy2(today_chart, dst)
+            shutil.copy2(today_chart, png_dst)
         except Exception as e:  # noqa: BLE001
-            print(f"  [WARN] could not archive {dst}: {e}")
+            print(f"  [WARN] could not archive {png_dst}: {e}")
             continue
+        try:
+            json_dst.write_text(
+                json.dumps(snapshot, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+        except Exception as e:  # noqa: BLE001
+            print(f"  [WARN] could not archive {json_dst}: {e}")
 
-        # Prune files older than retention window
+        # Prune files older than retention window — both PNG and JSON
         cutoff = pd.Timestamp.now() - pd.Timedelta(days=VIX_HISTORY_RETENTION_DAYS)
         kept = []
         for f in sorted(archive_dir.glob("*.png")):
@@ -195,15 +243,28 @@ def archive_vix_history(today_chart: Path, data_date: str) -> None:
                 continue  # ignore non-date filenames
             if file_date < cutoff:
                 f.unlink()
-                print(f"  Pruned: {f.name}")
+                companion = archive_dir / f"{f.stem}.json"
+                if companion.exists():
+                    companion.unlink()
+                print(f"  Pruned: {f.name} (+ .json)")
             else:
                 kept.append(f.stem)
+
+        # Sweep orphan JSON files (e.g. from older runs where only PNG
+        # existed, or when a PNG was deleted manually).
+        for f in archive_dir.glob("*.json"):
+            if f.name == "manifest.json":
+                continue
+            if f.stem not in kept:
+                f.unlink()
+                print(f"  Pruned orphan: {f.name}")
 
         kept = sorted(kept)
         manifest = {
             "dates": kept,
             "latest": kept[-1] if kept else None,
             "retention_days": VIX_HISTORY_RETENTION_DAYS,
+            "data_format": "png + json (per-date)",
         }
         (archive_dir / "manifest.json").write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2),
@@ -303,7 +364,8 @@ def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path,
     plt.close()
 
 
-def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path):
+def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
+                              settlement_date: str | None = None):
     fig, ax = plt.subplots(figsize=(12, 6))
 
     # Plot VIX spot at DTE=0
@@ -344,8 +406,11 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path)
 
     ax.set_xlabel("Days to expiration", fontsize=11)
     ax.set_ylabel("VIX futures price", fontsize=11)
-    today_str = pd.Timestamp.now(tz="US/Eastern").strftime("%Y-%m-%d")
-    ax.set_title(f"VIX Futures Term Structure — settlement {today_str}",
+    # The settlement date drives the title; if the caller didn't supply one
+    # (e.g. ad-hoc renders), fall back to wall-clock today — but on real
+    # runs this is the VIX-cash close date, which matches the futures CSV.
+    title_date = settlement_date or pd.Timestamp.now(tz="US/Eastern").strftime("%Y-%m-%d")
+    ax.set_title(f"VIX Futures Term Structure — settlement {title_date}",
                  fontsize=13, fontweight="bold")
     ax.legend(loc="upper left", fontsize=10)
     ax.grid(alpha=0.3)
@@ -1286,11 +1351,20 @@ def main():
     ts = compute_tactical_signal(vix_hist, cs, spx)
 
     if len(vx) > 0:
-        render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png")
+        # VIX-cash and VIX-futures settle together on the Cboe end-of-day
+        # cycle, so the last bar of vix_hist is the authoritative settlement
+        # date for the term-structure chart. Using cs["date"] here would
+        # mis-file the archive whenever COR/SKEW (yfinance) lags behind Cboe
+        # direct, which is most weekdays.
+        vix_settle_date = (vix_hist.index[-1].strftime("%Y-%m-%d")
+                           if len(vix_hist) else cs["date"])
+        render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png",
+                                  settlement_date=vix_settle_date)
         print(f"  Saved: {OUT_KO / 'vix_term_structure.png'}")
         shutil.copy2(OUT_KO / "vix_term_structure.png", OUT_EN / "vix_term_structure.png")
         print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
-        archive_vix_history(OUT_KO / "vix_term_structure.png", cs["date"])
+        archive_vix_history(OUT_KO / "vix_term_structure.png", vix_settle_date,
+                            vx=vx, vix_spot=vix_spot)
 
     if ks:
         render_kelly_curve(vix_spot, OUT_KO / "kelly_curve.png")
