@@ -222,6 +222,58 @@ img {
   background: #1e3a8a;
 }
 
+.vix-history-player__restart {
+  background: white;
+  color: #1e40af;
+  border: 1px solid #1e40af;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vix-history-player__restart:hover {
+  background: #eff6ff;
+}
+
+.vix-history-player__range {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.72rem;
+  color: #4b5563;
+}
+
+.vix-history-player__range-label {
+  font-weight: 600;
+}
+
+.vix-history-player__range-sep {
+  color: #9ca3af;
+}
+
+.vix-history-player__from,
+.vix-history-player__to {
+  font-family: inherit;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.vix-history-player__from:hover,
+.vix-history-player__to:hover {
+  border-color: #1e40af;
+}
+
 .vix-history-player__date {
   font-weight: 700;
   font-family: "JetBrains Mono", monospace;
