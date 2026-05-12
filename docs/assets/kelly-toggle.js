@@ -1,6 +1,6 @@
 // kelly-toggle.js
 // Lets the user switch Kelly fraction (Quarter/Half/Full) and risk-discount
-// profile (Loose/Standard/Tight) on the live dashboard cash-allocation card.
+// profile (Loose/Standard/Tight) on the daily dashboard cash-allocation card.
 // All math happens in the browser; Python only ships base values + signal
 // states via data-* attributes. Selection persists in localStorage.
 

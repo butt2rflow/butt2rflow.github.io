@@ -11,7 +11,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
 
-## 📊 Live Dashboard
+## 📊 Daily Dashboard
 
 <small>**As of 2026-05-11** · Auto-updates daily after the US close · [Framework details →](posts/cash-allocation.md)</small>
 

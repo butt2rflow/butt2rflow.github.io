@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Daily live-dashboard updater.
+Daily daily-dashboard updater.
 
 Pulls fresh end-of-day data from yfinance (Cboe COR + SKEW indices) and
 the Cboe VIX-futures settlement CSV, regenerates two charts, and patches
@@ -1079,7 +1079,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
         START_MARK,
         '<div class="live-dash" markdown>',
         "",
-        "## 📊 라이브 대시보드",
+        "## 📊 일일 대시보드",
         "",
         f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신</small>",
         "",
@@ -1263,7 +1263,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
         START_MARK,
         '<div class="live-dash" markdown>',
         "",
-        "## 📊 Live Dashboard",
+        "## 📊 Daily Dashboard",
         "",
         f"<small>**As of {cs['date']}** · Auto-updates daily after the US close · "
         "[Framework details →](posts/cash-allocation.md)</small>",

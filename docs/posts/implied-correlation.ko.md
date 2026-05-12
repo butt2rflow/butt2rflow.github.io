@@ -201,7 +201,7 @@ bgcolor(skew_spread > 25 ? color.new(color.red, 85) :
 
 내재변동성표면(IV Surface)은 옵션 시장 참여자들의 집단 심리가 실시간으로 녹아든 지도입니다. COR 지수들은 이 지도의 다양한 지점을 수치화하여, 뉴스보다 빠르게 시장 참여자들의 의중을 읽을 수 있는 도구입니다.
 
-> 💡 **이 글에서 다룬 COR1M~COR1Y, COR10D~COR90D, SKEW 지수가 [홈페이지의 라이브 대시보드](../index.md)에서 매일 자동 갱신됩니다.** Cboe 결제 데이터 직접 사용 — 광고 없는 vixcentral 대안.
+> 💡 **이 글에서 다룬 COR1M~COR1Y, COR10D~COR90D, SKEW 지수가 [홈페이지의 일일 대시보드](../index.md)에서 매일 자동 갱신됩니다.** Cboe 결제 데이터 직접 사용 — 광고 없는 vixcentral 대안.
 
 ---
 

@@ -72,7 +72,7 @@ SKEW measures **the tail-risk premium** the S&P 500 options market is paying for
 | 158+ | High tail-risk pricing (above p95) |
 
 !!! note "SKEW's historical shift — thresholds recalibrated (2026-05)"
-    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally — **current median ≈ 145, p75 ≈ 150, p95 ≈ 157**. The legacy 140/150 thresholds became "normal state" and lost their signal value, so the live dashboard now uses **150 caution / 158 stress** (p75/p95 of the current distribution). The table above reflects that recalibration.
+    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally — **current median ≈ 145, p75 ≈ 150, p95 ≈ 157**. The legacy 140/150 thresholds became "normal state" and lost their signal value, so the daily dashboard now uses **150 caution / 158 stress** (p75/p95 of the current distribution). The table above reflects that recalibration.
 
 !!! note "The SKEW paradox"
     SKEW can actually be **higher during the recovery** than right before the crash. That's because during the crash, institutions already own their puts. After the recovery, they buy fresh puts to hedge against "the next crash." A *low* SKEW reading can therefore be a market-bottom signal.

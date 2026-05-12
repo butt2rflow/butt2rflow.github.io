@@ -7,7 +7,7 @@ lang: en
 
 # Vol-Based Cash Allocation — Kelly meets risk signals
 
-> **Where this fits**: The [Principles series](../series/index.md) Part 3 (Kelly's Criterion, paid) gives the Kelly fraction; this article plugs **VIX into σ** to turn it into a daily cash/equity allocation. [Part 1 — Shannon's Demon](../series/s1-shannons-demon.md) closes with "cash is the fuel for rebalancing"; this article is the *how-much* answer. It's the math behind the first card on the live dashboard.
+> **Where this fits**: The [Principles series](../series/index.md) Part 3 (Kelly's Criterion, paid) gives the Kelly fraction; this article plugs **VIX into σ** to turn it into a daily cash/equity allocation. [Part 1 — Shannon's Demon](../series/s1-shannons-demon.md) closes with "cash is the fuel for rebalancing"; this article is the *how-much* answer. It's the math behind the first card on the daily dashboard.
 
 ---
 
@@ -142,7 +142,7 @@ When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). 
 1. **Estimation error in μ and σ**: realised average return often runs below estimate; realised vol can run above. Full Kelly is exquisitely sensitive — small errors compound.
 2. **Drawdown volatility**: Full Kelly has maximum long-run growth, but the *path* is violent. -50% to -70% drawdowns are normal — most people cannot hold through them.
 
-Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see the [Principles series](../series/index.md) Part 4 "No Edge in the Game" — paid). The live dashboard also exposes **¾ Kelly** as a compromise — it's the meaningful middle ground in the VIX 19+ region where Half feels over-conservative and Full feels reckless.
+Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see the [Principles series](../series/index.md) Part 4 "No Edge in the Game" — paid). The daily dashboard also exposes **¾ Kelly** as a compromise — it's the meaningful middle ground in the VIX 19+ region where Half feels over-conservative and Full feels reckless.
 
 | Fraction | Calm (VIX 17) | Stress (VIX 30) | Crisis (VIX 40) |
 |:---|---:|---:|---:|
@@ -330,9 +330,9 @@ Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
 
 ---
 
-## 8. How to use the live dashboard
+## 8. How to use the daily dashboard
 
-The first card on the [live dashboard](../index.md) recomputes this every day.
+The first card on the [daily dashboard](../index.md) recomputes this every day.
 
 **What you can do inside the card:**
 
@@ -387,7 +387,7 @@ The first week after Lehman's bankruptcy (−10%) is unavoidable. But the additi
 
 This framework **automates a mathematical intuition** — it is not a back-tested production system.
 
-1. **μ − r assumption is uncertain**: academic estimates of the equity-risk premium span 3–9% across studies. The live dashboard's **μ−r toggle (5% / 7% / 9%)** lets you swap your own view — 5% (default) is conservative and effectively bakes in the VIX vol-risk-premium drag, 7% is the long-run SPX average, 9% is a post-1990 bullish view.
+1. **μ − r assumption is uncertain**: academic estimates of the equity-risk premium span 3–9% across studies. The daily dashboard's **μ−r toggle (5% / 7% / 9%)** lets you swap your own view — 5% (default) is conservative and effectively bakes in the VIX vol-risk-premium drag, 7% is the long-run SPX average, 9% is a post-1990 bullish view.
 2. **VRP bias**: VIX averages 3–5 vol points *above* realised vol (the Volatility Risk Premium). So Kelly base runs slightly conservative — generally safe, but not exactly optimal.
 3. **VIX is 30-day forward**: longer holding horizons (6+ months) would want a different σ proxy (e.g., VIX futures average).
 4. **Signals aren't independent**: COR/SKEW, VIX TS, and VolVol all view the same underlying stress through different lenses. The multiplicative discount could over-react. The chosen multipliers (≥ 0.75 in Standard) are deliberately mild for this reason.

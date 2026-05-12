@@ -11,7 +11,7 @@ title: Home
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
 
-## 📊 라이브 대시보드
+## 📊 일일 대시보드
 
 <small>**2026-05-11 기준** · 미국 장 마감 후 매일 자동 갱신</small>
 
