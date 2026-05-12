@@ -820,7 +820,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
     shape_ko = SHAPE_KO.get(ks["vix_ts_shape"], "—")
     init_eq = _initial_kelly_equity(ks)  # default fraction × default premium, capped
     return [
-        "### 💰 메인 통 — 권장 주식/현금 비중",
+        "### 💰 메인 자본 — 권장 주식/현금 비중",
         "",
         f'<div class="kelly-card"\n'
         f'     data-vix="{vix:.1f}"\n'
@@ -873,7 +873,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'alt="Kelly × VIX 곡선" '
         f'data-kelly-curve-prefix="{diagrams_path}/kelly_curve_">',
         "",
-        "<small>*위 비중은 **메인 통 내부 기준** — 공격 통은 다음 카드, "
+        "<small>*위 비중은 **메인 자본 내부 기준** — 공격 자본은 다음 카드, "
         "전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. "
         "공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × "
         "위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. "
@@ -1009,7 +1009,7 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
                "🟡 " if ts["t1_weight"] == 0.5 else
                "🟠 " if ts["t1_weight"] == 1.0 else "🔴 ") + ts["t1_tier_ko"]
     return [
-        "### ⚡ 공격 통 — 위기 발동 신호",
+        "### ⚡ 공격 자본 — 위기 발동 신호",
         "",
         f'<div class="tactical-card" markdown>',
         '<div class="dash-tight" markdown>',
@@ -1019,15 +1019,15 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         f"| VIX 5일 지속 — 40+ ×½ / 50+ ×1 / 60+ ×1½ | {vix_disp} | {t1_mark} |",
         f"| COR90D > 55 + SKEW > 150 | {cor_skew_disp} | {mark2(ts['t2'])} |",
         f"| 30일 SPX 누적 −20% | {drawdown_str} | {mark2(ts['t3'])} |",
-        f"| **공격 통 투입 비중** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_ko']})** | — |",
+        f"| **공격 자본 투입 비중** | **{EMOJI[ts['state']]} {ts['deploy_pct']}% ({ts['label_ko']})** | — |",
         "",
         "</div>",
         "</div>",
         "",
-        "<small>*공격 통은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
+        "<small>*공격 자본은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
         "T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. "
         "총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. "
-        "위 카드의 투입 %는 **공격 통 내부 기준** — 전체 자산 환산과 분할 비율은 페이지 상단 마스터 바 참조 · "
+        "위 카드의 투입 %는 **공격 자본 내부 기준** — 전체 자산 환산과 분할 비율은 페이지 상단 마스터 바 참조 · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
         "---",
