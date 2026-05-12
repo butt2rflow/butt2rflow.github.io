@@ -103,7 +103,7 @@ f* = (μ − r) / σ²
 | **r** | Risk-free rate (annualised) |
 | **σ** | Asset return standard deviation (annualised vol) |
 
-For the S&P 500, long-run μ ≈ 9%, r ≈ 4%, so **μ − r = 5%** is a reasonable baseline equity premium. σ runs ~16–20% in calm regimes, spikes to 40–50% in crises.
+For the S&P 500, long-run μ ≈ 9%, r ≈ 4%, so **μ − r = 5%** is a *conservative* baseline equity premium. Academic estimates span 3%–9% depending on dataset and methodology — the daily dashboard exposes three preset premia as a toggle (5% / 7% / 9%); see §6½ μ−r toggle for the full comparison. σ runs ~16–20% in calm regimes, spikes to 40–50% in crises.
 
 > **Why σ² and not σ?** The squared denominator is the key. Doubling vol *quarters* the optimal weight. The asymmetric "raise cash quickly" instinct lives in that squared term.
 
@@ -121,13 +121,13 @@ Kelly needs *forward-looking* σ. Historical realised vol tells you the past; yo
 
 VIX = 17 → σ ≈ 0.17. VIX = 30 → σ ≈ 0.30.
 
-| VIX | σ² | Half-Kelly @ μ−r=5% |
-|---:|---:|---:|
-| 12 | 0.0144 | 173% → **100% (capped)** |
-| 17 | 0.0289 | **86%** |
-| 22 | 0.0484 | 52% |
-| 30 | 0.0900 | 28% |
-| 40 | 0.1600 | 16% |
+| VIX | σ² | Half-Kelly @ μ−r=5% *(conservative)* | Half-Kelly @ μ−r=7% | Half-Kelly @ μ−r=9% |
+|---:|---:|---:|---:|---:|
+| 12 | 0.0144 | 173% → **100%** | 100% | 100% |
+| 17 | 0.0289 | **86%** | 100% (cap) | 100% (cap) |
+| 22 | 0.0484 | 52% | 72% | 93% |
+| 30 | 0.0900 | 28% | 39% | 50% |
+| 40 | 0.1600 | 16% | 22% | 28% |
 
 When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). That's where the rough rule "VIX in the high 20s → cut equity in half" comes from — it's the same curve.
 
@@ -147,15 +147,16 @@ Practitioners almost always use **Half-Kelly** or **Quarter-Kelly** (see the [Pr
 | Fraction | Calm (VIX 17) | Stress (VIX 30) | Crisis (VIX 40) |
 |:---|---:|---:|---:|
 | **Quarter (¼)** | 43% | 14% | 8% |
-| **Half (½) ← default** | 86% → 100% (cap) | 28% | 16% |
-| **¾ Kelly** | 100% (cap) | 42% | 23% |
+| **Half (½)** | 86% → 100% (cap) | 28% | 16% |
+| **¾ Kelly ← default** | 100% (cap) | 42% | 23% |
 | **Full (1×)** | 100% (cap) | 56% | 31% |
 
 The dashboard's first toggle picks one of these:
 
-- **Quarter**: Conservative. Most robust to estimation error. Used by many institutional desks.
-- **Half**: Matches the conservative tone of Principles Part 4 ("No Edge in the Game"). Default — balances long-run growth against drawdown.
-- **Full**: Theoretical max. Only if you have strong conviction in μ/σ estimates *and* the mental/liquidity buffer for big drawdowns.
+- **Quarter (¼)**: Most conservative. Most robust to μ/σ estimation error. Used by many institutional desks and fits pre-retirement / withdrawal-phase profiles where drawdown depth doubles as a redemption risk.
+- **Half (½)**: The academic standard. **Minimises CAGR variance** — i.e. "slightly slower long-run growth but smoothest path." Matches the conservative tone of [Principles Part 4](../series/index.md) ("No Edge in the Game").
+- **¾ Kelly (default)**: Meaningful middle ground between Half and Full. Below VIX 19 it caps at 100% the same as Full, but in the VIX 20–35 caution zone it sits squarely between Half (over-conservative for most accumulators) and Full (over-aggressive given σ uncertainty). Chosen as the new-visitor default for retail accumulators.
+- **Full (1×)**: Theoretical max. Only if you have strong conviction in μ/σ estimates *and* the mental/liquidity buffer for −50% to −70% drawdowns. Rarely recommended in the literature.
 
 > **Pick your fraction once and barely change it.** The point is not to react to markets by changing the fraction — it's to let the *same* fraction produce different weights as vol moves.
 
@@ -191,12 +192,14 @@ So **split cash into two kinds** — that completes the structure the series arg
 
 | Bucket | Role | Mechanism |
 |:---|:---|:---|
-| **Main (~80%)** | Defensive — *fuel for survival* | Kelly × VIX + risk signals. Auto-deleverage / auto-re-entry. |
-| **Tactical (~20%)** | Offensive — *fuel for attack* | Composite extreme triggers (VIX, COR/SKEW, SPX drawdown), laddered deploy. Monetises the time edge. |
+| **Main bucket** | Defensive — *fuel for survival* | Kelly × VIX + risk signals. Auto-deleverage / auto-re-entry. |
+| **Tactical bucket** | Offensive — *fuel for attack* | Composite extreme triggers (VIX, COR/SKEW, SPX drawdown), laddered deploy. Monetises the time edge. |
+
+The split between the two is itself a toggle — the daily dashboard's master bar lets you pick **80/20 · 90/10 · 95/5**. New-visitor default is **90/10** (90% main, 10% tactical). The tradeoff table + situation-based recommendations live in "Choosing the split" below.
 
 ### Tactical bucket operating rules
 
-- **Size**: 10–20% of total. Too large destabilises the main framework; too small makes deployment irrelevant.
+- **Size**: 5–20% of total (dashboard toggle). Too large destabilises the main framework and inflates normal-regime cash drag; too small makes deployment symbolic. The default 10% is the middle compromise.
 - **Composite triggers** — T1 is laddered, T2/T3 binary:
     - **T1 (VIX sustained 5 days, tiered)**
         - 5-day VIX min > **40** → weight **0.5** (mild partial entry)
@@ -257,10 +260,10 @@ Even if the tactical bucket fully deploys, its impact on the *total* portfolio d
 | Situation | Split | Why |
 |:---|:---:|:---|
 | Accumulation (long horizon, early career) | **95/5** | Maximise compounding via time edge. Reserve only for real capitulation (T3). |
-| Mid-stage (late accumulation, wealth-building) | **90/10** | Minimise drag while preserving meaningful entry at VIX>60. |
+| Mid-stage (late accumulation, wealth-building) | **90/10 ← default** | Minimise drag while preserving meaningful entry at VIX>60. New-visitor default. |
 | Conservative (pre-retirement, withdrawal phase, behavioural concerns) | **80/20** | Sequence-of-returns defence. Crisis firepower + emotional buffer. |
 
-> **Honest take**: 80/20 is largely a *behavioural insurance premium*. Mathematically, Kelly already discounts to half-Kelly with multipliers, and σ=VIX/100 already responds to volatility — so adding another 20% cash buffer is a triple safety margin. If you can hold discipline during real drawdowns, 90/10 or 95/5 is the more rational choice. If you can't, 80/20 is safer.
+> **Honest take**: 80/20 is largely a *behavioural insurance premium*. Mathematically, Kelly is already discounted (½ or ¾) and σ=VIX/100 already responds to volatility — adding another 20% cash buffer is a triple safety margin. That's why the retail-accumulator default lands on **90/10** — it halves the normal-regime cash drag while still keeping 10% of the portfolio as deploy firepower. Pick 95/5 if you trust yourself not to touch the toggle mid-crash; 80/20 if sequence-of-returns risk worries you.
 
 ---
 
@@ -298,16 +301,60 @@ How aggressively those multipliers bite is **your risk-aversion choice**. Three 
 | Profile | 🟡 caution | 🔴 danger | All-red cumulative |
 |:---|---:|---:|---:|
 | **Loose** | × 0.95 | × 0.85 | 0.85³ ≈ 0.61 |
-| **Standard** | × 0.90 | × 0.75 | 0.75³ ≈ 0.42 |
+| **Standard ← default** | × 0.90 | × 0.75 | 0.75³ ≈ 0.42 |
 | **Tight** | × 0.85 | × 0.65 | 0.65³ ≈ 0.27 |
 
 Reading:
 
 - **Loose**: weak reaction to signals. Even all-red leaves you at 61% of the Kelly base. For people who don't want to rotate frequently.
-- **Standard**: matches the [Principles series](../series/index.md) conservative tone. All-red reduces to ~42% of base — e.g., 86% becomes ~36%.
+- **Standard (default)**: matches the [Principles series](../series/index.md) conservative tone. All-red reduces to ~42% of base — e.g., ¾ Kelly at 100% (cap) becomes ~42%.
 - **Tight**: strong reaction. All-red drops to 27% of base. For people whose top priority is avoiding tail losses.
 
 > **Picking**: if you hate frequent rebalancing → *Loose*; if "risk signal = big cash" is your philosophy → *Tight*; otherwise → *Standard*.
+
+---
+
+## 6½. Equity premium μ−r — the third user toggle
+
+The numerator of `f* = (μ−r) / σ²` is the **equity risk premium**: "how much *more* do you expect equities to earn over the risk-free rate, annualised?"
+
+The problem: you can't know this number exactly. Academic estimates span **3% to 9%** depending on dataset, time window, and computation method — your choice almost doubles the suggested weight in some regions. The daily dashboard exposes three preset premia:
+
+| Profile | μ−r | Rationale | Half @ VIX 18 | Half @ VIX 22 | Half @ VIX 30 |
+|:---|:---:|:---|---:|---:|---:|
+| **Conservative** | **5%** | Long-run academic estimate (Damodaran et al.). Implicitly absorbs the VIX vol-risk-premium drag — i.e. acknowledges VIX ≈ realised σ + 4pt on average, so you're effectively inflating σ. | 74% | 52% | 28% |
+| **Standard ← default** | **7%** | Long-run SPX historical average ex-WWII. The closest single-number match to "Kelly applied to *realised* vol" once VIX's vol-risk premium is netted out. | 100% (cap) | 72% | 39% |
+| **Aggressive** | **9%** | Post-1990 SPX bullish view. Treats the VIX vol-risk-premium drag as a recoverable inefficiency rather than a baked-in cost. | 100% (cap) | 93% | 50% |
+
+### Why 5% is "conservative" — the VIX vol-risk-premium story
+
+The key intuition: **VIX runs 3–5 pts above realised vol on average** (the Vol Risk Premium — option buyers pay an insurance premium). VIX = 18 typically corresponds to ~14% actual realised vol over the following 30 days.
+
+Plugging σ = VIX/100 into Kelly with that bias makes σ² = (0.18)² = 0.0324 — about 1.65× larger than the "true" σ² = (0.14)² = 0.0196. **A 1.65× larger denominator means a 1.65× smaller suggested weight** — so the Kelly base already comes out conservative just from how σ is sourced.
+
+Two ways to compensate:
+1. Plug in realised vol directly (hard to estimate live).
+2. Bump μ−r in the numerator to offset the inflated denominator.
+
+**μ−r = 5% + σ = VIX/100** is effectively "conservative-Kelly + conservative-σ" — *doubly* conservative. Raising μ−r to 7–9% unwinds the σ inflation, producing weights that line up much closer to what a realised-vol Half-Kelly would give.
+
+### Which value to pick?
+
+| Your view | Recommended μ−r |
+|:---|:---:|
+| "Future SPX could underperform history (lost-decade scenario)" | **5%** |
+| "Long-run, SPX delivers historical-average premium" (most-cited single number) | **7% ← default** |
+| "Post-1990 US exceptionalism + AI tailwinds continue (bullish)" | **9%** |
+
+The default lands on **7% (Standard)** because:
+- It matches the most-cited long-run historical SPX premium.
+- It best offsets VIX's vol-risk-premium drag, making the framework approximate realised-vol Kelly without requiring you to estimate realised vol live.
+
+> **Like the Kelly fraction (¼/½/¾), pick once and barely touch it.** This isn't a market-condition toggle — it's a one-time declaration of your *long-run market view*.
+
+### The chart curve moves with the toggle too
+
+The Kelly × VIX curve below the card is rendered as three separate PNGs (one per premium); selecting a μ−r swaps the image. The 5% curve sits lowest, 9% highest — visually showing how the same VIX level maps to wildly different suggested weights depending on your premium assumption.
 
 ---
 
@@ -334,15 +381,16 @@ Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
 
 The first card on the [daily dashboard](../index.md) recomputes this every day.
 
-**What you can do inside the card:**
+**What you can do inside the card** (defaults marked with †):
 
-1. **Kelly fraction toggle** (¼ / ½ / ¾ / Full) — set once and rarely change
-2. **Risk sensitivity toggle** (Loose / Standard / Tight) — how aggressively signals discount
-3. **Equity premium μ−r toggle** (5% / 7% / 9%) — your view on long-run SPX premium. 5% = conservative (accounts for VIX vol-risk-premium drag), 7% = historical, 9% = bullish
-4. **Decision table** — base value, each group's multiplier, final equity/cash split at a glance
-5. **Kelly curve chart** — visualises the VIX → weight relationship (drawn at μ−r = 5%) with a current-VIX marker
+1. **Kelly fraction toggle** (¼ / ½ / **¾†** / Full) — set once and rarely change. Full comparison in §4.
+2. **Risk sensitivity toggle** (Loose / **Standard†** / Tight) — how aggressively signals discount. Full comparison in §6.
+3. **Equity premium μ−r toggle** (5% / **7%†** / 9%) — your view on long-run SPX premium. Full comparison in §6½.
+4. **Decision table** — base value, each group's multiplier, final equity/cash split at a glance.
+5. **Kelly curve chart** — visualises the VIX → weight relationship. **Syncs with the μ−r toggle** (three pre-rendered PNG variants, JS swaps `src`). Current-VIX marker included.
+6. **Master-bar split selector** (80/20 · **90/10†** · 95/5) — main/tactical bucket ratio. Full comparison in §4 "Choosing the split."
 
-Both selections are saved in browser `localStorage`, so they persist across visits.
+All selections persist in browser `localStorage` and carry over between visits.
 
 **Typical workflow:**
 
@@ -365,15 +413,17 @@ The framework's value lies in the *cascade* that follows the first shock, not th
 
 ### Historical examples
 
-**March 2020 COVID crash:**
+**March 2020 COVID crash** *(scenario uses Half-Kelly @ μ−r=5% — the most conservative toggle combo)*:
 
-| Date | VIX | Half-Kelly base | Signals | Suggested mix |
+| Date | VIX | Half-Kelly @ 5% base | Signals | Suggested mix |
 |:---|---:|---:|:---|---:|
 | Feb 14 (calm) | 14 | 100% (cap) | All 🟢 | Equity 100% / Cash 0% |
 | Feb 24 (−3.4% first gap) | 28 | 32% | Some 🟡 | Equity ~25% / Cash ~75% |
 | Mar 16 (bottom) | 82 | 4% | All 🔴 | **Equity ~2% / Cash ~98%** |
 
 VIX 14 → 82 (6×) cuts the suggested weight from 100% to 2%. The additional ~−25% drawdown across this month lands on a *much smaller* equity base, dramatically reducing cumulative loss vs a static fully-invested position.
+
+> **Under the new defaults (¾ Kelly @ μ−r=7%)** the same VIX path produces a base of 67% at VIX 28 and 8% at VIX 82 — starting higher, but deleveraging at the same rate. The absolute numbers differ, but the *slope* of the response is identical. The scenario's lesson — cascade absorption — is invariant to which toggle combo you pick; only the starting point shifts.
 
 **September 2008 Lehman week:**
 
@@ -387,8 +437,8 @@ The first week after Lehman's bankruptcy (−10%) is unavoidable. But the additi
 
 This framework **automates a mathematical intuition** — it is not a back-tested production system.
 
-1. **μ − r assumption is uncertain**: academic estimates of the equity-risk premium span 3–9% across studies. The daily dashboard's **μ−r toggle (5% / 7% / 9%)** lets you swap your own view — 5% (default) is conservative and effectively bakes in the VIX vol-risk-premium drag, 7% is the long-run SPX average, 9% is a post-1990 bullish view.
-2. **VRP bias**: VIX averages 3–5 vol points *above* realised vol (the Volatility Risk Premium). So Kelly base runs slightly conservative — generally safe, but not exactly optimal.
+1. **μ − r assumption is uncertain**: academic estimates of the equity-risk premium span 3–9% across studies. The daily dashboard's **μ−r toggle (5% / 7%(default) / 9%)** lets you swap your own view (full breakdown in §6½). 5% is conservative and effectively bakes in the VIX vol-risk-premium drag; default 7% is the long-run SPX historical average and the closest match to realised-vol Kelly; 9% is a post-1990 bullish view.
+2. **VRP bias**: VIX averages 3–5 vol points *above* realised vol (the Volatility Risk Premium). So Kelly base with μ−r=5% runs *substantially* conservative — the default 7% is closer to realised-vol Kelly, and 9% approaches the "VRP fully recoverable" assumption. The toggle is the explicit handle for this trade-off.
 3. **VIX is 30-day forward**: longer holding horizons (6+ months) would want a different σ proxy (e.g., VIX futures average).
 4. **Signals aren't independent**: COR/SKEW, VIX TS, and VolVol all view the same underlying stress through different lenses. The multiplicative discount could over-react. The chosen multipliers (≥ 0.75 in Standard) are deliberately mild for this reason.
 5. **Post-crisis false positive**: signals like VolVol mechanically lag during recoveries, which can delay re-entry.
