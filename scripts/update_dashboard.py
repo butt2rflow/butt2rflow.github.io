@@ -20,7 +20,9 @@ import json
 import re
 import shutil
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import matplotlib
 import matplotlib.dates as mdates
@@ -1108,8 +1110,9 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     ]
 
 
-def render_section_ko(cs, vs, vvs, ks, ts=None):
+def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
+    upd = f' <small class="dash-updated">({update_label})</small>' if update_label else ""
     parts = [
         START_MARK,
         '<div class="live-dash" markdown>',
@@ -1137,7 +1140,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
         parts += render_tactical_card_ko(ts, ks)
     if vs:
         parts += [
-            "### VIX Futures Term Structure",
+            f"### VIX Futures Term Structure{upd}",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1168,7 +1171,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
             "",
         ]
     parts += [
-        "### COR + SKEW 대시보드",
+        f"### COR + SKEW 대시보드{upd}",
         "",
         '<div class="dash-tight" markdown>',
         "",
@@ -1197,7 +1200,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
         parts += [
             "---",
             "",
-            "### VolVol — VVIX / VIX 비율 지표",
+            f"### VolVol — VVIX / VIX 비율 지표{upd}",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1302,8 +1305,9 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
     ]
 
 
-def render_section_en(cs, vs, vvs, ks, ts=None):
+def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
+    upd = f' <small class="dash-updated">({update_label})</small>' if update_label else ""
     parts = [
         START_MARK,
         '<div class="live-dash" markdown>',
@@ -1336,7 +1340,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
         parts += render_tactical_card_en(ts, ks)
     if vs:
         parts += [
-            "### VIX Futures Term Structure",
+            f"### VIX Futures Term Structure{upd}",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1367,7 +1371,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
             "",
         ]
     parts += [
-        "### COR + SKEW Dashboard",
+        f"### COR + SKEW Dashboard{upd}",
         "",
         '<div class="dash-tight" markdown>',
         "",
@@ -1396,7 +1400,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
         parts += [
             "---",
             "",
-            "### VolVol — VVIX / VIX ratio",
+            f"### VolVol — VVIX / VIX ratio{upd}",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1543,8 +1547,26 @@ def main():
               f"SPX 30d dd={ts['spx_drawdown_30d_pct']:+.1f}%")
 
     print("Patching home pages...")
-    ko_changed = patch_home(ROOT / "docs" / "index.ko.md", render_section_ko(cs, vs, vvs, ks, ts))
-    en_changed = patch_home(ROOT / "docs" / "index.en.md", render_section_en(cs, vs, vvs, ks, ts))
+    # Build-time stamps shown next to each section header. Same UTC instant
+    # rendered in each locale's home zone — KST for the KO page, ET for EN —
+    # so the reader sees "when did this last refresh in MY time zone."
+    now_utc = datetime.now(timezone.utc)
+    kst = now_utc.astimezone(ZoneInfo("Asia/Seoul"))
+    et = now_utc.astimezone(ZoneInfo("America/New_York"))
+    update_label_ko = f"{kst.month}월 {kst.day}일 {kst.hour}시 {kst.minute:02d}분 업데이트"
+    et_label = et.strftime("%b %-d, %-I:%M %p") if hasattr(et, "strftime") else et.isoformat()
+    # %- isn't supported on Windows strftime; build the EN label manually.
+    am_pm = "AM" if et.hour < 12 else "PM"
+    hour12 = et.hour % 12 or 12
+    update_label_en = f"Updated {et.strftime('%b')} {et.day}, {hour12}:{et.minute:02d} {am_pm} ET"
+    ko_changed = patch_home(
+        ROOT / "docs" / "index.ko.md",
+        render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko),
+    )
+    en_changed = patch_home(
+        ROOT / "docs" / "index.en.md",
+        render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en),
+    )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
     print("Done.")
