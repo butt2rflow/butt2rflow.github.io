@@ -31,7 +31,7 @@ title: 시리즈 안내
 1. **[섀넌의 도깨비 (Shannon's Demon)](s1-shannons-demon.md)** — 랜덤 워크에서 돈을 버는 방법 **(무료)**
 2. 상트페테르부르크의 역설과 기하 평균
 3. 캘리의 기준 (Kelly's Criterion)이 주는 교훈
-4. 엣지 없는 게임, 엣지 있는 시장
+4. 우위 없는 게임, 우위 있는 시장
 
 [크몽 원칙편 구매](https://kmong.com/gig/762026){ .md-button .md-button--primary }
 [Gumroad (Overseas)](https://butt2rflow.gumroad.com/l/aejfrj){ .md-button }

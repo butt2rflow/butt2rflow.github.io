@@ -110,7 +110,7 @@
       "y": 129.5,
       "width": 329.4,
       "height": 29,
-      "text": "[OK] YES (도박, 명확한 엣지) --> 풀 캘리 또는 하프 캘리",
+      "text": "[OK] YES (도박, 명확한 우위) --> 풀 캘리 또는 하프 캘리",
       "fontSize": 13,
       "fontFamily": 1,
       "textAlign": "center",
@@ -130,7 +130,7 @@
       "link": null,
       "locked": false,
       "baseline": 13,
-      "originalText": "[OK] YES (도박, 명확한 엣지) --> 풀 캘리 또는 하프 캘리"
+      "originalText": "[OK] YES (도박, 명확한 우위) --> 풀 캘리 또는 하프 캘리"
     },
     {
       "type": "rectangle",
