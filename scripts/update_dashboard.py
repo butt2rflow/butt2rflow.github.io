@@ -974,10 +974,10 @@ def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
         f'style="width: {total_eq}%"></div>',
         '  </div>',
         '  <div class="allocation-master__formula">',
-        f'    <span>메인 <span data-main-pct>{main_pct}</span>% × '
+        f'    <span>메인자본 <span data-main-pct>{main_pct}</span>% × '
         f'<span data-kelly-equity-mini>{kelly_eq}</span>% 주식</span>',
         '    <span class="allocation-master__plus">+</span>',
-        f'    <span>공격 <span data-tactical-pct>{tac_pct}</span>% × '
+        f'    <span>공격자본 <span data-tactical-pct>{tac_pct}</span>% × '
         f'<span data-deploy-mini>{deploy}</span>% 투입</span>',
         '    <span class="allocation-master__plus">=</span>',
         f'    <strong><span data-total-equity-mini>{total_eq}</span>% 주식</strong>',
