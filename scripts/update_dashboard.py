@@ -493,37 +493,51 @@ def kelly_weight_at(vix: float, fraction: float, premium: float = EQUITY_PREMIUM
     return min(fraction * f_star, KELLY_CAP)
 
 
-def render_kelly_curve(vix_spot: float, out_path: Path, premium: float = EQUITY_PREMIUM):
+def render_kelly_curve(vix_spot: float, out_path: Path,
+                       premium: float = EQUITY_PREMIUM,
+                       highlight: str = "half"):
     """Four Kelly fractions vs VIX at the given equity premium. The dashboard
-    ships one PNG per premium profile so the chart in the card can switch
-    in sync with the μ−r toggle."""
+    ships one PNG per (fraction × premium) combination so the chart in the
+    card swaps in sync with BOTH the Kelly fraction and the μ−r toggle.
+    `highlight` picks which fraction's curve is rendered bold/solid and
+    receives the spot annotation; the others are drawn dashed and muted so
+    the reader's eye lands on the chosen line."""
     vix_range = np.linspace(5, 60, 220)
     colors = {"quarter":      "#16a34a",
               "half":         "#0ea5e9",
               "threequarter": "#f59e0b",
               "full":         "#7c3aed"}
+    label_short = {"quarter": "Quarter", "half": "Half",
+                   "threequarter": "¾", "full": "Full"}
     fig, ax = plt.subplots(figsize=(12, 4.6))
     for key, frac, label in KELLY_FRACTIONS:
         weights = np.array([kelly_weight_at(v, frac, premium) for v in vix_range]) * 100
-        lw = 2.4 if key == "half" else 1.6
-        ls = "-" if key == "half" else "--"
+        is_hl = (key == highlight)
+        lw = 2.6 if is_hl else 1.2
+        ls = "-" if is_hl else "--"
+        alpha = 1.0 if is_hl else 0.5
         ax.plot(vix_range, weights, color=colors[key], linewidth=lw, linestyle=ls,
-                label=f"{label} Kelly")
+                alpha=alpha, label=f"{label} Kelly")
     if not np.isnan(vix_spot):
         for key, frac, _ in KELLY_FRACTIONS:
             w = kelly_weight_at(vix_spot, frac, premium) * 100
-            ax.plot([vix_spot], [w], "o", color=colors[key], markersize=9, zorder=5)
-        w_half = kelly_weight_at(vix_spot, 0.5, premium) * 100
-        ax.annotate(f"VIX {vix_spot:.1f}\nHalf → {w_half:.0f}%",
-                    xy=(vix_spot, w_half), xytext=(12, 10), textcoords="offset points",
-                    fontsize=9, color="#0ea5e9",
+            is_hl = (key == highlight)
+            ax.plot([vix_spot], [w], "o", color=colors[key],
+                    markersize=10 if is_hl else 6,
+                    alpha=1.0 if is_hl else 0.5, zorder=5)
+        hl_frac = dict((k, f) for k, f, _ in KELLY_FRACTIONS)[highlight]
+        w_hl = kelly_weight_at(vix_spot, hl_frac, premium) * 100
+        ax.annotate(f"VIX {vix_spot:.1f}\n{label_short[highlight]} → {w_hl:.0f}%",
+                    xy=(vix_spot, w_hl), xytext=(12, 10), textcoords="offset points",
+                    fontsize=9, color=colors[highlight],
                     bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
-                              edgecolor="#0ea5e9", alpha=0.9))
+                              edgecolor=colors[highlight], alpha=0.9))
     for boundary in (14, 20, 28, 40):
         ax.axvline(boundary, color="#9ca3af", ls=":", linewidth=0.9, alpha=0.5)
     ax.set_xlabel("VIX (forward-looking σ × 100)", fontsize=10)
     ax.set_ylabel("Equity weight — cash = 100% − equity (%)", fontsize=10)
-    ax.set_title(f"Kelly × VIX — equity weight curves (μ−r = {premium*100:.0f}%, σ = VIX/100)",
+    ax.set_title(f"Kelly × VIX — {label_short[highlight]} highlighted "
+                 f"(μ−r = {premium*100:.0f}%, σ = VIX/100)",
                  fontsize=11)
     ax.set_xlim(5, 60)
     ax.set_ylim(0, 105)
@@ -890,7 +904,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'</div>',
         "",
         f'<img class="kelly-curve-img" '
-        f'src="{diagrams_path}/kelly_curve_{EQUITY_PREMIUM_DEFAULT}.png" '
+        f'src="{diagrams_path}/kelly_curve_{KELLY_DEFAULT}_{EQUITY_PREMIUM_DEFAULT}.png" '
         f'alt="Kelly × VIX 곡선" '
         f'data-kelly-curve-prefix="{diagrams_path}/kelly_curve_">',
         "",
@@ -898,7 +912,7 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         "전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. "
         "공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × "
         "위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. "
-        "곡선 그림과 카드 숫자 모두 선택한 μ−r에 동기화됨. "
+        "곡선 그림과 카드 숫자 모두 선택한 Kelly 분수·μ−r에 동기화됨 — 선택한 분수의 라인이 굵게 강조됨. "
         "**교육 목적 · 투자 권유 아님** · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
         "",
@@ -1045,7 +1059,7 @@ def render_tactical_card_ko(ts: dict, ks: dict | None = None) -> list[str]:
         "</div>",
         "</div>",
         "",
-        "<small>*공격 자본은 *시간 에지를 행사하는 위기 매수 현금*으로 별도 운용. "
+        "<small>*공격 자본은 *시간 우위를 행사하는 위기 매수 현금*으로 별도 운용. "
         "T1(VIX 지속)은 40/50/60 단계별 가중치, T2·T3는 0/1 이진. "
         "총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap. "
         "위 카드의 투입 %는 **공격 자본 내부 기준** — 전체 자산 환산과 분할 비율은 페이지 상단 마스터 바 참조 · "
@@ -1261,7 +1275,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'</div>',
         "",
         f'<img class="kelly-curve-img" '
-        f'src="{diagrams_path}/kelly_curve_{EQUITY_PREMIUM_DEFAULT}.png" '
+        f'src="{diagrams_path}/kelly_curve_{KELLY_DEFAULT}_{EQUITY_PREMIUM_DEFAULT}.png" '
         f'alt="Kelly × VIX curve" '
         f'data-kelly-curve-prefix="{diagrams_path}/kelly_curve_">',
         "",
@@ -1269,7 +1283,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         "and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. "
         "Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × "
         "risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. "
-        "Both the curve chart and the card numbers update with the selected μ−r. "
+        "The curve chart and card numbers sync with both the selected Kelly fraction and μ−r — the chosen fraction's line is highlighted. "
         "**Educational — not investment advice.** "
         "[Read more →](posts/cash-allocation.md)*</small>",
         "",
@@ -1293,7 +1307,11 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
     if ks and ts:
         parts += render_master_bar_en(ks, ts)
     if ks:
-        parts += render_kelly_card_en(ks, "assets/diagrams_en")
+        # EN home is served at /en/ so a relative "assets/..." path resolves
+        # to /en/assets/... and 404s. mkdocs rewrites markdown ![]() image
+        # paths automatically but raw <img> tags pass through untouched, so
+        # we hand the path one ".." up to land at /assets/diagrams_en/...
+        parts += render_kelly_card_en(ks, "../assets/diagrams_en")
     if ts:
         parts += render_tactical_card_en(ts, ks)
     if vs:
@@ -1472,15 +1490,20 @@ def main():
                             vx=vx, vix_spot=vix_spot)
 
     if ks:
-        # One curve PNG per premium profile so the chart in the Kelly card
-        # can swap in sync with the μ−r toggle. Filenames embed the profile
-        # key (kelly_curve_<profile>.png); HTML img src is set to the
-        # default-profile variant and JS swaps to the other two on toggle.
-        for prof_key, prof_val in EQUITY_PREMIUM_PROFILES.items():
-            fname = f"kelly_curve_{prof_key}.png"
-            render_kelly_curve(vix_spot, OUT_KO / fname, premium=prof_val)
-            shutil.copy2(OUT_KO / fname, OUT_EN / fname)
-            print(f"  Saved: {fname} (μ−r = {prof_val*100:.0f}%)")
+        # One curve PNG per (Kelly fraction × premium profile) combination
+        # so the chart in the card swaps in sync with BOTH toggles. Filename
+        # convention: kelly_curve_<fraction>_<premium>.png. HTML img src is
+        # set to the default combo and JS appends the active fraction+premium
+        # keys on toggle. 4 × 3 = 12 variants per locale.
+        n_rendered = 0
+        for frac_key, _frac_val, _frac_label in KELLY_FRACTIONS:
+            for prof_key, prof_val in EQUITY_PREMIUM_PROFILES.items():
+                fname = f"kelly_curve_{frac_key}_{prof_key}.png"
+                render_kelly_curve(vix_spot, OUT_KO / fname,
+                                   premium=prof_val, highlight=frac_key)
+                shutil.copy2(OUT_KO / fname, OUT_EN / fname)
+                n_rendered += 1
+        print(f"  Saved: {n_rendered} kelly_curve variants (4 fractions × 3 premiums)")
 
     print(f"  COR/SKEW: spread={cs['spread']:.2f}, COR90D={cs['cor90d']:.2f}, SKEW={cs['skew']:.2f}")
     if vs:
