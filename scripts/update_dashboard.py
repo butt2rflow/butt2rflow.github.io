@@ -1116,7 +1116,17 @@ def render_section_ko(cs, vs, vvs, ks, ts=None):
         "",
         "## 📊 일일 대시보드",
         "",
-        f"<small>**{cs['date']} 기준** · 미국 장 마감 후 매일 자동 갱신</small>",
+        f"<small>**{cs['date']} 기준** · 매 영업일 NY 종가 후 자동 갱신 "
+        "(≈ 23:00 ET / 12:00 KST 화–토)</small>",
+        "",
+        '??? note "갱신 일정 자세히"',
+        "    - **크론**: 03:00 UTC 화–토 — NY 시간으로 영업일 마감 약 7시간 뒤, "
+        "한국 시간으로 다음 날 정오",
+        "    - **갱신 대상**: VIX TS · COR+SKEW · VolVol · Kelly × VIX 차트 + 카드 숫자 "
+        "— 모두 한 사이클에 함께 갱신",
+        "    - **데이터 출처**: Cboe 직접 (VIX cash, futures settlement, COR/SKEW, VVIX)",
+        "    - **변동 가능성**: GitHub Actions 크론은 best-effort라 ±30분 지연 가능. "
+        "Cboe가 그날 데이터를 늦게 올리면 다음 사이클로 밀릴 수 있음",
         "",
     ]
     if ks and ts:
@@ -1300,8 +1310,18 @@ def render_section_en(cs, vs, vvs, ks, ts=None):
         "",
         "## 📊 Daily Dashboard",
         "",
-        f"<small>**As of {cs['date']}** · Auto-updates daily after the US close · "
+        f"<small>**As of {cs['date']}** · Auto-refreshes after each NY close "
+        "(≈ 23:00 ET / 12:00 KST, Tue–Sat) · "
         "[Framework details →](posts/cash-allocation.md)</small>",
+        "",
+        '??? note "Update schedule"',
+        "    - **Cron**: 03:00 UTC Tue–Sat — about 7 hours after the NY close, "
+        "or roughly the next noon in Seoul",
+        "    - **Refreshed**: VIX TS · COR+SKEW · VolVol · Kelly × VIX charts + card "
+        "numbers — all rebuilt in the same cycle",
+        "    - **Source**: Cboe direct (VIX cash, futures settlement, COR/SKEW, VVIX)",
+        "    - **Variance**: GitHub Actions cron is best-effort, so ±30 min jitter is "
+        "normal. If Cboe publishes that day's data late the refresh slips to the next cycle",
         "",
     ]
     if ks and ts:
