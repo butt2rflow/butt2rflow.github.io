@@ -340,8 +340,8 @@ img {
    ========================================================================== */
 
 .md-typeset .kelly-card {
-  border: 1px solid #fcd34d;
-  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
   border-radius: 8px;
   padding: 0.5rem 0.9rem;
   margin: 0.3rem auto 0.5rem;
@@ -429,7 +429,7 @@ img {
 .md-typeset .kelly-table thead th {
   background: transparent;
   font-weight: 600;
-  color: #78350f;
+  color: #525252;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
 }
@@ -441,10 +441,10 @@ img {
 }
 
 .md-typeset .kelly-table tr.kelly-final td {
-  border-top: 2px solid #f59e0b;
+  border-top: 2px solid #9ca3af;
   padding-top: 0.28em;
   font-size: 0.78rem;
-  color: #78350f;
+  color: #1f2937;
 }
 
 /* Tactical bucket card — offensive deploy signal */
