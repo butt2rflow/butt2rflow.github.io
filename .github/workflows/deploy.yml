@@ -14,9 +14,11 @@ on:
   push:
     branches: [main]
   schedule:
-    # Daily at 22:10 UTC — 10 min after dashboard-update.yml, giving
-    # that workflow time to commit the day's vix_history snapshot first.
-    - cron: '10 22 * * 1-5'
+    # Daily at 03:10 UTC Tue–Sat — 10 min after dashboard-update.yml,
+    # giving that workflow time to commit the day's vix_history snapshot
+    # before the deploy regenerates the home page. See dashboard-update.yml
+    # for the rationale on why we wait until ~11 PM ET (Cboe publish lag).
+    - cron: '10 3 * * 2-6'
   workflow_dispatch:
 
 permissions:

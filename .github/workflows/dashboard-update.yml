@@ -10,9 +10,14 @@ name: Archive daily VIX TS snapshot
 
 on:
   schedule:
-    # Daily at 22:00 UTC (≈ 5–6 PM US Eastern, after the 4 PM market close
-    # and after Cboe publishes index closes / VIX futures settlements)
-    - cron: '0 22 * * 1-5'
+    # Daily at 03:00 UTC Tue–Sat (≈ 11 PM US Eastern the previous business
+    # day, i.e. ~7 hours after the 4 PM market close). The previous 22:00
+    # UTC slot caught Cboe before they'd published the day's VIX history
+    # CSV — observed 2026-05-12 where the 22:59 UTC run still returned the
+    # previous trading day's row. Cboe's daily index CSV publishes between
+    # ~7:30 and 10:30 PM ET, so 03:00 UTC the next morning gives a wide
+    # safety margin.
+    - cron: '0 3 * * 2-6'
   workflow_dispatch:
 
 permissions:
