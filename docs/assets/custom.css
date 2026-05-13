@@ -58,8 +58,9 @@ img {
   line-height: 1.3;
 }
 
-/* Per-section "last updated" timestamp shown next to each chart's H3.
+/* "Last updated" timestamp shown next to the dashboard H2 title.
    De-emphasised so the title still leads but the freshness is visible. */
+.md-typeset .live-dash h2 .dash-updated,
 .md-typeset .live-dash h3 .dash-updated {
   font-size: 0.72rem;
   font-weight: 400;

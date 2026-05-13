@@ -1112,15 +1112,15 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
 
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
-    upd = f' <small class="dash-updated">({update_label})</small>' if update_label else ""
+    # One timestamp next to the H2 title is enough — the per-section
+    # H3 suffix was repetitive (all charts share the same build instant).
+    title_suffix = (f' <small class="dash-updated">({update_label})</small>'
+                    if update_label else "")
     parts = [
         START_MARK,
         '<div class="live-dash" markdown>',
         "",
-        "## 📊 일일 대시보드",
-        "",
-        f"<small>**{cs['date']} 기준** · 매 영업일 NY 종가 후 자동 갱신 "
-        "(≈ 23:00 ET / 12:00 KST 화–토)</small>",
+        f"## 📊 일일 대시보드{title_suffix}",
         "",
         '??? note "갱신 일정 자세히"',
         "    - **크론**: 03:00 UTC 화–토 — NY 시간으로 영업일 마감 약 7시간 뒤, "
@@ -1142,7 +1142,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
         parts += render_tactical_card_ko(ts, ks)
     if vs:
         parts += [
-            f"### VIX Futures Term Structure{upd}",
+            "### VIX Futures Term Structure",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1173,7 +1173,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
             "",
         ]
     parts += [
-        f"### COR + SKEW 대시보드{upd}",
+        "### COR + SKEW 대시보드",
         "",
         '<div class="dash-tight" markdown>',
         "",
@@ -1202,7 +1202,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
         parts += [
             "---",
             "",
-            f"### VolVol — VVIX / VIX 비율 지표{upd}",
+            "### VolVol — VVIX / VIX 비율 지표",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1309,16 +1309,15 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
-    upd = f' <small class="dash-updated">({update_label})</small>' if update_label else ""
+    # One timestamp next to the H2 title is enough — the per-section
+    # H3 suffix was repetitive (all charts share the same build instant).
+    title_suffix = (f' <small class="dash-updated">({update_label})</small>'
+                    if update_label else "")
     parts = [
         START_MARK,
         '<div class="live-dash" markdown>',
         "",
-        "## 📊 Daily Dashboard",
-        "",
-        f"<small>**As of {cs['date']}** · Auto-refreshes after each NY close "
-        "(≈ 23:00 ET / 12:00 KST, Tue–Sat) · "
-        "[Framework details →](posts/cash-allocation.md)</small>",
+        f"## 📊 Daily Dashboard{title_suffix}",
         "",
         '??? note "Update schedule"',
         "    - **Cron**: 03:00 UTC Tue–Sat — about 7 hours after the NY close, "
@@ -1345,7 +1344,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
         parts += render_tactical_card_en(ts, ks)
     if vs:
         parts += [
-            f"### VIX Futures Term Structure{upd}",
+            "### VIX Futures Term Structure",
             "",
             '<div class="dash-tight" markdown>',
             "",
@@ -1376,7 +1375,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
             "",
         ]
     parts += [
-        f"### COR + SKEW Dashboard{upd}",
+        "### COR + SKEW Dashboard",
         "",
         '<div class="dash-tight" markdown>',
         "",
@@ -1405,7 +1404,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
         parts += [
             "---",
             "",
-            f"### VolVol — VVIX / VIX ratio{upd}",
+            "### VolVol — VVIX / VIX ratio",
             "",
             '<div class="dash-tight" markdown>',
             "",
