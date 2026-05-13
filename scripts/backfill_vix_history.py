@@ -125,35 +125,45 @@ def rebuild_manifests(archive_dirs: list[Path]):
         print(f"  Manifest {d.parent.name}/{d.name}: {len(existing)} entries, latest={manifest['latest']}")
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--days", type=int, default=365,
-                        help="Calendar days to look back (default 365 ≈ 252 weekdays)")
-    parser.add_argument("--skip-existing", action="store_true", default=True,
-                        help="Skip dates whose PNG already exists (default on)")
-    parser.add_argument("--no-skip-existing", dest="skip_existing", action="store_false")
-    parser.add_argument("--sleep", type=float, default=0.3,
-                        help="Seconds between Cboe requests (default 0.3)")
-    args = parser.parse_args()
+def backfill(days: int = 365, skip_existing: bool = True,
+             sleep: float = 0.3, verbose: bool = True,
+             vix_hist: pd.Series | None = None) -> dict:
+    """Render historical VIX TS snapshots for the past `days` calendar days
+    and write them to docs/assets/diagrams[_en]/vix_history/. With
+    `skip_existing=True` already-archived dates are left alone, so daily
+    cron runs can call this with a short window (e.g. days=14) as a cheap
+    gap-filler — only genuinely missing days hit Cboe.
 
-    print(f"Backfill window: {args.days} days, skip_existing={args.skip_existing}")
-    print("Fetching full VIX cash history (Cboe direct)...")
-    vix_hist = ud.fetch_vix_history()
-    print(f"  {len(vix_hist)} bars, {vix_hist.index.min().date()} → {vix_hist.index.max().date()}")
+    Returns a dict with rendered / skipped counts so callers can log/log.
+
+    Pass `vix_hist` to reuse a Series already fetched by the caller;
+    otherwise this function fetches its own copy."""
+    def log(msg: str):
+        if verbose:
+            print(msg)
+
+    log(f"Backfill window: {days} days, skip_existing={skip_existing}")
+    if vix_hist is None:
+        log("Fetching full VIX cash history (Cboe direct)...")
+        vix_hist = ud.fetch_vix_history()
+        log(f"  {len(vix_hist)} bars, {vix_hist.index.min().date()} → {vix_hist.index.max().date()}")
 
     today = pd.Timestamp.now(tz="US/Eastern").normalize().tz_localize(None)
-    requested_start = today - pd.Timedelta(days=args.days)
+    requested_start = today - pd.Timedelta(days=days)
     earliest = pd.Timestamp(EARLIEST_KEEP_DATE)
     start = max(requested_start, earliest)
     if start > requested_start:
-        print(f"Clamping start from {requested_start.date()} → {start.date()} "
-              f"(EARLIEST_KEEP_DATE)")
+        log(f"Clamping start from {requested_start.date()} → {start.date()} "
+            f"(EARLIEST_KEEP_DATE)")
     business_days = pd.date_range(start=start, end=today, freq="B")
     target_dates = [
         d.strftime("%Y-%m-%d") for d in business_days
         if d.strftime("%Y-%m-%d") not in US_MARKET_HOLIDAYS
     ]
-    print(f"Targeting {len(target_dates)} business days ({target_dates[0]} → {target_dates[-1]})")
+    if not target_dates:
+        return {"rendered": 0, "skipped_existing": 0, "skipped_no_data": 0}
+    log(f"Targeting {len(target_dates)} business days "
+        f"({target_dates[0]} → {target_dates[-1]})")
 
     archive_dirs = [ud.OUT_KO / "vix_history", ud.OUT_EN / "vix_history"]
     for d in archive_dirs:
@@ -162,7 +172,7 @@ def main():
     rendered, skipped_existing, skipped_no_data = 0, 0, 0
     for i, date_str in enumerate(target_dates, 1):
         png_path = archive_dirs[0] / f"{date_str}.png"
-        if args.skip_existing and png_path.exists():
+        if skip_existing and png_path.exists():
             skipped_existing += 1
             continue
 
@@ -172,7 +182,7 @@ def main():
         if not len(available_vix) or available_vix.index[-1].strftime("%Y-%m-%d") != date_str:
             # VIX cash hasn't published this day → genuinely non-trading
             skipped_no_data += 1
-            print(f"[{i}/{len(target_dates)}] {date_str}: no matching VIX spot, skip")
+            log(f"[{i}/{len(target_dates)}] {date_str}: no matching VIX spot, skip")
             continue
         vix_spot = float(available_vix.iloc[-1])
 
@@ -180,21 +190,21 @@ def main():
         vx = fetch_settlement_at(date_str)
         if vx.empty:
             skipped_no_data += 1
-            print(f"[{i}/{len(target_dates)}] {date_str}: settlement CSV empty, skip")
-            time.sleep(args.sleep)
+            log(f"[{i}/{len(target_dates)}] {date_str}: settlement CSV empty, skip")
+            time.sleep(sleep)
             continue
         if len(vx) < MIN_CONTRACTS:
             skipped_no_data += 1
-            print(f"[{i}/{len(target_dates)}] {date_str}: only {len(vx)} contracts "
-                  f"(< {MIN_CONTRACTS}), Cboe purged expired front-end — skip")
-            time.sleep(args.sleep)
+            log(f"[{i}/{len(target_dates)}] {date_str}: only {len(vx)} contracts "
+                f"(< {MIN_CONTRACTS}), Cboe purged expired front-end — skip")
+            time.sleep(sleep)
             continue
         if not is_month_chain_continuous(vx):
             skipped_no_data += 1
             months = sorted({d.strftime("%Y-%m") for d in vx["Expiration Date"]})
-            print(f"[{i}/{len(target_dates)}] {date_str}: month gaps in chain "
-                  f"({months}) — skip")
-            time.sleep(args.sleep)
+            log(f"[{i}/{len(target_dates)}] {date_str}: month gaps in chain "
+                f"({months}) — skip")
+            time.sleep(sleep)
             continue
 
         # Render chart with the historical settlement date in the title,
@@ -210,13 +220,33 @@ def main():
         rendered += 1
         shape = snapshot.get("shape", "?")
         n_contracts = len(snapshot.get("contracts", []))
-        print(f"[{i}/{len(target_dates)}] {date_str}: ✓ VIX {vix_spot:.2f}, "
-              f"{n_contracts} contracts, {shape}")
-        time.sleep(args.sleep)
+        log(f"[{i}/{len(target_dates)}] {date_str}: ✓ VIX {vix_spot:.2f}, "
+            f"{n_contracts} contracts, {shape}")
+        time.sleep(sleep)
 
-    print(f"\nDone. Rendered: {rendered}, skipped (existed): {skipped_existing}, "
-          f"skipped (no data): {skipped_no_data}")
-    rebuild_manifests(archive_dirs)
+    log(f"\nDone. Rendered: {rendered}, skipped (existed): {skipped_existing}, "
+        f"skipped (no data): {skipped_no_data}")
+    if rendered > 0:
+        rebuild_manifests(archive_dirs)
+    return {
+        "rendered": rendered,
+        "skipped_existing": skipped_existing,
+        "skipped_no_data": skipped_no_data,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--days", type=int, default=365,
+                        help="Calendar days to look back (default 365 ≈ 252 weekdays)")
+    parser.add_argument("--skip-existing", action="store_true", default=True,
+                        help="Skip dates whose PNG already exists (default on)")
+    parser.add_argument("--no-skip-existing", dest="skip_existing", action="store_false")
+    parser.add_argument("--sleep", type=float, default=0.3,
+                        help="Seconds between Cboe requests (default 0.3)")
+    args = parser.parse_args()
+    backfill(days=args.days, skip_existing=args.skip_existing,
+             sleep=args.sleep, verbose=True)
 
 
 if __name__ == "__main__":

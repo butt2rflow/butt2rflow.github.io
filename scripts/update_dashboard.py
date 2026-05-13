@@ -1128,8 +1128,10 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
         "    - **갱신 대상**: VIX TS · COR+SKEW · VolVol · Kelly × VIX 차트 + 카드 숫자 "
         "— 모두 한 사이클에 함께 갱신",
         "    - **데이터 출처**: Cboe 직접 (VIX cash, futures settlement, COR/SKEW, VVIX)",
-        "    - **변동 가능성**: GitHub Actions 크론은 best-effort라 ±30분 지연 가능. "
-        "Cboe가 그날 데이터를 늦게 올리면 다음 사이클로 밀릴 수 있음",
+        "    - **변동 가능성**: GitHub Actions 크론 ±30분 지터 가능. "
+        "드물게 Cboe가 그날 종가를 늦게 올려서 그 사이클이 전일 데이터로 끝나면, "
+        "라이브 차트는 다음 영업일 사이클에 자동으로 따라잡고 슬라이더 아카이브는 "
+        "매 사이클의 14-day gap-fill 패스로 빠진 날을 채워 넣음 — 결과적으로 데이터 손실은 없음",
         "",
     ]
     if ks and ts:
@@ -1324,8 +1326,11 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
         "    - **Refreshed**: VIX TS · COR+SKEW · VolVol · Kelly × VIX charts + card "
         "numbers — all rebuilt in the same cycle",
         "    - **Source**: Cboe direct (VIX cash, futures settlement, COR/SKEW, VVIX)",
-        "    - **Variance**: GitHub Actions cron is best-effort, so ±30 min jitter is "
-        "normal. If Cboe publishes that day's data late the refresh slips to the next cycle",
+        "    - **Variance**: GitHub Actions cron has ±30 min jitter. In the rare case "
+        "Cboe publishes that day's close late and the cron snaps the previous day's row, "
+        "the live chart catches up on the next business-day cycle and the slider archive "
+        "back-fills missing days via the 14-day gap-fill pass each run — so no data is "
+        "lost",
         "",
     ]
     if ks and ts:
@@ -1512,6 +1517,25 @@ def main():
         print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
         archive_vix_history(OUT_KO / "vix_term_structure.png", vix_settle_date,
                             vx=vx, vix_spot=vix_spot)
+
+        # Gap-fill: every cron run also looks back ~14 days for any business
+        # days whose archive PNG is missing (e.g. a previous cron caught
+        # Cboe before its publish window and ended up overwriting yesterday's
+        # entry instead of adding today's). skip_existing=True keeps this
+        # cheap on the common path — only genuinely missing dates hit Cboe.
+        try:
+            import backfill_vix_history
+            gap_result = backfill_vix_history.backfill(
+                days=14, skip_existing=True, sleep=0.3,
+                verbose=False, vix_hist=vix_hist,
+            )
+            if gap_result["rendered"] > 0:
+                print(f"  Gap-filled {gap_result['rendered']} missing day(s) "
+                      f"in vix_history archive")
+        except Exception as e:  # noqa: BLE001
+            # A backfill failure is non-fatal — the day's primary archive is
+            # already written. Log and continue so the dashboard still deploys.
+            print(f"  [WARN] gap-fill skipped: {e}")
 
     if ks:
         # One curve PNG per (Kelly fraction × premium profile) combination
