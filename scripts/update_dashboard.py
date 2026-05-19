@@ -199,19 +199,19 @@ def _vix_ts_data_snapshot(vx: pd.DataFrame, vix_spot: float,
             "dte": int(row["DTE"]),
             "price": float(row["Price"]),
         })
-    front = contracts[0]["price"] if contracts else None
-    back = contracts[-1]["price"] if contracts else None
     spread_2_1 = (contracts[1]["price"] - contracts[0]["price"]
                   if len(contracts) >= 2 else None)
-    if not np.isnan(vix_spot) and front is not None and back is not None:
-        if vix_spot > front:
-            shape = "backwardation"
-        elif back > front:
-            shape = "contango"
-        else:
-            shape = "mixed"
-    else:
+    # Curve shape is defined by M2-M1, not spot-vs-M1: near expiry the front
+    # converges to spot and tiny wiggles would flip the label even on a
+    # clearly upward-sloping curve.
+    if spread_2_1 is None:
         shape = None
+    elif spread_2_1 > 0:
+        shape = "contango"
+    elif spread_2_1 < 0:
+        shape = "backwardation"
+    else:
+        shape = "mixed"
     return {
         "settlement_date": settlement_date,
         "vix_spot": None if np.isnan(vix_spot) else float(vix_spot),
@@ -421,18 +421,17 @@ def render_vix_term_structure(vx: pd.DataFrame, vix_spot: float, out_path: Path,
             ha="center", fontsize=8,
         )
 
-    # Determine shape — use the *active* curve (post-filter) so that on
-    # settlement days the shape reflects the live forward structure, not
-    # an already-settled front month that's converged to spot.
-    front = plot_vx.iloc[0]["Price"] if len(plot_vx) else float("nan")
-    back = plot_vx.iloc[-1]["Price"] if len(plot_vx) else float("nan")
-    if not np.isnan(vix_spot) and len(plot_vx) >= 2:
-        if vix_spot > front:
-            shape = "Backwardation"
-            shape_color = "#dc2626"
-        elif back > front:
+    # Shape from M2-M1 of the *active* curve (post-filter) — on settlement
+    # days the front has converged to spot, so a spot-vs-front rule would
+    # mislabel an upward curve as backwardation.
+    if len(plot_vx) >= 2:
+        spread_2_1 = float(plot_vx.iloc[1]["Price"]) - float(plot_vx.iloc[0]["Price"])
+        if spread_2_1 > 0:
             shape = "Contango"
             shape_color = "#16a34a"
+        elif spread_2_1 < 0:
+            shape = "Backwardation"
+            shape_color = "#dc2626"
         else:
             shape = "Mixed"
             shape_color = "#6b7280"
@@ -812,10 +811,13 @@ def compute_vix_signals(vx, vix_spot):
     spread_7_1 = None
     if len(vx) >= 7:
         spread_7_1 = float(vx.iloc[6]["Price"]) - front
-    if not np.isnan(vix_spot) and vix_spot > front:
-        shape = "backwardation"
-    elif spread_2_1 > 0:
+    # Curve shape is defined by M2-M1, not spot-vs-M1: near expiry the front
+    # converges to spot and tiny wiggles would flip the label even on a
+    # clearly upward-sloping curve.
+    if spread_2_1 > 0:
         shape = "contango"
+    elif spread_2_1 < 0:
+        shape = "backwardation"
     else:
         shape = "mixed"
     return {
