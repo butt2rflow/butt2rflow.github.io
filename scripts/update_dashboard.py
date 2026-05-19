@@ -153,6 +153,38 @@ def fetch_vix_futures():
     return vx
 
 
+def load_latest_archived_vx() -> tuple[pd.DataFrame, float, str] | tuple[None, None, None]:
+    """Fall-back when Cboe's settlement CSV is sparse (e.g. mid-day on a VX
+    settlement day, the file is rebuilt and temporarily only carries the
+    settling row). Read the newest vix_history/*.json snapshot and rebuild
+    a DataFrame matching what fetch_vix_futures() would have returned, so
+    the home page can render with last-known-good data + a stale badge."""
+    archive_dir = OUT_KO / "vix_history"
+    if not archive_dir.exists():
+        return None, None, None
+    snapshots = sorted(p for p in archive_dir.glob("*.json") if p.name != "manifest.json")
+    if not snapshots:
+        return None, None, None
+    data = json.loads(snapshots[-1].read_text(encoding="utf-8"))
+    contracts = data.get("contracts") or []
+    if len(contracts) < 2:
+        return None, None, None
+    today = pd.Timestamp.now(tz="US/Eastern").normalize().tz_localize(None)
+    vx = pd.DataFrame([
+        {
+            "Symbol": c["symbol"],
+            "Expiration Date": pd.to_datetime(c["expiration"]),
+            "Price": float(c["price"]),
+        }
+        for c in contracts
+    ])
+    vx["DTE"] = (vx["Expiration Date"] - today).dt.days
+    vx = vx[vx["DTE"] >= 0].reset_index(drop=True)
+    if len(vx) < 2:
+        return None, None, None
+    return vx, float(data.get("vix_spot") or float("nan")), data["settlement_date"]
+
+
 def fetch_vix_history() -> pd.Series:
     return _fetch_cboe_index("VIX")
 
@@ -1112,7 +1144,8 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     ]
 
 
-def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
+def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
+                      vix_stale_date: str | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1143,9 +1176,15 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
     if ts:
         parts += render_tactical_card_ko(ts, ks)
     if vs:
+        parts += ["### VIX Futures Term Structure", ""]
+        if vix_stale_date:
+            parts += [
+                f'!!! warning "데이터 갱신 지연"',
+                f"    Cboe 결제 파일이 일시적으로 불완전하여 **{vix_stale_date}** 마감 곡선을 표시 중. "
+                "다음 03:00 UTC 사이클에서 자동 갱신.",
+                "",
+            ]
         parts += [
-            "### VIX Futures Term Structure",
-            "",
             '<div class="dash-tight" markdown>',
             "",
             "| 항목 | 값 | 상태 |",
@@ -1309,7 +1348,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
     ]
 
 
-def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
+def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
+                      vix_stale_date: str | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1345,9 +1385,15 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = ""):
     if ts:
         parts += render_tactical_card_en(ts, ks)
     if vs:
+        parts += ["### VIX Futures Term Structure", ""]
+        if vix_stale_date:
+            parts += [
+                f'!!! warning "Stale data"',
+                f"    Cboe's settlement file is temporarily incomplete; showing the "
+                f"**{vix_stale_date}** close. Auto-refreshes on the next 03:00 UTC cycle.",
+                "",
+            ]
         parts += [
-            "### VIX Futures Term Structure",
-            "",
             '<div class="dash-tight" markdown>',
             "",
             "| Field | Value | State |",
@@ -1468,6 +1514,20 @@ def main():
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] Cboe fetch failed: {e}")
         vx = pd.DataFrame()
+    # Fall back to the most recent archived snapshot when the live CSV is
+    # too sparse to render a curve (Cboe rebuilds the settlement file
+    # around settlement events and it briefly carries only the settling
+    # row — observed 2026-05-19). Stale-date carries through to the
+    # rendered section so the badge marks the displayed numbers as
+    # last-known-good rather than today.
+    vix_data_stale_date: str | None = None
+    if len(vx) < 2:
+        fb_vx, fb_spot, fb_date = load_latest_archived_vx()
+        if fb_vx is not None:
+            print(f"  [WARN] only {len(vx)} live contract(s); "
+                  f"falling back to archived snapshot {fb_date}")
+            vx = fb_vx
+            vix_data_stale_date = fb_date
 
     print("Fetching VIX + VVIX history...")
     vix_hist = fetch_vix_history()
@@ -1504,20 +1564,27 @@ def main():
     ts = compute_tactical_signal(vix_hist, cs, spx)
 
     if len(vx) > 0:
-        # VIX-cash and VIX-futures settle together on the Cboe end-of-day
-        # cycle, so the last bar of vix_hist is the authoritative settlement
-        # date for the term-structure chart. Using cs["date"] here would
-        # mis-file the archive whenever COR/SKEW (yfinance) lags behind Cboe
-        # direct, which is most weekdays.
-        vix_settle_date = (vix_hist.index[-1].strftime("%Y-%m-%d")
-                           if len(vix_hist) else cs["date"])
+        # On the stale path, the displayed curve is yesterday's snapshot —
+        # label the chart with that date and skip the archive write so we
+        # don't overwrite the good archive entry with re-derived data.
+        if vix_data_stale_date:
+            vix_settle_date = vix_data_stale_date
+        else:
+            # VIX-cash and VIX-futures settle together on the Cboe end-of-day
+            # cycle, so the last bar of vix_hist is the authoritative settlement
+            # date for the term-structure chart. Using cs["date"] here would
+            # mis-file the archive whenever COR/SKEW (yfinance) lags behind Cboe
+            # direct, which is most weekdays.
+            vix_settle_date = (vix_hist.index[-1].strftime("%Y-%m-%d")
+                               if len(vix_hist) else cs["date"])
         render_vix_term_structure(vx, vix_spot, OUT_KO / "vix_term_structure.png",
                                   settlement_date=vix_settle_date)
         print(f"  Saved: {OUT_KO / 'vix_term_structure.png'}")
         shutil.copy2(OUT_KO / "vix_term_structure.png", OUT_EN / "vix_term_structure.png")
         print(f"  Copied: {OUT_EN / 'vix_term_structure.png'}")
-        archive_vix_history(OUT_KO / "vix_term_structure.png", vix_settle_date,
-                            vx=vx, vix_spot=vix_spot)
+        if not vix_data_stale_date:
+            archive_vix_history(OUT_KO / "vix_term_structure.png", vix_settle_date,
+                                vx=vx, vix_spot=vix_spot)
 
         # Gap-fill: every cron run also looks back ~14 days for any business
         # days whose archive PNG is missing (e.g. a previous cron caught
@@ -1586,11 +1653,13 @@ def main():
     update_label_en = f"Updated {et.strftime('%b')} {et.day}, {hour12}:{et.minute:02d} {am_pm} ET"
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
-        render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko),
+        render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
+                          vix_stale_date=vix_data_stale_date),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
-        render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en),
+        render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
+                          vix_stale_date=vix_data_stale_date),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
