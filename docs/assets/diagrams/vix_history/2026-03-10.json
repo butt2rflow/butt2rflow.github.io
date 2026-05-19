@@ -1,7 +1,7 @@
 {
   "settlement_date": "2026-03-10",
   "vix_spot": 24.93,
-  "shape": "mixed",
+  "shape": "backwardation",
   "spread_M2_M1": -1.177500000000002,
   "contracts": [
     {
