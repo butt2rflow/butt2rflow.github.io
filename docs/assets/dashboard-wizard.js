@@ -233,6 +233,9 @@
     close: "닫기",
     bannerLabel: "당신의 프로필",
     bannerWhy: "왜 이 조합? 위자드 답변에 따라 자동 추천",
+    share: "🔗 공유 링크 복사",
+    shareShort: "🔗",
+    shareCopied: "복사됨!",
     axisKelly: "Kelly 분율",
     axisDiscount: "위험 민감도",
     axisPremium: "기대 프리미엄",
@@ -257,6 +260,9 @@
     close: "Close",
     bannerLabel: "Your profile",
     bannerWhy: "Why this combo? Auto-selected from your wizard answers",
+    share: "🔗 Copy share link",
+    shareShort: "🔗",
+    shareCopied: "Copied!",
     axisKelly: "Kelly fraction",
     axisDiscount: "Risk sensitivity",
     axisPremium: "Equity premium",
@@ -297,9 +303,101 @@
     const discount = bucketDiscount(d);
     const premium = bucketPremium(p);
     const split = bucketSplit(s);
+    return buildResult(kelly, discount, premium, split, lang, { k, d, p, s });
+  }
+
+  function buildResult(kelly, discount, premium, split, lang, scores) {
     const labels = getProfileLabels(lang);
     const profileName = labels[`${kelly}|${premium}`] || (lang === "en" ? "Custom" : "맞춤형");
-    return { kelly, discount, premium, split, profileName, scores: { k, d, p, s } };
+    return { kelly, discount, premium, split, profileName, scores: scores || null };
+  }
+
+  // ---------------------------------------------------------------------
+  // Profile ↔ URL query encoding (?profile=kelly-discount-premium-split)
+  // Used for share-link generation and to apply a profile on cold visit.
+  // ---------------------------------------------------------------------
+
+  const VALID_KELLY    = new Set(["quarter", "half", "threequarter", "full"]);
+  const VALID_DISCOUNT = new Set(["loose", "standard", "tight"]);
+  const VALID_PREMIUM  = new Set(["conservative", "standard", "aggressive"]);
+  const VALID_SPLIT    = new Set(["80-20", "90-10", "95-5"]);
+
+  function encodeProfileQuery(result) {
+    return `${result.kelly}-${result.discount}-${result.premium}-${result.split}`;
+  }
+  function parseProfileQuery(raw, lang) {
+    if (!raw) return null;
+    // Split into 4 tokens, but split is "95-5" / "90-10" / "80-20" — has a
+    // hyphen inside. So split into a max of 4 pieces from the LEFT to keep
+    // the split token whole at the end.
+    const parts = raw.split("-");
+    if (parts.length < 5) return null;
+    const kelly    = parts[0];
+    const discount = parts[1];
+    const premium  = parts[2];
+    const split    = parts.slice(3).join("-");
+    if (!VALID_KELLY.has(kelly)) return null;
+    if (!VALID_DISCOUNT.has(discount)) return null;
+    if (!VALID_PREMIUM.has(premium)) return null;
+    if (!VALID_SPLIT.has(split)) return null;
+    return buildResult(kelly, discount, premium, split, lang, null);
+  }
+
+  function buildShareUrl(result) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("profile", encodeProfileQuery(result));
+    url.hash = "";
+    return url.toString();
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    // Fallback for http / older browsers.
+    return new Promise((resolve, reject) => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error("copy failed"));
+      } catch (e) {
+        document.body.removeChild(ta);
+        reject(e);
+      }
+    });
+  }
+
+  function flashCopiedFeedback(btn, originalLabel, copiedLabel) {
+    btn.disabled = true;
+    btn.textContent = copiedLabel;
+    btn.classList.add("is-copied");
+    if (btn._copyResetTimer) clearTimeout(btn._copyResetTimer);
+    btn._copyResetTimer = setTimeout(() => {
+      btn.textContent = originalLabel;
+      btn.classList.remove("is-copied");
+      btn.disabled = false;
+    }, 1500);
+  }
+
+  // Light haptic on choice tap — Android Chrome supports navigator.vibrate;
+  // iOS Safari ignores it (no error). Skipped when reduced-motion is on so
+  // motion-sensitive users don't get unexpected feedback either.
+  function maybeVibrate() {
+    if (prefersReducedMotion()) return;
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      try { navigator.vibrate(10); } catch (e) { /* */ }
+    }
+  }
+
+  function prefersReducedMotion() {
+    return typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   // ---------------------------------------------------------------------
@@ -353,6 +451,9 @@
     const answers = new Array(questions.length).fill(null);
     let result = null;
     let phase = "questions"; // or "result"
+    // Direction of the last transition between questions — drives the
+    // slide-in animation class on .wizard-body. "next" / "prev" / null.
+    let lastDirection = null;
 
     const overlay = el("div", { className: "wizard-overlay", attrs: { role: "dialog", "aria-modal": "true", "aria-label": t.title } });
     const modal = el("div", { className: "wizard-modal" });
@@ -394,7 +495,10 @@
         renderProgress(idx + 1, questions.length),
       ]);
 
-      const body = el("div", { className: "wizard-body" }, [
+      const slideClass = lastDirection === "prev"
+        ? " wizard-slide-from-left"
+        : (lastDirection === "next" ? " wizard-slide-from-right" : "");
+      const body = el("div", { className: "wizard-body" + slideClass }, [
         el("div", { className: "wizard-question-label", text: q.label }),
         q.sub ? el("div", { className: "wizard-question-sub", text: q.sub }) : null,
         el("div", { className: "wizard-choices" }, q.choices.map((c, ci) => {
@@ -405,13 +509,16 @@
             text: c.label,
             onClick: () => {
               answers[idx] = { ...c.scores, _choiceIdx: ci };
+              maybeVibrate();
               // Auto-advance for snappier UX; user can still go back.
               if (idx < questions.length - 1) {
                 idx += 1;
+                lastDirection = "next";
                 render();
               } else {
                 result = computeResult(answers, lang);
                 phase = "result";
+                lastDirection = "next";
                 render();
               }
             },
@@ -426,7 +533,7 @@
           attrs: { type: "button", disabled: idx === 0 ? "disabled" : null },
           text: t.prev,
           onClick: () => {
-            if (idx > 0) { idx -= 1; render(); }
+            if (idx > 0) { idx -= 1; lastDirection = "prev"; render(); }
           },
         }),
         el("button", {
@@ -436,10 +543,11 @@
           onClick: () => {
             if (!answers[idx]) return;
             if (idx < questions.length - 1) {
-              idx += 1; render();
+              idx += 1; lastDirection = "next"; render();
             } else {
               result = computeResult(answers, lang);
               phase = "result";
+              lastDirection = "next";
               render();
             }
           },
@@ -477,6 +585,17 @@
         renderAxisCard(t.axisSplit,    t.splitValueLabel[result.split]),
       ]);
 
+      const shareBtn = el("button", {
+        className: "wizard-nav-btn wizard-nav-share",
+        attrs: { type: "button" },
+        text: t.share,
+        onClick: () => {
+          copyToClipboard(buildShareUrl(result))
+            .then(() => flashCopiedFeedback(shareBtn, t.share, t.shareCopied))
+            .catch(() => { /* */ });
+        },
+      });
+
       const nav = el("div", { className: "wizard-nav" }, [
         el("button", {
           className: "wizard-nav-btn wizard-nav-prev",
@@ -486,9 +605,11 @@
             for (let i = 0; i < answers.length; i++) answers[i] = null;
             idx = 0;
             phase = "questions";
+            lastDirection = "prev";
             render();
           },
         }),
+        shareBtn,
         el("button", {
           className: "wizard-nav-btn wizard-nav-apply",
           attrs: { type: "button" },
@@ -581,6 +702,17 @@
 
     const summary = `${t.kellyValueLabel[result.kelly]}K · ${t.discountValueLabel[result.discount]} · ${t.premiumValueLabel[result.premium]} · ${t.splitValueLabel[result.split]}`;
 
+    const shareBtn = el("button", {
+      className: "wizard-banner-share",
+      attrs: { type: "button", title: t.share, "aria-label": t.share },
+      text: t.shareShort,
+      onClick: () => {
+        copyToClipboard(buildShareUrl(result))
+          .then(() => flashCopiedFeedback(shareBtn, t.shareShort, t.shareCopied))
+          .catch(() => { /* */ });
+      },
+    });
+
     const banner = el("div", { className: "wizard-banner-inner" }, [
       el("span", { className: "wizard-banner-icon", text: "💡" }),
       el("span", { className: "wizard-banner-text" }, [
@@ -589,6 +721,7 @@
         el("span", { className: "wizard-banner-sep", text: " — " }),
         el("span", { className: "wizard-banner-summary", text: summary }),
       ]),
+      shareBtn,
       el("button", {
         className: "wizard-banner-btn",
         attrs: { type: "button" },
@@ -636,6 +769,29 @@
       if (!btn.textContent.trim()) btn.textContent = t.triggerLabel;
       btn.addEventListener("click", openWizard);
     });
+
+    // If we arrived from a share link (?profile=...), apply it and rewrite
+    // the URL so a manual refresh doesn't re-apply on top of a user's later
+    // tweaks. Falls through to restoreBanner() if no query is present.
+    const urlResult = parseProfileQuery(
+      new URLSearchParams(window.location.search).get("profile"),
+      lang
+    );
+    if (urlResult) {
+      // Defer the click dispatch one tick so kelly-toggle.js has finished
+      // its own init() — without this, the synthetic clicks fire before
+      // its click handlers are attached and nothing happens.
+      setTimeout(() => {
+        applyResult(urlResult, lang);
+        renderBanner(urlResult, lang);
+      }, 0);
+      try {
+        const cleaned = new URL(window.location.href);
+        cleaned.searchParams.delete("profile");
+        history.replaceState(null, "", cleaned.pathname + cleaned.hash);
+      } catch (e) { /* */ }
+      return;
+    }
 
     restoreBanner();
   }

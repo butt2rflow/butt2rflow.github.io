@@ -608,8 +608,28 @@ img {
   padding: 0 0.15rem;
 }
 .wizard-banner-close:hover { color: #7c2d12; }
+.wizard-banner-share {
+  flex: 0 0 auto;
+  border: 1px solid #d97706;
+  background: transparent;
+  color: #92400e;
+  cursor: pointer;
+  font-size: 0.78rem;
+  line-height: 1;
+  padding: 0.18rem 0.4rem;
+  border-radius: 999px;
+  font-family: inherit;
+}
+.wizard-banner-share:hover { background: #fde68a; }
+.wizard-banner-share.is-copied {
+  background: #047857;
+  border-color: #047857;
+  color: #ffffff;
+  font-weight: 600;
+}
 
-/* Modal overlay — full-viewport dim + centered card. */
+/* Modal overlay — full-viewport dim + centered card.
+   Both overlay and modal animate in on mount; respect reduced-motion. */
 .wizard-overlay {
   position: fixed;
   inset: 0;
@@ -620,6 +640,7 @@ img {
   background: rgba(15, 23, 42, 0.55);
   padding: 1rem;
   overflow-y: auto;
+  animation: wizard-fade-in 160ms ease-out;
 }
 body.wizard-open { overflow: hidden; }
 
@@ -636,6 +657,51 @@ body.wizard-open { overflow: hidden; }
   font-family: inherit;
   color: #1f2937;
   overflow-y: auto;
+  animation: wizard-pop-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes wizard-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes wizard-pop-in {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes wizard-slide-in-right {
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes wizard-slide-in-left {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes wizard-banner-reveal {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wizard-body.wizard-slide-from-right {
+  animation: wizard-slide-in-right 180ms ease-out;
+}
+.wizard-body.wizard-slide-from-left {
+  animation: wizard-slide-in-left 180ms ease-out;
+}
+.wizard-banner-inner {
+  animation: wizard-banner-reveal 220ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wizard-overlay,
+  .wizard-modal,
+  .wizard-body.wizard-slide-from-right,
+  .wizard-body.wizard-slide-from-left,
+  .wizard-banner-inner {
+    animation: none !important;
+  }
+  .wizard-progress-fill,
+  .allocation-master__equity {
+    transition: none !important;
+  }
 }
 
 .wizard-header { margin-bottom: 0.7rem; }
@@ -808,9 +874,24 @@ body.wizard-open { overflow: hidden; }
   background: #d97706;
   color: white;
 }
+.wizard-nav-share.is-copied {
+  background: #047857;
+  border-color: #047857;
+  color: #ffffff;
+  font-weight: 600;
+}
+.wizard-nav-share.is-copied:hover:not([disabled]) {
+  background: #047857;
+  border-color: #047857;
+  color: #ffffff;
+}
 
 @media (max-width: 480px) {
   .wizard-modal { padding: 0.85rem 0.9rem 0.95rem; }
   .wizard-result { grid-template-columns: 1fr; }
   .wizard-banner-inner { flex-wrap: wrap; }
+  /* On narrow viewports stack the share+apply pair below retake so they
+     don't squeeze into illegible widths. */
+  .wizard-nav { flex-wrap: wrap; }
+  .wizard-nav-btn { flex: 1 1 45%; }
 }
