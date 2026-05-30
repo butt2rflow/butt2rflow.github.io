@@ -837,6 +837,42 @@ body.wizard-open { overflow: hidden; }
   font-variant-numeric: tabular-nums;
 }
 
+/* Editable axis card — pill row replaces the static value. Pills here
+   only mutate the wizard's in-modal state; the dashboard's actual axis
+   buttons (the master bar / Kelly card) are only touched when the user
+   clicks Apply. Keep the visual smaller than the dashboard pills so the
+   role distinction is obvious. */
+.wizard-axis--editable { padding-top: 0.45rem; padding-bottom: 0.5rem; }
+.wizard-axis-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-top: 0.15rem;
+}
+.wizard-axis-pill {
+  font-size: 0.72rem;
+  padding: 0.12rem 0.42rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.wizard-axis-pill:hover {
+  border-color: #f59e0b;
+  color: #92400e;
+}
+.wizard-axis-pill.is-active {
+  background: #f59e0b;
+  border-color: #d97706;
+  color: white;
+  font-weight: 600;
+}
+
 .wizard-nav {
   display: flex;
   justify-content: space-between;
@@ -977,6 +1013,70 @@ body.wizard-open { overflow: hidden; }
   color: #6b7280;
   text-align: center;
   padding: 0.45rem 0;
+}
+
+/* Sparkline — profile NAV vs SPX 100% baseline, both rebased to 1.0 at
+   period start. Pure SVG, no library. */
+.wizard-backtest-chart-wrap {
+  margin: 0.25rem 0 0.3rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.3rem 0.45rem;
+  display: flex;
+  justify-content: center;
+}
+.wizard-backtest-chart {
+  width: 100%;
+  height: auto;
+  max-height: 90px;
+  display: block;
+}
+.wizard-chart-profile {
+  stroke: #d97706;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.wizard-chart-spx {
+  stroke: #94a3b8;
+  stroke-width: 1.3;
+  stroke-dasharray: 3 2;
+  stroke-linejoin: round;
+}
+.wizard-chart-baseline {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+.wizard-backtest-legend {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+  font-size: 0.66rem;
+  color: #4b5563;
+  margin-bottom: 0.35rem;
+}
+.wizard-backtest-legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+.wizard-backtest-legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  vertical-align: middle;
+}
+.wizard-backtest-legend-swatch--profile {
+  background: #d97706;
+}
+.wizard-backtest-legend-swatch--spx {
+  background: linear-gradient(to right, #94a3b8 0%, #94a3b8 50%, transparent 50%, transparent 100%);
+  background-size: 6px 2px;
+  background-repeat: repeat-x;
+  background-color: transparent;
+  border-top: 2px dashed #94a3b8;
+  height: 0;
 }
 
 @media (max-width: 480px) {

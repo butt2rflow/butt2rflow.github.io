@@ -164,6 +164,16 @@
     },
   ];
 
+  // Canonical ordering for each axis. Drives both the result-screen pill
+  // rows (so the user can nudge a single axis after seeing the wizard's
+  // recommendation) and any future lookups that need a stable list.
+  const AXIS_ORDER = {
+    kelly:    ["quarter", "half", "threequarter", "full"],
+    discount: ["loose", "standard", "tight"],
+    premium:  ["conservative", "standard", "aggressive"],
+    split:    ["80-20", "90-10", "95-5"],
+  };
+
   // Bucket boundaries — clamp score sums to the closest dashboard value.
   function bucketKelly(score) {
     if (score <= -5) return "quarter";
@@ -242,6 +252,8 @@
     backtestMdd: "최대 낙폭",
     backtestVol: "변동성",
     backtestVsSpx: "SPX 100% 비교",
+    backtestChartLegendProfile: "내 프로필",
+    backtestChartLegendSpx: "SPX 100%",
     backtestDisclaimer: "단순화된 예시 — 가격 수익률만, 배당·세금·슬리피지·옵션 프리미엄 미반영, Discount/Split 토글 미적용. 실제 운용 결과 아님.",
     backtestPeriodMap: { full: "전체", since_2010: "2010~", covid_2020: "코로나 2020", bear_2022: "베어 2022" },
     backtestLoading: "백테스트 불러오는 중…",
@@ -279,6 +291,8 @@
     backtestMdd: "Max drawdown",
     backtestVol: "Volatility",
     backtestVsSpx: "vs SPX 100%",
+    backtestChartLegendProfile: "My profile",
+    backtestChartLegendSpx: "SPX 100%",
     backtestDisclaimer: "Illustrative only — price returns only; dividends, taxes, slippage, options premiums excluded; Discount/Split toggles not applied. NOT actual performance.",
     backtestPeriodMap: { full: "Full", since_2010: "Since 2010", covid_2020: "Covid 2020", bear_2022: "Bear 2022" },
     backtestLoading: "Loading backtest…",
@@ -445,7 +459,86 @@
     return `${sign}${v.toFixed(1)}%`;
   }
 
-  function fillBacktest(box, data, result, t) {
+  // ---------------------------------------------------------------------
+  // SVG sparkline: profile NAV vs SPX baseline, both rebased to 1.0 at
+  // period start. Linear scale, no axes/grid — the surrounding numbers
+  // give the precise readouts; the chart's job is just "which line ended
+  // higher and which had a deeper trough."
+  // ---------------------------------------------------------------------
+  const CHART_WIDTH = 280;
+  const CHART_HEIGHT = 72;
+  const CHART_PAD_X = 4;
+  const CHART_PAD_Y = 6;
+
+  function buildChartSvg(profileSeries, spxSeries) {
+    if (!profileSeries || profileSeries.length < 2 ||
+        !spxSeries || spxSeries.length < 2) {
+      return null;
+    }
+    const n = Math.min(profileSeries.length, spxSeries.length);
+    const yMin = Math.min(
+      Math.min(...profileSeries.slice(0, n)),
+      Math.min(...spxSeries.slice(0, n))
+    );
+    const yMax = Math.max(
+      Math.max(...profileSeries.slice(0, n)),
+      Math.max(...spxSeries.slice(0, n))
+    );
+    const yRange = yMax - yMin || 1;
+    const innerW = CHART_WIDTH - 2 * CHART_PAD_X;
+    const innerH = CHART_HEIGHT - 2 * CHART_PAD_Y;
+
+    function pointsFor(series) {
+      return series.slice(0, n).map((v, i) => {
+        const x = CHART_PAD_X + (innerW * i) / (n - 1);
+        const y = CHART_PAD_Y + innerH - (innerH * (v - yMin)) / yRange;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(" ");
+    }
+
+    // Use SVG namespace via createElementNS so the polyline renders.
+    // Build via DOM rather than innerHTML to keep CSP-friendly.
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`);
+    svg.setAttribute("class", "wizard-backtest-chart");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-hidden", "true");
+
+    // SPX baseline first (background, dashed gray).
+    const spxLine = document.createElementNS(svgNS, "polyline");
+    spxLine.setAttribute("points", pointsFor(spxSeries));
+    spxLine.setAttribute("class", "wizard-chart-spx");
+    spxLine.setAttribute("fill", "none");
+    svg.appendChild(spxLine);
+
+    // Profile in front, solid amber.
+    const profLine = document.createElementNS(svgNS, "polyline");
+    profLine.setAttribute("points", pointsFor(profileSeries));
+    profLine.setAttribute("class", "wizard-chart-profile");
+    profLine.setAttribute("fill", "none");
+    svg.appendChild(profLine);
+
+    // 1.0 baseline (start value) — light reference hairline.
+    if (yMin <= 1.0 && yMax >= 1.0) {
+      const baselineY = CHART_PAD_Y + innerH - (innerH * (1.0 - yMin)) / yRange;
+      const baseline = document.createElementNS(svgNS, "line");
+      baseline.setAttribute("x1", CHART_PAD_X);
+      baseline.setAttribute("x2", CHART_WIDTH - CHART_PAD_X);
+      baseline.setAttribute("y1", baselineY);
+      baseline.setAttribute("y2", baselineY);
+      baseline.setAttribute("class", "wizard-chart-baseline");
+      svg.insertBefore(baseline, spxLine);
+    }
+    return svg;
+  }
+
+  // fillBacktest renders the entire backtest section (header + period
+  // pills + chart + metrics + SPX line + disclaimer) into `box`. The
+  // active period is owned by the caller (openWizard closure) so that
+  // switching Kelly/Premium pills above doesn't reset the user's chosen
+  // period. `onPeriodChange` is fired so the caller can persist it.
+  function fillBacktest(box, data, result, t, activePeriod, onPeriodChange) {
     const profileKey = `${result.kelly}|${result.premium}`;
     const profMetrics = data.profiles && data.profiles[profileKey];
     if (!profMetrics) {
@@ -456,14 +549,20 @@
     box.innerHTML = "";
     box.removeAttribute("data-loading");
 
-    // Default to the "since_2010" slice — long enough to be meaningful,
-    // recent enough that the chosen profile reflects the dashboard's
-    // current regime. User can switch periods via the pill row below.
-    let activePeriod = "since_2010";
-
     const header = el("div", { className: "wizard-backtest-head" }, [
       el("strong", { text: t.backtestTitle }),
       renderPeriodPills(),
+    ]);
+    const chartWrap = el("div", { className: "wizard-backtest-chart-wrap" });
+    const legend = el("div", { className: "wizard-backtest-legend" }, [
+      el("span", { className: "wizard-backtest-legend-item" }, [
+        el("span", { className: "wizard-backtest-legend-swatch wizard-backtest-legend-swatch--profile" }),
+        el("span", { text: " " + t.backtestChartLegendProfile }),
+      ]),
+      el("span", { className: "wizard-backtest-legend-item" }, [
+        el("span", { className: "wizard-backtest-legend-swatch wizard-backtest-legend-swatch--spx" }),
+        el("span", { text: " " + t.backtestChartLegendSpx }),
+      ]),
     ]);
     const metricsRow = el("div", { className: "wizard-backtest-metrics" });
     const spxLine = el("div", { className: "wizard-backtest-spx" });
@@ -480,15 +579,25 @@
           text: t.backtestPeriodMap[key] || key,
           onClick: () => {
             activePeriod = key;
+            if (onPeriodChange) onPeriodChange(key);
             wrap.querySelectorAll(".wizard-backtest-pill").forEach((p) => {
               p.classList.toggle("is-active", p.getAttribute("data-period") === key);
             });
-            redrawMetrics();
+            redrawAll();
           },
         });
         wrap.appendChild(pill);
       });
       return wrap;
+    }
+
+    function redrawChart() {
+      chartWrap.innerHTML = "";
+      const profileSeries = data.series && data.series.profiles
+        && data.series.profiles[profileKey] && data.series.profiles[profileKey][activePeriod];
+      const spxSeries = data.series && data.series.spx && data.series.spx[activePeriod];
+      const svg = buildChartSvg(profileSeries, spxSeries);
+      if (svg) chartWrap.appendChild(svg);
     }
 
     function redrawMetrics() {
@@ -516,11 +625,18 @@
       }
     }
 
+    function redrawAll() {
+      redrawChart();
+      redrawMetrics();
+    }
+
     box.appendChild(header);
+    box.appendChild(chartWrap);
+    box.appendChild(legend);
     box.appendChild(metricsRow);
     box.appendChild(spxLine);
     box.appendChild(disclaimer);
-    redrawMetrics();
+    redrawAll();
   }
 
   // ---------------------------------------------------------------------
@@ -577,6 +693,10 @@
     // Direction of the last transition between questions — drives the
     // slide-in animation class on .wizard-body. "next" / "prev" / null.
     let lastDirection = null;
+    // Active backtest period — owned at the openWizard scope (not inside
+    // fillBacktest) so that editing an axis pill above the chart doesn't
+    // reset the user's chosen period when the result re-renders.
+    let backtestPeriod = "since_2010";
 
     const overlay = el("div", { className: "wizard-overlay", attrs: { role: "dialog", "aria-modal": "true", "aria-label": t.title } });
     const modal = el("div", { className: "wizard-modal" });
@@ -702,10 +822,10 @@
       ]);
 
       const axes = el("div", { className: "wizard-result" }, [
-        renderAxisCard(t.axisKelly,    t.kellyValueLabel[result.kelly]),
-        renderAxisCard(t.axisDiscount, t.discountValueLabel[result.discount]),
-        renderAxisCard(t.axisPremium,  t.premiumValueLabel[result.premium]),
-        renderAxisCard(t.axisSplit,    t.splitValueLabel[result.split]),
+        renderEditableAxisCard("kelly",    t.axisKelly,    t.kellyValueLabel),
+        renderEditableAxisCard("discount", t.axisDiscount, t.discountValueLabel),
+        renderEditableAxisCard("premium",  t.axisPremium,  t.premiumValueLabel),
+        renderEditableAxisCard("split",    t.axisSplit,    t.splitValueLabel),
       ]);
 
       // Backtest section — placeholder injected synchronously, populated
@@ -716,7 +836,8 @@
         el("div", { className: "wizard-backtest-loading", text: t.backtestLoading }),
       ]);
       loadBacktest()
-        .then((data) => fillBacktest(backtestBox, data, result, t))
+        .then((data) => fillBacktest(backtestBox, data, result, t, backtestPeriod,
+                                     (newPeriod) => { backtestPeriod = newPeriod; }))
         .catch(() => {
           backtestBox.innerHTML = "";
           backtestBox.appendChild(el("div", { className: "wizard-backtest-error", text: t.backtestFailed }));
@@ -766,11 +887,41 @@
       modal.appendChild(nav);
     }
 
-    function renderAxisCard(name, value) {
-      return el("div", { className: "wizard-axis" }, [
-        el("div", { className: "wizard-axis-name", text: name }),
-        el("div", { className: "wizard-axis-value", text: value }),
+    // Editable axis card — the wizard's recommendation populates each
+    // axis, but the user can override any one (or all four) with the
+    // pill row before clicking Apply / Share. Kelly+Premium changes
+    // ripple into the profile name and the backtest section.
+    function renderEditableAxisCard(axisKey, axisName, axisLabels) {
+      return el("div", { className: "wizard-axis wizard-axis--editable" }, [
+        el("div", { className: "wizard-axis-name", text: axisName }),
+        el("div", { className: "wizard-axis-pills" },
+          AXIS_ORDER[axisKey].map((val) =>
+            el("button", {
+              className: "wizard-axis-pill" + (result[axisKey] === val ? " is-active" : ""),
+              attrs: { type: "button", "data-axis-value": val },
+              text: axisLabels[val],
+              onClick: () => setAxis(axisKey, val),
+            })
+          )
+        ),
       ]);
+    }
+
+    function setAxis(axisKey, value) {
+      if (result[axisKey] === value) return;
+      result[axisKey] = value;
+      // Profile name depends on Kelly + Premium — recompute when either
+      // changes. Discount and Split don't affect the label.
+      if (axisKey === "kelly" || axisKey === "premium") {
+        const labels = getProfileLabels(lang);
+        result.profileName = labels[`${result.kelly}|${result.premium}`]
+          || (lang === "en" ? "Custom" : "맞춤형");
+      }
+      // Re-render the whole result screen. Cheap (DOM rebuild, the
+      // backtest fetch is cached). Backtest period persists because
+      // backtestPeriod lives in the openWizard closure, not inside
+      // fillBacktest.
+      render();
     }
 
     function renderProgress(curr, total) {

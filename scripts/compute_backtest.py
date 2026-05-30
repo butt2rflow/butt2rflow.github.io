@@ -97,6 +97,26 @@ def slice_period(s: pd.Series, start: pd.Timestamp | None, end: pd.Timestamp | N
     return out
 
 
+def sample_monthly(nav: pd.Series) -> tuple[list[str], list[float]]:
+    """Resample to month-end NAV (last trading day of each month) so the
+    wizard chart stays light. Returns (dates_iso, navs_rounded). Short
+    periods (covid 2020, bear 2022) keep ~11-12 points which is enough
+    for a small sparkline."""
+    if len(nav) < 2:
+        return [], []
+    monthly = nav.resample("ME").last().dropna()
+    # Always include the very first point (start of slice) so the chart
+    # starts at 1.0 rather than a month later.
+    first_date = nav.index[0]
+    if len(monthly) == 0 or monthly.index[0] != first_date:
+        first_point = pd.Series([nav.iloc[0]], index=[first_date])
+        monthly = pd.concat([first_point, monthly])
+    monthly = monthly.sort_index()
+    dates = [d.date().isoformat() for d in monthly.index]
+    navs = [round(float(v), 4) for v in monthly.values]
+    return dates, navs
+
+
 def main() -> None:
     print("Fetching SPX history from Cboe CDN...")
     spx = _fetch_cboe_index("SPX").sort_index()
@@ -117,6 +137,7 @@ def main() -> None:
     df["vix_lag"] = df["vix"].shift(1)
 
     profiles_metrics: dict[str, dict] = {}
+    profiles_series: dict[str, dict] = {}
 
     for frac_key, frac_val, _ in KELLY_FRACTIONS:
         for prem_key, prem_val in EQUITY_PREMIUM_PROFILES.items():
@@ -124,17 +145,21 @@ def main() -> None:
                 lambda v: kelly_weight_at(v, frac_val, prem_val)
             )
             nav = simulate_nav(df["spx_ret"], eq_pct)
-            per_period = {}
+            per_period_metrics = {}
+            per_period_series = {}
             for key, start, end, _, _ in PERIODS:
                 sub_nav = slice_period(nav, start, end)
                 # Re-anchor to 1.0 at the start of the slice for the cum_pct
                 # to read as "+X% over this window," not since 1990.
                 if len(sub_nav) >= 2:
                     sub_nav = sub_nav / sub_nav.iloc[0]
-                per_period[key] = summarize(sub_nav)
+                per_period_metrics[key] = summarize(sub_nav)
+                dates, navs = sample_monthly(sub_nav)
+                per_period_series[key] = navs
             profile_id = f"{frac_key}|{prem_key}"
-            profiles_metrics[profile_id] = per_period
-            full = per_period["full"]
+            profiles_metrics[profile_id] = per_period_metrics
+            profiles_series[profile_id] = per_period_series
+            full = per_period_metrics["full"]
             print(
                 f"  {profile_id:30s}  full: "
                 f"cum={full['cum_pct']:+.1f}%  CAGR={full['cagr_pct']:+.2f}%  "
@@ -142,14 +167,22 @@ def main() -> None:
             )
 
     # SPX 100% baseline — same period slicing, eq_pct = 1.0 throughout.
+    # Doubles as the X-axis date master per period: all profiles' monthly
+    # samples align with these dates, so the JSON only needs one date array
+    # per period rather than one per profile.
     print("Computing SPX 100% baseline...")
     spx_nav = (1.0 + df["spx_ret"].fillna(0.0)).cumprod()
     spx_baseline = {}
+    period_dates: dict[str, list[str]] = {}
+    spx_series: dict[str, list[float]] = {}
     for key, start, end, _, _ in PERIODS:
         sub = slice_period(spx_nav, start, end)
         if len(sub) >= 2:
             sub = sub / sub.iloc[0]
         spx_baseline[key] = summarize(sub)
+        dates, navs = sample_monthly(sub)
+        period_dates[key] = dates
+        spx_series[key] = navs
 
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -166,6 +199,14 @@ def main() -> None:
         ],
         "profiles": profiles_metrics,
         "spx_baseline": spx_baseline,
+        # Monthly NAV samples for the wizard sparkline. dates[period_key]
+        # is shared across all profiles + the SPX baseline within a period.
+        # Each NAV series is rebased to 1.0 at the start of its period.
+        "series": {
+            "dates": period_dates,
+            "spx":   spx_series,
+            "profiles": profiles_series,
+        },
         "disclaimer": {
             "ko": "단순화된 시뮬레이션입니다. 가격 수익률만 (배당 제외), 현금 이자 0%, Discount/Split 토글 미반영, 옵션 프리미엄·세금·슬리피지 무시. 실제 운용 결과가 아닌 예시 수치입니다.",
             "en": "Simplified illustrative simulation only. Price returns only (no dividends), 0% cash interest, Discount/Split toggles ignored, options premiums / taxes / slippage not modeled. NOT actual performance.",
