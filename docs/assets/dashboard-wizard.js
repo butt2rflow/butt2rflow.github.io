@@ -236,6 +236,16 @@
     share: "🔗 공유 링크 복사",
     shareShort: "🔗",
     shareCopied: "복사됨!",
+    backtestTitle: "과거 시뮬레이션",
+    backtestCum: "누적",
+    backtestCagr: "연 수익",
+    backtestMdd: "최대 낙폭",
+    backtestVol: "변동성",
+    backtestVsSpx: "SPX 100% 비교",
+    backtestDisclaimer: "단순화된 예시 — 가격 수익률만, 배당·세금·슬리피지·옵션 프리미엄 미반영, Discount/Split 토글 미적용. 실제 운용 결과 아님.",
+    backtestPeriodMap: { full: "전체", since_2010: "2010~", covid_2020: "코로나 2020", bear_2022: "베어 2022" },
+    backtestLoading: "백테스트 불러오는 중…",
+    backtestFailed: "백테스트 데이터를 불러올 수 없습니다.",
     axisKelly: "Kelly 분율",
     axisDiscount: "위험 민감도",
     axisPremium: "기대 프리미엄",
@@ -263,6 +273,16 @@
     share: "🔗 Copy share link",
     shareShort: "🔗",
     shareCopied: "Copied!",
+    backtestTitle: "Historical simulation",
+    backtestCum: "Cumulative",
+    backtestCagr: "CAGR",
+    backtestMdd: "Max drawdown",
+    backtestVol: "Volatility",
+    backtestVsSpx: "vs SPX 100%",
+    backtestDisclaimer: "Illustrative only — price returns only; dividends, taxes, slippage, options premiums excluded; Discount/Split toggles not applied. NOT actual performance.",
+    backtestPeriodMap: { full: "Full", since_2010: "Since 2010", covid_2020: "Covid 2020", bear_2022: "Bear 2022" },
+    backtestLoading: "Loading backtest…",
+    backtestFailed: "Could not load backtest data.",
     axisKelly: "Kelly fraction",
     axisDiscount: "Risk sensitivity",
     axisPremium: "Equity premium",
@@ -274,6 +294,25 @@
   };
 
   const STORAGE_PROFILE = "wizard-profile";
+
+  // ---------------------------------------------------------------------
+  // Backtest data — fetched once on first use, cached in module scope.
+  // Path is relative; the bundle is at /assets/dashboard-wizard.js so
+  // ../assets/data/... resolves correctly from the EN page (/en/) too.
+  // ---------------------------------------------------------------------
+  const BACKTEST_URL = "/assets/data/backtest_results.json";
+  let backtestPromise = null;
+  function loadBacktest() {
+    if (backtestPromise) return backtestPromise;
+    backtestPromise = fetch(BACKTEST_URL, { cache: "force-cache" })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .catch((err) => {
+        // Don't poison the cache on transient failures so a later call can retry.
+        backtestPromise = null;
+        throw err;
+      });
+    return backtestPromise;
+  }
 
   function pickLang() {
     // Prefer document lang; fall back to URL prefix (`/en/`).
@@ -398,6 +437,90 @@
   function prefersReducedMotion() {
     return typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function fmtPct(v) {
+    if (v == null || isNaN(v)) return "—";
+    const sign = v > 0 ? "+" : "";
+    return `${sign}${v.toFixed(1)}%`;
+  }
+
+  function fillBacktest(box, data, result, t) {
+    const profileKey = `${result.kelly}|${result.premium}`;
+    const profMetrics = data.profiles && data.profiles[profileKey];
+    if (!profMetrics) {
+      box.innerHTML = "";
+      box.appendChild(el("div", { className: "wizard-backtest-error", text: t.backtestFailed }));
+      return;
+    }
+    box.innerHTML = "";
+    box.removeAttribute("data-loading");
+
+    // Default to the "since_2010" slice — long enough to be meaningful,
+    // recent enough that the chosen profile reflects the dashboard's
+    // current regime. User can switch periods via the pill row below.
+    let activePeriod = "since_2010";
+
+    const header = el("div", { className: "wizard-backtest-head" }, [
+      el("strong", { text: t.backtestTitle }),
+      renderPeriodPills(),
+    ]);
+    const metricsRow = el("div", { className: "wizard-backtest-metrics" });
+    const spxLine = el("div", { className: "wizard-backtest-spx" });
+    const disclaimer = el("div", { className: "wizard-backtest-disclaimer", text: t.backtestDisclaimer });
+
+    function renderPeriodPills() {
+      const wrap = el("div", { className: "wizard-backtest-periods" });
+      const keys = ["since_2010", "full", "covid_2020", "bear_2022"];
+      keys.forEach((key) => {
+        if (!profMetrics[key]) return;
+        const pill = el("button", {
+          className: "wizard-backtest-pill" + (key === activePeriod ? " is-active" : ""),
+          attrs: { type: "button", "data-period": key },
+          text: t.backtestPeriodMap[key] || key,
+          onClick: () => {
+            activePeriod = key;
+            wrap.querySelectorAll(".wizard-backtest-pill").forEach((p) => {
+              p.classList.toggle("is-active", p.getAttribute("data-period") === key);
+            });
+            redrawMetrics();
+          },
+        });
+        wrap.appendChild(pill);
+      });
+      return wrap;
+    }
+
+    function redrawMetrics() {
+      const m = profMetrics[activePeriod];
+      const baseline = data.spx_baseline && data.spx_baseline[activePeriod];
+      metricsRow.innerHTML = "";
+      [
+        [t.backtestCum,  fmtPct(m.cum_pct)],
+        [t.backtestCagr, fmtPct(m.cagr_pct)],
+        [t.backtestMdd,  fmtPct(m.mdd_pct)],
+        [t.backtestVol,  fmtPct(m.vol_pct)],
+      ].forEach(([name, value]) => {
+        metricsRow.appendChild(el("div", { className: "wizard-backtest-metric" }, [
+          el("div", { className: "wizard-backtest-metric-name", text: name }),
+          el("div", { className: "wizard-backtest-metric-value", text: value }),
+        ]));
+      });
+      spxLine.innerHTML = "";
+      if (baseline) {
+        spxLine.appendChild(el("span", { className: "wizard-backtest-spx-label", text: t.backtestVsSpx + ":" }));
+        spxLine.appendChild(el("span", {
+          className: "wizard-backtest-spx-value",
+          text: ` ${t.backtestCum} ${fmtPct(baseline.cum_pct)} · ${t.backtestMdd} ${fmtPct(baseline.mdd_pct)}`,
+        }));
+      }
+    }
+
+    box.appendChild(header);
+    box.appendChild(metricsRow);
+    box.appendChild(spxLine);
+    box.appendChild(disclaimer);
+    redrawMetrics();
   }
 
   // ---------------------------------------------------------------------
@@ -585,6 +708,20 @@
         renderAxisCard(t.axisSplit,    t.splitValueLabel[result.split]),
       ]);
 
+      // Backtest section — placeholder injected synchronously, populated
+      // asynchronously once the JSON fetch resolves. Failures fall back
+      // to a short error line; the recommendation flow itself is not
+      // blocked on this data.
+      const backtestBox = el("div", { className: "wizard-backtest", attrs: { "data-loading": "1" } }, [
+        el("div", { className: "wizard-backtest-loading", text: t.backtestLoading }),
+      ]);
+      loadBacktest()
+        .then((data) => fillBacktest(backtestBox, data, result, t))
+        .catch(() => {
+          backtestBox.innerHTML = "";
+          backtestBox.appendChild(el("div", { className: "wizard-backtest-error", text: t.backtestFailed }));
+        });
+
       const shareBtn = el("button", {
         className: "wizard-nav-btn wizard-nav-share",
         attrs: { type: "button" },
@@ -625,6 +762,7 @@
       modal.appendChild(header);
       modal.appendChild(profileBox);
       modal.appendChild(axes);
+      modal.appendChild(backtestBox);
       modal.appendChild(nav);
     }
 
@@ -769,6 +907,11 @@
       if (!btn.textContent.trim()) btn.textContent = t.triggerLabel;
       btn.addEventListener("click", openWizard);
     });
+
+    // Warm the backtest cache so the result screen has it ready when the
+    // user reaches Q7. Silently swallow failures — the result UI handles
+    // the missing-data case itself.
+    loadBacktest().catch(() => { /* */ });
 
     // If we arrived from a share link (?profile=...), apply it and rewrite
     // the URL so a manual refresh doesn't re-apply on top of a user's later

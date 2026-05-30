@@ -35,6 +35,8 @@ _archive/
 !scripts/update_dashboard.py
 # Plus the one-off backfill helper for the VIX TS history archive
 !scripts/backfill_vix_history.py
+# Plus the monthly backtest data generator (output is JSON, committed)
+!scripts/compute_backtest.py
 blogstyle.css
 RachetEffect.gif
 .claude/

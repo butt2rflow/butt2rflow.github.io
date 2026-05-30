@@ -1,0 +1,486 @@
+{
+  "generated_at": "2026-05-30T17:45:59.143104+00:00",
+  "data_range": {
+    "start": "1990-01-02",
+    "end": "2026-05-29",
+    "rows": 9165
+  },
+  "periods": [
+    {
+      "key": "full",
+      "start": null,
+      "end": null,
+      "label_ko": "전체",
+      "label_en": "Full history"
+    },
+    {
+      "key": "since_2010",
+      "start": "2010-01-01",
+      "end": null,
+      "label_ko": "2010~",
+      "label_en": "Since 2010"
+    },
+    {
+      "key": "covid_2020",
+      "start": "2020-02-01",
+      "end": "2020-12-31",
+      "label_ko": "코로나 2020",
+      "label_en": "Covid 2020"
+    },
+    {
+      "key": "bear_2022",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "label_ko": "베어 2022",
+      "label_en": "Bear 2022"
+    }
+  ],
+  "profiles": {
+    "quarter|conservative": {
+      "full": {
+        "cum_pct": 227.28,
+        "cagr_pct": 3.31,
+        "mdd_pct": -17.61,
+        "vol_pct": 5.52,
+        "sharpe": 0.6,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 97.91,
+        "cagr_pct": 4.26,
+        "mdd_pct": -10.31,
+        "vol_pct": 5.58,
+        "sharpe": 0.76,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 2.41,
+        "cagr_pct": 2.62,
+        "mdd_pct": -5.11,
+        "vol_pct": 3.8,
+        "sharpe": 0.69,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -7.28,
+        "cagr_pct": -7.3,
+        "mdd_pct": -7.62,
+        "vol_pct": 4.79,
+        "sharpe": -1.52,
+        "days": 251
+      }
+    },
+    "quarter|standard": {
+      "full": {
+        "cum_pct": 358.05,
+        "cagr_pct": 4.27,
+        "mdd_pct": -23.84,
+        "vol_pct": 7.34,
+        "sharpe": 0.58,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 146.84,
+        "cagr_pct": 5.67,
+        "mdd_pct": -12.95,
+        "vol_pct": 7.53,
+        "sharpe": 0.75,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 3.35,
+        "cagr_pct": 3.64,
+        "mdd_pct": -7.1,
+        "vol_pct": 5.33,
+        "sharpe": 0.68,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -10.09,
+        "cagr_pct": -10.13,
+        "mdd_pct": -10.56,
+        "vol_pct": 6.71,
+        "sharpe": -1.51,
+        "days": 251
+      }
+    },
+    "quarter|aggressive": {
+      "full": {
+        "cum_pct": 465.8,
+        "cagr_pct": 4.88,
+        "mdd_pct": -29.65,
+        "vol_pct": 8.76,
+        "sharpe": 0.56,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 188.79,
+        "cagr_pct": 6.69,
+        "mdd_pct": -13.74,
+        "vol_pct": 9.06,
+        "sharpe": 0.74,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 4.38,
+        "cagr_pct": 4.76,
+        "mdd_pct": -9.02,
+        "vol_pct": 6.84,
+        "sharpe": 0.7,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -12.86,
+        "cagr_pct": -12.9,
+        "mdd_pct": -13.44,
+        "vol_pct": 8.62,
+        "sharpe": -1.5,
+        "days": 251
+      }
+    },
+    "half|conservative": {
+      "full": {
+        "cum_pct": 519.02,
+        "cagr_pct": 5.14,
+        "mdd_pct": -32.41,
+        "vol_pct": 9.37,
+        "sharpe": 0.55,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 206.17,
+        "cagr_pct": 7.07,
+        "mdd_pct": -15.18,
+        "vol_pct": 9.71,
+        "sharpe": 0.73,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 4.83,
+        "cagr_pct": 5.25,
+        "mdd_pct": -9.91,
+        "vol_pct": 7.57,
+        "sharpe": 0.69,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -14.22,
+        "cagr_pct": -14.27,
+        "mdd_pct": -14.86,
+        "vol_pct": 9.58,
+        "sharpe": -1.49,
+        "days": 251
+      }
+    },
+    "half|standard": {
+      "full": {
+        "cum_pct": 713.82,
+        "cagr_pct": 5.93,
+        "mdd_pct": -41.97,
+        "vol_pct": 11.28,
+        "sharpe": 0.53,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 276.31,
+        "cagr_pct": 8.43,
+        "mdd_pct": -20.34,
+        "vol_pct": 11.54,
+        "sharpe": 0.73,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 6.82,
+        "cagr_pct": 7.43,
+        "mdd_pct": -12.53,
+        "vol_pct": 10.11,
+        "sharpe": 0.73,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -19.0,
+        "cagr_pct": -19.07,
+        "mdd_pct": -19.84,
+        "vol_pct": 13.32,
+        "sharpe": -1.43,
+        "days": 251
+      }
+    },
+    "half|aggressive": {
+      "full": {
+        "cum_pct": 880.38,
+        "cagr_pct": 6.48,
+        "mdd_pct": -47.08,
+        "vol_pct": 12.63,
+        "sharpe": 0.51,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 332.57,
+        "cagr_pct": 9.36,
+        "mdd_pct": -22.94,
+        "vol_pct": 12.7,
+        "sharpe": 0.74,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 8.91,
+        "cagr_pct": 9.71,
+        "mdd_pct": -14.67,
+        "vol_pct": 12.48,
+        "sharpe": 0.78,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -21.53,
+        "cagr_pct": -21.61,
+        "mdd_pct": -22.9,
+        "vol_pct": 16.69,
+        "sharpe": -1.3,
+        "days": 251
+      }
+    },
+    "threequarter|conservative": {
+      "full": {
+        "cum_pct": 759.77,
+        "cagr_pct": 6.09,
+        "mdd_pct": -43.69,
+        "vol_pct": 11.66,
+        "sharpe": 0.52,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 294.69,
+        "cagr_pct": 8.75,
+        "mdd_pct": -21.23,
+        "vol_pct": 11.87,
+        "sharpe": 0.74,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 7.35,
+        "cagr_pct": 8.0,
+        "mdd_pct": -13.07,
+        "vol_pct": 10.69,
+        "sharpe": 0.75,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -19.9,
+        "cagr_pct": -19.97,
+        "mdd_pct": -20.79,
+        "vol_pct": 14.23,
+        "sharpe": -1.4,
+        "days": 251
+      }
+    },
+    "threequarter|standard": {
+      "full": {
+        "cum_pct": 971.3,
+        "cagr_pct": 6.74,
+        "mdd_pct": -48.58,
+        "vol_pct": 13.39,
+        "sharpe": 0.5,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 353.01,
+        "cagr_pct": 9.67,
+        "mdd_pct": -24.59,
+        "vol_pct": 13.34,
+        "sharpe": 0.72,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 10.16,
+        "cagr_pct": 11.08,
+        "mdd_pct": -16.24,
+        "vol_pct": 14.24,
+        "sharpe": 0.78,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -22.25,
+        "cagr_pct": -22.33,
+        "mdd_pct": -24.59,
+        "vol_pct": 18.69,
+        "sharpe": -1.19,
+        "days": 251
+      }
+    },
+    "threequarter|aggressive": {
+      "full": {
+        "cum_pct": 1107.2,
+        "cagr_pct": 7.09,
+        "mdd_pct": -50.98,
+        "vol_pct": 14.47,
+        "sharpe": 0.49,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 376.14,
+        "cagr_pct": 10.0,
+        "mdd_pct": -26.79,
+        "vol_pct": 14.27,
+        "sharpe": 0.7,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 10.48,
+        "cagr_pct": 11.43,
+        "mdd_pct": -19.13,
+        "vol_pct": 17.46,
+        "sharpe": 0.65,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -23.24,
+        "cagr_pct": -23.32,
+        "mdd_pct": -26.79,
+        "vol_pct": 21.63,
+        "sharpe": -1.08,
+        "days": 251
+      }
+    },
+    "full|conservative": {
+      "full": {
+        "cum_pct": 949.1,
+        "cagr_pct": 6.68,
+        "mdd_pct": -48.17,
+        "vol_pct": 13.16,
+        "sharpe": 0.51,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 348.04,
+        "cagr_pct": 9.59,
+        "mdd_pct": -24.04,
+        "vol_pct": 13.14,
+        "sharpe": 0.73,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 9.8,
+        "cagr_pct": 10.69,
+        "mdd_pct": -15.72,
+        "vol_pct": 13.66,
+        "sharpe": 0.78,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -21.94,
+        "cagr_pct": -22.02,
+        "mdd_pct": -24.04,
+        "vol_pct": 18.08,
+        "sharpe": -1.22,
+        "days": 251
+      }
+    },
+    "full|standard": {
+      "full": {
+        "cum_pct": 1121.89,
+        "cagr_pct": 7.12,
+        "mdd_pct": -51.34,
+        "vol_pct": 14.6,
+        "sharpe": 0.49,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 378.59,
+        "cagr_pct": 10.03,
+        "mdd_pct": -26.82,
+        "vol_pct": 14.39,
+        "sharpe": 0.7,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 10.25,
+        "cagr_pct": 11.19,
+        "mdd_pct": -19.54,
+        "vol_pct": 17.94,
+        "sharpe": 0.62,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -23.06,
+        "cagr_pct": -23.14,
+        "mdd_pct": -26.82,
+        "vol_pct": 21.95,
+        "sharpe": -1.05,
+        "days": 251
+      }
+    },
+    "full|aggressive": {
+      "full": {
+        "cum_pct": 1348.93,
+        "cagr_pct": 7.63,
+        "mdd_pct": -50.5,
+        "vol_pct": 15.42,
+        "sharpe": 0.49,
+        "days": 9165
+      },
+      "since_2010": {
+        "cum_pct": 406.73,
+        "cagr_pct": 10.42,
+        "mdd_pct": -26.45,
+        "vol_pct": 15.12,
+        "sharpe": 0.69,
+        "days": 4126
+      },
+      "covid_2020": {
+        "cum_pct": 11.44,
+        "cagr_pct": 12.49,
+        "mdd_pct": -22.03,
+        "vol_pct": 20.51,
+        "sharpe": 0.61,
+        "days": 232
+      },
+      "bear_2022": {
+        "cum_pct": -21.46,
+        "cagr_pct": -21.54,
+        "mdd_pct": -26.45,
+        "vol_pct": 23.71,
+        "sharpe": -0.91,
+        "days": 251
+      }
+    }
+  },
+  "spx_baseline": {
+    "full": {
+      "cum_pct": 2007.39,
+      "cagr_pct": 8.74,
+      "mdd_pct": -56.78,
+      "vol_pct": 18.01,
+      "sharpe": 0.49,
+      "days": 9165
+    },
+    "since_2010": {
+      "cum_pct": 569.03,
+      "cagr_pct": 12.31,
+      "mdd_pct": -33.92,
+      "vol_pct": 17.24,
+      "sharpe": 0.71,
+      "days": 4126
+    },
+    "covid_2020": {
+      "cum_pct": 15.61,
+      "cagr_pct": 17.06,
+      "mdd_pct": -33.92,
+      "vol_pct": 35.86,
+      "sharpe": 0.48,
+      "days": 232
+    },
+    "bear_2022": {
+      "cum_pct": -19.95,
+      "cagr_pct": -20.02,
+      "mdd_pct": -25.43,
+      "vol_pct": 24.21,
+      "sharpe": -0.83,
+      "days": 251
+    }
+  },
+  "disclaimer": {
+    "ko": "단순화된 시뮬레이션입니다. 가격 수익률만 (배당 제외), 현금 이자 0%, Discount/Split 토글 미반영, 옵션 프리미엄·세금·슬리피지 무시. 실제 운용 결과가 아닌 예시 수치입니다.",
+    "en": "Simplified illustrative simulation only. Price returns only (no dividends), 0% cash interest, Discount/Split toggles ignored, options premiums / taxes / slippage not modeled. NOT actual performance."
+  }
+}
