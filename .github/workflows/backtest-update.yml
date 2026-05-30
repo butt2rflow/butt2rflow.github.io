@@ -1,0 +1,66 @@
+name: Monthly backtest refresh
+
+# Re-runs scripts/compute_backtest.py once a month and commits the
+# refreshed docs/assets/data/backtest_results.json. The wizard's "Historical
+# simulation" section reads this static JSON; without a periodic refresh
+# the end-of-data slowly falls behind today's date.
+#
+# Why not daily: the backtest covers ~36 years of history (1990–present).
+# A daily re-run would only append ~1 trading day's worth of new data and
+# republish a 10 KB JSON — wasteful CI time and unnecessary commit churn.
+# Monthly gives a meaningful update (~21 trading days) and keeps the file
+# fresh enough that "since 2010" includes the most recent quarter.
+
+on:
+  schedule:
+    # 04:00 UTC on the 1st of every month — one hour after the daily
+    # dashboard archive cron (03:00 UTC Tue–Sat) so the two crons never
+    # collide on push.
+    - cron: '0 4 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        # compute_backtest.py imports from update_dashboard.py for the
+        # _fetch_cboe_index helper and Kelly constants, hence the same
+        # dependency set as the daily dashboard cron.
+        run: pip install pandas numpy matplotlib
+
+      - name: Run backtest
+        run: python scripts/compute_backtest.py
+
+      - name: Commit & push refreshed backtest JSON if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/data/backtest_results.json
+          if git diff --cached --quiet; then
+            echo "No backtest changes — nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: refresh backtest data ($(date -u +%Y-%m-%d))"
+          # Retry-with-rebase on push: a deploy run or the daily dashboard
+          # cron may have landed concurrently. Data changes here don't
+          # conflict with their scope (vix_history archive), so rebase
+          # should always succeed.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push attempt $attempt failed — rebasing onto origin/main and retrying"
+            git pull --rebase origin main
+          done
+          echo "Push still failing after 3 attempts" >&2
+          exit 1
