@@ -76,6 +76,7 @@ extra_javascript:
   - assets/sidebar-widget.js
   - assets/vix-history-player.js
   - assets/kelly-toggle.js
+  - assets/dashboard-wizard.js
 
 nav:
   - Home: index.md

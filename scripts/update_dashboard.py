@@ -989,12 +989,14 @@ def render_master_bar_ko(ks: dict, ts: dict) -> list[str]:
     main_pct = int(round(MAIN_FRAC * 100))
     tac_pct = int(round(TACTICAL_FRAC * 100))
     return [
+        '<div class="wizard-banner" data-wizard-banner hidden></div>',
         f'<div class="allocation-master" data-deploy-pct="{deploy}" '
         f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
         '  <div class="allocation-master__head">',
         '    📊 <strong>오늘의 비중</strong> — '
         f'주식 <strong><span data-total-equity>{total_eq}</span>%</strong> / '
-        f'현금 <strong><span data-total-cash>{total_cash}</span>%</strong>',
+        f'현금 <strong><span data-total-cash>{total_cash}</span>%</strong>'
+        '    <button class="wizard-trigger" data-wizard-open type="button"></button>',
         '  </div>',
         '  <div class="allocation-master__split">',
         '    <span class="allocation-master__split-label">분할 (메인자본/공격자본):</span>',
@@ -1030,12 +1032,14 @@ def render_master_bar_en(ks: dict, ts: dict) -> list[str]:
     main_pct = int(round(MAIN_FRAC * 100))
     tac_pct = int(round(TACTICAL_FRAC * 100))
     return [
+        '<div class="wizard-banner" data-wizard-banner hidden></div>',
         f'<div class="allocation-master" data-deploy-pct="{deploy}" '
         f'data-main-frac="{MAIN_FRAC}" data-tactical-frac="{TACTICAL_FRAC}">',
         '  <div class="allocation-master__head">',
         '    📊 <strong>Today\'s mix</strong> — '
         f'Equity <strong><span data-total-equity>{total_eq}</span>%</strong> / '
-        f'Cash <strong><span data-total-cash>{total_cash}</span>%</strong>',
+        f'Cash <strong><span data-total-cash>{total_cash}</span>%</strong>'
+        '    <button class="wizard-trigger" data-wizard-open type="button"></button>',
         '  </div>',
         '  <div class="allocation-master__split">',
         '    <span class="allocation-master__split-label">Split (Main/Tactical):</span>',
@@ -1646,7 +1650,6 @@ def main():
     kst = now_utc.astimezone(ZoneInfo("Asia/Seoul"))
     et = now_utc.astimezone(ZoneInfo("America/New_York"))
     update_label_ko = f"{kst.month}월 {kst.day}일 {kst.hour}시 {kst.minute:02d}분 업데이트"
-    et_label = et.strftime("%b %-d, %-I:%M %p") if hasattr(et, "strftime") else et.isoformat()
     # %- isn't supported on Windows strftime; build the EN label manually.
     am_pm = "AM" if et.hour < 12 else "PM"
     hour12 = et.hour % 12 or 12
