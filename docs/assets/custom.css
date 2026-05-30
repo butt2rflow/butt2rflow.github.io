@@ -1023,14 +1023,19 @@ body.wizard-open { overflow: hidden; }
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   padding: 0.3rem 0.45rem;
-  display: flex;
-  justify-content: center;
+  /* Plain block (not flex) so the inline SVG inside picks up its own
+     width: 100% + intrinsic-aspect height correctly on iOS Safari. */
+  text-align: center;
 }
 .wizard-backtest-chart {
-  width: 100%;
+  /* max-width keeps the chart from exceeding the wrap's content box; the
+     SVG already has explicit width/height attributes matching its viewBox
+     so it renders with a fixed aspect ratio. `height: auto` lets the
+     responsive scaling work without losing intrinsic height. */
+  max-width: 100%;
   height: auto;
-  max-height: 90px;
   display: block;
+  margin: 0 auto;
 }
 .wizard-chart-profile {
   stroke: #d97706;

@@ -500,6 +500,12 @@
     // Build via DOM rather than innerHTML to keep CSP-friendly.
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
+    // Explicit width/height (not just viewBox) so iOS Safari and older
+    // Chrome — which don't compute SVG intrinsic size from viewBox alone
+    // inside flex/grid containers — actually render with non-zero height.
+    // CSS overrides for responsive scaling: `max-width: 100%; height: auto`.
+    svg.setAttribute("width", CHART_WIDTH);
+    svg.setAttribute("height", CHART_HEIGHT);
     svg.setAttribute("viewBox", `0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`);
     svg.setAttribute("class", "wizard-backtest-chart");
     svg.setAttribute("role", "img");
