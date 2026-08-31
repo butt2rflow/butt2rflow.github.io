@@ -20,6 +20,7 @@ import json
 import os
 import re
 import shutil
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -106,6 +107,12 @@ CREDIT_IDS = {"hy": "BAMLH0A0HYM2", "b": "BAMLH0A2HYB", "ccc": "BAMLH0A3HYC"}
 # pull fails, marked stale so the reader knows it's last-known-good.
 CREDIT_FALLBACK = {"hy": 260.0, "b": 276.0, "ccc": 1031.0,
                    "gap": 755.0, "gap_ytd": 150.0, "date": "2026-08-28", "live": False}
+
+# CFTC Commitments of Traders — Traders in Financial Futures (Socrata, no key).
+# E-mini S&P 500 Leveraged-Funds net = the modern "large speculator" cohort
+# (hedge funds / CTAs). Weekly (Tue positions, Fri release). The legacy
+# futures-only report renamed this contract in 2022, so TFF is the live source.
+COT_BASE = "https://publicreporting.cftc.gov/resource/gpe5-46if.json"
 
 
 # ============================================================
@@ -269,6 +276,51 @@ def fetch_credit_oas() -> dict:
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] FRED credit OAS fetch failed ({e}); using snapshot fallback")
         return dict(CREDIT_FALLBACK)
+
+
+def _cot_state(pct: float) -> str:
+    """COT positioning state by 1-year percentile: extremes (crowded long or
+    short) read as caution on a contrarian basis, the middle as ok."""
+    if pct >= 80 or pct <= 20:
+        return "caution"
+    return "ok"
+
+
+def fetch_cot() -> dict | None:
+    """E-mini S&P 500 Leveraged-Funds net position from the CFTC TFF report
+    (Socrata, no key). Returns the latest net, 4-week change, 1-year percentile
+    and the weekly series; None on failure so the tile is simply omitted."""
+    params = {
+        "$select": ("report_date_as_yyyy_mm_dd,"
+                    "lev_money_positions_long,lev_money_positions_short"),
+        "$where": "contract_market_name='E-MINI S&P 500'",
+        "$order": "report_date_as_yyyy_mm_dd DESC",
+        "$limit": "80",
+    }
+    url = COT_BASE + "?" + urllib.parse.urlencode(params)
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            rows = json.load(r)
+        if not rows:
+            raise ValueError("no COT rows")
+        df = pd.DataFrame(rows)
+        df["date"] = pd.to_datetime(df["report_date_as_yyyy_mm_dd"])
+        df["net"] = (pd.to_numeric(df["lev_money_positions_long"], errors="coerce")
+                     - pd.to_numeric(df["lev_money_positions_short"], errors="coerce"))
+        df = df.dropna(subset=["net"]).sort_values("date")
+        net = pd.Series(df["net"].values, index=df["date"])
+        if len(net) < 5:
+            raise ValueError("too few COT points")
+        latest = float(net.iloc[-1])
+        chg4 = latest - float(net.iloc[-5])
+        yr = net[net.index >= (net.index.max() - pd.DateOffset(months=12))]
+        pct = float((yr < latest).mean() * 100) if len(yr) else 50.0
+        return {"net": latest, "chg4": chg4, "pct": pct,
+                "date": net.index[-1].strftime("%Y-%m-%d"), "series": net}
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] COT fetch failed ({e}); COT tile skipped")
+        return None
 
 
 def compute_volvol_df(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
@@ -1225,6 +1277,92 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     ]
 
 
+def render_cot_chart(net: pd.Series, out_path: Path):
+    """Non-commercial (large speculator) net position over the trailing ~12
+    months, contracts, with a zero line. Regenerated live from CFTC COT."""
+    cutoff = net.index.max() - pd.DateOffset(months=12)
+    net = net[net.index >= cutoff]
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    ax.axhline(0, color="#9ca3af", linewidth=0.9, linestyle=":")
+    ax.fill_between(net.index, 0, net.values, where=(net.values >= 0),
+                    color="#16a34a", alpha=0.12, linewidth=0)
+    ax.fill_between(net.index, 0, net.values, where=(net.values < 0),
+                    color="#dc2626", alpha=0.12, linewidth=0)
+    ax.plot(net.index, net.values, color="#0ea5e9", linewidth=2.0,
+            label="Leveraged-funds net")
+    latest = float(net.iloc[-1])
+    ax.annotate(f"{latest/1000:+,.0f}k", xy=(net.index.max(), latest),
+                xytext=(-6, 6), textcoords="offset points", ha="right", fontsize=9,
+                color="#0369a1",
+                bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
+                          edgecolor="#0ea5e9", alpha=0.9))
+    ax.set_ylabel("Net contracts", fontsize=10)
+    ax.set_title("COT — E-mini S&P 500 large-speculator net position", fontsize=11)
+    ax.legend(loc="upper left", fontsize=9)
+    ax.grid(alpha=0.3)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
+def render_cot_card_ko(c: dict) -> list[str]:
+    st = _cot_state(c["pct"])
+    lab = ("1년 상단권 (되돌림 주의)" if c["pct"] >= 80
+           else "1년 하단권 (되돌림 주의)" if c["pct"] <= 20 else "중립")
+    return [
+        "---",
+        "",
+        "### COT — S&P 500 대형투기 순포지션",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **레버리지드 펀드 순포지션** (E-mini) | {c['net']/1000:+,.1f}천 계약 | {EMOJI[st]} {lab} |",
+        f"| 4주 변화 | {c['chg4']/1000:+,.1f}천 | — |",
+        f"| 1년 백분위 | {c['pct']:.0f}% | — |",
+        "",
+        "</div>",
+        "",
+        "![S&P 500 대형투기 순포지션 추이](assets/diagrams/cot_sp500.png)",
+        "",
+        f"<small>*CFTC COT · TFF (레버리지드 펀드=투기성 대형, {c['date']} 기준, 주간). "
+        "순포지션이 1년 범위의 극단(상·하단)에 가면 되돌림 가능성을 보는 역발상 지표. 음수면 순매도 상태 · "
+        "[자세히 →](posts/cot.md)*</small>",
+        "",
+    ]
+
+
+def render_cot_card_en(c: dict) -> list[str]:
+    st = _cot_state(c["pct"])
+    lab = ("Top of 1yr range" if c["pct"] >= 80
+           else "Bottom of 1yr range" if c["pct"] <= 20 else "Neutral")
+    return [
+        "---",
+        "",
+        "### COT — S&P 500 large-spec net position",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **Leveraged-funds net** (E-mini) | {c['net']/1000:+,.1f}k | {EMOJI[st]} {lab} |",
+        f"| 4-week change | {c['chg4']/1000:+,.1f}k | — |",
+        f"| 1-year percentile | {c['pct']:.0f}% | — |",
+        "",
+        "</div>",
+        "",
+        "![S&P 500 large-spec net position](assets/diagrams_en/cot_sp500.png)",
+        "",
+        f"<small>*CFTC COT · TFF (leveraged funds = fast-money large specs, as of {c['date']}, weekly). "
+        "Positioning stretched to either end of its 1-year range flags a possible reversal — a contrarian gauge; a negative value = net short · "
+        "[Read more →](posts/cot.md)*</small>",
+        "",
+    ]
+
+
 def render_credit_dispersion(series: dict, out_path: Path):
     """HY / single-B / CCC OAS (bp) over the trailing ~12 months with the
     CCC-B dispersion band shaded. Regenerated live each build from FRED so
@@ -1320,7 +1458,8 @@ def render_credit_card_en(cd: dict) -> list[str]:
 
 
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
-                      vix_stale_date: str | None = None, creds: dict | None = None):
+                      vix_stale_date: str | None = None, creds: dict | None = None,
+                      cot: dict | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1439,6 +1578,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "[자세히 →](posts/cash-allocation.md)*</small>",
             "",
         ]
+    if cot:
+        parts += render_cot_card_ko(cot)
     if creds:
         parts += render_credit_card_ko(creds)
     parts += [
@@ -1526,7 +1667,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 
 
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
-                      vix_stale_date: str | None = None, creds: dict | None = None):
+                      vix_stale_date: str | None = None, creds: dict | None = None,
+                      cot: dict | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1650,6 +1792,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "[Read more →](posts/cash-allocation.md)*</small>",
             "",
         ]
+    if cot:
+        parts += render_cot_card_en(cot)
     if creds:
         parts += render_credit_card_en(creds)
     parts += [
@@ -1726,6 +1870,11 @@ def main():
     print(f"  Credit: HY {creds['hy']:.0f}bp, CCC-B gap {creds['gap']:.0f}bp "
           f"({'live' if creds['live'] else 'snapshot'})")
 
+    print("Fetching COT (CFTC)...")
+    cot = fetch_cot()
+    if cot:
+        print(f"  COT: net {cot['net']:+,.0f} ({cot['date']}, pct {cot['pct']:.0f}%)")
+
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
     print(f"  Saved: {OUT_KO / 'vol_dashboard.png'}")
@@ -1744,6 +1893,11 @@ def main():
         render_credit_dispersion(creds["series"], OUT_KO / "credit_dispersion.png")
         shutil.copy2(OUT_KO / "credit_dispersion.png", OUT_EN / "credit_dispersion.png")
         print(f"  Saved: {OUT_KO / 'credit_dispersion.png'}")
+
+    if cot:
+        render_cot_chart(cot["series"], OUT_KO / "cot_sp500.png")
+        shutil.copy2(OUT_KO / "cot_sp500.png", OUT_EN / "cot_sp500.png")
+        print(f"  Saved: {OUT_KO / 'cot_sp500.png'}")
 
     print("Computing signals...")
     cs = compute_cor_skew_signals(tenor, skew)
@@ -1842,12 +1996,12 @@ def main():
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
         render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
-                          vix_stale_date=vix_data_stale_date, creds=creds),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
         render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
-                          vix_stale_date=vix_data_stale_date, creds=creds),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
