@@ -183,6 +183,7 @@ title: Home
 
 - [**COT 리포트**](posts/cot.md) — 선물시장에서 기관의 의중 읽기
 - [**FedWatch Tool**](posts/fedwatch.md) — Fed Fund 선물로 금리 예측하기
+- [**신용 스프레드를 지표로 읽기**](posts/credit-spreads.md) — 지수는 잠잠한데 CCC−B 격차는 확대, CDS 못 사도 FRED로 읽는 후기 사이클 신호
 
 ### 도구
 

@@ -183,6 +183,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 - [**The COT Report**](posts/cot.md) — Reading institutional intent in the futures market
 - [**The FedWatch Tool**](posts/fedwatch.md) — Pricing rate moves with Fed Funds futures
+- [**Reading Credit Spreads as an Indicator**](posts/credit-spreads.md) — The index is calm while the CCC−B gap widens; a late-cycle signal you can read on FRED without trading CDS
 
 ### Tools
 

@@ -89,6 +89,7 @@ nav:
   - "Market Data":
     - posts/cot.md
     - posts/fedwatch.md
+    - posts/credit-spreads.md
   - "Options 101":
     - posts/options-basics.md
     - posts/skew.md
