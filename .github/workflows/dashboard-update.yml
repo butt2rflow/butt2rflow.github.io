@@ -37,6 +37,8 @@ jobs:
         run: pip install pandas numpy matplotlib
 
       - name: Run dashboard updater
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python scripts/update_dashboard.py
 
       - name: Commit & push vix_history archive if changed

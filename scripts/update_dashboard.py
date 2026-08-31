@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import re
 import shutil
 import urllib.request
@@ -95,6 +96,11 @@ CBOE_SETTLEMENT_URL = "https://www.cboe.com/us/futures/market_statistics/settlem
 # dispersion tile. If FRED is unreachable in CI we fall back to the last
 # verified snapshot so the tile still renders (marked stale).
 FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
+# Official FRED API (needs a free key in the FRED_API_KEY env / repo secret).
+# Reliable from CI, unlike the public fredgraph.csv download which throttles.
+FRED_API_URL = ("https://api.stlouisfed.org/fred/series/observations"
+                "?series_id={id}&api_key={key}&file_type=json"
+                "&sort_order=desc&limit=400")
 CREDIT_IDS = {"hy": "BAMLH0A0HYM2", "b": "BAMLH0A2HYB", "ccc": "BAMLH0A3HYC"}
 # Verified 2026-08-28 (see posts/credit-spreads). Seeds the tile when the live
 # pull fails, marked stale so the reader knows it's last-known-good.
@@ -206,7 +212,19 @@ def fetch_vvix_history() -> pd.Series:
 
 
 def _fetch_fred_series(series_id: str) -> pd.Series:
-    """Pull a FRED series from the public fredgraph CSV (no API key)."""
+    """Pull a FRED series. Prefers the official API (FRED_API_KEY env), which
+    is reliable from CI; falls back to the public fredgraph CSV otherwise.
+    On failure the caller (fetch_credit_oas) drops to the snapshot."""
+    key = os.environ.get("FRED_API_KEY")
+    if key:
+        url = FRED_API_URL.format(id=series_id, key=key)
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            obs = json.load(r).get("observations", [])
+        idx = pd.to_datetime([o["date"] for o in obs])
+        vals = pd.to_numeric([o["value"] for o in obs], errors="coerce")
+        return pd.Series(vals, index=idx).dropna().sort_index()
+
     url = FRED_CSV_URL.format(series_id)
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as r:
