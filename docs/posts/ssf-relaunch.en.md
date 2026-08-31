@@ -149,7 +149,7 @@ CME announced the plan on February 10, 2026 and launched on July 27. Two sizes.
 | Block-eligible | Yes (50 contract minimum) | No |
 | BTIC / EFP / EFR | Yes | No |
 
-The underlyings come from the S&P 500, Nasdaq-100 and Russell 1000 — Alphabet, Amazon, Apple, Meta, Nvidia, Tesla, Microsoft, Micron, and the recently listed **SpaceX**. CME says the 55 names carry over $200B in average daily notional volume and, by index weight, cover roughly **55–65%** of the S&P 500 and Nasdaq-100.
+The underlyings are 55 names drawn from the S&P 500, Nasdaq-100 and Russell 1000, including the recently listed **SpaceX**. CME says they carry over $200B in average daily notional volume and, by index weight, cover roughly **55–65%** of the S&P 500 and Nasdaq-100.
 
 Here is what the two sizes share. These are the items to check before you place an order.
 
