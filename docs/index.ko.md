@@ -170,6 +170,7 @@ title: Home
 - [**내 포트폴리오의 수익률은?**](posts/portfolio-return.md) — TWR vs MWR, 같은 거래 두 가지 답
 - [**수익률의 기댓값**](posts/expected-return.md) — 확률 모델로 본 QQQ vs TQQQ
 - [**파생상품의 레버리지 사용료**](posts/derivatives-leverage-cost.md) — 같은 3배라도 비용은 70배 차이
+- [**네마녀의 날이 돌아왔다**](posts/ssf-relaunch.md) — 6년 만에 부활한 개별주식선물(SSF), 실적 방향성 베팅에 왜 최적인가
 
 ### 옵션 분석
 

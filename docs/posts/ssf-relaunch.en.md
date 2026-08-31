@@ -523,7 +523,7 @@ Nothing gives you leverage, zero volatility exposure, and a loss floor **at the 
 
 The statutory basis: IRC §1256(b)(2)(A) provides that a "section 1256 contract" does not include any securities futures contract, or option on one, unless it is a dealer securities futures contract. §1234B governs instead — character follows the underlying property, and gain or loss on a contract *to sell* is treated as short-term capital gain or loss.
 
-The way CME's own FAQ handles this is telling: the question heading mentions 60/40, and the answer only addresses §871(m) withholding for international investors. That latter item is the one that matters in practice for non-residents, and CME handles it through the intermediary/QDD framework in Chapter 9 Rule 990 of its rulebook. Confirm your own treatment with your accountant — I'm not a tax professional.
+The way CME's own FAQ handles this is telling: the question heading mentions 60/40, and the answer only addresses §871(m) withholding for international investors. That latter item is the one that matters in practice for non-residents, and CME handles it through the intermediary/QDD framework in Chapter 9 Rule 990 of its rulebook. The specifics depend on your account type and residency, so settle your own treatment with your accountant before filing.
 
 ### What to watch on September 18
 

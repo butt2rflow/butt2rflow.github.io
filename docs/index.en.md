@@ -170,6 +170,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**How is my portfolio actually doing?**](posts/portfolio-return.md) — TWR vs MWR, same trade two answers
 - [**Expected Return — QQQ vs TQQQ**](posts/expected-return.md) — A probability view of leverage and vol drag
 - [**Cost of Leverage in Derivatives**](posts/derivatives-leverage-cost.md) — Same 3×, wildly different bills
+- [**Quadruple Witching Is Whole Again**](posts/ssf-relaunch.md) — Single stock futures are back after 6 years, and why they fit a directional earnings bet
 
 ### Options analysis
 
