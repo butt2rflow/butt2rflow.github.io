@@ -1,0 +1,70 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>네마녀의 날 네 다리의 존재 기간</title>
+<desc>지수선물, 지수옵션, 개별주식옵션은 계속 거래됐다. 개별주식선물만 2020년 9월에 사라져 6년간 부재했고 2026년 7월에 돌아왔다. 그 6년간 만기일은 사실상 세마녀의 날이었다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8;
+  --gf:#F1EFE8; --gk:#5F5E5A; --gt:#2C2C2A;
+  --tf:#E1F5EE; --tk:#0F6E56; --tt:#04342C; }
+@media (prefers-color-scheme: dark) { :root { --tp:#e0ded5; --ts:#a8a59a; --br:#4a4945;
+  --gf:#444441; --gk:#B4B2A9; --gt:#F1EFE8;
+  --tf:#085041; --tk:#9FE1CB; --tt:#E1F5EE; } }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.div { stroke:var(--br); stroke-width:0.5; stroke-dasharray:4 4; opacity:0.8; }
+.g rect { fill:var(--gf); stroke:var(--gk); }
+.g text { font-size:14px; font-weight:500; fill:var(--gt); }
+.t rect { fill:var(--tf); stroke:var(--tk); }
+.t text { font-size:14px; font-weight:500; fill:var(--tt); }
+</style>
+
+<line class="div" x1="390" y1="46" x2="390" y2="212"/>
+<line class="div" x1="540" y1="46" x2="540" y2="212"/>
+
+<text class="s" x="240" y="42" text-anchor="middle">2002 – 2020</text>
+<text class="s" x="465" y="42" text-anchor="middle">2020 – 2026</text>
+<text class="s" x="580" y="42" text-anchor="middle">2026 –</text>
+
+<g class="g">
+<rect x="90" y="56" width="530" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="70" dominant-baseline="central">지수선물</text>
+</g>
+
+<g class="g">
+<rect x="90" y="92" width="530" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="106" dominant-baseline="central">지수옵션</text>
+</g>
+
+<g class="g">
+<rect x="90" y="128" width="530" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="142" dominant-baseline="central">개별주식옵션</text>
+</g>
+
+<g class="t">
+<rect x="90" y="172" width="300" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="186" dominant-baseline="central">개별주식선물</text>
+</g>
+
+<rect x="392" y="172" width="146" height="28" rx="6" fill="none" stroke="#D85A30" stroke-width="0.5" stroke-dasharray="5 4"/>
+
+<g class="t">
+<rect x="540" y="172" width="80" height="28" rx="6" stroke-width="1"/>
+</g>
+
+<text class="s" x="465" y="222" text-anchor="middle">이 6년간 마녀는 셋이었다</text>
+
+<line x1="390" y1="248" x2="390" y2="262" stroke="#D85A30" stroke-width="0.5"/>
+<circle cx="390" cy="248" r="2.5" fill="#D85A30"/>
+<text class="th" x="390" y="280" text-anchor="middle">2020.09.18</text>
+<text class="s" x="390" y="298" text-anchor="middle">OneChicago 거래 종료</text>
+
+<line x1="580" y1="248" x2="580" y2="262" stroke="#1D9E75" stroke-width="0.5"/>
+<circle cx="580" cy="248" r="2.5" fill="#1D9E75"/>
+<text class="th" x="580" y="280" text-anchor="middle">2026.07.27</text>
+<text class="s" x="580" y="298" text-anchor="middle">CME 재상장</text>
+
+<text class="s" x="160" y="280" text-anchor="middle">2002.11.08</text>
+<text class="s" x="160" y="298" text-anchor="middle">첫 상장</text>
+<line x1="160" y1="248" x2="160" y2="262" stroke="var(--br)" stroke-width="0.5"/>
+<circle cx="160" cy="248" r="2.5" fill="var(--ts)"/>
+</svg>

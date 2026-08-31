@@ -1,0 +1,56 @@
+<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>선물 베이시스와 옵션 시간가치의 소멸 방식 비교</title>
+<desc>만기까지 남은 일수에 따라 시간비용이 사라지는 방식. 선물 베이시스는 직선으로 균일하게 수렴하고, 옵션 시간가치는 가속하며 소멸하다가 실적 발표 시점에 IV 붕괴로 절벽처럼 급락한다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+@media (prefers-color-scheme: dark) { :root { --tp:#e0ded5; --ts:#a8a59a; --br:#4a4945; } }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.t { font-size:14px; font-weight:400; fill:var(--tp); }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.ax { stroke:var(--br); stroke-width:0.5; }
+.gr { stroke:var(--br); stroke-width:0.5; stroke-dasharray:3 4; opacity:0.6; }
+.ld { stroke:var(--ts); stroke-width:0.5; stroke-dasharray:2 3; opacity:0.7; }
+</style>
+
+<text class="s" x="40" y="42">진입 시점 시간비용 = 100%</text>
+
+<line class="ax" x1="90" y1="60" x2="90" y2="320"/>
+<line class="ax" x1="90" y1="320" x2="628" y2="320"/>
+<line class="gr" x1="90" y1="60" x2="620" y2="60"/>
+<line class="gr" x1="90" y1="190" x2="620" y2="190"/>
+
+<text class="s" x="80" y="64" text-anchor="end">100%</text>
+<text class="s" x="80" y="194" text-anchor="end">50%</text>
+<text class="s" x="80" y="324" text-anchor="end">0%</text>
+
+<line x1="443" y1="60" x2="443" y2="320" stroke="#D85A30" stroke-width="0.5" stroke-dasharray="4 4" opacity="0.7"/>
+
+<path d="M90,60 L620,320" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+
+<path d="M90,60 Q134,72 178,83 Q222,96 267,108 Q311,122 355,136 Q399,153 443,170" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M443,170 L443,255" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M443,255 Q465,260 488,264 Q510,269 532,274 Q554,281 576,288 Q598,301 620,320" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+
+<circle cx="443" cy="170" r="3.5" fill="#D85A30"/>
+<circle cx="443" cy="255" r="3.5" fill="#D85A30"/>
+
+<line class="ld" x1="443" y1="212" x2="510" y2="150"/>
+<text class="th" x="516" y="146">실적 발표</text>
+<text class="s" x="516" y="164">IV 붕괴 — 한 번에 사라짐</text>
+
+<line class="ld" x1="300" y1="185" x2="300" y2="230"/>
+<text class="th" x="248" y="250">SSF 베이시스</text>
+<text class="s" x="248" y="268">직선 — 하루치가 늘 같음</text>
+
+<line class="ld" x1="230" y1="98" x2="230" y2="76"/>
+<text class="th" x="176" y="70">옵션 시간가치</text>
+
+<text class="s" x="90" y="352">만기까지 60일</text>
+<text class="s" x="620" y="352" text-anchor="end">만기</text>
+
+<rect x="90" y="386" width="10" height="10" rx="2" fill="#1D9E75" opacity="0.85"/>
+<text class="s" x="108" y="396">선물 — 확정된 캐리, 시간에 비례해 균일 소멸</text>
+<rect x="372" y="386" width="10" height="10" rx="2" fill="#D85A30" opacity="0.85"/>
+<text class="s" x="390" y="396">옵션 — IV가 크기를 정하고, 가속하며 소멸</text>
+</svg>

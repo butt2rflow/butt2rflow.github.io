@@ -1,0 +1,94 @@
+<svg width="100%" viewBox="0 0 680 450" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Choosing the tool by your view</title>
+<desc>If your view is direction only, use SSF; if it includes size or volatility, buy options; if you think IV is overpriced, sell premium. For a multi-day position that must hold across the report, SSF is a poor fit.</desc>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --ln:#73726c;
+  --gf:#F1EFE8; --gk:#5F5E5A; --gt:#2C2C2A; --gu:#5F5E5A;
+  --tf:#E1F5EE; --tk:#0F6E56; --tt:#04342C; --tu:#0F6E56;
+  --pf:#EEEDFE; --pk:#534AB7; --pt:#26215C; --pu:#534AB7;
+  --cf:#FAECE7; --ck:#993C1D; --ct:#4A1B0C; --cu:#993C1D; }
+@media (prefers-color-scheme: dark) { :root { --tp:#e0ded5; --ts:#a8a59a; --ln:#a8a59a;
+  --gf:#444441; --gk:#B4B2A9; --gt:#F1EFE8; --gu:#D3D1C7;
+  --tf:#085041; --tk:#9FE1CB; --tt:#E1F5EE; --tu:#9FE1CB;
+  --pf:#3C3489; --pk:#AFA9EC; --pt:#EEEDFE; --pu:#CECBF6;
+  --cf:#712B13; --ck:#F0997B; --ct:#FAECE7; --cu:#F5C4B3; } }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.cap { font-size:12px; font-weight:400; fill:var(--ts); }
+.g rect { fill:var(--gf); stroke:var(--gk); }
+.g .n { font-size:14px; font-weight:500; fill:var(--gt); }
+.g .m { font-size:12px; font-weight:400; fill:var(--gu); }
+.t rect { fill:var(--tf); stroke:var(--tk); }
+.t .n { font-size:14px; font-weight:500; fill:var(--tt); }
+.t .m { font-size:12px; font-weight:400; fill:var(--tu); }
+.p rect { fill:var(--pf); stroke:var(--pk); }
+.p .n { font-size:14px; font-weight:500; fill:var(--pt); }
+.p .m { font-size:12px; font-weight:400; fill:var(--pu); }
+.c rect { fill:var(--cf); stroke:var(--ck); }
+.c .n { font-size:14px; font-weight:500; fill:var(--ct); }
+.c .m { font-size:12px; font-weight:400; fill:var(--cu); }
+.fl { stroke:var(--ln); stroke-width:1.5; fill:none; }
+</style>
+
+<g class="g">
+<rect x="200" y="54" width="280" height="52" rx="8" stroke-width="0.5"/>
+<text class="n" x="340" y="72" text-anchor="middle" dominant-baseline="central">What exactly is my view?</text>
+<text class="m" x="340" y="90" text-anchor="middle" dominant-baseline="central">Direction only, or the size too?</text>
+</g>
+
+<path class="fl" d="M340,106 L340,124 L130,124 L130,148" marker-end="url(#ar)"/>
+<path class="fl" d="M340,106 L340,148" marker-end="url(#ar)"/>
+<path class="fl" d="M340,106 L340,124 L550,124 L550,148" marker-end="url(#ar)"/>
+
+<g class="t">
+<rect x="45" y="152" width="170" height="56" rx="8" stroke-width="0.5"/>
+<text class="n" x="130" y="172" text-anchor="middle" dominant-baseline="central">Direction only</text>
+<text class="m" x="130" y="190" text-anchor="middle" dominant-baseline="central">sign only, size unknown</text>
+</g>
+
+<g class="g">
+<rect x="255" y="152" width="170" height="56" rx="8" stroke-width="0.5"/>
+<text class="n" x="340" y="172" text-anchor="middle" dominant-baseline="central">Size too</text>
+<text class="m" x="340" y="190" text-anchor="middle" dominant-baseline="central">expect a big move</text>
+</g>
+
+<g class="g">
+<rect x="465" y="152" width="170" height="56" rx="8" stroke-width="0.5"/>
+<text class="n" x="550" y="172" text-anchor="middle" dominant-baseline="central">IV is expensive</text>
+<text class="m" x="550" y="190" text-anchor="middle" dominant-baseline="central">the move is overpriced</text>
+</g>
+
+<line class="fl" x1="130" y1="208" x2="130" y2="244" marker-end="url(#ar)"/>
+<line class="fl" x1="340" y1="208" x2="340" y2="244" marker-end="url(#ar)"/>
+<line class="fl" x1="550" y1="208" x2="550" y2="244" marker-end="url(#ar)"/>
+
+<g class="t">
+<rect x="45" y="248" width="170" height="56" rx="8" stroke-width="1"/>
+<text class="n" x="130" y="268" text-anchor="middle" dominant-baseline="central">SSF</text>
+<text class="m" x="130" y="286" text-anchor="middle" dominant-baseline="central">delta 1.0, zero IV exposure</text>
+</g>
+
+<g class="p">
+<rect x="255" y="248" width="170" height="56" rx="8" stroke-width="1"/>
+<text class="n" x="340" y="268" text-anchor="middle" dominant-baseline="central">Buy options</text>
+<text class="m" x="340" y="286" text-anchor="middle" dominant-baseline="central">you need convexity</text>
+</g>
+
+<g class="p">
+<rect x="465" y="248" width="170" height="56" rx="8" stroke-width="1"/>
+<text class="n" x="550" y="268" text-anchor="middle" dominant-baseline="central">Sell premium</text>
+<text class="m" x="550" y="286" text-anchor="middle" dominant-baseline="central">bet on vol contraction</text>
+</g>
+
+<g class="c">
+<rect x="45" y="344" width="590" height="60" rx="8" stroke-width="0.5" stroke-dasharray="5 4"/>
+<text class="n" x="340" y="366" text-anchor="middle" dominant-baseline="central">But for a multi-day hold across the report, SSF is not the answer</text>
+<text class="m" x="340" y="386" text-anchor="middle" dominant-baseline="central">a right call can still be stopped out by a gap — use options here</text>
+</g>
+
+<text class="cap" x="340" y="432" text-anchor="middle">SSF is clean in exactly one case — a directional view with zero volatility exposure</text>
+</svg>
