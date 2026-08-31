@@ -31,8 +31,6 @@
         { description: "S&P 500", proName: "SP:SPX" },
         { description: "VIX", proName: "CBOE:VIX" },
         { description: "SKEW", proName: "CBOE:SKEW" },
-        { description: "COR3M", proName: "CBOE:COR3M" },
-        { description: "COR90D", proName: "CBOE:COR90D" },
         { description: "VVIX", proName: "CBOE:VVIX" },
       ],
       showSymbolLogo: true,
