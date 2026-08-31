@@ -90,6 +90,17 @@ SKEW_RENAME = {"COR3M": "COR3MD"}
 
 CBOE_SETTLEMENT_URL = "https://www.cboe.com/us/futures/market_statistics/settlement/csv/"
 
+# ICE BofA OAS by rating, via FRED's public CSV endpoint (no API key needed).
+# Values are in percent; x100 -> basis points. Feeds the credit-spread
+# dispersion tile. If FRED is unreachable in CI we fall back to the last
+# verified snapshot so the tile still renders (marked stale).
+FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
+CREDIT_IDS = {"hy": "BAMLH0A0HYM2", "b": "BAMLH0A2HYB", "ccc": "BAMLH0A3HYC"}
+# Verified 2026-08-28 (see posts/credit-spreads). Seeds the tile when the live
+# pull fails, marked stale so the reader knows it's last-known-good.
+CREDIT_FALLBACK = {"hy": 260.0, "b": 276.0, "ccc": 1031.0,
+                   "gap": 755.0, "gap_ytd": 150.0, "date": "2026-08-28", "live": False}
+
 
 # ============================================================
 # Data fetching
@@ -192,6 +203,53 @@ def fetch_vix_history() -> pd.Series:
 def fetch_vvix_history() -> pd.Series:
     """Cboe VVIX — implied volatility of VIX itself."""
     return _fetch_cboe_index("VVIX")
+
+
+def _fetch_fred_series(series_id: str) -> pd.Series:
+    """Pull a FRED series from the public fredgraph CSV (no API key)."""
+    url = FRED_CSV_URL.format(series_id)
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        df = pd.read_csv(io.BytesIO(r.read()))
+    date_col = "observation_date" if "observation_date" in df.columns else df.columns[0]
+    val_col = series_id if series_id in df.columns else df.columns[-1]
+    s = pd.Series(pd.to_numeric(df[val_col], errors="coerce").values,
+                  index=pd.to_datetime(df[date_col]))
+    return s.dropna()
+
+
+def _credit_state(hy_bp: float, gap_ytd_bp: float) -> tuple[str, str]:
+    """Signal state for the credit tile. The warning combination is a
+    compressed index (thin pay for default risk) plus a widening CCC-B gap
+    (the bottom already repricing). Returns (level_state, gap_state)."""
+    level_state = "danger" if hy_bp < 300 else ("caution" if hy_bp < 400 else "ok")
+    gap_state = "danger" if gap_ytd_bp >= 100 else ("caution" if gap_ytd_bp >= 30 else "ok")
+    return level_state, gap_state
+
+
+def fetch_credit_oas() -> dict:
+    """HY / single-B / CCC OAS from FRED (bp) plus the CCC-B gap and its
+    YTD change. Falls back to the last verified snapshot if FRED is
+    unreachable, so the tile always renders (marked stale when not live)."""
+    try:
+        hy = _fetch_fred_series(CREDIT_IDS["hy"]) * 100.0
+        b = _fetch_fred_series(CREDIT_IDS["b"]) * 100.0
+        ccc = _fetch_fred_series(CREDIT_IDS["ccc"]) * 100.0
+        if not len(hy) or not len(b) or not len(ccc):
+            raise ValueError("empty FRED series")
+        hy_bp, b_bp, ccc_bp = float(hy.iloc[-1]), float(b.iloc[-1]), float(ccc.iloc[-1])
+        gap = ccc_bp - b_bp
+        # YTD widening: latest gap minus the gap at the first observation of the year.
+        year = hy.index[-1].year
+        ccc_y, b_y = ccc[ccc.index.year == year], b[b.index.year == year]
+        gap_start = (float(ccc_y.iloc[0]) - float(b_y.iloc[0])
+                     if len(ccc_y) and len(b_y) else gap)
+        return {"hy": hy_bp, "b": b_bp, "ccc": ccc_bp, "gap": gap,
+                "gap_ytd": gap - gap_start,
+                "date": hy.index[-1].strftime("%Y-%m-%d"), "live": True}
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] FRED credit OAS fetch failed ({e}); using snapshot fallback")
+        return dict(CREDIT_FALLBACK)
 
 
 def compute_volvol_df(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
@@ -1148,8 +1206,62 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     ]
 
 
+def render_credit_card_ko(cd: dict) -> list[str]:
+    lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
+    lvl_label = {"ok": "보통", "caution": "다소 얇음", "danger": "얇음 (보상 적음)"}[lvl]
+    gap_label = {"ok": "안정", "caution": "확대 조짐", "danger": "확대 중"}[gap]
+    stamp = "" if cd.get("live") else f" · {cd['date']} 기준"
+    return [
+        "---",
+        "",
+        "### 신용 스프레드 — 분산 신호",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **HY OAS** (지수 레벨) | {cd['hy']:.0f}bp | {EMOJI[lvl]} {lvl_label} |",
+        f"| **CCC−B 격차** (분산) | {cd['gap']:.0f}bp | {EMOJI[gap]} {gap_label} |",
+        f"| 올해 격차 변화 | {cd['gap_ytd']:+.0f}bp | — |",
+        "",
+        "</div>",
+        "",
+        f"<small>*ICE BofA 등급별 OAS (FRED){stamp}. 지수가 잠잠해도 CCC−B 격차가 "
+        "벌어지면 바닥 등급부터 값이 다시 매겨지는 후기 사이클 신호 · "
+        "[자세히 →](posts/credit-spreads.md)*</small>",
+        "",
+    ]
+
+
+def render_credit_card_en(cd: dict) -> list[str]:
+    lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
+    lvl_label = {"ok": "Normal", "caution": "Somewhat thin", "danger": "Thin (little pay)"}[lvl]
+    gap_label = {"ok": "Stable", "caution": "Widening", "danger": "Widening fast"}[gap]
+    stamp = "" if cd.get("live") else f" · as of {cd['date']}"
+    return [
+        "---",
+        "",
+        "### Credit spreads — dispersion signal",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **HY OAS** (index level) | {cd['hy']:.0f}bp | {EMOJI[lvl]} {lvl_label} |",
+        f"| **CCC−B gap** (dispersion) | {cd['gap']:.0f}bp | {EMOJI[gap]} {gap_label} |",
+        f"| Gap change this year | {cd['gap_ytd']:+.0f}bp | — |",
+        "",
+        "</div>",
+        "",
+        f"<small>*ICE BofA OAS by rating (FRED){stamp}. Even with a calm index, a widening "
+        "CCC−B gap flags the bottom repricing first — a late-cycle signal · "
+        "[Read more →](posts/credit-spreads.md)*</small>",
+        "",
+    ]
+
+
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
-                      vix_stale_date: str | None = None):
+                      vix_stale_date: str | None = None, creds: dict | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1268,6 +1380,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "[자세히 →](posts/cash-allocation.md)*</small>",
             "",
         ]
+    if creds:
+        parts += render_credit_card_ko(creds)
     parts += [
         "</div>",
         "",
@@ -1353,7 +1467,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 
 
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
-                      vix_stale_date: str | None = None):
+                      vix_stale_date: str | None = None, creds: dict | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1477,6 +1591,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "[Read more →](posts/cash-allocation.md)*</small>",
             "",
         ]
+    if creds:
+        parts += render_credit_card_en(creds)
     parts += [
         "</div>",
         "",
@@ -1545,6 +1661,11 @@ def main():
     print("Fetching S&P 500 reference series...")
     spx = fetch_spx()
     print(f"  SPX history: {len(spx)} rows")
+
+    print("Fetching credit-spread OAS (FRED)...")
+    creds = fetch_credit_oas()
+    print(f"  Credit: HY {creds['hy']:.0f}bp, CCC-B gap {creds['gap']:.0f}bp "
+          f"({'live' if creds['live'] else 'snapshot'})")
 
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
@@ -1657,12 +1778,12 @@ def main():
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
         render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
-                          vix_stale_date=vix_data_stale_date),
+                          vix_stale_date=vix_data_stale_date, creds=creds),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
         render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
-                          vix_stale_date=vix_data_stale_date),
+                          vix_stale_date=vix_data_stale_date, creds=creds),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
