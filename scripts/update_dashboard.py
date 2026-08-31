@@ -264,7 +264,8 @@ def fetch_credit_oas() -> dict:
                      if len(ccc_y) and len(b_y) else gap)
         return {"hy": hy_bp, "b": b_bp, "ccc": ccc_bp, "gap": gap,
                 "gap_ytd": gap - gap_start,
-                "date": hy.index[-1].strftime("%Y-%m-%d"), "live": True}
+                "date": hy.index[-1].strftime("%Y-%m-%d"), "live": True,
+                "series": {"hy": hy, "b": b, "ccc": ccc}}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] FRED credit OAS fetch failed ({e}); using snapshot fallback")
         return dict(CREDIT_FALLBACK)
@@ -1224,6 +1225,42 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     ]
 
 
+def render_credit_dispersion(series: dict, out_path: Path):
+    """HY / single-B / CCC OAS (bp) over the trailing ~12 months with the
+    CCC-B dispersion band shaded. Regenerated live each build from FRED so
+    the reader can watch the daily trend, not just today's snapshot."""
+    hy, b, ccc = series["hy"], series["b"], series["ccc"]
+    cutoff = hy.index.max() - pd.DateOffset(months=12)
+    hy, b, ccc = hy[hy.index >= cutoff], b[b.index >= cutoff], ccc[ccc.index >= cutoff]
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    common = ccc.index.intersection(b.index)
+    if len(common):
+        ax.fill_between(common, b.reindex(common).values, ccc.reindex(common).values,
+                        color="#D85A30", alpha=0.08, linewidth=0)
+    ax.plot(ccc.index, ccc.values, color="#D85A30", linewidth=2.2, label="CCC & lower")
+    ax.plot(b.index, b.values, color="#C99A2E", linewidth=2.0, label="Single-B")
+    ax.plot(hy.index, hy.values, color="#1D9E75", linewidth=2.0, label="HY index")
+    if len(common):
+        d = common.max()
+        gap = float(ccc.reindex(common).iloc[-1] - b.reindex(common).iloc[-1])
+        ax.annotate(f"CCC−B gap ≈ {gap:.0f}bp",
+                    xy=(d, float(ccc.reindex(common).iloc[-1])),
+                    xytext=(-8, -6), textcoords="offset points", ha="right",
+                    fontsize=9, color="#7A2E12",
+                    bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
+                              edgecolor="#D85A30", alpha=0.9))
+    ax.set_ylabel("OAS (bp)", fontsize=10)
+    ax.set_title("Credit spreads by rating — the CCC−B gap is the dispersion signal",
+                 fontsize=11)
+    ax.legend(loc="upper left", fontsize=9, ncol=3)
+    ax.grid(alpha=0.3)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
 def render_credit_card_ko(cd: dict) -> list[str]:
     lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
     lvl_label = {"ok": "보통", "caution": "다소 얇음", "danger": "얇음 (보상 적음)"}[lvl]
@@ -1244,6 +1281,8 @@ def render_credit_card_ko(cd: dict) -> list[str]:
         "",
         "</div>",
         "",
+        *(["![등급별 스프레드 추이 — HY · 단일B · CCC](assets/diagrams/credit_dispersion.png)", ""]
+          if cd.get("series") else []),
         f"<small>*ICE BofA 등급별 OAS (FRED){stamp}. 지수가 잠잠해도 CCC−B 격차가 "
         "벌어지면 바닥 등급부터 값이 다시 매겨지는 후기 사이클 신호 · "
         "[자세히 →](posts/credit-spreads.md)*</small>",
@@ -1271,6 +1310,8 @@ def render_credit_card_en(cd: dict) -> list[str]:
         "",
         "</div>",
         "",
+        *(["![Credit spreads by rating — HY · single-B · CCC](assets/diagrams_en/credit_dispersion.png)", ""]
+          if cd.get("series") else []),
         f"<small>*ICE BofA OAS by rating (FRED){stamp}. Even with a calm index, a widening "
         "CCC−B gap flags the bottom repricing first — a late-cycle signal · "
         "[Read more →](posts/credit-spreads.md)*</small>",
@@ -1698,6 +1739,11 @@ def main():
         print(f"  Saved: {OUT_KO / 'volvol.png'}")
         shutil.copy2(OUT_KO / "volvol.png", OUT_EN / "volvol.png")
         print(f"  Copied: {OUT_EN / 'volvol.png'}")
+
+    if creds.get("series"):
+        render_credit_dispersion(creds["series"], OUT_KO / "credit_dispersion.png")
+        shutil.copy2(OUT_KO / "credit_dispersion.png", OUT_EN / "credit_dispersion.png")
+        print(f"  Saved: {OUT_KO / 'credit_dispersion.png'}")
 
     print("Computing signals...")
     cs = compute_cor_skew_signals(tenor, skew)
