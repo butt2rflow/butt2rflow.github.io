@@ -12,11 +12,6 @@
   --tf:#E1F5EE; --tk:#0F6E56; --tt:#04342C; --tu:#0F6E56;
   --pf:#EEEDFE; --pk:#534AB7; --pt:#26215C; --pu:#534AB7;
   --cf:#FAECE7; --ck:#993C1D; --ct:#4A1B0C; --cu:#993C1D; }
-@media (prefers-color-scheme: dark) { :root { --tp:#e0ded5; --ts:#a8a59a; --ln:#a8a59a;
-  --gf:#444441; --gk:#B4B2A9; --gt:#F1EFE8; --gu:#D3D1C7;
-  --tf:#085041; --tk:#9FE1CB; --tt:#E1F5EE; --tu:#9FE1CB;
-  --pf:#3C3489; --pk:#AFA9EC; --pt:#EEEDFE; --pu:#CECBF6;
-  --cf:#712B13; --ck:#F0997B; --ct:#FAECE7; --cu:#F5C4B3; } }
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .cap { font-size:12px; font-weight:400; fill:var(--ts); }
 .g rect { fill:var(--gf); stroke:var(--gk); }
@@ -33,6 +28,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 .c .m { font-size:12px; font-weight:400; fill:var(--cu); }
 .fl { stroke:var(--ln); stroke-width:1.5; fill:none; }
 </style>
+<rect x="0" y="0" width="680" height="450" rx="12" fill="#FAF8F2"/>
 
 <g class="g">
 <rect x="200" y="54" width="280" height="52" rx="8" stroke-width="0.5"/>

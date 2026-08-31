@@ -10,9 +10,6 @@
 :root { --tp:#3d3d3a; --ts:#73726c; --ar:#73726c;
         --tf:#E1F5EE; --tk:#0F6E56; --tt:#085041; --tu:#0F6E56;
         --cf:#FAECE7; --ck:#993C1D; --ct:#712B13; --cu:#993C1D; }
-@media (prefers-color-scheme: dark) { :root { --tp:#e0ded5; --ts:#a8a59a; --ar:#a8a59a;
-        --tf:#085041; --tk:#9FE1CB; --tt:#E1F5EE; --tu:#9FE1CB;
-        --cf:#712B13; --ck:#F5C4B3; --ct:#FAECE7; --cu:#F5C4B3; } }
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .th { font-size:14px; font-weight:500; fill:var(--tp); }
 .s { font-size:12px; font-weight:400; fill:var(--ts); }
@@ -24,6 +21,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 .fail .m { font-size:12px; font-weight:400; fill:var(--cu); }
 .fl { stroke:var(--ar); stroke-width:1.5; fill:none; }
 </style>
+<rect x="0" y="0" width="680" height="470" rx="12" fill="#FAF8F2"/>
 
 <text class="s" x="340" y="34" text-anchor="middle">Same setup — stock +3% after earnings, expected move was ±7%</text>
 

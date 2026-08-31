@@ -5,9 +5,6 @@
 :root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8;
   --gf:#F1EFE8; --gk:#5F5E5A; --gt:#2C2C2A;
   --tf:#E1F5EE; --tk:#0F6E56; --tt:#04342C; }
-@media (prefers-color-scheme: dark) { :root { --tp:#e0ded5; --ts:#a8a59a; --br:#4a4945;
-  --gf:#444441; --gk:#B4B2A9; --gt:#F1EFE8;
-  --tf:#085041; --tk:#9FE1CB; --tt:#E1F5EE; } }
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .th { font-size:14px; font-weight:500; fill:var(--tp); }
 .s { font-size:12px; font-weight:400; fill:var(--ts); }
@@ -17,6 +14,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 .t rect { fill:var(--tf); stroke:var(--tk); }
 .t text { font-size:14px; font-weight:500; fill:var(--tt); }
 </style>
+<rect x="0" y="0" width="680" height="330" rx="12" fill="#FAF8F2"/>
 
 <line class="div" x1="390" y1="46" x2="390" y2="212"/>
 <line class="div" x1="540" y1="46" x2="540" y2="212"/>

@@ -274,6 +274,8 @@ carry as % of notional = $816 / $20,000 = 4.08% ≈ the risk-free rate
 | Swaps (TQQQ) | 3× | ~3.3% | ~10% |
 | Deep ITM call (1yr) | 1.87× | ~0.8% | ~0.8% |
 
+*The ES, TQQQ, and deep-ITM figures come from the previous post's February 2023 rate environment. Absolute numbers shift as rates change, but the structure — the fee scaling with leverage — holds.*
+
 > Same conclusion as last time. **Cut your leverage and the fee falls proportionally.** Post double the margin to run 3.3× and the fee is 13.6%/yr.
 
 ### Dividend payers flip the sign
