@@ -342,27 +342,35 @@ def fetch_cot() -> dict | None:
         am_chg4 = am_latest - float(am_short.iloc[-5])
         yr = am_short[am_short.index >= (am_short.index.max() - pd.DateOffset(months=12))]
         am_pct = float((yr < am_latest).mean() * 100) if len(yr) else 50.0
+        last_dt = am_short.index[-1]     # positions are as of this Tuesday
         return {"am_short": am_latest, "am_short_chg4": am_chg4, "am_short_pct": am_pct,
                 "lev_net": float(lev_net.iloc[-1]) if len(lev_net) else float("nan"),
-                "date": am_short.index[-1].strftime("%Y-%m-%d"),
+                "date": last_dt.strftime("%Y-%m-%d"),
+                "release": (last_dt + pd.Timedelta(days=3)).strftime("%Y-%m-%d"),  # Fri release
                 "am_series": am_short, "lev_series": lev_net}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] COT fetch failed ({e}); COT tile skipped")
         return None
 
 
-def _zq_implied(year: int, month: int) -> float | None:
-    """Implied month-average EFFR (%) from the ZQ contract = 100 - price."""
+def _zq_implied(year: int, month: int) -> tuple[float | None, str | None]:
+    """Implied month-average EFFR (%) from the ZQ contract = 100 - price, plus
+    the source trading date of that price (from Yahoo's regularMarketTime)."""
+    import datetime as _dt
     url = YF_ZQ.format(code=_MONTHCODE[month - 1], yy=year % 100)
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=25) as r:
             d = json.load(r)
         res = d.get("chart", {}).get("result")
-        p = res[0]["meta"].get("regularMarketPrice") if res else None
-        return round(100.0 - float(p), 4) if p else None
+        meta = res[0]["meta"] if res else {}
+        p = meta.get("regularMarketPrice")
+        t = meta.get("regularMarketTime")
+        src_date = (_dt.datetime.fromtimestamp(t, _dt.timezone.utc).date().isoformat()
+                    if t else None)
+        return (round(100.0 - float(p), 4) if p else None, src_date)
     except Exception:  # noqa: BLE001
-        return None
+        return (None, None)
 
 
 def fetch_fedwatch() -> dict | None:
@@ -373,11 +381,13 @@ def fetch_fedwatch() -> dict | None:
     import calendar as _cal
     try:
         today = datetime.now(timezone.utc).date()
-        path, y, m = [], today.year, today.month
+        path, y, m, zq_date = [], today.year, today.month, None
         for _ in range(7):
-            imp = _zq_implied(y, m)
+            imp, dt = _zq_implied(y, m)
             if imp is not None:
                 path.append((y, m, imp))
+                if zq_date is None:      # front-month price date = the source "as of"
+                    zq_date = dt
             m += 1
             if m > 12:
                 m, y = 1, y + 1
@@ -392,7 +402,7 @@ def fetch_fedwatch() -> dict | None:
             effr = None
         prob = None
         if nxt and effr is not None:
-            meet_imp = _zq_implied(nxt.year, nxt.month)
+            meet_imp, _ = _zq_implied(nxt.year, nxt.month)
             if meet_imp is not None:
                 N = _cal.monthrange(nxt.year, nxt.month)[1]
                 n_old = nxt.day            # days at old EFFR; new rate effective day after decision
@@ -403,7 +413,8 @@ def fetch_fedwatch() -> dict | None:
         cur = effr if effr is not None else path[0][2]
         six = path[min(6, len(path) - 1)][2]
         return {"path": path, "next_fomc": nxt, "effr": effr,
-                "cur": cur, "six": six, "chg_bp": (six - cur) * 100.0, "prob": prob}
+                "cur": cur, "six": six, "chg_bp": (six - cur) * 100.0, "prob": prob,
+                "date": zq_date or today.strftime("%Y-%m-%d")}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] FedWatch fetch failed ({e}); tile skipped")
         return None
@@ -1453,7 +1464,7 @@ def render_cot_card_ko(c: dict) -> list[str]:
         "",
         "![기관 포지셔닝 — Asset Manager 숏 vs Leveraged Funds 순](assets/diagrams/cot_sp500.png)",
         "",
-        f"<small>*CFTC COT · TFF ({c['date']} 기준, 주간). **Asset Manager(스마트 머니) 숏이 "
+        f"<small>*CFTC COT · TFF (화 {c['date']} 포지션 · 금 {c['release']} 발표). **Asset Manager(스마트 머니) 숏이 "
         "누적되면 기관이 하락 대비, 줄면 상승 예측.** Leveraged Funds(덤 머니)는 반대 성향 참고용 · "
         "[자세히 →](posts/cot.md)*</small>",
         "",
@@ -1481,7 +1492,7 @@ def render_cot_card_en(c: dict) -> list[str]:
         "",
         "![Institutional positioning — Asset Mgr short vs Leveraged Funds net](assets/diagrams_en/cot_sp500.png)",
         "",
-        f"<small>*CFTC COT · TFF (as of {c['date']}, weekly). **Asset Managers (smart money) building "
+        f"<small>*CFTC COT · TFF (Tue {c['date']} positions · Fri {c['release']} release). **Asset Managers (smart money) building "
         "shorts = hedging for downside; easing shorts = leaning bullish.** Leveraged Funds (fast money) "
         "shown for contrast · [Read more →](posts/cot.md)*</small>",
         "",
@@ -1543,7 +1554,7 @@ def render_fedwatch_card_ko(f: dict) -> list[str]:
         "",
         "![내재 정책금리 경로 (ZQ 선물)](assets/diagrams/fedwatch_path.png)",
         "",
-        "<small>*Fed Fund 선물(ZQ) 내재금리(100−가격) 기준, 주간 갱신. 회의별 정확한 확률은 "
+        f"<small>*Fed Fund 선물(ZQ) 내재금리(100−가격), {f['date']} 기준. 회의별 정확한 확률은 "
         "[CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html)에서 · "
         "[자세히 →](posts/fedwatch.md)*</small>",
         "",
@@ -1583,7 +1594,7 @@ def render_fedwatch_card_en(f: dict) -> list[str]:
         "",
         "![Market-implied policy rate path (ZQ futures)](assets/diagrams_en/fedwatch_path.png)",
         "",
-        "<small>*From Fed Funds futures (ZQ) implied rate (100 − price), refreshed weekly. "
+        f"<small>*From Fed Funds futures (ZQ) implied rate (100 − price), as of {f['date']}. "
         "For exact per-meeting probabilities see [CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) · "
         "[Read more →](posts/fedwatch.md)*</small>",
         "",
@@ -1705,7 +1716,7 @@ def render_credit_card_ko(cd: dict) -> list[str]:
     lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
     lvl_label = {"ok": "낮음 (평온)", "caution": "확대 — 경계", "danger": "급확대 — 신용 스트레스"}[lvl]
     gap_label = {"ok": "안정", "caution": "확대 조짐", "danger": "확대 중"}[gap]
-    stamp = "" if cd.get("live") else f" · {cd['date']} 기준"
+    stamp = f" · {cd['date']} 기준" + ("" if cd.get("live") else " (스냅샷)")
     return [
         "---",
         "",
@@ -1734,7 +1745,7 @@ def render_credit_card_en(cd: dict) -> list[str]:
     lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
     lvl_label = {"ok": "Low (calm)", "caution": "Widening — caution", "danger": "Blowing out — credit stress"}[lvl]
     gap_label = {"ok": "Stable", "caution": "Widening", "danger": "Widening fast"}[gap]
-    stamp = "" if cd.get("live") else f" · as of {cd['date']}"
+    stamp = f" · as of {cd['date']}" + ("" if cd.get("live") else " (snapshot)")
     return [
         "---",
         "",
@@ -1777,9 +1788,13 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         '??? note "갱신 일정 자세히"',
         "    - **크론**: 03:00 UTC 화–토 — NY 시간으로 영업일 마감 약 7시간 뒤, "
         "한국 시간으로 다음 날 정오",
-        "    - **갱신 대상**: VIX TS · COR+SKEW · VolVol · Kelly × VIX 차트 + 카드 숫자 "
-        "— 모두 한 사이클에 함께 갱신",
-        "    - **데이터 출처**: Cboe 직접 (VIX cash, futures settlement, COR/SKEW, VVIX)",
+        "    - **갱신 대상**: VIX TS · COR+SKEW · VolVol · Kelly × VIX · "
+        "**MOVE · COT · FedWatch · 신용 스프레드** 차트 + 카드 숫자 — 모두 한 사이클에 함께 갱신",
+        "    - **데이터 출처**: Cboe (VIX·COR/SKEW·VVIX) · Yahoo (MOVE·Fed Fund 선물) · "
+        "FRED (신용 OAS·EFFR) · CFTC (COT)",
+        "    - **원천 주기**: 대부분 매일(EOD) 갱신 — 단 **COT는 주간**(금요일 발표, 그 주 내내 "
+        "동일)이고 **신용 스프레드는 약 1영업일 지연**. 스크립트는 매일 모두 다시 그리지만 "
+        "이 둘은 원천 주기대로만 값이 바뀜",
         "    - **변동 가능성**: GitHub Actions 크론 ±30분 지터 가능. "
         "드물게 Cboe가 그날 종가를 늦게 올려서 그 사이클이 전일 데이터로 끝나면, "
         "라이브 차트는 다음 영업일 사이클에 자동으로 따라잡고 슬라이더 아카이브는 "
@@ -1991,9 +2006,15 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         '??? note "Update schedule"',
         "    - **Cron**: 03:00 UTC Tue–Sat — about 7 hours after the NY close, "
         "or roughly the next noon in Seoul",
-        "    - **Refreshed**: VIX TS · COR+SKEW · VolVol · Kelly × VIX charts + card "
-        "numbers — all rebuilt in the same cycle",
-        "    - **Source**: Cboe direct (VIX cash, futures settlement, COR/SKEW, VVIX)",
+        "    - **Refreshed**: VIX TS · COR+SKEW · VolVol · Kelly × VIX · "
+        "**MOVE · COT · FedWatch · credit spreads** charts + card numbers — all rebuilt "
+        "in the same cycle",
+        "    - **Source**: Cboe (VIX · COR/SKEW · VVIX) · Yahoo (MOVE · Fed Funds futures) · "
+        "FRED (credit OAS · EFFR) · CFTC (COT)",
+        "    - **Native cadence**: most tiles refresh daily (EOD) — but **COT is weekly** "
+        "(Friday release, unchanged through the week) and **credit spreads lag ~1 business "
+        "day**. The script rebuilds all of them daily, but those two only change on their "
+        "own schedule",
         "    - **Variance**: GitHub Actions cron has ±30 min jitter. In the rare case "
         "Cboe publishes that day's close late and the cron snaps the previous day's row, "
         "the live chart catches up on the next business-day cycle and the slider archive "
