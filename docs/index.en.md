@@ -213,9 +213,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 | [**Depth (39p)**](series/s4-preview.md) | Gamma, dynamic hedging, GEX, 0DTE | 4 | [Buy](https://butt2rflow.gumroad.com/l/cwwzss) |
 | **Complete bundle (167p)** | Principles + Execution + Extension + Depth | 13 | [**Buy**](https://butt2rflow.gumroad.com/l/dbkyt) |
 
-> 💡 **Bundle = ~33% off vs buying each series separately.** Buying all four together is significantly cheaper than buying them individually.
-
-[Buy the Complete Bundle on Gumroad](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button .md-button--primary }
+<small>The bundle collects all four series in one.</small>
 
 ---
 

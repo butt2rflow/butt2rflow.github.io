@@ -91,7 +91,7 @@ The fact that prices move up and down (volatility) can itself be a source of ret
 
 <img src="../assets/covers/bundle_en.png" alt="Bundle cover" style="max-width:280px; float:right; margin-left:20px;">
 
-**167 pages · 90+ diagrams · 33% off vs. buying each series individually.**
+**167 pages · 90+ diagrams.**
 
 The full curriculum from "why volatility pays" to "how gamma moves the market" — all 13 articles in one PDF, with cross-series links so concepts build naturally.
 

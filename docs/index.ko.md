@@ -213,10 +213,7 @@ title: Home
 | [**심화편 (42p)**](series/s4-preview.md) | 감마, 동적 헷지, GEX, 0DTE | 4편 | [구매](https://kmong.com/gig/762062) | [Buy](https://butt2rflow.gumroad.com/l/cwwzss) |
 | **전 13편 번들 (179p)** | 원칙편 + 실행편 + 확장편 + 심화편 | 13편 | [**구매**](https://kmong.com/gig/762066) | [**Buy**](https://butt2rflow.gumroad.com/l/dbkyt) |
 
-> 💡 **번들 = 개별 구매 대비 약 33% 할인**. 4개 시리즈 따로 사는 것보다 한 번에 사는 게 훨씬 저렴합니다.
-
-[크몽 전체 세트 구매](https://kmong.com/gig/762066){ .md-button .md-button--primary }
-[Gumroad Bundle](https://butt2rflow.gumroad.com/l/dbkyt){ .md-button }
+<small>번들은 네 시리즈를 한 번에 묶은 구성입니다.</small>
 
 ---
 

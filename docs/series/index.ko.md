@@ -87,7 +87,7 @@ title: 시리즈 안내
 
 <img src="../assets/covers/bundle.png" alt="번들 표지" style="max-width:280px; float:right; margin-left:20px;">
 
-**179페이지 · 다이어그램 90장+ · 개별 구매 대비 약 33% 할인.**
+**179페이지 · 다이어그램 90장+.**
 
 원칙편부터 심화편까지 순서대로 읽을 수 있도록 번호와 목차가 통합된 단일 PDF.
 
