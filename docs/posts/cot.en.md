@@ -108,7 +108,7 @@ COT/TFF is one of very few public datasets that lets you see institutional posit
 - **Track the trend in Asset Manager shorts** week over week.
 - Shorts piling up = institutions preparing for a drop. Shorts shrinking = institutions positioning for a rally.
 - **Much faster than 13F** (weekly vs quarterly), and **shows shorts** that 13Fs don't.
-- You can pull the data directly from cftc.gov, or get it visualized on Barchart.com and similar sites.
+- You can pull the data directly from cftc.gov, or get it visualized on Barchart.com and similar sites — or read it straight off this blog's [home dashboard](../index.md), where S&P 500 institutional positioning (Asset Manager short vs Leveraged Funds) refreshes **automatically every week** as a live value and chart.
 
 One caveat: COT is **a compass, not a clock**. It points direction, not timing. Institutions are wrong sometimes, and the data is already 3 days old when you get it. The strongest use is in combination with other signals — VIX (the market's fear index), technical analysis, and so on.
 

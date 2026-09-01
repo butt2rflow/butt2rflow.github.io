@@ -279,19 +279,20 @@ def fetch_credit_oas() -> dict:
 
 
 def _cot_state(pct: float) -> str:
-    """COT positioning state by 1-year percentile: extremes (crowded long or
-    short) read as caution on a contrarian basis, the middle as ok."""
-    if pct >= 80 or pct <= 20:
-        return "caution"
-    return "ok"
+    """Asset Manager short-position percentile. High = shorts accumulated
+    (institutions hedging for downside per the COT post) = caution; else ok."""
+    return "caution" if pct >= 70 else "ok"
 
 
 def fetch_cot() -> dict | None:
-    """E-mini S&P 500 Leveraged-Funds net position from the CFTC TFF report
-    (Socrata, no key). Returns the latest net, 4-week change, 1-year percentile
-    and the weekly series; None on failure so the tile is simply omitted."""
+    """E-mini S&P 500 positioning from the CFTC TFF report (Socrata, no key).
+    Primary signal (per the COT post) is Asset Manager / Institutional short —
+    smart money hedging for downside; we also carry Leveraged-Funds net (fast /
+    "dumb" money) for contrast. Returns both plus their weekly series; None on
+    failure so the tile is simply omitted."""
     params = {
         "$select": ("report_date_as_yyyy_mm_dd,"
+                    "asset_mgr_positions_long,asset_mgr_positions_short,"
                     "lev_money_positions_long,lev_money_positions_short"),
         "$where": "contract_market_name='E-MINI S&P 500'",
         "$order": "report_date_as_yyyy_mm_dd DESC",
@@ -306,18 +307,24 @@ def fetch_cot() -> dict | None:
             raise ValueError("no COT rows")
         df = pd.DataFrame(rows)
         df["date"] = pd.to_datetime(df["report_date_as_yyyy_mm_dd"])
-        df["net"] = (pd.to_numeric(df["lev_money_positions_long"], errors="coerce")
-                     - pd.to_numeric(df["lev_money_positions_short"], errors="coerce"))
-        df = df.dropna(subset=["net"]).sort_values("date")
-        net = pd.Series(df["net"].values, index=df["date"])
-        if len(net) < 5:
+        for col in ("asset_mgr_positions_long", "asset_mgr_positions_short",
+                    "lev_money_positions_long", "lev_money_positions_short"):
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+        df = df.sort_values("date")
+        am_short = pd.Series(df["asset_mgr_positions_short"].values, index=df["date"]).dropna()
+        lev_net = pd.Series((df["lev_money_positions_long"]
+                             - df["lev_money_positions_short"]).values,
+                            index=df["date"]).dropna()
+        if len(am_short) < 5:
             raise ValueError("too few COT points")
-        latest = float(net.iloc[-1])
-        chg4 = latest - float(net.iloc[-5])
-        yr = net[net.index >= (net.index.max() - pd.DateOffset(months=12))]
-        pct = float((yr < latest).mean() * 100) if len(yr) else 50.0
-        return {"net": latest, "chg4": chg4, "pct": pct,
-                "date": net.index[-1].strftime("%Y-%m-%d"), "series": net}
+        am_latest = float(am_short.iloc[-1])
+        am_chg4 = am_latest - float(am_short.iloc[-5])
+        yr = am_short[am_short.index >= (am_short.index.max() - pd.DateOffset(months=12))]
+        am_pct = float((yr < am_latest).mean() * 100) if len(yr) else 50.0
+        return {"am_short": am_latest, "am_short_chg4": am_chg4, "am_short_pct": am_pct,
+                "lev_net": float(lev_net.iloc[-1]) if len(lev_net) else float("nan"),
+                "date": am_short.index[-1].strftime("%Y-%m-%d"),
+                "am_series": am_short, "lev_series": lev_net}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] COT fetch failed ({e}); COT tile skipped")
         return None
@@ -1277,27 +1284,26 @@ def render_tactical_card_en(ts: dict, ks: dict | None = None) -> list[str]:
     ]
 
 
-def render_cot_chart(net: pd.Series, out_path: Path):
-    """Non-commercial (large speculator) net position over the trailing ~12
-    months, contracts, with a zero line. Regenerated live from CFTC COT."""
-    cutoff = net.index.max() - pd.DateOffset(months=12)
-    net = net[net.index >= cutoff]
+def render_cot_chart(am_short: pd.Series, lev_net: pd.Series, out_path: Path):
+    """Asset Manager short (smart money) and Leveraged-Funds net (fast money)
+    over the trailing ~12 months, with a zero line. Regenerated live from CFTC."""
+    cutoff = am_short.index.max() - pd.DateOffset(months=12)
+    am = am_short[am_short.index >= cutoff]
+    lv = lev_net[lev_net.index >= cutoff]
     fig, ax = plt.subplots(figsize=(12, 4.2))
     ax.axhline(0, color="#9ca3af", linewidth=0.9, linestyle=":")
-    ax.fill_between(net.index, 0, net.values, where=(net.values >= 0),
-                    color="#16a34a", alpha=0.12, linewidth=0)
-    ax.fill_between(net.index, 0, net.values, where=(net.values < 0),
-                    color="#dc2626", alpha=0.12, linewidth=0)
-    ax.plot(net.index, net.values, color="#0ea5e9", linewidth=2.0,
-            label="Leveraged-funds net")
-    latest = float(net.iloc[-1])
-    ax.annotate(f"{latest/1000:+,.0f}k", xy=(net.index.max(), latest),
+    ax.plot(am.index, am.values, color="#0ea5e9", linewidth=2.0,
+            label="Asset Mgr short (smart money)")
+    ax.plot(lv.index, lv.values, color="#f59e0b", linewidth=2.0,
+            label="Leveraged Funds net (fast money)")
+    ax.annotate(f"{am.iloc[-1]/1000:,.0f}k", xy=(am.index.max(), float(am.iloc[-1])),
                 xytext=(-6, 6), textcoords="offset points", ha="right", fontsize=9,
                 color="#0369a1",
                 bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
                           edgecolor="#0ea5e9", alpha=0.9))
-    ax.set_ylabel("Net contracts", fontsize=10)
-    ax.set_title("COT — E-mini S&P 500 large-speculator net position", fontsize=11)
+    ax.set_ylabel("Contracts", fontsize=10)
+    ax.set_title("COT — E-mini S&P 500: Asset Manager short vs Leveraged Funds net",
+                 fontsize=11)
     ax.legend(loc="upper left", fontsize=9)
     ax.grid(alpha=0.3)
     ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
@@ -1308,57 +1314,57 @@ def render_cot_chart(net: pd.Series, out_path: Path):
 
 
 def render_cot_card_ko(c: dict) -> list[str]:
-    st = _cot_state(c["pct"])
-    lab = ("1년 상단권 (되돌림 주의)" if c["pct"] >= 80
-           else "1년 하단권 (되돌림 주의)" if c["pct"] <= 20 else "중립")
+    st = _cot_state(c["am_short_pct"])
+    lab = ("숏 누적 — 기관 하락 대비" if c["am_short_pct"] >= 70
+           else "숏 감소 — 기관 상승 기대" if c["am_short_pct"] <= 30 else "중립")
     return [
         "---",
         "",
-        "### COT — S&P 500 대형투기 순포지션",
+        "### COT — S&P 500 기관 포지셔닝",
         "",
         '<div class="dash-tight" markdown>',
         "",
         "| 신호 | 값 | 상태 |",
         "|:-----|---:|:-----|",
-        f"| **레버리지드 펀드 순포지션** (E-mini) | {c['net']/1000:+,.1f}천 계약 | {EMOJI[st]} {lab} |",
-        f"| 4주 변화 | {c['chg4']/1000:+,.1f}천 | — |",
-        f"| 1년 백분위 | {c['pct']:.0f}% | — |",
+        f"| **Asset Manager 숏** (스마트 머니) | {c['am_short']/1000:,.1f}천 계약 | {EMOJI[st]} {lab} |",
+        f"| 숏 4주 변화 (추세) | {c['am_short_chg4']/1000:+,.1f}천 | — |",
+        f"| Leveraged Funds 순포지션 (덤 머니) | {c['lev_net']/1000:+,.1f}천 | — |",
         "",
         "</div>",
         "",
-        "![S&P 500 대형투기 순포지션 추이](assets/diagrams/cot_sp500.png)",
+        "![기관 포지셔닝 — Asset Manager 숏 vs Leveraged Funds 순](assets/diagrams/cot_sp500.png)",
         "",
-        f"<small>*CFTC COT · TFF (레버리지드 펀드=투기성 대형, {c['date']} 기준, 주간). "
-        "순포지션이 1년 범위의 극단(상·하단)에 가면 되돌림 가능성을 보는 역발상 지표. 음수면 순매도 상태 · "
+        f"<small>*CFTC COT · TFF ({c['date']} 기준, 주간). **Asset Manager(스마트 머니) 숏이 "
+        "누적되면 기관이 하락 대비, 줄면 상승 예측.** Leveraged Funds(덤 머니)는 반대 성향 참고용 · "
         "[자세히 →](posts/cot.md)*</small>",
         "",
     ]
 
 
 def render_cot_card_en(c: dict) -> list[str]:
-    st = _cot_state(c["pct"])
-    lab = ("Top of 1yr range" if c["pct"] >= 80
-           else "Bottom of 1yr range" if c["pct"] <= 20 else "Neutral")
+    st = _cot_state(c["am_short_pct"])
+    lab = ("Shorts building — hedging downside" if c["am_short_pct"] >= 70
+           else "Shorts easing — leaning bullish" if c["am_short_pct"] <= 30 else "Neutral")
     return [
         "---",
         "",
-        "### COT — S&P 500 large-spec net position",
+        "### COT — S&P 500 institutional positioning",
         "",
         '<div class="dash-tight" markdown>',
         "",
         "| Signal | Value | State |",
         "|:-------|------:|:------|",
-        f"| **Leveraged-funds net** (E-mini) | {c['net']/1000:+,.1f}k | {EMOJI[st]} {lab} |",
-        f"| 4-week change | {c['chg4']/1000:+,.1f}k | — |",
-        f"| 1-year percentile | {c['pct']:.0f}% | — |",
+        f"| **Asset Manager short** (smart money) | {c['am_short']/1000:,.1f}k | {EMOJI[st]} {lab} |",
+        f"| Short 4-week change (trend) | {c['am_short_chg4']/1000:+,.1f}k | — |",
+        f"| Leveraged Funds net (fast money) | {c['lev_net']/1000:+,.1f}k | — |",
         "",
         "</div>",
         "",
-        "![S&P 500 large-spec net position](assets/diagrams_en/cot_sp500.png)",
+        "![Institutional positioning — Asset Mgr short vs Leveraged Funds net](assets/diagrams_en/cot_sp500.png)",
         "",
-        f"<small>*CFTC COT · TFF (leveraged funds = fast-money large specs, as of {c['date']}, weekly). "
-        "Positioning stretched to either end of its 1-year range flags a possible reversal — a contrarian gauge; a negative value = net short · "
-        "[Read more →](posts/cot.md)*</small>",
+        f"<small>*CFTC COT · TFF (as of {c['date']}, weekly). **Asset Managers (smart money) building "
+        "shorts = hedging for downside; easing shorts = leaning bullish.** Leveraged Funds (fast money) "
+        "shown for contrast · [Read more →](posts/cot.md)*</small>",
         "",
     ]
 
@@ -1873,7 +1879,8 @@ def main():
     print("Fetching COT (CFTC)...")
     cot = fetch_cot()
     if cot:
-        print(f"  COT: net {cot['net']:+,.0f} ({cot['date']}, pct {cot['pct']:.0f}%)")
+        print(f"  COT: AM short {cot['am_short']:+,.0f} (pct {cot['am_short_pct']:.0f}%), "
+              f"Lev net {cot['lev_net']:+,.0f} ({cot['date']})")
 
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
@@ -1895,7 +1902,7 @@ def main():
         print(f"  Saved: {OUT_KO / 'credit_dispersion.png'}")
 
     if cot:
-        render_cot_chart(cot["series"], OUT_KO / "cot_sp500.png")
+        render_cot_chart(cot["am_series"], cot["lev_series"], OUT_KO / "cot_sp500.png")
         shutil.copy2(OUT_KO / "cot_sp500.png", OUT_EN / "cot_sp500.png")
         print(f"  Saved: {OUT_KO / 'cot_sp500.png'}")
 
