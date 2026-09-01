@@ -132,6 +132,8 @@ Bonds are honest first because of who trades them. The Treasury market is where 
 
 This also connects to the [credit spreads](credit-spreads.md) story. When rate volatility (MOVE) rises, funding gets harder for weak companies and credit spreads start to widen. Stress often travels **MOVE → credit spreads → equities.** That puts bond volatility at the **front** of the chain of warning signals.
 
+You can see this in the data too. On the home [dashboard](../index.md), place the MOVE chart next to the credit-dispersion (CCC−B) chart and you'll notice that **spikes in bond volatility tend to line up with the bottom-rated spread widening.** Both refresh weekly, so check today's picture for yourself.
+
 ---
 
 ## 6. What to watch
