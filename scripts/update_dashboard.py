@@ -128,6 +128,10 @@ FOMC_DATES = [
     (2027, 1, 27), (2027, 3, 17), (2027, 4, 28), (2027, 6, 16),
 ]
 
+# ICE BofA MOVE Index (the bond VIX) via Yahoo. Yahoo mislabels the NAME field
+# but the VALUES are the real MOVE, so we hardcode the label and range-guard.
+YF_MOVE = "https://query1.finance.yahoo.com/v8/finance/chart/%5EMOVE?interval=1d&range=1y"
+
 
 # ============================================================
 # Data fetching
@@ -402,6 +406,46 @@ def fetch_fedwatch() -> dict | None:
                 "cur": cur, "six": six, "chg_bp": (six - cur) * 100.0, "prob": prob}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] FedWatch fetch failed ({e}); tile skipped")
+        return None
+
+
+def _move_state(v: float) -> str:
+    return "danger" if v >= 160 else "caution" if v >= 120 else "ok"
+
+
+def _move_label_ko(v: float) -> str:
+    return "평온" if v < 80 else "정상" if v < 120 else "스트레스" if v < 160 else "발작"
+
+
+def _move_label_en(v: float) -> str:
+    return "Calm" if v < 80 else "Normal" if v < 120 else "Stressed" if v < 160 else "Convulsion"
+
+
+def fetch_move() -> dict | None:
+    """ICE BofA MOVE Index (the bond VIX) from Yahoo — current level, 4-week
+    change, 1-year percentile and history. Range-guarded against Yahoo ever
+    remapping the ticker. None on failure so the tile is simply omitted."""
+    try:
+        req = urllib.request.Request(YF_MOVE, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            d = json.load(r)
+        res = d.get("chart", {}).get("result")
+        if not res:
+            raise ValueError("no MOVE data")
+        r0 = res[0]
+        s = pd.Series(r0["indicators"]["quote"][0]["close"],
+                      index=pd.to_datetime(r0["timestamp"], unit="s")).dropna()
+        if len(s) < 20:
+            raise ValueError("too few MOVE points")
+        v = float(s.iloc[-1])
+        if not (30 <= v <= 400):
+            raise ValueError(f"MOVE value {v:.1f} out of plausible range")
+        chg = v - float(s.iloc[-21]) if len(s) >= 21 else 0.0
+        pct = float((s < v).mean() * 100)
+        return {"value": v, "chg": chg, "pct": pct,
+                "date": s.index[-1].strftime("%Y-%m-%d"), "series": s}
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] MOVE fetch failed ({e}); tile skipped")
         return None
 
 
@@ -1546,6 +1590,81 @@ def render_fedwatch_card_en(f: dict) -> list[str]:
     ]
 
 
+def render_move_chart(s: pd.Series, out_path: Path):
+    """MOVE (bond volatility) over the trailing year, with the calm/stressed/
+    convulsion reference lines. Regenerated live from Yahoo each build."""
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    for lvl, col in [(80, "#1D9E75"), (120, "#C99A2E"), (160, "#D85A30")]:
+        ax.axhline(lvl, color=col, linewidth=0.8, linestyle="--", alpha=0.6)
+        ax.annotate(str(lvl), xy=(s.index[0], lvl), fontsize=8, color=col, va="bottom", ha="left")
+    ax.plot(s.index, s.values, color="#4a2f9e", linewidth=2.0, label="MOVE")
+    v = float(s.iloc[-1])
+    ax.annotate(f"{v:.0f}", xy=(s.index[-1], v), xytext=(-6, 6), textcoords="offset points",
+                ha="right", fontsize=9, color="#4a2f9e",
+                bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="#7c3aed", alpha=0.9))
+    ax.set_ylabel("MOVE (bp)", fontsize=10)
+    ax.set_title("MOVE — bond-market volatility (implied Treasury yield vol)", fontsize=11)
+    ax.legend(loc="upper left", fontsize=9)
+    ax.grid(alpha=0.3)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
+def render_move_card_ko(m: dict) -> list[str]:
+    st = _move_state(m["value"])
+    return [
+        "---",
+        "",
+        "### MOVE — 채권시장의 VIX",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **MOVE 지수** | {m['value']:.0f} | {EMOJI[st]} {_move_label_ko(m['value'])} |",
+        f"| 4주 변화 | {m['chg']:+.0f} | — |",
+        f"| 1년 백분위 | {m['pct']:.0f}% | — |",
+        "",
+        "</div>",
+        "",
+        "![MOVE 추이 (채권 변동성)](assets/diagrams/move_index.png)",
+        "",
+        f"<small>*ICE BofA MOVE — 미 국채 금리의 예상 변동성(단위 bp), {m['date']} 기준. "
+        "80 미만 평온 · 160 초과 발작. VIX와 갈라지면 채권이 먼저 겁먹은 신호 · "
+        "[자세히 →](posts/move-index.md)*</small>",
+        "",
+    ]
+
+
+def render_move_card_en(m: dict) -> list[str]:
+    st = _move_state(m["value"])
+    return [
+        "---",
+        "",
+        "### MOVE — the bond market's VIX",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **MOVE Index** | {m['value']:.0f} | {EMOJI[st]} {_move_label_en(m['value'])} |",
+        f"| 4-week change | {m['chg']:+.0f} | — |",
+        f"| 1-year percentile | {m['pct']:.0f}% | — |",
+        "",
+        "</div>",
+        "",
+        "![MOVE trend (bond volatility)](assets/diagrams_en/move_index.png)",
+        "",
+        f"<small>*ICE BofA MOVE — implied volatility of US Treasury yields (in bp), as of {m['date']}. "
+        "Below 80 calm · above 160 convulsion. A divergence from VIX means bonds got scared first · "
+        "[Read more →](posts/move-index.md)*</small>",
+        "",
+    ]
+
+
 def render_credit_dispersion(series: dict, out_path: Path):
     """HY / single-B / CCC OAS (bp) over the trailing ~12 months with the
     CCC-B dispersion band shaded. Regenerated live each build from FRED so
@@ -1642,7 +1761,8 @@ def render_credit_card_en(cd: dict) -> list[str]:
 
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
-                      cot: dict | None = None, fw: dict | None = None):
+                      cot: dict | None = None, fw: dict | None = None,
+                      move: dict | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1761,6 +1881,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "[자세히 →](posts/cash-allocation.md)*</small>",
             "",
         ]
+    if move:
+        parts += render_move_card_ko(move)
     if cot:
         parts += render_cot_card_ko(cot)
     if fw:
@@ -1853,7 +1975,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
-                      cot: dict | None = None, fw: dict | None = None):
+                      cot: dict | None = None, fw: dict | None = None,
+                      move: dict | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1977,6 +2100,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "[Read more →](posts/cash-allocation.md)*</small>",
             "",
         ]
+    if move:
+        parts += render_move_card_en(move)
     if cot:
         parts += render_cot_card_en(cot)
     if fw:
@@ -2070,6 +2195,11 @@ def main():
               f"({fw['chg_bp']:+.0f}bp), next FOMC {fw['next_fomc']}, "
               f"prob {'yes' if fw['prob'] else 'no-EFFR'}")
 
+    print("Fetching MOVE (bond VIX)...")
+    move = fetch_move()
+    if move:
+        print(f"  MOVE: {move['value']:.0f} (pct {move['pct']:.0f}%, 4wk {move['chg']:+.0f})")
+
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
     print(f"  Saved: {OUT_KO / 'vol_dashboard.png'}")
@@ -2098,6 +2228,11 @@ def main():
         render_fedwatch_chart(fw["path"], OUT_KO / "fedwatch_path.png")
         shutil.copy2(OUT_KO / "fedwatch_path.png", OUT_EN / "fedwatch_path.png")
         print(f"  Saved: {OUT_KO / 'fedwatch_path.png'}")
+
+    if move:
+        render_move_chart(move["series"], OUT_KO / "move_index.png")
+        shutil.copy2(OUT_KO / "move_index.png", OUT_EN / "move_index.png")
+        print(f"  Saved: {OUT_KO / 'move_index.png'}")
 
     print("Computing signals...")
     cs = compute_cor_skew_signals(tenor, skew)
@@ -2196,12 +2331,12 @@ def main():
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
         render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
         render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
