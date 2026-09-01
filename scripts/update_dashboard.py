@@ -1786,8 +1786,9 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         f"## 📊 일일 대시보드{title_suffix}",
         "",
         '??? note "갱신 일정 자세히"',
-        "    - **크론**: 03:00 UTC 화–토 — NY 시간으로 영업일 마감 약 7시간 뒤, "
-        "한국 시간으로 다음 날 정오",
+        "    - **크론**: 매일 03:10 UTC 화–토(장 마감 후 정식 EOD) + **미 장중 매시**"
+        "(14~21 UTC 평일) 스냅샷 갱신 — 장중엔 주로 Yahoo 소스(MOVE·FedWatch) 숫자가 "
+        "신선해지고, Cboe·FRED·CFTC 타일은 직전 마감/발표 값을 유지",
         "    - **갱신 대상**: VIX TS · COR+SKEW · VolVol · Kelly × VIX · "
         "**MOVE · COT · FedWatch · 신용 스프레드** 차트 + 카드 숫자 — 모두 한 사이클에 함께 갱신",
         "    - **데이터 출처**: Cboe (VIX·COR/SKEW·VVIX) · Yahoo (MOVE·Fed Fund 선물) · "
@@ -2004,8 +2005,10 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         f"## 📊 Daily Dashboard{title_suffix}",
         "",
         '??? note "Update schedule"',
-        "    - **Cron**: 03:00 UTC Tue–Sat — about 7 hours after the NY close, "
-        "or roughly the next noon in Seoul",
+        "    - **Cron**: daily 03:10 UTC Tue–Sat (clean post-close EOD) + **hourly during "
+        "US market hours** (14–21 UTC, Mon–Fri) for an intraday snapshot refresh — intraday "
+        "mainly freshens the Yahoo-sourced numbers (MOVE, FedWatch); Cboe/FRED/CFTC tiles "
+        "hold their last EOD/release value",
         "    - **Refreshed**: VIX TS · COR+SKEW · VolVol · Kelly × VIX · "
         "**MOVE · COT · FedWatch · credit spreads** charts + card numbers — all rebuilt "
         "in the same cycle",

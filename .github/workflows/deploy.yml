@@ -14,11 +14,17 @@ on:
   push:
     branches: [main]
   schedule:
-    # Daily at 03:10 UTC Tue–Sat — 10 min after dashboard-update.yml,
-    # giving that workflow time to commit the day's vix_history snapshot
-    # before the deploy regenerates the home page. See dashboard-update.yml
-    # for the rationale on why we wait until ~11 PM ET (Cboe publish lag).
+    # Daily post-close full refresh at 03:10 UTC Tue–Sat — 10 min after
+    # dashboard-update.yml, giving that workflow time to commit the day's
+    # vix_history snapshot before the deploy regenerates the home page. See
+    # dashboard-update.yml for why we wait until ~11 PM ET (Cboe publish lag).
     - cron: '10 3 * * 2-6'
+    # Intraday snapshot refresh — hourly during US market hours (14:00–21:00
+    # UTC, Mon–Fri). Mainly freshens the Yahoo-sourced numbers (MOVE, FedWatch
+    # ZQ); Cboe/FRED/CFTC tiles hold their last EOD/weekly value until the
+    # post-close run. A full rebuild+deploy each time (charts too — harmless);
+    # only gh-pages is updated, main is untouched. Public repo → free minutes.
+    - cron: '0 14-21 * * 1-5'
   workflow_dispatch:
 
 permissions:
