@@ -93,6 +93,7 @@ nav:
   - "Options 101":
     - posts/options-basics.md
     - posts/skew.md
+    - posts/move-index.md
     - posts/hedging-wings.md
     - posts/implied-correlation.md
   - Tools:

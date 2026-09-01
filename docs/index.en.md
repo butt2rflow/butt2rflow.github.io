@@ -176,6 +176,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 - [**Options Basics**](posts/options-basics.md) — Calls, puts, strike, expiration, delta — explained via car insurance (start *here* if options are new)
 - [**Volatility Skew**](posts/skew.md) — The "smirk" in S&P 500 index options, Implied Correlation, the CBOE SKEW Index
+- [**The Bond Market's VIX — MOVE Index**](posts/move-index.md) — the fear gauge for Treasury yields; in bp not %, and the divergence from VIX is the signal
 - [**Hedging the Wings**](posts/hedging-wings.md) — Low-cost tail-risk hedging (1:2 put ratio, with a concrete SPY example)
 - [**Market-Sentiment Volatility Indices**](posts/implied-correlation.md) — COR3M, the IV Surface, Delta Skew + a TradingView Pine Script
 

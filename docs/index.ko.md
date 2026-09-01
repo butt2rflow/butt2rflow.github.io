@@ -176,6 +176,7 @@ title: Home
 
 - [**옵션의 기초**](posts/options-basics.md) — 자동차 보험 비유로 풀어 보는 콜·풋·행사가·델타 (옵션 처음이라면 *여기부터*)
 - [**변동성 Skew**](posts/skew.md) — S&P500 지수 옵션의 "썩소"와 Implied Correlation, CBOE SKEW Index
+- [**채권시장의 VIX — MOVE 지수**](posts/move-index.md) — 미 국채 금리의 공포 게이지, %가 아닌 bp, VIX와 갈라질 때가 신호
 - [**Hedging the Wings**](posts/hedging-wings.md) — 저비용 테일 리스크 헷지 (1:2 Put Ratio, SPY 구체 예시)
 - [**시장 심리 변동성 지수**](posts/implied-correlation.md) — COR3M, IV Surface, Delta Skew + TradingView Pine Script
 
