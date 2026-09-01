@@ -463,6 +463,8 @@ This framework **automates a mathematical intuition** — it is not a back-teste
 - [Implied Correlation indices](implied-correlation.md): COR3M, IV Surface, Delta Skew
 - [Volatility Dashboard (Google Sheets)](volatility-dashboard.md): the manual COR/SKEW tracker
 - [VIX Futures Term Structure](vix-term-structure.md): reading the shape
+- [Reading Credit Spreads as an Indicator](credit-spreads.md): the index is calm while the bottom rating already moves
+- [The Bond Market's VIX — MOVE Index](move-index.md): reading risk through bond-market volatility
 
 ---
 

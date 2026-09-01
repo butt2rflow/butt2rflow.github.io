@@ -171,4 +171,4 @@ For a long-term investor, the value here isn't a short-term trade signal — it'
 
 ---
 
-*Related: [Volatility Dashboard — Tracking Correlation + Skew](volatility-dashboard.md) | [Hedging the Wings — Cheap Tail-Risk Insurance](hedging-wings.md) | [Volatility Skew](skew.md)*
+*Related: [Volatility Dashboard — Tracking Correlation + Skew](volatility-dashboard.md) | [Hedging the Wings — Cheap Tail-Risk Insurance](hedging-wings.md) | [Volatility Skew](skew.md) | [MOVE — The Bond Market's VIX](move-index.md)*

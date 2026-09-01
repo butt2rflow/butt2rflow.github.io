@@ -205,4 +205,4 @@ The IV surface is a real-time map of the options market's collective psychology.
 
 ---
 
-*Previous: [Hedging the Wings](hedging-wings.md) | Related: [Volatility Skew](skew.md)*
+*Previous: [Hedging the Wings](hedging-wings.md) | Related: [Volatility Skew](skew.md) | [Reading Credit Spreads as an Indicator](credit-spreads.md)*

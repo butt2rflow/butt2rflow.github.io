@@ -246,7 +246,7 @@ The [previous article](expected-return.md) showed that *time horizon* matters mo
 
 ---
 
-*Previous: [Expected Return — A Probability View of QQQ vs TQQQ](expected-return.md) | Related: [Extension series (S3) — Options in practice](../series/s3-preview.md)*
+*Previous: [Expected Return — A Probability View of QQQ vs TQQQ](expected-return.md) | Related: [Extension series (S3) — Options in practice](../series/s3-preview.md) | [Single-Stock Futures — The Directional Earnings Play](ssf-relaunch.md)*
 
 <a id="glossary"></a>
 

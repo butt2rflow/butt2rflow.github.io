@@ -171,4 +171,4 @@ VIX futures term structure는 **시장 변동성 심리의 단면도**입니다.
 
 ---
 
-*관련: [변동성 대시보드 — Correlation + Skew 추적](volatility-dashboard.md) | [Hedging the Wings — 저비용 테일 리스크 헷지](hedging-wings.md) | [변동성 Skew](skew.md)*
+*관련: [변동성 대시보드 — Correlation + Skew 추적](volatility-dashboard.md) | [Hedging the Wings — 저비용 테일 리스크 헷지](hedging-wings.md) | [변동성 Skew](skew.md) | [MOVE 지수 — 채권시장의 VIX](move-index.md)*

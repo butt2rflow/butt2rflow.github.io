@@ -199,7 +199,7 @@ To put it to work:
 
 ---
 
-*Related: [Volatility Skew](skew.md) | [Implied Correlation](implied-correlation.md) | [COT Report](cot.md)*
+*Related: [Volatility Skew](skew.md) | [Implied Correlation](implied-correlation.md) | [COT Report](cot.md) | [MOVE — The Bond Market's VIX](move-index.md)*
 
 ### Sources and notes
 

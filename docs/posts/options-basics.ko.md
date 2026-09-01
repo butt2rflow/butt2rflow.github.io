@@ -168,5 +168,6 @@ lang: ko
 
 - 옵션을 *보험*으로 활용 → [Hedging the Wings — 1:2 Put Ratio Spread](hedging-wings.md)
 - 옵션을 *레버리지*로 활용 → [파생상품의 레버리지 사용료](derivatives-leverage-cost.md)
+- 개별주식에 *방향성 베팅* → [개별주식선물(SSF)의 부활](ssf-relaunch.md)
 - 옵션 *시장의 비대칭* (왜 풋이 콜보다 비싼가) → [변동성 Skew](skew.md)
 - 옵션을 *진지하게* 배우려면 → [확장편 (S3 시리즈) — 옵션의 본질·실전](../series/s3-preview.md)

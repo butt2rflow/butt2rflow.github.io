@@ -115,3 +115,5 @@ One caveat: COT is **a compass, not a clock**. It points direction, not timing. 
 ---
 
 *Next: [Fed Fund Futures and the CME FedWatch Tool — How rate-cut probabilities are computed](fedwatch.md)*
+
+*Related: [Reading Credit Spreads as an Indicator](credit-spreads.md)*

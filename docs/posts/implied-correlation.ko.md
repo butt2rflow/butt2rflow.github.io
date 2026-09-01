@@ -205,4 +205,4 @@ bgcolor(skew_spread > 25 ? color.new(color.red, 85) :
 
 ---
 
-*이전 글: [Hedging the Wings](hedging-wings.md) | 관련 글: [변동성 Skew](skew.md)*
+*이전 글: [Hedging the Wings](hedging-wings.md) | 관련 글: [변동성 Skew](skew.md) | [신용 스프레드를 지표로 읽기](credit-spreads.md)*

@@ -463,6 +463,8 @@ VIX 14 → 82로 6배 뛰면서 권장 비중은 100% → 2%. 이 한 달 사이
 - [시장 심리 변동성 지수](implied-correlation.md): COR3M, IV Surface, Delta Skew 개념
 - [변동성 대시보드 (구글시트)](volatility-dashboard.md): COR/SKEW를 직접 추적하는 도구
 - [VIX 선물 만기 구조](vix-term-structure.md): VIX TS shape의 해석법
+- [신용 스프레드를 지표로 읽기](credit-spreads.md): 지수는 잠잠해도 바닥 등급이 먼저 움직인다
+- [MOVE 지수 — 채권시장의 VIX](move-index.md): 채권시장의 변동성으로 리스크를 읽는 법
 
 ---
 

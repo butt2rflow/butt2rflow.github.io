@@ -160,5 +160,6 @@ If you're running multi-leg strategies (spreads, synthetics, 0DTE, etc.), IBKR i
 
 - Options as *insurance* → [Hedging the Wings — 1:2 Put Ratio Spread](hedging-wings.md)
 - Options as *leverage* → [Cost of Leverage in Derivatives](derivatives-leverage-cost.md)
+- *Directional bets* on single stocks → [Single-Stock Futures Relaunch](ssf-relaunch.md)
 - The *asymmetry* of options markets (why puts cost more than calls) → [Volatility Skew](skew.md)
 - Going *deep* on options → [Extension series (S3) — The Nature of Options + Practical Strategies](../series/s3-preview.md)

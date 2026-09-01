@@ -246,7 +246,7 @@ ATM 콜은 *시간이 빠르게 적*이지만, *짧은 시간 안에 큰 움직�
 
 ---
 
-*이전 글: [수익률의 기댓값 — QQQ vs TQQQ](expected-return.md) | 관련: [확장편 (S3 시리즈) — 옵션 실전](../series/s3-preview.md)*
+*이전 글: [수익률의 기댓값 — QQQ vs TQQQ](expected-return.md) | 관련: [확장편 (S3 시리즈) — 옵션 실전](../series/s3-preview.md) | [개별주식선물(SSF)의 부활 — 방향성 어닝 플레이](ssf-relaunch.md)*
 
 <a id="용어-설명"></a>
 

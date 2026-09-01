@@ -117,3 +117,5 @@ COT/TFF 리포트는 기관투자자의 포지셔닝을 **매주** 확인할 수
 ---
 
 *다음 글: [Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리](fedwatch.md)*
+
+*관련: [신용 스프레드를 지표로 읽기](credit-spreads.md)*
