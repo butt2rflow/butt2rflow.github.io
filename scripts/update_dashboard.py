@@ -114,6 +114,20 @@ CREDIT_FALLBACK = {"hy": 260.0, "b": 276.0, "ccc": 1031.0,
 # futures-only report renamed this contract in 2022, so TFF is the live source.
 COT_BASE = "https://publicreporting.cftc.gov/resource/gpe5-46if.json"
 
+# CME 30-Day Fed Funds futures (ZQ) via Yahoo's public chart endpoint (no key).
+# FedWatch-style: implied month-average EFFR = 100 - price. The multi-month
+# curve is the market-implied policy path; with current EFFR + the FOMC date it
+# also yields the next-meeting move. See posts/fedwatch.
+YF_ZQ = "https://query1.finance.yahoo.com/v8/finance/chart/ZQ{code}{yy:02d}.CBT?interval=1d&range=5d"
+_MONTHCODE = "FGHJKMNQUVXZ"  # Jan..Dec futures month codes
+# FOMC decision dates (2nd day of each meeting); the new rate is effective the
+# next day. Verify/extend annually.
+FOMC_DATES = [
+    (2026, 1, 28), (2026, 3, 18), (2026, 4, 29), (2026, 6, 17),
+    (2026, 7, 29), (2026, 9, 16), (2026, 10, 28), (2026, 12, 16),
+    (2027, 1, 27), (2027, 3, 17), (2027, 4, 28), (2027, 6, 16),
+]
+
 
 # ============================================================
 # Data fetching
@@ -244,10 +258,13 @@ def _fetch_fred_series(series_id: str) -> pd.Series:
 
 
 def _credit_state(hy_bp: float, gap_ytd_bp: float) -> tuple[str, str]:
-    """Signal state for the credit tile. The warning combination is a
-    compressed index (thin pay for default risk) plus a widening CCC-B gap
-    (the bottom already repricing). Returns (level_state, gap_state)."""
-    level_state = "danger" if hy_bp < 300 else ("caution" if hy_bp < 400 else "ok")
+    """Credit states, colour-consistent with the rest of the dashboard where
+    🔴 = active stress. A WIDE HY spread = credit stress (danger); a very TIGHT
+    spread is complacency — thin compensation with asymmetric downside, a
+    caution, not stress. A widening CCC-B gap is an early stress signal."""
+    level_state = ("danger" if hy_bp >= 500       # blowing out = credit stress
+                   else "caution" if hy_bp >= 400  # widening toward stress
+                   else "ok")                       # low/normal = calm credit market (the "trap")
     gap_state = "danger" if gap_ytd_bp >= 100 else ("caution" if gap_ytd_bp >= 30 else "ok")
     return level_state, gap_state
 
@@ -327,6 +344,64 @@ def fetch_cot() -> dict | None:
                 "am_series": am_short, "lev_series": lev_net}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] COT fetch failed ({e}); COT tile skipped")
+        return None
+
+
+def _zq_implied(year: int, month: int) -> float | None:
+    """Implied month-average EFFR (%) from the ZQ contract = 100 - price."""
+    url = YF_ZQ.format(code=_MONTHCODE[month - 1], yy=year % 100)
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            d = json.load(r)
+        res = d.get("chart", {}).get("result")
+        p = res[0]["meta"].get("regularMarketPrice") if res else None
+        return round(100.0 - float(p), 4) if p else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def fetch_fedwatch() -> dict | None:
+    """Market-implied Fed policy path from ZQ futures (robust, directly
+    observed) plus the next-FOMC move when current EFFR is available from FRED.
+    Returns None on failure so the tile is simply omitted."""
+    import datetime as _dt
+    import calendar as _cal
+    try:
+        today = datetime.now(timezone.utc).date()
+        path, y, m = [], today.year, today.month
+        for _ in range(7):
+            imp = _zq_implied(y, m)
+            if imp is not None:
+                path.append((y, m, imp))
+            m += 1
+            if m > 12:
+                m, y = 1, y + 1
+        if len(path) < 3:
+            raise ValueError("no ZQ path")
+        nxt = next((_dt.date(yy, mm, dd) for (yy, mm, dd) in FOMC_DATES
+                    if _dt.date(yy, mm, dd) >= today), None)
+        effr = None
+        try:
+            effr = float(_fetch_fred_series("DFF").iloc[-1])
+        except Exception:  # noqa: BLE001
+            effr = None
+        prob = None
+        if nxt and effr is not None:
+            meet_imp = _zq_implied(nxt.year, nxt.month)
+            if meet_imp is not None:
+                N = _cal.monthrange(nxt.year, nxt.month)[1]
+                n_old = nxt.day            # days at old EFFR; new rate effective day after decision
+                n_new = N - n_old
+                if n_new >= 1:
+                    R = (meet_imp * N - effr * n_old) / n_new
+                    prob = {"R": R, "move_bp": (R - effr) * 100.0}
+        cur = effr if effr is not None else path[0][2]
+        six = path[min(6, len(path) - 1)][2]
+        return {"path": path, "next_fomc": nxt, "effr": effr,
+                "cur": cur, "six": six, "chg_bp": (six - cur) * 100.0, "prob": prob}
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] FedWatch fetch failed ({e}); tile skipped")
         return None
 
 
@@ -1369,6 +1444,108 @@ def render_cot_card_en(c: dict) -> list[str]:
     ]
 
 
+def render_fedwatch_chart(path: list, out_path: Path):
+    """Market-implied policy rate (100 - ZQ price) across the next several
+    monthly Fed Funds contracts — the market's expected rate trajectory."""
+    import datetime as _dt
+    xs = [_dt.date(y, m, 15) for (y, m, _v) in path]
+    ys = [v for (_y, _m, v) in path]
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    ax.plot(xs, ys, color="#7c3aed", linewidth=2.2, marker="o", markersize=4,
+            label="Implied policy rate (100 − ZQ)")
+    for x, yv in zip(xs, ys):
+        ax.annotate(f"{yv:.2f}", (x, yv), textcoords="offset points", xytext=(0, 8),
+                    ha="center", fontsize=8, color="#5b21b6")
+    ax.set_ylabel("Implied rate (%)", fontsize=10)
+    ax.set_title("FedWatch — market-implied Fed policy path (Fed Funds futures)",
+                 fontsize=11)
+    ax.legend(loc="best", fontsize=9)
+    ax.grid(alpha=0.3)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+
+
+def render_fedwatch_card_ko(f: dict) -> list[str]:
+    fomc = f["next_fomc"]
+    fomc_s = f"{fomc.month}/{fomc.day}" if fomc else "—"
+    p = f["prob"]
+    if p:
+        mv = p["move_bp"]
+        lean = ("⬇️ 인하 우세" if mv <= -12 else "⬆️ 인상 우세" if mv >= 12 else "➡️ 동결 우세")
+        move_cell = f"{mv:+.0f}bp"
+    else:
+        lean = ("⬆️ 인상 경로" if f["chg_bp"] >= 15 else "⬇️ 인하 경로"
+                if f["chg_bp"] <= -15 else "➡️ 횡보")
+        move_cell = "—"
+    dir6 = ("⬆️ 인상 경로" if f["chg_bp"] >= 15 else "⬇️ 인하 경로"
+            if f["chg_bp"] <= -15 else "➡️ 횡보")
+    n_moves = abs(f["chg_bp"]) / 25
+    return [
+        "---",
+        "",
+        "### FedWatch — 시장의 금리 경로 (Fed Fund 선물)",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **다음 FOMC** ({fomc_s}) | {move_cell} | {lean} |",
+        f"| 내재 정책금리 (지금→6개월) | {f['cur']:.2f}% → {f['six']:.2f}% | {dir6} |",
+        f"| 6개월 내재 변화 | {f['chg_bp']:+.0f}bp (≈ {n_moves:.1f}회) | — |",
+        "",
+        "</div>",
+        "",
+        "![내재 정책금리 경로 (ZQ 선물)](assets/diagrams/fedwatch_path.png)",
+        "",
+        "<small>*Fed Fund 선물(ZQ) 내재금리(100−가격) 기준, 주간 갱신. 회의별 정확한 확률은 "
+        "[CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html)에서 · "
+        "[자세히 →](posts/fedwatch.md)*</small>",
+        "",
+    ]
+
+
+def render_fedwatch_card_en(f: dict) -> list[str]:
+    fomc = f["next_fomc"]
+    fomc_s = f"{fomc.month}/{fomc.day}" if fomc else "—"
+    p = f["prob"]
+    if p:
+        mv = p["move_bp"]
+        lean = ("⬇️ Cut leaning" if mv <= -12 else "⬆️ Hike leaning" if mv >= 12
+                else "➡️ Hold leaning")
+        move_cell = f"{mv:+.0f}bp"
+    else:
+        lean = ("⬆️ Tightening path" if f["chg_bp"] >= 15 else "⬇️ Easing path"
+                if f["chg_bp"] <= -15 else "➡️ Flat")
+        move_cell = "—"
+    dir6 = ("⬆️ Tightening" if f["chg_bp"] >= 15 else "⬇️ Easing"
+            if f["chg_bp"] <= -15 else "➡️ Flat")
+    n_moves = abs(f["chg_bp"]) / 25
+    return [
+        "---",
+        "",
+        "### FedWatch — market-implied rate path (Fed Funds futures)",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **Next FOMC** ({fomc_s}) | {move_cell} | {lean} |",
+        f"| Implied policy rate (now → 6mo) | {f['cur']:.2f}% → {f['six']:.2f}% | {dir6} |",
+        f"| 6-month implied change | {f['chg_bp']:+.0f}bp (≈ {n_moves:.1f} moves) | — |",
+        "",
+        "</div>",
+        "",
+        "![Market-implied policy rate path (ZQ futures)](assets/diagrams_en/fedwatch_path.png)",
+        "",
+        "<small>*From Fed Funds futures (ZQ) implied rate (100 − price), refreshed weekly. "
+        "For exact per-meeting probabilities see [CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) · "
+        "[Read more →](posts/fedwatch.md)*</small>",
+        "",
+    ]
+
+
 def render_credit_dispersion(series: dict, out_path: Path):
     """HY / single-B / CCC OAS (bp) over the trailing ~12 months with the
     CCC-B dispersion band shaded. Regenerated live each build from FRED so
@@ -1407,7 +1584,7 @@ def render_credit_dispersion(series: dict, out_path: Path):
 
 def render_credit_card_ko(cd: dict) -> list[str]:
     lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
-    lvl_label = {"ok": "보통", "caution": "다소 얇음", "danger": "얇음 (보상 적음)"}[lvl]
+    lvl_label = {"ok": "낮음 (평온)", "caution": "확대 — 경계", "danger": "급확대 — 신용 스트레스"}[lvl]
     gap_label = {"ok": "안정", "caution": "확대 조짐", "danger": "확대 중"}[gap]
     stamp = "" if cd.get("live") else f" · {cd['date']} 기준"
     return [
@@ -1436,7 +1613,7 @@ def render_credit_card_ko(cd: dict) -> list[str]:
 
 def render_credit_card_en(cd: dict) -> list[str]:
     lvl, gap = _credit_state(cd["hy"], cd["gap_ytd"])
-    lvl_label = {"ok": "Normal", "caution": "Somewhat thin", "danger": "Thin (little pay)"}[lvl]
+    lvl_label = {"ok": "Low (calm)", "caution": "Widening — caution", "danger": "Blowing out — credit stress"}[lvl]
     gap_label = {"ok": "Stable", "caution": "Widening", "danger": "Widening fast"}[gap]
     stamp = "" if cd.get("live") else f" · as of {cd['date']}"
     return [
@@ -1465,7 +1642,7 @@ def render_credit_card_en(cd: dict) -> list[str]:
 
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
-                      cot: dict | None = None):
+                      cot: dict | None = None, fw: dict | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1586,6 +1763,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         ]
     if cot:
         parts += render_cot_card_ko(cot)
+    if fw:
+        parts += render_fedwatch_card_ko(fw)
     if creds:
         parts += render_credit_card_ko(creds)
     parts += [
@@ -1674,7 +1853,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
-                      cot: dict | None = None):
+                      cot: dict | None = None, fw: dict | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1800,6 +1979,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         ]
     if cot:
         parts += render_cot_card_en(cot)
+    if fw:
+        parts += render_fedwatch_card_en(fw)
     if creds:
         parts += render_credit_card_en(creds)
     parts += [
@@ -1882,6 +2063,13 @@ def main():
         print(f"  COT: AM short {cot['am_short']:+,.0f} (pct {cot['am_short_pct']:.0f}%), "
               f"Lev net {cot['lev_net']:+,.0f} ({cot['date']})")
 
+    print("Fetching FedWatch (ZQ futures)...")
+    fw = fetch_fedwatch()
+    if fw:
+        print(f"  FedWatch: cur {fw['cur']:.2f}% -> 6mo {fw['six']:.2f}% "
+              f"({fw['chg_bp']:+.0f}bp), next FOMC {fw['next_fomc']}, "
+              f"prob {'yes' if fw['prob'] else 'no-EFFR'}")
+
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
     print(f"  Saved: {OUT_KO / 'vol_dashboard.png'}")
@@ -1905,6 +2093,11 @@ def main():
         render_cot_chart(cot["am_series"], cot["lev_series"], OUT_KO / "cot_sp500.png")
         shutil.copy2(OUT_KO / "cot_sp500.png", OUT_EN / "cot_sp500.png")
         print(f"  Saved: {OUT_KO / 'cot_sp500.png'}")
+
+    if fw:
+        render_fedwatch_chart(fw["path"], OUT_KO / "fedwatch_path.png")
+        shutil.copy2(OUT_KO / "fedwatch_path.png", OUT_EN / "fedwatch_path.png")
+        print(f"  Saved: {OUT_KO / 'fedwatch_path.png'}")
 
     print("Computing signals...")
     cs = compute_cor_skew_signals(tenor, skew)
@@ -2003,12 +2196,12 @@ def main():
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
         render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
         render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
