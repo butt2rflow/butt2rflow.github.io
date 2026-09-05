@@ -1,0 +1,3096 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/cash-allocation/">
+      
+      
+        <link rel="prev" href="../vix-term-structure/">
+      
+      
+        <link rel="next" href="../../series/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="ko">
+        
+          <link rel="alternate" href="../../en/posts/cash-allocation/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합 - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kelly" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/posts/cash-allocation/" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Returns 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../options-basics/" class="md-tabs__link">
+          
+  
+  
+  Options 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률, 복리, 그리고 로그차트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률의 기댓값 — 확률 모델로 본 QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파생상품의 레버리지 사용료 — 같은 3배라도 비용은 천차만별
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    네마녀의 날이 돌아왔다 — 개별주식선물과 방향성 어닝 플레이
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신용 스프레드를 지표로 읽기 — 지수는 잠잠한데 바닥 등급은 이미 움직인다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션의 기초 — 자동차 보험으로 푸는 콜과 풋
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    채권시장의 VIX — MOVE 지수 읽는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — 콘탱고와 백워데이션 읽는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        한 줄 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-vol-drag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 왜 변동성 자체가 손실인가 — vol drag와 기하평균
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 왜 변동성 자체가 손실인가 — vol drag와 기하평균">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        산술평균 vs 기하평균
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        횡보에서도 돈이 사라진다
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        연 단위 끌림 추정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 큰손들은 변동성 신호에 민감한가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kelly_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kelly 공식과의 직접 연결
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kelly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kelly 공식 한 줄
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. σ에 무엇을 넣을까? — VIX의 등장
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kelly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Kelly 비율 — 사용자가 선택하는 첫 번째 토글
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Kelly 비율 — 사용자가 선택하는 첫 번째 토글">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kelly_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        심화: 위기 한복판에서 Kelly 비율을 올려도 되는가?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tactical-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공격 자본 (Tactical bucket)은 프레임워크의 필수 짝
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공격 자본 운영 원칙
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-the-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        어떤 비율을 골라야 하나?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-kellyvix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 단순 Kelly@VIX의 한계 — 추가 신호가 필요한 이유
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 위험 민감도 — 사용자가 선택하는 두 번째 토글
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#612-r" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6½. 기대 프리미엄 μ−r — 사용자가 선택하는 세 번째 토글
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6½. 기대 프리미엄 μ−r — 사용자가 선택하는 세 번째 토글">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-vix-vol-risk-premium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 5%가 "보수적"인가 — VIX vol-risk-premium 이야기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        어떤 값을 골라야 하나?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        곡선 차트가 토글에 맞춰 같이 움직임
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 최종 공식 — 한 줄로
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 일일 대시보드 사용법
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 실전 시나리오 — 첫 갭은 못 피해도 연쇄는 깎는다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. 실전 시나리오 — 첫 갭은 못 피해도 연쇄는 깎는다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        역사적 사례
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 한계와 주의
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 글
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        한 줄 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-vol-drag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 왜 변동성 자체가 손실인가 — vol drag와 기하평균
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 왜 변동성 자체가 손실인가 — vol drag와 기하평균">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        산술평균 vs 기하평균
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        횡보에서도 돈이 사라진다
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        연 단위 끌림 추정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 큰손들은 변동성 신호에 민감한가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kelly_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kelly 공식과의 직접 연결
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kelly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kelly 공식 한 줄
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. σ에 무엇을 넣을까? — VIX의 등장
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kelly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Kelly 비율 — 사용자가 선택하는 첫 번째 토글
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Kelly 비율 — 사용자가 선택하는 첫 번째 토글">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kelly_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        심화: 위기 한복판에서 Kelly 비율을 올려도 되는가?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tactical-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공격 자본 (Tactical bucket)은 프레임워크의 필수 짝
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공격 자본 운영 원칙
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-the-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        어떤 비율을 골라야 하나?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-kellyvix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 단순 Kelly@VIX의 한계 — 추가 신호가 필요한 이유
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 위험 민감도 — 사용자가 선택하는 두 번째 토글
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#612-r" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6½. 기대 프리미엄 μ−r — 사용자가 선택하는 세 번째 토글
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6½. 기대 프리미엄 μ−r — 사용자가 선택하는 세 번째 토글">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-vix-vol-risk-premium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 5%가 "보수적"인가 — VIX vol-risk-premium 이야기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        어떤 값을 골라야 하나?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        곡선 차트가 토글에 맞춰 같이 움직임
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 최종 공식 — 한 줄로
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 일일 대시보드 사용법
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 실전 시나리오 — 첫 갭은 못 피해도 연쇄는 깎는다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. 실전 시나리오 — 첫 갭은 못 피해도 연쇄는 깎는다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        역사적 사례
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 한계와 주의
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 글
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kelly">변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합<a class="headerlink" href="#kelly" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>이 글의 위치</strong>: <a href="../../series/">원칙편 시리즈</a> Part 3 (Kelly의 공식, 유료)의 베팅 비율을 <strong>변동성(VIX)을 σ로 입력</strong>해 일일 현금/주식 비중 추천으로 확장합니다. <a href="../../series/s1-shannons-demon/">Part 1 — Shannon's Demon</a>이 "현금 = 리밸런싱의 연료"로 끝맺었다면, 이 글은 <em>얼마만큼</em>에 대한 답. 일일 대시보드 첫 카드의 수학적 근거.</p>
+</blockquote>
+<hr />
+<h2 id="_1">한 줄 요약<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>변동성이 낮을 때 현금을 줄이고, 변동성이 높아지면 현금을 늘린다 — 이 직관을 Kelly 공식으로 수치화한 것.</strong></p>
+</blockquote>
+<p><strong>f* = (μ − r) / σ²</strong> — σ에 VIX를 대입하면, 변동성이 2배 되면 권장 비중이 1/4로 줄어드는 <em>자동 디레버리지</em> 곡선이 됩니다. 여기에 COR/SKEW · VIX 백워데이션 · VolVol 같은 추가 위험 신호가 켜지면 곱셈 할인가 더해져 현금 비중이 한 단계 더 올라갑니다.</p>
+<hr />
+<h2 id="1-vol-drag">1. 왜 변동성 자체가 손실인가 — vol drag와 기하평균<a class="headerlink" href="#1-vol-drag" title="Permanent link">&para;</a></h2>
+<p>Kelly 공식의 σ²을 이해하려면 먼저 <strong>변동성이 그 자체로 자산을 깎는다</strong>는 사실부터 짚어야 합니다. 이게 큰손·기관들이 변동성 신호에 민감하게 반응하는 <em>진짜 이유</em>입니다.</p>
+<h3 id="vs">산술평균 vs 기하평균<a class="headerlink" href="#vs" title="Permanent link">&para;</a></h3>
+<p>수익률의 평균은 두 가지가 있습니다:</p>
+<ul>
+<li><strong>산술평균</strong>: 매년 수익률을 단순 평균. "평균적으로 한 해에 몇 % 났나"</li>
+<li><strong>기하평균</strong>: 실제로 <em>복리되는</em> 수익률. "10년 후 내 자산이 몇 배 되어 있나"</li>
+</ul>
+<p>복리는 곱셈으로 누적되기 때문에, <em>실제로 내 통장에 남는 건</em> 기하평균입니다. 그리고 이 둘은 변동성이 클수록 벌어집니다:</p>
+<div class="highlight"><pre><span></span><code>기하평균 ≈ 산술평균 − σ² / 2
+</code></pre></div>
+<p>이 차이를 <strong>vol drag</strong> (변동성 끌림, 음의 복리)라고 부릅니다. σ가 <em>제곱</em>으로 들어가는 게 핵심.</p>
+<h3 id="_2">횡보에서도 돈이 사라진다<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시나리오</th>
+<th style="text-align: right;">Year 1</th>
+<th style="text-align: right;">Year 2</th>
+<th style="text-align: right;">산술평균</th>
+<th style="text-align: right;">기하평균 (실제 손익)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">변동성 낮음</td>
+<td style="text-align: right;">+5%</td>
+<td style="text-align: right;">−5%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−0.13%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">변동성 중간</td>
+<td style="text-align: right;">+15%</td>
+<td style="text-align: right;">−15%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−1.13%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>변동성 높음</strong></td>
+<td style="text-align: right;">+30%</td>
+<td style="text-align: right;">−30%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−4.6%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">위기 수준</td>
+<td style="text-align: right;">+50%</td>
+<td style="text-align: right;">−50%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−13.4%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>산술평균은 모두 0%로 똑같지만, <em>실제 자산</em>은 변동성이 클수록 빠르게 줄어듭니다. 가장 극단인 마지막 행: 한 해에 +50%, 다음 해 −50% — "평균 0%인데 본전이겠지?" 싶지만 자산은 100 → 150 → 75. <strong>2년 동안 25% 손실</strong>.</p>
+<p>거래도 안 하고 가만히 있는데도 사라지는 돈 — 이게 vol drag.</p>
+<h3 id="_3">연 단위 끌림 추정<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>연간 변동성별로 vol drag (σ²/2):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">변동성 σ</th>
+<th style="text-align: left;">VIX 수준</th>
+<th style="text-align: right;">vol drag (연)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">16%</td>
+<td style="text-align: left;">평시 VIX</td>
+<td style="text-align: right;"><strong>−1.3%</strong> (감내 가능)</td>
+</tr>
+<tr>
+<td style="text-align: left;">20%</td>
+<td style="text-align: left;">약간 긴장</td>
+<td style="text-align: right;">−2.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">경계</td>
+<td style="text-align: right;"><strong>−3.1%</strong> (의미 있음)</td>
+</tr>
+<tr>
+<td style="text-align: left;">30%</td>
+<td style="text-align: left;">스트레스</td>
+<td style="text-align: right;">−4.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">40%</td>
+<td style="text-align: left;">위기</td>
+<td style="text-align: right;"><strong>−8.0%</strong> (압도적)</td>
+</tr>
+</tbody>
+</table>
+<p>S&amp;P500의 장기 산술평균 수익률이 ~9%인데, 위기 구간(VIX 40)의 vol drag가 8%면 <strong>기대수익의 거의 전부를 변동성이 먹어버립니다</strong>. 들고 있는 것 자체가 손해.</p>
+<h3 id="_4">왜 큰손들은 변동성 신호에 민감한가<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>리테일 투자자는 보통 <em>산술평균</em>으로 사고합니다: "장기 평균 +9%니까 그냥 들고 있자". 기관·헤지펀드 같은 큰손들은 <em>기하평균</em> (= 실제 장기 자산 성장률) 또는 <em>이길 확률</em>로 사고합니다. 같은 산술평균이라도 변동성이 다르면 <strong>장기 생존 확률이 완전히 다르다는 걸 수학적으로 알기 때문</strong>입니다.</p>
+<p>큰손의 사고:</p>
+<blockquote>
+<p>"지금 산술기대 +5%인데 σ=40%면 vol drag가 8%다 → 기하평균은 음수 → <strong>들고 있으면 장기적으로 손실 확정</strong> → 일단 현금화"</p>
+</blockquote>
+<p>이게 변동성 신호가 떴을 때 <em>스마트 머니가 먼저 나가는</em> 메커니즘입니다. 신문 헤드라인 때문이 아니라, 곱셈 수학 때문에.</p>
+<h3 id="kelly_1">Kelly 공식과의 직접 연결<a class="headerlink" href="#kelly_1" title="Permanent link">&para;</a></h3>
+<p>여기까지 오면 Kelly 공식의 σ²이 어디서 오는지 자연스럽게 보입니다:</p>
+<div class="highlight"><pre><span></span><code>f* = (μ − r) / σ²
+</code></pre></div>
+<p>분모의 σ²이 정확히 <strong>vol drag의 크기</strong>입니다. Kelly는 "변동성이 까먹는 만큼 익스포져를 줄여서 기하평균을 최대화하라"는 공식 — <em>왜</em> σ²이냐는 질문에 "vol drag와 정확히 같은 항이기 때문"이 답입니다.</p>
+<blockquote>
+<p><strong>요약</strong>: 변동성 자체가 곱셈 손실(vol drag)을 만든다 → 큰손은 기하평균 사고로 변동성 신호에 미리 반응한다 → Kelly의 σ²이 이 반응 곡선을 수학적으로 명시한다.</p>
+</blockquote>
+<hr />
+<h2 id="2-kelly">2. Kelly 공식 한 줄<a class="headerlink" href="#2-kelly" title="Permanent link">&para;</a></h2>
+<p>Kelly 공식의 본질은 <strong>"수익률 분포에서 장기 자산 성장률을 최대화하는 단일 비율"</strong> 입니다. 주식·채권 같은 연속 분포 자산에 대해서는 다음과 같은 형태로 정리됩니다:</p>
+<div class="highlight"><pre><span></span><code>f* = (μ − r) / σ²
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">기호</th>
+<th style="text-align: left;">의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>f*</strong></td>
+<td style="text-align: left;">자산에 투입할 자본 비율 (나머지는 현금)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>μ</strong></td>
+<td style="text-align: left;">자산의 기대수익률 (연환산)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>r</strong></td>
+<td style="text-align: left;">무위험 수익률 (연환산)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>σ</strong></td>
+<td style="text-align: left;">자산 수익률의 표준편차 (연환산 변동성)</td>
+</tr>
+</tbody>
+</table>
+<p>S&amp;P500을 예로 들면 장기 평균 μ ≈ 9%, r ≈ 4%, 즉 <strong>μ − r = 5%</strong> 정도가 보수적 가정입니다. 학계 추정은 분야·기간별로 3%–9% 범위로 매우 다양 — 일일 대시보드는 5% / 7% / 9% 세 가지 프리미엄을 토글로 제공합니다 (자세한 비교는 §6½ μ−r 토글 절 참조). σ는 평시 16~20%, 패닉 시 40~50%까지 튑니다.</p>
+<blockquote>
+<p><strong>왜 σ²인가?</strong>: 분모에 σ가 <em>제곱</em>으로 들어가는 게 핵심입니다. 변동성이 2배 되면 권장 비중은 4배 줄어듭니다. "변동성 신호 → 현금 늘림"의 가속도가 이 제곱항에서 옵니다.</p>
+</blockquote>
+<hr />
+<h2 id="3-vix">3. σ에 무엇을 넣을까? — VIX의 등장<a class="headerlink" href="#3-vix" title="Permanent link">&para;</a></h2>
+<p>Kelly 공식의 약점은 σ가 미래 변동성이라는 점입니다. <em>지금까지의</em> 실현변동성은 알 수 있지만, <em>앞으로의</em> σ는 추정해야 합니다.</p>
+<p><strong>가장 깔끔한 향후 변동성 추정치가 VIX</strong>입니다. VIX는 S&amp;P500 옵션 시장이 현재 가격에 반영하고 있는 <strong>향후 30일 기대 변동성</strong>을 연환산한 값(%)입니다. 매일 실시간으로 갱신되고, 옵션 시장 전체의 합의된 추정치라는 점에서 어떤 통계적 추정량보다 강력합니다.</p>
+<div class="highlight"><pre><span></span><code>σ ≈ VIX / 100
+</code></pre></div>
+<p>VIX = 17이면 σ ≈ 0.17, VIX = 30이면 σ ≈ 0.30.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">VIX</th>
+<th style="text-align: right;">σ²</th>
+<th style="text-align: right;">Half-Kelly @ μ−r=5% <em>(보수 기준)</em></th>
+<th style="text-align: right;">Half-Kelly @ μ−r=7%</th>
+<th style="text-align: right;">Half-Kelly @ μ−r=9%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.0144</td>
+<td style="text-align: right;">173% → <strong>100%</strong></td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">0.0289</td>
+<td style="text-align: right;"><strong>86%</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">100% (cap)</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">0.0484</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">72%</td>
+<td style="text-align: right;">93%</td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.0900</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">39%</td>
+<td style="text-align: right;">50%</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.1600</td>
+<td style="text-align: right;">16%</td>
+<td style="text-align: right;">22%</td>
+<td style="text-align: right;">28%</td>
+</tr>
+</tbody>
+</table>
+<p>변동성이 17 → 30으로 1.8배 오르면 권장 비중은 86 → 28%로 1/3 토막. "VIX가 두 자리 후반에 들어가면 현금 비중을 절반 이상으로"라는 어림셈도 같은 곡선에서 나옵니다.</p>
+<p><img alt="Kelly × VIX 곡선 (μ−r=7% 기본)" src="../assets/diagrams/kelly_curve_standard.png" /></p>
+<blockquote>
+<p>일일 대시보드에서는 5% / 7% / 9% 토글로 같은 형태의 곡선이 위/아래로 시프트합니다 (자세한 비교는 §6½). 위 그림은 새 기본값 <strong>7%</strong> 기준.</p>
+</blockquote>
+<hr />
+<h2 id="4-kelly">4. Kelly 비율 — 사용자가 선택하는 첫 번째 토글<a class="headerlink" href="#4-kelly" title="Permanent link">&para;</a></h2>
+<p><strong>Full Kelly (f* 그대로) 는 이론적 최대지만 리테일에는 위험</strong>합니다. 이유는 두 가지:</p>
+<ol>
+<li><strong>μ와 σ 추정 오차</strong>: 실제 평균 수익률은 추정치보다 낮을 수 있고, 변동성은 추정치보다 높을 수 있습니다. Full Kelly는 이 오차에 매우 민감 — 한 번 어긋나면 베팅 비율이 폭발합니다.</li>
+<li><strong>손실폭 변동성</strong>: Full Kelly의 장기 성장률은 최대지만 <em>경로</em>가 격렬합니다. -50%, -70% 손실폭이 정상이고, 멘탈로 견디기 어려움.</li>
+</ol>
+<p>그래서 실무에서는 <strong>Half-Kelly</strong> 또는 <strong>Quarter-Kelly</strong>를 씁니다 (<a href="../../series/">원칙편 시리즈</a> Part 4 "우위 없는 게임" 유료편 참조). 일일 대시보드에는 절충점 <strong>¾ Kelly</strong>도 토글로 추가되어 있습니다 — VIX 19+ 영역에서 Half(과보수)와 Full(과공격) 사이의 의미있는 중간점.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">비율</th>
+<th style="text-align: right;">평시 (VIX 17)</th>
+<th style="text-align: right;">스트레스 (VIX 30)</th>
+<th style="text-align: right;">위기 (VIX 40)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Quarter (¼)</strong></td>
+<td style="text-align: right;">43%</td>
+<td style="text-align: right;">14%</td>
+<td style="text-align: right;">8%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Half (½)</strong></td>
+<td style="text-align: right;">86% → 100% (cap)</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">16%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>¾ Kelly ← 기본</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">42%</td>
+<td style="text-align: right;">23%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Full (1×)</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">56%</td>
+<td style="text-align: right;">31%</td>
+</tr>
+</tbody>
+</table>
+<p>대시보드의 첫 번째 토글이 이 비율 선택입니다:</p>
+<ul>
+<li><strong>Quarter (¼)</strong>: 가장 보수적. 변동성 추정 오차에 가장 덜 민감. 기관·연금·은퇴 직전처럼 <em>손실폭이 곧 인출 리스크</em>인 상황에 적합. Full의 1/4 베팅이라 평시 비중도 낮음.</li>
+<li><strong>Half (½)</strong>: 학계 표준. <strong>CAGR 변동성이 최소화되는 지점</strong> — 즉 "장기 성장률은 약간 떨어지지만 경로의 흔들림이 가장 작은" 절충점. <a href="../../series/">원칙편</a> Part 4 "우위 없는 게임"의 보수성 권고와 일치.</li>
+<li><strong>¾ Kelly (기본값)</strong>: Half와 Full 사이 의미있는 중간점. VIX &lt; 19 영역에서는 Full과 동일하게 cap에 걸려 100%이지만, VIX 20–35 caution zone에서 진가 발휘 — Half(과보수)와 Full(과공격) 사이를 <em>기하 평균</em>하는 위치. 적립기 ~ 자산 형성기 retail에게 합리적인 기본값으로 채택.</li>
+<li><strong>Full (1×)</strong>: 이론적 최대. 본인이 μ·σ 추정에 강한 확신이 있고 −50~−70% 손실폭을 멘탈/유동성으로 견딜 자신이 있을 때만. 학계는 거의 권하지 않음.</li>
+</ul>
+<blockquote>
+<p><strong>본인의 비율을 한 번 정하면 거의 바꿀 필요 없습니다.</strong> 시장 상황에 따라 비율을 흔드는 게 아니라, <em>동일한 비율</em>로 계산된 권장값이 변동성에 따라 자동으로 움직이는 구조입니다.</p>
+</blockquote>
+<h3 id="kelly_2">심화: 위기 한복판에서 Kelly 비율을 올려도 되는가?<a class="headerlink" href="#kelly_2" title="Permanent link">&para;</a></h3>
+<p>자주 나오는 질문 — 폭락 와중에 Half에서 Full로 바꾸는 게 무모한가?</p>
+<p><strong>수학적으로는 옹호 가능</strong>합니다. 가격이 빠질수록 향후 μ−r이 확대된다는 가정이 합리적이기 때문 (평시 5% → 위기 8~10%). 예: VIX 60 + μ−r=10%로 Full Kelly = 28%, 같은 VIX의 Half Kelly @ 5% = 7%. 차이가 4배여도 80%+ 현금 상태에서의 <em>절대 위험</em>은 여전히 작습니다.</p>
+<p><strong>그럼에도 비율 자체를 흔드는 건 권하지 않습니다:</strong></p>
+<ul>
+<li><strong>떨어지는 칼날</strong> — VIX &gt; 60은 바닥처럼 보이지만 2008년에는 1년 사이 두 번. "충분히 떨어졌나"는 사후에만 답할 수 있음.</li>
+<li><strong>추정 오차의 역설</strong> — σ가 가장 불확실한 시점에 μ 추정도 가장 불확실. 그때 비율을 올리는 건 <em>가장 흔들리는 곳에서 베팅을 키우는</em> 행동.</li>
+<li><strong>행동심리적 위험</strong> — 공포 극단에서 토글을 만지는 건 결국 감정적 결정. Kelly 비율 고정의 핵심 이유(감정 배제)가 무너짐.</li>
+<li><strong>트리거의 과거 적합화 위험</strong> — "VIX &gt; 50 5일 지속" 같은 규칙은 과거 데이터로 잘 작동하는 것만 골라 만든 것이라 미래 보장 없음.</li>
+</ul>
+<h3 id="tactical-bucket">공격 자본 (Tactical bucket)은 프레임워크의 <em>필수 짝</em><a class="headerlink" href="#tactical-bucket" title="Permanent link">&para;</a></h3>
+<p>여기서 끝내면 중요한 게 빠집니다. 시리즈의 두 핵심 명제를 다시 짚어보세요:</p>
+<ol>
+<li><strong>장기 우상향</strong> — 충분히 긴 시간 창에서 주식은 채권/현금을 이긴다</li>
+<li><strong>시간이 우리의 우위</strong> — 리테일은 환매 압력 없이 기다릴 수 있는 <em>구조적 우위</em>가 있다</li>
+</ol>
+<p>이 둘을 합치면 함의가 명확해집니다: <strong>향후 위험 프리미엄이 가장 확대되는 순간 = 위기 한복판</strong>. 그 순간 자본을 투입할 메커니즘이 없으면, 시간 우위를 <em>가지고 있다</em>고 말하면서 <em>가장 비싼 순간에 안 쓰는</em> 모순.</p>
+<p><strong>방어 프레임워크만 있을 때의 빈자리:</strong></p>
+<ul>
+<li>Kelly × VIX 자동 디레버리지로 100% → 2% 갈 수 있음 ✓ (연쇄 흡수)</li>
+<li>VIX가 식으면 자동 재진입 → 그러나 <em>회복기 가격</em>에 사게 됨, <em>바닥 가격이 아니라</em></li>
+<li>결과: 변동성 끌림은 피하지만 진짜 저점 매수는 못 함. <a href="../../series/s1-shannons-demon/">Shannon's Demon</a>이 끝맺은 "리밸런싱 = 저점 매수 + 고점 매도" 중 고점 매도 쪽만 동작</li>
+</ul>
+<p>따라서 <strong>현금을 두 종류로 분리</strong>하는 게 시리즈 철학과 맞물리는 완결된 구조:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">자본 분리</th>
+<th style="text-align: left;">역할</th>
+<th style="text-align: left;">메커니즘</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>메인 자본</strong></td>
+<td style="text-align: left;">방어 — <em>생존을 위한 연료</em></td>
+<td style="text-align: left;">Kelly × VIX + 위험 신호. 자동 디레버리지·재진입.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>공격 자본</strong></td>
+<td style="text-align: left;">공격 — <em>공격을 위한 연료</em></td>
+<td style="text-align: left;">VIX 극단 복합 트리거에 1/3씩 단계 투입. 시간 우위 행사.</td>
+</tr>
+</tbody>
+</table>
+<p>두 자본의 분할 비율은 토글 — 일일 대시보드 마스터 바에서 <strong>80/20 · 90/10 · 95/5</strong> 중 선택. 신규 방문자 기본값은 <strong>90/10</strong> (메인 90%, 공격 10%). 자세한 트레이드오프와 상황별 추천은 아래 "어떤 비율을 골라야 하나?" 절 참조.</p>
+<h3 id="_5">공격 자본 운영 원칙<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>크기</strong>: 전체 포트폴리오의 5~20% (대시보드 토글 선택). 너무 크면 메인 프레임워크의 안정성을 흔들고 평시 현금 드래그가 큼, 너무 작으면 투입 효과가 미미. 기본 10%는 둘 사이 절충.</li>
+<li><strong>복합 트리거</strong> — T1은 단계별 가중치, T2·T3는 이진:<ul>
+<li><strong>T1 (VIX 5일 지속, 단계별)</strong><ul>
+<li>VIX 5일 최저 &gt; <strong>40</strong> → 가중치 <strong>0.5</strong> (약한 부분 진입)</li>
+<li>VIX 5일 최저 &gt; <strong>50</strong> → 가중치 <strong>1.0</strong> (표준 1트랜치)</li>
+<li>VIX 5일 최저 &gt; <strong>60</strong> → 가중치 <strong>1.5</strong> (깊은 스트레스, 큰 트랜치)</li>
+</ul>
+</li>
+<li><strong>T2 (교차 자산 스트레스)</strong>: COR90D &gt; 55 AND SKEW &gt; 150 동시 → 가중치 <strong>1.0</strong></li>
+<li><strong>T3 (가격 투매)</strong>: 30일 누적 SPX 하락 ≥ <strong>20%</strong> → 가중치 <strong>1.0</strong></li>
+</ul>
+</li>
+<li><strong>단계 투입 (laddered)</strong> — 총 가중치를 3으로 나눠 투입 % 산출, 100% 초과는 cap:<ul>
+<li>예: VIX 5일 최저 45 (T1=0.5) + COR/SKEW 발동 (T2=1.0) + SPX 누적 −22% (T3=1.0) → 총 2.5 → 83% 투입</li>
+<li>모든 신호 최대 (VIX 60+, T2, T3) → 총 3.5 → cap 100% (전면 투매 국면)</li>
+</ul>
+</li>
+<li>
+<p><strong>상태 라벨</strong> — 투입 %를 5단계로 구분:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">투입 %</th>
+<th style="text-align: center;">0%</th>
+<th style="text-align: center;">1~33%</th>
+<th style="text-align: center;">34~66%</th>
+<th style="text-align: center;">67~99%</th>
+<th style="text-align: center;">100%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">상태</td>
+<td style="text-align: center;">🟢 대기</td>
+<td style="text-align: center;">🟡 1차 발동</td>
+<td style="text-align: center;">🟠 2차 발동</td>
+<td style="text-align: center;">🔴 3차 발동</td>
+<td style="text-align: center;">🔴 Capitulation</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>회복기에 천천히 재충전</strong> — 평시로 돌아오면 메인 프레임워크의 익스포져 감소분 또는 차익으로 공격 자본을 재충전. 한 번 투입 후 영원히 비워두지 말 것.</p>
+</li>
+<li><strong>사전 정의된 규칙으로만 발동</strong> — "느낌" 아닌 <em>사전에 적어둔 조건</em>에서만. 조건 미달이면 가만히. (감정적 진입 차단)</li>
+</ul>
+<blockquote>
+<p><strong>결론</strong>: 비율 자체는 절대 흔들지 말고, <em>대신</em> 공격 자본을 메인 프레임워크의 짝으로 두세요. 프레임워크는 <em>생존</em>을 책임지고, 공격 자본은 <em>시간 우위를 활용</em> 합니다. 이 둘이 합쳐져야 시리즈의 <strong>"변동성을 연료로"</strong> 가 진정 완성됩니다.</p>
+</blockquote>
+<h3 id="choosing-the-split">어떤 비율을 골라야 하나?<a class="headerlink" href="#choosing-the-split" title="Permanent link">&para;</a></h3>
+<p>일일 대시보드의 마스터 바에서 <strong>80/20 · 90/10 · 95/5</strong> 중 선택할 수 있습니다. 결론부터: <strong>트레이드오프는 "평시 현금 드래그 vs 위기 시 매수 화력"</strong> 입니다.</p>
+<p><strong>평시 현금 드래그 (Cash Drag)</strong></p>
+<p>공격 자본은 평소엔 100% 현금이고, T1·T2·T3 트리거가 발동될 때만 풀립니다. 즉 <em>대부분의 날</em> 은 그냥 잠자는 돈. SPX 장기 기대수익률 ≈ 9%/yr 가정 시:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Split</th>
+<th style="text-align: center;">평시 잠자는 현금</th>
+<th style="text-align: center;">연 기회비용 (CAGR)</th>
+<th style="text-align: center;">20년 누적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">80/20</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">−1.8%</td>
+<td style="text-align: center;">≈ −30%</td>
+</tr>
+<tr>
+<td style="text-align: left;">90/10</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">−0.9%</td>
+<td style="text-align: center;">≈ −16%</td>
+</tr>
+<tr>
+<td style="text-align: left;">95/5</td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: center;">−0.45%</td>
+<td style="text-align: center;">≈ −8%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>위기 시 매수 화력</strong></p>
+<p>같은 트리거에서 공격 자본이 100% 투입돼도, 그게 전체 자산에 미치는 영향은 비율에 따라 다릅니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Split</th>
+<th style="text-align: center;">트리거 전부 발동 시 추가 투입 (전체 기준)</th>
+<th style="text-align: left;">직관</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">80/20</td>
+<td style="text-align: center;">+20% 매수</td>
+<td style="text-align: left;">VIX 60 + 투매 국면 매수에서 의미 있는 진입</td>
+</tr>
+<tr>
+<td style="text-align: left;">90/10</td>
+<td style="text-align: center;">+10% 매수</td>
+<td style="text-align: left;">보조적 진입, 메인 프레임워크 자동 재진입이 주력</td>
+</tr>
+<tr>
+<td style="text-align: left;">95/5</td>
+<td style="text-align: center;">+5% 매수</td>
+<td style="text-align: left;">거의 상징적 — T3 (SPX −20%) 같은 진짜 폭락에만 의미</td>
+</tr>
+</tbody>
+</table>
+<p><strong>트리거 발동 빈도 (2010-2024 대략)</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">트리거</th>
+<th style="text-align: center;">발동 일수</th>
+<th style="text-align: center;">비율</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">T1 VIX&gt;40 5일 지속</td>
+<td style="text-align: center;">~25일</td>
+<td style="text-align: center;">0.6%</td>
+</tr>
+<tr>
+<td style="text-align: left;">T2 COR&gt;55 &amp; SKEW&gt;150</td>
+<td style="text-align: center;">~10일</td>
+<td style="text-align: center;">0.25%</td>
+</tr>
+<tr>
+<td style="text-align: left;">T3 SPX 30일 −20%</td>
+<td style="text-align: center;">~12일</td>
+<td style="text-align: center;">0.3%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>99%의 날은 공격 자본 = 그냥 현금</strong>. 1%를 위해 얼마를 묶을지가 결정 포인트입니다.</p>
+<p><strong>추천 (상황별)</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">상황</th>
+<th style="text-align: center;">추천 Split</th>
+<th style="text-align: left;">근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">적립기 (장기 horizon, 적립 초반)</td>
+<td style="text-align: center;"><strong>95/5</strong></td>
+<td style="text-align: left;">시간 우위로 복리를 극대화. T3 같은 진짜 투매(panic selling)에만 보조 화력.</td>
+</tr>
+<tr>
+<td style="text-align: left;">균형기 (적립 후반, 자산 형성기)</td>
+<td style="text-align: center;"><strong>90/10 ← 기본</strong></td>
+<td style="text-align: left;">평시 드래그 최소화하면서 VIX&gt;60 진입은 의미 있게 유지. 신규 방문자 기본값.</td>
+</tr>
+<tr>
+<td style="text-align: left;">보수기 (은퇴 직전, 인출 단계, 행동심리 약점)</td>
+<td style="text-align: center;"><strong>80/20</strong></td>
+<td style="text-align: left;">시퀀스 리스크 방어. 폭락 시 정신적 안정과 매수 화력 동시 확보.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>솔직히</strong>: 80/20은 <em>행동심리적 보험료</em> 측면이 큽니다. 수학적으로는 Kelly 자체가 이미 분수(½ 또는 ¾) + multiplier로 보수적이고, σ=VIX/100 으로 변동성에 자동 반응하므로 거기에 20% 현금을 또 빼면 트리플 안전마진입니다. 그래서 retail accumulator 기본값은 <strong>90/10</strong>으로 잡혀 있어요 — 평시 cash drag를 절반으로 줄이면서도 위기 매수 화력 10%는 유지. 본인이 폭락 한복판에서도 토글을 함부로 안 만질 자신이 있다면 95/5, 시퀀스 리스크가 신경 쓰이면 80/20.</p>
+</blockquote>
+<hr />
+<h2 id="5-kellyvix">5. 단순 Kelly@VIX의 한계 — 추가 신호가 필요한 이유<a class="headerlink" href="#5-kellyvix" title="Permanent link">&para;</a></h2>
+<p>VIX 하나만으로는 <strong>"겉은 평온, 속은 위태" (smoke without fire)</strong> 상황을 잡지 못합니다. 예시:</p>
+<ul>
+<li>VIX 17 (평온해 보임)</li>
+<li>그런데 SKEW = 155 (꼬리 위험 가격 폭증)</li>
+<li>COR90D = 55 (개별 종목들이 같이 떨어지기 시작)</li>
+<li>VIX 선물이 backwardation (front &gt; spot)</li>
+</ul>
+<p>이건 VIX 자체는 안 움직였지만 옵션 시장이 <em>조용히</em> 가격에 패닉을 넣고 있는 상태입니다. Kelly@VIX = 86% 그대로 들고 가면 며칠 안에 후회할 가능성이 큽니다.</p>
+<p>해결책: <strong>다른 위험 신호 그룹들이 켜지면 Kelly 베이스에 추가 할인을 곱한다.</strong></p>
+<p>대시보드의 세 위험 신호 그룹:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">그룹</th>
+<th style="text-align: left;">무엇을 보는가</th>
+<th style="text-align: left;">🟢 정상</th>
+<th style="text-align: left;">🟡 경계</th>
+<th style="text-align: left;">🔴 스트레스</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>COR/SKEW</strong></td>
+<td style="text-align: left;">Term Structure 스프레드 · COR90D · SKEW</td>
+<td style="text-align: left;">모두 정상</td>
+<td style="text-align: left;">하나 경계</td>
+<td style="text-align: left;">하나 이상 스트레스</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>VIX TS shape</strong></td>
+<td style="text-align: left;">M1 vs VIX 현물, M2 − M1</td>
+<td style="text-align: left;">콘탱고 (M2 &gt; M1, 현물 &lt; M1)</td>
+<td style="text-align: left;">혼합 (M2 ≤ M1이지만 현물 ≤ M1)</td>
+<td style="text-align: left;">백워데이션 (현물 &gt; M1)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>VolVol</strong></td>
+<td style="text-align: left;">VVIX/VIX 5DMA vs 20일 BB 중간선</td>
+<td style="text-align: left;">5DMA &gt; 중간선</td>
+<td style="text-align: left;">최근 5일 내 크로스</td>
+<td style="text-align: left;">5DMA &lt; 중간선</td>
+</tr>
+</tbody>
+</table>
+<p>각 그룹의 가장 안 좋은 하위 신호가 그룹 상태를 결정하고, 그룹 상태별 배율이 Kelly 베이스에 곱해집니다.</p>
+<blockquote>
+<p><strong>각 지표 자세히</strong>: COR/SKEW 의미는 <a href="../implied-correlation/">내재상관관계 지수 글</a>, VIX TS shape 해석은 <a href="../vix-term-structure/">VIX 선물 만기 구조 글</a>, VolVol 정의(VVIX/VIX 비율 + 5DMA + 20일 BB)는 <a href="../../">일일 대시보드 VolVol 카드</a>와 향후 실행편(유료) Part 3 — <em>변동성의 변동성과 시장 심리</em>에서 다룹니다.</p>
+</blockquote>
+<hr />
+<h2 id="6">6. 위험 민감도 — 사용자가 선택하는 두 번째 토글<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p>배율 강도는 본인의 <strong>위험 회피 수준</strong>에 따라 다르게 설정할 수 있습니다. 대시보드에는 세 프로파일이 있습니다:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">프로파일</th>
+<th style="text-align: right;">🟡 경계</th>
+<th style="text-align: right;">🔴 스트레스</th>
+<th style="text-align: right;">모든 그룹 적색 시 누적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>느슨 (loose)</strong></td>
+<td style="text-align: right;">× 0.95</td>
+<td style="text-align: right;">× 0.85</td>
+<td style="text-align: right;">0.85³ ≈ 0.61</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>기본 (standard) ← 디폴트</strong></td>
+<td style="text-align: right;">× 0.90</td>
+<td style="text-align: right;">× 0.75</td>
+<td style="text-align: right;">0.75³ ≈ 0.42</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>빡빡 (tight)</strong></td>
+<td style="text-align: right;">× 0.85</td>
+<td style="text-align: right;">× 0.65</td>
+<td style="text-align: right;">0.65³ ≈ 0.27</td>
+</tr>
+</tbody>
+</table>
+<p>해석:</p>
+<ul>
+<li><strong>느슨</strong>: 위험 신호를 약하게 반영. 모든 신호가 빨강이어도 Kelly 베이스의 61%까지만 줄임. 신호에 따라 자주 움직이고 싶지 않은 사람용.</li>
+<li><strong>기본 (디폴트)</strong>: <a href="../../series/">원칙편</a>의 보수성과 일치. 세 신호가 모두 빨강이면 베이스의 42% — 즉 ¾ Kelly 100%(cap)였다면 약 42%로 줄어듦.</li>
+<li><strong>빡빡</strong>: 신호에 강하게 반응. 셋 다 빨강이면 베이스의 27%. 위기 회피를 최우선으로 두는 사람용.</li>
+</ul>
+<blockquote>
+<p><strong>선택 기준</strong>: 평소 시장에 자주 들어갔다 나오는 게 싫으면 <em>느슨</em>, "위험 신호 뜨면 무조건 현금 비중 크게"가 본인 철학이면 <em>빡빡</em>. 잘 모르겠으면 기본.</p>
+</blockquote>
+<hr />
+<h2 id="612-r">6½. 기대 프리미엄 μ−r — 사용자가 선택하는 세 번째 토글<a class="headerlink" href="#612-r" title="Permanent link">&para;</a></h2>
+<p>Kelly 공식 <code>f* = (μ−r) / σ²</code> 의 분자에 들어가는 <strong>주식 위험 프리미엄(equity risk premium)</strong>. 의미: "주식이 무위험 자산보다 <em>연 평균</em> 몇 % 더 벌어다 줄 것으로 기대하는가?"</p>
+<p>문제는 이 값을 <strong>정확히 알 수 없다</strong>는 점입니다. 학계 추정은 데이터 기간·계산 방법에 따라 <strong>3% ~ 9%</strong> 사이로 매우 광범위 — 어떤 가정을 쓰느냐에 따라 권장 비중이 거의 2배 차이 납니다. 그래서 일일 대시보드는 세 가지 프리미엄을 토글로 노출합니다.</p>
+<p><strong>Half-Kelly 기준 권장 비중</strong> (μ−r 토글별 비교):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">프로파일</th>
+<th style="text-align: center;">μ−r</th>
+<th style="text-align: right;">VIX 18</th>
+<th style="text-align: right;">VIX 22</th>
+<th style="text-align: right;">VIX 30</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>보수 (Conservative)</strong></td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: right;">74%</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">28%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>표준 (Standard) ← 디폴트</strong></td>
+<td style="text-align: center;"><strong>7%</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">72%</td>
+<td style="text-align: right;">39%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>공격 (Aggressive)</strong></td>
+<td style="text-align: center;">9%</td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">93%</td>
+<td style="text-align: right;">50%</td>
+</tr>
+</tbody>
+</table>
+<p>각 프로파일의 근거:</p>
+<ul>
+<li><strong>보수 (5%)</strong> — 장기 학계 추정 (Damodaran 등). VIX의 vol-risk-premium을 흡수한다는 가정 — 즉 VIX는 평균적으로 realized σ보다 4pt 정도 높으니, σ=VIX/100을 그대로 쓰면 분모가 부풀려져 자연스럽게 보수적으로 계산됨.</li>
+<li><strong>표준 (7%) — 디폴트</strong> — 1928년 이후 SPX 역사적 평균 ex-WWII. realized vol 기준 Kelly에 사실상 가장 가까운 결과를 내는 값.</li>
+<li><strong>공격 (9%)</strong> — post-1990 SPX bullish 가정. VIX의 vol-risk-premium drag를 <em>완전히 회복 가능한</em> 비효율로 봄 — 일종의 "VRP는 보너스" 입장.</li>
+</ul>
+<h3 id="5-vix-vol-risk-premium">왜 5%가 "보수적"인가 — VIX vol-risk-premium 이야기<a class="headerlink" href="#5-vix-vol-risk-premium" title="Permanent link">&para;</a></h3>
+<p>핵심 직관: <strong>VIX는 평균적으로 realized vol보다 3~5pt 높습니다</strong> (VRP, Vol Risk Premium). 시장이 옵션을 사는 입장에서 보험료를 더 내기 때문 — VIX 18인 날의 실제 향후 30일 σ는 평균 ~14% 수준. </p>
+<p>Kelly 공식에 σ = VIX/100을 그대로 넣으면 σ²이 (0.18)² = 0.0324 — 진짜 σ인 (0.14)² = 0.0196보다 1.65배 큼. <strong>분모가 1.65배 커지면 권장 비중이 1.65배 작아짐</strong>, 즉 Kelly 베이스가 자동으로 보수적으로 나옴.</p>
+<p>이걸 보정하는 방법은 두 가지:
+1. σ에 realized vol을 직접 넣음 (실시간 추정 어려움)
+2. 분자 μ−r을 키워서 분모의 부풀림을 상쇄</p>
+<p><strong>μ−r = 5% + σ = VIX/100</strong> 의 조합은 사실상 "보수적 Kelly + 보수적 σ" — <em>이중</em> 보수. μ−r을 7~9%로 올리는 건 σ의 부풀림을 풀어주는 효과로, <strong>실제로는 realized-vol 기준 Half-Kelly에 더 가까운 결과</strong>가 나옵니다.</p>
+<h3 id="_6">어떤 값을 골라야 하나?<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">본인 입장</th>
+<th style="text-align: center;">추천 μ−r</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">"미래 SPX는 과거보다 안 좋을 수 있다 (잃어버린 10년 시나리오)"</td>
+<td style="text-align: center;"><strong>5%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">"장기적으로 SPX는 역사적 평균 정도는 한다 (가장 흔한 가정)"</td>
+<td style="text-align: center;"><strong>7% ← 디폴트</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">"post-1990 미국 예외주의 지속, AI 호황 등 강세 가정"</td>
+<td style="text-align: center;"><strong>9%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>기본값이 <strong>7%(표준)</strong>인 이유는 두 가지:
+- 1928년 이후 장기 평균과 일치 (가장 인용되는 단일 숫자)
+- VIX-based σ의 vol-risk-premium 보정 효과 — <em>realized vol Kelly에 가장 가까운 결과</em></p>
+<blockquote>
+<p><strong>본인 비율(¼/½/¾)과 마찬가지로, 한 번 정하고 거의 바꾸지 마세요.</strong> 시장 상황에 따라 흔드는 게 아니라 <strong>본인의 장기 시장관(market view)</strong> 을 한 번 선언하는 토글입니다.</p>
+</blockquote>
+<h3 id="_7">곡선 차트가 토글에 맞춰 같이 움직임<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>대시보드의 Kelly × VIX 곡선 그림은 선택한 μ−r에 따라 세 가지 버전으로 미리 렌더링돼 있고, 토글 클릭 시 즉시 교체됩니다. 5% 곡선은 가장 낮고, 9% 곡선이 가장 높음 — 같은 VIX에서도 권장 비중이 어떻게 달라지는지 시각적으로 확인할 수 있습니다.</p>
+<hr />
+<h2 id="7">7. 최종 공식 — 한 줄로<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">항</th>
+<th style="text-align: left;">의미</th>
+<th style="text-align: left;">사용자 토글</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>f</strong></td>
+<td style="text-align: left;">Kelly 비율 (¼ / ½ / ¾ / 1)</td>
+<td style="text-align: left;"><strong>첫 번째 토글</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>μ−r</strong></td>
+<td style="text-align: left;">기대 주식 프리미엄 (5% / 7% / 9%)</td>
+<td style="text-align: left;"><strong>세 번째 토글</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>σ = VIX/100</strong></td>
+<td style="text-align: left;">앞을 보는 변동성</td>
+<td style="text-align: left;">(자동)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>d_CS</strong></td>
+<td style="text-align: left;">COR/SKEW 그룹 배율</td>
+<td style="text-align: left;"><strong>두 번째 토글이 강도 결정</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>d_VTS</strong></td>
+<td style="text-align: left;">VIX TS shape 배율</td>
+<td style="text-align: left;">동일</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>d_VV</strong></td>
+<td style="text-align: left;">VolVol 배율</td>
+<td style="text-align: left;">동일</td>
+</tr>
+</tbody>
+</table>
+<p><strong>현금 비중 = 100% − 주식 비중</strong></p>
+<hr />
+<h2 id="8">8. 일일 대시보드 사용법<a class="headerlink" href="#8" title="Permanent link">&para;</a></h2>
+<p>홈 페이지 <a href="../../">일일 대시보드</a>의 첫 카드가 이 계산을 매일 자동으로 갱신합니다.</p>
+<p><strong>카드 안에서 할 수 있는 것 (기본값은 †로 표시):</strong></p>
+<ol>
+<li><strong>Kelly 비율 토글</strong> (¼ / ½ / <strong>¾†</strong> / Full) — 한 번 본인 값으로 정하고 거의 안 바꿈. 자세한 비교는 §4</li>
+<li><strong>위험 민감도 토글</strong> (느슨 / <strong>기본†</strong> / 빡빡) — 신호 발동 시 얼마나 깎을지. 자세한 비교는 §6</li>
+<li><strong>μ−r 토글</strong> (5% / <strong>7%†</strong> / 9%) — 본인의 주식 프리미엄 가정. 자세한 비교는 §6½</li>
+<li><strong>결정 테이블</strong> — 베이스값 + 각 그룹 배율 + 최종 주식/현금 % 한눈에</li>
+<li><strong>Kelly 곡선 차트</strong> — VIX → 비중의 관계를 시각화. <strong>선택한 μ−r에 동기화</strong> (3개 변종 PNG 사전 렌더 후 JS swap). 현재 위치 마커 포함</li>
+<li><strong>마스터 바 상단 분할 선택</strong> (80/20 · <strong>90/10†</strong> · 95/5) — 메인/공격 자본 비율. 자세한 비교는 §4 "어떤 비율을 골라야 하나?"</li>
+</ol>
+<p>선택은 브라우저 <code>localStorage</code>에 저장돼서 다음 방문 때도 같은 설정이 유지됩니다.</p>
+<p><strong>전형적인 사용 흐름:</strong></p>
+<ul>
+<li>매주 한 번 대시보드 확인</li>
+<li>모든 그룹 🟢 → "현재 권장 그대로 유지"</li>
+<li>어느 그룹이 🟡로 바뀜 → "포지션을 천천히 줄이기 시작"</li>
+<li>두 개 이상 🔴 → "현금 비중 크게 올림, 단기 현금화"</li>
+<li>평온해지면 다시 신호 따라 점진적으로 익스포져 복귀</li>
+</ul>
+<hr />
+<h2 id="9">9. 실전 시나리오 — 첫 갭은 못 피해도 연쇄는 깎는다<a class="headerlink" href="#9" title="Permanent link">&para;</a></h2>
+<p>이 프레임워크의 가치는 <strong>폭락의 첫 갭</strong>이 아니라 <strong>그 뒤 누적</strong>에서 나옵니다. 첫 -3%, -5% 갭은 인사이더나 우연을 빼면 누구도 못 피하는 영역이라 프레임워크의 한계로 볼 이유가 없습니다. 진짜 차이는 <em>그 다음 며칠~몇 주</em>에서 발생합니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">단계</th>
+<th style="text-align: left;">시장 움직임</th>
+<th style="text-align: left;">자동 반응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>1일차 갭</strong></td>
+<td style="text-align: left;">폭락 -5%</td>
+<td style="text-align: left;">풀 포지션 그대로 맞음 (반응형 프레임워크의 진입 비용)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2일차 ~ N일차</strong></td>
+<td style="text-align: left;">VIX 폭증 → σ² 4배 → Kelly 베이스 1/4 이하 + 위험 신호 빨강 × 0.42</td>
+<td style="text-align: left;">익스포져가 <em>이미</em> 작아진 상태에서 후속 폭락 흡수</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">역사적 사례<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p><strong>2020년 3월 COVID 폭락</strong> <em>(예시 시나리오: Half-Kelly @ μ−r=5% — 가장 보수적인 토글 조합)</em>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">시점</th>
+<th style="text-align: right;">VIX</th>
+<th style="text-align: right;">Half-Kelly @ 5% 베이스</th>
+<th style="text-align: left;">신호 상태</th>
+<th style="text-align: right;">권장 비중</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2/14 (평시)</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: left;">모두 🟢</td>
+<td style="text-align: right;">주식 100% / 현금 0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">2/24 (−3.4% 첫 갭)</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">32%</td>
+<td style="text-align: left;">일부 🟡</td>
+<td style="text-align: right;">주식 ~25% / 현금 ~75%</td>
+</tr>
+<tr>
+<td style="text-align: left;">3/16 (저점)</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: left;">모두 🔴</td>
+<td style="text-align: right;"><strong>주식 ~2% / 현금 ~98%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>VIX 14 → 82로 6배 뛰면서 권장 비중은 100% → 2%. 이 한 달 사이 시장이 추가로 약 −25% 더 빠졌는데, 그 연쇄는 <em>이미 줄어든</em> 익스포져로 맞기 때문에 정적 풀투자 대비 누적 손실이 크게 줄어듭니다.</p>
+<blockquote>
+<p><strong>새 기본값(¾ Kelly @ μ−r=7%)으로 풀면</strong> 같은 VIX 28에서 베이스가 67%, VIX 82에서 8% — <em>초기에는 더 많이 들고 있다가</em> σ 폭발에 따라 비슷한 비율로 줄어듭니다. 절대값은 다르지만 디레버리지의 <em>기울기</em>는 동일. 본인이 선택한 토글 조합에 따라 시작점만 다르고 동역학은 같다는 점이 핵심.</p>
+</blockquote>
+<p><strong>2008년 9월 리먼 사태:</strong></p>
+<p>리먼 파산 발표(9/15) 직후 첫 주 −10%는 그대로. 하지만 그 뒤 한 달간 추가 −25% 하락은, 프레임워크가 자동으로 디레버리지된 상태에서 맞기 때문에 누적 손실이 정적 포지션의 절반 수준 (개념적 예시).</p>
+<blockquote>
+<p><strong>요약</strong>: 프레임워크는 <em>예측 도구</em>가 아니라 <em>연쇄 buffer</em>. 첫 갭은 진입 비용으로 받아들이고, 그 뒤 누적 손실을 줄이는 게 핵심 가치.</p>
+</blockquote>
+<hr />
+<h2 id="10">10. 한계와 주의<a class="headerlink" href="#10" title="Permanent link">&para;</a></h2>
+<p>이 프레임워크는 <strong>수학적 직관을 자동화한 것</strong>이지, 백테스트 검증된 완성된 시스템이 아닙니다. 주요 한계:</p>
+<ol>
+<li><strong>μ − r 가정의 변동성</strong>: 미래 주식 위험 프리미엄을 정확히 알 수 없습니다 — 학계 추정치 범위는 3%~9% 매우 넓음. 일일 대시보드의 <strong>μ−r 토글(5% / 7%(기본) / 9%)</strong> 로 본인 가정을 바꿔볼 수 있습니다 (§6½ 참조). 보수적 5%는 VRP 보정 포함, 기본값 7%는 SPX 역사적 평균이자 realized-vol Kelly에 가장 가까운 값, 9%는 post-1990 bullish view.</li>
+<li><strong>VRP 편향</strong>: VIX는 평균적으로 실현변동성보다 3~5포인트 높음 (변동성 위험 프리미엄, VRP). 즉 5% μ−r에서 σ=VIX로 푼 Kelly 베이스는 <em>상당히 보수적</em>으로 나옴 — 기본값 7%로도 여전히 보수적, 9%가 사실상 realized-vol Kelly의 ½ 정도 위치.</li>
+<li><strong>VIX는 30일 앞을 보는 지표</strong>: 더 긴 보유 기간(6개월~)에는 VIX 단일값보다 VIX 선물 평균 등 다른 σ 대체값이 더 정확.</li>
+<li><strong>신호 간 상관성</strong>: COR/SKEW·VIX TS·VolVol이 서로 독립이 아니라 같은 기저 시장 스트레스를 다른 각도에서 보는 거라서, 곱셈 할인이 <em>과도하게</em> 작용할 수도 있음. 그래서 배율이 0.75 이상으로 보수적.</li>
+<li><strong>회복기 잘못된 발동</strong>: 폭락 <em>직후</em> 회복기에는 VolVol 같은 신호가 기계적으로 늦게 풀려서 익스포져 회복을 늦출 수 있음.</li>
+</ol>
+<blockquote>
+<p><strong>이 도구는 투자 권유가 아닙니다.</strong> 변동성과 Kelly의 관계를 시각적으로 직관화하기 위한 <em>교육적 시뮬레이션</em>이며, 본인의 위험 성향·세제·유동성 상황에 맞는 의사결정은 본인이 내려야 합니다.</p>
+</blockquote>
+<hr />
+<h2 id="_9">관련 글<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../series/s1-shannons-demon/">시리즈 Part 1 — Shannon's Demon</a>: 왜 변동성이 적이 아니라 연료가 될 수 있는가</li>
+<li><a href="../implied-correlation/">시장 심리 변동성 지수</a>: COR3M, IV Surface, Delta Skew 개념</li>
+<li><a href="../volatility-dashboard/">변동성 대시보드 (구글시트)</a>: COR/SKEW를 직접 추적하는 도구</li>
+<li><a href="../vix-term-structure/">VIX 선물 만기 구조</a>: VIX TS shape의 해석법</li>
+<li><a href="../credit-spreads/">신용 스프레드를 지표로 읽기</a>: 지수는 잠잠해도 바닥 등급이 먼저 움직인다</li>
+<li><a href="../move-index/">MOVE 지수 — 채권시장의 VIX</a>: 채권시장의 변동성으로 리스크를 읽는 법</li>
+</ul>
+<hr />
+<p><em>이 글은 변동성에 따른 자산 배분의 </em>수학적 정직성<em>에 초점을 둡니다. 실전에서는 거래비용·세제·심리적 한계도 같이 고려해야 합니다.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../assets/vix-history-player.js"></script>
+      
+        <script src="../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

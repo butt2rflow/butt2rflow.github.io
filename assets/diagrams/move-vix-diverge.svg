@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>MOVE vs VIX — 갈라질 때가 신호</title>
+<desc>가로축은 VIX(주식 공포), 세로축은 MOVE(채권 공포). 둘 다 낮으면 평온, 둘 다 높으면 위기. 채권만 높으면 금리·Fed 리스크를 먼저 감지한 신호, 주식만 높으면 순수 주식 이슈다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.cn { font-size:13px; font-weight:500; }
+.cm { font-size:11px; font-weight:400; }
+.ax { font-size:12px; font-weight:500; fill:var(--ts); }
+</style>
+<rect x="0" y="0" width="680" height="430" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="38">MOVE vs VIX — 갈라질 때가 신호</text>
+
+<!-- quadrant cells: (150..610) x (70..350), cross at (380,210) -->
+<!-- bottom-left: both low -->
+<rect x="150" y="210" width="230" height="140" fill="#CDE7DC" opacity="0.5"/>
+<!-- top-right: both high -->
+<rect x="380" y="70" width="230" height="140" fill="#EFB6AB" opacity="0.55"/>
+<!-- top-left: MOVE high, VIX low (HIGHLIGHT) -->
+<rect x="150" y="70" width="230" height="140" fill="#F0E4C4" opacity="0.7" stroke="#C99A2E" stroke-width="1.5" stroke-dasharray="5 4"/>
+<!-- bottom-right: VIX high, MOVE low -->
+<rect x="380" y="210" width="230" height="140" fill="#F1EFE8"/>
+
+<rect x="150" y="70" width="460" height="280" fill="none" stroke="var(--br)" stroke-width="1"/>
+<line x1="380" y1="70" x2="380" y2="350" stroke="var(--br)" stroke-width="0.6"/>
+<line x1="150" y1="210" x2="610" y2="210" stroke="var(--br)" stroke-width="0.6"/>
+
+<!-- cell texts -->
+<text class="cn" x="265" y="132" text-anchor="middle" fill="#7a5e18">채권만 긴장</text>
+<text class="cm" x="265" y="150" text-anchor="middle" fill="#7a5e18">금리·Fed 리스크를 먼저 감지</text>
+<text class="cm" x="265" y="166" text-anchor="middle" fill="#7a5e18">← 채권이 먼저 겁먹는 신호</text>
+
+<text class="cn" x="495" y="135" text-anchor="middle" fill="#7A2E12">둘 다 스트레스</text>
+<text class="cm" x="495" y="153" text-anchor="middle" fill="#7A2E12">위기 국면</text>
+
+<text class="cn" x="265" y="278" text-anchor="middle" fill="#0F3D30">둘 다 평온</text>
+<text class="cm" x="265" y="296" text-anchor="middle" fill="#0F3D30">정보 적음</text>
+
+<text class="cn" x="495" y="278" text-anchor="middle" fill="#5c5a52">주식만 긴장</text>
+<text class="cm" x="495" y="296" text-anchor="middle" fill="#5c5a52">순수 주식 이슈</text>
+
+<!-- axes labels -->
+<text class="ax" x="380" y="378" text-anchor="middle">VIX (주식 공포) →</text>
+<text class="ax" x="132" y="210" text-anchor="middle" transform="rotate(-90 132 210)">MOVE (채권 공포) ↑</text>
+
+<text class="s" x="340" y="410" text-anchor="middle">보통 왼쪽 위(채권만 긴장)에서 스트레스가 시작된다</text>
+</svg>

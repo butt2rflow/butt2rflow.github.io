@@ -1,0 +1,2699 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/gex-calculator/">
+      
+      
+        <link rel="prev" href="../almanac/">
+      
+      
+        <link rel="next" href="../gex-0dte-patterns/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/gex-calculator/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Calculating GEX Yourself — Google Sheets + Python - butterflow Investment Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#calculating-gex-yourself-google-sheets-python" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Investment Notes" class="md-header__button md-logo" aria-label="butterflow Investment Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Investment Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Calculating GEX Yourself — Google Sheets + Python
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/gex-calculator/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Returns 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  Market Data
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../options-basics/" class="md-tabs__link">
+          
+  
+  
+  Options 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  Series
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Investment Notes" class="md-nav__button md-logo" aria-label="butterflow Investment Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Investment Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-preview-what-the-finished-tool-gives-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second preview: what the finished tool gives you
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concept-gex-in-three-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core concept: GEX in three minutes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core concept: GEX in three minutes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-makers-mms-and-gamma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Market makers (MMs) and gamma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-assumptions-behind-the-gex-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two assumptions behind the GEX formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-copy-the-google-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Copy the Google Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-download-the-option-chain-from-cboe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Download the option chain from CBOE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-load-data-into-the-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Load data into the sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-read-the-result-automatic-gex-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Read the result — automatic GEX calculation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Read the result — automatic GEX calculation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-dashboard-shows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the dashboard shows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#under-the-hood-what-the-formulas-actually-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under the hood: what the formulas actually do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Under the hood: what the formulas actually do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gex-calculation-gammaexposure-calc-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX calculation (GammaExposure Calc tab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-gex-explodes-at-5975" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why GEX explodes at 5,975
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamma-flip-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gamma flip point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-pain-maxpain-calc-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Pain (MaxPain Calc tab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-it-day-to-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to use it day to day
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-version-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python version: automation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-of-this-gex-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations of this GEX calculation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrap-up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-article" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next article
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-preview-what-the-finished-tool-gives-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second preview: what the finished tool gives you
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concept-gex-in-three-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core concept: GEX in three minutes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core concept: GEX in three minutes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-makers-mms-and-gamma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Market makers (MMs) and gamma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-assumptions-behind-the-gex-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two assumptions behind the GEX formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-copy-the-google-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Copy the Google Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-download-the-option-chain-from-cboe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Download the option chain from CBOE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-load-data-into-the-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Load data into the sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-read-the-result-automatic-gex-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Read the result — automatic GEX calculation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Read the result — automatic GEX calculation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-dashboard-shows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the dashboard shows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#under-the-hood-what-the-formulas-actually-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under the hood: what the formulas actually do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Under the hood: what the formulas actually do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gex-calculation-gammaexposure-calc-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GEX calculation (GammaExposure Calc tab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-gex-explodes-at-5975" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why GEX explodes at 5,975
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamma-flip-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gamma flip point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-pain-maxpain-calc-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Pain (MaxPain Calc tab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-it-day-to-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to use it day to day
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-version-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python version: automation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-of-this-gex-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations of this GEX calculation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrap-up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-article" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next article
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="calculating-gex-yourself-google-sheets-python">Calculating GEX Yourself — Google Sheets + Python<a class="headerlink" href="#calculating-gex-yourself-google-sheets-python" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Copy the Google Sheets template:</strong> <a href="https://docs.google.com/spreadsheets/d/1ZrnHpTddR4hwF3_QY6U5MxpjSzLiqG3n5aZkJ8GskTU/copy">GammaExposureAndMaxPain</a></p>
+</blockquote>
+<p>This article walks through a Google Sheets tool that takes Cboe's free option chain data and computes the <strong>GEX profile, the gamma flip point, and Max Pain</strong> automatically. We'll build it step by step so you understand what each number means, and the finished sheet is ready to use day-to-day — just refresh the data.</p>
+<p>What you'll need:</p>
+<ul>
+<li>A Google account (to copy the sheet)</li>
+<li>(Optional) Python 3 with pandas and matplotlib</li>
+</ul>
+<hr />
+<h2 id="30-second-preview-what-the-finished-tool-gives-you">30-second preview: what the finished tool gives you<a class="headerlink" href="#30-second-preview-what-the-finished-tool-gives-you" title="Permanent link">&para;</a></h2>
+<p>Once you copy the sheet and load data, you'll see something like this (every term below is explained later — for now just glance at the shape of the output):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Example</th>
+<th style="text-align: left;">What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Total GEX</strong></td>
+<td style="text-align: left;">−$22.4B</td>
+<td style="text-align: left;">MMs are short gamma — volatility-amplification mode</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Max Pain</strong></td>
+<td style="text-align: left;">6,000</td>
+<td style="text-align: left;">The "magnet" price that pins the index at expiration</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MM hedge size</strong></td>
+<td style="text-align: left;">$22.4B per 1%</td>
+<td style="text-align: left;">How much MMs must buy/sell on a 1% index move</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Put/Call Ratio</strong></td>
+<td style="text-align: left;">1.17</td>
+<td style="text-align: left;">More put volume than call volume</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Top GEX strike</strong></td>
+<td style="text-align: left;">5,975 (−$22.2B)</td>
+<td style="text-align: left;">The strike where gamma is most concentrated</td>
+</tr>
+</tbody>
+</table>
+<p>We'll build up to that result step by step.</p>
+<hr />
+<h2 id="core-concept-gex-in-three-minutes">Core concept: GEX in three minutes<a class="headerlink" href="#core-concept-gex-in-three-minutes" title="Permanent link">&para;</a></h2>
+<h3 id="market-makers-mms-and-gamma">Market makers (MMs) and gamma<a class="headerlink" href="#market-makers-mms-and-gamma" title="Permanent link">&para;</a></h3>
+<p>In the options market, MMs sit between buyers and sellers as the perpetual counterparty. They don't bet on direction — they hedge their directional exposure (delta — how much the option price moves for a $1 move in the stock) using the underlying (SPX futures, etc.).</p>
+<p><strong>Gamma</strong> is how much delta moves when the stock moves $1 — it's the <em>acceleration</em> of the option's sensitivity. When MMs hold gamma, every move in the underlying changes their hedge size, so they have to keep rebalancing. If the stock rises and the MM has to <strong>buy</strong> more futures, that buying <em>amplifies</em> the move. If they have to <strong>sell</strong>, it brakes the move:</p>
+<ul>
+<li><strong>MM long gamma</strong>: stock rises → MM sells futures (against the move) → volatility <strong>dampened</strong> (firefighter)</li>
+<li><strong>MM short gamma</strong>: stock rises → MM buys futures (with the move) → volatility <strong>amplified</strong> (arsonist)</li>
+</ul>
+<h3 id="the-two-assumptions-behind-the-gex-formula">The two assumptions behind the GEX formula<a class="headerlink" href="#the-two-assumptions-behind-the-gex-formula" title="Permanent link">&para;</a></h3>
+<p>GEX calculation rests on two assumptions:</p>
+<ol>
+<li><strong>Call open interest (OI = contracts still open)</strong> = institutions selling calls against shares (covered calls — the dominant SPX/NDX flow), MMs buy → <strong>MM long gamma (+)</strong></li>
+<li><strong>Put OI</strong> = investors buying puts (insurance), MMs sell → <strong>MM short gamma (−)</strong></li>
+</ol>
+<p>So: <strong>Net GEX = Call GEX(+) − Put GEX(−)</strong>. Call GEX dampens for the MM (+), put GEX amplifies (−), so we subtract the two for the net effect.</p>
+<p>Positive = MM is the firefighter. Negative = MM is the arsonist.</p>
+<p><img alt="How MM gamma position drives the market" src="../../../assets/diagrams_en/diag_gex_mm_gamma.png" /></p>
+<div class="admonition warning">
+<p class="admonition-title">SPX/NDX only</p>
+<p>These assumptions are valid only for large index options. On single names (TSLA, NVDA, etc.), retail buys calls aggressively, which flips assumption #1. Use this tool only for <strong>SPX, NDX, RUT</strong>.</p>
+</div>
+<hr />
+<h2 id="step-1-copy-the-google-sheet">Step 1: Copy the Google Sheet<a class="headerlink" href="#step-1-copy-the-google-sheet" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Click <a href="https://docs.google.com/spreadsheets/d/1ZrnHpTddR4hwF3_QY6U5MxpjSzLiqG3n5aZkJ8GskTU/copy">this link</a> → "Make a copy"</li>
+<li>The copied sheet has <strong>7 tabs</strong>:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tab</th>
+<th style="text-align: left;">Role</th>
+<th style="text-align: left;">What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>How to import</strong></td>
+<td style="text-align: left;">CBOE download guide (with screenshots)</td>
+<td style="text-align: left;">Read only</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OptionChain Import</strong></td>
+<td style="text-align: left;">Where you paste the CBOE CSV</td>
+<td style="text-align: left;"><strong>Import data here</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>GammaExposure Calc</strong></td>
+<td style="text-align: left;">GEX is computed automatically</td>
+<td style="text-align: left;">Just check the result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>GammaExposure Graph</strong></td>
+<td style="text-align: left;">Settings + summary dashboard + <strong>Gamma Flip</strong></td>
+<td style="text-align: left;">Just check the result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MaxPain Calc</strong></td>
+<td style="text-align: left;">Max Pain computed automatically</td>
+<td style="text-align: left;">Just check the result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Gamma Profile Summary</strong></td>
+<td style="text-align: left;">Final summary (top strikes, OI distribution)</td>
+<td style="text-align: left;"><strong>Read results here</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>0DTE Strategy Patterns</strong></td>
+<td style="text-align: left;">Intraday 0DTE (same-day expiry) gamma patterns</td>
+<td style="text-align: left;">See the <a href="../gex-0dte-patterns/">next article</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-2-download-the-option-chain-from-cboe">Step 2: Download the option chain from CBOE<a class="headerlink" href="#step-2-download-the-option-chain-from-cboe" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Open the <a href="https://www.cboe.com/delayed_quotes/spx/quote_table">CBOE SPX option chain</a> page</li>
+<li>Change <strong>Options Range</strong> from <code>Near The Money</code> to <strong><code>All</code></strong></li>
+<li>Change <strong>Expiration</strong> to <strong><code>All</code></strong> (so every expiry is included)</li>
+<li>Click <strong>View Chain</strong> → wait for the chain to load (a few seconds to a few tens of seconds)</li>
+<li>Click <strong>Download CSV</strong> at the bottom of the page → save it locally</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">When to pull the data</p>
+<p>Pull it <strong>after the close (16:00 Eastern or later)</strong> to get a clean snapshot at that day's close. CBOE's free quotes are 15-minute delayed, so this isn't real-time data during the session.</p>
+</div>
+<hr />
+<h2 id="step-3-load-data-into-the-sheet">Step 3: Load data into the sheet<a class="headerlink" href="#step-3-load-data-into-the-sheet" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In the Google Sheet, click the <strong><code>OptionChain Import</code></strong> tab</li>
+<li>Open <strong>File → Import</strong></li>
+<li><strong>Upload</strong> → <strong>Browse</strong> → pick the CSV you just downloaded</li>
+<li>Set Import location to <strong><code>Replace current sheet</code></strong></li>
+<li>Click <strong>Import data</strong></li>
+</ol>
+<p>When it finishes, the <code>OptionChain Import</code> tab will be filled with rows like this:</p>
+<div class="highlight"><pre><span></span><code>Expiration Date | Calls         | Last | ... | Gamma | OI    | Strike | Puts          | Last | ... | Gamma | OI
+Fri Jun 13 2025 | SPXW250613C.. | 1.18 | ... | 0.128 | 769   | 5975   | SPXW250613P.. | 0.48 | ... | 0.128 | 4720
+Fri Jun 20 2025 | SPXW250620C.. | 45.2 | ... | 0.008 | 1203  | 5975   | SPXW250620P.. | 38.5 | ... | 0.008 | 2841
+...
+</code></pre></div>
+<p>Having <strong>dozens of rows</strong> at the same strike (5,975) with different expirations is normal — you want all of them.</p>
+<hr />
+<h2 id="step-4-read-the-result-automatic-gex-calculation">Step 4: Read the result — automatic GEX calculation<a class="headerlink" href="#step-4-read-the-result-automatic-gex-calculation" title="Permanent link">&para;</a></h2>
+<p>Once the data is loaded, the rest of the tabs compute automatically. Go to the <strong><code>Gamma Profile Summary</code></strong> tab.</p>
+<h3 id="what-the-dashboard-shows">What the dashboard shows<a class="headerlink" href="#what-the-dashboard-shows" title="Permanent link">&para;</a></h3>
+<p><strong>Total gamma state:</strong></p>
+<div class="highlight"><pre><span></span><code>Call GEX total:    $4,477,749,074   (MM long-gamma contribution)
+Put GEX total:    $26,857,654,715   (MM short-gamma contribution)
+Total GEX:       -$22,379,905,641   ← net short gamma
+</code></pre></div>
+<p>→ Total GEX is <strong>negative</strong> = MMs are net short gamma = arsonist mode.</p>
+<p><strong>Hedge-size interpretation:</strong></p>
+<div class="highlight"><pre><span></span><code>"Market makers need to SELL $22.4Bn worth of index for each 1% move DOWN,
+ and BUY $22.4Bn for each 1% move UP."
+</code></pre></div>
+<p>→ For every 1% the index moves, MMs need to put <strong>$22.4B of trades</strong> through the market. That trading <em>amplifies</em> the move further.</p>
+<p><strong>Max Pain / Gamma Flip:</strong></p>
+<div class="highlight"><pre><span></span><code>Max Pain     = 6,000
+Gamma Flip   = none (entire range is short gamma)
+</code></pre></div>
+<p>→ Max Pain: the strike where total option-buyer intrinsic value is minimized at expiration — in plain English, the price at which option buyers collectively lose the most. When it's close to spot (5,976.97 here), there's a real chance of "pinning" — the index sticking to a specific strike at expiration.
+→ Gamma Flip: in this dataset, Net GEX near the ATM is uniformly negative, so there's no flip point. That's typical when put OI is overwhelmingly dominant. On days where call OI is dominant in a region, you'll see an actual strike here.</p>
+<p><strong>Top 5 strikes (by absolute Net GEX):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Strike</th>
+<th style="text-align: right;">Net GEX</th>
+<th style="text-align: left;">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">5,975</td>
+<td style="text-align: right;">−$22.2B</td>
+<td style="text-align: left;">ATM — concentrated 0DTE gamma</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,970</td>
+<td style="text-align: right;">−$77.4M</td>
+<td style="text-align: left;">Short-gamma acceleration</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,980</td>
+<td style="text-align: right;">−$67.7M</td>
+<td style="text-align: left;">Short-gamma acceleration</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,960</td>
+<td style="text-align: right;">−$19.3M</td>
+<td style="text-align: left;">Downside pressure</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,950</td>
+<td style="text-align: right;">−$14.5M</td>
+<td style="text-align: left;">Potential downside support</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OI distribution:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Top call OI</th>
+<th style="text-align: left;">Top put OI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">6,100 (12,787)</td>
+<td style="text-align: left;">6,000 (8,247)</td>
+</tr>
+<tr>
+<td style="text-align: left;">6,150 (11,673)</td>
+<td style="text-align: left;">5,975 (4,720)</td>
+</tr>
+<tr>
+<td style="text-align: left;">6,140 (9,143)</td>
+<td style="text-align: left;">5,960 (2,546)</td>
+</tr>
+</tbody>
+</table>
+<p>→ Call OI clusters <strong>above</strong> spot, put OI clusters <strong>at and below</strong> spot. Classic short-gamma structure.</p>
+<p><strong>The GEX profile chart:</strong> visualize the data above by strike and you get this profile.</p>
+<p><img alt="SPX GEX profile — concentrated short gamma at ATM" src="../../../assets/diagrams_en/gex_profile.png" /></p>
+<p>Top: 0DTE gamma at the ATM (5,975) is so concentrated it produces a −$22.2B spike. Bottom: zoomed view excluding the ATM — the GEX distribution at surrounding strikes. Red = short gamma (volatility amplifier), blue = long gamma (volatility dampener).</p>
+<hr />
+<h2 id="under-the-hood-what-the-formulas-actually-do">Under the hood: what the formulas actually do<a class="headerlink" href="#under-the-hood-what-the-formulas-actually-do" title="Permanent link">&para;</a></h2>
+<p>Now that you've seen the result, let's understand what the sheet does internally.</p>
+<h3 id="gex-calculation-gammaexposure-calc-tab">GEX calculation (<code>GammaExposure Calc</code> tab)<a class="headerlink" href="#gex-calculation-gammaexposure-calc-tab" title="Permanent link">&para;</a></h3>
+<p>For each strike K, we sum across every expiration:</p>
+<div class="highlight"><pre><span></span><code>Call GEX(K) = Σ (Gamma_i × Call_OI_i × 100 × K)
+Put GEX(K)  = Σ (Gamma_i × Put_OI_i × 100 × K)
+Net GEX(K)  = Call GEX(K) − Put GEX(K)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Gamma_i</code></td>
+<td style="text-align: left;">Gamma at expiration i (very large for 0DTE, small for 30DTE)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OI_i</code></td>
+<td style="text-align: left;">Open interest at expiration i</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>× 100</code></td>
+<td style="text-align: left;">One option contract = 100 shares</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>× K</code></td>
+<td style="text-align: left;">Convert gamma (delta change per $1) into a <strong>dollar magnitude</strong> at the strike level</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Decomposing the GEX formula" src="../../../assets/diagrams_en/diag_gex_formula.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Variations of the GEX formula</p>
+<p>SpotGamma and similar services use <code>Gamma × OI × 100 × S² × 0.01</code> (S = spot) to directly produce "hedge dollars per 1% move." This sheet uses the <code>× K</code> variant, which is well-suited for comparing dollar-gamma across strikes. The absolute numbers differ, but the <strong>shape of the profile and the location of the flip point are identical</strong>.</p>
+</div>
+<p>Google Sheets formula (<code>GammaExposure Calc</code> tab, deduplicated-strike section):</p>
+<div class="highlight"><pre><span></span><code>Call GEX = SUMPRODUCT(
+  (OptionChain!$K:$K = L2) *       ← strike match
+  OptionChain!$J:$J *              ← Call Gamma
+  OptionChain!$K2:$K2 *            ← Call OI
+  100 * L2                         ← × 100 × strike
+)
+</code></pre></div>
+<h3 id="why-gex-explodes-at-5975">Why GEX explodes at 5,975<a class="headerlink" href="#why-gex-explodes-at-5975" title="Permanent link">&para;</a></h3>
+<p>Data at the 5,975 strike:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Expiration</th>
+<th style="text-align: right;">Gamma</th>
+<th style="text-align: right;">Call OI</th>
+<th style="text-align: right;">Put OI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>0DTE (Jun 13)</strong></td>
+<td style="text-align: right;"><strong>0.1281</strong></td>
+<td style="text-align: right;">769</td>
+<td style="text-align: right;">4,720</td>
+</tr>
+<tr>
+<td style="text-align: left;">1 week (Jun 20)</td>
+<td style="text-align: right;">0.0080</td>
+<td style="text-align: right;">1,203</td>
+<td style="text-align: right;">2,841</td>
+</tr>
+<tr>
+<td style="text-align: left;">1 month (Jul 18)</td>
+<td style="text-align: right;">0.0025</td>
+<td style="text-align: right;">587</td>
+<td style="text-align: right;">1,156</td>
+</tr>
+</tbody>
+</table>
+<p>Gamma rises sharply as expiration approaches — options near expiration are extremely sensitive to spot moves. The 0DTE gamma (0.1281) is <strong>16× higher</strong> than the 1-week (0.0080). Multiply by OI and the 0DTE expiration alone determines most of the strike's GEX.</p>
+<h3 id="gamma-flip-point">Gamma flip point<a class="headerlink" href="#gamma-flip-point" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>The price where, scanning down from the highest strike, cumulative Net GEX flips from positive to negative.</strong></p>
+</blockquote>
+<p>This is the dividing line where MM behavior reverses:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Spot relative to flip</th>
+<th style="text-align: left;">MM state</th>
+<th style="text-align: left;">Market behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Above</strong> the flip point</td>
+<td style="text-align: left;">Long gamma (firefighter)</td>
+<td style="text-align: left;">Volatility dampened, calm</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Below</strong> the flip point</td>
+<td style="text-align: left;">Short gamma (arsonist)</td>
+<td style="text-align: left;">Volatility amplified, prone to violent moves</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Gamma flip point — the concept" src="../../../assets/diagrams_en/diag_gex_flip_point.png" /></p>
+<p>In the sheet, column AH on the <code>GammaExposure Calc</code> tab computes this cumulative sum automatically:</p>
+<div class="highlight"><pre><span></span><code>AH2 = MAP(L2:L258, LAMBDA(k, SUMPRODUCT((L$2:L$258&gt;=k)*IF(ISNUMBER(V$2:V$258),V$2:V$258,0))))
+</code></pre></div>
+<p>For each strike, this computes "the sum of all Net GEX at or above this price." The point where the value flips from positive to negative is the flip point — and the <code>GammaExposure Graph</code> tab's <strong>Gamma Flip</strong> cell shows it automatically.</p>
+<div class="admonition note">
+<p class="admonition-title">What if there's no flip point?</p>
+<p>If Total GEX is negative across the entire range, no flip point exists. MMs are short gamma at every price.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">A simplified approximation</p>
+<p>This method holds the option chain's current gammas fixed and just sums cumulatively. The precise method would re-compute every option's gamma at each hypothetical spot using Black–Scholes (BSM) and then sum — but that's a lot more compute, and the answers usually differ only slightly.</p>
+</div>
+<h3 id="max-pain-maxpain-calc-tab">Max Pain (<code>MaxPain Calc</code> tab)<a class="headerlink" href="#max-pain-maxpain-calc-tab" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>The expiration settlement price where total option-buyer intrinsic value is minimized</strong> (= MM profit is maximized).</p>
+</blockquote>
+<p>For each hypothetical settlement price S:</p>
+<div class="highlight"><pre><span></span><code>Call intrinsic(S) = Σ_K max(S − K, 0) × Call_OI(K) × 100
+Put intrinsic(S)  = Σ_K max(K − S, 0) × Put_OI(K)  × 100
+Total intrinsic(S) = Call intrinsic + Put intrinsic
+</code></pre></div>
+<p><strong>Max Pain = the S that minimizes total intrinsic</strong> (the price where option buyers earn the least = MMs earn the most).</p>
+<p>In the sheet, the <code>dollar value sum</code> column carries this number, and the row with the smallest value gives Max Pain.</p>
+<hr />
+<h2 id="how-to-use-it-day-to-day">How to use it day to day<a class="headerlink" href="#how-to-use-it-day-to-day" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">When</th>
+<th style="text-align: left;">What</th>
+<th style="text-align: left;">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">After the close</td>
+<td style="text-align: left;">Download CSV from CBOE</td>
+<td style="text-align: left;">1 min</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Import into the sheet's <code>OptionChain Import</code> tab</td>
+<td style="text-align: left;">1 min</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Read the result on <code>Gamma Profile Summary</code></td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">Before the next session opens</td>
+<td style="text-align: left;">Check Total GEX sign + flip point + Max Pain</td>
+<td style="text-align: left;">1 min</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Three minutes a day gets you the GEX state for that session.</strong></p>
+<p>The checklist:</p>
+<ul>
+<li>[ ] Total GEX sign: positive (calm) vs negative (unstable)</li>
+<li>[ ] Flip point: above or below current spot?</li>
+<li>[ ] Max Pain: how close is it to spot?</li>
+<li>[ ] Top 5 strikes: which prices likely act as support/resistance?</li>
+</ul>
+<hr />
+<h2 id="python-version-automation">Python version: automation<a class="headerlink" href="#python-version-automation" title="Permanent link">&para;</a></h2>
+<p>If you don't want to do this manually each day, automate it with Python. Feed in the CBOE CSV and get GEX, the flip point, and Max Pain in one pass.</p>
+<details><summary>Full Python code (GEX + Max Pain + chart)</summary>
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mticker</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_cboe_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Parse the CBOE SPX option chain CSV."""</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">'expiry'</span><span class="p">,</span> <span class="s1">'call_symbol'</span><span class="p">,</span> <span class="s1">'call_last'</span><span class="p">,</span> <span class="s1">'call_net'</span><span class="p">,</span> <span class="s1">'call_bid'</span><span class="p">,</span> <span class="s1">'call_ask'</span><span class="p">,</span>
+        <span class="s1">'call_volume'</span><span class="p">,</span> <span class="s1">'call_iv'</span><span class="p">,</span> <span class="s1">'call_delta'</span><span class="p">,</span> <span class="s1">'call_gamma'</span><span class="p">,</span> <span class="s1">'call_oi'</span><span class="p">,</span>
+        <span class="s1">'strike'</span><span class="p">,</span>
+        <span class="s1">'put_symbol'</span><span class="p">,</span> <span class="s1">'put_last'</span><span class="p">,</span> <span class="s1">'put_net'</span><span class="p">,</span> <span class="s1">'put_bid'</span><span class="p">,</span> <span class="s1">'put_ask'</span><span class="p">,</span>
+        <span class="s1">'put_volume'</span><span class="p">,</span> <span class="s1">'put_iv'</span><span class="p">,</span> <span class="s1">'put_delta'</span><span class="p">,</span> <span class="s1">'put_gamma'</span><span class="p">,</span> <span class="s1">'put_oi'</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'strike'</span><span class="p">,</span> <span class="s1">'call_gamma'</span><span class="p">,</span> <span class="s1">'put_gamma'</span><span class="p">,</span> <span class="s1">'call_oi'</span><span class="p">,</span> <span class="s1">'put_oi'</span><span class="p">,</span>
+                <span class="s1">'call_volume'</span><span class="p">,</span> <span class="s1">'put_volume'</span><span class="p">]:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_gex</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute GEX per strike (summed across all expirations)."""</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'call_gex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'call_gamma'</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">'call_oi'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'put_gex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'put_gamma'</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">'put_oi'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">]</span>
+
+    <span class="n">gex</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'strike'</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">call_gex</span><span class="o">=</span><span class="p">(</span><span class="s1">'call_gex'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">),</span>
+        <span class="n">put_gex</span><span class="o">=</span><span class="p">(</span><span class="s1">'put_gex'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">),</span>
+        <span class="n">call_oi</span><span class="o">=</span><span class="p">(</span><span class="s1">'call_oi'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">),</span>
+        <span class="n">put_oi</span><span class="o">=</span><span class="p">(</span><span class="s1">'put_oi'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">),</span>
+        <span class="n">call_volume</span><span class="o">=</span><span class="p">(</span><span class="s1">'call_volume'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">),</span>
+        <span class="n">put_volume</span><span class="o">=</span><span class="p">(</span><span class="s1">'put_volume'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">),</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">gex</span><span class="p">[</span><span class="s1">'net_gex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'call_gex'</span><span class="p">]</span> <span class="o">-</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'put_gex'</span><span class="p">]</span>
+    <span class="n">gex</span><span class="p">[</span><span class="s1">'total_gex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'call_gex'</span><span class="p">]</span> <span class="o">+</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'put_gex'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">gex</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_gamma_flip</span><span class="p">(</span><span class="n">gex</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The strike where cumulative Net GEX (high → low) flips + → -."""</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gex</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'strike'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">g</span><span class="p">[</span><span class="s1">'cum'</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="s1">'net_gex'</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">sign_change</span> <span class="o">=</span> <span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">'cum'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">'cum'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sign_change</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">sign_change</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span> <span class="s1">'strike'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_max_pain</span><span class="p">(</span><span class="n">gex</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The strike where total option intrinsic value is minimized."""</span>
+    <span class="n">strikes</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">call_oi</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'call_oi'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">put_oi</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'put_oi'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">pain</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">strikes</span><span class="p">:</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">strikes</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">call_oi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">strikes</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">put_oi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">pain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cp</span> <span class="o">+</span> <span class="n">pp</span><span class="p">)</span>
+    <span class="n">gex</span><span class="p">[</span><span class="s1">'pain'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pain</span>
+    <span class="k">return</span> <span class="n">gex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gex</span><span class="p">[</span><span class="s1">'pain'</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">(),</span> <span class="s1">'strike'</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_gex</span><span class="p">(</span><span class="n">gex</span><span class="p">,</span> <span class="n">spot</span><span class="p">,</span> <span class="n">flip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_pain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Render the GEX profile chart."""</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="n">spot</span> <span class="o">*</span> <span class="mf">0.05</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[(</span><span class="n">gex</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">spot</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">gex</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spot</span> <span class="o">+</span> <span class="n">margin</span><span class="p">)]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'#2196F3'</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">'#F44336'</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">g</span><span class="p">[</span><span class="s1">'net_gex'</span><span class="p">]]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">'strike'</span><span class="p">],</span> <span class="n">g</span><span class="p">[</span><span class="s1">'net_gex'</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">spot</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'SPX: </span><span class="si">{</span><span class="n">spot</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">flip</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">flip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#FF9800'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Gamma Flip: </span><span class="si">{</span><span class="n">flip</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_pain</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">max_pain</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#9C27B0'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Max Pain: </span><span class="si">{</span><span class="n">max_pain</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Strike'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Net GEX ($)'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'SPX Gamma Exposure Profile'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mticker</span><span class="o">.</span><span class="n">FuncFormatter</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'$</span><span class="si">{</span><span class="n">x</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">B'</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1e9</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">'$</span><span class="si">{</span><span class="n">x</span><span class="o">/</span><span class="mf">1e6</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">M'</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'gex_profile.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c1"># === Run ===</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">parse_cboe_csv</span><span class="p">(</span><span class="s1">'spx_options.csv'</span><span class="p">)</span>  <span class="c1"># path to CBOE CSV</span>
+<span class="n">gex</span> <span class="o">=</span> <span class="n">calc_gex</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">spot</span> <span class="o">=</span> <span class="mf">5976.97</span>
+
+<span class="n">flip</span> <span class="o">=</span> <span class="n">find_gamma_flip</span><span class="p">(</span><span class="n">gex</span><span class="p">)</span>
+<span class="n">mp</span> <span class="o">=</span> <span class="n">calc_max_pain</span><span class="p">(</span><span class="n">gex</span><span class="p">)</span>
+<span class="n">total</span> <span class="o">=</span> <span class="n">gex</span><span class="p">[</span><span class="s1">'net_gex'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total GEX:    $</span><span class="si">{</span><span class="n">total</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gamma Flip:   </span><span class="si">{</span><span class="n">flip</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Max Pain:     </span><span class="si">{</span><span class="n">mp</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Put/Call Vol:  </span><span class="si">{</span><span class="n">gex</span><span class="p">[</span><span class="s1">'put_volume'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gex</span><span class="p">[</span><span class="s1">'call_volume'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">plot_gex</span><span class="p">(</span><span class="n">gex</span><span class="p">,</span> <span class="n">spot</span><span class="p">,</span> <span class="n">flip</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
+</code></pre></div>
+
+</details>
+
+<hr />
+<h2 id="limitations-of-this-gex-calculation">Limitations of this GEX calculation<a class="headerlink" href="#limitations-of-this-gex-calculation" title="Permanent link">&para;</a></h2>
+<p>Things you should know before relying on this tool:</p>
+<ol>
+<li>
+<p><strong>OI is yesterday's-close data</strong> — it doesn't reflect intraday volume. → see the <a href="../gex-0dte-patterns/">next article: 0DTE Gamma Patterns</a> for an intraday correction approach.</p>
+</li>
+<li>
+<p><strong>CBOE gamma is BSM-based</strong> — it's the textbook theoretical gamma. Real MMs may use slightly different models.</p>
+</li>
+<li>
+<p><strong>OI doesn't tell you the direction</strong> — public data doesn't say who's the buyer and who's the seller. You're relying on the "calls = MM buys, puts = MM sells" assumption.</p>
+</li>
+<li>
+<p><strong>0DTE dominates</strong> — ATM 0DTE gamma is so large that GEX is dominated by a single expiration. As 0DTE OI shifts intraday, GEX shifts dramatically with it.</p>
+</li>
+<li>
+<p><strong>It's not a trade signal</strong> — GEX is a <em>directional indicator</em> about MM positioning. Don't make trading decisions on GEX alone.</p>
+</li>
+</ol>
+<hr />
+<h2 id="wrap-up">Wrap-up<a class="headerlink" href="#wrap-up" title="Permanent link">&para;</a></h2>
+<p>What this tool gives you:</p>
+<ol>
+<li><strong>Three minutes a day</strong> — Total GEX sign, flip point, Max Pain, all read off the dashboard</li>
+<li><strong>Support/resistance candidates</strong> — strikes with large GEX = strikes where MM hedging is concentrated</li>
+<li><strong>MM behavior estimate</strong> — short gamma (amplification) vs long gamma (dampening)</li>
+<li><strong>Context for fast moves</strong> — a structural answer to "why did the index just snap?"</li>
+</ol>
+<p>GEX is not a short-term trade signal. Its value to a long-term investor is <strong>structurally understanding the market's violent moves and not getting shaken by fear</strong>. When the index drops 2% out of nowhere, recognizing "that was 0DTE gamma hedging flow" lets you stick to your rebalancing plan instead of panic-selling.</p>
+<hr />
+<h2 id="next-article">Next article<a class="headerlink" href="#next-article" title="Permanent link">&para;</a></h2>
+<p>The GEX you compute in the morning is just the starting point. <strong>What happens to GEX intraday when 0DTE options trade in size?</strong> How do BTO/STO patterns push the MM gamma position around, and how do you apply intraday corrections to morning GEX?</p>
+<p>→ <a href="../gex-0dte-patterns/">0DTE Gamma Patterns — How GEX shifts intraday</a></p>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://squeezemetrics.com/monitor/docs">SqueezeMetrics GEX whitepaper (PDF)</a></li>
+<li><a href="https://www.cboe.com/delayed_quotes/spx/quote_table">Cboe SPX Options — Delayed Quotes</a></li>
+</ul>
+<p><em>Cboe, SPX, and VIX are registered trademarks of Cboe Exchange, Inc. This article has no affiliation with or endorsement from Cboe.</em></p>
+<hr />
+<p><em>Previous: <a href="../almanac/">The Almanac Trader — Seasonality analysis</a> | Next: <a href="../gex-0dte-patterns/">0DTE Gamma Patterns — How GEX shifts intraday</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

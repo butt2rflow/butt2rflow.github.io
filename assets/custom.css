@@ -1,0 +1,1096 @@
+/* butterflow — Warm & Bright theme */
+
+img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 12px auto;
+  display: block;
+}
+
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.md-typeset table:not([class]) {
+  font-size: 0.8rem;
+}
+
+.md-typeset blockquote {
+  border-left-color: #f59e0b;
+}
+
+.md-header__button.md-logo img {
+  border-radius: 50%;
+  background: #fff;
+  padding: 3px;
+}
+
+.md-typeset .md-button {
+  padding: 0.35em 0.9em;
+  font-size: 0.75rem;
+  margin: 0.2em 0.3em 0.2em 0;
+}
+
+/* ==========================================================================
+   Live dashboard block on the home page — aggressive compression
+   ========================================================================== */
+
+.md-typeset .live-dash {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.md-typeset .live-dash h2 {
+  font-size: 1rem !important;
+  margin: 0.5rem 0 0.2rem 0 !important;
+  padding: 0 !important;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.md-typeset .live-dash h3 {
+  font-size: 0.85rem !important;
+  margin: 0.4rem 0 0.15rem 0 !important;
+  padding: 0 !important;
+  font-weight: 700;
+  color: #525252;
+  line-height: 1.3;
+}
+
+/* "Last updated" timestamp shown next to the dashboard H2 title.
+   De-emphasised so the title still leads but the freshness is visible. */
+.md-typeset .live-dash h2 .dash-updated,
+.md-typeset .live-dash h3 .dash-updated {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: #9ca3af;
+  margin-left: 0.4em;
+  letter-spacing: 0;
+}
+
+.md-typeset .live-dash p {
+  margin: 0.15rem 0 !important;
+}
+
+.md-typeset .live-dash hr {
+  margin: 0.3rem 0 !important;
+}
+
+.md-typeset .live-dash img {
+  margin: 0.2rem auto !important;
+  max-width: 92%;
+  display: block;
+}
+
+/* Center-align tables and content blocks within the dashboard so charts
+   and tables share visual alignment */
+.md-typeset .live-dash .dash-tight {
+  text-align: center !important;
+}
+
+.md-typeset .live-dash > h2,
+.md-typeset .live-dash > h3 {
+  text-align: center !important;
+}
+
+.md-typeset .live-dash > p:has(small),
+.md-typeset .live-dash > p {
+  text-align: center !important;
+}
+
+.md-typeset .live-dash small {
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+.md-typeset .live-dash .headerlink {
+  display: none;
+}
+
+/* Tables inside dash-tight (used inside live-dash for the signal tables) */
+.md-typeset .dash-tight {
+  margin: 0.25rem 0 !important;
+}
+
+.md-typeset .dash-tight table:not([class]) {
+  font-size: 0.72rem !important;
+  margin: 0.15rem auto !important;
+  width: auto !important;
+  display: inline-table;
+}
+
+.md-typeset .dash-tight table:not([class]) th,
+.md-typeset .dash-tight table:not([class]) td {
+  padding: 0.18em 0.55em !important;
+  line-height: 1.3 !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.md-typeset .dash-tight table:not([class]) thead th {
+  padding-top: 0.25em !important;
+  padding-bottom: 0.25em !important;
+}
+
+.md-typeset .dash-tight p {
+  margin: 0.1rem 0 !important;
+}
+
+/* ==========================================================================
+   Mobile responsive — disable inline float:right images on narrow screens
+   so Korean text doesn't get squeezed into a one-char-per-line column
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .md-typeset img[style*="float"] {
+    float: none !important;
+    max-width: 100% !important;
+    width: auto !important;
+    margin: 1rem auto !important;
+    display: block;
+  }
+
+  /* Series index uses cover images with inline float — strip the float so
+     the bullet lists below them flow normally instead of wrapping
+     character-by-character beside a narrow image */
+  .md-typeset img[style*="max-width:280px"],
+  .md-typeset img[style*="max-width: 280px"] {
+    float: none !important;
+    max-width: 70% !important;
+    margin: 1rem auto !important;
+    display: block;
+  }
+
+  /* Ensure the 'clear:both' divs after floated images don't introduce
+     weird gaps on mobile */
+  .md-typeset div[style*="clear:both"] {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Sidebar TradingView ticker widget — injected on homepage only
+   ========================================================================== */
+
+.sidebar-tv-widget {
+  margin: 1rem 0.6rem 1.5rem 0.6rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-tv-widget__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #525252;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-tv-widget .tradingview-widget-container {
+  width: 100%;
+}
+
+/* TradingView ticker tape is naturally horizontal; let it scroll within the
+   sidebar without bursting the container */
+.sidebar-tv-widget iframe {
+  max-width: 100% !important;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   VIX history player — slider + play/pause + speed control on home dashboard
+   ========================================================================== */
+
+#vix-history-player {
+  margin: 0.5rem 0;
+}
+
+.vix-history-player__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.6rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.78rem;
+}
+
+.vix-history-player__play {
+  background: #1e40af;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vix-history-player__play:hover {
+  background: #1e3a8a;
+}
+
+.vix-history-player__restart {
+  background: white;
+  color: #1e40af;
+  border: 1px solid #1e40af;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vix-history-player__restart:hover {
+  background: #eff6ff;
+}
+
+.vix-history-player__range {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.72rem;
+  color: #4b5563;
+}
+
+.vix-history-player__range-label {
+  font-weight: 600;
+}
+
+.vix-history-player__range-sep {
+  color: #9ca3af;
+}
+
+.vix-history-player__from,
+.vix-history-player__to {
+  font-family: inherit;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.vix-history-player__from:hover,
+.vix-history-player__to:hover {
+  border-color: #1e40af;
+}
+
+.vix-history-player__date {
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  min-width: 6rem;
+  text-align: center;
+}
+
+.vix-history-player__slider {
+  flex: 1;
+  min-width: 8rem;
+  cursor: pointer;
+}
+
+.vix-history-player__counter {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-family: "JetBrains Mono", monospace;
+  white-space: nowrap;
+}
+
+.vix-history-player__speed {
+  font-size: 0.74rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.vix-history-player__image {
+  margin: 0.3rem 0;
+}
+
+.vix-history-player__image img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.vix-history-empty {
+  padding: 0.8rem;
+  background: #fef3c7;
+  border: 1px dashed #d4a017;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Cash-allocation / Kelly card on the daily dashboard
+   ========================================================================== */
+
+.md-typeset .kelly-card {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 0.5rem 0.9rem;
+  margin: 0.3rem auto 0.5rem;
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+}
+
+.kelly-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+}
+
+.kelly-label {
+  font-weight: 600;
+  color: #92400e;
+  margin-right: 0.1rem;
+}
+
+.kelly-divider {
+  color: #d1d5db;
+  margin: 0 0.3rem;
+}
+
+.kelly-help {
+  margin-left: 0.25rem;
+  color: #3b82f6;
+  cursor: help;
+  font-size: 0.8rem;
+}
+
+.kelly-help:hover {
+  color: #1d4ed8;
+}
+
+.md-typeset .kelly-pill {
+  font-size: 0.7rem;
+  padding: 0.12rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: white;
+  color: #4b5563;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.3;
+}
+
+.md-typeset .kelly-pill:hover {
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.md-typeset .kelly-pill.is-active {
+  background: #f59e0b;
+  border-color: #d97706;
+  color: white;
+  font-weight: 600;
+}
+
+.md-typeset .kelly-table {
+  width: auto;
+  margin: 0.15rem auto;
+  font-size: 0.72rem;
+  border-collapse: collapse;
+  display: inline-table;
+}
+
+.md-typeset .kelly-table th,
+.md-typeset .kelly-table td {
+  padding: 0.18em 0.55em;
+  line-height: 1.3;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.md-typeset .kelly-table th,
+.md-typeset .kelly-table td {
+  text-align: left;
+}
+
+.md-typeset .kelly-table thead th {
+  background: transparent;
+  font-weight: 600;
+  color: #525252;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+.md-typeset .kelly-table th:last-child,
+.md-typeset .kelly-table td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.md-typeset .kelly-table tr.kelly-final td {
+  border-top: 2px solid #9ca3af;
+  padding-top: 0.28em;
+  font-size: 0.78rem;
+  color: #1f2937;
+}
+
+/* Tactical bucket card — offensive deploy signal */
+.md-typeset .tactical-card {
+  margin: 0.3rem auto 0.5rem;
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Master allocation bar — composite (main + tactical) anchor at the top of
+   the dashboard. Stacked bar shows the final equity/cash split; formula
+   strip beneath shows the contribution from each bucket. */
+.md-typeset .allocation-master {
+  margin: 0.5rem auto 0.9rem;
+  padding: 0.55rem 0.9rem 0.6rem;
+  max-width: 560px;
+  border: 1px solid #93c5fd;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: 8px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.allocation-master__head {
+  font-size: 0.92rem;
+  margin-bottom: 0.45rem;
+  color: #1e3a8a;
+}
+
+.allocation-master__split {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+}
+
+.allocation-master__split-label {
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-right: 0.15rem;
+}
+
+.allocation-master__split-info {
+  margin-left: 0.2rem;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: help;
+}
+
+.allocation-master__split-info:hover {
+  color: #1d4ed8;
+}
+
+.allocation-master__bar {
+  position: relative;
+  height: 18px;
+  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.allocation-master__equity {
+  height: 100%;
+  background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+  transition: width 0.3s ease;
+}
+
+.allocation-master__formula {
+  margin-top: 0.45rem;
+  font-size: 0.72rem;
+  color: #475569;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.allocation-master__formula strong {
+  color: #047857;
+}
+
+.allocation-master__plus {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Investor-profile wizard — modal, banner, trigger
+   ========================================================================== */
+
+/* Trigger pill — sits next to the master-bar head. Matches kelly-pill colors
+   but slightly larger so it reads as a "primary action" call to discover. */
+.md-typeset .wizard-trigger {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.65rem;
+  margin-left: 0.55rem;
+  border: 1px solid #d97706;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  vertical-align: 0.05em;
+}
+.md-typeset .wizard-trigger:hover {
+  background: #fde68a;
+  border-color: #b45309;
+}
+
+/* Banner — appears above the master bar after the user applies a wizard
+   result. Persistent across reloads (localStorage) until dismissed. */
+.md-typeset .wizard-banner {
+  margin: 0.5rem auto 0.4rem;
+  max-width: 560px;
+}
+.wizard-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.78rem;
+  border: 1px solid #f59e0b;
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+  border-radius: 8px;
+  color: #78350f;
+}
+.wizard-banner-icon { flex: 0 0 auto; font-size: 0.95rem; }
+.wizard-banner-text { flex: 1 1 auto; line-height: 1.4; }
+.wizard-banner-profile { font-weight: 600; }
+.wizard-banner-sep { color: #b45309; }
+.wizard-banner-summary { font-variant-numeric: tabular-nums; }
+.wizard-banner-btn {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  padding: 0.12rem 0.55rem;
+  border: 1px solid #d97706;
+  border-radius: 999px;
+  background: transparent;
+  color: #92400e;
+  cursor: pointer;
+  font-family: inherit;
+}
+.wizard-banner-btn:hover { background: #fde68a; }
+.wizard-banner-close {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  color: #b45309;
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 0 0.15rem;
+}
+.wizard-banner-close:hover { color: #7c2d12; }
+.wizard-banner-share {
+  flex: 0 0 auto;
+  border: 1px solid #d97706;
+  background: transparent;
+  color: #92400e;
+  cursor: pointer;
+  font-size: 0.78rem;
+  line-height: 1;
+  padding: 0.18rem 0.4rem;
+  border-radius: 999px;
+  font-family: inherit;
+}
+.wizard-banner-share:hover { background: #fde68a; }
+.wizard-banner-share.is-copied {
+  background: #047857;
+  border-color: #047857;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Modal overlay — full-viewport dim + centered card.
+   Both overlay and modal animate in on mount; respect reduced-motion. */
+.wizard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.55);
+  padding: 1rem;
+  overflow-y: auto;
+  animation: wizard-fade-in 160ms ease-out;
+}
+body.wizard-open { overflow: hidden; }
+
+.wizard-modal {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 520px;
+  width: 100%;
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.2rem 1.1rem;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.25);
+  font-family: inherit;
+  color: #1f2937;
+  overflow-y: auto;
+  animation: wizard-pop-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes wizard-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes wizard-pop-in {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes wizard-slide-in-right {
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes wizard-slide-in-left {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes wizard-banner-reveal {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wizard-body.wizard-slide-from-right {
+  animation: wizard-slide-in-right 180ms ease-out;
+}
+.wizard-body.wizard-slide-from-left {
+  animation: wizard-slide-in-left 180ms ease-out;
+}
+.wizard-banner-inner {
+  animation: wizard-banner-reveal 220ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wizard-overlay,
+  .wizard-modal,
+  .wizard-body.wizard-slide-from-right,
+  .wizard-body.wizard-slide-from-left,
+  .wizard-banner-inner {
+    animation: none !important;
+  }
+  .wizard-progress-fill,
+  .allocation-master__equity {
+    transition: none !important;
+  }
+}
+
+.wizard-header { margin-bottom: 0.7rem; }
+.wizard-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+.wizard-title strong { color: #92400e; font-weight: 700; }
+.wizard-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6b7280;
+  padding: 0.1rem 0.3rem;
+  line-height: 1;
+}
+.wizard-close:hover { color: #1f2937; }
+.wizard-subtitle {
+  margin-top: 0.2rem;
+  font-size: 0.74rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.wizard-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+.wizard-progress {
+  flex: 1 1 auto;
+  height: 6px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.wizard-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+  transition: width 0.25s ease;
+}
+.wizard-progress-text {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+.wizard-body { flex: 1 1 auto; padding: 0.4rem 0 0.2rem; }
+.wizard-question-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0.3rem 0 0.15rem;
+  line-height: 1.4;
+  color: #1f2937;
+}
+.wizard-question-sub {
+  font-size: 0.72rem;
+  color: #6b7280;
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+
+.wizard-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0.55rem;
+}
+.wizard-choice {
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.wizard-choice:hover {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+.wizard-choice.is-picked {
+  border-color: #d97706;
+  background: #fef3c7;
+  color: #78350f;
+  font-weight: 600;
+}
+
+/* Result screen — 4-axis grid */
+.wizard-profile-name {
+  margin: 0.55rem 0 0.55rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #78350f;
+  font-size: 0.85rem;
+  text-align: center;
+}
+.wizard-profile-label { color: #92400e; font-size: 0.75rem; }
+
+.wizard-result {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0.7rem;
+}
+.wizard-axis {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+  text-align: center;
+}
+.wizard-axis-name {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-bottom: 0.18rem;
+}
+.wizard-axis-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #92400e;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Editable axis card — pill row replaces the static value. Pills here
+   only mutate the wizard's in-modal state; the dashboard's actual axis
+   buttons (the master bar / Kelly card) are only touched when the user
+   clicks Apply. Keep the visual smaller than the dashboard pills so the
+   role distinction is obvious. */
+.wizard-axis--editable { padding-top: 0.45rem; padding-bottom: 0.5rem; }
+.wizard-axis-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-top: 0.15rem;
+}
+.wizard-axis-pill {
+  font-size: 0.72rem;
+  padding: 0.12rem 0.42rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.wizard-axis-pill:hover {
+  border-color: #f59e0b;
+  color: #92400e;
+}
+.wizard-axis-pill.is-active {
+  background: #f59e0b;
+  border-color: #d97706;
+  color: white;
+  font-weight: 600;
+}
+
+.wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 0.6rem;
+}
+.wizard-nav-btn {
+  flex: 1 1 0;
+  font-size: 0.8rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  font-family: inherit;
+}
+.wizard-nav-btn:hover:not([disabled]) {
+  border-color: #f59e0b;
+  color: #92400e;
+}
+.wizard-nav-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.wizard-nav-apply {
+  background: #f59e0b;
+  border-color: #d97706;
+  color: white;
+  font-weight: 600;
+}
+.wizard-nav-apply:hover:not([disabled]) {
+  background: #d97706;
+  color: white;
+}
+.wizard-nav-share.is-copied {
+  background: #047857;
+  border-color: #047857;
+  color: #ffffff;
+  font-weight: 600;
+}
+.wizard-nav-share.is-copied:hover:not([disabled]) {
+  background: #047857;
+  border-color: #047857;
+  color: #ffffff;
+}
+
+/* Backtest summary — between the 4-axis grid and the action buttons. */
+.wizard-backtest {
+  margin: 0.4rem 0 0.6rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-size: 0.78rem;
+  color: #1f2937;
+}
+.wizard-backtest-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+}
+.wizard-backtest-head strong { color: #92400e; font-size: 0.85rem; }
+.wizard-backtest-periods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+.wizard-backtest-pill {
+  font-size: 0.68rem;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.wizard-backtest-pill:hover {
+  border-color: #f59e0b;
+  color: #92400e;
+}
+.wizard-backtest-pill.is-active {
+  background: #f59e0b;
+  border-color: #d97706;
+  color: #ffffff;
+  font-weight: 600;
+}
+.wizard-backtest-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+.wizard-backtest-metric {
+  padding: 0.3rem 0.3rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  text-align: center;
+}
+.wizard-backtest-metric-name {
+  font-size: 0.66rem;
+  color: #6b7280;
+  margin-bottom: 0.1rem;
+}
+.wizard-backtest-metric-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1f2937;
+  font-variant-numeric: tabular-nums;
+}
+.wizard-backtest-spx {
+  font-size: 0.72rem;
+  color: #4b5563;
+  margin-bottom: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+.wizard-backtest-spx-label { color: #6b7280; }
+.wizard-backtest-disclaimer {
+  font-size: 0.66rem;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  line-height: 1.45;
+}
+.wizard-backtest-loading,
+.wizard-backtest-error {
+  font-size: 0.74rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 0.45rem 0;
+}
+
+/* Sparkline — profile NAV vs SPX 100% baseline, both rebased to 1.0 at
+   period start. Pure SVG, no library. */
+.wizard-backtest-chart-wrap {
+  margin: 0.25rem 0 0.3rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.3rem 0.45rem;
+  /* Plain block (not flex) so the inline SVG inside picks up its own
+     width: 100% + intrinsic-aspect height correctly on iOS Safari. */
+  text-align: center;
+}
+.wizard-backtest-chart {
+  /* max-width keeps the chart from exceeding the wrap's content box; the
+     SVG already has explicit width/height attributes matching its viewBox
+     so it renders with a fixed aspect ratio. `height: auto` lets the
+     responsive scaling work without losing intrinsic height. */
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.wizard-chart-profile {
+  stroke: #d97706;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.wizard-chart-spx {
+  stroke: #94a3b8;
+  stroke-width: 1.3;
+  stroke-dasharray: 3 2;
+  stroke-linejoin: round;
+}
+.wizard-chart-baseline {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+.wizard-backtest-legend {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+  font-size: 0.66rem;
+  color: #4b5563;
+  margin-bottom: 0.35rem;
+}
+.wizard-backtest-legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+.wizard-backtest-legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  vertical-align: middle;
+}
+.wizard-backtest-legend-swatch--profile {
+  background: #d97706;
+}
+.wizard-backtest-legend-swatch--spx {
+  background: linear-gradient(to right, #94a3b8 0%, #94a3b8 50%, transparent 50%, transparent 100%);
+  background-size: 6px 2px;
+  background-repeat: repeat-x;
+  background-color: transparent;
+  border-top: 2px dashed #94a3b8;
+  height: 0;
+}
+
+@media (max-width: 480px) {
+  .wizard-modal { padding: 0.85rem 0.9rem 0.95rem; }
+  .wizard-result { grid-template-columns: 1fr; }
+  .wizard-banner-inner { flex-wrap: wrap; }
+  /* On narrow viewports stack the share+apply pair below retake so they
+     don't squeeze into illegible widths. */
+  .wizard-nav { flex-wrap: wrap; }
+  .wizard-nav-btn { flex: 1 1 45%; }
+  .wizard-backtest-metrics { grid-template-columns: repeat(2, 1fr); }
+}

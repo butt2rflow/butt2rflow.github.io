@@ -1,0 +1,3096 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/cash-allocation/">
+      
+      
+        <link rel="prev" href="../vix-term-structure/">
+      
+      
+        <link rel="next" href="../../series/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/cash-allocation/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Vol-Based Cash Allocation — Kelly meets risk signals - butterflow Investment Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vol-based-cash-allocation-kelly-meets-risk-signals" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Investment Notes" class="md-header__button md-logo" aria-label="butterflow Investment Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Investment Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Vol-Based Cash Allocation — Kelly meets risk signals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/cash-allocation/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Returns 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  Market Data
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../options-basics/" class="md-tabs__link">
+          
+  
+  
+  Options 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  Series
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Investment Notes" class="md-nav__button md-logo" aria-label="butterflow Investment Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Investment Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-why-volatility-is-itself-a-loss-vol-drag-and-the-geometric-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Why volatility is itself a loss — vol drag and the geometric mean
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Why volatility is itself a loss — vol drag and the geometric mean">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-vs-geometric-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic vs geometric mean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#money-disappears-in-sideways-markets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Money disappears in sideways markets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annual-drag-by-vix-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Annual drag by VIX level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-smart-money-reacts-to-vol-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why smart money reacts to vol signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-link-to-kelly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct link to Kelly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kellys-formula-in-one-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kelly's formula in one line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-to-plug-into-vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What to plug into σ — VIX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kelly-fraction-the-first-user-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Kelly fraction — the first user toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Kelly fraction — the first user toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-is-it-reckless-to-bump-fraction-up-during-a-crash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep dive: Is it reckless to bump fraction up during a crash?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tactical-bucket-is-the-frameworks-essential-complement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tactical bucket is the framework's essential complement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tactical-bucket-operating-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tactical bucket operating rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-the-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the split
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-why-vix-alone-isnt-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Why VIX alone isn't enough
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-risk-sensitivity-the-second-user-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Risk sensitivity — the second user toggle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#612-equity-premium-r-the-third-user-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6½. Equity premium μ−r — the third user toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6½. Equity premium μ−r — the third user toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-5-is-conservative-the-vix-vol-risk-premium-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why 5% is "conservative" — the VIX vol-risk-premium story
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-value-to-pick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which value to pick?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-chart-curve-moves-with-the-toggle-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The chart curve moves with the toggle too
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-final-formula-one-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Final formula — one line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-how-to-use-the-daily-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. How to use the daily dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-real-world-behavior-first-gap-vs-the-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Real-world behavior — first gap vs the cascade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Real-world behavior — first gap vs the cascade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#historical-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historical examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-caveats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Caveats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-why-volatility-is-itself-a-loss-vol-drag-and-the-geometric-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Why volatility is itself a loss — vol drag and the geometric mean
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Why volatility is itself a loss — vol drag and the geometric mean">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-vs-geometric-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic vs geometric mean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#money-disappears-in-sideways-markets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Money disappears in sideways markets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annual-drag-by-vix-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Annual drag by VIX level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-smart-money-reacts-to-vol-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why smart money reacts to vol signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-link-to-kelly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct link to Kelly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kellys-formula-in-one-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kelly's formula in one line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-to-plug-into-vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What to plug into σ — VIX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kelly-fraction-the-first-user-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Kelly fraction — the first user toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Kelly fraction — the first user toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-is-it-reckless-to-bump-fraction-up-during-a-crash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep dive: Is it reckless to bump fraction up during a crash?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tactical-bucket-is-the-frameworks-essential-complement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tactical bucket is the framework's essential complement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tactical-bucket-operating-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tactical bucket operating rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-the-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the split
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-why-vix-alone-isnt-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Why VIX alone isn't enough
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-risk-sensitivity-the-second-user-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Risk sensitivity — the second user toggle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#612-equity-premium-r-the-third-user-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6½. Equity premium μ−r — the third user toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6½. Equity premium μ−r — the third user toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-5-is-conservative-the-vix-vol-risk-premium-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why 5% is "conservative" — the VIX vol-risk-premium story
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-value-to-pick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which value to pick?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-chart-curve-moves-with-the-toggle-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The chart curve moves with the toggle too
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-final-formula-one-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Final formula — one line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-how-to-use-the-daily-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. How to use the daily dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-real-world-behavior-first-gap-vs-the-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Real-world behavior — first gap vs the cascade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Real-world behavior — first gap vs the cascade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#historical-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historical examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-caveats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Caveats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="vol-based-cash-allocation-kelly-meets-risk-signals">Vol-Based Cash Allocation — Kelly meets risk signals<a class="headerlink" href="#vol-based-cash-allocation-kelly-meets-risk-signals" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Where this fits</strong>: The <a href="../../series/">Principles series</a> Part 3 (Kelly's Criterion, paid) gives the Kelly fraction; this article plugs <strong>VIX into σ</strong> to turn it into a daily cash/equity allocation. <a href="../../series/s1-shannons-demon/">Part 1 — Shannon's Demon</a> closes with "cash is the fuel for rebalancing"; this article is the <em>how-much</em> answer. It's the math behind the first card on the daily dashboard.</p>
+</blockquote>
+<hr />
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Cut cash when vol is low, raise cash when vol rises</strong> — Kelly's formula makes this intuition quantitative.</p>
+</blockquote>
+<p><strong>f* = (μ − r) / σ²</strong> — substitute σ with VIX, and a <em>doubling</em> of volatility <em>quarters</em> the suggested equity weight (the σ² in the denominator does the work). On top of that base, three extra risk-signal groups (COR/SKEW, VIX TS backwardation, VolVol) layer multiplicative discounts when they fire, raising cash one more notch.</p>
+<hr />
+<h2 id="1-why-volatility-is-itself-a-loss-vol-drag-and-the-geometric-mean">1. Why volatility is itself a loss — vol drag and the geometric mean<a class="headerlink" href="#1-why-volatility-is-itself-a-loss-vol-drag-and-the-geometric-mean" title="Permanent link">&para;</a></h2>
+<p>The σ² in Kelly's formula isn't arbitrary. It maps directly to a concrete mechanism: <strong>volatility itself erodes wealth, even when the average return is unchanged.</strong> This is the <em>real</em> reason institutions and "smart money" raise cash when vol rises.</p>
+<h3 id="arithmetic-vs-geometric-mean">Arithmetic vs geometric mean<a class="headerlink" href="#arithmetic-vs-geometric-mean" title="Permanent link">&para;</a></h3>
+<p>There are two ways to average returns:</p>
+<ul>
+<li><strong>Arithmetic mean</strong>: simple yearly average. "On average, what % per year?"</li>
+<li><strong>Geometric mean</strong>: the <em>compounded</em> return. "What multiple of my capital after 10 years?"</li>
+</ul>
+<p>Compounding is multiplicative, so what actually shows up in your account is the <strong>geometric</strong> mean. And the two diverge as volatility rises:</p>
+<div class="highlight"><pre><span></span><code>Geometric ≈ Arithmetic − σ² / 2
+</code></pre></div>
+<p>This gap is called <strong>vol drag</strong> (or "variance drain", negative compounding). The fact that σ enters <em>squared</em> is the whole story.</p>
+<h3 id="money-disappears-in-sideways-markets">Money disappears in sideways markets<a class="headerlink" href="#money-disappears-in-sideways-markets" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Scenario</th>
+<th style="text-align: right;">Year 1</th>
+<th style="text-align: right;">Year 2</th>
+<th style="text-align: right;">Arithmetic mean</th>
+<th style="text-align: right;">Geometric (actual P&amp;L)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Low vol</td>
+<td style="text-align: right;">+5%</td>
+<td style="text-align: right;">−5%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−0.13%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Mid vol</td>
+<td style="text-align: right;">+15%</td>
+<td style="text-align: right;">−15%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−1.13%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>High vol</strong></td>
+<td style="text-align: right;">+30%</td>
+<td style="text-align: right;">−30%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−4.6%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Crisis-level</td>
+<td style="text-align: right;">+50%</td>
+<td style="text-align: right;">−50%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>−13.4%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>All rows have arithmetic mean 0%, but <em>actual capital</em> shrinks faster as vol rises. Look at the last row: +50% then −50% feels like break-even, but capital goes 100 → 150 → 75. <strong>25% loss over 2 years, with zero expected return</strong>.</p>
+<p>Money evaporating while you do nothing — that's vol drag.</p>
+<h3 id="annual-drag-by-vix-level">Annual drag by VIX level<a class="headerlink" href="#annual-drag-by-vix-level" title="Permanent link">&para;</a></h3>
+<p>vol drag per year ≈ σ²/2:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">σ</th>
+<th style="text-align: left;">VIX regime</th>
+<th style="text-align: right;">Drag (annual)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">16%</td>
+<td style="text-align: left;">Calm VIX</td>
+<td style="text-align: right;"><strong>−1.3%</strong> (tolerable)</td>
+</tr>
+<tr>
+<td style="text-align: left;">20%</td>
+<td style="text-align: left;">Mild stress</td>
+<td style="text-align: right;">−2.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">Caution</td>
+<td style="text-align: right;"><strong>−3.1%</strong> (meaningful)</td>
+</tr>
+<tr>
+<td style="text-align: left;">30%</td>
+<td style="text-align: left;">Stressed</td>
+<td style="text-align: right;">−4.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">40%</td>
+<td style="text-align: left;">Crisis</td>
+<td style="text-align: right;"><strong>−8.0%</strong> (overwhelming)</td>
+</tr>
+</tbody>
+</table>
+<p>S&amp;P 500's long-run <em>arithmetic</em> mean is ~9%. In a crisis-level vol regime (VIX 40), the 8% drag <strong>eats almost the entire expected return</strong>. Just holding becomes a loss.</p>
+<h3 id="why-smart-money-reacts-to-vol-signals">Why smart money reacts to vol signals<a class="headerlink" href="#why-smart-money-reacts-to-vol-signals" title="Permanent link">&para;</a></h3>
+<p>Retail investors typically think in <em>arithmetic</em> terms: "long-run average is +9%, so just hold". Institutions and hedge funds think in <em>geometric</em> terms (= actual long-run growth rate) or in <em>probability of survival</em>. They know mathematically that <strong>same arithmetic mean with different vol = completely different long-run outcome</strong>.</p>
+<p>Smart-money reasoning:</p>
+<blockquote>
+<p>"Arithmetic expectation +5% but σ=40% → vol drag is 8% → geometric mean is negative → <strong>holding guarantees long-run loss</strong> → raise cash now."</p>
+</blockquote>
+<p>That's the mechanism. Smart money exits early on vol signals not because of news headlines, but because of multiplicative arithmetic.</p>
+<h3 id="direct-link-to-kelly">Direct link to Kelly<a class="headerlink" href="#direct-link-to-kelly" title="Permanent link">&para;</a></h3>
+<p>Once you see this, the σ² in Kelly's formula becomes self-evident:</p>
+<div class="highlight"><pre><span></span><code>f* = (μ − r) / σ²
+</code></pre></div>
+<p>The denominator σ² <em>is</em> the magnitude of vol drag. Kelly is saying: "trim exposure by exactly the amount that variance is eating, so that geometric growth is maximised." Why σ² and not σ? Because vol drag is σ²/2 — same term.</p>
+<blockquote>
+<p><strong>Takeaway</strong>: vol creates multiplicative loss (vol drag) → institutions think in geometric terms and react early to vol signals → Kelly's σ² formalises this reaction curve mathematically.</p>
+</blockquote>
+<hr />
+<h2 id="2-kellys-formula-in-one-line">2. Kelly's formula in one line<a class="headerlink" href="#2-kellys-formula-in-one-line" title="Permanent link">&para;</a></h2>
+<p>Kelly maximises the long-run growth rate of a portfolio under a return distribution. For continuous assets like equities:</p>
+<div class="highlight"><pre><span></span><code>f* = (μ − r) / σ²
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>f*</strong></td>
+<td style="text-align: left;">Fraction of capital to deploy (the rest sits in cash)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>μ</strong></td>
+<td style="text-align: left;">Asset expected return (annualised)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>r</strong></td>
+<td style="text-align: left;">Risk-free rate (annualised)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>σ</strong></td>
+<td style="text-align: left;">Asset return standard deviation (annualised vol)</td>
+</tr>
+</tbody>
+</table>
+<p>For the S&amp;P 500, long-run μ ≈ 9%, r ≈ 4%, so <strong>μ − r = 5%</strong> is a <em>conservative</em> baseline equity premium. Academic estimates span 3%–9% depending on dataset and methodology — the daily dashboard exposes three preset premia as a toggle (5% / 7% / 9%); see §6½ μ−r toggle for the full comparison. σ runs ~16–20% in calm regimes, spikes to 40–50% in crises.</p>
+<blockquote>
+<p><strong>Why σ² and not σ?</strong> The squared denominator is the key. Doubling vol <em>quarters</em> the optimal weight. The asymmetric "raise cash quickly" instinct lives in that squared term.</p>
+</blockquote>
+<hr />
+<h2 id="3-what-to-plug-into-vix">3. What to plug into σ — VIX<a class="headerlink" href="#3-what-to-plug-into-vix" title="Permanent link">&para;</a></h2>
+<p>Kelly needs <em>forward-looking</em> σ. Historical realised vol tells you the past; you need the future.</p>
+<p><strong>VIX is the cleanest forward-looking estimate.</strong> It is the S&amp;P 500 options market's consensus expectation of 30-day realised vol, annualised, updated tick-by-tick. No single statistical estimator can match the wisdom-of-crowds quality of a deeply liquid options market.</p>
+<div class="highlight"><pre><span></span><code>σ ≈ VIX / 100
+</code></pre></div>
+<p>VIX = 17 → σ ≈ 0.17. VIX = 30 → σ ≈ 0.30.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">VIX</th>
+<th style="text-align: right;">σ²</th>
+<th style="text-align: right;">Half-Kelly @ μ−r=5% <em>(conservative)</em></th>
+<th style="text-align: right;">Half-Kelly @ μ−r=7%</th>
+<th style="text-align: right;">Half-Kelly @ μ−r=9%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.0144</td>
+<td style="text-align: right;">173% → <strong>100%</strong></td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">0.0289</td>
+<td style="text-align: right;"><strong>86%</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">100% (cap)</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">0.0484</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">72%</td>
+<td style="text-align: right;">93%</td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.0900</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">39%</td>
+<td style="text-align: right;">50%</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.1600</td>
+<td style="text-align: right;">16%</td>
+<td style="text-align: right;">22%</td>
+<td style="text-align: right;">28%</td>
+</tr>
+</tbody>
+</table>
+<p>When vol rises 17 → 30 (1.8×), the suggested weight falls 86% → 28% (1/3). That's where the rough rule "VIX in the high 20s → cut equity in half" comes from — it's the same curve.</p>
+<p><img alt="Kelly × VIX curve (μ−r=7%, default)" src="../assets/diagrams_en/kelly_curve_standard.png" /></p>
+<blockquote>
+<p>On the daily dashboard the same curve shape shifts up/down with the 5% / 7% / 9% toggle (full comparison in §6½). The chart above shows the new default — <strong>7%</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="4-kelly-fraction-the-first-user-toggle">4. Kelly fraction — the first user toggle<a class="headerlink" href="#4-kelly-fraction-the-first-user-toggle" title="Permanent link">&para;</a></h2>
+<p><strong>Full Kelly (f* as-is) is theoretically optimal but practically dangerous</strong> for retail. Two reasons:</p>
+<ol>
+<li><strong>Estimation error in μ and σ</strong>: realised average return often runs below estimate; realised vol can run above. Full Kelly is exquisitely sensitive — small errors compound.</li>
+<li><strong>Drawdown volatility</strong>: Full Kelly has maximum long-run growth, but the <em>path</em> is violent. -50% to -70% drawdowns are normal — most people cannot hold through them.</li>
+</ol>
+<p>Practitioners almost always use <strong>Half-Kelly</strong> or <strong>Quarter-Kelly</strong> (see the <a href="../../series/">Principles series</a> Part 4 "No Edge in the Game" — paid). The daily dashboard also exposes <strong>¾ Kelly</strong> as a compromise — it's the meaningful middle ground in the VIX 19+ region where Half feels over-conservative and Full feels reckless.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Fraction</th>
+<th style="text-align: right;">Calm (VIX 17)</th>
+<th style="text-align: right;">Stress (VIX 30)</th>
+<th style="text-align: right;">Crisis (VIX 40)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Quarter (¼)</strong></td>
+<td style="text-align: right;">43%</td>
+<td style="text-align: right;">14%</td>
+<td style="text-align: right;">8%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Half (½)</strong></td>
+<td style="text-align: right;">86% → 100% (cap)</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">16%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>¾ Kelly ← default</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">42%</td>
+<td style="text-align: right;">23%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Full (1×)</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">56%</td>
+<td style="text-align: right;">31%</td>
+</tr>
+</tbody>
+</table>
+<p>The dashboard's first toggle picks one of these:</p>
+<ul>
+<li><strong>Quarter (¼)</strong>: Most conservative. Most robust to μ/σ estimation error. Used by many institutional desks and fits pre-retirement / withdrawal-phase profiles where drawdown depth doubles as a redemption risk.</li>
+<li><strong>Half (½)</strong>: The academic standard. <strong>Minimises CAGR variance</strong> — i.e. "slightly slower long-run growth but smoothest path." Matches the conservative tone of <a href="../../series/">Principles Part 4</a> ("No Edge in the Game").</li>
+<li><strong>¾ Kelly (default)</strong>: Meaningful middle ground between Half and Full. Below VIX 19 it caps at 100% the same as Full, but in the VIX 20–35 caution zone it sits squarely between Half (over-conservative for most accumulators) and Full (over-aggressive given σ uncertainty). Chosen as the new-visitor default for retail accumulators.</li>
+<li><strong>Full (1×)</strong>: Theoretical max. Only if you have strong conviction in μ/σ estimates <em>and</em> the mental/liquidity buffer for −50% to −70% drawdowns. Rarely recommended in the literature.</li>
+</ul>
+<blockquote>
+<p><strong>Pick your fraction once and barely change it.</strong> The point is not to react to markets by changing the fraction — it's to let the <em>same</em> fraction produce different weights as vol moves.</p>
+</blockquote>
+<h3 id="deep-dive-is-it-reckless-to-bump-fraction-up-during-a-crash">Deep dive: Is it reckless to bump fraction up during a crash?<a class="headerlink" href="#deep-dive-is-it-reckless-to-bump-fraction-up-during-a-crash" title="Permanent link">&para;</a></h3>
+<p>Common question — would shifting from Half to Full mid-crash be reckless?</p>
+<p><strong>Math has a defensible answer.</strong> Forward μ−r likely expands as prices fall — a 5% → 8–10% jump is reasonable in deep drawdowns. Full Kelly at VIX 60 with μ−r = 10% gives ~28%; Half Kelly at the same VIX with μ−r = 5% gives 7%. The 4× difference is meaningful, but absolute risk stays modest given the 80%+ cash you're already holding.</p>
+<p><strong>Don't modulate the fraction itself, though:</strong></p>
+<ul>
+<li><strong>Catching falling knives</strong> — VIX &gt; 60 <em>looks</em> like a bottom, but 2008 had two such spikes a year apart. "Deep enough?" only resolves with hindsight.</li>
+<li><strong>Estimation-error paradox</strong> — σ is most uncertain precisely when μ estimation is also most uncertain. Bumping fraction at the moment of maximum estimation noise is the opposite of conservative.</li>
+<li><strong>Behavioural risk</strong> — touching the toggle at peak fear is by definition an emotional act. The whole point of a fixed fraction is to remove that lever.</li>
+<li><strong>Backfit triggers</strong> — "VIX &gt; 50 sustained 5 days" reads well in hindsight but is fitted to past crises; no guarantee it generalises.</li>
+</ul>
+<h3 id="tactical-bucket-is-the-frameworks-essential-complement">Tactical bucket is the framework's <em>essential complement</em><a class="headerlink" href="#tactical-bucket-is-the-frameworks-essential-complement" title="Permanent link">&para;</a></h3>
+<p>Stopping here misses something important. Recall the series' two core claims:</p>
+<ol>
+<li><strong>Long-run upward drift</strong> — over long-enough windows, equities beat bonds/cash.</li>
+<li><strong>Time is the retail edge</strong> — retail investors have a <em>structural</em> advantage in being able to wait without redemption pressure.</li>
+</ol>
+<p>Combining the two implies: <strong>forward risk premium expands most precisely at peak crisis</strong>. Without a mechanism to deploy capital in that moment, you claim a time edge but <em>don't use it when it's most valuable</em> — a self-contradiction.</p>
+<p><strong>What the defensive framework alone misses:</strong></p>
+<ul>
+<li>Kelly × VIX auto-deleverage takes you 100% → 2% during a crash ✓ (cascade absorbed)</li>
+<li>VIX cools → auto-rebuild — but you buy back at <em>recovery</em> prices, <em>not bottom</em> prices</li>
+<li>Net: vol drag avoided, but real buy-low never happens. Of <a href="../../series/s1-shannons-demon/">Shannon's Demon</a>'s "rebalancing = buy low + sell high", only sell-high engaged.</li>
+</ul>
+<p>So <strong>split cash into two kinds</strong> — that completes the structure the series argues for:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Bucket</th>
+<th style="text-align: left;">Role</th>
+<th style="text-align: left;">Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Main bucket</strong></td>
+<td style="text-align: left;">Defensive — <em>fuel for survival</em></td>
+<td style="text-align: left;">Kelly × VIX + risk signals. Auto-deleverage / auto-re-entry.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tactical bucket</strong></td>
+<td style="text-align: left;">Offensive — <em>fuel for attack</em></td>
+<td style="text-align: left;">Composite extreme triggers (VIX, COR/SKEW, SPX drawdown), laddered deploy. Monetises the time edge.</td>
+</tr>
+</tbody>
+</table>
+<p>The split between the two is itself a toggle — the daily dashboard's master bar lets you pick <strong>80/20 · 90/10 · 95/5</strong>. New-visitor default is <strong>90/10</strong> (90% main, 10% tactical). The tradeoff table + situation-based recommendations live in "Choosing the split" below.</p>
+<h3 id="tactical-bucket-operating-rules">Tactical bucket operating rules<a class="headerlink" href="#tactical-bucket-operating-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Size</strong>: 5–20% of total (dashboard toggle). Too large destabilises the main framework and inflates normal-regime cash drag; too small makes deployment symbolic. The default 10% is the middle compromise.</li>
+<li><strong>Composite triggers</strong> — T1 is laddered, T2/T3 binary:<ul>
+<li><strong>T1 (VIX sustained 5 days, tiered)</strong><ul>
+<li>5-day VIX min &gt; <strong>40</strong> → weight <strong>0.5</strong> (mild partial entry)</li>
+<li>5-day VIX min &gt; <strong>50</strong> → weight <strong>1.0</strong> (standard tranche)</li>
+<li>5-day VIX min &gt; <strong>60</strong> → weight <strong>1.5</strong> (deep stress, large tranche)</li>
+</ul>
+</li>
+<li><strong>T2 (cross-asset stress)</strong>: COR90D &gt; 55 AND SKEW &gt; 150 simultaneously → weight <strong>1.0</strong></li>
+<li><strong>T3 (price capitulation)</strong>: 30-day cumulative SPX decline ≥ <strong>20%</strong> → weight <strong>1.0</strong></li>
+</ul>
+</li>
+<li><strong>Laddered deploy</strong> — total weight ÷ 3 → deploy %, capped at 100:<ul>
+<li>e.g., 5-day VIX min = 45 (T1=0.5) + COR/SKEW fired (T2=1.0) + SPX −22% (T3=1.0) → total 2.5 → 83% deploy</li>
+<li>All signals max (VIX 60+, T2, T3) → total 3.5 → cap 100% (capitulation)</li>
+</ul>
+</li>
+<li>
+<p><strong>State labels</strong> — deploy % maps to 5 tiers:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Deploy %</th>
+<th style="text-align: center;">0%</th>
+<th style="text-align: center;">1–33%</th>
+<th style="text-align: center;">34–66%</th>
+<th style="text-align: center;">67–99%</th>
+<th style="text-align: center;">100%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">State</td>
+<td style="text-align: center;">🟢 Inactive</td>
+<td style="text-align: center;">🟡 Tranche 1</td>
+<td style="text-align: center;">🟠 Tranche 2</td>
+<td style="text-align: center;">🔴 Tranche 3</td>
+<td style="text-align: center;">🔴 Capitulation</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Refill gradually in recovery</strong> — once vol calms, refill tactical bucket from the main framework's exposure-reduction proceeds or from gains. Don't leave it empty forever after one deployment.</p>
+</li>
+<li><strong>Pre-defined rules only</strong> — no "feel". Deploy <em>only</em> on pre-specified conditions. If conditions aren't met, sit still. (Blocks emotional entries.)</li>
+</ul>
+<blockquote>
+<p><strong>Bottom line</strong>: Never modulate the Kelly fraction itself. <em>Instead</em>, pair the main framework with a tactical bucket. The framework owns <em>survival</em>; the tactical bucket <em>monetises the time edge</em>. Together, the two are what completes the series' "<strong>volatility as fuel</strong>" thesis.</p>
+</blockquote>
+<h3 id="choosing-the-split">Choosing the split<a class="headerlink" href="#choosing-the-split" title="Permanent link">&para;</a></h3>
+<p>The live-dashboard master bar lets you pick between <strong>80/20 · 90/10 · 95/5</strong>. The trade-off in one line: <strong>cash drag in normal conditions vs crisis-buy firepower</strong>.</p>
+<p><strong>Cash drag (normal regime)</strong></p>
+<p>The tactical bucket sits in 100% cash by default — it only deploys when T1/T2/T3 fire, which is <em>most days</em>. Assuming long-run SPX ≈ 9%/yr:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Split</th>
+<th style="text-align: center;">Idle cash (normal regime)</th>
+<th style="text-align: center;">Annual opportunity cost (CAGR)</th>
+<th style="text-align: center;">20-year compounded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">80/20</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">−1.8%</td>
+<td style="text-align: center;">≈ −30%</td>
+</tr>
+<tr>
+<td style="text-align: left;">90/10</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">−0.9%</td>
+<td style="text-align: center;">≈ −16%</td>
+</tr>
+<tr>
+<td style="text-align: left;">95/5</td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: center;">−0.45%</td>
+<td style="text-align: center;">≈ −8%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Crisis firepower</strong></p>
+<p>Even if the tactical bucket fully deploys, its impact on the <em>total</em> portfolio depends on the split:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Split</th>
+<th style="text-align: center;">Max additional buy (whole portfolio)</th>
+<th style="text-align: left;">Intuition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">80/20</td>
+<td style="text-align: center;">+20% buy</td>
+<td style="text-align: left;">Meaningful entry at VIX 60 + capitulation</td>
+</tr>
+<tr>
+<td style="text-align: left;">90/10</td>
+<td style="text-align: center;">+10% buy</td>
+<td style="text-align: left;">Supplementary; main framework's auto-re-entry does the heavy lifting</td>
+</tr>
+<tr>
+<td style="text-align: left;">95/5</td>
+<td style="text-align: center;">+5% buy</td>
+<td style="text-align: left;">Almost symbolic — meaningful only at real capitulation (T3, SPX −20%)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Trigger frequency (2010–2024, rough)</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Trigger</th>
+<th style="text-align: center;">Days fired</th>
+<th style="text-align: center;">% of days</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">T1 VIX&gt;40 sustained 5d</td>
+<td style="text-align: center;">~25</td>
+<td style="text-align: center;">0.6%</td>
+</tr>
+<tr>
+<td style="text-align: left;">T2 COR&gt;55 &amp; SKEW&gt;150</td>
+<td style="text-align: center;">~10</td>
+<td style="text-align: center;">0.25%</td>
+</tr>
+<tr>
+<td style="text-align: left;">T3 SPX 30d −20%</td>
+<td style="text-align: center;">~12</td>
+<td style="text-align: center;">0.3%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>99% of days, the tactical bucket = just idle cash</strong>. The question is how much you're willing to immobilise for that 1%.</p>
+<p><strong>Recommendations (by situation)</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Situation</th>
+<th style="text-align: center;">Split</th>
+<th style="text-align: left;">Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Accumulation (long horizon, early career)</td>
+<td style="text-align: center;"><strong>95/5</strong></td>
+<td style="text-align: left;">Maximise compounding via time edge. Reserve only for real capitulation (T3).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mid-stage (late accumulation, wealth-building)</td>
+<td style="text-align: center;"><strong>90/10 ← default</strong></td>
+<td style="text-align: left;">Minimise drag while preserving meaningful entry at VIX&gt;60. New-visitor default.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Conservative (pre-retirement, withdrawal phase, behavioural concerns)</td>
+<td style="text-align: center;"><strong>80/20</strong></td>
+<td style="text-align: left;">Sequence-of-returns defence. Crisis firepower + emotional buffer.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Honest take</strong>: 80/20 is largely a <em>behavioural insurance premium</em>. Mathematically, Kelly is already discounted (½ or ¾) and σ=VIX/100 already responds to volatility — adding another 20% cash buffer is a triple safety margin. That's why the retail-accumulator default lands on <strong>90/10</strong> — it halves the normal-regime cash drag while still keeping 10% of the portfolio as deploy firepower. Pick 95/5 if you trust yourself not to touch the toggle mid-crash; 80/20 if sequence-of-returns risk worries you.</p>
+</blockquote>
+<hr />
+<h2 id="5-why-vix-alone-isnt-enough">5. Why VIX alone isn't enough<a class="headerlink" href="#5-why-vix-alone-isnt-enough" title="Permanent link">&para;</a></h2>
+<p>VIX alone misses <strong>"smoke without fire"</strong> setups. Example:</p>
+<ul>
+<li>VIX 17 (looks calm)</li>
+<li>But SKEW = 155 (tail risk priced rich)</li>
+<li>COR90D = 55 (correlation regime breaking down)</li>
+<li>VIX futures in backwardation (front &gt; spot)</li>
+</ul>
+<p>VIX itself didn't move, but the options market is quietly pricing panic into other surfaces. Riding Kelly@VIX = 86% here usually ends badly within a few days.</p>
+<p>Fix: <strong>when other risk-signal groups fire, apply a multiplicative discount to the Kelly base.</strong></p>
+<p>The three groups on the dashboard:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Group</th>
+<th style="text-align: left;">What it watches</th>
+<th style="text-align: left;">🟢 Normal</th>
+<th style="text-align: left;">🟡 Caution</th>
+<th style="text-align: left;">🔴 Stressed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>COR/SKEW</strong></td>
+<td style="text-align: left;">Term-structure spread · COR90D · SKEW</td>
+<td style="text-align: left;">All sub-signals normal</td>
+<td style="text-align: left;">Any one caution</td>
+<td style="text-align: left;">Any one danger</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>VIX TS shape</strong></td>
+<td style="text-align: left;">M1 vs VIX spot, M2 − M1</td>
+<td style="text-align: left;">Contango (M2 &gt; M1, spot &lt; M1)</td>
+<td style="text-align: left;">Mixed (M2 ≤ M1 but spot ≤ M1)</td>
+<td style="text-align: left;">Backwardation (spot &gt; M1)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>VolVol</strong></td>
+<td style="text-align: left;">VVIX/VIX 5DMA vs 20-day BB middle</td>
+<td style="text-align: left;">5DMA &gt; middle</td>
+<td style="text-align: left;">Cross within last 5 days</td>
+<td style="text-align: left;">5DMA &lt; middle</td>
+</tr>
+</tbody>
+</table>
+<p>Each group's worst sub-signal sets the group state, and the state maps to a multiplier on the Kelly base.</p>
+<blockquote>
+<p><strong>Indicator deep-dives</strong>: COR/SKEW in the <a href="../implied-correlation/">Implied Correlation article</a>, VIX TS shape in the <a href="../vix-term-structure/">VIX Futures Term Structure article</a>, VolVol (VVIX/VIX ratio with 5DMA + 20-day BB) in the <a href="../../">live-dashboard VolVol card</a> and upcoming Execution series Part 3 — <em>Vol-of-vol and market sentiment</em> (paid).</p>
+</blockquote>
+<hr />
+<h2 id="6-risk-sensitivity-the-second-user-toggle">6. Risk sensitivity — the second user toggle<a class="headerlink" href="#6-risk-sensitivity-the-second-user-toggle" title="Permanent link">&para;</a></h2>
+<p>How aggressively those multipliers bite is <strong>your risk-aversion choice</strong>. Three profiles:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Profile</th>
+<th style="text-align: right;">🟡 caution</th>
+<th style="text-align: right;">🔴 danger</th>
+<th style="text-align: right;">All-red cumulative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Loose</strong></td>
+<td style="text-align: right;">× 0.95</td>
+<td style="text-align: right;">× 0.85</td>
+<td style="text-align: right;">0.85³ ≈ 0.61</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Standard ← default</strong></td>
+<td style="text-align: right;">× 0.90</td>
+<td style="text-align: right;">× 0.75</td>
+<td style="text-align: right;">0.75³ ≈ 0.42</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tight</strong></td>
+<td style="text-align: right;">× 0.85</td>
+<td style="text-align: right;">× 0.65</td>
+<td style="text-align: right;">0.65³ ≈ 0.27</td>
+</tr>
+</tbody>
+</table>
+<p>Reading:</p>
+<ul>
+<li><strong>Loose</strong>: weak reaction to signals. Even all-red leaves you at 61% of the Kelly base. For people who don't want to rotate frequently.</li>
+<li><strong>Standard (default)</strong>: matches the <a href="../../series/">Principles series</a> conservative tone. All-red reduces to ~42% of base — e.g., ¾ Kelly at 100% (cap) becomes ~42%.</li>
+<li><strong>Tight</strong>: strong reaction. All-red drops to 27% of base. For people whose top priority is avoiding tail losses.</li>
+</ul>
+<blockquote>
+<p><strong>Picking</strong>: if you hate frequent rebalancing → <em>Loose</em>; if "risk signal = big cash" is your philosophy → <em>Tight</em>; otherwise → <em>Standard</em>.</p>
+</blockquote>
+<hr />
+<h2 id="612-equity-premium-r-the-third-user-toggle">6½. Equity premium μ−r — the third user toggle<a class="headerlink" href="#612-equity-premium-r-the-third-user-toggle" title="Permanent link">&para;</a></h2>
+<p>The numerator of <code>f* = (μ−r) / σ²</code> is the <strong>equity risk premium</strong>: "how much <em>more</em> do you expect equities to earn over the risk-free rate, annualised?"</p>
+<p>The problem: you can't know this number exactly. Academic estimates span <strong>3% to 9%</strong> depending on dataset, time window, and computation method — your choice almost doubles the suggested weight in some regions. The daily dashboard exposes three preset premia:</p>
+<p><strong>Half-Kelly suggested weight</strong> under each μ−r toggle:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Profile</th>
+<th style="text-align: center;">μ−r</th>
+<th style="text-align: right;">VIX 18</th>
+<th style="text-align: right;">VIX 22</th>
+<th style="text-align: right;">VIX 30</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Conservative</strong></td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: right;">74%</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">28%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Standard ← default</strong></td>
+<td style="text-align: center;"><strong>7%</strong></td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">72%</td>
+<td style="text-align: right;">39%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Aggressive</strong></td>
+<td style="text-align: center;">9%</td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: right;">93%</td>
+<td style="text-align: right;">50%</td>
+</tr>
+</tbody>
+</table>
+<p>Rationale for each:</p>
+<ul>
+<li><strong>Conservative (5%)</strong> — Long-run academic estimate (Damodaran et al.). Implicitly absorbs VIX's vol-risk-premium drag — since VIX runs ≈ realised σ + 4pt on average, plugging σ = VIX/100 directly already inflates the denominator, making the framework conservative by construction.</li>
+<li><strong>Standard (7%) — default</strong> — Long-run SPX historical average ex-WWII. The closest single-number match to "Kelly applied to <em>realised</em> vol" once VIX's vol-risk premium is netted out by the higher numerator.</li>
+<li><strong>Aggressive (9%)</strong> — Post-1990 SPX bullish view. Treats the VIX vol-risk-premium drag as a recoverable inefficiency rather than a baked-in cost — essentially the "VRP is a bonus" stance.</li>
+</ul>
+<h3 id="why-5-is-conservative-the-vix-vol-risk-premium-story">Why 5% is "conservative" — the VIX vol-risk-premium story<a class="headerlink" href="#why-5-is-conservative-the-vix-vol-risk-premium-story" title="Permanent link">&para;</a></h3>
+<p>The key intuition: <strong>VIX runs 3–5 pts above realised vol on average</strong> (the Vol Risk Premium — option buyers pay an insurance premium). VIX = 18 typically corresponds to ~14% actual realised vol over the following 30 days.</p>
+<p>Plugging σ = VIX/100 into Kelly with that bias makes σ² = (0.18)² = 0.0324 — about 1.65× larger than the "true" σ² = (0.14)² = 0.0196. <strong>A 1.65× larger denominator means a 1.65× smaller suggested weight</strong> — so the Kelly base already comes out conservative just from how σ is sourced.</p>
+<p>Two ways to compensate:
+1. Plug in realised vol directly (hard to estimate live).
+2. Bump μ−r in the numerator to offset the inflated denominator.</p>
+<p><strong>μ−r = 5% + σ = VIX/100</strong> is effectively "conservative-Kelly + conservative-σ" — <em>doubly</em> conservative. Raising μ−r to 7–9% unwinds the σ inflation, producing weights that line up much closer to what a realised-vol Half-Kelly would give.</p>
+<h3 id="which-value-to-pick">Which value to pick?<a class="headerlink" href="#which-value-to-pick" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Your view</th>
+<th style="text-align: center;">Recommended μ−r</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">"Future SPX could underperform history (lost-decade scenario)"</td>
+<td style="text-align: center;"><strong>5%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">"Long-run, SPX delivers historical-average premium" (most-cited single number)</td>
+<td style="text-align: center;"><strong>7% ← default</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">"Post-1990 US exceptionalism + AI tailwinds continue (bullish)"</td>
+<td style="text-align: center;"><strong>9%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The default lands on <strong>7% (Standard)</strong> because:
+- It matches the most-cited long-run historical SPX premium.
+- It best offsets VIX's vol-risk-premium drag, making the framework approximate realised-vol Kelly without requiring you to estimate realised vol live.</p>
+<blockquote>
+<p><strong>Like the Kelly fraction (¼/½/¾), pick once and barely touch it.</strong> This isn't a market-condition toggle — it's a one-time declaration of your <em>long-run market view</em>.</p>
+</blockquote>
+<h3 id="the-chart-curve-moves-with-the-toggle-too">The chart curve moves with the toggle too<a class="headerlink" href="#the-chart-curve-moves-with-the-toggle-too" title="Permanent link">&para;</a></h3>
+<p>The Kelly × VIX curve below the card is rendered as three separate PNGs (one per premium); selecting a μ−r swaps the image. The 5% curve sits lowest, 9% highest — visually showing how the same VIX level maps to wildly different suggested weights depending on your premium assumption.</p>
+<hr />
+<h2 id="7-final-formula-one-line">7. Final formula — one line<a class="headerlink" href="#7-final-formula-one-line" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">User toggle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>f</strong></td>
+<td style="text-align: left;">Kelly fraction (¼ / ½ / ¾ / 1)</td>
+<td style="text-align: left;"><strong>First toggle</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>μ−r</strong></td>
+<td style="text-align: left;">Expected equity premium (5% / 7% / 9%)</td>
+<td style="text-align: left;"><strong>Third toggle</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>σ = VIX/100</strong></td>
+<td style="text-align: left;">Forward-looking vol</td>
+<td style="text-align: left;">(auto)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>d_CS</strong></td>
+<td style="text-align: left;">COR/SKEW group multiplier</td>
+<td style="text-align: left;"><strong>Second toggle sets the strength</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>d_VTS</strong></td>
+<td style="text-align: left;">VIX TS shape multiplier</td>
+<td style="text-align: left;">same</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>d_VV</strong></td>
+<td style="text-align: left;">VolVol multiplier</td>
+<td style="text-align: left;">same</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cash weight = 100% − Equity weight.</strong></p>
+<hr />
+<h2 id="8-how-to-use-the-daily-dashboard">8. How to use the daily dashboard<a class="headerlink" href="#8-how-to-use-the-daily-dashboard" title="Permanent link">&para;</a></h2>
+<p>The first card on the <a href="../../">daily dashboard</a> recomputes this every day.</p>
+<p><strong>What you can do inside the card</strong> (defaults marked with †):</p>
+<ol>
+<li><strong>Kelly fraction toggle</strong> (¼ / ½ / <strong>¾†</strong> / Full) — set once and rarely change. Full comparison in §4.</li>
+<li><strong>Risk sensitivity toggle</strong> (Loose / <strong>Standard†</strong> / Tight) — how aggressively signals discount. Full comparison in §6.</li>
+<li><strong>Equity premium μ−r toggle</strong> (5% / <strong>7%†</strong> / 9%) — your view on long-run SPX premium. Full comparison in §6½.</li>
+<li><strong>Decision table</strong> — base value, each group's multiplier, final equity/cash split at a glance.</li>
+<li><strong>Kelly curve chart</strong> — visualises the VIX → weight relationship. <strong>Syncs with the μ−r toggle</strong> (three pre-rendered PNG variants, JS swaps <code>src</code>). Current-VIX marker included.</li>
+<li><strong>Master-bar split selector</strong> (80/20 · <strong>90/10†</strong> · 95/5) — main/tactical bucket ratio. Full comparison in §4 "Choosing the split."</li>
+</ol>
+<p>All selections persist in browser <code>localStorage</code> and carry over between visits.</p>
+<p><strong>Typical workflow:</strong></p>
+<ul>
+<li>Check the dashboard ~weekly</li>
+<li>All 🟢 → "stay at current suggested allocation"</li>
+<li>One group flips 🟡 → "start trimming slowly"</li>
+<li>Two or more 🔴 → "raise cash hard, de-risk now"</li>
+<li>After the storm passes → re-deploy gradually as signals normalise</li>
+</ul>
+<hr />
+<h2 id="9-real-world-behavior-first-gap-vs-the-cascade">9. Real-world behavior — first gap vs the cascade<a class="headerlink" href="#9-real-world-behavior-first-gap-vs-the-cascade" title="Permanent link">&para;</a></h2>
+<p>The framework's value lies in the <em>cascade</em> that follows the first shock, not the first shock itself. A −3% or −5% gap on day 1 is the entry cost — outside of insiders or lucky timing, no rule-based system can avoid it. The real difference shows up in the <em>days and weeks after</em>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Market</th>
+<th style="text-align: left;">Auto-response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Day 1 gap</strong></td>
+<td style="text-align: left;">Sudden −5%</td>
+<td style="text-align: left;">Taken at full position (entry cost of a reactive framework)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Day 2 ~ N</strong></td>
+<td style="text-align: left;">VIX spikes → σ² × 4 → Kelly base ÷ 4 + all-red signals × 0.42</td>
+<td style="text-align: left;">Subsequent drops hit an <em>already shrunken</em> equity base</td>
+</tr>
+</tbody>
+</table>
+<h3 id="historical-examples">Historical examples<a class="headerlink" href="#historical-examples" title="Permanent link">&para;</a></h3>
+<p><strong>March 2020 COVID crash</strong> <em>(scenario uses Half-Kelly @ μ−r=5% — the most conservative toggle combo)</em>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Date</th>
+<th style="text-align: right;">VIX</th>
+<th style="text-align: right;">Half-Kelly @ 5% base</th>
+<th style="text-align: left;">Signals</th>
+<th style="text-align: right;">Suggested mix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Feb 14 (calm)</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">100% (cap)</td>
+<td style="text-align: left;">All 🟢</td>
+<td style="text-align: right;">Equity 100% / Cash 0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Feb 24 (−3.4% first gap)</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">32%</td>
+<td style="text-align: left;">Some 🟡</td>
+<td style="text-align: right;">Equity ~25% / Cash ~75%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mar 16 (bottom)</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: left;">All 🔴</td>
+<td style="text-align: right;"><strong>Equity ~2% / Cash ~98%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>VIX 14 → 82 (6×) cuts the suggested weight from 100% to 2%. The additional ~−25% drawdown across this month lands on a <em>much smaller</em> equity base, dramatically reducing cumulative loss vs a static fully-invested position.</p>
+<blockquote>
+<p><strong>Under the new defaults (¾ Kelly @ μ−r=7%)</strong> the same VIX path produces a base of 67% at VIX 28 and 8% at VIX 82 — starting higher, but deleveraging at the same rate. The absolute numbers differ, but the <em>slope</em> of the response is identical. The scenario's lesson — cascade absorption — is invariant to which toggle combo you pick; only the starting point shifts.</p>
+</blockquote>
+<p><strong>September 2008 Lehman week:</strong></p>
+<p>The first week after Lehman's bankruptcy (−10%) is unavoidable. But the additional −25% over the following month lands on an already deleveraged portfolio, so cumulative loss runs roughly half of what a static fully-invested position would take (illustrative).</p>
+<blockquote>
+<p><strong>TL;DR</strong>: The framework is a <em>cascade buffer</em>, not a forecaster. The first gap is the entry cost; the value is in shrinking the cumulative loss that follows.</p>
+</blockquote>
+<hr />
+<h2 id="10-caveats">10. Caveats<a class="headerlink" href="#10-caveats" title="Permanent link">&para;</a></h2>
+<p>This framework <strong>automates a mathematical intuition</strong> — it is not a back-tested production system.</p>
+<ol>
+<li><strong>μ − r assumption is uncertain</strong>: academic estimates of the equity-risk premium span 3–9% across studies. The daily dashboard's <strong>μ−r toggle (5% / 7%(default) / 9%)</strong> lets you swap your own view (full breakdown in §6½). 5% is conservative and effectively bakes in the VIX vol-risk-premium drag; default 7% is the long-run SPX historical average and the closest match to realised-vol Kelly; 9% is a post-1990 bullish view.</li>
+<li><strong>VRP bias</strong>: VIX averages 3–5 vol points <em>above</em> realised vol (the Volatility Risk Premium). So Kelly base with μ−r=5% runs <em>substantially</em> conservative — the default 7% is closer to realised-vol Kelly, and 9% approaches the "VRP fully recoverable" assumption. The toggle is the explicit handle for this trade-off.</li>
+<li><strong>VIX is 30-day forward</strong>: longer holding horizons (6+ months) would want a different σ proxy (e.g., VIX futures average).</li>
+<li><strong>Signals aren't independent</strong>: COR/SKEW, VIX TS, and VolVol all view the same underlying stress through different lenses. The multiplicative discount could over-react. The chosen multipliers (≥ 0.75 in Standard) are deliberately mild for this reason.</li>
+<li><strong>Post-crisis false positive</strong>: signals like VolVol mechanically lag during recoveries, which can delay re-entry.</li>
+</ol>
+<blockquote>
+<p><strong>This is not investment advice.</strong> It is an <em>educational visualisation</em> of how Kelly and vol interact. Real decisions need to factor in your risk tolerance, taxes, liquidity, and behavioural limits.</p>
+</blockquote>
+<hr />
+<h2 id="related-reading">Related reading<a class="headerlink" href="#related-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../series/s1-shannons-demon/">Series Part 1 — Shannon's Demon</a>: why volatility can be fuel, not enemy</li>
+<li><a href="../implied-correlation/">Implied Correlation indices</a>: COR3M, IV Surface, Delta Skew</li>
+<li><a href="../volatility-dashboard/">Volatility Dashboard (Google Sheets)</a>: the manual COR/SKEW tracker</li>
+<li><a href="../vix-term-structure/">VIX Futures Term Structure</a>: reading the shape</li>
+<li><a href="../credit-spreads/">Reading Credit Spreads as an Indicator</a>: the index is calm while the bottom rating already moves</li>
+<li><a href="../move-index/">The Bond Market's VIX — MOVE Index</a>: reading risk through bond-market volatility</li>
+</ul>
+<hr />
+<p><em>This article focuses on the </em>mathematical honesty<em> of vol-driven allocation. Real-world execution layers on transaction costs, taxes, and behavioural limits.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

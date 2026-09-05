@@ -1,0 +1,282 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 195.2,
+      "y": 6.0,
+      "width": 389.6,
+      "height": 38,
+      "text": "세 원판 한눈에 비교 — 복리 투자자의 선택",
+      "fontSize": 22,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "strokeColor": "#1e40af",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 676957,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r1_top",
+      "x": 50, "y": 70, "width": 210, "height": 80,
+      "strokeColor": "#16a34a", "backgroundColor": "#dcfce7",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 757991, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t1_top",
+      "x": 100, "y": 87, "width": 110, "height": 46,
+      "text": "원판 1\n[0.8 ~ 1.8]",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 251141, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "원판 1\n[0.8 ~ 1.8]"
+    },
+    {
+      "type": "text",
+      "id": "lbl1",
+      "x": 115, "y": 155, "width": 80, "height": 20,
+      "text": "안정적",
+      "fontSize": 13, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 793865, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r1_mid",
+      "x": 50, "y": 185, "width": 210, "height": 110,
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 221913, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t1_mid",
+      "x": 80, "y": 210, "width": 150, "height": 60,
+      "text": "산술평균: 1.30\n기하평균: 1.26 (최고)\n변동성: 낮음",
+      "fontSize": 13, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 741748, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "산술평균: 1.30\n기하평균: 1.26 (최고)\n변동성: 낮음"
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r1_bot",
+      "x": 50, "y": 320, "width": 210, "height": 90,
+      "strokeColor": "#16a34a", "backgroundColor": "#dcfce7",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 746678, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t1_bot",
+      "x": 110, "y": 338, "width": 90, "height": 54,
+      "text": "복리 시\n꾸준히\n성장",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#16a34a", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 902394, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "복리 시\n꾸준히\n성장"
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r2_top",
+      "x": 290, "y": 70, "width": 210, "height": 80,
+      "strokeColor": "#dc2626", "backgroundColor": "#fee2e2",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 807143, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t2_top",
+      "x": 340, "y": 87, "width": 110, "height": 46,
+      "text": "원판 2\n[0.0 ~ 3.0]",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 934856, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "원판 2\n[0.0 ~ 3.0]"
+    },
+    {
+      "type": "text",
+      "id": "lbl2",
+      "x": 340, "y": 155, "width": 110, "height": 20,
+      "text": "0배수 있음!",
+      "fontSize": 13, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 620724, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r2_mid",
+      "x": 290, "y": 185, "width": 210, "height": 110,
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 648525, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t2_mid",
+      "x": 310, "y": 210, "width": 170, "height": 60,
+      "text": "산술평균: 1.33\n기하평균: 0.00 (파산)\n변동성: 매우 높음",
+      "fontSize": 13, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 237267, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "산술평균: 1.33\n기하평균: 0.00 (파산)\n변동성: 매우 높음"
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r2_bot",
+      "x": 290, "y": 320, "width": 210, "height": 90,
+      "strokeColor": "#dc2626", "backgroundColor": "#fee2e2",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 610482, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t2_bot",
+      "x": 350, "y": 338, "width": 90, "height": 54,
+      "text": "복리 시\n언젠가\n파산!",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#dc2626", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 777816, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "복리 시\n언젠가\n파산!"
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r3_top",
+      "x": 530, "y": 70, "width": 210, "height": 80,
+      "strokeColor": "#ca8a04", "backgroundColor": "#fef9c3",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 130865, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t3_top",
+      "x": 580, "y": 87, "width": 110, "height": 46,
+      "text": "원판 3\n[0.1 ~ 4.0]",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#ca8a04", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 802198, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "원판 3\n[0.1 ~ 4.0]"
+    },
+    {
+      "type": "text",
+      "id": "lbl3",
+      "x": 580, "y": 155, "width": 110, "height": 20,
+      "text": "높은 변동성",
+      "fontSize": 13, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#ca8a04", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 436175, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r3_mid",
+      "x": 530, "y": 185, "width": 210, "height": 110,
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 787019, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t3_mid",
+      "x": 550, "y": 210, "width": 170, "height": 60,
+      "text": "산술평균: 1.77\n기하평균: 0.89\n변동성: 매우 높음",
+      "fontSize": 13, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e1e1e", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 357821, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "산술평균: 1.77\n기하평균: 0.89\n변동성: 매우 높음"
+    },
+
+    {
+      "type": "rectangle",
+      "id": "r3_bot",
+      "x": 530, "y": 320, "width": 210, "height": 90,
+      "strokeColor": "#ca8a04", "backgroundColor": "#fef9c3",
+      "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 902346, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t3_bot",
+      "x": 590, "y": 338, "width": 90, "height": 54,
+      "text": "복리 시\n서서히\n손실",
+      "fontSize": 14, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#ca8a04", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "roughness": 1, "opacity": 100,
+      "angle": 0, "seed": 942620, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "originalText": "복리 시\n서서히\n손실"
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

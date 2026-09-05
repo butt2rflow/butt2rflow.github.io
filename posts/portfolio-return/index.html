@@ -1,0 +1,2410 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/portfolio-return/">
+      
+      
+        <link rel="prev" href="../log-return/">
+      
+      
+        <link rel="next" href="../expected-return/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="ko">
+        
+          <link rel="alternate" href="../../en/posts/portfolio-return/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>내 포트폴리오의 수익률은? — TWR vs MWR - butterflow 투자 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#twr-vs-mwr" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 투자 노트" class="md-header__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 투자 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              내 포트폴리오의 수익률은? — TWR vs MWR
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/posts/portfolio-return/" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Returns 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  시장 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../options-basics/" class="md-tabs__link">
+          
+  
+  
+  Options 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  도구
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  시리즈
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 투자 노트" class="md-nav__button md-logo" aria-label="butterflow 투자 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 투자 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률, 복리, 그리고 로그차트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약 — 같은 거래, 두 가지 답
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 잠깐 복습 — 로그수익률은 더하기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 현금흐름이 끼면 식이 약간 달라진다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-twr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 시간가중수익률 (TWR) — 자산을 측정한다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 시간가중수익률 (TWR) — 자산을 측정한다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#twr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TWR이 측정하는 것
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#twr_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TWR이 답하는 질문
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mwr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 금액가중수익률 (MWR) — 내 결과를 측정한다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 금액가중수익률 (MWR) — 내 결과를 측정한다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        한 줄 요약: "들어온 돈 = 나간 돈"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        들어오는 돈 vs 나가는 돈 (포트폴리오 기준)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#30_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 예제
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-twr-vs-mwr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. TWR vs MWR — 결정적 차이
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. TWR vs MWR — 결정적 차이">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        같은 거래, 두 가지 답
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 결과가 다른가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        둘 중 뭐가 맞는가? — 둘 다 맞다, 다른 질문이다
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#twr_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TWR을 계산하지 못할 때
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-dcf-mwr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 보너스 — DCF는 사실 MWR이다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 정리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률의 기댓값 — 확률 모델로 본 QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파생상품의 레버리지 사용료 — 같은 3배라도 비용은 천차만별
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    네마녀의 날이 돌아왔다 — 개별주식선물과 방향성 어닝 플레이
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신용 스프레드를 지표로 읽기 — 지수는 잠잠한데 바닥 등급은 이미 움직인다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션의 기초 — 자동차 보험으로 푸는 콜과 풋
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    채권시장의 VIX — MOVE 지수 읽는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — 콘탱고와 백워데이션 읽는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약 — 같은 거래, 두 가지 답
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 잠깐 복습 — 로그수익률은 더하기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 현금흐름이 끼면 식이 약간 달라진다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-twr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 시간가중수익률 (TWR) — 자산을 측정한다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 시간가중수익률 (TWR) — 자산을 측정한다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#twr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TWR이 측정하는 것
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#twr_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TWR이 답하는 질문
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mwr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 금액가중수익률 (MWR) — 내 결과를 측정한다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 금액가중수익률 (MWR) — 내 결과를 측정한다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        한 줄 요약: "들어온 돈 = 나간 돈"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        들어오는 돈 vs 나가는 돈 (포트폴리오 기준)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#30_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 예제
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-twr-vs-mwr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. TWR vs MWR — 결정적 차이
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. TWR vs MWR — 결정적 차이">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        같은 거래, 두 가지 답
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 결과가 다른가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        둘 중 뭐가 맞는가? — 둘 다 맞다, 다른 질문이다
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#twr_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TWR을 계산하지 못할 때
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-dcf-mwr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 보너스 — DCF는 사실 MWR이다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 정리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="twr-vs-mwr">내 포트폴리오의 수익률은? — TWR vs MWR<a class="headerlink" href="#twr-vs-mwr" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>같은 계좌, 같은 거래인데 증권사 앱과 직접 계산한 결과가 다르게 나온 적 있나요? 둘 다 정확합니다 — <strong>다른 질문에 다른 답</strong>을 주고 있을 뿐입니다.</p>
+</blockquote>
+<p><img alt="수익률은 달라달라" src="../../assets/diagrams/cafe_8429_01.gif" /></p>
+<p>이 글은 그 차이의 정체를 그림으로 풀어 봅니다.</p>
+<hr />
+<h2 id="30">30초 요약 — 같은 거래, 두 가지 답<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
+<p>$50을 투자해 주식을 샀고, 매년 $2 배당을 받았습니다. 2년 차에 $10을 추가로 투입했고, 3년 후 $65에 매도했어요.</p>
+<p>연수익률이 얼마였을까요?</p>
+<p><img alt="TWR vs MWR — 같은 거래, 두 가지 답" src="../../assets/diagrams/ret_twr_vs_mwr.png" /></p>
+<ul>
+<li><strong>MWR (금액가중수익률)</strong>: <strong>6.70%</strong></li>
+<li><strong>TWR (시간가중수익률)</strong>: <strong>9.82%</strong></li>
+</ul>
+<p><strong>같은 거래인데 결과가 다릅니다.</strong> 왜?</p>
+<ul>
+<li><strong>TWR</strong>은 "<em>자산이</em> 얼마나 잘 굴러갔는가"를 측정 → 9.82% (자산 운용 능력)</li>
+<li><strong>MWR</strong>은 "<em>내가</em> 결과적으로 얼마를 벌었는가"를 측정 → 6.70% (실제 내 수익)</li>
+</ul>
+<p>3.12%p 차이는 <strong>2년 차에 $10 추가 매수 타이밍이 안 좋았기 때문</strong>입니다. 자산은 잘 굴러갔지만, 내 진입 타이밍이 결과를 낮췄어요.</p>
+<p>증권사 앱마다 어느 쪽을 보여주는지 다릅니다. 이제 그 차이가 보이실 거예요.</p>
+<hr />
+<h2 id="1">1. 잠깐 복습 — 로그수익률은 더하기<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p><a href="../log-return/">지난 글</a>의 핵심:</p>
+<blockquote>
+<p><strong>로그수익률 = ln(1 + 산술수익률)</strong> — 곱하기로 풀어야 할 일을 <em>더하기</em>로 바꿔주는 도구</p>
+</blockquote>
+<p>가격 흐름이 다음과 같다면:</p>
+<div class="highlight"><pre><span></span><code>$1,000 → $2,000 → $2,200 → $1,800 → $900 → $1,300
+</code></pre></div>
+<p>전체 기간 로그수익률은 <strong>각 기간 로그수익률을 그냥 더하면</strong> 됩니다:</p>
+<div class="highlight"><pre><span></span><code>ln(2000/1000) + ln(2200/2000) + ln(1800/2200) + ln(900/1800) + ln(1300/900)
+= ln(1300/1000)   ← 중간 항이 모두 상쇄
+≈ +26.2%
+</code></pre></div>
+<p><img alt="각 기간 로그수익률 합 = 전체 로그수익률" src="../../assets/diagrams/cafe_8429_02.png" /></p>
+<p>이 단순한 사실이 TWR과 MWR 모두의 출발점입니다.</p>
+<hr />
+<h2 id="2">2. 현금흐름이 끼면 식이 약간 달라진다<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>위 예시에서 $2,200일 때 <strong>$500을 인출</strong>했다고 합시다.</p>
+<div class="highlight"><pre><span></span><code>$1,000 → $2,000 → $2,200 → [-$500 인출] → $1,800 → $900 → $1,300
+</code></pre></div>
+<p>이 시점의 로그수익률 계산은 인출액을 빼주면 됩니다:</p>
+<div class="highlight"><pre><span></span><code>새 로그수익률 = ln (현재가 / (이전가 − 인출))
+</code></pre></div>
+<p>배당이 들어왔다면? 더해주면 됩니다:</p>
+<div class="highlight"><pre><span></span><code>배당 받았을 때 = ln ((현재가 + 배당) / 이전가)
+배당 재투자 = ln (현재가 / (이전가 − 재투자))
+</code></pre></div>
+<p>같은 원리: <strong>포트폴리오 가치를 정확하게 잡고 비율을 구하는 것</strong>. 어렵지 않아요.</p>
+<details><summary>📐 식 정리 (현금흐름 + 배당 종합)</summary>
+
+<div class="highlight"><pre><span></span><code>일반 로그수익률   = ln (현재가 / 이전가)
++ 인출 시         = ln (현재가 / (이전가 − 인출))
++ 입금 시         = ln (현재가 / (이전가 + 입금))
++ 배당 시         = ln ((현재가 + 배당) / 이전가)
++ 배당 재투자 시  = ln (현재가 / (이전가 − 재투자))
+</code></pre></div>
+
+요지는 *비율을 구할 때 분자·분모를 정확하게 잡는 것* 뿐입니다.
+
+</details>
+
+<hr />
+<h2 id="3-twr">3. 시간가중수익률 (TWR) — 자산을 측정한다<a class="headerlink" href="#3-twr" title="Permanent link">&para;</a></h2>
+<p>위에서 한 방식 — <strong>기간별 로그수익률을 모두 더하기</strong> — 이 바로 <strong>TWR(Time-Weighted Return)</strong> 입니다.</p>
+<h3 id="twr">TWR이 측정하는 것<a class="headerlink" href="#twr" title="Permanent link">&para;</a></h3>
+<p>TWR은 <em>자산 자체</em>의 운용 성과를 봅니다. <strong>현금흐름 효과를 제거</strong>해서 "이 펀드가 정말 잘 굴러갔는지"를 알려줍니다.</p>
+<p>같은 펀드의 두 시나리오:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">사례 A: 추가 매수</th>
+<th style="text-align: left;">사례 B: 일부 매도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">초기 투자</td>
+<td style="text-align: left;">$1,000,000</td>
+<td style="text-align: left;">$1,000,000</td>
+</tr>
+<tr>
+<td style="text-align: left;">6개월 후 잔고</td>
+<td style="text-align: left;">$1,162,484</td>
+<td style="text-align: left;">$1,162,484</td>
+</tr>
+<tr>
+<td style="text-align: left;">6개월 차 행동</td>
+<td style="text-align: left;"><strong>+$100,000</strong> 추가 매수</td>
+<td style="text-align: left;"><strong>−$100,000</strong> 인출</td>
+</tr>
+<tr>
+<td style="text-align: left;">12개월 후 잔고</td>
+<td style="text-align: left;">$1,192,328</td>
+<td style="text-align: left;">$1,003,440</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TWR</strong></td>
+<td style="text-align: left;"><strong>+9.34%</strong></td>
+<td style="text-align: left;"><strong>+9.34%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>A든 B든 TWR은 똑같이 +9.34%.</strong> 같은 펀드니까 — 펀드의 <em>수익 능력</em>은 같아요.</p>
+<h3 id="twr_1">TWR이 답하는 질문<a class="headerlink" href="#twr_1" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>"이 펀드를 비교 평가하고 싶다. 매니저가 잘 굴렸는가?"</p>
+</blockquote>
+<p>펀드 평가, 운용사 평가에 사용합니다. 모닝스타나 펀드 사이트에서 보는 수익률은 보통 TWR입니다.</p>
+<blockquote>
+<p>📚 <a href="https://www.investopedia.com/terms/t/time-weightedror.asp">Investopedia — Time-Weighted Rate of Return</a></p>
+</blockquote>
+<hr />
+<h2 id="4-mwr">4. 금액가중수익률 (MWR) — 내 결과를 측정한다<a class="headerlink" href="#4-mwr" title="Permanent link">&para;</a></h2>
+<h3 id="_1">한 줄 요약: "들어온 돈 = 나간 돈"<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>돼지저금통을 생각해 봅시다. 동전을 넣고 빼고 또 넣고 — 마지막에 깨서 다 꺼내면 <em>원래 들어간 만큼</em> 나옵니다 (이자가 없다면). 들어온 돈 = 나간 돈.</p>
+<p>같은 원리를 투자 포트폴리오에 적용하면:</p>
+<blockquote>
+<p><strong>들어온 돈의 양 = 나간 돈의 양 + 남은 돈의 양</strong></p>
+</blockquote>
+<p>투자 마지막에 다 팔아 버렸다고 가정하면 "남은 돈"은 0이 되어:</p>
+<blockquote>
+<p><strong>들어온 돈 = 나간 돈</strong> ⇔ <strong>현금흐름의 총합 = 0</strong></p>
+</blockquote>
+<p>(물리에서는 이걸 <em>에너지 보존의 법칙</em>이라고 하지만, 외울 필요는 없어요. 핵심은 <em>총합이 0</em>이라는 거.)</p>
+<p>각 시점의 현금흐름을 IRR(내부수익률)로 할인해서 합이 0이 되는 IRR을 찾는 것 — 이게 MWR입니다.</p>
+<h3 id="vs">들어오는 돈 vs 나가는 돈 (포트폴리오 기준)<a class="headerlink" href="#vs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">들어오는 돈 (Inflow)</th>
+<th style="text-align: left;">나가는 돈 (Outflow)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">자산 매도 수익</td>
+<td style="text-align: left;">자산 매수 비용</td>
+</tr>
+<tr>
+<td style="text-align: left;">받은 배당·이자</td>
+<td style="text-align: left;">배당·이자 재투자</td>
+</tr>
+<tr>
+<td style="text-align: left;">추가 입금(contribution)</td>
+<td style="text-align: left;">인출(withdrawal)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>헷갈리지 마세요: 추가 입금은 <strong>들어오는 돈</strong>, 인출은 <strong>나가는 돈</strong> — <em>포트폴리오 기준</em>입니다.</p>
+</blockquote>
+<h3 id="30_1">30초 예제<a class="headerlink" href="#30_1" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>$50 매수 → 1년 차 $2 배당 → 2년 차 $2 배당 → 3년 차 $65 매도 + $2 배당. 수익률은?</p>
+</blockquote>
+<p>현금흐름:</p>
+<div class="highlight"><pre><span></span><code>t=0:  -$50  (매수, outflow)
+t=1:  +$2   (배당, inflow)
+t=2:  +$2   (배당, inflow)
+t=3:  +$67  ($2 배당 + $65 매도, inflow)
+</code></pre></div>
+<p>구글시트에 한 줄:</p>
+<div class="highlight"><pre><span></span><code>=IRR(A1:A4)   →  12.82%
+</code></pre></div>
+<p>끝입니다. <strong>연 12.82%로 균등하게 운용한 것과 같은 결과</strong>라는 뜻이에요.</p>
+<blockquote>
+<p>📚 <a href="https://www.investopedia.com/terms/m/money-weighted-return.asp">Investopedia — Money-Weighted Return</a></p>
+</blockquote>
+<details><summary>📐 IRR을 직접 풀어 보기 — 뉴턴법</summary>
+
+`=IRR()` 함수가 내부적으로 어떻게 푸는지 궁금하면 — 뉴턴법(Newton's method)입니다.
+
+`X = 1/(1+IRR)`로 치환하면 3차 방정식이 됩니다:
+
+<div class="highlight"><pre><span></span><code>−50 + 2·X + 2·X² + 67·X³ = 0
+</code></pre></div>
+
+뉴턴법은 추정치 X₀에서 시작해 접선이 X축과 만나는 곳을 새 추정치로 잡고, 이걸 반복합니다:
+
+![뉴턴법 — 함수와 접선](../assets/diagrams/ret_newton.png)
+
+몇 번 반복하면 X = 0.8864로 수렴 → IRR = 1/0.8864 − 1 = **12.82%**.
+
+구글시트로 직접 구현하면:
+
+1. A1 셀: 추정치 X₀ = 1.0
+2. B1 셀: `=−50 + 2*A1 + 2*A1^2 + 67*A1^3`  (f(X) 값)
+3. C1 셀: `=2 + 4*A1 + 201*A1^2`  (도함수 f'(X) 값)
+4. A2 셀: `=A1 − B1/C1`  (뉴턴법 새 추정치)
+5. B1, C1 식을 A2 행으로 복사 → 반복
+
+f(X)가 0에 충분히 가까워지면 끝.
+
+</details>
+
+<hr />
+<h2 id="5-twr-vs-mwr">5. TWR vs MWR — 결정적 차이<a class="headerlink" href="#5-twr-vs-mwr" title="Permanent link">&para;</a></h2>
+<h3 id="_2">같은 거래, 두 가지 답<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>이 글 도입부의 예제로 돌아가 봅시다:</p>
+<blockquote>
+<p>$50 매수 → 1년 차 $2 배당 → <strong>2년 차 $10 추가 매수</strong> + $2 배당 → 3년 차 $65 매도 + $2 배당</p>
+</blockquote>
+<p><strong>MWR 계산</strong> — 추가 매수($10)는 outflow:</p>
+<div class="highlight"><pre><span></span><code>t=0:  -$50
+t=1:  +$2
+t=2:  -$8   ($2 배당 - $10 추가매수)
+t=3:  +$67
+
+=IRR(...)  →  6.70%
+</code></pre></div>
+<p><strong>TWR 계산</strong> — <em>각 시점의 잔고를 알아야</em> 합니다:</p>
+<div class="highlight"><pre><span></span><code>1년 차 종료 시 잔고: $55 (배당받기 직전)
+2년 차 종료 시 잔고: $60 (배당받기·추가매수 직전)
+3년 차 종료 시 잔고: $65 (매도가)
+
+1년 차: ln((55 + 2)/50)            = ln(57/50)
+2년 차: ln((60 + 2)/(55 + 10))     = ln(62/65)   ← 분모는 직전 잔고 + 추가매수
+3년 차: ln((65 + 2)/60)            = ln(67/60)
+
+3년 합산 로그수익률을 연환산 → 연 9.82%
+</code></pre></div>
+<blockquote>
+<p>분자에는 <em>그 기간 동안 들어온 모든 가치</em>(잔고 + 배당), 분모에는 <em>그 기간 시작 시점의 투자 원본</em>(이전 잔고 + 추가매수). 이게 시간가중 계산의 핵심입니다.</p>
+</blockquote>
+<h3 id="_3">왜 결과가 다른가<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">TWR</th>
+<th style="text-align: left;">MWR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>9.82% vs 6.70%</strong></td>
+<td style="text-align: left;">자산 자체의 운용 성과</td>
+<td style="text-align: left;">내 진입·청산 타이밍까지 포함</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2년 차 $10 추가</strong></td>
+<td style="text-align: left;">효과 제거됨</td>
+<td style="text-align: left;">효과 반영됨 → 결과 끌어내림</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>메시지</strong></td>
+<td style="text-align: left;">"이 펀드는 잘 굴렀다"</td>
+<td style="text-align: left;">"근데 내가 들어간 시점이 안 좋았다"</td>
+</tr>
+</tbody>
+</table>
+<p>자산은 +9.82%로 잘 굴러갔습니다. 그러나 내가 2년 차에 추가 매수한 $10은 1년만 운용되어 약 $11 정도가 됐고(+10% 정도), 전체 수익률을 끌어내렸습니다. <strong>이게 MWR이 보여주는 메시지</strong> — <em>내가 결과적으로 6.70%만 벌었다</em>는 사실입니다.</p>
+<h3 id="_4">둘 중 뭐가 맞는가? — <strong>둘 다 맞다, 다른 질문이다</strong><a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">질문</th>
+<th style="text-align: left;">보세요</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">"이 펀드 운용 잘하나?"</td>
+<td style="text-align: left;"><strong>TWR</strong> (펀드 평가)</td>
+</tr>
+<tr>
+<td style="text-align: left;">"내가 실제로 얼마 벌었나?"</td>
+<td style="text-align: left;"><strong>MWR</strong> (개인 결과)</td>
+</tr>
+<tr>
+<td style="text-align: left;">"ETF끼리 비교하고 싶다"</td>
+<td style="text-align: left;"><strong>TWR</strong> (현금흐름 차이 제거)</td>
+</tr>
+<tr>
+<td style="text-align: left;">"증권사 앱에서 보이는 수익률"</td>
+<td style="text-align: left;">보통 <strong>MWR</strong> (거래 내역만으로 계산 가능)</td>
+</tr>
+</tbody>
+</table>
+<p>증권사 앱이 MWR을 자주 쓰는 이유는 <em>매일의 잔고를 추적하지 않아도</em> 거래 내역만으로 바로 계산 가능하기 때문입니다. TWR은 현금흐름 발생 시점의 잔고를 모두 알아야 해서 더 무거워요.</p>
+<h3 id="twr_2">TWR을 계산하지 못할 때<a class="headerlink" href="#twr_2" title="Permanent link">&para;</a></h3>
+<p>위 예제에서 <strong>잔고를 모르면</strong> TWR은 계산 불가능합니다. 1년 차, 2년 차 <em>현금흐름 시점의 잔고</em>를 모르면 비율을 못 구해요.</p>
+<p>이게 두 방법의 가장 큰 실용적 차이입니다:</p>
+<ul>
+<li><strong>MWR</strong>: 거래 내역(현금흐름)만 알면 OK</li>
+<li><strong>TWR</strong>: 잔고 정보까지 필요</li>
+</ul>
+<hr />
+<h2 id="6-dcf-mwr">6. 보너스 — DCF는 사실 MWR이다<a class="headerlink" href="#6-dcf-mwr" title="Permanent link">&para;</a></h2>
+<p>기업가치 평가에서 자주 듣는 <strong>DCF(Discounted Cash Flow)</strong> — 미국채 금리가 오르면 성장주가 힘 못 쓴다는 그 단골 등장하는 개념 — 도 본질이 같습니다.</p>
+<div class="highlight"><pre><span></span><code>DCF (기업가치) = 자기자본 + Σ ( 미래 현금흐름 / (1 + 할인율)^t )
+MWR (수익률)   = NPV = 0 이 되는 IRR을 찾는 것
+              = Σ ( 현금흐름 / (1 + IRR)^t ) = 0
+</code></pre></div>
+<p><strong>같은 식</strong>입니다. DCF는 미래 현금흐름을 <em>무위험이율</em>로 할인하고, MWR은 미래 현금흐름을 <em>IRR</em>로 할인합니다 — 다만 IRR이 미지수일 뿐이에요.</p>
+<p>따라서 미국채 금리(=무위험이율)가 오르면 모든 미래 수익이 더 많이 할인되어 <em>현재가치가 줄어듭니다</em>. 이게 성장주가 금리 인상기에 부진한 이유입니다.</p>
+<hr />
+<h2 id="7">7. 정리<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">개념</th>
+<th style="text-align: left;">TWR (시간가중)</th>
+<th style="text-align: left;">MWR (금액가중)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>무엇을 측정</strong></td>
+<td style="text-align: left;">자산 운용 성과</td>
+<td style="text-align: left;">내 실제 투자 결과</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>현금흐름 효과</strong></td>
+<td style="text-align: left;">제거</td>
+<td style="text-align: left;">포함</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>필요 정보</strong></td>
+<td style="text-align: left;">모든 시점의 잔고 + 거래</td>
+<td style="text-align: left;">거래 내역만</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>계산법</strong></td>
+<td style="text-align: left;">기간별 로그수익률 합산</td>
+<td style="text-align: left;">NPV = 0이 되는 IRR (<code>=IRR()</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>누가 쓰나</strong></td>
+<td style="text-align: left;">펀드 비교, 운용사 평가</td>
+<td style="text-align: left;">증권사 앱, DCF</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>이런 질문에 답</strong></td>
+<td style="text-align: left;">펀드가 잘 굴렀나?</td>
+<td style="text-align: left;">내가 얼마 벌었나?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기억할 한 가지</strong>: 같은 거래에서 두 수익률이 다를 수 있습니다. 어느 한쪽이 정답이 아니에요 — <em>다른 질문에 다른 답</em>입니다.</p>
+<p>증권사 앱마다 어느 쪽을 표시하는지 한 번 확인해 보시고, 둘 다 보실 줄 알면 자기 투자를 훨씬 정확하게 평가할 수 있습니다.</p>
+<hr />
+<p><em>이전 글: <a href="../log-return/">수익률, 복리, 그리고 로그차트</a></em></p>
+<p><em>관련: <a href="../../series/s1-shannons-demon/">섀넌의 도깨비와 산술/기하 평균 (S1 시리즈)</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../assets/vix-history-player.js"></script>
+      
+        <script src="../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

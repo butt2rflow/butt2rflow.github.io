@@ -1,0 +1,2139 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/implied-correlation/">
+      
+      
+        <link rel="prev" href="../hedging-wings/">
+      
+      
+        <link rel="next" href="../monte-carlo/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/implied-correlation/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface - butterflow Investment Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#market-sentiment-volatility-indices-implied-correlation-and-the-iv-surface" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Investment Notes" class="md-header__button md-logo" aria-label="butterflow Investment Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Investment Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/implied-correlation/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Returns 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cot/" class="md-tabs__link">
+          
+  
+  
+  Market Data
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../options-basics/" class="md-tabs__link">
+          
+  
+  
+  Options 101
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../monte-carlo/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../series/" class="md-tabs__link">
+          
+  
+  
+  Series
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Investment Notes" class="md-nav__button md-logo" aria-label="butterflow Investment Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Investment Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-implied-volatility-actually-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What implied volatility actually is
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What implied volatility actually is">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-bother-watching-these-indices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why bother watching these indices?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-iv-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The IV surface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VIX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cor3m-3-month-implied-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COR3M — 3-Month Implied Correlation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-tenor-indices-extending-the-time-axis-added-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Tenor indices — extending the time axis (added 2022)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-delta-skew-indices-extending-the-strike-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Delta Skew indices — extending the strike axis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-monitor-the-gap-is-the-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to monitor — the gap is the signal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-implied-volatility-actually-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What implied volatility actually is
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What implied volatility actually is">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-bother-watching-these-indices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why bother watching these indices?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-iv-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The IV surface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VIX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cor3m-3-month-implied-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COR3M — 3-Month Implied Correlation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-tenor-indices-extending-the-time-axis-added-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Tenor indices — extending the time axis (added 2022)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-delta-skew-indices-extending-the-strike-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Delta Skew indices — extending the strike axis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-monitor-the-gap-is-the-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to monitor — the gap is the signal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="market-sentiment-volatility-indices-implied-correlation-and-the-iv-surface">Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface<a class="headerlink" href="#market-sentiment-volatility-indices-implied-correlation-and-the-iv-surface" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Related: <a href="../skew/">Volatility Skew</a> | <a href="../hedging-wings/">Hedging the Wings</a></p>
+<p>📚 <strong>Where this article fits</strong>: this is the <em>concept and taxonomy</em> of COR/SKEW indices. The <em>day-to-day monitoring tool</em> is <a href="../volatility-dashboard/">Volatility Dashboard</a>. They're a pair.</p>
+</blockquote>
+<hr />
+<h2 id="what-implied-volatility-actually-is">What implied volatility actually is<a class="headerlink" href="#what-implied-volatility-actually-is" title="Permanent link">&para;</a></h2>
+<p>The <strong>implied volatility (IV)</strong> of an S&amp;P 500 index option is the <strong>future-volatility estimate</strong> that SPX option market participants have implicitly agreed on for the period running to expiration.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Historical / Realized Volatility (HV/RV)</strong></td>
+<td style="text-align: left;">Computed from prices that have already happened</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Implied Volatility (IV)</strong></td>
+<td style="text-align: left;">The forward estimate the options market has agreed on, after digesting all available information</td>
+</tr>
+</tbody>
+</table>
+<p>Think of SPX-option IV as the <strong>market-cleared price of insurance</strong>. When the crowd starts pricing in upside, call IV rises. When the crowd starts pricing in downside, put IV rises.</p>
+<blockquote>
+<p>If you watch the IV surface carefully enough, can you read the market's collective intent — without ever opening the news?</p>
+</blockquote>
+<h3 id="why-bother-watching-these-indices">Why bother watching these indices?<a class="headerlink" href="#why-bother-watching-these-indices" title="Permanent link">&para;</a></h3>
+<p>In February 2020, <strong>before</strong> mainstream news really picked up the COVID story, the options market was already moving. Implied correlation had jumped from around 30% to north of 60% — the unmistakable signature of institutions buying put insurance in size.</p>
+<p>If you wait for the news, you're always late. The IV surface and the COR indices reflect <strong>institutional positioning first</strong>, so they give you a faster signal than the headlines.</p>
+<hr />
+<h2 id="the-iv-surface">The IV surface<a class="headerlink" href="#the-iv-surface" title="Permanent link">&para;</a></h2>
+<p>If you plot S&amp;P 500 (SPX) option implied volatility with <strong>moneyness</strong> (strike vs spot) on one axis and <strong>maturity</strong> (time to expiration) on the other, you get the <strong>IV surface</strong>.</p>
+<p><img alt="The IV surface and the headline indices" src="../../../assets/diagrams_en/diag_cor_iv_surface.png" /></p>
+<p>Each point on this surface is the IV at a specific strike-and-maturity combination. CBOE computes a number of implied-correlation indices by sampling specific points on this surface.</p>
+<hr />
+<h2 id="vix">VIX<a class="headerlink" href="#vix" title="Permanent link">&para;</a></h2>
+<p><strong>VIX</strong> is the market's fear gauge. It computes the <strong>expected 30-day volatility</strong> of the S&amp;P 500 from a wide strip of OTM SPX options (calls and puts together). It's not a single ATM point — it integrates a broad slice of the IV surface. So VIX is the SPX option market's <strong>collective 30-day-ahead volatility forecast</strong>.</p>
+<details><summary>How VIX is calculated (deeper dive)</summary>
+
+VIX is built using a variance-swap replication formula. Instead of reading a single strike's IV, it computes a weighted sum of OTM option prices across many strikes to get the expected 30-day variance. Take the square root, annualize, and you have VIX.
+
+</details>
+
+<hr />
+<h2 id="cor3m-3-month-implied-correlation">COR3M — 3-Month Implied Correlation<a class="headerlink" href="#cor3m-3-month-implied-correlation" title="Permanent link">&para;</a></h2>
+<p>CBOE launched this index on July 1, 2021. Its formal name is <strong>Cboe 3-Month Implied Correlation Index</strong>.</p>
+<p>COR3M reads the implied correlation at the <strong>3-month maturity, at-the-money (50Δ)</strong> point on the IV surface.</p>
+<p><strong>Implied correlation</strong> measures the relationship between the S&amp;P 500 index option's IV and the IV of the top 50 single-name options, expressed as a 0–100% number. In plain terms: how much the index members move together.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Market state</th>
+<th style="text-align: left;">Implied correlation</th>
+<th style="text-align: left;">What it says</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Uptrend</td>
+<td style="text-align: left;">~30%</td>
+<td style="text-align: left;">Mix of winners and losers; leadership stocks dragging the index up</td>
+</tr>
+<tr>
+<td style="text-align: left;">Downtrend</td>
+<td style="text-align: left;">Spikes above 60%</td>
+<td style="text-align: left;">Everything falls together</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>COR3M is published in real time on the CBOE website (cboe.com).</p>
+</blockquote>
+<hr />
+<h2 id="the-tenor-indices-extending-the-time-axis-added-2022">The Tenor indices — extending the time axis (added 2022)<a class="headerlink" href="#the-tenor-indices-extending-the-time-axis-added-2022" title="Permanent link">&para;</a></h2>
+<p>COR3M's success led CBOE to launch eight more correlation indices on July 18, 2022 — four along the <strong>time (tenor)</strong> axis and five along the <strong>strike (delta)</strong> axis of the IV surface.</p>
+<p><strong>The four tenor indices (ATM fixed, only maturity changes):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Index</th>
+<th style="text-align: left;">Maturity</th>
+<th style="text-align: left;">Strike</th>
+<th style="text-align: left;">What it tells you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>COR1M</strong></td>
+<td style="text-align: left;">1 month</td>
+<td style="text-align: left;">50Δ (ATM)</td>
+<td style="text-align: left;">Short-term sentiment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR6M</strong></td>
+<td style="text-align: left;">6 months</td>
+<td style="text-align: left;">50Δ (ATM)</td>
+<td style="text-align: left;">Mid-term sentiment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR9M</strong></td>
+<td style="text-align: left;">9 months</td>
+<td style="text-align: left;">50Δ (ATM)</td>
+<td style="text-align: left;">Mid-to-long-term sentiment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR1Y</strong></td>
+<td style="text-align: left;">1 year</td>
+<td style="text-align: left;">50Δ (ATM)</td>
+<td style="text-align: left;">Long-term sentiment</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="the-delta-skew-indices-extending-the-strike-axis">The Delta Skew indices — extending the strike axis<a class="headerlink" href="#the-delta-skew-indices-extending-the-strike-axis" title="Permanent link">&para;</a></h2>
+<p><strong>The five delta-skew indices (3-month maturity fixed, only strike changes):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Index</th>
+<th style="text-align: left;">Maturity</th>
+<th style="text-align: left;">Strike</th>
+<th style="text-align: left;">What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>COR10D</strong></td>
+<td style="text-align: left;">3 months</td>
+<td style="text-align: left;">10Δ</td>
+<td style="text-align: left;">Deep OTM put</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR30D</strong></td>
+<td style="text-align: left;">3 months</td>
+<td style="text-align: left;">30Δ</td>
+<td style="text-align: left;">OTM put</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR3MD</strong></td>
+<td style="text-align: left;">3 months</td>
+<td style="text-align: left;">50Δ</td>
+<td style="text-align: left;">ATM baseline</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR70D</strong></td>
+<td style="text-align: left;">3 months</td>
+<td style="text-align: left;">70Δ</td>
+<td style="text-align: left;">OTM call</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR90D</strong></td>
+<td style="text-align: left;">3 months</td>
+<td style="text-align: left;">90Δ</td>
+<td style="text-align: left;">Deep OTM call</td>
+</tr>
+</tbody>
+</table>
+<p>S&amp;P 500 index options have a <a href="../skew/">volatility skew</a>. When you plot all five delta-skew correlation indices on one chart, the COR readings line up <strong>close to a straight line</strong>. That makes the slope easy to read at a glance — and the slope <em>is</em> the skew.</p>
+<p><img alt="Delta Skew indices — read the skew from the slope" src="../../../assets/diagrams_en/diag_cor_delta_skew.png" /></p>
+<p>A steeper negative slope (case A) corresponds to a <strong>steeper skew on the IV surface</strong> than a flatter slope (case B).</p>
+<hr />
+<h2 id="how-to-monitor-the-gap-is-the-signal">How to monitor — the gap is the signal<a class="headerlink" href="#how-to-monitor-the-gap-is-the-signal" title="Permanent link">&para;</a></h2>
+<p><img alt="Monitoring the COR indices — the spacing matters" src="../../../assets/diagrams_en/diag_cor_monitoring.png" /></p>
+<p>When you track the historical levels of the delta-skew correlation indices, the key isn't the absolute level — it's the <strong>spacing between them</strong>:</p>
+<ul>
+<li><strong>Wide spacing</strong> → correlations differ across deltas → market is healthy, names dispersing</li>
+<li><strong>Narrow spacing</strong> → all correlations converging toward 1.0 (every stock moving in the same direction) → stress, broad sell-off</li>
+</ul>
+<p>Below is a TradingView chart that monitors the tenor COR indices (COR1M through COR1Y) in real time:</p>
+<p><img alt="BF_CBOE_ImpliedCorrelation_TermStructure (TradingView)" src="../../../assets/diagrams_en/bf_cor_termstructure.png" /></p>
+<p>In the calm window from August to October 2025, the indices are well separated. In November and December's pullbacks, you can see the spacing collapse and the Bear signal fire.</p>
+<blockquote>
+<p>You can read live COR data on the CBOE website, or run the Pine Scripts below in TradingView.</p>
+</blockquote>
+<details><summary>TradingView Pine Script — BF_CBOE_COR_TermStructure</summary>
+
+<div class="highlight"><pre><span></span><code>//@version=6
+indicator("BF_CBOE_COR_TermStructure", overlay=false)
+
+mult = input.float(1.0, "Multiplier", minval=0.1, step=0.1)
+
+cor1m = request.security("CBOE:COR1M", timeframe.period, close) * mult
+cor3m = request.security("CBOE:COR3M", timeframe.period, close) * mult
+cor6m = request.security("CBOE:COR6M", timeframe.period, close) * mult
+cor9m = request.security("CBOE:COR9M", timeframe.period, close) * mult
+cor1y = request.security("CBOE:COR1Y", timeframe.period, close) * mult
+
+plot(cor1m, "COR1M", color=color.red, linewidth=2)
+plot(cor3m, "COR3M", color=color.orange, linewidth=2)
+plot(cor6m, "COR6M", color=color.yellow, linewidth=2)
+plot(cor9m, "COR9M", color=color.green, linewidth=2)
+plot(cor1y, "COR1Y", color=color.blue, linewidth=2)
+
+// Bull/Bear: term structure inversion
+bull = ta.crossunder(cor1m, cor1y)
+bear = ta.crossover(cor1m, cor1y)
+
+if bull
+    label.new(bar_index, cor1m, "Bull", color=color.green,
+              textcolor=color.white, style=label.style_label_down, size=size.small)
+if bear
+    label.new(bar_index, cor1m, "Bear", color=color.red,
+              textcolor=color.white, style=label.style_label_down, size=size.small)
+</code></pre></div>
+
+</details>
+
+<details><summary>TradingView Pine Script — BF_CBOE_COR_DeltaSkew</summary>
+
+<div class="highlight"><pre><span></span><code>//@version=6
+indicator("BF_CBOE_COR_DeltaSkew", overlay=false)
+
+mult = input.float(1.0, "Multiplier", minval=0.1, step=0.1)
+
+cor10d = request.security("CBOE:COR10D", timeframe.period, close) * mult
+cor30d = request.security("CBOE:COR30D", timeframe.period, close) * mult
+cor3md = request.security("CBOE:COR3M", timeframe.period, close) * mult
+cor70d = request.security("CBOE:COR70D", timeframe.period, close) * mult
+cor90d = request.security("CBOE:COR90D", timeframe.period, close) * mult
+
+plot(cor10d, "COR10D (10D Put)", color=color.red, linewidth=2)
+plot(cor30d, "COR30D (30D Put)", color=color.orange, linewidth=2)
+plot(cor3md, "COR3MD (50D ATM)", color=color.yellow, linewidth=2)
+plot(cor70d, "COR70D (70D Call)", color=color.green, linewidth=2)
+plot(cor90d, "COR90D (90D Call)", color=color.blue, linewidth=2)
+
+// Skew spread background: wider = more stress
+skew_spread = cor10d - cor90d
+bgcolor(skew_spread &gt; 25 ? color.new(color.red, 85) :
+        skew_spread &gt; 20 ? color.new(color.orange, 90) : na)
+</code></pre></div>
+
+</details>
+
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Index group</th>
+<th style="text-align: left;">What it reads</th>
+<th style="text-align: left;">The point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>VIX</strong></td>
+<td style="text-align: left;">30-day forward volatility</td>
+<td style="text-align: left;">The market's fear gauge</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COR3M</strong></td>
+<td style="text-align: left;">3-month ATM implied correlation</td>
+<td style="text-align: left;">Are stocks dispersing or moving together?</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tenor (COR1M–1Y)</strong></td>
+<td style="text-align: left;">Implied correlation along the time axis</td>
+<td style="text-align: left;">Short-term vs long-term sentiment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Delta Skew (10D–90D)</strong></td>
+<td style="text-align: left;">Implied correlation along the strike axis</td>
+<td style="text-align: left;">Steepening skew = downside stress</td>
+</tr>
+</tbody>
+</table>
+<p>The IV surface is a real-time map of the options market's collective psychology. The COR indices put numbers on specific points of that map — giving you a tool to read participant intent faster than the news cycle.</p>
+<blockquote>
+<p>💡 <strong>The COR1M–COR1Y, COR10D–COR90D, and SKEW indices discussed here are tracked daily on the <a href="../../">home-page daily dashboard</a>.</strong> Pulled directly from Cboe settlement data — an ad-free alternative to vixcentral.</p>
+</blockquote>
+<hr />
+<p><em>Previous: <a href="../hedging-wings/">Hedging the Wings</a> | Related: <a href="../skew/">Volatility Skew</a> | <a href="../credit-spreads/">Reading Credit Spreads as an Indicator</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>
