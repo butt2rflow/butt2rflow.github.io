@@ -1,12 +1,12 @@
 ---
-title: "스테레오에서 집기까지 — 로봇은 부품을 어떻게 보는가"
+title: "스테레오에서 집기(grasping)까지 — 로봇은 부품을 어떻게 보는가"
 date: 2026-09-07
 tags: [physical-ai, robot-vision, foundation-models, stereo, segmentation, pose-estimation, isaac, robotics]
 lang: ko
 description: "카메라 사진 두 장으로 부품을 정밀하게 집어 올리기까지 — 파운데이션 모델 파이프라인(FoundationStereo → SAM 2 → FoundationPose)을 처음부터, 왜 최근까지 불가능했는지, 그리고 시뮬레이션이 어떻게 그 열쇠였는지. 로봇 비전 1부(2부작)."
 ---
 
-# 스테레오에서 집기까지 — 로봇은 부품을 어떻게 보는가
+# 스테레오에서 집기(grasping)까지 — 로봇은 부품을 어떻게 보는가
 
 > **로봇 비전(robot vision) · 2부작 중 1부.** 이 글은 로봇이 어떻게 *보는지*에 대한 이야기입니다. 그렇게 본 것을 *어디를 잡을지*로 바꾸는 이야기는 2부 [좌표계와 변환](frames-transforms.md)에서 이어집니다.
 
