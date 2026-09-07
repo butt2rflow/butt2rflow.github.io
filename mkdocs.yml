@@ -74,6 +74,7 @@ extra_css:
   - assets/custom.css
 
 extra_javascript:
+  - assets/external-links.js
   - assets/sidebar-widget.js
   - assets/vix-history-player.js
   - assets/kelly-toggle.js

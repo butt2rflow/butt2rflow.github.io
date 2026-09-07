@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 452" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>로봇 비전 파이프라인 — 상자에서 상자로 넘어가는 네 개의 질문</title>
-<desc>네 단계의 수직 파이프라인. 각 단계는 앞 단계의 결과를 받는다. 1: FoundationStereo가 좌·우 이미지를 깊이 지도로 바꾼다. 2: SAM 2가 이미지와 클릭 한 번을 부품 마스크로 바꾼다. 3: FoundationPose가 깊이·마스크·CAD를 6-DoF 포즈로 바꾼다. 4: 경로 계획기가 포즈와 점군을 충돌 없는 경로로 바꾼다.</desc>
+<desc>네 단계의 수직 파이프라인. 각 단계는 앞 단계의 결과를 받는다. 1: FoundationStereo가 좌·우 이미지를 깊이 지도로 바꾼다. 2: SAM 2가 이미지와 클릭 한 번을 부품 마스크로 바꾼다. 3: FoundationPose가 깊이·마스크·CAD를 6-DoF 포즈로 바꾼다. 4: 경로 계획기가 포즈와 포인트 클라우드을 충돌 없는 경로로 바꾼다.</desc>
 <style>
 :root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
@@ -49,6 +49,6 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <circle cx="96" cy="388" r="14" fill="#d97a0b"/><text class="bdg" x="96" y="393" text-anchor="middle">4</text>
 <text class="n" x="122" y="383" fill="#d97a0b">로봇이 움직인다</text>
 <text class="q" x="122" y="403">어떻게 안전하게 도달하나?</text>
-<text class="io" x="600" y="383" text-anchor="end">입력: 포즈 + 점군</text>
+<text class="io" x="600" y="383" text-anchor="end">입력: 포즈 + 포인트 클라우드</text>
 <text class="io" x="600" y="403" text-anchor="end">출력: 충돌 없는 경로</text>
 </svg>

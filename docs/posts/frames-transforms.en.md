@@ -125,7 +125,7 @@ Do the three one after another, and out comes the part's pose in the **base fram
 
 A photo is flat. Nothing in it directly says "250 mm away, tilted 12°." Recovering that needs two ingredients.
 
-**The lens's "ruler" (intrinsics).** Every lens has its own way of turning the world into pixels — how zoomed-in it is (**focal length**) and where it's truly aimed on the sensor (**principal point**). Together these let software turn "a dot at this pixel" into "a ray pointing in this exact direction."
+**The lens's "ruler" (intrinsics, K).** Every lens has its own way of turning the world into pixels — how zoomed-in it is (**focal length**) and where it's truly aimed on the sensor (**principal point**). Packed together into a matrix called **K**, they let software turn "a dot at this pixel" into "a ray pointing in this exact direction."
 
 **The geometry (PnP).** Given the handful of dots the AI found on the part, a **known 3D model** of the part, and that lens ruler, PnP finds the *one* position-and-tilt of the real part that would make its points land exactly on those dots. It's the same trick your eye does judging a coffee mug's distance from a single glance — because you know the mug's real size, only one distance-and-angle can make it look the way it does.
 
@@ -192,6 +192,6 @@ Educational summary; the math shown is illustrative, not something you compute b
 - *Translation / rotation* — the slide and the spin. Applied rotation-first, then translation.
 - *W, P, R* — a robot's orientation shorthand: roll (about X), pitch (about Y), yaw (about Z).
 - *PnP (Perspective-n-Point)* — recovering a known object's 3D pose from where its points land in one photo.
-- *Intrinsics* — a lens's own numbers: focal length (zoom), principal point (true aim), and distortion.
+- *Intrinsics (K)* — a lens's own numbers, packed into the camera matrix K: focal length (zoom), principal point (true aim), and distortion.
 - *Hand-eye calibration* — measuring the fixed Camera → Wrist transform by watching a fixed checkerboard from many arm poses.
 - *Matrix (4×4)* — the container that packs a transform's six numbers so a chain of frames becomes one multiplication.

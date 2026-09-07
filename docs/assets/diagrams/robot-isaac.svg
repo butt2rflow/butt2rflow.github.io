@@ -29,5 +29,5 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="r" x="615" y="118" text-anchor="middle" fill="#e6e5ff">범용 최전선</text>
 
 <path d="M40,158 L40,150 L350,150 L350,158" fill="none" stroke="#0d9488" stroke-width="1.2"/>
-<text class="cap" x="195" y="180" text-anchor="middle">우리 스테레오 → SAM → 포즈 파이프라인이 여기 산다</text>
+<text class="cap" x="195" y="180" text-anchor="middle">우리 스테레오 → SAM → 포즈 파이프라인이 여기에 들어간다</text>
 </svg>

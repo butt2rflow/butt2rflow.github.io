@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>찍고 · 렌더 · 비교 · 다듬기 — 가장 잘 맞는 포즈가 이긴다</title>
-<desc>CAD 모델을 여러 후보 포즈에 놓아, 서로 다르게 회전한 흐릿한 유령 상자들로 보인다. 각각을 렌더링해 실제 사진과 비교하고, 가장 잘 맞는 것이 이긴다. 승자는 진하게, 위치와 방향을 담은 세 축 표시(6-DoF 포즈)와 함께 그려진다.</desc>
+<desc>CAD 모델을 여러 후보 포즈에 놓아, 서로 다르게 회전한 흐릿한 유령 상자들로 보인다. 각각을 렌더링해 실제 사진과 비교하고, 가장 잘 맞는 것이 최종 선택된다. 선택된 포즈는 진하게, 위치와 방향을 담은 세 축 표시(6-DoF 포즈)와 함께 그려진다.</desc>
 <style>
 :root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
@@ -31,5 +31,5 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="ax" x="560" y="150" fill="#e0392b">x</text>
 <text class="ax" x="484" y="142" fill="#22a34a">y</text>
 <text class="ax" x="524" y="216" fill="#2f6fed">z</text>
-<text class="cap" x="518" y="118" text-anchor="middle">승리한 6-DoF 포즈</text>
+<text class="cap" x="518" y="118" text-anchor="middle">최종적으로 선택된 6-DoF 포즈</text>
 </svg>
