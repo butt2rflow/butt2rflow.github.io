@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>Open vs closed — can the AI reach into the robot's force loop?</title>
-<desc>Left, UR: the edge AI and the robot talk over RTDE at 500Hz (2ms) in both directions, so the AI reads force/torque and commands force directly via force_mode. Right, FANUC: only position commands flow at about 10Hz (100ms), and the force-control loop is walled off inside the robot where the AI cannot reach it.</desc>
+<desc>Left, UR: the edge AI and the robot talk over RTDE at 500Hz (2ms) in both directions, so the AI reads force/torque and commands force directly via force_mode. Right, FANUC: externally only position commands flow (tens of Hz on the free path; the paid high-rate streaming option is still position-only), and the force-control loop is walled off inside the robot where the AI cannot reach it.</desc>
 <style>
 text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 .h{font-size:15px;font-weight:700;}
@@ -36,7 +36,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 <text class="s" x="500" y="231" text-anchor="middle" style="fill:#d84a3a">force control (walled off)</text>
 <line x1="500" y1="140" x2="500" y2="194" stroke="#c99a6a" stroke-width="2"/>
 <path d="M496,188 L500,194 L504,188" fill="none" stroke="#c99a6a" stroke-width="2"/>
-<text class="s" x="512" y="162" style="fill:#8a6d3b">position cmd</text>
-<text class="s" x="512" y="177" style="fill:#8a6d3b">~10Hz · 100ms</text>
+<text class="s" x="512" y="162" style="fill:#8a6d3b">position only</text>
+<text class="s" x="512" y="177" style="fill:#8a6d3b">no force</text>
 <text class="big" x="500" y="285" text-anchor="middle" style="fill:#d84a3a">force is out of AI's reach</text>
 </svg>

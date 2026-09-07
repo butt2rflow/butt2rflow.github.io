@@ -21,9 +21,9 @@ This is the story of why that openness is decisive.
 ## In 30 seconds
 
 - **The specs are basically a tie.** UR10e (12.5 kg / 1300 mm) and FANUC CRX-10iA/L (10 kg / 1249 mm) overlap on repeatability (±0.05 mm class), safety (ISO/TS 15066), and hand guiding.
-- **The decider is external-control openness.** UR opens **RTDE** — 500Hz bidirectional data — so you can **read wrist force/torque externally** and **command force from outside** via `force_mode()`. FANUC's closed ecosystem exposes **neither the force data nor external force commands.**
-- **Why 500Hz matters:** for contact tasks (insertion, touch-off), an AI closing a force loop needs millisecond command intervals. 500Hz is 2 ms; a community driver at ~10Hz is 100 ms — too slow to react.
-- **The ecosystem splits too.** UR: URScript, `ur_rtde` (Python), an official ROS 2 driver, MoveIt 2, Isaac ROS, free simulators. FANUC: proprietary Karel/TP, ROBOGUIDE, a community driver — usually **vendor-dependent.**
+- **The decider is external-control openness.** UR opens **RTDE** — 500Hz bidirectional data — so you can **read wrist force/torque externally** and **command force from outside** via `force_mode()`, open and free out of the box. FANUC's force control is strong too, but it runs **inside the robot only** — there's no open channel to reach into the force loop from outside in real time.
+- **Why 500Hz matters:** for contact tasks (insertion, touch-off), an AI closing a force loop needs millisecond command intervals. UR gives you 2 ms (500Hz) natively. FANUC has a paid high-rate streaming option too, but it's **position-only,** and the free path runs at tens of Hz — too slow to react to force.
+- **The ecosystem splits too.** UR: URScript, `ur_rtde` (Python), an official ROS 2 driver, MoveIt 2, Isaac ROS, free simulators. FANUC centers on proprietary Karel/TP and ROBOGUIDE — though in late 2025 it **partnered with NVIDIA and shipped official ROS 2 + Isaac Sim** to start opening up (more below).
 - So **how much the AI can touch** diverges. In one field analysis it worked out to roughly **75–80% (open) vs 40–50% (closed)** Physical AI coverage — and the entire gap was **force-control access.**
 - FANUC, in return, is strong on **scale, high-volume precision, CNC integration, and fitting into existing plants.** "Physical AI first" → UR; "traditional automation's stability and scale" → FANUC. Different jobs.
 
@@ -37,7 +37,7 @@ Clear up the misconception first: this comparison isn't "which arm is better." I
 |---|---|---|
 | Payload | 10 kg | 12.5 kg |
 | Reach | 1,249 mm | 1,300 mm |
-| Repeatability | ±0.05 mm | ±0.05 mm |
+| Repeatability | ±0.04 mm | ±0.05 mm |
 | DoF | 6 | 6 |
 | Weight | 45 kg | 33.5 kg |
 | IP rating | IP54 | IP54 |
@@ -71,11 +71,11 @@ The heart of Physical AI is a **tight perception → action loop.** The AI sees 
 ![Open vs closed — can the AI reach into the robot's force loop?](../assets/diagrams_en/cobot-openness.svg)
 
 - **UR — open.** The **RTDE (Real-Time Data Exchange)** protocol opens **500Hz** bidirectional communication. You read joint positions and **wrist force/torque externally in real time,** and command **force, speed, and impedance from outside** (e.g. from an edge computer) with calls like `force_mode()` and `speedl()`. An AI policy can drive the robot's force behavior live.
-- **FANUC — closed.** In a closed ecosystem, the standard external interface is EtherNet/IP + Karel registers. Even a community ROS 2 driver tops out around **10Hz,** **wrist force/torque isn't externally readable,** and you **can't command force from outside.** Force control runs by script inside the robot.
+- **FANUC — more closed.** The free standard path is EtherNet/IP + Karel registers, plus a recent official ROS 2 driver — updating at **tens of Hz.** For faster external streaming you buy a **paid option like Stream Motion** (~125–250Hz), and even that is **position-only.** Wrist force/torque can be polled slowly over registers, but that's not a real-time force channel, and **there's no open path to command force from outside in real time.** FANUC's force control is capable — but it runs **inside the robot only.**
 
 ### Why 500Hz matters
 
-The numbers make it obvious: **10Hz means 100 ms between commands; 500Hz means 2 ms.** On a contact task — seating a connector, a light touch-off — an AI that needs to feel resistance and modulate force can't work at 100 ms; it's already shoved past. 2 ms can react like a fingertip. That's the **threshold for reactive force control.**
+The numbers make it obvious: **UR is 500Hz — 2 ms between commands.** FANUC's free path (tens of Hz) sits in the tens-to-100 ms range, and even the paid high-rate option updates position at 4–8 ms. On a contact task — seating a connector, a light touch-off — an AI that needs to feel resistance and modulate force can't work at 100 ms; it's already shoved past. 2 ms can react like a fingertip. But more decisive than the rate: **UR carries *force* over that fast channel, while FANUC's channel carries only *position.*** That's the **threshold for reactive force control.**
 
 ---
 
@@ -87,10 +87,10 @@ Openness doesn't stop at one interface; it spreads across the whole ecosystem.
 |---|---|---|
 | Native language | Karel / TP (proprietary) | URScript (open, Python-like) |
 | Python SDK | none | `ur_rtde` (open source) |
-| ROS 2 driver | community · ~10Hz | official · 500Hz |
+| ROS 2 driver | official (new 2025) · tens of Hz | official · 500Hz |
 | MoveIt 2 | limited | full |
 | Isaac ROS | partial | full |
-| Simulator | ROBOGUIDE (proprietary) | URSim (free), Gazebo, Isaac Sim |
+| Simulator | ROBOGUIDE + Isaac Sim (NVIDIA partnership) | URSim (free), Gazebo, Isaac Sim |
 | Open documentation | limited | comprehensive |
 | External-vendor dependency | usually required | not required |
 
@@ -102,7 +102,7 @@ FANUC's closedness isn't automatically bad, of course. **Proven stability, accou
 
 ## Force control — it all comes down to whether the AI can touch it
 
-Both robots do force control **internally.** Force following, force-threshold touch-off, pressing to a set force — both get a checkmark on the spec sheet.
+Both robots do force control **internally.** UR has a wrist force/torque sensor built into the e-Series; FANUC does it with a separate F/T sensor + Force Control package (a paid option) — force following, force-threshold touch-off, pressing to a set force. Both get a checkmark on the spec sheet; "FANUC has no force control" is a myth.
 
 The decisive difference: **UR opens that force to the outside; FANUC doesn't.**
 
@@ -140,15 +140,17 @@ Keep the balance here. The argument above rests on the premise **"if Physical AI
 
 So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible cell the AI keeps touching and evolving" → UR.** Not replacement — different uses.
 
+**And FANUC isn't standing still.** In late 2025 it announced an official Physical AI partnership with NVIDIA — putting **NVIDIA Jetson** (on-robot edge AI) and **Isaac Sim / Omniverse** (digital-twin simulation) onto its robots, and lowering the Python barrier with **official ROS 2 support.** The direction is clearly toward *more* open. But what's public so far is mostly **simulation, edge compute, and programming access** — not yet the thing this piece hinges on: **opening the real-time force loop to the outside.** Whether that gap closes ties directly into Part 3's investment story, so we'll pick it up there.
+
 ---
 
 ## Summary
 
 | Dimension | FANUC CRX | UR |
 |---|---|---|
-| Arm spec (10 kg class) | comparable (±0.05 mm) | comparable, a bit lighter/cheaper |
-| External control | EtherNet/IP · Karel, ~10Hz, no external force | **RTDE 500Hz, read & command force externally** |
-| Software | Karel/TP · ROBOGUIDE, vendor-dependent | URScript · Python · official ROS 2 · Isaac |
+| Arm spec (10 kg class) | comparable (±0.04 mm) | comparable, a bit lighter/cheaper |
+| External control | free tens of Hz / paid 125–250Hz · position-only, no real-time force | **RTDE 500Hz · read + command force** |
+| Software | Karel/TP · ROBOGUIDE — opening up via ROS 2 · NVIDIA | URScript · Python · official ROS 2 · Isaac |
 | AI force control | no (locked inside) | **yes (live external control)** |
 | Demo data | position only | **position + force** |
 | Physical AI coverage | low (perception only) | high (through force control) |
@@ -170,6 +172,7 @@ Specs and interfaces follow the manufacturers' (Universal Robots, FANUC) public 
 - *force_mode()* — the UR call that lets an external program directly control the robot's force behavior.
 - *Karel / TP* — FANUC's proprietary robot programming language and teach-pendant program.
 - *EtherNet/IP* — a standard industrial communication protocol; FANUC's main external interface.
+- *Stream Motion* — FANUC's paid external motion-streaming option; an outside PC can send position commands, but not force/torque.
 - *Force/torque (F/T) control* — the robot's ability to sense and modulate contact force; core to insertion, touch-off, and other contact tasks.
 - *Imitation learning* — training an AI policy from human demonstration data.
 - *ROS 2 · MoveIt 2 · Isaac ROS* — the common robotics middleware, motion planning, and NVIDIA GPU-accelerated robot packages.

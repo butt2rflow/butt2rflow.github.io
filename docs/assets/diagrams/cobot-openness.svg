@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>개방형 vs 폐쇄형 — AI가 로봇의 힘 루프를 만질 수 있느냐</title>
-<desc>왼쪽 UR: 엣지의 AI와 로봇이 RTDE로 500Hz(2ms) 양방향 통신해, AI가 힘/토크를 읽고 force_mode로 힘을 직접 제어한다. 오른쪽 화낙: 위치 명령만 대략 10Hz(100ms)로 오가고, 힘 제어 루프가 로봇 안에 갇혀 AI가 외부에서 손댈 수 없다.</desc>
+<desc>왼쪽 UR: 엣지의 AI와 로봇이 RTDE로 500Hz(2ms) 양방향 통신해, AI가 힘/토크를 읽고 force_mode로 힘을 직접 제어한다. 오른쪽 화낙: 외부로는 위치 명령만 오가고(무료 경로는 수십 Hz, 고속 스트리밍은 유료 옵션이라도 위치만), 힘 제어 루프가 로봇 안에 갇혀 AI가 외부에서 손댈 수 없다.</desc>
 <style>
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .h{font-size:15px;font-weight:700;}
@@ -46,8 +46,8 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <!-- one-way position arrow -->
 <line x1="500" y1="140" x2="500" y2="194" stroke="#c99a6a" stroke-width="2"/>
 <path d="M496,188 L500,194 L504,188" fill="none" stroke="#c99a6a" stroke-width="2"/>
-<text class="s" x="512" y="162" style="fill:#8a6d3b">위치 명령</text>
-<text class="s" x="512" y="177" style="fill:#8a6d3b">~10Hz · 100ms</text>
+<text class="s" x="512" y="162" style="fill:#8a6d3b">위치 명령만</text>
+<text class="s" x="512" y="177" style="fill:#8a6d3b">힘은 못 실림</text>
 <!-- barrier: AI can't reach force loop -->
 <text class="big" x="500" y="285" text-anchor="middle" style="fill:#d84a3a">힘은 외부에서 못 만짐</text>
 </svg>
