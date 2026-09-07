@@ -160,7 +160,7 @@ So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible c
 | Physical AI coverage | low (perception only) | high (through force control) |
 | Wins instead on | scale · high-volume precision · CNC · stability | openness · flexibility · fast iteration |
 
-**The one thing to remember:** the two arms are nearly the same. What decides Physical AI is **whether the AI can reach into the robot's force loop — i.e. openness.** Which leads straight to the third question: *so if you were investing in this, in whom?* [Part 3](cobot-investing.md) breaks down **UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA** through a Physical AI investing lens.
+**The one thing to remember:** the two arms are nearly the same. What decides Physical AI is **whether the AI can reach into the robot's force loop — i.e. openness.** And being open ultimately means you can **fuse AI with the robot** — a "fusion" that comes back as the key thread of Part 3. Which leads straight to the third question: *so if you were investing in this, in whom?* [Part 3](cobot-investing.md) breaks down **UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA** through a Physical AI investing lens.
 
 ---
 
