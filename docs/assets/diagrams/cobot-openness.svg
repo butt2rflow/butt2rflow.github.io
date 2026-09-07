@@ -1,0 +1,53 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>개방형 vs 폐쇄형 — AI가 로봇의 힘 루프를 만질 수 있느냐</title>
+<desc>왼쪽 UR: 엣지의 AI와 로봇이 RTDE로 500Hz(2ms) 양방향 통신해, AI가 힘/토크를 읽고 force_mode로 힘을 직접 제어한다. 오른쪽 화낙: 위치 명령만 대략 10Hz(100ms)로 오가고, 힘 제어 루프가 로봇 안에 갇혀 AI가 외부에서 손댈 수 없다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.b{font-size:13px;font-weight:600;fill:#3d3d3a;}
+.s{font-size:11px;fill:#73726c;}
+.big{font-size:13px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="320" rx="12" fill="#FAF8F2"/>
+
+<!-- LEFT: UR open -->
+<rect x="40" y="52" width="280" height="240" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="h" x="180" y="80" text-anchor="middle" style="fill:#16a34a">UR — 열려 있음</text>
+<!-- AI box -->
+<rect x="86" y="98" width="188" height="40" rx="8" fill="#e3f6ea" stroke="#16a34a" stroke-width="0.8"/>
+<text class="b" x="180" y="123" text-anchor="middle">AI · 엣지 컴퓨터</text>
+<!-- robot box -->
+<rect x="86" y="212" width="188" height="46" rx="8" fill="#eef1f6" stroke="#9aa0a8" stroke-width="0.8"/>
+<text class="b" x="180" y="233" text-anchor="middle">로봇 (힘 루프)</text>
+<text class="s" x="180" y="250" text-anchor="middle">힘/토크 센서</text>
+<!-- bidirectional arrows -->
+<g stroke="#16a34a" stroke-width="2.4">
+<line x1="150" y1="140" x2="150" y2="210"/>
+<path d="M146,146 L150,140 L154,146" fill="none"/>
+<line x1="210" y1="210" x2="210" y2="142"/>
+<path d="M206,148 L210,142 L214,148" fill="none"/>
+</g>
+<text class="big" x="180" y="180" text-anchor="middle" style="fill:#16a34a">RTDE</text>
+<text class="s" x="180" y="196" text-anchor="middle" style="fill:#16a34a">500Hz · 2ms</text>
+<text class="s" x="88" y="180" style="fill:#16a34a">힘 읽기 ↑</text>
+<text class="s" x="216" y="180" style="fill:#16a34a">force_mode ↓</text>
+<text class="s" x="180" y="278" text-anchor="middle">→ AI가 힘을 실시간 제어</text>
+
+<!-- RIGHT: FANUC closed -->
+<rect x="360" y="52" width="280" height="240" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="h" x="500" y="80" text-anchor="middle" style="fill:#d84a3a">화낙 — 닫혀 있음</text>
+<!-- AI box -->
+<rect x="406" y="98" width="188" height="40" rx="8" fill="#f6efe9" stroke="#c99a6a" stroke-width="0.8"/>
+<text class="b" x="500" y="123" text-anchor="middle">AI · 엣지 컴퓨터</text>
+<!-- robot box with inner walled force loop -->
+<rect x="406" y="196" width="188" height="62" rx="8" fill="#eef1f6" stroke="#9aa0a8" stroke-width="0.8"/>
+<rect x="440" y="210" width="120" height="34" rx="6" fill="#f7dcd6" stroke="#d84a3a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text class="s" x="500" y="231" text-anchor="middle" style="fill:#d84a3a">힘 제어 (내부 격리)</text>
+<!-- one-way position arrow -->
+<line x1="500" y1="140" x2="500" y2="194" stroke="#c99a6a" stroke-width="2"/>
+<path d="M496,188 L500,194 L504,188" fill="none" stroke="#c99a6a" stroke-width="2"/>
+<text class="s" x="512" y="162" style="fill:#8a6d3b">위치 명령</text>
+<text class="s" x="512" y="177" style="fill:#8a6d3b">~10Hz · 100ms</text>
+<!-- barrier: AI can't reach force loop -->
+<text class="big" x="500" y="285" text-anchor="middle" style="fill:#d84a3a">힘은 외부에서 못 만짐</text>
+</svg>
