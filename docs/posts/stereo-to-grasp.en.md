@@ -14,6 +14,8 @@ I learned this the hard way. I started where most of us do — photographing a p
 
 Then I watched a webinar called [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM), and it uncovered my eyes. The problem had never been my effort. It was that **you can't get this kind of training data from the real world at all** — so the whole approach has to change. This is the walkthrough I wish someone had handed me on day one.
 
+Step back, and the timing makes sense. The first wave of AI *generated* — text and images, like ChatGPT. The second learned to *act* — reasoning and using tools, like Claude. The third is **physical AI**: that same intelligence moving into robots that see and move in the real world. This is a look at how that third wave actually runs on a factory floor.
+
 The whole pipeline answers exactly one question:
 
 > **Where is the part in 3D, and how is it turned?**
@@ -61,7 +63,7 @@ Factory floors frequently have limited or no internet, for security and reliabil
 
 *→ Solved by running locally:* the models are small and optimized enough to run on an on-cell computer — no cloud.
 
-The unlock is the same for all four: instead of collecting real-world data, you **generate it in simulation**, where labels are free and everything can be randomized — then run the trained models locally.
+The unlock is the same for all four — **generate the data in simulation** (labels free, everything randomizable), then run the trained models locally.
 
 ---
 
@@ -144,7 +146,7 @@ Notice what just happened: the **clean depth from Step 1** turns out to matter f
 
 <details>
 <summary>The numbers behind the motion</summary>
-<p>A common planner, <strong>RRT*</strong>, approximates the whole robot as a few hundred spheres and routes them around a collision map built from the Step-1 point cloud; NVIDIA's GPU planner <strong>cuMotion</strong> does the same job on the GPU. Perception runs in roughly <strong>2–6 seconds</strong> — but it happens <em>while the arm is placing the previous part</em>, so cycle time is limited by robot motion, not by vision. And all of it runs locally on the controller — no cloud.</p>
+<p>A common planner, <strong>RRT*</strong>, approximates the whole robot as a few hundred spheres and routes them around a collision map built from the Step-1 point cloud; NVIDIA's GPU planner <strong>cuMotion</strong> does the same job on the GPU. Perception runs in roughly <strong>2–6 seconds</strong> — but it happens <em>while the arm is placing the previous part</em>, so cycle time is limited by robot motion, not by vision. And all of it runs locally on the controller.</p>
 </details>
 
 ---
@@ -188,7 +190,7 @@ You don't start at the frontier. You crawl, then walk, then run.
 | 3 | **FoundationPose** | Where, and how turned? | depth + mask + CAD → 6-DoF pose |
 | 4 | **RRT\* / cuMotion** | How do I reach it safely? | pose + point cloud → path |
 
-**The one thing to remember:** the old way needed a trained model *per part* — weeks each. Foundation models flip it around. You **prompt** them — a click, a CAD file — instead of training them, and they work on parts they've never seen, because they were trained on enormous *simulated* datasets with the lighting and clutter randomized. That single shift is what turned "impossible parts" into a Tuesday.
+**The one thing to remember:** foundation models swap *training* for *prompting* — a click, a CAD file — and still work on parts they've never seen, because they learned from enormous *simulated* datasets with the lighting and clutter randomized. That single shift is what turned "impossible parts" into a Tuesday.
 
 Next: the part's pose comes out in the *camera's* point of view, but the robot lives in its *own*. [Part 2 — Frames & Transforms](frames-transforms.md) is how it translates one into the other.
 

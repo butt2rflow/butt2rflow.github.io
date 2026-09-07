@@ -10,7 +10,7 @@ description: "The same spot has different numbers depending on who you ask — t
 
 > **Robot Vision · Part 2 of 2.** [Part 1](stereo-to-grasp.md) was about how the robot *sees* a part. This one is about how it turns "I see it there" into "…so my arm should move *here*."
 
-In [Part 1](stereo-to-grasp.md), the pipeline gave us the part's pose — but in the *camera's* point of view. That's not where the robot lives. The robot moves in its *own* frame. So there's one more idea to cross, and it's the same geometry behind self-driving cars, AR filters, and every camera-guided arm — worked out long before any of them existed.
+In [Part 1](stereo-to-grasp.md), the pipeline gave us the part's position and orientation — its **pose** — but in the *camera's* point of view. That's not where the robot lives. The robot moves in its *own* frame. So there's one more idea to cross, and it's the same geometry behind self-driving cars, AR filters, and every camera-guided arm — worked out long before any of them existed.
 
 Here's the whole thing in one sentence:
 
@@ -75,15 +75,11 @@ Why? A rotation always turns things *around the origin*. If you slide first, you
 
 > It's like getting dressed: shirt before jacket, not after. Same six numbers — but the sequence is load-bearing.
 
----
-
-## The same point, two names
-
-Here's the whole idea in one picture: a single dot, sitting in the **same physical spot**, gets different numbers in each frame. To convert, you rotate it, then slide it.
+Here's the whole idea in one picture: a single dot in the **same physical spot** gets different numbers in each frame, and the way to convert between them is exactly that order — rotate, then slide.
 
 ![One dot, seen from two frames](../assets/diagrams_en/frames-two-names.svg)
 
-Same physical dot; different numbers, depending on whose viewpoint you use. And 3D works exactly the same way — just three coordinates and three angles instead of one.
+3D works exactly the same way — just three coordinates and three angles instead of one.
 
 <details>
 <summary>The actual paper-and-pencil version</summary>
@@ -99,17 +95,11 @@ Y = 1.000 + 3 = 4.000</p>
 
 ---
 
-## The magic part — chaining transforms
-
-Here's why this scales. If you know **Camera → Wrist**, and you know **Wrist → Base**, you can get **Camera → Base** by doing one after the other. It doesn't matter how many hops there are — five frames just means four transforms in a row.
-
-> Every camera-guided robot in the world does exactly this. It's the bread and butter.
-
----
-
 ## What our robot actually does — Part → Camera → Wrist → Base
 
-The neat thing about the real pipeline is that each link comes from a *different* source — one from AI, one fixed, one live.
+The real power is that transforms **chain**: if you know **Camera → Wrist** and **Wrist → Base**, you get **Camera → Base** by doing one after the other — no matter how many hops. Every camera-guided robot in the world does exactly this; it's the bread and butter.
+
+And the neat thing about the real pipeline is that each link comes from a *different* source — one from AI, one fixed, one live.
 
 ![Three links, three different sources](../assets/diagrams_en/frames-chain.svg)
 
@@ -161,13 +151,9 @@ Why bother? Because grids **multiply cleanly**, and computers multiply them fast
 
 ---
 
-## In five sentences
+## End to end, in one flow
 
-1. Every "where is the part?" answer depends on whose viewpoint you use — a **frame of reference.**
-2. To convert between two frames you need a **transform** — a slide plus a spin, six numbers.
-3. Applying it, you **rotate first, then slide.** The order matters.
-4. A chain of frames (camera → wrist → base) is handled by **doing the transforms one after another.**
-5. The code stores them as **4×4 grids** because grids multiply cleanly — that's the whole reason.
+The camera sees the part — in the camera's frame. You rotate-then-slide that position into the wrist's frame, then into the base's frame. However many frames there are, you just chain the transforms one after another, and the code packs them into **4×4 grids** so the whole chain collapses to a single multiply. That's how *where the camera saw it* becomes *where the robot reaches*.
 
 And that closes the loop from Part 1: the pipeline *sees* the part in the camera's frame, and a chain of transforms carries that sighting all the way into the base frame, where the robot can finally reach out and pick it up.
 
