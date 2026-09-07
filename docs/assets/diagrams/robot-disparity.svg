@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>두 눈, 하나의 어긋남 — 시차가 깊이가 된다</title>
-<desc>같은 물체를 좌 렌즈와 우 렌즈로 보면 가로 위치가 살짝 달라진다. 그 어긋남이 시차다. 어긋남이 클수록 물체가 가깝다. 이미지 전체의 시차를 깊이 지도로 바꾸며, 가까움에서 멀리로 가는 색 막대로 나타낸다.</desc>
+<desc>같은 물체를 좌 렌즈와 우 렌즈로 보면 가로 위치가 살짝 달라진다. 그 어긋남이 시차다. 어긋남이 클수록 물체가 가깝다. 이미지 전체의 시차를 깊이 맵으로 바꾸며, 가까움에서 멀리로 가는 색 막대로 나타낸다.</desc>
 <style>
 :root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }

@@ -20,9 +20,9 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="n" x="122" y="83" fill="#2f6fed">FoundationStereo</text>
 <text class="q" x="122" y="103">모든 게 얼마나 먼가?</text>
 <text class="io" x="600" y="83" text-anchor="end">입력: 좌 + 우 이미지</text>
-<text class="io" x="600" y="103" text-anchor="end">출력: 깊이 지도</text>
+<text class="io" x="600" y="103" text-anchor="end">출력: 깊이 맵</text>
 
-<text class="cap" x="340" y="142" text-anchor="middle">↓  깨끗한 깊이 지도</text>
+<text class="cap" x="340" y="142" text-anchor="middle">↓  깨끗한 깊이 맵</text>
 
 <rect x="60" y="152" width="560" height="72" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.6"/>
 <rect x="60" y="152" width="4" height="72" rx="2" fill="#9333ea"/>
