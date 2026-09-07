@@ -35,6 +35,7 @@ plugins:
           site_name: "butterflow 투자 노트"
           nav_translations:
             Home: 홈
+            Investing: 투자 노트
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -80,39 +81,40 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - "Returns 101":
-    - posts/log-return.md
-    - posts/portfolio-return.md
-    - posts/expected-return.md
-    - posts/derivatives-leverage-cost.md
-    - posts/ssf-relaunch.md
-  - "Market Data":
-    - posts/cot.md
-    - posts/fedwatch.md
-    - posts/credit-spreads.md
-  - "Options 101":
-    - posts/options-basics.md
-    - posts/skew.md
-    - posts/move-index.md
-    - posts/hedging-wings.md
-    - posts/implied-correlation.md
-  - Tools:
-    - posts/monte-carlo.md
-    - posts/almanac.md
-    - posts/gex-calculator.md
-    - posts/gex-0dte-patterns.md
-    - posts/volatility-dashboard.md
-    - posts/vix-term-structure.md
-    - posts/cash-allocation.md
+  - "Investing":
+    - "Returns 101":
+      - posts/log-return.md
+      - posts/portfolio-return.md
+      - posts/expected-return.md
+      - posts/derivatives-leverage-cost.md
+      - posts/ssf-relaunch.md
+    - "Market Data":
+      - posts/cot.md
+      - posts/fedwatch.md
+      - posts/credit-spreads.md
+    - "Options 101":
+      - posts/options-basics.md
+      - posts/skew.md
+      - posts/move-index.md
+      - posts/hedging-wings.md
+      - posts/implied-correlation.md
+    - Tools:
+      - posts/monte-carlo.md
+      - posts/almanac.md
+      - posts/gex-calculator.md
+      - posts/gex-0dte-patterns.md
+      - posts/volatility-dashboard.md
+      - posts/vix-term-structure.md
+      - posts/cash-allocation.md
+    - Series:
+      - series/index.md
+      - Principles:
+        - series/s1-shannons-demon.md
+      - "Execution (preview)": series/s2-preview.md
+      - "Extension (preview)": series/s3-preview.md
+      - "Depth (preview)": series/s4-preview.md
   - "Physical AI":
     - posts/stereo-to-grasp.md
     - posts/frames-transforms.md
-  - Series:
-    - series/index.md
-    - Principles:
-      - series/s1-shannons-demon.md
-    - "Execution (preview)": series/s2-preview.md
-    - "Extension (preview)": series/s3-preview.md
-    - "Depth (preview)": series/s4-preview.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"
