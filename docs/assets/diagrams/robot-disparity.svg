@@ -22,7 +22,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <line x1="180" y1="122" x2="264" y2="122" stroke="#0d9488" stroke-width="1.4" stroke-dasharray="4 3"/>
 <line x1="180" y1="116" x2="180" y2="128" stroke="#0d9488" stroke-width="1.4"/>
 <line x1="264" y1="116" x2="264" y2="128" stroke="#0d9488" stroke-width="1.4"/>
-<text class="cap" x="222" y="110" text-anchor="middle" fill="#0d9488">어긋남 = 시차</text>
+<text class="cap" x="222" y="110" text-anchor="middle" style="fill:#0d9488">어긋남 = 시차</text>
 
 <text class="h" x="452" y="154" fill="var(--ts)">→</text>
 
@@ -32,7 +32,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 </linearGradient>
 </defs>
 <rect x="486" y="66" width="146" height="164" rx="10" fill="url(#dz)" stroke="var(--br)" stroke-width="1"/>
-<text class="lb" x="559" y="90" text-anchor="middle" fill="#fff">깊이</text>
-<text class="s" x="559" y="120" text-anchor="middle" fill="#fff">가까움</text>
-<text class="s" x="559" y="212" text-anchor="middle" fill="#fff">멀리</text>
+<text class="lb" x="559" y="90" text-anchor="middle" style="fill:#ffffff">깊이</text>
+<text class="s" x="559" y="120" text-anchor="middle" style="fill:#ffffff">가까움</text>
+<text class="s" x="559" y="212" text-anchor="middle" style="fill:#ffffff">멀리</text>
 </svg>

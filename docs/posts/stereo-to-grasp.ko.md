@@ -1,12 +1,12 @@
 ---
-title: "스테레오 비전(Stereo Vision)에서 잡기(grasping)까지 — 로봇은 목표한 사물을 어떻게 발견하는가"
+title: "스테레오 비전(Stereo Vision)에서 목표물 잡기(grasping)까지 — 로봇은 목표한 사물을 어떻게 발견하는가"
 date: 2026-09-07
 tags: [physical-ai, robot-vision, foundation-models, stereo, segmentation, pose-estimation, isaac, robotics]
 lang: ko
 description: "카메라 사진 두 장으로 부품을 정밀하게 잡아 올리기까지 — 파운데이션 모델 파이프라인(FoundationStereo → SAM 2 → FoundationPose)을 처음부터, 왜 최근까지 불가능했는지, 그리고 시뮬레이션이 어떻게 그 열쇠였는지. 로봇 비전 1부(2부작)."
 ---
 
-# 스테레오 비전(Stereo Vision)에서 잡기(grasping)까지 — 로봇은 목표한 사물을 어떻게 발견하는가
+# 스테레오 비전(Stereo Vision)에서 목표물 잡기(grasping)까지 — 로봇은 목표한 사물을 어떻게 발견하는가
 
 > **로봇 비전(robot vision) · 2부작 중 1부.** 이 글은 로봇이 어떻게 *보는지*에 대한 이야기입니다. 그렇게 본 걸 *어디를 잡을지*로 바꾸는 이야기는 2부 [좌표계와 변환](frames-transforms.md)에서 이어집니다.
 
@@ -16,7 +16,7 @@ description: "카메라 사진 두 장으로 부품을 정밀하게 잡아 올�
 
 결국 이 파이프라인 전체가 답하려는 건 딱 한 가지입니다.
 
-> **부품이 3D 공간 어디에 있고, 어떻게 돌아가 있나?**
+> **부품이 3D 공간 어떤 좌표에 있고, 부품의 자세가 얼마만큼 돌아가 있나?**
 
 이걸 충분히 정밀하게 계산해 낼 수 있으면 로봇은 부품을 스스로 잡아 올릴 수 있습니다. 미리 학습된 AI 모델 세 개를 줄줄이 이어 붙여 거기까지 가는 길, 그리고 그 전부를 가능하게 만든 진짜 열쇠인 시뮬레이션 이야기를 지금부터 풀어볼게요.
 

@@ -24,7 +24,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="cap" x="352" y="136" text-anchor="middle">클릭 1번 →</text>
 
 <rect x="396" y="60" width="236" height="160" rx="10" fill="#0b0b12" stroke="var(--br)" stroke-width="1"/>
-<text class="lb" x="414" y="82" fill="#8a8f9c">마스크</text>
+<text class="lb" x="414" y="82" style="fill:#9aa0ac">마스크</text>
 <path d="M470,150 q10,-46 56,-40 q40,6 40,40 q0,34 -44,38 q-48,4 -52,-38 Z" fill="#fff"/>
-<text class="s" x="514" y="206" text-anchor="middle" fill="#8a8f9c">부품만 = 흰색</text>
+<text class="s" x="514" y="206" text-anchor="middle" style="fill:#9aa0ac">부품만 = 흰색</text>
 </svg>

@@ -38,7 +38,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 </linearGradient>
 </defs>
 <rect x="486" y="66" width="146" height="164" rx="10" fill="url(#dz)" stroke="var(--br)" stroke-width="1"/>
-<text class="lb" x="559" y="90" text-anchor="middle" fill="#fff">DEPTH</text>
-<text class="s" x="559" y="120" text-anchor="middle" fill="#fff">near</text>
-<text class="s" x="559" y="212" text-anchor="middle" fill="#fff">far</text>
+<text class="lb" x="559" y="90" text-anchor="middle" style="fill:#ffffff">DEPTH</text>
+<text class="s" x="559" y="120" text-anchor="middle" style="fill:#ffffff">near</text>
+<text class="s" x="559" y="212" text-anchor="middle" style="fill:#ffffff">far</text>
 </svg>
