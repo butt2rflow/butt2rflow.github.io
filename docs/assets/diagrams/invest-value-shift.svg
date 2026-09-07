@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" role="img">
-<title>Physical AI 가치이동 지도 — 밀어주는 쪽 vs 누르는 쪽</title>
-<desc>Physical AI가 가치를 밀어주는 쪽(컴퓨트 NVIDIA, 로봇 관절 감속기 하모닉·나브테스코, 개방형 힘 제어 UR)과 누르는 쪽(전통 3D 머신비전의 로봇 가이던스 프리미엄 Cognex·Keyence)으로 갈린다. 다만 누르는 쪽엔 결정론 장벽이 있어 검사·계측 본진은 방어되고, 가치는 AI와 결정론을 잇는 융합에 앉는다.</desc>
+<title>Physical AI 가치이동 지도 — 밀어주는 쪽 vs 눌리는 쪽</title>
+<desc>Physical AI가 가치를 밀어주는 쪽(컴퓨트 NVIDIA, 로봇 관절 감속기 하모닉·나브테스코, 개방형 힘 제어 UR)과 눌리는 쪽(전통 3D 머신비전의 로봇 가이던스 프리미엄 Cognex·Keyence)으로 갈린다. 다만 눌리는 쪽엔 결정론 장벽이 있어 검사·계측 본진은 방어되고, 가치는 AI와 결정론을 연결하는 융합에 자리 잡는다.</desc>
 <style>
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .h{font-size:14px;font-weight:700;}
@@ -34,7 +34,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="s" x="550" y="106" text-anchor="middle">UR (Teradyne)</text>
 
 <!-- PRESSURED band -->
-<text class="zt" x="40" y="292" style="fill:#d84a3a">누르는 쪽 — 압박</text>
+<text class="zt" x="40" y="292" style="fill:#d84a3a">눌리는 쪽 — 압박</text>
 <rect x="40" y="304" width="330" height="56" rx="9" fill="#f7dcd6" stroke="#d84a3a" stroke-width="0.9"/>
 <text class="b" x="205" y="327" text-anchor="middle">전통 3D 머신비전의 로봇 가이던스 프리미엄</text>
 <text class="s" x="205" y="345" text-anchor="middle">Cognex · Keyence ← 싼 스테레오 + 파운데이션 모델</text>

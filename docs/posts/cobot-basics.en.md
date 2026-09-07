@@ -8,7 +8,7 @@ description: "Why industrial robots lived behind a fence, and how cobots stepped
 
 # What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
 
-> **Cobot series · Part 1 of 3.** This one is *what a cobot is and why it's different*. Part 2 compares UR vs FANUC products; Part 3 connects it to Physical AI investing (UR · FANUC · NVIDIA).
+> **Cobot series · Part 1 of 3.** This one is *what a cobot is and why it's different*. [Part 2](cobot-ur-vs-fanuc.md) compares UR vs FANUC products; [Part 3](cobot-investing.md) connects it to Physical AI investing (UR = Teradyne · FANUC · NVIDIA).
 
 Walk into a factory and most robots are behind bars. Yellow fencing, a red e-stop, a sign that says "open the door and it halts." Inside, the arm moves with a speed and force no human could match — and that speed and force is exactly **why it has to be caged.** Stand next to it and you're in danger.
 
@@ -60,9 +60,11 @@ There are four ways an application can count as "collaborative":
 3. **Speed and separation monitoring (SSM)** — sensors track the human–robot distance; the robot slows as you approach, stops before contact, and speeds up as you retreat.
 4. **Power and force limiting (PFL)** — the robot limits its own force so no contact exceeds the injury limits. Contact *is* allowed; it just can't hurt.
 
-![Industrial robot vs cobot — cage it, or limit its force](../assets/diagrams_en/cobot-vs-industrial.svg)
+![The four collaborative methods the standard recognizes](../assets/diagrams_en/cobot-four-methods.svg)
 
 The cobots we usually picture — like UR's — run on that fourth method, **power-and-force limiting (PFL),** by default. They feel contact through force/torque sensing and stop, with dozens of configurable limits on force, speed, and momentum. (Add a sensor and they can do SSM or hand guiding too.)
+
+![Industrial robot vs cobot — cage it, or limit its force](../assets/diagrams_en/cobot-vs-industrial.svg)
 
 ---
 
@@ -98,12 +100,14 @@ On paper it looks like a losing hand. Why it wins anyway:
 
 The key point: **cobots are not replacing high-volume lines.** A car-body weld line is still fast caged robots. What cobots did was **open up work that was never economical to automate — small shops, high-mix cells, tasks beside people.** That's market *expansion,* not substitution.
 
+![Expansion, not replacement](../assets/diagrams_en/cobot-market-expansion.svg)
+
 ---
 
 ## Who makes them — UR, and FANUC's answer
 
 - **Universal Robots (UR)** — founded in Odense, Denmark in 2005; its **first commercial cobot, the UR5, shipped in 2008,** effectively creating the category. The lineup, by payload: **UR3e (3 kg) · UR5e (5 kg) · UR10e (12.5 kg) · UR16e (16 kg) · UR20 (20 kg) · UR30 (30 kg).** Since 2015 it's been a subsidiary of the US company **Teradyne.** (That ownership is the key hook for the Part 3 investing piece.)
-- **FANUC** — the industrial-robot heavyweight (a "Big Four" with ABB, KUKA, Yaskawa) and the dominant supplier of machine-tool **CNC controls.** It announced its **one-millionth robot** shipped in 2023. Its answer in the cobot category is the **CRX series,** which leads on tablet drag-and-drop programming aimed squarely at UR's ease-of-use — e.g. the **CRX-25iA (25 kg payload, 1,889 mm reach).**
+- **FANUC** — the industrial-robot heavyweight (a "Big Four" with ABB, KUKA, Yaskawa) and the dominant supplier of machine-tool **CNC controls.** It announced its **one-millionth robot** shipped in 2023. Its answer in the cobot category is the **CRX series** — aimed squarely at UR's ease-of-use — e.g. the **CRX-25iA (25 kg payload, 1,889 mm reach).**
 - Plenty of others compete too — Doosan Robotics, Techman, ABB (GoFa/YuMi), KUKA (LBR iiwa) — and UR remains the cobot market-share leader.
 
 ---
@@ -133,11 +137,11 @@ And one more: **"collaborative" is a property of the operation, not the robot.**
 | **Who makes it** | UR (category creator, owned by Teradyne), FANUC CRX (incumbent's answer), others |
 | **Biggest myth** | the arm alone doesn't make it safe — safety is a property of the whole *application* |
 
-**The one thing to remember:** the cobot's innovation wasn't making the robot stronger — it was **removing the barriers to entry: the safety fence and the specialist integrator.** So the cobot story is really about *who sells that accessibility best* — which is where **Part 2 puts UR and FANUC head to head,** before **Part 3 connects it to Physical AI investing (UR = Teradyne · FANUC · NVIDIA).**
+**The one thing to remember:** the cobot's innovation wasn't making the robot stronger — it was **removing the barriers to entry: the safety fence and the specialist integrator.** So the cobot story is really about *who sells that accessibility best* — which is where **[Part 2](cobot-ur-vs-fanuc.md) puts UR and FANUC head to head,** before **[Part 3](cobot-investing.md) connects it to Physical AI investing (UR = Teradyne · FANUC · NVIDIA).**
 
 ---
 
-*Related: [From Stereo to Grasp — How a Robot Learns to See a Part](stereo-to-grasp.md)*
+*Related: [Part 2 — UR vs FANUC, openness](cobot-ur-vs-fanuc.md) · [Part 3 — Physical AI investing](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
 
 ### Sources & trademarks
 

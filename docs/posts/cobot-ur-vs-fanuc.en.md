@@ -8,7 +8,7 @@ description: "Two 10 kg-class cobots, nearly identical on paper — so why does 
 
 # UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
 
-> **Cobot series · Part 2 of 3.** [Part 1](cobot-basics.md) was what a cobot is and why it's different. Now we put the two flagships head to head — **Universal Robots (UR)** and **FANUC** — before Part 3 connects it to investing (UR = Teradyne · FANUC · NVIDIA).
+> **Cobot series · Part 2 of 3.** [Part 1](cobot-basics.md) was what a cobot is and why it's different. Now we put the two flagships head to head — **Universal Robots (UR)** and **FANUC** — before [Part 3](cobot-investing.md) connects it to investing (UR = Teradyne · FANUC · NVIDIA).
 
 Set two 10 kg-class cobots side by side: UR's **UR10e** and FANUC's **CRX-10iA/L**. Payload, reach, repeatability… on the spec sheet they're near twins. The prices are close too. So — same thing, right?
 
@@ -48,6 +48,8 @@ Clear up the misconception first: this comparison isn't "which arm is better." I
 *(Figures are approximate and vary by datasheet and date.)*
 
 Payload, reach, precision — all comparable, with UR a bit lighter and cheaper. **On the arm alone, you can't really separate them.** The contest is decided where the spec sheet doesn't look.
+
+![Specs are twins; openness is what splits them](../assets/diagrams_en/cobot-spec-vs-openness.svg)
 
 ---
 
@@ -122,6 +124,8 @@ To sum up: the **perception layer** (finding the target with a camera and gettin
 
 In one field analysis, that difference came out as roughly **75–80% (open) vs 40–50% (closed)** Physical AI coverage. The number itself is an illustrative estimate that varies by application — but the point is that **the entire gap traces to one thing: force-control access.** Not a worse arm — a less open one.
 
+![Physical AI coverage — open vs closed](../assets/diagrams_en/cobot-pai-coverage.svg)
+
 ---
 
 ## That doesn't mean FANUC loses — different jobs
@@ -156,11 +160,11 @@ So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible c
 | Physical AI coverage | low (perception only) | high (through force control) |
 | Wins instead on | scale · high-volume precision · CNC · stability | openness · flexibility · fast iteration |
 
-**The one thing to remember:** the two arms are nearly the same. What decides Physical AI is **whether the AI can reach into the robot's force loop — i.e. openness.** Which leads straight to the third question: *so if you were investing in this, in whom?* Part 3 breaks down **UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA** through a Physical AI investing lens.
+**The one thing to remember:** the two arms are nearly the same. What decides Physical AI is **whether the AI can reach into the robot's force loop — i.e. openness.** Which leads straight to the third question: *so if you were investing in this, in whom?* [Part 3](cobot-investing.md) breaks down **UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA** through a Physical AI investing lens.
 
 ---
 
-*Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+*Related: [Part 1 — What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [Part 3 — Physical AI investing](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
 
 ### Sources & trademarks
 

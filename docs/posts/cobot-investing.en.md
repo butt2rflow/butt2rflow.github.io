@@ -74,6 +74,10 @@ Conclusion: there's **no clean way to buy this board with a US large-cap.** So w
 
 ## Three exposures — each diluted differently
 
+All three have under half their revenue in robots — each diluted by something different. Here it is at a glance.
+
+![Three exposures, three dilutions — share of revenue that is robotics](../assets/diagrams_en/invest-three-dilution.svg)
+
 ### NVIDIA — selling brains to everyone (picks and shovels)
 
 NVIDIA's role in Physical AI is **"the merchant selling jeans and picks in a gold rush."** Whoever wins the robot war, that robot's brain and training ground come from NVIDIA. In fact it sells compute to **both** Part 2 protagonists — **UR (Teradyne) and FANUC.** A neutral arms dealer.
@@ -149,10 +153,12 @@ Industrial inspection demands **determinism** — the same answer every time, tr
 > **AI narrows; determinism confirms.**
 > AI takes the flexible, perception-hard part (find the object, absorb variation); classical vision and geometry take the verdict and the measurement (sub-pixel gauge, hard thresholds).
 
-This is exactly **your Robot Vision pipeline** — FoundationStereo/SAM (AI, flexible) find the "where/what," PnP/geometry (deterministic math) fix "exactly how much," and force confirms the grasp. **Fusion is the architecture that series already proved.**
+This is exactly **your Robot Vision pipeline** — FoundationStereo/SAM (AI, flexible) find the "where/what," geometry (deterministic math) fixes "exactly how much," and force confirms the grasp. **Fusion is the architecture that series already proved.**
+
+![Fusion — AI narrows, determinism confirms](../assets/diagrams_en/invest-fusion.svg)
 
 So for investing:
-- **Why incumbents are defended** — Cognex and Keyence already **own the deterministic, certified layer,** and can bolt AI on top. The robot-guidance segment gets pressured, but the **inspection / metrology / reading core holds** — because they hold the fusion layer.
+- **Why incumbents are defended** — Cognex and Keyence already **own the deterministic, certified layer,** and can bolt AI on top. The robot-guidance segment gets pressured, but the **inspection / metrology / reading core likely holds** — because they hold the fusion layer.
 - **NVIDIA is an enabler, not a replacer** — it supplies the AI layer, not the deterministic verdict. It doesn't kill the incumbents; it powers their fusion.
 
 In fact, Cognex and Keyence **each grew ~9%** through 2025–2026 — the very window this thesis predicts pain. The pressure is not "revenue collapse" but **margin/mix pressure at the 3D-guidance frontier.** That the frontier is real shows elsewhere — Intel's RealSense spun out as a standalone company in 2025 and **refocused on robotics,** and NVIDIA's FoundationStereo and FoundationPose now ship inside Isaac ROS. The erosion is coming — at the frontier, not the core.
@@ -167,7 +173,7 @@ So it's not a game of picking one ticker — it's a game of reading **where valu
 
 **Pure-AI startups** can't meet industry's determinism. **Pure-legacy incumbents** can't absorb AI's variety. The winner is **whoever owns the fusion of the two.** Part 2's openness echoes here — you have to be **open** to slot a deterministic verification layer around the AI; close it off and you can't attach that layer.
 
-Picks (NVDA) sell, joints (reducers) turn, open arms (UR) take AI in, and deterministic eyes (Cognex/Keyence) absorb AI. **Physical AI's real moat isn't with the robot makers or the AI makers — it forms with whoever bridges the two.**
+Picks (NVDA) sell, joints (reducers) turn, open arms (UR) take AI in, and deterministic eyes (Cognex/Keyence) are positioned to absorb AI. **Physical AI's real moat isn't with the robot makers or the AI makers — it forms with whoever bridges the two.**
 
 That closes the trilogy. What a cobot is (Part 1), what divides them (Part 2), and how to read and invest in the board (Part 3) — the one word running through all of it was **openness,** and, built on top of it, **fusion.**
 
@@ -179,10 +185,9 @@ That closes the trilogy. What a cobot is (Part 1), what divides them (Part 2), a
 |---|---|
 | Narrative vs revenue | Narrative/valuation = humanoids (mostly private); revenue/cash = cobots/industrial arms |
 | Pure-play | None in US large-caps (Doosan = small/Korea, UBTech/Unitree = China humanoid, ABB robotics = sold to SoftBank) |
-| NVIDIA | Picks and shovels. Physical AI ~1%, Data Center 90%. Lowest P/E (~29x) |
-| Teradyne (UR) | Most direct on the openness winner. But Robotics ~10%, semis 79%. Highest P/E (~47x) |
-| FANUC | Purest-robotics balance-sheet name. But robots 41%·mostly industrial, closed + China cycle |
+| The three, one line | NVDA = thin but cheapest · TER = openness winner wrapped in semis · FANUC = pure balance-sheet name but closed |
 | Value shift | Lifts: compute · reducers · open force control / Presses: traditional 3D vision's robot guidance |
+| Watch (risks) | Chinese reducer competition · FANUC's China cycle · FANUY liquidity · Symbotic's Walmart concentration |
 | Real moat | **Fusion** — whoever bridges non-deterministic AI + deterministic inspection |
 
 ---

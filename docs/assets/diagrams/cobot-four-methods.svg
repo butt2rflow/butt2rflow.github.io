@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 680 356" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>규격이 인정하는 네 가지 협동 방식</title>
+<desc>ISO/TS 15066이 인정하는 네 가지 협동 방식: 안전정격 감시정지(사람이 들어오면 멈추고 나가면 재개), 핸드 가이딩(작업자가 손으로 잡고 이동), 속도·분리 감시(거리를 재서 느려지고 닿기 전 멈춤), 동력·힘 제한(힘을 제한해 접촉해도 다치지 않음 — UR의 기본 방식).</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:13.5px;font-weight:700;fill:#3d3d3a;}
+.s{font-size:11.5px;fill:#73726c;}
+.n{font-size:11px;font-weight:700;}
+.badge{font-size:10.5px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="356" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">규격이 인정하는 네 가지 협동 방식</text>
+
+<!-- cell 1 SRMS -->
+<rect x="40" y="60" width="290" height="126" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="n" x="60" y="86" style="fill:#8a8781">1</text>
+<text class="t" x="80" y="88">안전정격 감시정지 (SRMS)</text>
+<text class="s" x="60" y="116">사람이 공유 구역에 들어오면 로봇이</text>
+<text class="s" x="60" y="134">(전원은 유지한 채) 멈추고,</text>
+<text class="s" x="60" y="152">나가면 다시 움직인다.</text>
+
+<!-- cell 2 HG -->
+<rect x="350" y="60" width="290" height="126" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="n" x="370" y="86" style="fill:#8a8781">2</text>
+<text class="t" x="390" y="88">핸드 가이딩 (HG)</text>
+<text class="s" x="370" y="116">작업자가 로봇을 직접 손으로 잡고</text>
+<text class="s" x="370" y="134">이동시킨다. 사람이 시키는</text>
+<text class="s" x="370" y="152">대로만 움직인다.</text>
+
+<!-- cell 3 SSM -->
+<rect x="40" y="200" width="290" height="126" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="n" x="60" y="226" style="fill:#8a8781">3</text>
+<text class="t" x="80" y="228">속도·분리 감시 (SSM)</text>
+<text class="s" x="60" y="256">사람과의 거리를 재서, 가까워지면</text>
+<text class="s" x="60" y="274">느려지고 닿기 전 멈췄다가,</text>
+<text class="s" x="60" y="292">멀어지면 다시 속도를 낸다.</text>
+
+<!-- cell 4 PFL (highlight) -->
+<rect x="350" y="200" width="290" height="126" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.6"/>
+<text class="n" x="370" y="226" style="fill:#15803d">4</text>
+<text class="t" x="390" y="228" style="fill:#15803d">동력·힘 제한 (PFL)</text>
+<rect x="556" y="212" width="66" height="20" rx="10" fill="#16a34a"/>
+<text class="badge" x="589" y="226" text-anchor="middle" style="fill:#ffffff">UR 기본</text>
+<text class="s" x="370" y="256">로봇이 힘을 제한해, 어떤 접촉도</text>
+<text class="s" x="370" y="274">부상 한계를 넘지 않게 한다.</text>
+<text class="s" x="370" y="292">접촉은 허용 — 다만 아프지 않다.</text>
+</svg>
