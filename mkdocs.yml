@@ -104,6 +104,9 @@ nav:
     - posts/volatility-dashboard.md
     - posts/vix-term-structure.md
     - posts/cash-allocation.md
+  - "Physical AI":
+    - posts/stereo-to-grasp.md
+    - posts/frames-transforms.md
   - Series:
     - series/index.md
     - Principles:

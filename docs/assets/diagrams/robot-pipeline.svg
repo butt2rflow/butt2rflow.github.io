@@ -1,0 +1,54 @@
+<svg width="100%" viewBox="0 0 680 452" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>로봇 비전 파이프라인 — 상자에서 상자로 넘어가는 네 개의 질문</title>
+<desc>네 단계의 수직 파이프라인. 각 단계는 앞 단계의 결과를 받는다. 1: FoundationStereo가 좌·우 이미지를 깊이 지도로 바꾼다. 2: SAM 2가 이미지와 클릭 한 번을 부품 마스크로 바꾼다. 3: FoundationPose가 깊이·마스크·CAD를 6-DoF 포즈로 바꾼다. 4: 경로 계획기가 포즈와 점군을 충돌 없는 경로로 바꾼다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.n{font-size:15px;font-weight:700;}
+.q{font-size:12px;fill:var(--ts);}
+.io{font-size:11px;fill:var(--ts);}
+.cap{font-size:11px;fill:var(--ts);}
+.bdg{font-size:14px;font-weight:700;fill:#fff;}
+</style>
+<rect x="0" y="0" width="680" height="452" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">파이프라인 — 네 개의 질문, 상자에서 상자로</text>
+
+<rect x="60" y="52" width="560" height="72" rx="10" fill="#e7effe" stroke="#2f6fed" stroke-width="0.6"/>
+<rect x="60" y="52" width="4" height="72" rx="2" fill="#2f6fed"/>
+<circle cx="96" cy="88" r="14" fill="#2f6fed"/><text class="bdg" x="96" y="93" text-anchor="middle">1</text>
+<text class="n" x="122" y="83" fill="#2f6fed">FoundationStereo</text>
+<text class="q" x="122" y="103">모든 게 얼마나 먼가?</text>
+<text class="io" x="600" y="83" text-anchor="end">입력: 좌 + 우 이미지</text>
+<text class="io" x="600" y="103" text-anchor="end">출력: 깊이 지도</text>
+
+<text class="cap" x="340" y="142" text-anchor="middle">↓  깨끗한 깊이 지도</text>
+
+<rect x="60" y="152" width="560" height="72" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.6"/>
+<rect x="60" y="152" width="4" height="72" rx="2" fill="#9333ea"/>
+<circle cx="96" cy="188" r="14" fill="#9333ea"/><text class="bdg" x="96" y="193" text-anchor="middle">2</text>
+<text class="n" x="122" y="183" fill="#9333ea">Segment Anything (SAM 2)</text>
+<text class="q" x="122" y="203">어느 픽셀이 부품인가?</text>
+<text class="io" x="600" y="183" text-anchor="end">입력: 이미지 + 클릭 한 번</text>
+<text class="io" x="600" y="203" text-anchor="end">출력: 마스크</text>
+
+<text class="cap" x="340" y="242" text-anchor="middle">↓  깊이 + 부품 마스크</text>
+
+<rect x="60" y="252" width="560" height="72" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="0.6"/>
+<rect x="60" y="252" width="4" height="72" rx="2" fill="#16a34a"/>
+<circle cx="96" cy="288" r="14" fill="#16a34a"/><text class="bdg" x="96" y="293" text-anchor="middle">3</text>
+<text class="n" x="122" y="283" fill="#16a34a">FoundationPose</text>
+<text class="q" x="122" y="303">어디에, 어떻게 돌아가 있나?</text>
+<text class="io" x="600" y="283" text-anchor="end">입력: 깊이 + 마스크 + CAD</text>
+<text class="io" x="600" y="303" text-anchor="end">출력: 6-DoF 포즈</text>
+
+<text class="cap" x="340" y="342" text-anchor="middle">↓  정확한 포즈</text>
+
+<rect x="60" y="352" width="560" height="72" rx="10" fill="#fdf0dc" stroke="#d97a0b" stroke-width="0.6"/>
+<rect x="60" y="352" width="4" height="72" rx="2" fill="#d97a0b"/>
+<circle cx="96" cy="388" r="14" fill="#d97a0b"/><text class="bdg" x="96" y="393" text-anchor="middle">4</text>
+<text class="n" x="122" y="383" fill="#d97a0b">로봇이 움직인다</text>
+<text class="q" x="122" y="403">어떻게 안전하게 도달하나?</text>
+<text class="io" x="600" y="383" text-anchor="end">입력: 포즈 + 점군</text>
+<text class="io" x="600" y="403" text-anchor="end">출력: 충돌 없는 경로</text>
+</svg>

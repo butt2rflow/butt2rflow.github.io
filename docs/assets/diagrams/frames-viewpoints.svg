@@ -1,0 +1,29 @@
+<svg width="100%" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>같은 컵, 두 시점, 다른 숫자</title>
+<desc>가운데 컵 하나. 왼쪽 사람은 "오른쪽 2, 앞으로 3"으로, 오른쪽 친구는 같은 컵을 "왼쪽 2, 뒤로 3"으로 잰다. 같은 물체인데 숫자가 다른 이유는 각자 자기 시점에서 재기 때문이며, 그 시점이 좌표계다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.s{font-size:12px;fill:var(--ts);}
+.you{font-size:13px;font-weight:700;fill:#2f6fed;}
+.fr{font-size:13px;font-weight:700;fill:#16a34a;}
+</style>
+<rect x="0" y="0" width="680" height="240" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">같은 컵, 두 시점, 다른 숫자</text>
+
+<ellipse cx="340" cy="130" rx="26" ry="20" fill="#0d9488" opacity="0.85"/>
+<text class="s" x="340" y="176" text-anchor="middle">그 컵</text>
+
+<circle cx="120" cy="120" r="15" fill="#2f6fed"/>
+<text class="you" x="120" y="96" text-anchor="middle">나</text>
+<text class="s" x="120" y="164" text-anchor="middle">"오른쪽 2, 앞으로 3"</text>
+<line x1="138" y1="122" x2="316" y2="128" stroke="#2f6fed" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.7"/>
+
+<circle cx="560" cy="120" r="15" fill="#16a34a"/>
+<text class="fr" x="560" y="96" text-anchor="middle">친구</text>
+<text class="s" x="560" y="164" text-anchor="middle">"왼쪽 2, 뒤로 3"</text>
+<line x1="542" y1="122" x2="364" y2="128" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.7"/>
+
+<text class="s" x="340" y="214" text-anchor="middle">같은 물체 · 다른 숫자 · 각자 자기 좌표계에서</text>
+</svg>

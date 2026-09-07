@@ -1,0 +1,30 @@
+<svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>클릭 한 번이 부품만 오려낸다</title>
+<desc>왼쪽은 잡동사니가 섞인 장면 — 부품에 홀더와 통 가장자리가 함께 있고, 부품 위에 클릭 표시가 있다. 클릭 한 번 뒤 오른쪽에는 부품만 검정 위 흰색 형태로 오려낸 마스크가 남고, 나머지는 무시된다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.s{font-size:12px;fill:var(--ts);}
+.lb{font-size:11px;font-weight:600;fill:var(--ts);}
+.cap{font-size:12px;font-weight:600;fill:#9333ea;}
+</style>
+<rect x="0" y="0" width="680" height="250" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">클릭 한 번이 부품만 오려낸다</text>
+
+<rect x="48" y="60" width="260" height="160" rx="10" fill="#fff" stroke="var(--br)" stroke-width="1"/>
+<text class="lb" x="66" y="82">카메라 시점</text>
+<rect x="70" y="96" width="70" height="40" rx="5" fill="#cfd4dc" opacity="0.7"/>
+<rect x="228" y="150" width="62" height="46" rx="5" fill="#cfd4dc" opacity="0.7"/>
+<path d="M120,150 q10,-46 56,-40 q40,6 40,40 q0,34 -44,38 q-48,4 -52,-38 Z" fill="#9333ea" opacity="0.5"/>
+<circle cx="164" cy="140" r="9" fill="none" stroke="#9333ea" stroke-width="2.5"/>
+<circle cx="164" cy="140" r="2.5" fill="#9333ea"/>
+<text class="s" x="118" y="210">홀더 / 통 가장자리 = 무시</text>
+
+<text class="cap" x="352" y="136" text-anchor="middle">클릭 1번 →</text>
+
+<rect x="396" y="60" width="236" height="160" rx="10" fill="#0b0b12" stroke="var(--br)" stroke-width="1"/>
+<text class="lb" x="414" y="82" fill="#8a8f9c">마스크</text>
+<path d="M470,150 q10,-46 56,-40 q40,6 40,40 q0,34 -44,38 q-48,4 -52,-38 Z" fill="#fff"/>
+<text class="s" x="514" y="206" text-anchor="middle" fill="#8a8f9c">부품만 = 흰색</text>
+</svg>
