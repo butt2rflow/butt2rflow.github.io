@@ -12,7 +12,7 @@ description: "Two camera photos become a precise 3D grasp — the beginner's wal
 
 I learned this the hard way. I started where most of us do — photographing a part by hand and drawing a box around it, image after image, in a labelling tool. Then I spent weeks fighting the results: depth maps full of holes on the shiny metal, a model that worked under one set of lights and fell apart under the next, and — once — a gripper that drove straight into the part because a single bad depth reading told it to.
 
-Then I watched a webinar called *Picking the Impossible Parts*, and it uncovered my eyes. The problem had never been my effort. It was that **you can't get this kind of training data from the real world at all** — so the whole approach has to change. This is the walkthrough I wish someone had handed me on day one.
+Then I watched a webinar called [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM), and it uncovered my eyes. The problem had never been my effort. It was that **you can't get this kind of training data from the real world at all** — so the whole approach has to change. This is the walkthrough I wish someone had handed me on day one.
 
 The whole pipeline answers exactly one question:
 
@@ -198,7 +198,7 @@ Next: the part's pose comes out in the *camera's* point of view, but the robot l
 
 ### Sources & trademarks
 
-Based on the Vention webinar *Picking the Impossible Parts*. Model behaviour, training-set sizes, and package names follow NVIDIA's and Meta's public documentation and the respective model papers (FoundationStereo, FoundationPose, Segment Anything). Figures are approximate and current as of the sources at time of writing.
+Based on the Vention webinar [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM). Model behaviour, training-set sizes, and package names follow NVIDIA's and Meta's public documentation and the respective model papers (FoundationStereo, FoundationPose, Segment Anything). Figures are approximate and current as of the sources at time of writing.
 
 NVIDIA Isaac (Isaac Sim, Isaac ROS, Isaac Lab, Isaac GR00T, Omniverse, Jetson, cuMotion), FoundationStereo, FoundationPose, Meta Segment Anything (SAM), Vention, Intel RealSense, Luxonis, and Roboflow are trademarks of their respective owners, used here for identification only. All diagrams are original.
 

@@ -12,7 +12,7 @@ description: "카메라 사진 두 장으로 부품을 정밀하게 잡아 올�
 
 저는 몸으로 직접 때우면서 이런 것들을 배웠어요. 다들 그렇듯 저도 처음엔 모든 걸 수동으로 시작했습니다. 타겟 부품의 사진을 직접 찍고, 라벨링 도구에서 한 장 한 장 네모를 그리고… 그러고는 몇 주를 결과와 씨름했죠. 크롬 표면(비전에서는 실제 크롬이 아니어도, 깊이 재기가 어려운 반질반질한 표면을 통틀어 이렇게 부릅니다) 위에서는 깊이 맵(depth map)이 뻥 뚫린 채 '측정 불가'로 나왔고, 한 조명에서 멀쩡하던 모델이 조명만 바뀌면 와르르 무너졌어요. 한번은 깊이 값 하나가 잘못 찍히는 바람에 그리퍼(gripper)가 부품을 그대로 들이받은 적도 있습니다.
 
-그러다 *Picking the Impossible Parts(불가능한 부품 집기)*라는 웨비나를 봤는데, 그게 눈을 번쩍 뜨게 해주더군요. 문제는 제가 대충 해서가 아니었어요. **애초에 이런 학습 데이터는 현실에서 구할 수가 없는 것**이었고, 그러니 접근법 자체를 갈아엎는 수밖에 없었던 겁니다. 이 글은 그때 누가 옆에서 딱 짚어줬으면 싶었던, 바로 그 이야기예요.
+그러다 [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM)(불가능한 부품 집기)라는 웨비나를 봤는데, 그게 눈을 번쩍 뜨게 해주더군요. 문제는 제가 대충 해서가 아니었어요. **애초에 이런 학습 데이터는 현실에서 구할 수가 없는 것**이었고, 그러니 접근법 자체를 갈아엎는 수밖에 없었던 겁니다. 이 글은 그때 누가 옆에서 딱 짚어줬으면 싶었던, 바로 그 이야기예요.
 
 결국 이 파이프라인 전체가 답하려는 건 딱 한 가지입니다.
 
@@ -198,7 +198,7 @@ CAD 파일에서 형태를 그때그때 읽어오기 때문에 이것도 **제�
 
 ### 출처와 표기
 
-Vention 웨비나 *Picking the Impossible Parts*를 바탕으로 했습니다. 모델 동작·학습 데이터 규모·패키지 이름은 NVIDIA와 Meta의 공개 문서 및 각 모델 논문(FoundationStereo, FoundationPose, Segment Anything)을 따랐습니다. 수치는 근사이며 집필 시점 출처 기준입니다.
+Vention 웨비나 [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM)를 바탕으로 했습니다. 모델 동작·학습 데이터 규모·패키지 이름은 NVIDIA와 Meta의 공개 문서 및 각 모델 논문(FoundationStereo, FoundationPose, Segment Anything)을 따랐습니다. 수치는 근사이며 집필 시점 출처 기준입니다.
 
 NVIDIA Isaac(Isaac Sim, Isaac ROS, Isaac Lab, Isaac GR00T, Omniverse, Jetson, cuMotion), FoundationStereo, FoundationPose, Meta Segment Anything(SAM), Vention, Intel RealSense, Luxonis, Roboflow는 각 권리자의 상표이며, 여기서는 지칭 목적으로만 사용했습니다. 본문 그림은 모두 직접 제작했습니다.
 
