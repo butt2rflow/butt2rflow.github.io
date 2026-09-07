@@ -8,7 +8,7 @@ description: "A robot-vision pipeline ultimately has to run on a small computer 
 
 # Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
 
-> **Field notes · "The Robot's Brain on the Edge," Part 1 of 2.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 (planned) puts **Isaac ROS** on top for GPU-accelerated perception — a step I haven't taken yet, so I'll write it once I've actually done it.
+> **Field notes · "The Robot's Brain on the Edge," Part 1 of 2.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 (planned) puts **Isaac ROS** on top for GPU-accelerated perception.
 
 First, a word on how this piece was written. A good share of the setup below, I **didn't type myself.** The first thing I did at the start was **open SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly**, and from there the AI ran the commands, read the logs, and worked through the blockers faster than my own hands. I **climbed past my own knowledge and ability with 2nd-gen AI, up onto 3rd-gen Physical AI.** How I wired that up comes shortly — first, what we're building and why.
 
