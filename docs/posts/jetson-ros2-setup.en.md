@@ -3,12 +3,12 @@ title: "Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and
 date: 2026-09-12
 tags: [physical-ai, jetson, ros2, edge-ai, robotics, field-notes]
 lang: en
-description: "A robot-vision pipeline ultimately has to run on a small computer bolted to the cell. Field notes on getting JetPack and ROS 2 onto a Jetson Orin NX — and the walls I actually hit. Part 1 of 2 (in progress)."
+description: "A robot-vision pipeline ultimately has to run on a small computer bolted to the cell. Field notes on getting JetPack and ROS 2 onto a Jetson Orin NX — and the walls I actually hit. Part 1 of 2."
 ---
 
 # Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
 
-> **Field notes · "The Robot's Brain on the Edge," Part 1 of 2.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 (planned) puts **Isaac ROS** on top for GPU-accelerated perception.
+> **Field notes · "The Robot's Brain on the Edge," Part 1 of 2.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 puts **Isaac ROS** on top for GPU-accelerated perception.
 
 First, a word on how this piece was written. A good share of the setup below, I **didn't type myself.** The first thing I did at the start was **open SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly**, and from there the AI ran the commands, read the logs, and worked through the blockers faster than my own hands. I **climbed past my own knowledge and ability with 2nd-gen AI, up onto 3rd-gen Physical AI.** How I wired that up comes shortly — first, what we're building and why.
 
@@ -27,7 +27,7 @@ Physical AI is really about "AI moving into the robot." The place that AI actual
 - **JetPack** (Jetson's OS + drivers + CUDA bundle) **6** flashed → Ubuntu 22.04 / CUDA 12.6. (Deliberately 6, *not* the newest 7 — more stable, thicker support.) The first walls show up here.
 - **ROS 2 Humble** via apt — the common language of robot software. This part was relatively smooth.
 - **The biggest wall:** `pip install torch` pulls the wrong CUDA build and won't run → you have to get it from a Jetson-specific index. The point where desktop instincts betray you.
-- **The big picture:** heavy **training on a desktop GPU**, **inference on the Jetson.** ROS 2 is the on-ramp to the next step, **Isaac ROS** — which is Part 2.
+- **The big picture:** heavy **training on a desktop or cloud GPU**, **inference on the Jetson.** ROS 2 is the on-ramp to the next step, **Isaac ROS** — which is Part 2.
 - **Why it went fast:** I started by opening **SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly.** I climbed past my own knowledge with 2nd-gen AI to get up onto **3rd-gen Physical AI.**
 - *This is a general Jetson setup experience, not a specific field deployment.*
 
@@ -112,7 +112,7 @@ That's the "as far as I've gotten" point. But you need to see where this setup i
 
 The goal is a **two-machine division of labor.**
 
-- **Training on a desktop GPU.** Heavy work like simulation and model training goes to an RTX-class desktop GPU. (The Jetson can't do this — a gotcha in its own right.)
+- **Training on a desktop (or cloud) GPU.** Heavy work like simulation and model training goes to an RTX-class desktop GPU — or a **rented cloud GPU** if you don't have one. (Either way, the Jetson can't do it — a gotcha in its own right.)
 - **Inference on the Jetson.** The trained models/policies come down to the Jetson, which runs only the real-time perceive→act loop at the cell.
 
 And an honest confession. **The control loop that actually runs today is plain Python** — grab a frame from the camera, run the model, send a command to the robot. ROS 2 is still closer to "nice-to-have infrastructure." So why bother installing ROS 2 at all?
@@ -123,13 +123,11 @@ And an honest confession. **The control loop that actually runs today is plain P
 
 ---
 
-## Next — Isaac ROS, but there's a fork
+## Next — Isaac ROS
 
 Now that ROS 2 is up, the next step is **Isaac ROS** — NVIDIA's collection of GPU-accelerated ROS 2 perception packages. Think of it as the on-Jetson implementation of the very pipeline from the Robot Vision series — stereo depth, segmentation, 6-DoF pose — running fast and zero-copy on the board.
 
-But you have to read the map before climbing. Isaac ROS has recently **split into two tracks** — an older JetPack 6 / ROS 2 Humble line, and a newest JetPack 7 / ROS 2 Jazzy line. My **JetPack 6.2.2** sits right near that fork. (By the same "stable and supported" logic I used to pick 6, the Humble side is the natural choice — but whether it actually slots in cleanly is something you only learn by doing it.) Which way to go, how it affects the existing ROS 2 version, and actually spinning up the container and running a first perception job — I'll write that honestly in Part 2, **after I've actually done it.**
-
-The map is drawn. Now it's time to climb.
+One fork worth flagging ahead of time: Isaac ROS recently **split into two tracks** — an older JetPack 6 / ROS 2 Humble line, and a newest JetPack 7 / ROS 2 Jazzy line. On my **JetPack 6.2.2**, by the same "stable and supported" logic I used to pick 6, the **Humble side** is the natural choice. Part 2 builds the perception stack on top of it.
 
 ---
 

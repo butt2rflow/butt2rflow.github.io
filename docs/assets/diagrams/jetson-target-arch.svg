@@ -13,8 +13,8 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 
 <!-- desktop box -->
 <rect x="40" y="96" width="210" height="120" rx="10" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.3"/>
-<text class="t" x="145" y="130" text-anchor="middle" style="fill:#3f4d66">데스크톱 (RTX GPU)</text>
-<text class="s" x="145" y="156" text-anchor="middle">무거운 학습 · 시뮬레이션</text>
+<text class="t" x="145" y="130" text-anchor="middle" style="fill:#3f4d66">학습 GPU</text>
+<text class="s" x="145" y="156" text-anchor="middle">데스크톱 RTX / 클라우드 렌털</text>
 <text class="s" x="145" y="174" text-anchor="middle">Isaac Lab / Sim</text>
 <text class="s" x="145" y="196" text-anchor="middle">(젯슨에선 못 함)</text>
 
