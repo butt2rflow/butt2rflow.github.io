@@ -1,4 +1,4 @@
-site_name: butterflow 투자 노트
+site_name: butterflow 노트
 site_url: https://butt2rflow.github.io
 site_description: 변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙
 site_author: butterflow
@@ -32,7 +32,7 @@ plugins:
           name: "🇰🇷 한국어"
           build: true
           default: true
-          site_name: "butterflow 투자 노트"
+          site_name: "butterflow 노트"
           nav_translations:
             Home: 홈
             Investing: 투자 노트
@@ -48,7 +48,7 @@ plugins:
         - locale: en
           name: "🇺🇸 English"
           build: true
-          site_name: "butterflow Investment Notes"
+          site_name: "butterflow Notes"
 
 markdown_extensions:
   - admonition

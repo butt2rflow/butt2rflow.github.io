@@ -2,7 +2,7 @@
 title: Home
 ---
 
-# butterflow Investment Notes
+# butterflow Notes
 
 **Notes for the retail investor who treats volatility as fuel, not as enemy.**
 

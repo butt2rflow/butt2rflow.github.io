@@ -2,7 +2,7 @@
 title: Home
 ---
 
-# butterflow 투자 노트
+# butterflow 노트
 
 **변동성을 적이 아닌 연료로 바라보는 개인 투자자를 위한 기록.**
 
