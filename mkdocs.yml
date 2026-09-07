@@ -36,6 +36,8 @@ plugins:
           nav_translations:
             Home: 홈
             Investing: 투자 노트
+            "Robot Vision": 로봇 비전
+            Cobots: 협동로봇
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -115,7 +117,10 @@ nav:
       - "Extension (preview)": series/s3-preview.md
       - "Depth (preview)": series/s4-preview.md
   - "Physical AI":
-    - posts/stereo-to-grasp.md
-    - posts/frames-transforms.md
+    - "Robot Vision":
+      - posts/stereo-to-grasp.md
+      - posts/frames-transforms.md
+    - "Cobots":
+      - posts/cobot-basics.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"
