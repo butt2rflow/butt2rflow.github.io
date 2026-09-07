@@ -29,8 +29,8 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 <text class="h" x="532" y="106" fill="var(--ts)">→</text>
 <!-- box 4 (frontier, filled) -->
 <rect x="550" y="60" width="130" height="82" rx="10" fill="#5b57e0"/>
-<text class="n" x="615" y="96" text-anchor="middle" fill="#fff">GR00T ★</text>
-<text class="r" x="615" y="118" text-anchor="middle" fill="#e6e5ff">generalist frontier</text>
+<text class="n" x="615" y="96" text-anchor="middle" style="fill:#ffffff">GR00T ★</text>
+<text class="r" x="615" y="118" text-anchor="middle" style="fill:#e9e8ff">generalist frontier</text>
 
 <!-- bracket over first two -->
 <path d="M40,158 L40,150 L350,150 L350,158" fill="none" stroke="#0d9488" stroke-width="1.2"/>
