@@ -38,6 +38,7 @@ plugins:
             Investing: 투자 노트
             "Robot Vision": 로봇 비전
             Cobots: 협동로봇
+            "Field Notes": 현장 노트
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -124,5 +125,7 @@ nav:
       - posts/cobot-basics.md
       - posts/cobot-ur-vs-fanuc.md
       - posts/cobot-investing.md
+    - "Field Notes":
+      - posts/jetson-ros2-setup.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"
