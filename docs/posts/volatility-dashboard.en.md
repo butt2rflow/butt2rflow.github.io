@@ -345,4 +345,4 @@ It takes one minute a day. The point is to keep you from getting shaken by fear,
 
 ---
 
-*Previous: [0DTE Gamma Patterns — How GEX shifts intraday](gex-0dte-patterns.md)*
+*Previous: [Beyond Gamma — Vanna, Charm, and the Dealer's Real Hands](vanna-charm.md)*

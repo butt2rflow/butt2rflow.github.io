@@ -345,4 +345,4 @@ print("  ← 스트레스" if skew_val > 158 else "  ← 경계" if skew_val > 1
 
 ---
 
-*이전 글: [0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가](gex-0dte-patterns.md)*
+*이전 글: [감마 너머 — Vanna·Charm와 딜러의 진짜 손놀림](vanna-charm.md)*

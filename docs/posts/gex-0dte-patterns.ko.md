@@ -241,4 +241,4 @@ print(snap)
 
 ---
 
-*이전 글: [GEX 직접 계산하기 — Google Sheets + Python](gex-calculator.md) | 다음 글: [변동성 대시보드 — Correlation + Skew 추적](volatility-dashboard.md)*
+*이전 글: [GEX 직접 계산하기 — Google Sheets + Python](gex-calculator.md) | 다음 글: [감마 너머 — Vanna·Charm와 딜러의 진짜 손놀림](vanna-charm.md)*

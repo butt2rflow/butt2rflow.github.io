@@ -241,4 +241,4 @@ These tools aren't for short-term trading. They're for the long-term investor wh
 
 ---
 
-*Previous: [Calculating GEX Yourself — Google Sheets + Python](gex-calculator.md) | Next: [Volatility Dashboard — Tracking Correlation + Skew](volatility-dashboard.md)*
+*Previous: [Calculating GEX Yourself — Google Sheets + Python](gex-calculator.md) | Next: [Beyond Gamma — Vanna, Charm, and the Dealer's Real Hands](vanna-charm.md)*
