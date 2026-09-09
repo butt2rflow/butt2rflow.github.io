@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>정직 레이어 — 어디까지 믿나 (견고 / 휴리스틱 / 과장)</title>
-<desc>세 층으로 나눈다. 견고(교과서·피어리뷰): 그릭 정의·세 흐름, 딜러 순 숏 변동성(GPP), 만기 핀닝(NPP), 딜러 감마의 장중 효과(Barbon&Buraschi), 0DTE 약 59%. 프레임워크(휴리스틱): vanna rally, charm의 OPEX 드리프트, GEX 레짐 지도 — 방향 예측은 아님. 과장·회피: 딜러가 시장을 지배한다, OPEX 후 취약 구간, 특정 업체 GEX가 정답, 개별주에 그대로 적용, 월간 OPEX 효과 불변.</desc>
+<desc>세 층으로 나눈다. 견고(교과서·피어리뷰): 그릭 정의·세 흐름, 딜러 순 숏 변동성(GPP), 만기 핀닝(NPP), 딜러 감마의 장중 효과(Barbon&amp;Buraschi), 0DTE 약 59%. 프레임워크(휴리스틱): vanna rally, charm의 OPEX 드리프트, GEX 레짐 지도 — 방향 예측은 아님. 과장·회피: 딜러가 시장을 지배한다, OPEX 후 취약 구간, 특정 업체 GEX가 정답, 개별주에 그대로 적용, 월간 OPEX 효과 불변.</desc>
 <style>
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .h{font-size:15px;font-weight:700;}
