@@ -1136,6 +1136,25 @@ def compute_vix_signals(vx, vix_spot):
 EMOJI = {"ok": "🟢", "caution": "🟡", "warning": "🟠", "danger": "🔴"}
 START_MARK = "<!-- DASHBOARD_START -->"
 END_MARK = "<!-- DASHBOARD_END -->"
+
+
+def _dash_card(lines: list[str], chart_summary: str = "📈 차트 보기") -> list[str]:
+    """Wrap one indicator section into a compact grid card: drop its leading
+    horizontal rule and fold the full-width chart image into a <details> so the
+    card shows just heading + signal table by default (chart one click away)."""
+    out = [ln for ln in lines if ln != "---"]
+    for i, ln in enumerate(out):
+        if ln.strip().startswith("![") and "](" in ln:
+            out[i:i + 1] = [
+                '<details class="dash-chart" markdown>',
+                f"<summary>{chart_summary}</summary>",
+                "",
+                ln,
+                "",
+                "</details>",
+            ]
+            break
+    return ['<div class="dash-card" markdown>', ""] + out + ["", "</div>"]
 KO_LABEL = {"ok": "정상", "caution": "경계", "danger": "스트레스"}
 EN_LABEL = {"ok": "Normal", "caution": "Caution", "danger": "Stressed"}
 SHAPE_KO = {"contango": "콘탱고 (정상)", "backwardation": "백워데이션 (스트레스)", "mixed": "혼합"}
@@ -1802,14 +1821,18 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "매 사이클의 14-day gap-fill 패스로 빠진 날을 채워 넣음 — 결과적으로 데이터 손실은 없음",
         "",
     ]
+    parts += ["", '<p class="dash-zone">오늘의 결정</p>', ""]
     if ks and ts:
         parts += render_master_bar_ko(ks, ts)
     if ks:
         parts += render_kelly_card_ko(ks, "assets/diagrams")
     if ts:
         parts += render_tactical_card_ko(ts, ks)
+    parts += ["", '<p class="dash-zone">시장 신호 한눈에</p>', "",
+              '<div class="dash-grid" markdown>', ""]
     if vs:
-        parts += ["### VIX Futures Term Structure", ""]
+        parts += ['<div class="dash-card" markdown>', "",
+                  "### VIX Futures Term Structure", ""]
         if vix_stale_date:
             parts += [
                 f'!!! warning "데이터 갱신 지연"',
@@ -1837,16 +1860,22 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "",
             "</div>",
             "",
+            '<details class="dash-chart" markdown>',
+            "<summary>📈 1년 곡선 재생</summary>",
+            "",
             '<div id="vix-history-player"></div>',
             "",
-            "<small>*Cboe 결제 데이터(CFE) 기준. Vixcentral 대안으로 활용 가능 · "
-            "지난 1년 곡선을 슬라이더/▶로 재생 가능 · "
+            "</details>",
+            "",
+            "<small>*Cboe 결제 데이터(CFE) 기준 · 슬라이더/▶로 1년 곡선 재생 · "
             "[해석 가이드 →](posts/vix-term-structure.md)*</small>",
             "",
-            "---",
+            "</div>",
             "",
         ]
     parts += [
+        '<div class="dash-card" markdown>',
+        "",
         "### COR + SKEW 대시보드",
         "",
         '<div class="dash-tight" markdown>',
@@ -1862,11 +1891,17 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "",
         "</div>",
         "",
+        '<details class="dash-chart" markdown>',
+        "<summary>📈 차트 보기</summary>",
+        "",
         "![변동성 대시보드 (S&P 500 페어)](assets/diagrams/vol_dashboard.png)",
+        "",
+        "</details>",
         "",
         "<small>*Cboe COR + SKEW 지수로 본 시장 분산 효과와 꼬리 위험 · "
         "[자세히 →](posts/volatility-dashboard.md)*</small>",
         "",
+        "</div>",
     ]
     if vvs:
         cross_note = " · 최근 5일 내 크로스 발생" if vvs.get("crossed") else ""
@@ -1874,7 +1909,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                     "caution": "전환",
                     "danger": "긴장 (5DMA < 중간선)"}[vvs["state"]]
         parts += [
-            "---",
+            '<div class="dash-card" markdown>',
             "",
             "### VolVol — VVIX / VIX 비율 지표",
             "",
@@ -1888,24 +1923,31 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "",
             "</div>",
             "",
+            '<details class="dash-chart" markdown>',
+            "<summary>📈 차트 보기</summary>",
+            "",
             "![VolVol 시계열](assets/diagrams/volvol.png)",
+            "",
+            "</details>",
             "",
             "<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, "
             "아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. "
-            "**공식 지표가 아닌 '심리적' 보조 신호** — 단독 매매 판단보다는 "
-            "VIX TS·COR/SKEW와 함께 시장 분위기를 읽는 용도 · "
+            "**공식 지표가 아닌 '심리적' 보조 신호** · "
             "[자세히 →](posts/cash-allocation.md)*</small>",
             "",
+            "</div>",
         ]
     if move:
-        parts += render_move_card_ko(move)
+        parts += _dash_card(render_move_card_ko(move))
     if cot:
-        parts += render_cot_card_ko(cot)
+        parts += _dash_card(render_cot_card_ko(cot))
     if fw:
-        parts += render_fedwatch_card_ko(fw)
+        parts += _dash_card(render_fedwatch_card_ko(fw))
     if creds:
-        parts += render_credit_card_ko(creds)
+        parts += _dash_card(render_credit_card_ko(creds))
     parts += [
+        "</div>",
+        "",
         "</div>",
         "",
         "---",

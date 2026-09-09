@@ -137,6 +137,66 @@ img {
 }
 
 /* ==========================================================================
+   Dashboard reorg (2026-09): two zones (decision / signals) + a responsive
+   indicator grid whose heavy charts collapse into <details>. Turns the long
+   single column of full-width cards into a compact, scannable grid.
+   ========================================================================== */
+.md-typeset .live-dash .dash-zone {
+  text-align: left !important;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #7c3aed;
+  margin: 1rem 0 0.4rem !important;
+  padding: 0 0 0.18rem 0.1rem;
+  border-bottom: 2px solid rgba(124, 58, 237, 0.18);
+}
+.md-typeset .live-dash .dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 0.6rem;
+  align-items: start;
+  margin: 0.35rem 0;
+}
+.md-typeset .live-dash .dash-card {
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 10px;
+  padding: 0.35rem 0.6rem 0.55rem;
+  background: rgba(124, 58, 237, 0.018);
+  min-width: 0;
+}
+.md-typeset .live-dash .dash-card > h3 {
+  margin: 0.15rem 0 0.2rem !important;
+  text-align: center !important;
+  color: #4b3a86;
+}
+.md-typeset .live-dash .dash-card hr { display: none !important; }
+.md-typeset .live-dash .dash-card img { max-width: 100%; }
+/* Collapsed chart: compact, centered click-to-expand */
+.md-typeset .live-dash .dash-chart {
+  margin: 0.25rem 0 0.15rem;
+  font-size: 0.7rem;
+}
+.md-typeset .live-dash .dash-chart > summary {
+  cursor: pointer;
+  color: #7c3aed;
+  text-align: center;
+  padding: 0.15rem 0;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.md-typeset .live-dash .dash-chart > summary:hover { opacity: 1; }
+[data-md-color-scheme="slate"] .md-typeset .live-dash .dash-card {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+[data-md-color-scheme="slate"] .md-typeset .live-dash .dash-card > h3 { color: #c3b6ec; }
+/* On phones the grid is a single column anyway (minmax floor) — keep gap tight */
+@media (max-width: 480px) {
+  .md-typeset .live-dash .dash-grid { gap: 0.45rem; }
+}
+
+/* ==========================================================================
    Mobile responsive — disable inline float:right images on narrow screens
    so Korean text doesn't get squeezed into a one-char-per-line column
    ========================================================================== */
