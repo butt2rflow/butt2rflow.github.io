@@ -132,7 +132,7 @@ Total GEX:       -$22,379,905,641   ← net short gamma
 
 → Total GEX is **negative** = MMs are net short gamma = arsonist mode.
 
-**Hedge-size interpretation:**
+**Hedge-size interpretation** — the sheet renders it as:
 
 ```
 "Market makers need to SELL $22.4Bn worth of index for each 1% move DOWN,
@@ -270,6 +270,9 @@ Total intrinsic(S) = Call intrinsic + Put intrinsic
 **Max Pain = the S that minimizes total intrinsic** (the price where option buyers earn the least = MMs earn the most).
 
 In the sheet, the `dollar value sum` column carries this number, and the row with the smallest value gives Max Pain.
+
+!!! note "How much to trust Max Pain"
+    Honestly, limited. Expiration-day **pinning** of optionable *single stocks* to heavy-OI strikes is peer-reviewed (Ni·Pearson·Poteshman, 2005) — but that's single stocks; the evidence that the *index (SPX)* gets dragged to Max Pain is weak. And where it matters at all, it's *near expiry*, not intraday on a normal day. It's an overhyped number — treat it as an *expiration-day reference* at most. (The empirics of pinning and dealer flows go deeper in [Beyond Gamma — Vanna, Charm](vanna-charm.md).)
 
 ---
 
@@ -472,6 +475,7 @@ The GEX you compute in the morning is just the starting point. **What happens to
 ## References
 
 - [SqueezeMetrics GEX whitepaper (PDF)](https://squeezemetrics.com/monitor/docs)
+- [Cboe — Evaluating the Market Impact of SPX 0DTE Options](https://www.cboe.com/insights/posts/volatility-insights-evaluating-the-market-impact-of-spx-0-dte-options) (dealer net-gamma magnitude)
 - [Cboe SPX Options — Delayed Quotes](https://www.cboe.com/delayed_quotes/spx/quote_table)
 
 *Cboe, SPX, and VIX are registered trademarks of Cboe Exchange, Inc. This article has no affiliation with or endorsement from Cboe.*
