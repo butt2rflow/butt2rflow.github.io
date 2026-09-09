@@ -1789,10 +1789,226 @@ def render_credit_card_en(cd: dict) -> list[str]:
     ]
 
 
+YF_OPTIONS = "https://query2.finance.yahoo.com/v7/finance/options/SPY"
+
+
+def _bs_gamma(S, K, T, sigma, r=0.043):
+    """Black–Scholes gamma of one option (per unit of underlying)."""
+    if T <= 0 or sigma <= 0 or S <= 0 or K <= 0:
+        return 0.0
+    d1 = (np.log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * np.sqrt(T))
+    pdf = np.exp(-0.5 * d1 * d1) / np.sqrt(2.0 * np.pi)
+    return float(pdf / (S * sigma * np.sqrt(T)))
+
+
+def fetch_gex(r_rate: float = 0.043) -> dict | None:
+    """Live dealer-gamma snapshot from Yahoo SPY option chains (a liquid SPX
+    proxy). Aggregates the nearest ~6 expiries, computes net GEX under the naive
+    dealer convention (long calls / short puts), the gamma-flip level, the
+    long/short-gamma regime, and Max Pain. The GEX *sign* is fragile, so the
+    tile is framed as a REGIME read (ripple, not wave) — never a trade signal.
+    Returns None on any failure so the tile is simply omitted."""
+    import datetime as _dt
+    import http.cookiejar
+    from collections import defaultdict
+    try:
+        # Yahoo's v7 options endpoint now needs a cookie + crumb (the v8 chart
+        # API used elsewhere doesn't). Do the standard handshake once.
+        cj = http.cookiejar.CookieJar()
+        op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+        op.addheaders = [("User-Agent", "Mozilla/5.0")]
+        try:
+            op.open("https://fc.yahoo.com", timeout=10)
+        except Exception:  # noqa: BLE001  (this call is expected to error but sets the cookie)
+            pass
+        crumb = op.open("https://query2.finance.yahoo.com/v1/test/getcrumb",
+                        timeout=10).read().decode()
+        _cq = urllib.parse.quote(crumb)
+        d0 = json.load(op.open(f"{YF_OPTIONS}?crumb={_cq}", timeout=25))
+        oc = d0["optionChain"]["result"][0]
+        spot = float(oc["quote"]["regularMarketPrice"])
+        if not (100 <= spot <= 2000):
+            raise ValueError(f"SPY spot {spot} out of range")
+        expiries = list(oc.get("expirationDates", []))[:6]
+        if not expiries:
+            raise ValueError("no expiries")
+        now = _dt.datetime.now(_dt.timezone.utc)
+        rows = []                       # (strike, call_oi, put_oi, call_iv, put_iv, T)
+        coi_by_k: dict = defaultdict(float)
+        poi_by_k: dict = defaultdict(float)
+        iv_by_k: dict = defaultdict(list)
+        T_by_k: dict = defaultdict(list)
+        for ed in expiries:
+            exp = _dt.datetime.fromtimestamp(ed, _dt.timezone.utc)
+            T = (exp - now).days / 365.0
+            if T <= 0:
+                continue
+            dd = json.load(op.open(f"{YF_OPTIONS}?date={ed}&crumb={_cq}", timeout=25))
+            opt = dd["optionChain"]["result"][0]["options"][0]
+            calls = {float(c["strike"]): c for c in opt.get("calls", [])}
+            puts = {float(p["strike"]): p for p in opt.get("puts", [])}
+            for k in set(calls) | set(puts):
+                c = calls.get(k, {})
+                p = puts.get(k, {})
+                coi = float(c.get("openInterest") or 0)
+                poi = float(p.get("openInterest") or 0)
+                civ = float(c.get("impliedVolatility") or 0)
+                piv = float(p.get("impliedVolatility") or 0)
+                rows.append((k, coi, poi, civ, piv, T))
+                coi_by_k[k] += coi
+                poi_by_k[k] += poi
+                for iv in (civ, piv):
+                    if iv > 0:
+                        iv_by_k[k].append(iv)
+                T_by_k[k].append(T)
+        if len(rows) < 20:
+            raise ValueError("too few option rows")
+
+        def net_gex_at(S):
+            g = 0.0
+            for (k, coi, poi, civ, piv, T) in rows:
+                gc = _bs_gamma(S, k, T, civ, r_rate) if (civ > 0 and coi) else 0.0
+                gp = _bs_gamma(S, k, T, piv, r_rate) if (piv > 0 and poi) else 0.0
+                g += (gc * coi - gp * poi) * 100 * S * S * 0.01
+            return g
+
+        cur = net_gex_at(spot)                       # $ per 1% move
+        lo, hi, steps = spot * 0.88, spot * 1.12, 40
+        prev_s, prev_g, flip = lo, net_gex_at(lo), None
+        for i in range(1, steps + 1):
+            s = lo + (hi - lo) * i / steps
+            g = net_gex_at(s)
+            if (prev_g < 0) != (g < 0) and (g - prev_g) != 0:
+                flip = prev_s + (hi - lo) / steps * (0 - prev_g) / (g - prev_g)
+                break
+            prev_s, prev_g = s, g
+
+        ks_all = sorted(set(coi_by_k) | set(poi_by_k))
+
+        def pain(S):
+            return sum(coi_by_k[k] * max(0.0, S - k) + poi_by_k[k] * max(0.0, k - S)
+                       for k in ks_all)
+        max_pain = min(ks_all, key=pain) if ks_all else None
+
+        prof = []
+        for k in ks_all:
+            if spot * 0.85 <= k <= spot * 1.15:
+                Tm = float(np.mean(T_by_k[k])) if T_by_k[k] else 0.05
+                ivm = float(np.mean(iv_by_k[k])) if iv_by_k[k] else 0.0
+                g_one = _bs_gamma(spot, k, Tm, ivm, r_rate) if ivm > 0 else 0.0
+                prof.append((k, (g_one * coi_by_k[k] - g_one * poi_by_k[k])
+                             * 100 * spot * spot * 0.01))
+        return {
+            "spot": spot,
+            "net_bn": cur / 1e9,
+            "regime": "long" if cur > 0 else "short",
+            "flip": flip,
+            "max_pain": max_pain,
+            "date": now.strftime("%Y-%m-%d"),
+            "profile": prof,
+        }
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] GEX fetch failed ({e}); tile skipped")
+        return None
+
+
+def render_gex_chart(g: dict, out_path: Path) -> bool:
+    prof = g.get("profile") or []
+    if not prof:
+        return False
+    ks = [k for k, _ in prof]
+    gv = [v / 1e9 for _, v in prof]                  # $bn per 1%
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    width = (max(ks) - min(ks)) / max(len(ks), 1) * 0.9 if len(ks) > 1 else 1.0
+    ax.bar(ks, gv, width=width,
+           color=["#1D9E75" if v >= 0 else "#D85A30" for v in gv], alpha=0.85)
+    ax.axhline(0, color="#888", linewidth=0.8)
+    ax.axvline(g["spot"], color="#4a2f9e", linewidth=1.6,
+               label=f"SPY spot {g['spot']:.0f}")
+    if g.get("flip"):
+        ax.axvline(g["flip"], color="#C99A2E", linewidth=1.4, linestyle="--",
+                   label=f"Gamma flip {g['flip']:.0f}")
+    if g.get("max_pain"):
+        ax.axvline(g["max_pain"], color="#6b7280", linewidth=1.0, linestyle=":",
+                   label=f"Max Pain {g['max_pain']:.0f}")
+    ax.set_ylabel("Net GEX ($bn / 1%)", fontsize=10)
+    ax.set_xlabel("SPY strike", fontsize=10)
+    ax.set_title("Dealer gamma exposure by strike (SPY, nearest expiries)", fontsize=11)
+    ax.legend(loc="best", fontsize=8)
+    ax.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+    return True
+
+
+def render_gex_card_ko(g: dict) -> list[str]:
+    reg = ("🟢 롱 감마 — 딜러가 변동성 억제(잔물결)" if g["regime"] == "long"
+           else "🔴 숏 감마 — 딜러 헷지가 변동성 증폭")
+    flip_s = f"{g['flip']:.0f}" if g.get("flip") else "—"
+    mp_s = f"{g['max_pain']:.0f}" if g.get("max_pain") else "—"
+    pos = ("플립 위 = 롱 감마" if (g.get("flip") and g["spot"] >= g["flip"])
+           else "플립 아래 = 숏 감마" if g.get("flip") else "—")
+    return [
+        "---",
+        "",
+        "### GEX — 딜러 감마 레짐 (SPY≈SPX)",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **레짐** (넷 GEX 부호) | {g['net_bn']:+.1f}B | {reg} |",
+        f"| 감마 플립 / 현재가 | {flip_s} / {g['spot']:.0f} | {pos} |",
+        f"| Max Pain (만기 참고) | {mp_s} | 맹신 금물 |",
+        "",
+        "</div>",
+        "",
+        "![딜러 감마 노출 — 행사가별](assets/diagrams/gex_regime.png)",
+        "",
+        "<small>*Yahoo SPY 옵션 체인 추정(SPX 대리). **감마는 잔물결, 파도는 델타** — "
+        "부호는 추정이라 방향 신호가 아니라 레짐(증폭/억제) 참고용, Max Pain은 만기일 참고치일 뿐 · "
+        "[GEX 직접 계산 →](posts/gex-calculator.md)*</small>",
+        "",
+    ]
+
+
+def render_gex_card_en(g: dict) -> list[str]:
+    reg = ("🟢 Long gamma — dealers dampen vol (ripples)" if g["regime"] == "long"
+           else "🔴 Short gamma — dealer hedging amplifies vol")
+    flip_s = f"{g['flip']:.0f}" if g.get("flip") else "—"
+    mp_s = f"{g['max_pain']:.0f}" if g.get("max_pain") else "—"
+    pos = ("above flip = long gamma" if (g.get("flip") and g["spot"] >= g["flip"])
+           else "below flip = short gamma" if g.get("flip") else "—")
+    return [
+        "---",
+        "",
+        "### GEX — dealer gamma regime (SPY≈SPX)",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **Regime** (net GEX sign) | {g['net_bn']:+.1f}B | {reg} |",
+        f"| Gamma flip / spot | {flip_s} / {g['spot']:.0f} | {pos} |",
+        f"| Max Pain (expiry ref) | {mp_s} | don't over-trust |",
+        "",
+        "</div>",
+        "",
+        "![Dealer gamma exposure by strike](assets/diagrams_en/gex_regime.png)",
+        "",
+        "<small>*Estimated from Yahoo SPY option chains (SPX proxy). **Gamma is the ripple, "
+        "delta is the wave** — the sign is inferred, so read it as a regime (amplify/dampen), "
+        "not a directional signal; Max Pain is just an expiry-day reference · "
+        "[Compute GEX yourself →](posts/gex-calculator.md)*</small>",
+        "",
+    ]
+
+
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
                       cot: dict | None = None, fw: dict | None = None,
-                      move: dict | None = None):
+                      move: dict | None = None, gex: dict | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -1945,6 +2161,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         parts += _dash_card(render_fedwatch_card_ko(fw))
     if creds:
         parts += _dash_card(render_credit_card_ko(creds))
+    if gex:
+        parts += _dash_card(render_gex_card_ko(gex))
     parts += [
         "</div>",
         "",
@@ -2034,7 +2252,7 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
                       cot: dict | None = None, fw: dict | None = None,
-                      move: dict | None = None):
+                      move: dict | None = None, gex: dict | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -2195,6 +2413,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         parts += _dash_card(render_fedwatch_card_en(fw), "📈 Show chart")
     if creds:
         parts += _dash_card(render_credit_card_en(creds), "📈 Show chart")
+    if gex:
+        parts += _dash_card(render_gex_card_en(gex), "📈 Show chart")
     parts += [
         "</div>",
         "",
@@ -2289,6 +2509,12 @@ def main():
     if move:
         print(f"  MOVE: {move['value']:.0f} (pct {move['pct']:.0f}%, 4wk {move['chg']:+.0f})")
 
+    print("Fetching GEX (SPY options / dealer gamma)...")
+    gex = fetch_gex()
+    if gex:
+        print(f"  GEX: net {gex['net_bn']:+.1f}B ({gex['regime']}), "
+              f"flip {gex['flip']}, max_pain {gex['max_pain']} (spot {gex['spot']:.0f})")
+
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
     print(f"  Saved: {OUT_KO / 'vol_dashboard.png'}")
@@ -2317,6 +2543,11 @@ def main():
         render_fedwatch_chart(fw["path"], OUT_KO / "fedwatch_path.png")
         shutil.copy2(OUT_KO / "fedwatch_path.png", OUT_EN / "fedwatch_path.png")
         print(f"  Saved: {OUT_KO / 'fedwatch_path.png'}")
+
+    if gex and gex.get("profile"):
+        if render_gex_chart(gex, OUT_KO / "gex_regime.png"):
+            shutil.copy2(OUT_KO / "gex_regime.png", OUT_EN / "gex_regime.png")
+            print(f"  Saved: {OUT_KO / 'gex_regime.png'}")
 
     if move:
         render_move_chart(move["series"], OUT_KO / "move_index.png")
@@ -2420,12 +2651,12 @@ def main():
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
         render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move, gex=gex),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
         render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move, gex=gex),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
