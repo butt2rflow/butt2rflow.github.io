@@ -2067,6 +2067,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "lost",
         "",
     ]
+    parts += ["", '<p class="dash-zone">Today\'s decision</p>', ""]
     if ks and ts:
         parts += render_master_bar_en(ks, ts)
     if ks:
@@ -2077,8 +2078,11 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         parts += render_kelly_card_en(ks, "../assets/diagrams_en")
     if ts:
         parts += render_tactical_card_en(ts, ks)
+    parts += ["", '<p class="dash-zone">Market signals at a glance</p>', "",
+              '<div class="dash-grid" markdown>', ""]
     if vs:
-        parts += ["### VIX Futures Term Structure", ""]
+        parts += ['<div class="dash-card" markdown>', "",
+                  "### VIX Futures Term Structure", ""]
         if vix_stale_date:
             parts += [
                 f'!!! warning "Stale data"',
@@ -2106,16 +2110,22 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "",
             "</div>",
             "",
+            '<details class="dash-chart" markdown>',
+            "<summary>📈 Play 1-year curves</summary>",
+            "",
             '<div id="vix-history-player"></div>',
             "",
-            "<small>*Source: Cboe CFE settlement — a reliable alternative to vixcentral · "
-            "Use the slider/▶ to scrub through up to 1 year of past curves · "
+            "</details>",
+            "",
+            "<small>*Source: Cboe CFE settlement · scrub 1 year of past curves with the slider/▶ · "
             "[Reading guide →](posts/vix-term-structure.md)*</small>",
             "",
-            "---",
+            "</div>",
             "",
         ]
     parts += [
+        '<div class="dash-card" markdown>',
+        "",
         "### COR + SKEW Dashboard",
         "",
         '<div class="dash-tight" markdown>',
@@ -2131,11 +2141,17 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "",
         "</div>",
         "",
+        '<details class="dash-chart" markdown>',
+        "<summary>📈 Show chart</summary>",
+        "",
         "![Volatility dashboard (paired with S&P 500)](assets/diagrams_en/vol_dashboard.png)",
+        "",
+        "</details>",
         "",
         "<small>*Cboe COR + SKEW indices — market diversification and tail-risk view · "
         "[Full guide →](posts/volatility-dashboard.md)*</small>",
         "",
+        "</div>",
     ]
     if vvs:
         cross_note = " · crossed in last 5 days" if vvs.get("crossed") else ""
@@ -2143,7 +2159,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                     "caution": "Transition",
                     "danger": "Stressed (5DMA < middle)"}[vvs["state"]]
         parts += [
-            "---",
+            '<div class="dash-card" markdown>',
             "",
             "### VolVol — VVIX / VIX ratio",
             "",
@@ -2157,24 +2173,31 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "",
             "</div>",
             "",
+            '<details class="dash-chart" markdown>',
+            "<summary>📈 Show chart</summary>",
+            "",
             "![VolVol history](assets/diagrams_en/volvol.png)",
             "",
-            "<small>*5-day MA above the 20-day BB middle = vol is decompressing (calm regime); "
-            "below = vol is building (stressed). A cross through the middle band marks a sentiment shift. "
-            "**Not an official index — a 'psychological' confirmation signal**, best read alongside "
-            "VIX TS and COR/SKEW rather than as a standalone trading trigger · "
+            "</details>",
+            "",
+            "<small>*5-day MA above the 20-day BB middle = vol decompressing (calm); "
+            "below = building (stressed); a cross marks a sentiment shift. "
+            "**Not an official index — a 'psychological' confirmation signal** · "
             "[Read more →](posts/cash-allocation.md)*</small>",
             "",
+            "</div>",
         ]
     if move:
-        parts += render_move_card_en(move)
+        parts += _dash_card(render_move_card_en(move), "📈 Show chart")
     if cot:
-        parts += render_cot_card_en(cot)
+        parts += _dash_card(render_cot_card_en(cot), "📈 Show chart")
     if fw:
-        parts += render_fedwatch_card_en(fw)
+        parts += _dash_card(render_fedwatch_card_en(fw), "📈 Show chart")
     if creds:
-        parts += render_credit_card_en(creds)
+        parts += _dash_card(render_credit_card_en(creds), "📈 Show chart")
     parts += [
+        "</div>",
+        "",
         "</div>",
         "",
         "---",
