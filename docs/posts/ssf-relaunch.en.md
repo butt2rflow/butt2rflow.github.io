@@ -121,7 +121,7 @@ This is the crux. The questions you have to answer before buying an option don't
 |---|---|
 | Which strike? | none |
 | How much time is left (time value)? | none |
-| Is IV expensive or cheap? | **none** |
+| Is IV (implied volatility — the size of the move the market expects) expensive or cheap? | **none** |
 | Is delta 0.3 or 0.7? | **always 1.0** |
 | Gamma, vega | none |
 

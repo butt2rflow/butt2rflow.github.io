@@ -47,7 +47,7 @@ The two ends of the distribution look like wings. Hedging those tails is what pe
 > **Heads-up on difficulty:** This is a strategy for traders with options experience. You can run it on SPX index options or SPY ETF options (SPY is more accessible because the contract size is smaller), but it's not a beginner-friendly trade for these reasons:
 >
 > - **Multi-leg management**: holding two-plus legs at once, rolling them as expirations approach
-> - **Slippage** (the price difference between bid and ask): each leg has a bid–ask spread, and OTM puts are especially wide
+> - **Slippage** (the price difference between bid and ask): each leg has a bid–ask spread, and OTM (out-of-the-money — strikes far from spot, not yet in play) puts are especially wide
 > - **The awkward zone**: in a slow grinding decline, the position can lose money
 
 ---

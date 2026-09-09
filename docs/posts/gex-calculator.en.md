@@ -272,7 +272,7 @@ Total intrinsic(S) = Call intrinsic + Put intrinsic
 In the sheet, the `dollar value sum` column carries this number, and the row with the smallest value gives Max Pain.
 
 !!! note "How much to trust Max Pain"
-    Honestly, limited. Expiration-day **pinning** of optionable *single stocks* to heavy-OI strikes is peer-reviewed (Ni·Pearson·Poteshman, 2005) — but that's single stocks; the evidence that the *index (SPX)* gets dragged to Max Pain is weak. And where it matters at all, it's *near expiry*, not intraday on a normal day. It's an overhyped number — treat it as an *expiration-day reference* at most. (The empirics of pinning and dealer flows go deeper in [Beyond Gamma — Vanna, Charm](vanna-charm.md).)
+    Honestly, limited. Expiration-day **pinning** of optionable *single stocks* to heavy-OI strikes is peer-reviewed (Ni·Pearson·Poteshman, 2005) — but that's single stocks; the evidence that the *index (SPX)* gets dragged to Max Pain is weak. And where it matters at all, it's *near expiry*, not intraday on a normal day. It's an overhyped number — treat it as an *expiration-day reference* at most. (The empirics of pinning and dealer flows go deeper in [Beyond Gamma — The Vanna Rally & Pinning](vanna-charm.md).)
 
 ---
 
@@ -447,7 +447,7 @@ So is gamma meaningless? No. Gamma's real job isn't to *make* the wave — it's 
 
 Sometimes a ripple does **trigger** a big move — at a tipping point (short gamma · thin liquidity · near a heavy strike) it can be the trigger on an already-loaded setup (a gamma squeeze, butterfly-effect style). But **gamma is the trigger, not the fuel** — the energy sits in delta.
 
-So the balanced takeaway: **gamma's effect is real (some of it peer-reviewed), but its average magnitude is small, and the direction (sign) is even more uncertain.** Use GEX not to *predict* the wave but to read whether the sea will *amplify or calm* it (the regime). Reference it, don't worship it — the sign is inferred, the OI levels are last night's snapshot (going stale within the session), and vendors disagree. (The dealer flows beyond gamma, and the debate over their *magnitude,* go deeper in [Beyond Gamma — Vanna, Charm](vanna-charm.md).)
+So the balanced takeaway: **gamma's effect is real (some of it peer-reviewed), but its average magnitude is small, and the direction (sign) is even more uncertain.** Use GEX not to *predict* the wave but to read whether the sea will *amplify or calm* it (the regime). Reference it, don't worship it — the sign is inferred, the OI levels are last night's snapshot (going stale within the session), and vendors disagree. (The dealer flows beyond gamma, and the debate over their *magnitude,* go deeper in [Beyond Gamma — The Vanna Rally & Pinning](vanna-charm.md).)
 
 ---
 

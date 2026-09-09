@@ -192,7 +192,7 @@ That closes the trilogy. What a cobot is (Part 1), what divides them (Part 2), a
 
 ---
 
-*Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [UR vs FANUC — Openness](cobot-ur-vs-fanuc.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+*Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [UR vs FANUC — Openness](cobot-ur-vs-fanuc.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Jetson + ROS 2 Setup — Field Notes (1)](jetson-ros2-setup.md)*
 
 ### Sources & trademarks
 

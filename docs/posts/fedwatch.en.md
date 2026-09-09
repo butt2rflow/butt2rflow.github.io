@@ -151,4 +151,4 @@ The point is that you can recover the market's view on the next FOMC decision fr
 
 ---
 
-*Previous: [The COT Report — Reading the spot market through the futures market](cot.md)*
+*Previous: [The COT Report — Reading the spot market through the futures market](cot.md) | Related: [Reading Credit Spreads as an Indicator](credit-spreads.md) | [MOVE — The Bond Market's VIX](move-index.md)*

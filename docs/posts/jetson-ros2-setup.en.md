@@ -146,7 +146,7 @@ One fork worth flagging ahead of time: Isaac ROS recently **split into two track
 
 ---
 
-*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames & Transforms](frames-transforms.md)*
+*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames & Transforms](frames-transforms.md) · [Investing in Physical AI](cobot-investing.md)*
 
 ### Sources & trademarks
 

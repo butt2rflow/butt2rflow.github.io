@@ -86,7 +86,7 @@ So a **$10,000 TQQQ purchase becomes ~$8,000 in spot + a swap that adds another 
 
 ### The cost of swaps
 
-Swaps settle daily at **1-day overnight EFFR + a spread**.
+Swaps settle daily at **1-day overnight EFFR + a spread**. (EFFR = Effective Federal Funds Rate, the US overnight inter-bank benchmark — essentially the shortest US base rate.)
 
 As of November 2022, TQQQ's average swap rate was ≈ **4.5%**.
 
@@ -228,7 +228,7 @@ ATM calls are time-decayed *fast*, but they're rational when you're aiming for *
 
 ### TQQQ holder
 
-The [previous article](expected-return.md) showed that *time horizon* matters more than vol drag. But **9–10% per year leverage cost in the high-rate era** is no longer a number you can ignore. It's worth at least evaluating cheaper alternatives (deep-ITM, synthetic long) for the same 3× exposure.
+The [previous article](expected-return.md) showed that *time horizon* matters more than vol drag (the slow bleed a leveraged fund suffers when it repeatedly chops up and down). But **9–10% per year leverage cost in the high-rate era** is no longer a number you can ignore. It's worth at least evaluating cheaper alternatives (deep-ITM, synthetic long) for the same 3× exposure.
 
 ---
 
@@ -246,7 +246,7 @@ The [previous article](expected-return.md) showed that *time horizon* matters mo
 
 ---
 
-*Previous: [Expected Return — A Probability View of QQQ vs TQQQ](expected-return.md) | Related: [Extension series (S3) — Options in practice](../series/s3-preview.md) | [Single-Stock Futures — The Directional Earnings Play](ssf-relaunch.md)*
+*Previous: [Expected Return — A Probability View of QQQ vs TQQQ](expected-return.md) | Related: [Extension series (S3) — Options in practice](../series/s3-preview.md) | [Single-Stock Futures — The Directional Earnings Play](ssf-relaunch.md) | [Options Basics — Calls and Puts](options-basics.md)*
 
 <a id="glossary"></a>
 

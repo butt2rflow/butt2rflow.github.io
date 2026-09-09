@@ -98,6 +98,8 @@ What backwardation means in practice:
 
 ## Reading the curve fast — four signals
 
+**M1** is the nearest-expiry VIX future, **M2** the next one out, and **M2 − M1** is the gap between them (positive when the far month is pricier = normal contango).
+
 | Signal | Reading | Color |
 |:-------|:--------|:------|
 | **VIX spot < Front month** | Most common state (contango setup) | 🟢 Normal |
@@ -137,8 +139,8 @@ Cboe publishes settlement prices each business day after the close (typically 16
 
 Don't trade off VIX term structure alone. Pair it with the other signals from the [Volatility Dashboard](volatility-dashboard.md):
 
-- **COR term-structure inversion (COR1M > COR1Y)**: short-term fear surging — usually fires near-simultaneously with VIX TS backwardation
-- **COR90D > 50**: synchronization broadening — diversification breaking down
+- **COR term-structure inversion (COR1M > COR1Y)**: short-term fear surging — usually fires near-simultaneously with VIX TS backwardation *(COR1M = 1-month, COR1Y = 1-year implied correlation; short over long = crowding into near-term fear)*
+- **COR90D > 50**: synchronization broadening — diversification breaking down *(COR90D = 90-day implied correlation)*
 - **SKEW > 150**: institutional tail-risk pricing rising
 
 All three deteriorating + VIX backwardation = **unmistakable crisis signal**.
@@ -171,4 +173,4 @@ For a long-term investor, the value here isn't a short-term trade signal — it'
 
 ---
 
-*Related: [Volatility Dashboard — Tracking Correlation + Skew](volatility-dashboard.md) | [Hedging the Wings — Cheap Tail-Risk Insurance](hedging-wings.md) | [Volatility Skew](skew.md) | [MOVE — The Bond Market's VIX](move-index.md)*
+*Related: [Volatility Dashboard — Tracking Correlation + Skew](volatility-dashboard.md) | [Hedging the Wings — Cheap Tail-Risk Insurance](hedging-wings.md) | [Volatility Skew](skew.md) | [MOVE — The Bond Market's VIX](move-index.md) | [Implied Correlation](implied-correlation.md)*

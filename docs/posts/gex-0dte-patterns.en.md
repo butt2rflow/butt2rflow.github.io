@@ -13,7 +13,7 @@ lang: en
 
 The tool we built in [Calculating GEX Yourself](./gex-calculator.md) is a **snapshot at the prior day's close**. If your morning GEX reads −$22.4B, does it stay −$22.4B all day?
 
-**43–62% of SPX options are 0DTE** (same-day expiry) (Cboe, 2023–2025). Once the market opens, 0DTE options get opened and closed in massive volume. Each of those trades changes the market makers' (MMs') gamma position in real time. Just like a body temperature you measure in the morning can be different in the afternoon, the GEX (gamma exposure — the total gamma weighing on the market) you measure at the open keeps shifting through the day. Looking at only the morning GEX leaves you blind to what's actually causing intraday violence.
+**43–62% of SPX options are 0DTE** (same-day expiry) (Cboe, 2023–2025). Once the market opens, 0DTE options get opened and closed in massive volume. Each of those trades changes the market makers' (MMs') gamma position in real time. (Gamma = how fast an MM's hedge has to change as the price moves — like the sensitivity of a steering wheel.) Just like a body temperature you measure in the morning can be different in the afternoon, the GEX (gamma exposure — the total gamma weighing on the market) you measure at the open keeps shifting through the day. Looking at only the morning GEX leaves you blind to what's actually causing intraday violence.
 
 This article walks through the **intraday patterns** of 0DTE flow and gives you a checklist for applying intraday corrections to the morning GEX.
 
@@ -241,4 +241,4 @@ These tools aren't for short-term trading. They're for the long-term investor wh
 
 ---
 
-*Previous: [Calculating GEX Yourself — Google Sheets + Python](gex-calculator.md) | Next: [Beyond Gamma — Vanna, Charm, and the Dealer's Real Hands](vanna-charm.md)*
+*Previous: [Calculating GEX Yourself — Google Sheets + Python](gex-calculator.md) | Next: [Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands](vanna-charm.md)*

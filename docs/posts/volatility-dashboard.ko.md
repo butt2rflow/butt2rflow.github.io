@@ -345,4 +345,4 @@ print("  ← 스트레스" if skew_val > 158 else "  ← 경계" if skew_val > 1
 
 ---
 
-*이전 글: [감마 너머 — Vanna·Charm와 딜러의 진짜 손놀림](vanna-charm.md)*
+*이전 글: [감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림](vanna-charm.md)*

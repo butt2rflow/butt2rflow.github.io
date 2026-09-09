@@ -130,4 +130,4 @@ CBOE publishes the **SKEW Index**, a single number that quantifies how much extr
 
 *Next: [Hedging the Wings — Cheap Tail-Risk Insurance](hedging-wings.md)*
 
-*Related: [MOVE — The Bond Market's VIX](move-index.md) | [Reading Credit Spreads as an Indicator](credit-spreads.md)*
+*Related: [MOVE — The Bond Market's VIX](move-index.md) | [Reading Credit Spreads as an Indicator](credit-spreads.md) | [Implied Correlation](implied-correlation.md)*

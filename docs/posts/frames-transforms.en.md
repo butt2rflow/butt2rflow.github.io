@@ -159,7 +159,7 @@ And that closes the loop from Part 1: the pipeline *sees* the part in the camera
 
 ---
 
-*Related: [From Stereo to Grasp — How a Robot Learns to See a Part](stereo-to-grasp.md)*
+*Related: [From Stereo to Grasp — How a Robot Learns to See a Part](stereo-to-grasp.md) · [Investing in Physical AI](cobot-investing.md)*
 
 ### Go deeper
 

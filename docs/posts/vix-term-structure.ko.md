@@ -98,6 +98,8 @@ lang: ko
 
 ## 곡선 모양 빠르게 읽는 4가지 신호
 
+**M1**은 가장 가까운 만기의 VIX 선물, **M2**는 그다음 만기 선물이고, **M2 − M1**은 둘의 가격 차이예요(먼 달이 비쌀수록 양수 = 정상 콘탱고).
+
 | 신호 | 의미 | 색깔 |
 |:----|:-----|:-----|
 | **VIX 현물 < Front month** | 가장 흔한 상태 (콘탱고 시작) | 🟢 평상시 |
@@ -137,8 +139,8 @@ lang: ko
 
 VIX term structure 단독으로 매매 결정을 내리지 마세요. [변동성 대시보드](volatility-dashboard.md)의 다른 신호와 함께 봐야 합니다:
 
-- **Term Structure 역전(COR1M > COR1Y)**: 단기 공포 급등 — VIX TS 백워데이션과 거의 동시에 발생
-- **COR90D > 50**: 동조화 진행 — 분산 효과 약화
+- **Term Structure 역전(COR1M > COR1Y)**: 단기 공포 급등 — VIX TS 백워데이션과 거의 동시에 발생 *(COR1M = 향후 1개월, COR1Y = 향후 1년 종목 동조화 지수. 단기가 장기를 넘으면 눈앞의 공포에 쏠렸다는 뜻)*
+- **COR90D > 50**: 동조화 진행 — 분산 효과 약화 *(COR90D = 향후 90일 종목 동조화 지수)*
 - **SKEW > 150**: 기관의 꼬리 위험 인식 증가
 
 세 신호가 동시 악화 + VIX 백워데이션 = **명백한 위기 신호**.
@@ -171,4 +173,4 @@ VIX futures term structure는 **시장 변동성 심리의 단면도**입니다.
 
 ---
 
-*관련: [변동성 대시보드 — Correlation + Skew 추적](volatility-dashboard.md) | [Hedging the Wings — 저비용 테일 리스크 헷지](hedging-wings.md) | [변동성 Skew](skew.md) | [MOVE 지수 — 채권시장의 VIX](move-index.md)*
+*관련: [변동성 대시보드 — Correlation + Skew 추적](volatility-dashboard.md) | [Hedging the Wings — 저비용 테일 리스크 헷지](hedging-wings.md) | [변동성 Skew](skew.md) | [MOVE 지수 — 채권시장의 VIX](move-index.md) | [시장 심리 변동성 지수 — Implied Correlation](implied-correlation.md)*

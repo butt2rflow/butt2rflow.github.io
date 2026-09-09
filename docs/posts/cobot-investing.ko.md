@@ -192,7 +192,7 @@ Physical AI에서 NVIDIA의 자리는 **"골드러시에 청바지·곡괭이 �
 
 ---
 
-*관련: [협동로봇(cobot)이란](cobot-basics.md) · [UR vs 화낙 — 개방성](cobot-ur-vs-fanuc.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
+*관련: [협동로봇(cobot)이란](cobot-basics.md) · [UR vs 화낙 — 개방성](cobot-ur-vs-fanuc.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [Jetson·ROS 2 셋업 — 현장 노트 (1)](jetson-ros2-setup.md)*
 
 ### 출처와 표기
 

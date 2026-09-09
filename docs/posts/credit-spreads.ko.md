@@ -199,7 +199,7 @@ CCC−B 격차 = BAMLH0A3HYC − BAMLH0A2HYB
 
 ---
 
-*관련: [변동성 Skew](skew.md) | [시장 심리 변동성 지수](implied-correlation.md) | [COT 리포트](cot.md) | [MOVE 지수 — 채권시장의 VIX](move-index.md)*
+*관련: [변동성 Skew](skew.md) | [시장 심리 변동성 지수](implied-correlation.md) | [COT 리포트](cot.md) | [MOVE 지수 — 채권시장의 VIX](move-index.md) | [Fed Fund 선물과 CME FedWatch Tool](fedwatch.md)*
 
 ### 출처와 표기
 

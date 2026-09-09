@@ -196,7 +196,7 @@ CAD 파일에서 형태를 그때그때 읽어오기 때문에 이것도 **제�
 
 ---
 
-*관련: [좌표계와 변환 — 로봇은 어디를 잡을지 어떻게 아는가](frames-transforms.md)*
+*관련: [좌표계와 변환 — 로봇은 어디를 잡을지 어떻게 아는가](frames-transforms.md) · [Physical AI에 투자한다면](cobot-investing.md)*
 
 ### 출처와 표기
 

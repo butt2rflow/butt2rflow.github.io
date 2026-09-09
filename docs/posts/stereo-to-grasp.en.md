@@ -196,7 +196,7 @@ Next: the part's pose comes out in the *camera's* point of view, but the robot l
 
 ---
 
-*Related: [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md)*
+*Related: [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Investing in Physical AI](cobot-investing.md)*
 
 ### Sources & trademarks
 

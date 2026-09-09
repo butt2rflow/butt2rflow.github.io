@@ -345,4 +345,4 @@ It takes one minute a day. The point is to keep you from getting shaken by fear,
 
 ---
 
-*Previous: [Beyond Gamma — Vanna, Charm, and the Dealer's Real Hands](vanna-charm.md)*
+*Previous: [Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands](vanna-charm.md)*

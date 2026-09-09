@@ -131,4 +131,4 @@ CBOE에서는 S&P500 옵션의 극단적 하락 위험(테일 리스크) 기대�
 
 *다음 글: [Hedging the Wings — 저비용 테일 리스크 헷지](hedging-wings.md)*
 
-*관련: [MOVE 지수 — 채권시장의 VIX](move-index.md) | [신용 스프레드를 지표로 읽기](credit-spreads.md)*
+*관련: [MOVE 지수 — 채권시장의 VIX](move-index.md) | [신용 스프레드를 지표로 읽기](credit-spreads.md) | [시장 심리 변동성 지수 — Implied Correlation](implied-correlation.md)*

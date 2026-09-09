@@ -146,7 +146,7 @@ ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로
 
 ---
 
-*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md)*
+*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md) · [Physical AI에 투자한다면 — 코봇 투자편](cobot-investing.md)*
 
 ### 출처와 표기
 

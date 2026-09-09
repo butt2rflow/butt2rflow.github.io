@@ -1,11 +1,11 @@
 ---
-title: "Beyond Gamma — Vanna, Charm, and the Dealer's Real Hands"
+title: "Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands"
 date: 2026-09-12
 tags: [options, vanna, charm, gamma-exposure, dealer-positioning, GEX, market-structure]
 lang: en
 ---
 
-# Beyond Gamma — Vanna, Charm, and the Dealer's Real Hands
+# Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
 
 > **Options-structure series.** [Compute GEX Yourself](gex-calculator.md) covered **gamma**; [0DTE Gamma Patterns](gex-0dte-patterns.md) covered **intraday change.** This one goes **beyond gamma** — the dealer flows driven by volatility and time, **Vanna** and **Charm** — and *how far you can actually trust them*.
 
@@ -17,7 +17,7 @@ Recall the gamma story. A dealer (market maker) doesn't bet on direction — it 
 - **Vanna** — delta changes when **volatility moves**
 - **Charm** — delta changes when **time passes**
 
-Even with price frozen, a **falling volatility or simply a day going by** makes a dealer trade. This piece explains what vanna and charm are, when they matter, and — honestly — **how much of the finance-Twitter narrative is actually true.** (Spoiler: the math is solid, the positioning is mostly inferred, and the market-impact claims are often overstated.)
+Even with price frozen, a **falling volatility or simply a day going by** makes a dealer trade. This piece explains what vanna and charm are, when they matter, and — honestly — **what's actually true about the gamma, vanna, and charm "events" the industry periodically turns into headlines.** (Spoiler: the math is solid, the positioning is mostly inferred, and the market-impact claims are often overstated.)
 
 ---
 
@@ -25,10 +25,10 @@ Even with price frozen, a **falling volatility or simply a day going by** makes 
 
 - Three axes move dealer hedges: **gamma (price) · vanna (vol) · charm (time).**
 - **Vanna** = delta changes when vol changes. **Charm** = delta changes as time passes. — *That much is textbook.*
-- The **"vanna rally"** (vol down → dealers buy → up) is a **standard framework**, but it holds only under the (empirically supported) assumption that dealers are **net short vol** — and it is **not proven causal** (co-movement ≠ causation).
-- **Expiration pinning** (price sticking to a strike) is **peer-reviewed** — but for *single stocks.* A directional index "drift up into OPEX" (OPEX = options expiration) is a much weaker claim.
-- **The decisive rebuttal:** Cboe's own study finds dealer net gamma is **0.04–0.17% of daily S&P futures liquidity.** "Dealer hedging dominates the tape" is overstated. And **0DTE is now ~59% of SPX option volume (2025),** which has redistributed the classic monthly-OPEX effect.
-- **One-line guardrail:** trust the Greeks (math); the positioning (who's long/short) is partly measured, mostly inferred; and the impact claims range from *peer-reviewed-modest* (pinning, intraday gamma) to *vendor-amplified* (vanna rallies as certainty, "window of weakness").
+- The **"vanna rally"** — the idea that falling vol makes dealers buy and push the index up — is the industry's standard framework. It only holds if dealers are **net short vol** (positioned to profit when markets stay calm and lose when they swing hard), and that premise is confirmed in the data. The catch is the next step: no one has actually proven the causal link (moving together isn't the same as causing).
+- **Expiration pinning** (a stock getting magnetized to a strike at expiration) is **peer-reviewed** — but for *single stocks.* A directional index "drift up into OPEX" (OPEX = options expiration) is a much weaker claim.
+- **The decisive rebuttal:** Cboe's own study finds dealer net gamma is **0.04–0.17% of daily S&P futures liquidity.** "Dealer hedging dominates the tape" is overstated. And **0DTE (zero-days-to-expiry — options expiring the same session, traded heavily on expiry day) is now ~59% of SPX option volume (2025),** which has redistributed the classic monthly-OPEX effect.
+- **One line to keep.** Trust the Greek math. But whether a dealer is long or short *right now* is mostly a guess, and "that's why the market moved this much" is usually inflated. The bottom table sorts the solid from the hot air.
 
 ---
 
@@ -61,7 +61,7 @@ Direction depends on **what position the dealer holds.** And here's a fact **sho
 Under that position: when vol **falls,** put deltas shrink, so the dealer **buys back** the underlying it had sold as a hedge → upward pressure, in theory. This is the so-called **vanna rally.** On a vol spike, the reverse.
 
 !!! warning "Where to be honest"
-    **The positioning premise (dealers short vol) is supported, but no study proves that "vol down → buy → rally" is *causal*.** Vol compression and a grinding-higher index co-occur under plain risk-on dynamics — and under **vol-target flows**: when vol falls, systematic strategies (risk parity, vol-control funds) are allowed more risk, so they mechanically add equity exposure and buy for a completely different reason. That re-leveraging overlaps the dealer vanna flow in **both direction and timing**, so you **can't tell which one actually did the pushing — and by AUM the systematic channel may well be the larger of the two.** So **causation and co-movement aren't cleanly separated.** Vendors (SpotGamma etc.) that present it as a mechanical law are writing *marketing-grade,* not evidence-grade, copy. → **Worth knowing as a standard framework — but no mechanical certainty.**
+    **Dealers being short vol is confirmed in the data, but no study proves the causal chain "vol falls → dealers buy → the index rises."** That same picture — vol compressing while the index grinds higher — shows up under plain risk-on too. And when vol falls, some funds (risk parity, vol-control) mechanically buy stock because they're now allowed more risk — and their buying overlaps the dealer vanna flow in direction and timing, with more money behind it, if anything. So when the index rises, telling apart "the dealers pushed it" from "those funds pushed it" is essentially impossible. Read vendors (SpotGamma etc.) who sell this as a law as marketing, not evidence. It's a framework worth knowing — not something to trust like clockwork.
 
 ---
 
@@ -73,8 +73,8 @@ An analogy: charm is the **"hourglass pedal."** Price and fear unchanged, yet th
 
 Again, split evidence from story:
 
-- ✅ **Pinning is real.** Optionable **single-stock** closing prices cluster at strikes on expiration days, partly due to MM delta-hedging (Ni·Pearson·Poteshman, 2005; ≥16.5 bp average effect, single stocks pin ~8.2% of expiration days vs <6% on adjacent days).
-- 🟡 **But that's "single stocks pinning to nearby strikes,"** not a broad **index drift up** into OPEX — the latter is a much weaker heuristic.
+- ✅ **Pinning is real.** Optionable **single-stock** closing prices cluster at strikes on expiration days, partly due to MM delta-hedging (Ni·Pearson·Poteshman, 2005; ≥16.5 bp average effect, single stocks pin ~8.2% of expiration days vs <6% on adjacent days). Strictly, pinning is a **gamma** effect, not charm — near expiry, at-the-money gamma spikes and long-gamma dealers' hedging mean-reverts price to the strike; it lives in this section only because it's an expiration-day phenomenon.
+- 🟡 **But that's "single stocks pinning to nearby strikes,"** not a broad **index drift up** into OPEX — the latter is a much weaker heuristic. **Why only single stocks?** Pinning needs the option-hedging flow to be **large relative to the name's own trading volume** to anchor the price — doable in a thin single stock, but a drop in the ocean against an index's liquidity.
 
 ---
 
@@ -84,7 +84,7 @@ Again, split evidence from story:
 
 - ✅ **Dealer gamma affects *intraday* dynamics** — supported (Barbon·Buraschi, *Gamma Fragility*, 2021): dealer gamma imbalance predicts intraday momentum (short gamma) vs. reversal (long gamma), **stronger when the underlying is less liquid.** **Note: this is gamma's vol-amplify/dampen channel, NOT a directional "drift up into OPEX."** (Don't cite this paper as proof of a bullish OPEX drift.)
 - ✅ **Expiration pinning** — supported (NPP 2005, above).
-- ⛔ **A systematic, tradable upward drift into OPEX and a post-OPEX "window of weakness"** — **no rigorous primary source found. Unverified.** Treat skeptically, or don't assert it.
+- ⛔ **A systematic, tradable upward drift into OPEX and a post-OPEX "window of weakness"** — I couldn't find solid primary evidence for this one. It sounds plausible, but it isn't proven — so don't take it at face value.
 
 And **crucially, 0DTE (2023–2025) has changed the classic effect:**
 
