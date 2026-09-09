@@ -11,6 +11,8 @@ lang: en
 
 This article walks through a Google Sheets tool that takes Cboe's free option chain data and computes the **GEX profile, the gamma flip point, and Max Pain** automatically. We'll build it step by step so you understand what each number means, and the finished sheet is ready to use day-to-day — just refresh the data.
 
+And this article answers not just *how to compute* it but **how to read it** — that GEX is not a signal that predicts the wave, but a *map of the sea's state (the regime)*: that **gamma is the ripples and delta is the wave.** (In the last section.)
+
 What you'll need:
 
 - A Google account (to copy the sheet)
@@ -426,6 +428,23 @@ Things you should know before relying on this tool:
 4. **0DTE dominates** — ATM 0DTE gamma is so large that GEX is dominated by a single expiration. As 0DTE OI shifts intraday, GEX shifts dramatically with it.
 
 5. **It's not a trade signal** — GEX is a *directional indicator* about MM positioning. Don't make trading decisions on GEX alone.
+
+---
+
+## Gamma is ripples, delta is the wave — what I learned trading it
+
+An honest story. I used to trade watching GEX, and what I learned in my bones was this: **gamma hedging is the ripples; the strong waves come from large buying and selling — from delta (real order flow).**
+
+- **The wave = delta (supply/demand).** What actually pushes price is big buys and sells — index-fund rebalancing, systematic strategies, large directional orders. That's the body.
+- **The ripples = gamma hedging.** Dealers nudging in and out to stay delta-neutral. On average small (Cboe's own data puts dealer net gamma at **0.04–0.17% of daily S&P futures liquidity**).
+
+So is gamma meaningless? No. Gamma's real job isn't to *make* the wave — it's to **amplify or dampen the wave delta already made.** That's the **regime** (which "mode" the market is in): **short gamma** → dealers hedge *with* the flow and **amplify**; **long gamma** → they hedge *against* it and **dampen.**
+
+![Gamma is ripples, delta is the wave — short/long gamma amplify or dampen](../assets/diagrams_en/gex-ripple-wave.svg)
+
+Sometimes a ripple does **trigger** a big move — at a tipping point (short gamma · thin liquidity · near a heavy strike) it can be the trigger on an already-loaded setup (a gamma squeeze, butterfly-effect style). But **gamma is the trigger, not the fuel** — the energy sits in delta.
+
+So the balanced takeaway: **gamma's effect is real (some of it peer-reviewed), but its average magnitude is small, and the direction (sign) is even more uncertain.** Use GEX not to *predict* the wave but to read whether the sea will *amplify or calm* it (the regime). Reference it, don't worship it — the sign is inferred, the OI levels are last night's snapshot (going stale within the session), and vendors disagree. (The dealer flows beyond gamma, and the debate over their *magnitude,* go deeper in [Beyond Gamma — Vanna, Charm](vanna-charm.md).)
 
 ---
 

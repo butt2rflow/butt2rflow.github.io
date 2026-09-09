@@ -44,6 +44,8 @@ Delta hedging means "keep this position's delta at zero." The problem: delta kee
 
 Gamma was the prior posts; here it's the other two. *(This three-way split is itself textbook-correct.)*
 
+![Three things that move delta — price, volatility, time](../assets/diagrams_en/vanna-three-flows.svg)
+
 ---
 
 ## Vanna — volatility jolts delta
@@ -124,6 +126,8 @@ Keep it in three layers and it won't blur:
 | ✅ **Solid** (textbook / peer-reviewed) | Greek definitions & signs / the three flows (price·vol·time) / dealers net short vol (GPP) / expiration pinning (NPP) / dealer gamma's intraday amplify·dampen (B&B) / 0DTE ~59% | state plainly |
 | 🟡 **Framework** (heuristic) | vanna rally / charm's OPEX drift / GEX flip & regime "map" | as "a common framework," **not a directional forecast** |
 | ⛔ **Overstated — avoid** | dealer hedging dominates the market / a reliable post-OPEX "window of weakness" / any one vendor's GEX as ground truth / applying it confidently to single names / the monthly-OPEX effect unchanged in 2025 | avoid or **rebut** (Cboe's de-minimis data) |
+
+![The honesty layer — solid / heuristic / overstated](../assets/diagrams_en/vanna-honesty-layer.svg)
 
 **The one thing to remember:** the **math** of vanna and charm is **solid.** But the **positioning** stacked on top is partly measured and mostly inferred, and the **market-impact** claims span peer-reviewed-modest (pinning, intraday gamma) to vendor-inflated certainty. For a long-term investor, the value here isn't a trade signal — it's understanding, *structurally but without overconfidence,* that a sudden index lurch **might** owe something to dealer-hedging structure — while remembering that structure is smaller than the stories claim.
 

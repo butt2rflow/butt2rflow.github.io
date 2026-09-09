@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>The honesty layer — how much to trust (solid / heuristic / overstated)</title>
+<desc>Three layers. Solid (textbook/peer-reviewed): greek definitions and the three flows, dealers net short vol (GPP), expiration pinning (NPP), dealer gamma's intraday effect (Barbon and Buraschi), 0DTE about 59 percent. Framework (heuristic): vanna rally, charm's OPEX drift, the GEX regime map — not a directional forecast. Overstated, to avoid: dealers dominate the market, a post-OPEX window of weakness, one vendor's GEX as ground truth, applying it to single stocks, the monthly OPEX effect unchanged.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.lb{font-size:13px;font-weight:800;}
+.s{font-size:10.5px;fill:#5c5b55;}
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="38" style="fill:#3d3d3a">The honesty layer — how much to trust</text>
+
+<rect x="40" y="58" width="600" height="66" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<rect x="40" y="58" width="7" height="66" rx="3" fill="#16a34a"/>
+<text class="lb" x="62" y="82" style="fill:#15803d">Solid — state plainly (textbook / peer-reviewed)</text>
+<text class="s" x="62" y="103">Greek definitions & the three flows / dealers net short vol (GPP) / expiration pinning (NPP)</text>
+<text class="s" x="62" y="118">/ dealer gamma's intraday amplify·dampen (Barbon&amp;Buraschi) / 0DTE ~59%</text>
+
+<rect x="40" y="132" width="600" height="52" rx="9" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.2"/>
+<rect x="40" y="132" width="7" height="52" rx="3" fill="#e0870b"/>
+<text class="lb" x="62" y="156" style="fill:#a9791f">Framework — as "a common frame" only (heuristic)</text>
+<text class="s" x="62" y="176">vanna rally / charm's OPEX drift / the GEX regime map — not a directional forecast</text>
+
+<rect x="40" y="192" width="600" height="66" rx="9" fill="#f7dcd6" stroke="#d84a3a" stroke-width="1.2"/>
+<rect x="40" y="192" width="7" height="66" rx="3" fill="#d84a3a"/>
+<text class="lb" x="62" y="216" style="fill:#b23a2c">Overstated — avoid or rebut</text>
+<text class="s" x="62" y="237">dealers dominate the market / a reliable post-OPEX "window of weakness" / a vendor's GEX as truth</text>
+<text class="s" x="62" y="252">/ applying it to single stocks / the monthly-OPEX effect unchanged</text>
+
+<text class="s" x="40" y="284" style="fill:#8a6d3b">The math is solid, the positioning is inferred, the impact claims span a wide range.</text>
+</svg>
