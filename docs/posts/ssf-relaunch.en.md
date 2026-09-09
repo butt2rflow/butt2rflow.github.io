@@ -34,7 +34,7 @@ Nobody much cared. The name stuck out of habit, and reference material would qui
 - Cheap leverage is not the reason to use these. Deep ITM calls remain far cheaper.
 - **A futures price contains no view on "how big a move the market expects."** For an option, that expectation is the whole price.
 - Which is why nothing replaces an SSF for a **directional earnings bet**.
-- The price you pay is convexity. **A 15% adverse gap wipes out your entire margin.**
+- The price you pay is convexity — options have a curved payoff that bends gently when things go against you; futures are a straight line with no cushion. **A 15% adverse gap wipes out your entire margin.**
 
 ---
 

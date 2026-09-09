@@ -96,12 +96,12 @@ nav:
       - posts/cot.md
       - posts/fedwatch.md
       - posts/credit-spreads.md
+      - posts/move-index.md
+      - posts/implied-correlation.md
     - "Options 101":
       - posts/options-basics.md
       - posts/skew.md
-      - posts/move-index.md
       - posts/hedging-wings.md
-      - posts/implied-correlation.md
     - Tools:
       - posts/monte-carlo.md
       - posts/almanac.md

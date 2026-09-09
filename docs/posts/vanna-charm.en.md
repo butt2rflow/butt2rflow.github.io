@@ -26,7 +26,7 @@ Even with price frozen, a **falling volatility or simply a day going by** makes 
 - Three axes move dealer hedges: **gamma (price) · vanna (vol) · charm (time).**
 - **Vanna** = delta changes when vol changes. **Charm** = delta changes as time passes. — *That much is textbook.*
 - The **"vanna rally"** (vol down → dealers buy → up) is a **standard framework**, but it holds only under the (empirically supported) assumption that dealers are **net short vol** — and it is **not proven causal** (co-movement ≠ causation).
-- **Expiration pinning** (price sticking to a strike) is **peer-reviewed** — but for *single stocks.* A directional index "drift up into OPEX" is a much weaker claim.
+- **Expiration pinning** (price sticking to a strike) is **peer-reviewed** — but for *single stocks.* A directional index "drift up into OPEX" (OPEX = options expiration) is a much weaker claim.
 - **The decisive rebuttal:** Cboe's own study finds dealer net gamma is **0.04–0.17% of daily S&P futures liquidity.** "Dealer hedging dominates the tape" is overstated. And **0DTE is now ~59% of SPX option volume (2025),** which has redistributed the classic monthly-OPEX effect.
 - **One-line guardrail:** trust the Greeks (math); the positioning (who's long/short) is partly measured, mostly inferred; and the impact claims range from *peer-reviewed-modest* (pinning, intraday gamma) to *vendor-amplified* (vanna rallies as certainty, "window of weakness").
 
@@ -61,7 +61,7 @@ Direction depends on **what position the dealer holds.** And here's a fact **sho
 Under that position: when vol **falls,** put deltas shrink, so the dealer **buys back** the underlying it had sold as a hedge → upward pressure, in theory. This is the so-called **vanna rally.** On a vol spike, the reverse.
 
 !!! warning "Where to be honest"
-    **The positioning premise (dealers short vol) is supported, but no study proves that "vol down → buy → rally" is *causal*.** Vol compression and a grinding-higher index also co-occur under plain risk-on dynamics, so **causation and co-movement aren't cleanly separated.** Vendors (SpotGamma etc.) that present it as a mechanical law are writing *marketing-grade,* not evidence-grade, copy. → **Worth knowing as a standard framework — but no mechanical certainty.**
+    **The positioning premise (dealers short vol) is supported, but no study proves that "vol down → buy → rally" is *causal*.** Vol compression and a grinding-higher index co-occur under plain risk-on dynamics — and under **vol-target flows**: when vol falls, systematic strategies (risk parity, vol-control funds) are allowed more risk, so they mechanically add equity exposure and buy for a completely different reason. That re-leveraging overlaps the dealer vanna flow in **both direction and timing**, so you **can't tell which one actually did the pushing — and by AUM the systematic channel may well be the larger of the two.** So **causation and co-movement aren't cleanly separated.** Vendors (SpotGamma etc.) that present it as a mechanical law are writing *marketing-grade,* not evidence-grade, copy. → **Worth knowing as a standard framework — but no mechanical certainty.**
 
 ---
 
