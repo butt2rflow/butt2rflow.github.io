@@ -63,6 +63,8 @@ Under that position: when vol **falls,** put deltas shrink, so the dealer **buys
 !!! warning "Where to be honest"
     **Dealers being short vol is confirmed in the data, but no study proves the causal chain "vol falls → dealers buy → the index rises."** That same picture — vol compressing while the index grinds higher — shows up under plain risk-on too. And when vol falls, some funds (risk parity, vol-control) mechanically buy stock because they're now allowed more risk — and their buying overlaps the dealer vanna flow in direction and timing, with more money behind it, if anything. So when the index rises, telling apart "the dealers pushed it" from "those funds pushed it" is essentially impossible. Read vendors (SpotGamma etc.) who sell this as a law as marketing, not evidence. It's a framework worth knowing — not something to trust like clockwork.
 
+![A vanna rally — or just re-leveraging?](../assets/diagrams_en/vanna-rally-confound.svg)
+
 ---
 
 ## Charm — delta bleeds with time alone
@@ -75,6 +77,8 @@ Again, split evidence from story:
 
 - ✅ **Pinning is real.** Optionable **single-stock** closing prices cluster at strikes on expiration days, partly due to MM delta-hedging (Ni·Pearson·Poteshman, 2005; ≥16.5 bp average effect, single stocks pin ~8.2% of expiration days vs <6% on adjacent days). Strictly, pinning is a **gamma** effect, not charm — near expiry, at-the-money gamma spikes and long-gamma dealers' hedging mean-reverts price to the strike; it lives in this section only because it's an expiration-day phenomenon.
 - 🟡 **But that's "single stocks pinning to nearby strikes,"** not a broad **index drift up** into OPEX — the latter is a much weaker heuristic. **Why only single stocks?** Pinning needs the option-hedging flow to be **large relative to the name's own trading volume** to anchor the price — doable in a thin single stock, but a drop in the ocean against an index's liquidity.
+
+![Why pinning only works on single stocks](../assets/diagrams_en/pinning-liquidity.svg)
 
 ---
 
@@ -90,6 +94,8 @@ And **crucially, 0DTE (2023–2025) has changed the classic effect:**
 
 - 0DTE is now **~59% of SPX option volume (2025)** → hedging pressure has been **redistributed from once-a-month OPEX to every session's open and close.** What used to concentrate monthly now scatters daily.
 - Above all, **Cboe's own study:** market-maker net gamma averages **$170M–$670M/day** — that's **0.04–0.17% of daily S&P futures liquidity (~$400B),** with extremes around 1.3–1.9%, and **no uptick in intraday gap moves.** → The **strongest single rebuttal** to the *"dealer hedging dominates the market"* narrative.
+
+![The OPEX narrative — how much is true](../assets/diagrams_en/opex-story-vs-fact.svg)
 
 ---
 
