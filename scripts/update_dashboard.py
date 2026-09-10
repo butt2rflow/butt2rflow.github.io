@@ -1789,7 +1789,11 @@ def render_credit_card_en(cd: dict) -> list[str]:
     ]
 
 
-YF_OPTIONS = "https://query2.finance.yahoo.com/v7/finance/options/SPY"
+# Real SPX index options (^SPX, URL-encoded). Yahoo serves this chain now
+# (verified: 53 expiries, full OI/IV) — the actual dealer-hedged, European,
+# cash-settled book, deeper strike ladder than the old SPY proxy. ^GSPC does
+# NOT return options; SPY did but was a 1/10-notional proxy.
+YF_OPTIONS = "https://query2.finance.yahoo.com/v7/finance/options/%5ESPX"
 
 
 def _bs_gamma(S, K, T, sigma, r=0.043):
@@ -1802,8 +1806,8 @@ def _bs_gamma(S, K, T, sigma, r=0.043):
 
 
 def fetch_gex(r_rate: float = 0.043) -> dict | None:
-    """Live dealer-gamma snapshot from Yahoo SPY option chains (a liquid SPX
-    proxy). Aggregates the nearest ~6 expiries, computes net GEX under the naive
+    """Live dealer-gamma snapshot from Yahoo ^SPX index option chains.
+    Aggregates the nearest ~6 expiries, computes net GEX under the naive
     dealer convention (long calls / short puts), the gamma-flip level, the
     long/short-gamma regime, and Max Pain. The GEX *sign* is fragile, so the
     tile is framed as a REGIME read (ripple, not wave) — never a trade signal.
@@ -1827,8 +1831,8 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
         d0 = json.load(op.open(f"{YF_OPTIONS}?crumb={_cq}", timeout=25))
         oc = d0["optionChain"]["result"][0]
         spot = float(oc["quote"]["regularMarketPrice"])
-        if not (100 <= spot <= 2000):
-            raise ValueError(f"SPY spot {spot} out of range")
+        if not (1000 <= spot <= 10000):
+            raise ValueError(f"SPX spot {spot} out of range")
         expiries = list(oc.get("expirationDates", []))[:6]
         if not expiries:
             raise ValueError("no expiries")
@@ -1863,6 +1867,17 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
                 T_by_k[k].append(T)
         if len(rows) < 20:
             raise ValueError("too few option rows")
+        # Data-quality guard. Yahoo's overnight chain-rebuild window (~04:00 ET,
+        # which the daily scheduled deploy at 08:03 UTC lands squarely inside)
+        # returns the full strike skeleton with null openInterest / implied-
+        # Volatility. Without this check GEX computes to a flat ~0 profile and
+        # silently overwrites the last good chart with an empty one. Require a
+        # minimum of strikes actually carrying OI+IV, else skip the tile so the
+        # previous good render is simply left referenced (None -> tile omitted).
+        usable = sum(1 for (k, coi, poi, civ, piv, T) in rows
+                     if (coi and civ > 0) or (poi and piv > 0))
+        if usable < 20:
+            raise ValueError(f"chain present but OI/IV empty (usable={usable})")
 
         def net_gex_at(S):
             g = 0.0
@@ -1873,6 +1888,8 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
             return g
 
         cur = net_gex_at(spot)                       # $ per 1% move
+        if cur == 0.0:                               # belt-and-suspenders on empty data
+            raise ValueError("net GEX exactly 0 (empty chain)")
         lo, hi, steps = spot * 0.88, spot * 1.12, 40
         prev_s, prev_g, flip = lo, net_gex_at(lo), None
         for i in range(1, steps + 1):
@@ -1924,7 +1941,7 @@ def render_gex_chart(g: dict, out_path: Path) -> bool:
            color=["#1D9E75" if v >= 0 else "#D85A30" for v in gv], alpha=0.85)
     ax.axhline(0, color="#888", linewidth=0.8)
     ax.axvline(g["spot"], color="#4a2f9e", linewidth=1.6,
-               label=f"SPY spot {g['spot']:.0f}")
+               label=f"SPX spot {g['spot']:.0f}")
     if g.get("flip"):
         ax.axvline(g["flip"], color="#C99A2E", linewidth=1.4, linestyle="--",
                    label=f"Gamma flip {g['flip']:.0f}")
@@ -1932,8 +1949,8 @@ def render_gex_chart(g: dict, out_path: Path) -> bool:
         ax.axvline(g["max_pain"], color="#6b7280", linewidth=1.0, linestyle=":",
                    label=f"Max Pain {g['max_pain']:.0f}")
     ax.set_ylabel("Net GEX ($bn / 1%)", fontsize=10)
-    ax.set_xlabel("SPY strike", fontsize=10)
-    ax.set_title("Dealer gamma exposure by strike (SPY, nearest expiries)", fontsize=11)
+    ax.set_xlabel("SPX strike", fontsize=10)
+    ax.set_title("Dealer gamma exposure by strike (SPX, nearest expiries)", fontsize=11)
     ax.legend(loc="best", fontsize=8)
     ax.grid(alpha=0.3)
     plt.tight_layout()
@@ -1952,7 +1969,7 @@ def render_gex_card_ko(g: dict) -> list[str]:
     return [
         "---",
         "",
-        "### GEX — 딜러 감마 레짐 (SPY≈SPX)",
+        "### GEX — 딜러 감마 레짐 (SPX 지수옵션)",
         "",
         '<div class="dash-tight" markdown>',
         "",
@@ -1966,7 +1983,7 @@ def render_gex_card_ko(g: dict) -> list[str]:
         "",
         "![딜러 감마 노출 — 행사가별](assets/diagrams/gex_regime.png)",
         "",
-        "<small>*Yahoo SPY 옵션 체인 추정(SPX 대리). **감마는 잔물결, 파도는 델타** — "
+        "<small>*Yahoo ^SPX 지수옵션 체인 추정. **감마는 잔물결, 파도는 델타** — "
         "부호는 추정이라 방향 신호가 아니라 레짐(증폭/억제) 참고용, Max Pain은 만기일 참고치일 뿐 · "
         "[GEX 직접 계산 →](posts/gex-calculator.md)*</small>",
         "",
@@ -1983,7 +2000,7 @@ def render_gex_card_en(g: dict) -> list[str]:
     return [
         "---",
         "",
-        "### GEX — dealer gamma regime (SPY≈SPX)",
+        "### GEX — dealer gamma regime (SPX index options)",
         "",
         '<div class="dash-tight" markdown>',
         "",
@@ -1997,7 +2014,7 @@ def render_gex_card_en(g: dict) -> list[str]:
         "",
         "![Dealer gamma exposure by strike](assets/diagrams_en/gex_regime.png)",
         "",
-        "<small>*Estimated from Yahoo SPY option chains (SPX proxy). **Gamma is the ripple, "
+        "<small>*Estimated from Yahoo ^SPX index option chains. **Gamma is the ripple, "
         "delta is the wave** — the sign is inferred, so read it as a regime (amplify/dampen), "
         "not a directional signal; Max Pain is just an expiry-day reference · "
         "[Compute GEX yourself →](posts/gex-calculator.md)*</small>",
@@ -2509,7 +2526,7 @@ def main():
     if move:
         print(f"  MOVE: {move['value']:.0f} (pct {move['pct']:.0f}%, 4wk {move['chg']:+.0f})")
 
-    print("Fetching GEX (SPY options / dealer gamma)...")
+    print("Fetching GEX (^SPX options / dealer gamma)...")
     gex = fetch_gex()
     if gex:
         print(f"  GEX: net {gex['net_bn']:+.1f}B ({gex['regime']}), "
