@@ -1985,6 +1985,18 @@ def render_gex_chart(g: dict, out_path: Path) -> bool:
     ax.set_title("Dealer gamma exposure by strike (SPX, nearest expiries)", fontsize=11)
     ax.legend(loc="best", fontsize=8)
     ax.grid(alpha=0.3)
+    # Cache-snapshot watermark. This PNG is shared by both locales and CI
+    # matplotlib has no CJK font, so the mark is ASCII ("SNAPSHOT") to match
+    # the chart's English labels and the card's "(스냅샷)/(snapshot)" stamp.
+    if not g.get("live", True):
+        ax.text(0.5, 0.52, "SNAPSHOT", transform=ax.transAxes,
+                fontsize=54, color="#9aa0a6", alpha=0.20, rotation=16,
+                ha="center", va="center", fontweight="bold", zorder=5)
+        d = g.get("date", "")
+        if d:
+            ax.text(0.5, 0.40, f"cached · {d}", transform=ax.transAxes,
+                    fontsize=13, color="#9aa0a6", alpha=0.45, rotation=16,
+                    ha="center", va="center", zorder=5)
     plt.tight_layout()
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
