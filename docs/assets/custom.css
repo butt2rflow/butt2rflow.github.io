@@ -192,10 +192,21 @@ img {
 }
 [data-md-color-scheme="slate"] .md-typeset .live-dash .dash-card > h3 { color: #c3b6ec; }
 /* On phones force a single column so the minmax(290px) floor can never push
-   the grid wider than a narrow (≤320px) viewport. */
+   the grid wider than a narrow (≤320px) viewport, and keep every dashboard
+   card/table inside the viewport — any wide signal table scrolls inside its
+   own box instead of widening the whole page (which was clipping the intro
+   and decision cards on the right on narrow phones). */
 @media (max-width: 600px) {
   .md-typeset .live-dash .dash-grid { grid-template-columns: 1fr; gap: 0.45rem; }
-  .md-typeset .live-dash .dash-card .dash-tight { overflow-x: auto; }
+  .md-typeset .live-dash .dash-tight { max-width: 100%; overflow-x: auto; }
+  .md-typeset .live-dash .kelly-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .md-typeset .live-dash .kelly-card,
+  .md-typeset .live-dash .tactical-card,
+  .md-typeset .live-dash .allocation-master { max-width: 100% !important; }
 }
 
 /* ==========================================================================
