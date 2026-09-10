@@ -1,6 +1,6 @@
 ---
 title: "Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands"
-date: 2026-09-12
+date: 2026-09-10
 tags: [options, vanna, charm, gamma-exposure, dealer-positioning, GEX, market-structure]
 lang: en
 ---
@@ -8,8 +8,6 @@ lang: en
 # Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
 
 > **Options-structure series.** [Compute GEX Yourself](gex-calculator.md) covered **gamma**; [0DTE Gamma Patterns](gex-0dte-patterns.md) covered **intraday change.** This one goes **beyond gamma** — the dealer flows driven by volatility and time, **Vanna** and **Charm** — and *how far you can actually trust them*.
-
-<!-- DRAFT: remove `draft` and deploy after review. -->
 
 Recall the gamma story. A dealer (market maker) doesn't bet on direction — it offsets (hedges) the risk of the options customers hand over, using the underlying. But that hedge doesn't sit still. **Three things** keep moving the dealer's hands:
 
