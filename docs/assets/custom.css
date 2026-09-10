@@ -204,9 +204,19 @@ img {
     overflow-x: auto;
     white-space: nowrap;
   }
+  .md-typeset .live-dash img { max-width: 100%; }
   .md-typeset .live-dash .kelly-card,
   .md-typeset .live-dash .tactical-card,
-  .md-typeset .live-dash .allocation-master { max-width: 100% !important; }
+  .md-typeset .live-dash .allocation-master {
+    max-width: 100% !important;
+    width: auto !important;
+  }
+  /* Plain content tables (e.g. the paid-series table) aren't wrapped in a
+     scroll container by this theme, so a wide one pushes the whole page —
+     and its intro/cards — past the phone's width. Let them scroll instead.
+     (Dashboard signal tables keep their centered inline-table via the more
+     specific .dash-tight rule.) */
+  .md-typeset table:not([class]) { display: block; overflow-x: auto; }
 }
 
 /* ==========================================================================
