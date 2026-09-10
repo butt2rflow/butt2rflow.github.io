@@ -35,6 +35,12 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 OUT_KO = ROOT / "docs" / "assets" / "diagrams"
 OUT_EN = ROOT / "docs" / "assets" / "diagrams_en"
+# Last-good GEX snapshot. The deploy never commits to main (rendered artifacts
+# live only in the CI run and get published to gh-pages), so the PUBLISHED site
+# is the only cross-run store: each good deploy writes this file next to the
+# chart, and a deploy that hits Yahoo's empty-chain window reloads it over HTTP.
+GEX_CACHE = OUT_KO / "gex_last.json"
+GEX_CACHE_URL = "https://butt2rflow.github.io/assets/diagrams/gex_last.json"
 
 matplotlib.rcParams["axes.unicode_minus"] = False
 plt.rcParams.update({"figure.facecolor": "white"})
@@ -1929,6 +1935,32 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
         return None
 
 
+def _save_gex_cache(g: dict) -> None:
+    """Publish the last good GEX next to the chart so a later deploy that hits
+    Yahoo's empty-chain window can fall back to it over HTTP. gh-pages (the
+    published site) is the store — deploy never commits to main."""
+    try:
+        GEX_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        GEX_CACHE.write_text(json.dumps(g, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] could not write GEX cache ({e})")
+
+
+def _load_gex_cache() -> dict | None:
+    """Reload the last good GEX from the published site (marked stale) when a
+    live fetch comes back empty, and re-write it locally so gh-deploy keeps it
+    on the site for the next empty run (an empty run writes no fresh file)."""
+    try:
+        req = urllib.request.Request(GEX_CACHE_URL, headers={"User-Agent": "Mozilla/5.0"})
+        g = json.load(urllib.request.urlopen(req, timeout=15))
+        g["live"] = False
+        _save_gex_cache(g)
+        return g
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] GEX cache reload failed ({e}); tile omitted")
+        return None
+
+
 def render_gex_chart(g: dict, out_path: Path) -> bool:
     prof = g.get("profile") or []
     if not prof:
@@ -1966,6 +1998,7 @@ def render_gex_card_ko(g: dict) -> list[str]:
     mp_s = f"{g['max_pain']:.0f}" if g.get("max_pain") else "—"
     pos = ("플립 위 = 롱 감마" if (g.get("flip") and g["spot"] >= g["flip"])
            else "플립 아래 = 숏 감마" if g.get("flip") else "—")
+    stamp = f" · {g['date']} 기준" + ("" if g.get("live", True) else " (스냅샷)")
     return [
         "---",
         "",
@@ -1985,7 +2018,7 @@ def render_gex_card_ko(g: dict) -> list[str]:
         "",
         "<small>*Yahoo ^SPX 지수옵션 체인 추정. **감마는 잔물결, 파도는 델타** — "
         "부호는 추정이라 방향 신호가 아니라 레짐(증폭/억제) 참고용, Max Pain은 만기일 참고치일 뿐 · "
-        "[GEX 직접 계산 →](posts/gex-calculator.md)*</small>",
+        f"[GEX 직접 계산 →](posts/gex-calculator.md){stamp}*</small>",
         "",
     ]
 
@@ -1997,6 +2030,7 @@ def render_gex_card_en(g: dict) -> list[str]:
     mp_s = f"{g['max_pain']:.0f}" if g.get("max_pain") else "—"
     pos = ("above flip = long gamma" if (g.get("flip") and g["spot"] >= g["flip"])
            else "below flip = short gamma" if g.get("flip") else "—")
+    stamp = f" · as of {g['date']}" + ("" if g.get("live", True) else " (snapshot)")
     return [
         "---",
         "",
@@ -2017,7 +2051,7 @@ def render_gex_card_en(g: dict) -> list[str]:
         "<small>*Estimated from Yahoo ^SPX index option chains. **Gamma is the ripple, "
         "delta is the wave** — the sign is inferred, so read it as a regime (amplify/dampen), "
         "not a directional signal; Max Pain is just an expiry-day reference · "
-        "[Compute GEX yourself →](posts/gex-calculator.md)*</small>",
+        f"[Compute GEX yourself →](posts/gex-calculator.md){stamp}*</small>",
         "",
     ]
 
@@ -2529,8 +2563,14 @@ def main():
     print("Fetching GEX (^SPX options / dealer gamma)...")
     gex = fetch_gex()
     if gex:
+        gex["live"] = True
+        _save_gex_cache(gex)
+    else:
+        gex = _load_gex_cache()          # Yahoo empty-chain window → last good snapshot
+    if gex:
+        tag = "" if gex.get("live") else f" [cached, as of {gex.get('date')}]"
         print(f"  GEX: net {gex['net_bn']:+.1f}B ({gex['regime']}), "
-              f"flip {gex['flip']}, max_pain {gex['max_pain']} (spot {gex['spot']:.0f})")
+              f"flip {gex['flip']}, max_pain {gex['max_pain']} (spot {gex['spot']:.0f}){tag}")
 
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
