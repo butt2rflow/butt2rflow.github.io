@@ -176,15 +176,15 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 - [**Options Basics**](posts/options-basics.md) — Calls, puts, strike, expiration, delta — explained via car insurance (start *here* if options are new)
 - [**Volatility Skew**](posts/skew.md) — The "smirk" in S&P 500 index options, Implied Correlation, the CBOE SKEW Index
-- [**The Bond Market's VIX — MOVE Index**](posts/move-index.md) — the fear gauge for Treasury yields; in bp not %, and the divergence from VIX is the signal
 - [**Hedging the Wings**](posts/hedging-wings.md) — Low-cost tail-risk hedging (1:2 put ratio, with a concrete SPY example)
-- [**Market-Sentiment Volatility Indices**](posts/implied-correlation.md) — COR3M, the IV Surface, Delta Skew + a TradingView Pine Script
 
 ### Market data tools
 
 - [**The COT Report**](posts/cot.md) — Reading institutional intent in the futures market
 - [**The FedWatch Tool**](posts/fedwatch.md) — Pricing rate moves with Fed Funds futures
 - [**Reading Credit Spreads as an Indicator**](posts/credit-spreads.md) — The index is calm while the CCC−B gap widens; a late-cycle signal you can read on FRED without trading CDS
+- [**The Bond Market's VIX — MOVE Index**](posts/move-index.md) — the fear gauge for Treasury yields; in bp not %, and the divergence from VIX is the signal
+- [**Market-Sentiment Volatility Indices**](posts/implied-correlation.md) — COR3M, the IV Surface, Delta Skew + a TradingView Pine Script
 
 ### Tools
 
@@ -192,8 +192,18 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**The Almanac Trader**](posts/almanac.md) — Monthly seasonality analysis (Google Sheets + Python)
 - [**Calculating GEX Yourself**](posts/gex-calculator.md) — Gamma exposure with Google Sheets + Python
 - [**0DTE Gamma Patterns**](posts/gex-0dte-patterns.md) — How GEX shifts intraday
+- [**Beyond Gamma — The Vanna Rally, Pinning**](posts/vanna-charm.md) — Vanna, Charm, and dealer positioning — how much is actually true
 - [**Volatility Dashboard**](posts/volatility-dashboard.md) — Tracking Correlation + Skew (Google Sheets + Python)
 - [**VIX Futures Term Structure**](posts/vix-term-structure.md) — Reading contango/backwardation (vixcentral alternative)
+
+### Physical AI
+
+- [**From Stereo to Grasp**](posts/stereo-to-grasp.md) — How a robot learns to see a part
+- [**Frames & Transforms**](posts/frames-transforms.md) — How a robot knows where to grab
+- [**What Is a Collaborative Robot?**](posts/cobot-basics.md) — The basics of robots that work beside people
+- [**UR vs FANUC — Openness**](posts/cobot-ur-vs-fanuc.md) — Comparing the two camps' openness and ecosystems
+- [**Investing in Physical AI**](posts/cobot-investing.md) — Where the value migrates (the cobot investing angle)
+- [**The Robot's Brain at the Edge — Jetson & ROS 2**](posts/jetson-ros2-setup.md) — Field Notes (1): setting up a Jetson Orin NX
 
 ---
 

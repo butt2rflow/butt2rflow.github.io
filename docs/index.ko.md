@@ -176,15 +176,15 @@ title: Home
 
 - [**옵션의 기초**](posts/options-basics.md) — 자동차 보험 비유로 풀어 보는 콜·풋·행사가·델타 (옵션 처음이라면 *여기부터*)
 - [**변동성 Skew**](posts/skew.md) — S&P500 지수 옵션의 "썩소"와 Implied Correlation, CBOE SKEW Index
-- [**채권시장의 VIX — MOVE 지수**](posts/move-index.md) — 미 국채 금리의 공포 게이지, %가 아닌 bp, VIX와 갈라질 때가 신호
 - [**Hedging the Wings**](posts/hedging-wings.md) — 저비용 테일 리스크 헷지 (1:2 Put Ratio, SPY 구체 예시)
-- [**시장 심리 변동성 지수**](posts/implied-correlation.md) — COR3M, IV Surface, Delta Skew + TradingView Pine Script
 
 ### 시장 데이터 도구
 
 - [**COT 리포트**](posts/cot.md) — 선물시장에서 기관의 의중 읽기
 - [**FedWatch Tool**](posts/fedwatch.md) — Fed Fund 선물로 금리 예측하기
 - [**신용 스프레드를 지표로 읽기**](posts/credit-spreads.md) — 지수는 잠잠한데 CCC−B 격차는 확대, CDS 못 사도 FRED로 읽는 후기 사이클 신호
+- [**채권시장의 VIX — MOVE 지수**](posts/move-index.md) — 미 국채 금리의 공포 게이지, %가 아닌 bp, VIX와 갈라질 때가 신호
+- [**시장 심리 변동성 지수**](posts/implied-correlation.md) — COR3M, IV Surface, Delta Skew + TradingView Pine Script
 
 ### 도구
 
@@ -192,8 +192,18 @@ title: Home
 - [**Almanac Trader**](posts/almanac.md) — 월별 Seasonality 분석 (구글시트 + Python)
 - [**GEX 직접 계산하기**](posts/gex-calculator.md) — Google Sheets + Python으로 감마 노출 계산
 - [**0DTE 감마 패턴**](posts/gex-0dte-patterns.md) — 장중 GEX는 어떻게 변하는가
+- [**감마 너머 — 바나 랠리, 핀닝**](posts/vanna-charm.md) — Vanna·Charm와 딜러 포지셔닝, 어디까지가 사실인가
 - [**변동성 대시보드**](posts/volatility-dashboard.md) — Correlation + Skew 추적 (Google Sheets + Python)
 - [**VIX Futures Term Structure**](posts/vix-term-structure.md) — 콘탱고/백워데이션 해석 (vixcentral 대안)
+
+### Physical AI
+
+- [**스테레오 비전에서 목표물 잡기까지**](posts/stereo-to-grasp.md) — 로봇은 목표한 사물을 어떻게 발견하는가
+- [**좌표계와 변환**](posts/frames-transforms.md) — 로봇은 어디를 잡을지 어떻게 아는가
+- [**협동로봇(cobot)이란**](posts/cobot-basics.md) — 사람 옆에서 일하는 로봇의 기초
+- [**UR vs 화낙 — 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
+- [**Physical AI에 투자한다면**](posts/cobot-investing.md) — 가치는 어디로 이동하는가 (코봇 투자편)
+- [**로봇의 뇌를 엣지에 — Jetson·ROS 2**](posts/jetson-ros2-setup.md) — 현장 노트 (1): Jetson Orin NX 셋업
 
 ---
 

@@ -191,9 +191,11 @@ img {
   background: rgba(255, 255, 255, 0.02);
 }
 [data-md-color-scheme="slate"] .md-typeset .live-dash .dash-card > h3 { color: #c3b6ec; }
-/* On phones the grid is a single column anyway (minmax floor) — keep gap tight */
-@media (max-width: 480px) {
-  .md-typeset .live-dash .dash-grid { gap: 0.45rem; }
+/* On phones force a single column so the minmax(290px) floor can never push
+   the grid wider than a narrow (≤320px) viewport. */
+@media (max-width: 600px) {
+  .md-typeset .live-dash .dash-grid { grid-template-columns: 1fr; gap: 0.45rem; }
+  .md-typeset .live-dash .dash-card .dash-tight { overflow-x: auto; }
 }
 
 /* ==========================================================================
