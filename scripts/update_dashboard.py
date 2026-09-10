@@ -1821,6 +1821,10 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
     import datetime as _dt
     import http.cookiejar
     from collections import defaultdict
+    # >>> TEMP: verify SNAPSHOT watermark in CI (revert immediately after) >>>
+    print("  [TEST] forcing empty GEX to verify watermark")
+    return None
+    # <<< TEMP <<<
     try:
         # Yahoo's v7 options endpoint now needs a cookie + crumb (the v8 chart
         # API used elsewhere doesn't). Do the standard handshake once.
