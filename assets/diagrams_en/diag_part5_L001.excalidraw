@@ -1,0 +1,474 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 120,
+      "y": 10,
+      "width": 560,
+      "height": 30,
+      "text": "Same average, different volatility — distribution comparison",
+      "originalText": "Same average, different volatility — distribution comparison",
+      "fontSize": 22,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "strokeColor": "#1e40af",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110001,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "line",
+      "id": "xaxis",
+      "x": 60,
+      "y": 250,
+      "width": 680,
+      "height": 0,
+      "strokeColor": "#64748b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110010,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          680,
+          0
+        ]
+      ]
+    },
+    {
+      "type": "line",
+      "id": "yaxis",
+      "x": 60,
+      "y": 55,
+      "width": 0,
+      "height": 195,
+      "strokeColor": "#64748b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110011,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          195
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "id": "xlabel",
+      "x": 640,
+      "y": 258,
+      "width": 100,
+      "height": 18,
+      "text": "Return (%)",
+      "originalText": "Return (%)",
+      "fontSize": 12,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "strokeColor": "#64748b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110012,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "text",
+      "id": "ylabel",
+      "x": 20,
+      "y": 140,
+      "width": 30,
+      "height": 18,
+      "text": "Frequency",
+      "originalText": "Frequency",
+      "fontSize": 12,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "strokeColor": "#64748b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110013,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "line",
+      "id": "mean_line",
+      "x": 400,
+      "y": 55,
+      "width": 0,
+      "height": 195,
+      "strokeColor": "#64748b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110015,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          195
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "id": "mean_label",
+      "x": 370,
+      "y": 258,
+      "width": 60,
+      "height": 18,
+      "text": "Mean 7%",
+      "originalText": "Mean 7%",
+      "fontSize": 11,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "strokeColor": "#64748b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110016,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "line",
+      "id": "jeju_curve",
+      "x": 260,
+      "y": 245,
+      "width": 280,
+      "height": 170,
+      "strokeColor": "#047857",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110020,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          30,
+          -20
+        ],
+        [
+          60,
+          -60
+        ],
+        [
+          100,
+          -120
+        ],
+        [
+          130,
+          -165
+        ],
+        [
+          140,
+          -170
+        ],
+        [
+          150,
+          -165
+        ],
+        [
+          180,
+          -120
+        ],
+        [
+          220,
+          -60
+        ],
+        [
+          250,
+          -20
+        ],
+        [
+          280,
+          0
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "id": "jeju_label",
+      "x": 415,
+      "y": 38,
+      "width": 200,
+      "height": 36,
+      "text": "San Diego (low volatility)\nNarrow, tall distribution",
+      "originalText": "San Diego (low volatility)\nNarrow, tall distribution",
+      "fontSize": 13,
+      "fontFamily": 3,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "strokeColor": "#047857",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110021,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "line",
+      "id": "seoul_curve",
+      "x": 120,
+      "y": 245,
+      "width": 560,
+      "height": 110,
+      "strokeColor": "#dc2626",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110030,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          -10
+        ],
+        [
+          80,
+          -25
+        ],
+        [
+          140,
+          -55
+        ],
+        [
+          200,
+          -85
+        ],
+        [
+          260,
+          -105
+        ],
+        [
+          280,
+          -110
+        ],
+        [
+          300,
+          -105
+        ],
+        [
+          360,
+          -85
+        ],
+        [
+          420,
+          -55
+        ],
+        [
+          480,
+          -25
+        ],
+        [
+          520,
+          -10
+        ],
+        [
+          560,
+          0
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "id": "seoul_label",
+      "x": 90,
+      "y": 110,
+      "width": 200,
+      "height": 36,
+      "text": "Chicago (high volatility)\nWide, flat distribution",
+      "originalText": "Chicago (high volatility)\nWide, flat distribution",
+      "fontSize": 13,
+      "fontFamily": 3,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "strokeColor": "#dc2626",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110031,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "text",
+      "id": "insight",
+      "x": 140,
+      "y": 290,
+      "width": 520,
+      "height": 20,
+      "text": "Same average return — higher volatility lowers your realized return",
+      "originalText": "Same average return — higher volatility lowers your realized return",
+      "fontSize": 13,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "strokeColor": "#1e40af",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 110040,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "containerId": null,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": 20
+  },
+  "files": {}
+}

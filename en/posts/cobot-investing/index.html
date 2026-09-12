@@ -1,0 +1,2722 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="If you believe Physical AI is real, how do you invest? There's no pure-play — NVIDIA, Teradyne, and FANUC are each diluted differently — and the real question is where value moves. The narrative is humanoids; the money is cobots. Cobot series finale.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/cobot-investing/">
+      
+      
+        <link rel="prev" href="../cobot-ur-vs-fanuc/">
+      
+      
+        <link rel="next" href="../jetson-ros2-setup/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/cobot-investing/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Investing in Physical AI — There's No Pure-Play, and the Value Is Moving - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#investing-in-physical-ai-theres-no-pure-play-and-the-value-is-moving" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/cobot-investing/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../stereo-to-grasp/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms — How a Robot Knows Where to Grab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-narrative-is-humanoids-the-money-is-cobots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The narrative is humanoids; the money is cobots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theres-no-pure-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        There's no pure-play
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-exposures-each-diluted-differently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three exposures — each diluted differently
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Three exposures — each diluted differently">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nvidia-selling-brains-to-everyone-picks-and-shovels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NVIDIA — selling brains to everyone (picks and shovels)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teradyne-ter-the-most-direct-way-to-buy-ur-wrapped-in-semiconductor-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teradyne (TER) — the most direct way to buy UR, wrapped in semiconductor test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fanuc-the-purest-robotics-of-the-three-but-the-closed-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FANUC — the purest robotics of the three, but the "closed" side
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-value-moves-the-shift-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where value moves — the shift map
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where value moves — the shift map">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-determinism-barrier-why-they-dont-just-die" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The determinism barrier — why they don't just die
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closing-the-real-moat-is-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closing — the real moat is fusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-trademarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; trademarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-narrative-is-humanoids-the-money-is-cobots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The narrative is humanoids; the money is cobots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theres-no-pure-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        There's no pure-play
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-exposures-each-diluted-differently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three exposures — each diluted differently
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Three exposures — each diluted differently">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nvidia-selling-brains-to-everyone-picks-and-shovels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NVIDIA — selling brains to everyone (picks and shovels)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teradyne-ter-the-most-direct-way-to-buy-ur-wrapped-in-semiconductor-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teradyne (TER) — the most direct way to buy UR, wrapped in semiconductor test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fanuc-the-purest-robotics-of-the-three-but-the-closed-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FANUC — the purest robotics of the three, but the "closed" side
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-value-moves-the-shift-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where value moves — the shift map
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where value moves — the shift map">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-determinism-barrier-why-they-dont-just-die" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The determinism barrier — why they don't just die
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closing-the-real-moat-is-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closing — the real moat is fusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-trademarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; trademarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="investing-in-physical-ai-theres-no-pure-play-and-the-value-is-moving">Investing in Physical AI — There's No Pure-Play, and the Value Is Moving<a class="headerlink" href="#investing-in-physical-ai-theres-no-pure-play-and-the-value-is-moving" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Cobot series · Part 3 of 3 (finale).</strong> <a href="../cobot-basics/">Part 1</a> was what a cobot is; <a href="../cobot-ur-vs-fanuc/">Part 2</a> split UR vs FANUC on "openness." Now we connect it to <strong>investing</strong> — if Physical AI is real, how do we buy it?</p>
+</blockquote>
+<p>Suppose the first two parts convinced you Physical AI is real. AI becomes the robot's eyes and hands (the <a href="../stereo-to-grasp/">Robot Vision series</a>), and what decides the contest isn't specs but openness (Part 2).</p>
+<p>Then the natural next question: <strong>"So — where do I invest?"</strong></p>
+<p>Bad news first. <strong>There's no clean stock to buy.</strong> The names that come up when you search "Physical AI pure-play" — NVIDIA, Teradyne, FANUC — are all <strong>diluted exposure in different ways.</strong> And the good news: that's why this piece asks not "which stock" but <strong>"where does value move?"</strong> Drawing that map is the better trade.</p>
+<hr />
+<h2 id="in-30-seconds">In 30 seconds<a class="headerlink" href="#in-30-seconds" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The narrative is humanoids; the money is cobots.</strong> When people say Physical AI they picture a robot that walks like a person — but those are mostly <strong>prototypes and pilots,</strong> and mostly <strong>private.</strong> The actual revenue comes from the <strong>cobots and industrial arms</strong> already installed by the tens of thousands.</li>
+<li><strong>No pure-play.</strong> No US large-cap sells "just cobots" or "just Physical AI." The closest are small (Korea's Doosan Robotics) or Chinese (humanoid makers UBTech and Unitree) — and the one that was supposed to become a ticker, ABB's robotics spin-off, was <strong>sold to SoftBank instead of listing.</strong></li>
+<li><strong>Three flavors of dilution.</strong> <strong>NVIDIA</strong> = the picks-and-shovels seller of brains to everyone (but Physical AI is ~1% of revenue, 90% is Data Center). <strong>Teradyne</strong> = the openness winner via UR (but ~10% of revenue; 79% is semiconductor test). <strong>FANUC</strong> = the purest automation name (but robots are 41% and mostly <em>traditional</em> industrial arms; China-cyclical).</li>
+<li><strong>A valuation twist.</strong> On earnings (P/E), <strong>NVDA is the cheapest of the three (~29x), and the cobot owner, TER, is the most expensive (~47x).</strong> The pick-seller trades cheaper than the miner.</li>
+<li><strong>Value is moving.</strong> Physical AI <em>lifts</em> one side (compute, robot-joint reducers, open force control) and <em>presses</em> another (the robot-guidance premium of traditional 3D machine vision).</li>
+<li><strong>The real moat = fusion.</strong> AI is non-deterministic; industrial inspection is deterministic. Whoever <strong>bridges</strong> the two wins — not the pure-AI player, not the pure-legacy incumbent.</li>
+<li><em>This is a viewpoint, not stock advice. Please read the disclosure at the bottom.</em></li>
+</ul>
+<hr />
+<h2 id="the-narrative-is-humanoids-the-money-is-cobots">The narrative is humanoids; the money is cobots<a class="headerlink" href="#the-narrative-is-humanoids-the-money-is-cobots" title="Permanent link">&para;</a></h2>
+<p>Before the investing, set the board. "Physical AI" makes people overlay two different pictures:</p>
+<ul>
+<li><strong>Humanoids</strong> — two legs, two arms, do-anything. The general-purpose dream: "just drop it into a human's spot."</li>
+<li><strong>Cobots / industrial arms</strong> — one arm bolted to a table, repeating one task precisely in one place.</li>
+</ul>
+<p>They're at completely different maturities.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Cobot (collaborative robot)</strong></th>
+<th><strong>Humanoid</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Form</td>
+<td>fixed base + one arm</td>
+<td>two legs + two arms, whole body</td>
+</tr>
+<tr>
+<td>Status today</td>
+<td><strong>tens of thousands deployed, cash-generating</strong></td>
+<td>mostly <strong>prototype / pilot</strong></td>
+</tr>
+<tr>
+<td>ROI</td>
+<td>proven (boring but sure)</td>
+<td><strong>unproven,</strong> expensive, hard</td>
+</tr>
+<tr>
+<td>Good at</td>
+<td>one place, one task</td>
+<td>general — "anything" (still a dream)</td>
+</tr>
+<tr>
+<td>What's left</td>
+<td>mature</td>
+<td>walking, battery, hand dexterity, safety, cost — all of it</td>
+</tr>
+<tr>
+<td>Public access</td>
+<td>listed (but diluted)</td>
+<td><strong>mostly private</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The point: <strong>the hot narrative and valuation crowd around humanoids, but the revenue and cash flow come from cobots and industrial arms.</strong> While the walking-robot clips rack up views, the money is quietly welding in a car plant.</p>
+<p>And here's the trap. <strong>The hot side (humanoids) is mostly un-buyable</strong> — the Western leaders Figure, Agility, Apptronik, 1X are all private. The only listed pure humanoid plays are <strong>Chinese</strong> — UBTech, and Unitree (up +487% on its 2026 debut day). <strong>The buyable side (cobots) is all a slice of a bigger company,</strong> so it's diluted.</p>
+<p>That gap — <em>you can't buy what you want, and what you can buy is diluted</em> — is where Part 3 starts.</p>
+<p><img alt="Humanoid vs cobot — a 2×2 of maturity and generality" src="../../../assets/diagrams_en/invest-humanoid-vs-cobot.svg" /></p>
+<hr />
+<h2 id="theres-no-pure-play">There's no pure-play<a class="headerlink" href="#theres-no-pure-play" title="Permanent link">&para;</a></h2>
+<p>The honest answer to "just name me one Physical AI pure-play" is <strong>"there isn't one in US large-caps."</strong></p>
+<ul>
+<li><strong>Doosan Robotics</strong> (listed in Korea) — the <strong>closest listed cobot pure-play,</strong> but small and Korea-listed, so access and liquidity are limited.</li>
+<li><strong>UBTech · Unitree</strong> (listed in China) — actually-listed <strong>humanoid pure-plays</strong> with real revenue (though humanoid revenue is still ~$100M each). Not industrial cobots, and China-listed.</li>
+<li><strong>Symbotic (SYM)</strong> — the <strong>closest thing to a US-listed Physical AI pure-play,</strong> but really a <strong>warehouse-automation proxy</strong> where ~85% of revenue is Walmart. Neither a cobot nor a humanoid play.</li>
+<li><strong>ABB robotics — off.</strong> ABB once planned to spin its Robotics division into a separate listing, then <strong>scrapped it and sold the whole thing to SoftBank</strong> (~$5.4B, announced late 2025). So no new ticker here either.</li>
+<li>Everything else — Yaskawa, Rockwell, Intuitive Surgical — is <strong>diversified or a different domain</strong> (surgical robots, etc.), not a cobot pure-play.</li>
+</ul>
+<p>Conclusion: there's <strong>no clean way to buy this board with a US large-cap.</strong> So we examine the three names you <em>can</em> actually hold — NVIDIA, Teradyne, FANUC — and see <strong>how each is diluted.</strong></p>
+<hr />
+<h2 id="three-exposures-each-diluted-differently">Three exposures — each diluted differently<a class="headerlink" href="#three-exposures-each-diluted-differently" title="Permanent link">&para;</a></h2>
+<p>All three have under half their revenue in robots — each diluted by something different. Here it is at a glance.</p>
+<p><img alt="Three exposures, three dilutions — share of revenue that is robotics" src="../../../assets/diagrams_en/invest-three-dilution.svg" /></p>
+<h3 id="nvidia-selling-brains-to-everyone-picks-and-shovels">NVIDIA — selling brains to everyone (picks and shovels)<a class="headerlink" href="#nvidia-selling-brains-to-everyone-picks-and-shovels" title="Permanent link">&para;</a></h3>
+<p>NVIDIA's role in Physical AI is <strong>"the merchant selling jeans and picks in a gold rush."</strong> Whoever wins the robot war, that robot's brain and training ground come from NVIDIA. In fact it sells compute to <strong>both</strong> Part 2 protagonists — <strong>UR (Teradyne) and FANUC.</strong> A neutral arms dealer.</p>
+<ul>
+<li><strong>Brain:</strong> Jetson Thor (on-robot computer). <strong>Training ground:</strong> Isaac Sim / Omniverse (digital-twin simulation), Cosmos (world models). <strong>Model:</strong> Isaac GR00T N1 — an <strong>open</strong> vision-language-action foundation model for humanoids.</li>
+<li>Jensen Huang's "Physical AI is the next wave" story is <strong>real.</strong> The products exist and lead.</li>
+</ul>
+<p><strong>But on the income statement it's a rounding error.</strong> ~90% of NVIDIA's revenue (about $216B in FY2026) is <strong>Data Center,</strong> and the "Automotive &amp; Robotics" bucket robots live in is <strong>~1%</strong> — and mostly automotive, so <strong>pure robotics is under 1%.</strong> Buying NVDA "for Physical AI" buys <strong>a very thin slice of a $5.5T data-center company,</strong> at a rich price.</p>
+<ul>
+<li>The irony: it's still <strong>the cheapest of the three on earnings (P/E ~29x)</strong> — because earnings are growing so fast.</li>
+<li>One line: <strong>right technology, tiny exposure, price set by Data Center.</strong></li>
+</ul>
+<h3 id="teradyne-ter-the-most-direct-way-to-buy-ur-wrapped-in-semiconductor-test">Teradyne (TER) — the most direct way to buy UR, wrapped in semiconductor test<a class="headerlink" href="#teradyne-ter-the-most-direct-way-to-buy-ur-wrapped-in-semiconductor-test" title="Permanent link">&para;</a></h3>
+<p>The most direct public route to Part 2's openness winner, <strong>Universal Robots,</strong> is Teradyne. UR + MiR (mobile robots) form Teradyne's Robotics segment.</p>
+<ul>
+<li>UR bills itself as <strong>"the preferred platform for Physical AI,"</strong> shipping an NVIDIA-based "AI Accelerator" — pushing exactly Part 2's openness.</li>
+<li><strong>The problem is weight.</strong> Robotics is <strong>~10%</strong> of Teradyne's revenue (about $308M in FY2025, mostly UR). The other <strong>79% is semiconductor test equipment.</strong> So TER is <strong>fundamentally a semiconductor-test company</strong> with a cobot side-business.</li>
+<li>A subtler trap: TER's loud "AI" story is really <strong>semiconductor gear that tests AI chips,</strong> not Physical AI cobots. Same word, easy to conflate.</li>
+</ul>
+<p><strong>But don't nail it down as "declining."</strong> Robotics is <strong>rebounding</strong> after two 2025 restructurings (which cut breakeven revenue from $440M to $365M) — Q2 2026 hit a <strong>record $100M quarter (+33%).</strong> A side-business, but a growing one.</p>
+<ul>
+<li>Valuation: <strong>the most expensive of the three (P/E ~47x)</strong> — the AI-chip-test + robotics rebound is already priced in.</li>
+<li>One line: <strong>the most direct buy on the openness winner (UR), but it arrives wrapped in the semiconductor-test cycle.</strong></li>
+</ul>
+<h3 id="fanuc-the-purest-robotics-of-the-three-but-the-closed-side">FANUC — the purest robotics of the three, but the "closed" side<a class="headerlink" href="#fanuc-the-purest-robotics-of-the-three-but-the-closed-side" title="Permanent link">&para;</a></h3>
+<p>The <strong>purest factory-automation company</strong> here is FANUC. Robots + CNC + Robomachine — all automation.</p>
+<ul>
+<li><strong>Best balance sheet.</strong> Debt-free, net cash ~$5.1B, operating margin <strong>~21%.</strong> It pays a dividend (~1.9% yield).</li>
+<li><strong>Yet still not "pure."</strong> Robots are <strong>41%</strong> of revenue; the rest splits into CNC/FA (24%), Robomachine (17%), and Service. And that 41% is <strong>mostly traditional industrial robots,</strong> not cobots (CRX).</li>
+<li><strong>And it's Part 2's "closed" side.</strong> On the openness axis FANUC trailed. But in late 2025 it <strong>partnered with NVIDIA</strong> (Jetson, Isaac Sim, Omniverse into ROBOGUIDE) to start opening up, and reported <strong>1,000+ AI-robot orders</strong> right after. The hedge has begun.</li>
+<li><strong>Access caveat:</strong> the Tokyo listing (<strong>6954</strong>) is the real body; the US ADR (<strong>FANUY</strong>) trades OTC at 1 ADR = 0.1 share and is thinner. And revenue swings hard with <strong>China capex (especially EV).</strong></li>
+<li>Valuation: <strong>P/E ~31x</strong> (in the middle). One line: <strong>the purest-robotics balance-sheet name, but the closed side of the thesis + a China cycle.</strong></li>
+</ul>
+<h3 id="one-table">One table<a class="headerlink" href="#one-table" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>NVIDIA</strong></th>
+<th><strong>Teradyne (UR)</strong></th>
+<th><strong>FANUC</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical AI purity</td>
+<td>tiny (~1%, mostly auto)</td>
+<td>low (Robotics ~10%)</td>
+<td>mid (robots 41%, mostly industrial)</td>
+</tr>
+<tr>
+<td>Part 2 openness position</td>
+<td>enabler (sells to both)</td>
+<td><strong>open (UR)</strong></td>
+<td>closed (+NVIDIA hedge)</td>
+</tr>
+<tr>
+<td>Dilution</td>
+<td>Data Center 90%</td>
+<td>semi test 79%</td>
+<td>CNC·Robomachine·Service + China</td>
+</tr>
+<tr>
+<td>Financial strength</td>
+<td>hyper-growth</td>
+<td>semi cycle</td>
+<td><strong>debt-free · net cash · high margin</strong></td>
+</tr>
+<tr>
+<td>Valuation (P/E, approx)</td>
+<td>~29x (<strong>lowest</strong>)</td>
+<td>~47x (<strong>highest</strong>)</td>
+<td>~31x</td>
+</tr>
+<tr>
+<td>Access</td>
+<td>mega-cap, top liquidity</td>
+<td>large-cap</td>
+<td>6954 primary / FANUY thin</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Figures are 2025–2026 approximations; they move with timing, FX, and the AI cycle.)</em></p>
+<hr />
+<h2 id="where-value-moves-the-shift-map">Where value moves — the shift map<a class="headerlink" href="#where-value-moves-the-shift-map" title="Permanent link">&para;</a></h2>
+<p>Stopping at three tickers is only half the picture. The real Physical AI story is <strong>where value moves from and to.</strong> Two directions.</p>
+<p><strong>What it lifts (winners):</strong>
+- <strong>Compute</strong> — NVIDIA. Whoever wins, the brain comes from here.
+- <strong>Robot joints = reducers</strong> — precision-reducer makers like Harmonic Drive (6324) and Nabtesco (6268). <strong>Every</strong> robot arm and humanoid uses these at every joint. The <strong>reducer maker can be a purer robot bet than the robot maker</strong> — whoever wins, the joints all come from here. The real picks and shovels. (Caveat: Chinese reducer makers — Sanhua, Leaderdrive — are moving into the cost-sensitive humanoid tier, so the Japanese duopoly isn't forever.)
+- <strong>Open force control</strong> — Part 2's axis. The side, like UR (Teradyne), that lets AI reach the force loop.</p>
+<p><strong>What it presses (pressured):</strong>
+- <strong>The robot-guidance premium of traditional 3D machine vision</strong> — the "tell the robot where to grab" work that firms like Cognex (CGNX) and Keyence (6861) solved with expensive proprietary 3D vision. Now <strong>cheap stereo cameras + foundation models</strong> (the very pipeline you saw in the <a href="../stereo-to-grasp/">Robot Vision series</a>) undercut it. The old "expensive 3D scanner + proprietary software + vision engineer" bundle thins out.</p>
+<p><img alt="Physical AI value-shift map — what it lifts vs what it presses" src="../../../assets/diagrams_en/invest-value-shift.svg" /></p>
+<h3 id="the-determinism-barrier-why-they-dont-just-die">The determinism barrier — why they don't just die<a class="headerlink" href="#the-determinism-barrier-why-they-dont-just-die" title="Permanent link">&para;</a></h3>
+<p>Stop here and you'd conclude "traditional vision is finished." It isn't. <strong>The erosion hits a wall.</strong></p>
+<p>Industrial inspection demands <strong>determinism</strong> — the same answer every time, traceable, a certifiable pass/fail, never letting a bad part through. AI foundation models are <strong>non-deterministic</strong> — flexible but probabilistic, occasionally hallucinating, and "94% likely good" can't go straight into a safety/quality gate.</p>
+<p><strong>These collide head-on.</strong> So value settles not in replacement but in <strong>fusion.</strong></p>
+<blockquote>
+<p><strong>AI narrows; determinism confirms.</strong>
+AI takes the flexible, perception-hard part (find the object, absorb variation); classical vision and geometry take the verdict and the measurement (sub-pixel gauge, hard thresholds).</p>
+</blockquote>
+<p>This is exactly <strong>your Robot Vision pipeline</strong> — FoundationStereo/SAM (AI, flexible) find the "where/what," geometry (deterministic math) fixes "exactly how much," and force confirms the grasp. <strong>Fusion is the architecture that series already proved.</strong></p>
+<p><img alt="Fusion — AI narrows, determinism confirms" src="../../../assets/diagrams_en/invest-fusion.svg" /></p>
+<p>So for investing:
+- <strong>Why incumbents are defended</strong> — Cognex and Keyence already <strong>own the deterministic, certified layer,</strong> and can bolt AI on top. The robot-guidance segment gets pressured, but the <strong>inspection / metrology / reading core likely holds</strong> — because they hold the fusion layer.
+- <strong>NVIDIA is an enabler, not a replacer</strong> — it supplies the AI layer, not the deterministic verdict. It doesn't kill the incumbents; it powers their fusion.</p>
+<p>In fact, Cognex and Keyence <strong>each grew ~9%</strong> through 2025–2026 — the very window this thesis predicts pain. The pressure is not "revenue collapse" but <strong>margin/mix pressure at the 3D-guidance frontier.</strong> That the frontier is real shows elsewhere — Intel's RealSense spun out as a standalone company in 2025 and <strong>refocused on robotics,</strong> and NVIDIA's FoundationStereo and FoundationPose now ship inside Isaac ROS. The erosion is coming — at the frontier, not the core.</p>
+<hr />
+<h2 id="closing-the-real-moat-is-fusion">Closing — the real moat is fusion<a class="headerlink" href="#closing-the-real-moat-is-fusion" title="Permanent link">&para;</a></h2>
+<p>To sum up: Physical AI has no clean pure-play. NVDA's exposure is thin, TER is wrapped in semis, FANUC is split and closed. The hot humanoids are mostly un-buyable.</p>
+<p>So it's not a game of picking one ticker — it's a game of reading <strong>where value moves.</strong> And that movement converges on one place.</p>
+<p><strong>Pure-AI startups</strong> can't meet industry's determinism. <strong>Pure-legacy incumbents</strong> can't absorb AI's variety. The winner is <strong>whoever owns the fusion of the two.</strong> Part 2's openness echoes here — you have to be <strong>open</strong> to slot a deterministic verification layer around the AI; close it off and you can't attach that layer.</p>
+<p>Picks (NVDA) sell, joints (reducers) turn, open arms (UR) take AI in, and deterministic eyes (Cognex/Keyence) are positioned to absorb AI. <strong>Physical AI's real moat isn't with the robot makers or the AI makers — it forms with whoever bridges the two.</strong></p>
+<p>That closes the trilogy. What a cobot is (Part 1), what divides them (Part 2), and how to read and invest in the board (Part 3) — the one word running through all of it was <strong>openness,</strong> and, built on top of it, <strong>fusion.</strong></p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Lens</th>
+<th>Takeaway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Narrative vs revenue</td>
+<td>Narrative/valuation = humanoids (mostly private); revenue/cash = cobots/industrial arms</td>
+</tr>
+<tr>
+<td>Pure-play</td>
+<td>None in US large-caps (Doosan = small/Korea, UBTech/Unitree = China humanoid, ABB robotics = sold to SoftBank)</td>
+</tr>
+<tr>
+<td>The three, one line</td>
+<td>NVDA = thin but cheapest · TER = openness winner wrapped in semis · FANUC = pure balance-sheet name but closed</td>
+</tr>
+<tr>
+<td>Value shift</td>
+<td>Lifts: compute · reducers · open force control / Presses: traditional 3D vision's robot guidance</td>
+</tr>
+<tr>
+<td>Watch (risks)</td>
+<td>Chinese reducer competition · FANUC's China cycle · FANUY liquidity · Symbotic's Walmart concentration</td>
+</tr>
+<tr>
+<td>Real moat</td>
+<td><strong>Fusion</strong> — whoever bridges non-deterministic AI + deterministic inspection</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Related: <a href="../cobot-basics/">What Is a Collaborative Robot (Cobot)?</a> · <a href="../cobot-ur-vs-fanuc/">UR vs FANUC — Openness</a> · <a href="../stereo-to-grasp/">From Stereo to Grasp</a> · <a href="../jetson-ros2-setup/">Jetson + ROS 2 Setup — Field Notes (1)</a></em></p>
+<h3 id="sources-trademarks">Sources &amp; trademarks<a class="headerlink" href="#sources-trademarks" title="Permanent link">&para;</a></h3>
+<p>Financial figures follow each company's disclosures / earnings releases (FY2025–2026) and public market data; market caps, P/Es, segment shares, and revenues are <strong>approximations</strong> that vary with timing, FX, and fiscal-year conventions. Valuations are rough point-in-time references, not price targets. Company/platform/product names (NVIDIA·Jetson·Isaac·GR00T, Teradyne·Universal Robots·MiR, FANUC·CRX·ROBOGUIDE, Cognex, Keyence, ABB, Harmonic Drive, Nabtesco, Unitree, Doosan Robotics, etc.) are trademarks of their respective owners, used here for identification only. <strong>This article is not a solicitation to buy or sell any security and is not investment advice; the author accepts no responsibility for any investment outcome.</strong> Investment decisions and their consequences are entirely the reader's own.</p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>Physical AI</em> — AI that, beyond simulation and screens, perceives and acts in the physical world through robots</li>
+<li><em>Pure-play</em> — a stock focused on a single business that "cleanly" represents a theme</li>
+<li><em>Picks and shovels</em> — the gold-rush strategy of selling gear instead of mining gold; you win whoever the winner is</li>
+<li><em>P/E (price/earnings)</em> — price ÷ earnings per share; lower means cheaper relative to earnings (simplified)</li>
+<li><em>ADR</em> — a depositary receipt that lets a foreign stock trade in the US (FANUY = FANUC's ADR)</li>
+<li><em>Semiconductor test (ATE)</em> — equipment that checks whether chips work; Teradyne's core business</li>
+<li><em>Reducer</em> — the precision part that turns a motor's fast spin into a robot joint's slow, forceful motion</li>
+<li><em>GR00T</em> — NVIDIA's open action foundation model for humanoids</li>
+<li><em>Deterministic / non-deterministic</em> — always the same answer to the same input (deterministic) vs possibly varying, probabilistic (non-deterministic)</li>
+<li><em>TAM</em> — the theoretical maximum market (Total Addressable Market)</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

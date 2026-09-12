@@ -1,0 +1,40 @@
+<svg width="100%" viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>신용 삼각형 — 스프레드, 부도 확률, 손실률의 관계</title>
+<desc>스프레드는 부도 확률과 손실률(1 빼기 회수율)의 곱과 같다. 셋 중 둘을 알면 나머지가 풀린다. 스프레드 260bp를 관측하고 회수율 40%를 가정하면 내재 부도율은 약 4.3%가 나온다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.nb { font-size:14px; font-weight:500; }
+.ns { font-size:12px; font-weight:400; }
+</style>
+<rect x="0" y="0" width="680" height="440" rx="12" fill="#FAF8F2"/>
+
+<!-- triangle edges -->
+<path d="M340,96 L150,300 L530,300 Z" fill="none" stroke="#c9b89a" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+<!-- center relation -->
+<text class="th" x="340" y="228" text-anchor="middle">스프레드 ≈ 부도확률 × 손실률</text>
+<text class="s" x="340" y="248" text-anchor="middle">셋 중 둘을 알면 나머지가 풀린다</text>
+
+<!-- top node: 스프레드 (관측) -->
+<rect x="252" y="60" width="176" height="52" rx="9" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.8"/>
+<text class="nb" x="340" y="82" text-anchor="middle" fill="#0F3D30">스프레드</text>
+<text class="ns" x="340" y="100" text-anchor="middle" fill="#1D9E75">관측값 · 260bp</text>
+
+<!-- bottom-left: 부도확률 -->
+<rect x="62" y="300" width="176" height="52" rx="9" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/>
+<text class="nb" x="150" y="322" text-anchor="middle" fill="#2C2C2A">부도 확률 (PD)</text>
+<text class="ns" x="150" y="340" text-anchor="middle" fill="#5F5E5A">우리가 구할 값</text>
+
+<!-- bottom-right: 손실률 -->
+<rect x="442" y="300" width="176" height="52" rx="9" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/>
+<text class="nb" x="530" y="322" text-anchor="middle" fill="#2C2C2A">손실률 (LGD)</text>
+<text class="ns" x="530" y="340" text-anchor="middle" fill="#5F5E5A">= 1 − 회수율 · 가정 60%</text>
+
+<!-- inverted calc -->
+<line x1="90" y1="386" x2="590" y2="386" stroke="var(--br)" stroke-width="0.5"/>
+<text class="th" x="340" y="410" text-anchor="middle">뒤집으면  내재 부도율 = 스프레드 ÷ (1 − 회수율)</text>
+<text class="s" x="340" y="430" text-anchor="middle">= 2.6% ÷ 0.60 ≈ 4.3%</text>
+</svg>

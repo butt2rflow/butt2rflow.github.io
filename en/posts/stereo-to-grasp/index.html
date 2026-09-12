@@ -1,0 +1,2679 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Two camera photos become a precise 3D grasp — the beginner's walkthrough of the foundation-model pipeline (FoundationStereo → SAM 2 → FoundationPose), why it was impossible until recently, and why simulation was the unlock. Robot Vision, Part 1 of 2.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/stereo-to-grasp/">
+      
+      
+        <link rel="prev" href="../../series/s4-preview/">
+      
+      
+        <link rel="next" href="../frames-transforms/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/stereo-to-grasp/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>From Stereo to Grasp — How a Robot Learns to See a Part - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#from-stereo-to-grasp-how-a-robot-learns-to-see-a-part" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From Stereo to Grasp — How a Robot Learns to See a Part
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/stereo-to-grasp/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-the-hard-part-why-this-was-impossible-until-recently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First, the hard part — why this was impossible until recently
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First, the hard part — why this was impossible until recently">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-theres-no-training-data-on-the-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. There's no training data on the web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hand-labelling-is-impractical-and-unsafe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hand-labelling is impractical — and unsafe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-plant-lighting-is-poor-and-always-changing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Plant lighting is poor — and always changing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-the-cell-is-often-air-gapped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The cell is often air-gapped
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-pipeline-at-a-glance-four-questions-four-boxes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The pipeline at a glance — four questions, four boxes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-foundationstereo-how-far-away-is-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 · FoundationStereo — how far away is everything?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-segment-anything-sam-2-which-pixels-are-the-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 · Segment Anything (SAM 2) — which pixels are the part?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-foundationpose-where-exactly-is-it-and-how-is-it-turned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 · FoundationPose — where exactly is it, and how is it turned?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-the-robot-acts-how-do-i-reach-it-safely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 · The robot acts — how do I reach it, safely?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-grows-next-toward-nvidia-isaac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this grows next — toward NVIDIA Isaac
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-realistic-path-on-the-hardware-most-of-us-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A realistic path, on the hardware most of us have
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-whole-story-one-line-per-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The whole story, one line per step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The whole story, one line per step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-trademarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; trademarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms — How a Robot Knows Where to Grab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-the-hard-part-why-this-was-impossible-until-recently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First, the hard part — why this was impossible until recently
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First, the hard part — why this was impossible until recently">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-theres-no-training-data-on-the-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. There's no training data on the web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hand-labelling-is-impractical-and-unsafe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hand-labelling is impractical — and unsafe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-plant-lighting-is-poor-and-always-changing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Plant lighting is poor — and always changing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-the-cell-is-often-air-gapped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The cell is often air-gapped
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-pipeline-at-a-glance-four-questions-four-boxes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The pipeline at a glance — four questions, four boxes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-foundationstereo-how-far-away-is-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 · FoundationStereo — how far away is everything?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-segment-anything-sam-2-which-pixels-are-the-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 · Segment Anything (SAM 2) — which pixels are the part?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-foundationpose-where-exactly-is-it-and-how-is-it-turned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 · FoundationPose — where exactly is it, and how is it turned?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-the-robot-acts-how-do-i-reach-it-safely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 · The robot acts — how do I reach it, safely?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-grows-next-toward-nvidia-isaac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this grows next — toward NVIDIA Isaac
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-realistic-path-on-the-hardware-most-of-us-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A realistic path, on the hardware most of us have
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-whole-story-one-line-per-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The whole story, one line per step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The whole story, one line per step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-trademarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; trademarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="from-stereo-to-grasp-how-a-robot-learns-to-see-a-part">From Stereo to Grasp — How a Robot Learns to See a Part<a class="headerlink" href="#from-stereo-to-grasp-how-a-robot-learns-to-see-a-part" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Robot Vision · Part 1 of 2.</strong> This one is about how the robot <em>sees</em>. Part 2, <a href="../frames-transforms/">Frames &amp; Transforms</a>, is about how it turns that into <em>where to grab</em>.</p>
+</blockquote>
+<p>I learned this the hard way. I started where most of us do — photographing a part by hand and drawing a box around it, image after image, in a labelling tool. Then I spent weeks fighting the results: depth maps full of holes on the shiny metal, a model that worked under one set of lights and fell apart under the next, and — once — a gripper that drove straight into the part because a single bad depth reading told it to.</p>
+<p>Then I watched a webinar called <a href="https://www.youtube.com/watch?v=Zl_KhE1_9SM"><em>Picking the Impossible Parts</em></a>, and it uncovered my eyes. The problem had never been my effort. It was that <strong>you can't get this kind of training data from the real world at all</strong> — so the whole approach has to change. This is the walkthrough I wish someone had handed me on day one.</p>
+<p>Step back, and the timing makes sense. The first wave of AI <em>generated</em> — text and images, like ChatGPT. The second learned to <em>act</em> — reasoning and using tools, like Claude. The third is <strong>physical AI</strong>: that same intelligence moving into robots that see and move in the real world. This is a look at how that third wave actually runs on a factory floor.</p>
+<p>The whole pipeline answers exactly one question:</p>
+<blockquote>
+<p><strong>Where is the part in 3D, and how is it turned?</strong></p>
+</blockquote>
+<p>Answer that precisely enough and a robot can pick the part up. Let me show you how three pre-trained AI models, chained one after another, get there — and why simulation is the trick that makes it all possible.</p>
+<hr />
+<h2 id="in-30-seconds">In 30 seconds<a class="headerlink" href="#in-30-seconds" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A robot picks a part by answering one question: <strong>where is it, and how is it rotated</strong> — six numbers.</li>
+<li>The old way was to train a custom model <strong>per part</strong>, which took weeks each and needed hand-labelled photos.</li>
+<li>The new way chains <strong>three "foundation models"</strong> you <em>prompt</em> instead of train: <strong>FoundationStereo</strong> (how far?), <strong>Segment Anything / SAM 2</strong> (which pixels?), <strong>FoundationPose</strong> (where &amp; how turned?). Then a planner moves the arm.</li>
+<li>They work on parts they've <strong>never seen</strong> (zero-shot) because they were trained on <strong>enormous simulated datasets</strong> with the lighting and clutter randomized.</li>
+<li>Simulation is the unlock: in a simulator the computer already knows the perfect answer for every pixel, so <strong>labels are free</strong> and no real robot has to move to collect them.</li>
+<li>The whole thing runs <strong>locally, offline</strong>, on a small on-cell computer — no cloud.</li>
+</ul>
+<hr />
+<h2 id="first-the-hard-part-why-this-was-impossible-until-recently">First, the hard part — why this was impossible until recently<a class="headerlink" href="#first-the-hard-part-why-this-was-impossible-until-recently" title="Permanent link">&para;</a></h2>
+<p>Almost every wall I hit traces back to one root cause: <strong>you cannot get labelled training data from the real world</strong> at the scale and safety a factory needs. Here are the four walls, and the one idea that knocks all of them down.</p>
+<h3 id="1-theres-no-training-data-on-the-web">1. There's no training data on the web<a class="headerlink" href="#1-theres-no-training-data-on-the-web" title="Permanent link">&para;</a></h3>
+<p>A chatbot learned from the whole internet. But there is <strong>no "internet of robots picking parts out of bins."</strong> That data simply doesn't exist online — you can't download what nobody ever posted.</p>
+<p><em>→ Solved by simulation:</em> you generate the scenes yourself.</p>
+<h3 id="2-hand-labelling-is-impractical-and-unsafe">2. Hand-labelling is impractical — and unsafe<a class="headerlink" href="#2-hand-labelling-is-impractical-and-unsafe" title="Permanent link">&para;</a></h3>
+<p>Even once you have images, the answer has to be labelled to a <strong>fraction of a millimetre and a degree</strong> — the exact depth of every pixel, the exact orientation of the part. Nobody produces that by clicking around photos. And gathering real examples means running a <strong>live robot arm near people and parts</strong>: physical risk, plus slow and costly trial and error.</p>
+<p><em>→ Solved by simulation:</em> the renderer already knows the perfect answer for every pixel, so the labels come for free and no real arm has to move.</p>
+<h3 id="3-plant-lighting-is-poor-and-always-changing">3. Plant lighting is poor — and always changing<a class="headerlink" href="#3-plant-lighting-is-poor-and-always-changing" title="Permanent link">&para;</a></h3>
+<p>Factory light is dim, uneven, and inconsistent: glare off metal, dark corners, changes from shift to shift and day to night, sunlight through an open door. A model trained under one lighting <strong>overfits</strong> and collapses when the light changes.</p>
+<p><em>→ Solved by domain randomization:</em> training varies the lighting so wildly that the model stops caring — lights on, lights off, even sunlight.</p>
+<h3 id="4-the-cell-is-often-air-gapped">4. The cell is often air-gapped<a class="headerlink" href="#4-the-cell-is-often-air-gapped" title="Permanent link">&para;</a></h3>
+<p>Factory floors frequently have limited or no internet, for security and reliability. Cloud AI isn't an option; everything has to run <strong>on a local computer, offline.</strong></p>
+<p><em>→ Solved by running locally:</em> the models are small and optimized enough to run on an on-cell computer — no cloud.</p>
+<p>The unlock is the same for all four — <strong>generate the data in simulation</strong> (labels free, everything randomizable), then run the trained models locally.</p>
+<hr />
+<h2 id="the-pipeline-at-a-glance-four-questions-four-boxes">The pipeline at a glance — four questions, four boxes<a class="headerlink" href="#the-pipeline-at-a-glance-four-questions-four-boxes" title="Permanent link">&para;</a></h2>
+<p><img alt="The robot-vision pipeline — four questions passed box to box" src="../../../assets/diagrams_en/robot-pipeline.svg" /></p>
+<p>Each box takes the output of the one above it. Depth feeds the mask step; depth <em>and</em> mask feed the pose step. Miss one, and the robot is guessing.</p>
+<hr />
+<h2 id="step-1-foundationstereo-how-far-away-is-everything">Step 1 · FoundationStereo — how far away is everything?<a class="headerlink" href="#step-1-foundationstereo-how-far-away-is-everything" title="Permanent link">&para;</a></h2>
+<p><strong>The ask:</strong> turn a left/right photo pair into a <em>depth map</em> — every pixel's value is how many metres away it is.</p>
+<p>A single flat photo has no depth. <strong>Two</strong> photos from slightly different positions do — the same way a nearby finger seems to <em>jump</em> when you switch which eye you look through, while a far wall barely moves. That jump is called <strong>disparity</strong>, and it's the raw ingredient for depth.</p>
+<p><img alt="Two eyes, one shift — disparity becomes depth" src="../../../assets/diagrams_en/robot-disparity.svg" /></p>
+<p>Here's the catch that ruined weeks of my life. Classic stereo matching needs <strong>visible texture</strong> to line the two photos up. A shiny chrome part looks the same everywhere, so the matcher finds nothing to grab onto — and leaves <strong>holes exactly where the part is.</strong> The one place you needed depth is the one place you don't get it.</p>
+<p><strong>FoundationStereo</strong> is a <em>learned</em> model. On top of matching the two photos, it also reads single-image cues — shading, perspective, the way surfaces curve — so it fills in <strong>clean geometry even on blank, shiny surfaces.</strong> No infrared projector, no special rig. The chrome part that classic stereo left as a black hole now has clean depth, and the robot can finally see its 3D shape.</p>
+<details>
+<summary>The technical version</summary>
+<p>Classic stereo builds a <strong>cost volume</strong> — a scorecard of how well each point in the left image matches each point in the right. On a textureless surface every match scores the same, so the result is garbage. The matching algorithm most systems use is called <strong>SGM (Semi-Global Matching)</strong>, and the failure is in the <em>algorithm</em>, not the camera — RealSense, OAK-D, any on-chip stereo hits the same holes. A better camera doesn't fix a bad-algorithm problem.</p>
+<p>The old workaround was an <strong>infrared projector</strong> that paints fake texture onto the scene. It works in a lab, but the pattern scatters off shiny parts under factory light — holes again. FoundationStereo fuses in single-image (monocular) depth cues so a blank surface still gets sensible geometry, and needs no projector. (Its paper was a CVPR 2025 best-paper nomination.)</p>
+</details>
+
+<hr />
+<h2 id="step-2-segment-anything-sam-2-which-pixels-are-the-part">Step 2 · Segment Anything (SAM 2) — which pixels are the part?<a class="headerlink" href="#step-2-segment-anything-sam-2-which-pixels-are-the-part" title="Permanent link">&para;</a></h2>
+<p><strong>The ask:</strong> draw an exact outline around <em>just</em> the part, separating it from the holder, the bin, and everything else.</p>
+<p>The next step has to be told <strong>which object</strong> to work on. A mask is how you say it: "the part is <em>these</em> pixels — ignore the rest."</p>
+<p><strong>SAM</strong> (Segment Anything) is two things at once. It's <strong>promptable</strong> — you give it a hint, like clicking a point on the part or dragging a box around it. And it's <strong>zero-shot</strong> — it works on objects it has never trained on. One click on the part gives you a crisp outline of it, and the holder and fixture are left out.</p>
+<p><img alt="One click becomes a clean cut-out of the part" src="../../../assets/diagrams_en/robot-mask.svg" /></p>
+<details>
+<summary>The practical facts</summary>
+<p>SAM 2 (from Meta) is Apache-2.0 licensed and tiny — 39–224 MB across four sizes — so it runs comfortably on an edge box, even an 8 GB one. Because it's zero-shot and takes a click or a box, it replaces per-part-trained detectors and kills the "label thousands of images per part" cost.</p>
+<p>SAM has no text input on its own. If you want to prompt with the <em>word</em> "part," you chain a grounding model (GroundingDINO or Florence-2) that turns text into a box first, then let SAM turn the box into a mask. That combination is called <strong>Grounded-SAM</strong>.</p>
+</details>
+
+<hr />
+<h2 id="step-3-foundationpose-where-exactly-is-it-and-how-is-it-turned">Step 3 · FoundationPose — where exactly is it, and how is it turned?<a class="headerlink" href="#step-3-foundationpose-where-exactly-is-it-and-how-is-it-turned" title="Permanent link">&para;</a></h2>
+<p><strong>The ask:</strong> the full <strong>6-DoF pose</strong> — position (x, y, z) <em>and</em> orientation (roll, pitch, yaw). All six numbers.</p>
+<p>Position alone tells the robot where to reach, not how to hold its gripper. A part lying flat needs a different grasp than the same part on its side. <strong>"6-DoF"</strong> — six degrees of freedom — is just the six numbers that fully pin down how a rigid object sits in space.</p>
+<p>FoundationPose is given the part's <strong>CAD model</strong> — the exact 3D drawing. Then it does something wonderfully brute-force: it <strong>guesses</strong> hundreds of possible poses, <strong>renders</strong> what each one would look like through the camera, <strong>compares</strong> each render to the real photo (colour <em>and</em> depth), keeps the closest, and <strong>refines</strong> it. Out comes "the part is at (x, y, z), rotated like <em>this</em>" — exactly what the robot needs to line up.</p>
+<p><img alt="Guess, render, compare, refine — the best-fitting pose wins" src="../../../assets/diagrams_en/robot-pose.svg" /></p>
+<p>Because it reads the shape from the CAD file at run time, it's <strong>zero-shot too</strong>: a brand-new part just needs its CAD file — no retraining. Adding a new part number is loading a file, not launching a training run.</p>
+<details>
+<summary>How it actually works inside</summary>
+<p>FoundationPose is a <strong>render-and-compare</strong> method. It places the CAD model at hundreds of candidate poses and renders each one; a <strong>refine network</strong> nudges every candidate to line up better with the real RGB + depth; and a <strong>score network</strong> — trained to answer "which of these two is the better fit?" — ranks them and picks the winner.</p>
+<p>There's a second, sneaky use. After the robot grasps the part, the part shifts a little in the gripper. The robot takes another photo <em>in-hand</em> and re-runs FoundationPose, so it knows exactly how it's holding the part — which is what lets it <em>place</em> the part precisely (say, into an insertion test), not just pick it up.</p>
+</details>
+
+<hr />
+<h2 id="step-4-the-robot-acts-how-do-i-reach-it-safely">Step 4 · The robot acts — how do I reach it, safely?<a class="headerlink" href="#step-4-the-robot-acts-how-do-i-reach-it-safely" title="Permanent link">&para;</a></h2>
+<p>The pose from Step 3 is in the <strong>camera's</strong> point of view. To actually move, the robot:</p>
+<ol>
+<li><strong>Transforms</strong> the pose into its own base frame — a one-time setup called hand-eye calibration. (That's the whole subject of <a href="../frames-transforms/">Part 2</a>.)</li>
+<li>Picks a <strong>grasp</strong> that was taught once against the CAD model.</li>
+<li><strong>Plans a collision-free path</strong> — using the depth from Step 1 as its map of what to avoid.</li>
+<li><strong>Moves</strong> and picks.</li>
+</ol>
+<p>Notice what just happened: the <strong>clean depth from Step 1</strong> turns out to matter for <em>safety</em>, not only for finding the part. A path planner is only as safe as the obstacle map you give it — and that map is the point cloud from Step 1.</p>
+<details>
+<summary>The numbers behind the motion</summary>
+<p>A common planner, <strong>RRT*</strong>, approximates the whole robot as a few hundred spheres and routes them around a collision map built from the Step-1 point cloud; NVIDIA's GPU planner <strong>cuMotion</strong> does the same job on the GPU. Perception runs in roughly <strong>2–6 seconds</strong> — but it happens <em>while the arm is placing the previous part</em>, so cycle time is limited by robot motion, not by vision. And all of it runs locally on the controller.</p>
+</details>
+
+<hr />
+<h2 id="where-this-grows-next-toward-nvidia-isaac">Where this grows next — toward NVIDIA Isaac<a class="headerlink" href="#where-this-grows-next-toward-nvidia-isaac" title="Permanent link">&para;</a></h2>
+<p>The three models above are part of NVIDIA's <strong>Isaac</strong> robot platform. The easiest way to hold it in your head is four layers, each answering a different question.</p>
+<p><img alt="The Isaac stack — our pipeline lives in the first two boxes" src="../../../assets/diagrams_en/robot-isaac.svg" /></p>
+<ul>
+<li><strong>Isaac Sim — <em>trains</em> the models.</strong> A photoreal, physics-accurate simulator. It renders millions of scenes with randomized lighting, backgrounds, and clutter — and already knows the perfect depth and pose of every pixel, so the labels are free. This is where FoundationStereo and FoundationPose were trained, which is <em>why</em> they're zero-shot and lighting-robust.</li>
+<li><strong>Isaac ROS — <em>runs</em> the models.</strong> A GPU-accelerated ROS 2 package suite that runs this exact pipeline on a small edge computer at the cell.</li>
+<li><strong>Isaac Lab — <em>teaches</em> new skills.</strong> An open framework where robots learn <em>motions</em> in simulation (reinforcement and imitation learning). The step beyond perception: not just "see the part" but "learn how to manipulate it."</li>
+<li><strong>Isaac GR00T — the frontier.</strong> Vision-language-action foundation models for generalist robots — the same "prompt, don't train" idea taken all the way to whole-robot behaviour.</li>
+</ul>
+<p>Our Stereo → SAM → Pose pipeline lives in the first two boxes.</p>
+<details>
+<summary>Why simulation was the real unlock</summary>
+<p>All four factory walls fall in one place — the simulator — because the renderer already knows the perfect answer for every pixel. The scale it took: FoundationPose was trained on about <strong>678,000 scenes</strong>, FoundationStereo on roughly <strong>1,000,000 synthetic stereo pairs</strong>, every image rendered with domain randomization (lighting, surface finish, and clutter varied on every single frame). That one trick buys <em>both</em> zero-shot generality <em>and</em> the lighting-robustness a factory floor needs.</p>
+</details>
+
+<hr />
+<h2 id="a-realistic-path-on-the-hardware-most-of-us-have">A realistic path, on the hardware most of us have<a class="headerlink" href="#a-realistic-path-on-the-hardware-most-of-us-have" title="Permanent link">&para;</a></h2>
+<p>You don't start at the frontier. You crawl, then walk, then run.</p>
+<ul>
+<li><strong>Start here — offline, on saved frames.</strong> Run SAM 2, then FoundationStereo, on captured images of the part, on a small edge computer. Prove the depth comes out clean where it used to be full of holes. No ROS needed yet.</li>
+<li><strong>Next — real-time on Isaac ROS.</strong> Wrap the models as a live GPU graph on the edge computer, so the pipeline runs on the cell instead of in a notebook.</li>
+<li><strong>Later — learned control on Isaac Lab.</strong> Train manipulation policies in simulation and deploy them. This is the phase that needs bigger hardware.</li>
+</ul>
+<hr />
+<h2 id="the-whole-story-one-line-per-step">The whole story, one line per step<a class="headerlink" href="#the-whole-story-one-line-per-step" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Model</th>
+<th>Question</th>
+<th>In → Out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>FoundationStereo</strong></td>
+<td>How far is everything?</td>
+<td>left + right images → depth</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>SAM 2</strong></td>
+<td>Which pixels are the part?</td>
+<td>image + one click → mask</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>FoundationPose</strong></td>
+<td>Where, and how turned?</td>
+<td>depth + mask + CAD → 6-DoF pose</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>RRT* / cuMotion</strong></td>
+<td>How do I reach it safely?</td>
+<td>pose + point cloud → path</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The one thing to remember:</strong> foundation models swap <em>training</em> for <em>prompting</em> — a click, a CAD file — and still work on parts they've never seen, because they learned from enormous <em>simulated</em> datasets with the lighting and clutter randomized. That single shift is what turned "impossible parts" into a Tuesday.</p>
+<p>Next: the part's pose comes out in the <em>camera's</em> point of view, but the robot lives in its <em>own</em>. <a href="../frames-transforms/">Part 2 — Frames &amp; Transforms</a> is how it translates one into the other.</p>
+<hr />
+<p><em>Related: <a href="../frames-transforms/">Frames &amp; Transforms — How a Robot Knows Where to Grab</a> · <a href="../cobot-investing/">Investing in Physical AI</a></em></p>
+<h3 id="sources-trademarks">Sources &amp; trademarks<a class="headerlink" href="#sources-trademarks" title="Permanent link">&para;</a></h3>
+<p>Based on the Vention webinar <a href="https://www.youtube.com/watch?v=Zl_KhE1_9SM"><em>Picking the Impossible Parts</em></a>. Model behaviour, training-set sizes, and package names follow NVIDIA's and Meta's public documentation and the respective model papers (FoundationStereo, FoundationPose, Segment Anything). Figures are approximate and current as of the sources at time of writing.</p>
+<p>NVIDIA Isaac (Isaac Sim, Isaac ROS, Isaac Lab, Isaac GR00T, Omniverse, Jetson, cuMotion), FoundationStereo, FoundationPose, Meta Segment Anything (SAM), Vention, Intel RealSense, Luxonis, and Roboflow are trademarks of their respective owners, used here for identification only. All diagrams are original.</p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>Foundation model</em> — a large model pre-trained on a huge dataset that generalizes to new inputs without task-specific retraining. Here: FoundationStereo, SAM 2, FoundationPose.</li>
+<li><em>Zero-shot</em> — works on objects or scenes it never saw in training. You <em>prompt</em> it (a click, a CAD file) instead of training it.</li>
+<li><em>Disparity</em> — how far a point shifts between the left and right photo. Larger shift = nearer.</li>
+<li><em>Depth map</em> — an image where each pixel's value is its distance from the camera.</li>
+<li><em>Mask / segmentation</em> — a cut-out marking which pixels belong to a chosen object.</li>
+<li><em>6-DoF pose</em> — six degrees of freedom: position (x, y, z) plus orientation (roll, pitch, yaw).</li>
+<li><em>CAD model</em> — the exact 3D drawing of the part, used as the "known shape" for pose.</li>
+<li><em>Domain randomization</em> — varying lighting, finish, and clutter across training images so the model stops depending on any one look.</li>
+<li><em>Point cloud</em> — a 3D scatter of points reconstructed from depth; used as the obstacle map for planning.</li>
+<li><em>ROS 2</em> — the common robotics middleware; Isaac ROS is a GPU-accelerated set of ROS 2 packages.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

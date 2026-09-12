@@ -1,0 +1,2545 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/vanna-charm/">
+      
+      
+        <link rel="prev" href="../gex-0dte-patterns/">
+      
+      
+        <link rel="next" href="../volatility-dashboard/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="ko">
+        
+          <link rel="alternate" href="../../en/posts/vanna-charm/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림 - butterflow 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 노트" class="md-header__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/posts/vanna-charm/" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  투자 노트
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../stereo-to-grasp/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 노트" class="md-nav__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    투자 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    투자 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률, 복리, 그리고 로그차트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률의 기댓값 — 확률 모델로 본 QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파생상품의 레버리지 사용료 — 같은 3배라도 비용은 천차만별
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    네마녀의 날이 돌아왔다 — 개별주식선물과 방향성 어닝 플레이
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT — 선물시장에서 현물시장 살펴보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool — 금리 예측의 원리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신용 스프레드를 지표로 읽기 — 지수는 잠잠한데 바닥 등급은 이미 움직인다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    채권시장의 VIX — MOVE 지수 읽는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수 — Implied Correlation과 IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션의 기초 — 자동차 보험으로 푸는 콜과 풋
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew — S&P500 지수 옵션의 썩소
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — 저비용 테일 리스크 헷지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader — Seasonality 분석 (구글시트 + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기 — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        세 가지 흐름 — 가격, 변동성, 시간
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanna — 변동성이 델타를 흔든다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vanna — 변동성이 델타를 흔든다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vanna-rally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "vanna rally"는 어떤 이야기인가
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#charm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Charm — 시간만 지나도 델타가 준다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPEX 논지 — 사실인가, 이야기인가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        딜러 포지셔닝 — 어디까지가 사실인가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리 — 감마 다음을 보되, 겸손하게
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리 — 감마 다음을 보되, 겸손하게">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드 — Correlation + Skew 추적 (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — 콘탱고와 백워데이션 읽는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중 — Kelly 공식과 위험 신호의 결합
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇 비전
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    로봇 비전
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스테레오 비전(Stereo Vision)에서 목표물 잡기(grasping)까지 — 로봇은 목표한 사물을 어떻게 발견하는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    좌표계와 변환 — 로봇은 어디를 잡을지 어떻게 아는가
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    협동로봇
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇(cobot)이란 — 로봇이 안전 펜스 밖으로 나온 이유
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs 화낙(FANUC) — Physical AI를 가르는 건 스펙이 아니라 '개방성'
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI에 투자한다면 — 순수 플레이는 없고, 가치는 이동한다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    현장 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    현장 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇의 뇌를 엣지에 올리기 (1) — JetPack부터 ROS 2까지, 내가 부딪힌 벽들
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        세 가지 흐름 — 가격, 변동성, 시간
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanna — 변동성이 델타를 흔든다
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vanna — 변동성이 델타를 흔든다">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vanna-rally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "vanna rally"는 어떤 이야기인가
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#charm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Charm — 시간만 지나도 델타가 준다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPEX 논지 — 사실인가, 이야기인가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        딜러 포지셔닝 — 어디까지가 사실인가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리 — 감마 다음을 보되, 겸손하게
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리 — 감마 다음을 보되, 겸손하게">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="_1">감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>옵션 구조 시리즈.</strong> <a href="../gex-calculator/">GEX 직접 계산하기</a>에서 <strong>감마</strong>를, <a href="../gex-0dte-patterns/">0DTE 감마 패턴</a>에서 <strong>장중 변화</strong>를 다뤘습니다. 이번엔 <strong>감마 너머</strong> — 변동성과 시간이 만드는 딜러 흐름, <strong>Vanna</strong>와 <strong>Charm</strong>. 그리고 <em>어디까지 믿을 수 있는지</em>.</p>
+</blockquote>
+<p>감마 이야기를 다시 떠올려 볼게요. 딜러(마켓메이커)는 방향에 베팅하지 않고, 고객이 넘긴 옵션의 위험을 기초자산으로 상쇄(헷지)합니다. 그런데 그 헷지 물량은 가만있지 않아요 — <strong>세 가지</strong>가 딜러의 손을 계속 움직입니다.</p>
+<ul>
+<li><strong>감마(Gamma)</strong> — <strong>현물이 움직일 때</strong> 델타가 바뀜 (앞의 두 글)</li>
+<li><strong>바나(Vanna)</strong> — <strong>변동성이 움직일 때</strong> 델타가 바뀜</li>
+<li><strong>참(Charm)</strong> — <strong>시간이 흐를 때</strong> 델타가 바뀜</li>
+</ul>
+<p>가격이 가만있어도, <strong>변동성이 내리거나 그냥 하루가 지나가는 것만으로</strong> 딜러는 매매를 하게 됩니다. 이 글은 바나와 참이 무엇이고, 언제 의미가 있고, <strong>업계에서 종종 헤드라인으로 오르내리는 감마(gamma)·바나(vanna)·참(charm) 관련 이벤트의 사실관계</strong>를 정직하게 따져 보려는 이야기예요. (스포일러: 수학적 근거는 견고하고, 포지셔닝은 대부분 추정이며, 시장 영향은 과장이 많습니다.)</p>
+<hr />
+<h2 id="30">30초 요약<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
+<ul>
+<li>딜러 헷지를 움직이는 축은 셋: <strong>감마(가격)·바나(변동성)·참(시간)</strong>.</li>
+<li><strong>바나</strong> = 변동성이 바뀌면 델타가 바뀜. <strong>참</strong> = 시간이 지나면 델타가 바뀜. — <em>여기까지는 교과서.</em></li>
+<li><strong>"vanna rally"</strong> — 변동성이 내리면 딜러가 사서 지수를 민다는 이야기는 업계 표준 프레임워크입니다. 단, 딜러가 '변동성 숏'(시장이 잠잠하면 벌고 크게 출렁이면 잃는 자리)이라는 전제 위에서만 성립하는데, 이 전제 자체는 데이터로 확인됐어요. 문제는 그다음 — 진짜 인과인지까지는 증명된 적이 없다는 겁니다(같이 움직인다고 원인은 아니니까).</li>
+<li><strong>만기 핀닝</strong>(만기일에 주가가 특정 행사가에 자석처럼 들러붙는 현상)은 <strong>학술로 확인</strong> — 단 <em>개별주</em> 기준. 지수가 OPEX(옵션 만기일, Options Expiration)로 '상승 드리프트'한다는 건 훨씬 약한 이야기.</li>
+<li><strong>결정적 반증:</strong> CBOE 자체 연구 — 딜러 순감마는 하루 선물 유동성의 <strong>0.04~0.17%</strong>에 불과. "딜러 헷지가 시장을 지배한다"는 과장입니다. 게다가 <strong>0DTE(당일 만기 옵션 — 그날 장이 끝나면 소멸하는, 만기 당일 대량 거래되는 옵션)가 SPX 옵션의 ~59%(2025)</strong>라 고전적 월간 OPEX 효과는 재분배됐습니다.</li>
+<li><strong>한 줄만 챙기세요.</strong> 그릭 계산은 믿어도 됩니다. 그런데 '지금 딜러가 롱이냐 숏이냐'는 대부분 짐작이고, '그래서 시장이 이만큼 밀렸다'는 얘기는 십중팔구 부풀려져 있어요. 뭐가 단단하고 뭐가 뻥인지는 맨 아래 표에서 갈라 뒀습니다.</li>
+</ul>
+<hr />
+<h2 id="_2">세 가지 흐름 — 가격, 변동성, 시간<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>델타 헷지는 "지금 이 포지션의 델타를 0으로 맞추는" 일이에요. 문제는 델타가 <strong>세 가지 이유로</strong> 계속 변한다는 것. 수식으로 쓰면 델타의 움직임은 세 몫의 합이에요 — 가격이 만드는 몫(감마) + 변동성이 만드는 몫(바나) + 시간이 만드는 몫(참).</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">흐름</th>
+<th style="text-align: left;">델타를 바꾸는 원인</th>
+<th style="text-align: left;">그릭</th>
+<th style="text-align: left;">주로 언제</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">감마 헷지</td>
+<td style="text-align: left;"><strong>현물 가격</strong>이 움직임</td>
+<td style="text-align: left;">Gamma (∂δ/∂S)</td>
+<td style="text-align: left;">상시·장중, ATM·만기 임박에 최대</td>
+</tr>
+<tr>
+<td style="text-align: left;">바나 헷지</td>
+<td style="text-align: left;"><strong>내재변동성</strong>이 움직임</td>
+<td style="text-align: left;">Vanna (∂δ/∂σ)</td>
+<td style="text-align: left;">변동성 급변(패닉·진정), 수 시간~수일</td>
+</tr>
+<tr>
+<td style="text-align: left;">참 헷지</td>
+<td style="text-align: left;"><strong>시간</strong>이 지나감</td>
+<td style="text-align: left;">Charm (∂δ/∂t)</td>
+<td style="text-align: left;">만기 임박(OPEX 금요일·장 마감)</td>
+</tr>
+</tbody>
+</table>
+<p>감마는 앞 글들에서 다뤘으니, 여기선 나머지 둘. <em>(이 셋으로 나누는 것 자체는 파생 교재 어디에나 나오는, 다툼 없는 정리예요.)</em></p>
+<p><img alt="델타를 움직이는 세 가지 — 가격·변동성·시간" src="../../assets/diagrams/vanna-three-flows.svg" /></p>
+<hr />
+<h2 id="vanna">Vanna — 변동성이 델타를 흔든다<a class="headerlink" href="#vanna" title="Permanent link">&para;</a></h2>
+<p><strong>바나(Vanna)</strong>는 <em>"내재변동성이 1 움직일 때 델타가 얼마나 변하나"</em> 입니다. 뒤집으면 <em>"현물이 1 움직일 때 베가(변동성 민감도)가 얼마나 변하나"</em> 이기도 해요. 이름도 <strong>V</strong>ega + delt<strong>a</strong>.</p>
+<p>비유로: 감마가 "가격 페달"이라면, 바나는 <strong>"공포 페달"</strong>. 가격 페달은 건드리지도 않았는데, 시장의 공포(변동성)가 오르내리는 것만으로 델타가 저절로 바뀌어요 — 그럼 딜러가 헷지를 다시 맞춰야 하죠.</p>
+<h3 id="vanna-rally">"vanna rally"는 어떤 이야기인가<a class="headerlink" href="#vanna-rally" title="Permanent link">&para;</a></h3>
+<p>방향은 <strong>딜러가 어떤 포지션이냐</strong>가 정합니다. 그리고 여기 <strong>실제 보유 데이터로 확인된 사실</strong> 하나가 있어요: 기관(고객)은 지수 옵션, 특히 <strong>외가격 풋을 순매수</strong>한다 → 즉 <strong>딜러는 순 숏 변동성</strong>입니다 (Gârleanu·Pedersen·Poteshman, 2009 — "월가는 지수 변동성 숏"이라는 통념을 <em>보유 데이터로</em> 처음 입증한 논문).</p>
+<p>이 포지션에선: 변동성이 <strong>내리면</strong> 풋 델타가 줄어 딜러가 헷지로 팔아뒀던 현물을 <strong>되사면서</strong> → 이론상 상승을 민다는 논리예요. 이게 이른바 <strong>vanna rally</strong>. 변동성 급등 시엔 반대로 매도.</p>
+<div class="admonition warning">
+<p class="admonition-title">여기서 정직해야 할 것</p>
+<p><strong>딜러가 변동성 숏이라는 건 데이터로 확인됐지만, '변동성이 내려서 → 딜러가 사서 → 지수가 올랐다'는 인과를 증명한 연구는 아직 없습니다.</strong> 변동성이 쪼그라들면서 지수가 슬금슬금 오르는 그림은 그냥 리스크온일 때도 똑같이 나오거든요. 게다가 변동성이 낮아지면 위험을 더 져도 된다며 기계적으로 주식을 사들이는 펀드(리스크패리티·타깃볼)가 있는데, 이들이 사는 방향과 타이밍이 딜러 바나 헷지와 고스란히 겹칩니다 — 오히려 굴리는 돈은 이쪽이 더 클 수도 있고요. 그러니 지수가 올랐을 때 딜러가 민 건지 이 펀드들이 민 건지, 깔끔하게 가르는 건 사실상 불가능합니다. 이걸 무슨 법칙처럼 파는 업체(SpotGamma 등)의 문구는 마케팅으로 걸러 들으세요. 알아둘 만한 프레임워크는 맞지만, 기계처럼 믿을 물건은 아닙니다.</p>
+</div>
+<p><img alt="vanna rally인가, 그냥 재레버리징인가" src="../../assets/diagrams/vanna-rally-confound.svg" /></p>
+<hr />
+<h2 id="charm">Charm — 시간만 지나도 델타가 준다<a class="headerlink" href="#charm" title="Permanent link">&para;</a></h2>
+<p><strong>참(Charm)</strong>은 <em>"시간이 하루 지나면 델타가 얼마나 변하나"</em> (∂델타/∂시간, '델타 감쇠'). 만기가 다가오면 외가격(OTM) 델타는 0으로, 내가격(ITM)은 ±1로 쏠려요 — 아무 일도 없어도 <strong>달력이 넘어가는 것만으로</strong> 델타가 바뀝니다.</p>
+<p>비유로: 참은 <strong>"모래시계 페달"</strong>. 가격도 공포도 그대로인데, 모래가 떨어지는 것만으로 헷지가 조금씩 풀립니다. 그래서 <strong>만기 임박(특히 금요일·월간 OPEX)</strong>에 두드러져요.</p>
+<p>여기서도 실증과 이야기를 갈라야 합니다:</p>
+<ul>
+<li>✅ <strong>핀닝은 진짜예요.</strong> 옵션 만기일에 <strong>개별 주가가 특정 행사가로 몰리는</strong> 현상이 학술로 확인됐고, 그 일부가 MM 델타 헷지 때문입니다 (Ni·Pearson·Poteshman, 2005; 만기일 평균 ≥16.5bp 영향, 개별주가 행사가에 핀될 확률 만기일 ~8.2% vs 평소 &lt;6%). 참고로 핀닝은 엄밀히 <strong>참이 아니라 감마</strong> 효과예요 — 만기가 코앞이면 등가격 감마가 커져 딜러 헷지가 주가를 행사가로 되돌리거든요. 만기일에 나타나는 현상이라 이 참 섹션에 뒀을 뿐입니다.</li>
+<li>🟡 <strong>단, 그건 "개별주가 가까운 행사가로 핀"되는 얘기</strong>지, <strong>지수가 OPEX로 상승 드리프트</strong>한다는 건 훨씬 약한 휴리스틱입니다. <strong>왜 개별주에서만 통하냐면</strong> — 핀닝은 옵션 헷지 물량이 그 종목 자체 거래량보다 <strong>충분히 커야</strong> 주가를 특정 행사가에 붙들 수 있어서예요. 얕은 개별주에선 되지만, 유동성이 바다 같은 지수에선 헷지 물량이 한 방울이라 거의 안 통합니다.</li>
+</ul>
+<p><img alt="핀닝은 왜 개별주에서만 통하나" src="../../assets/diagrams/pinning-liquidity.svg" /></p>
+<hr />
+<h2 id="opex">OPEX 논지 — 사실인가, 이야기인가<a class="headerlink" href="#opex" title="Permanent link">&para;</a></h2>
+<p>"월간 OPEX 전 바나+참 헷지가 상승을 밀고, OPEX가 지나면 <strong>취약 구간(window of weakness)</strong>이 온다" — 이 되먹임 구조(피드백 루프) 서사는 JPM(Marko Kolanovic) 리서치에서 대중화됐어요. 무엇이 실증이고 무엇이 이야기인지 정확히 갈라봅시다.</p>
+<ul>
+<li>✅ <strong>딜러 감마가 <em>장중</em> 움직임에 영향</strong> — 실증됨 (Barbon·Buraschi, <em>Gamma Fragility</em>, 2021): 딜러 감마 불균형이 장중 모멘텀(숏 감마)/되돌림(롱 감마)을 예측, 단 <strong>기초자산 유동성이 낮을수록</strong> 강함. <strong>주의: 이건 감마의 변동성 증폭/억제 채널이지, OPEX로의 <em>상승 드리프트</em>가 아닙니다.</strong> (이 논문을 "OPEX 상승"의 근거로 인용하면 안 됨.)</li>
+<li>✅ <strong>만기 핀닝</strong> — 실증됨 (위, NPP 2005).</li>
+<li>⛔ <strong>OPEX로의 체계적·매매가능 상승 드리프트, 그리고 OPEX 후 '취약 구간'</strong> — 이걸 뒷받침할 탄탄한 1차 자료는 못 찾았어요. 그럴듯하게 들리지만 아직 증명된 얘기는 아니니, 곧이곧대로 믿진 마세요.</li>
+</ul>
+<p>그리고 <strong>결정적으로, 0DTE(2023~2025)가 이 고전 효과를 바꿨습니다:</strong></p>
+<ul>
+<li>0DTE가 이제 <strong>SPX 옵션 물량의 ~59%(2025)</strong> → 헷지 압력이 <strong>월 1회 OPEX에서 매일 개장·마감으로 재분배</strong>됐어요. 한 달에 한 번 몰리던 게 매일로 흩어진 거죠.</li>
+<li>무엇보다 <strong>CBOE 자체 연구</strong>: 마켓메이커 순감마가 하루 평균 <strong>$170M~$670M</strong> — 이는 <strong>하루 S&amp;P 선물 유동성(~$4천억)의 0.04~0.17%</strong>에 불과하고, 극단값도 1.3~1.9% 수준. <strong>장중 급등락(갭) 증가도 없었습니다.</strong> → <em>"딜러 헷지 물량이 시장을 지배한다"</em>는 서사에 대한 <strong>가장 강한 반증</strong>이에요.</li>
+</ul>
+<p><img alt="OPEX 서사 — 어디까지가 사실인가" src="../../assets/diagrams/opex-story-vs-fact.svg" /></p>
+<hr />
+<h2 id="_3">딜러 포지셔닝 — 어디까지가 사실인가<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>바나·참·감마 흐름은 <strong>전부 하나의 가정</strong> 위에 서 있습니다: <em>"고객이 풋을 사고 콜을 팔면, 딜러가 반대편에 서고, 그 헷지가 예측 가능하다."</em> 이 가정에서 <strong>아는 것과 추정하는 것</strong>을 갈라야 해요.</p>
+<ul>
+<li><strong>아는 것 (측정됨):</strong> 고객은 지수 옵션(특히 OTM 풋)을 순매수 → 딜러 순 숏 변동성. <strong>실제 보유 데이터로 확인된 유일한 고리</strong> (GPP 2009).</li>
+<li><strong>추정하는 것 (나머지 대부분):</strong> 지금 이 순간 딜러 재고는 <strong>아무도 직접 못 봅니다.</strong> 공개 체인은 행사가·그릭·거래량·OI는 보여줘도 <strong>누가 롱이고 숏인지는 안 보여줘요</strong> — 부호는 <strong>가정</strong>입니다.</li>
+</ul>
+<p><strong>누가, 어떻게 측정하나:</strong></p>
+<ul>
+<li><strong>CBOE Open-Close</strong> — 직접 측정에 가장 근접(모든 거래를 주체별·매수/매도·개설/청산으로 분류). 딜러 포지션 추정의 원천 피드.</li>
+<li><strong>SqueezeMetrics(GEX/DIX 대중화)·SpotGamma·MenthorQ·Tier1Alpha</strong> — 각자 <strong>독자적 '딜러 부호' 모델</strong>.</li>
+</ul>
+<p><strong>문서화된 한계 (여기가 핵심):</strong></p>
+<ul>
+<li><strong>부호는 그릭의 속성이 아니라 가정</strong> — 하나만 틀리면 레짐(롱감마=박스권 ↔ 숏감마=추세)이 통째로 뒤집힙니다. 크기는 다 "맞아 보이는데" 방향만 반대가 되는 거죠 (Chilingarian, <em>The Sign of Dealer Gamma</em>).</li>
+<li><strong>OI는 전일 밤 스냅샷</strong> — 장중엔 갱신 안 돼 세션 안에서 금세 실제와 어긋나기 시작합니다.</li>
+<li><strong>모든 고객 매수가 딜러에 흡수되는 것도 아님</strong> — 커버드콜·스프레드·지수복제가 부호를 흐립니다.</li>
+<li><strong>업체마다 부호·레벨이 다름</strong> — 둘 다 'GEX'라면서 결과가 갈려요.</li>
+<li><strong>지수(SPX)에서 가장 잘 검증됐고, 개별주에서 가장 약합니다.</strong> 그리고 <strong>GEX는 구조(변동성 민감도)를 보여주지, 다음 방향을 예측하지 않습니다.</strong></li>
+</ul>
+<p>앞의 <a href="../gex-calculator/">GEX 글</a>에서 짚은 한계 — OI는 전일 마감·방향 미상·BSM 이론 감마 — 가 바나·참엔 <strong>그대로, 한 겹 더 크게</strong> 적용됩니다. 바나·참은 감마보다 가정 위에 한 번 더 얹혀 있으니까요.</p>
+<hr />
+<h2 id="_4">정리 — 감마 다음을 보되, 겸손하게<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>이 주제는 세 층으로 나눠 기억하면 안 헷갈립니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">층</th>
+<th style="text-align: left;">내용</th>
+<th style="text-align: left;">태도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">✅ <strong>견고</strong> (교과서·피어리뷰)</td>
+<td style="text-align: left;">그릭 정의·부호 / 세 흐름(가격·변동성·시간) / 딜러 순 숏 변동성(GPP) / 만기 핀닝(NPP) / 딜러 감마의 장중 증폭·억제(B&amp;B) / 0DTE ~59%</td>
+<td style="text-align: left;">그대로 믿어도 됨</td>
+</tr>
+<tr>
+<td style="text-align: left;">🟡 <strong>프레임워크</strong> (휴리스틱)</td>
+<td style="text-align: left;">vanna rally / charm의 OPEX 드리프트 / GEX 플립·레짐 '지도'</td>
+<td style="text-align: left;">"흔한 프레임워크"로만, <strong>방향 예측 아님</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">⛔ <strong>과장·회피</strong></td>
+<td style="text-align: left;">딜러 헷지가 시장을 지배 / OPEX 후 '취약 구간' 확실 / 특정 업체 GEX=정답 / 개별주에 그대로 적용 / 월간 OPEX 효과 불변</td>
+<td style="text-align: left;">피하거나 <strong>반박</strong>(CBOE 미미 데이터)</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="정직 레이어 — 견고 / 휴리스틱 / 과장" src="../../assets/diagrams/vanna-honesty-layer.svg" /></p>
+<p><strong>기억할 한 가지:</strong> 바나·참의 <strong>수학적 근거는 견고</strong>합니다. 그런데 그 위에 올라간 <strong>포지셔닝은 일부만 측정되고 대부분 추정</strong>이며, <strong>시장 영향 주장은 소박한 실증(핀닝·장중 감마)부터 업체가 부풀린 확신까지</strong> 폭이 큽니다. 장기 투자자에게 이 도구들의 가치는 매매 신호가 아니라 — 지수가 갑자기 흔들릴 때 <em>"이게 딜러 헷지 구조 때문일 수도 있겠다, 다만 그 크기는 생각보다 작다"</em> 라고 <strong>구조적으로, 그러나 과신 없이</strong> 이해하는 것입니다.</p>
+<hr />
+<p><em>관련: <a href="../gex-calculator/">GEX 직접 계산하기</a> · <a href="../gex-0dte-patterns/">0DTE 감마 패턴</a></em></p>
+<h3 id="_5">출처와 표기<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Gârleanu, Pedersen &amp; Poteshman, <em>Demand-Based Option Pricing</em>, Review of Financial Studies (2009) — 딜러 순 숏 지수 변동성의 보유데이터 실증</li>
+<li>Ni, Pearson &amp; Poteshman, <em>Stock Price Clustering on Option Expiration Dates</em>, Journal of Financial Economics (2005) — 만기 핀닝</li>
+<li>Barbon &amp; Buraschi, <em>Gamma Fragility</em> (2021) — 딜러 감마의 장중 모멘텀/되돌림 효과</li>
+<li>Cboe, <em>Evaluating the Market Impact of SPX 0DTE Options</em> — 마켓메이커 순감마 규모·0DTE 비중</li>
+<li>Chilingarian, <em>The Sign of Dealer Gamma</em> — 딜러 부호 가정의 취약성</li>
+<li>SqueezeMetrics(GEX/DIX 백서), SpotGamma·MenthorQ(방법론) — <em>프레임워크의 주장</em> 참고용(근거가 아니라)</li>
+</ul>
+<p>수치·비중은 시점에 따라 달라지는 근사치입니다. Cboe·SPX·VIX는 Cboe Exchange, Inc.의 상표이며 지칭 목적으로만 사용했습니다. <strong>본 글은 교육 목적이며 특정 매매·투자에 대한 권유가 아닙니다.</strong></p>
+<h3 id="_6">용어 설명<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>델타(Delta)</em> — 현물 $1 변동 시 옵션 가격 변동폭</li>
+<li><em>감마(Gamma)</em> — 현물이 움직일 때 델타가 변하는 정도(∂델타/∂현물)</li>
+<li><em>바나(Vanna)</em> — 변동성이 움직일 때 델타가 변하는 정도(∂델타/∂변동성 = ∂베가/∂현물)</li>
+<li><em>참(Charm)</em> — 시간이 지날 때 델타가 변하는 정도(∂델타/∂시간, 델타 감쇠)</li>
+<li><em>베가(Vega)</em> — 내재변동성 1 변동 시 옵션 가격 변동폭</li>
+<li><em>OPEX</em> — 옵션 만기일(특히 매월 셋째 금요일 월간 만기)</li>
+<li><em>핀닝(pinning)</em> — 만기일에 주가가 큰 OI가 몰린 행사가에 달라붙는 현상</li>
+<li><em>딜러 포지셔닝</em> — 마켓메이커가 고객 반대편에 서서 갖게 되는(대부분 추정) 옵션 포지션과 그 헷지 성향</li>
+</ul>
+<hr />
+<p><em>이전 글: <a href="../gex-0dte-patterns/">0DTE 감마 패턴 — 장중 GEX는 어떻게 변하는가</a> | 다음 글: <a href="../volatility-dashboard/">변동성 대시보드 — Correlation + Skew 추적</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/external-links.js"></script>
+      
+        <script src="../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../assets/vix-history-player.js"></script>
+      
+        <script src="../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

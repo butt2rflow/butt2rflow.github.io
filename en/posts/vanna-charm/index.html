@@ -1,0 +1,2545 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="변동성을 적이 아닌 연료로 — 수학과 데이터에 기반한 투자 원칙">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/vanna-charm/">
+      
+      
+        <link rel="prev" href="../gex-0dte-patterns/">
+      
+      
+        <link rel="next" href="../volatility-dashboard/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/vanna-charm/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#beyond-gamma-the-vanna-rally-pinning-and-the-dealers-real-hands" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/vanna-charm/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../stereo-to-grasp/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-flows-price-vol-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three flows — price, vol, time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanna-volatility-jolts-delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanna — volatility jolts delta
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vanna — volatility jolts delta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-vanna-rally-story-actually-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the "vanna rally" story actually is
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#charm-delta-bleeds-with-time-alone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Charm — delta bleeds with time alone
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-opex-thesis-fact-or-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The OPEX thesis — fact, or story?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dealer-positioning-how-much-is-actually-known" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dealer positioning — how much is actually known?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#takeaway-look-beyond-gamma-but-stay-humble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Takeaway — look beyond gamma, but stay humble
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Takeaway — look beyond gamma, but stay humble">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms — How a Robot Knows Where to Grab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-flows-price-vol-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three flows — price, vol, time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanna-volatility-jolts-delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanna — volatility jolts delta
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vanna — volatility jolts delta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-vanna-rally-story-actually-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the "vanna rally" story actually is
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#charm-delta-bleeds-with-time-alone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Charm — delta bleeds with time alone
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-opex-thesis-fact-or-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The OPEX thesis — fact, or story?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dealer-positioning-how-much-is-actually-known" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dealer positioning — how much is actually known?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#takeaway-look-beyond-gamma-but-stay-humble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Takeaway — look beyond gamma, but stay humble
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Takeaway — look beyond gamma, but stay humble">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="beyond-gamma-the-vanna-rally-pinning-and-the-dealers-real-hands">Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands<a class="headerlink" href="#beyond-gamma-the-vanna-rally-pinning-and-the-dealers-real-hands" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Options-structure series.</strong> <a href="../gex-calculator/">Compute GEX Yourself</a> covered <strong>gamma</strong>; <a href="../gex-0dte-patterns/">0DTE Gamma Patterns</a> covered <strong>intraday change.</strong> This one goes <strong>beyond gamma</strong> — the dealer flows driven by volatility and time, <strong>Vanna</strong> and <strong>Charm</strong> — and <em>how far you can actually trust them</em>.</p>
+</blockquote>
+<p>Recall the gamma story. A dealer (market maker) doesn't bet on direction — it offsets (hedges) the risk of the options customers hand over, using the underlying. But that hedge doesn't sit still. <strong>Three things</strong> keep moving the dealer's hands:</p>
+<ul>
+<li><strong>Gamma</strong> — delta changes when <strong>spot moves</strong> (the previous two posts)</li>
+<li><strong>Vanna</strong> — delta changes when <strong>volatility moves</strong></li>
+<li><strong>Charm</strong> — delta changes when <strong>time passes</strong></li>
+</ul>
+<p>Even with price frozen, a <strong>falling volatility or simply a day going by</strong> makes a dealer trade. This piece explains what vanna and charm are, when they matter, and — honestly — <strong>what's actually true about the gamma, vanna, and charm "events" the industry periodically turns into headlines.</strong> (Spoiler: the math is solid, the positioning is mostly inferred, and the market-impact claims are often overstated.)</p>
+<hr />
+<h2 id="in-30-seconds">In 30 seconds<a class="headerlink" href="#in-30-seconds" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Three axes move dealer hedges: <strong>gamma (price) · vanna (vol) · charm (time).</strong></li>
+<li><strong>Vanna</strong> = delta changes when vol changes. <strong>Charm</strong> = delta changes as time passes. — <em>That much is textbook.</em></li>
+<li>The <strong>"vanna rally"</strong> — the idea that falling vol makes dealers buy and push the index up — is the industry's standard framework. It only holds if dealers are <strong>net short vol</strong> (positioned to profit when markets stay calm and lose when they swing hard), and that premise is confirmed in the data. The catch is the next step: no one has actually proven the causal link (moving together isn't the same as causing).</li>
+<li><strong>Expiration pinning</strong> (a stock getting magnetized to a strike at expiration) is <strong>peer-reviewed</strong> — but for <em>single stocks.</em> A directional index "drift up into OPEX" (OPEX = options expiration) is a much weaker claim.</li>
+<li><strong>The decisive rebuttal:</strong> Cboe's own study finds dealer net gamma is <strong>0.04–0.17% of daily S&amp;P futures liquidity.</strong> "Dealer hedging dominates the tape" is overstated. And <strong>0DTE (zero-days-to-expiry — options expiring the same session, traded heavily on expiry day) is now ~59% of SPX option volume (2025),</strong> which has redistributed the classic monthly-OPEX effect.</li>
+<li><strong>One line to keep.</strong> Trust the Greek math. But whether a dealer is long or short <em>right now</em> is mostly a guess, and "that's why the market moved this much" is usually inflated. The bottom table sorts the solid from the hot air.</li>
+</ul>
+<hr />
+<h2 id="three-flows-price-vol-time">Three flows — price, vol, time<a class="headerlink" href="#three-flows-price-vol-time" title="Permanent link">&para;</a></h2>
+<p>Delta hedging means "keep this position's delta at zero." The problem: delta keeps moving for <strong>three reasons.</strong> In words, delta's motion is the sum of three parts — the part from price (gamma) + the part from vol (vanna) + the part from time (charm).</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Flow</th>
+<th style="text-align: left;">What moves delta</th>
+<th style="text-align: left;">Greek</th>
+<th style="text-align: left;">When it dominates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Gamma hedging</td>
+<td style="text-align: left;"><strong>spot price</strong> moves</td>
+<td style="text-align: left;">Gamma (∂δ/∂S)</td>
+<td style="text-align: left;">continuous·intraday; sharpest near ATM &amp; expiry</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vanna hedging</td>
+<td style="text-align: left;"><strong>implied vol</strong> moves</td>
+<td style="text-align: left;">Vanna (∂δ/∂σ)</td>
+<td style="text-align: left;">vol regime shifts — hours to days</td>
+</tr>
+<tr>
+<td style="text-align: left;">Charm hedging</td>
+<td style="text-align: left;"><strong>time</strong> passes</td>
+<td style="text-align: left;">Charm (∂δ/∂t)</td>
+<td style="text-align: left;">into expiry (OPEX Friday · EOD)</td>
+</tr>
+</tbody>
+</table>
+<p>Gamma was the prior posts; here it's the other two. <em>(This three-way split is itself textbook-correct.)</em></p>
+<p><img alt="Three things that move delta — price, volatility, time" src="../../../assets/diagrams_en/vanna-three-flows.svg" /></p>
+<hr />
+<h2 id="vanna-volatility-jolts-delta">Vanna — volatility jolts delta<a class="headerlink" href="#vanna-volatility-jolts-delta" title="Permanent link">&para;</a></h2>
+<p><strong>Vanna</strong> is <em>"how much delta changes when implied vol moves by 1."</em> Flip it and it's also <em>"how much vega (vol sensitivity) changes when spot moves by 1."</em> The name is <strong>V</strong>ega + delt<strong>a</strong>.</p>
+<p>An analogy: if gamma is the "price pedal," vanna is the <strong>"fear pedal."</strong> The delta on a price pedal you never touched shifts on its own as the market's fear (volatility) rises or falls — so the dealer must re-hedge.</p>
+<h3 id="what-the-vanna-rally-story-actually-is">What the "vanna rally" story actually is<a class="headerlink" href="#what-the-vanna-rally-story-actually-is" title="Permanent link">&para;</a></h3>
+<p>Direction depends on <strong>what position the dealer holds.</strong> And here's a fact <strong>shown with actual holdings data:</strong> institutions (customers) are net buyers of index options, especially <strong>OTM puts</strong> → so <strong>dealers are net short vol</strong> (Gârleanu·Pedersen·Poteshman, 2009 — the first paper to <em>prove with holdings data</em> the "Wall Street is short index vol" conventional wisdom).</p>
+<p>Under that position: when vol <strong>falls,</strong> put deltas shrink, so the dealer <strong>buys back</strong> the underlying it had sold as a hedge → upward pressure, in theory. This is the so-called <strong>vanna rally.</strong> On a vol spike, the reverse.</p>
+<div class="admonition warning">
+<p class="admonition-title">Where to be honest</p>
+<p><strong>Dealers being short vol is confirmed in the data, but no study proves the causal chain "vol falls → dealers buy → the index rises."</strong> That same picture — vol compressing while the index grinds higher — shows up under plain risk-on too. And when vol falls, some funds (risk parity, vol-control) mechanically buy stock because they're now allowed more risk — and their buying overlaps the dealer vanna flow in direction and timing, with more money behind it, if anything. So when the index rises, telling apart "the dealers pushed it" from "those funds pushed it" is essentially impossible. Read vendors (SpotGamma etc.) who sell this as a law as marketing, not evidence. It's a framework worth knowing — not something to trust like clockwork.</p>
+</div>
+<p><img alt="A vanna rally — or just re-leveraging?" src="../../../assets/diagrams_en/vanna-rally-confound.svg" /></p>
+<hr />
+<h2 id="charm-delta-bleeds-with-time-alone">Charm — delta bleeds with time alone<a class="headerlink" href="#charm-delta-bleeds-with-time-alone" title="Permanent link">&para;</a></h2>
+<p><strong>Charm</strong> is <em>"how much delta changes as one day passes"</em> (∂Delta/∂time, "delta decay"). As expiry nears, OTM deltas decay toward 0 and ITM toward ±1 — with nothing happening at all, <strong>the calendar turning is enough</strong> to move delta.</p>
+<p>An analogy: charm is the <strong>"hourglass pedal."</strong> Price and fear unchanged, yet the falling sand alone unwinds a little of the hedge. So it stands out <strong>near expiry (especially Friday / monthly OPEX).</strong></p>
+<p>Again, split evidence from story:</p>
+<ul>
+<li>✅ <strong>Pinning is real.</strong> Optionable <strong>single-stock</strong> closing prices cluster at strikes on expiration days, partly due to MM delta-hedging (Ni·Pearson·Poteshman, 2005; ≥16.5 bp average effect, single stocks pin ~8.2% of expiration days vs &lt;6% on adjacent days). Strictly, pinning is a <strong>gamma</strong> effect, not charm — near expiry, at-the-money gamma spikes and long-gamma dealers' hedging mean-reverts price to the strike; it lives in this section only because it's an expiration-day phenomenon.</li>
+<li>🟡 <strong>But that's "single stocks pinning to nearby strikes,"</strong> not a broad <strong>index drift up</strong> into OPEX — the latter is a much weaker heuristic. <strong>Why only single stocks?</strong> Pinning needs the option-hedging flow to be <strong>large relative to the name's own trading volume</strong> to anchor the price — doable in a thin single stock, but a drop in the ocean against an index's liquidity.</li>
+</ul>
+<p><img alt="Why pinning only works on single stocks" src="../../../assets/diagrams_en/pinning-liquidity.svg" /></p>
+<hr />
+<h2 id="the-opex-thesis-fact-or-story">The OPEX thesis — fact, or story?<a class="headerlink" href="#the-opex-thesis-fact-or-story" title="Permanent link">&para;</a></h2>
+<p>"Before monthly OPEX, vanna + charm hedging pushes prices up, and after OPEX a <strong>window of weakness</strong> arrives" — this feedback-loop framing was popularized by JPMorgan research (Marko Kolanovic). Let's split exactly what's empirical from what's a story.</p>
+<ul>
+<li>✅ <strong>Dealer gamma affects <em>intraday</em> dynamics</strong> — supported (Barbon·Buraschi, <em>Gamma Fragility</em>, 2021): dealer gamma imbalance predicts intraday momentum (short gamma) vs. reversal (long gamma), <strong>stronger when the underlying is less liquid.</strong> <strong>Note: this is gamma's vol-amplify/dampen channel, NOT a directional "drift up into OPEX."</strong> (Don't cite this paper as proof of a bullish OPEX drift.)</li>
+<li>✅ <strong>Expiration pinning</strong> — supported (NPP 2005, above).</li>
+<li>⛔ <strong>A systematic, tradable upward drift into OPEX and a post-OPEX "window of weakness"</strong> — I couldn't find solid primary evidence for this one. It sounds plausible, but it isn't proven — so don't take it at face value.</li>
+</ul>
+<p>And <strong>crucially, 0DTE (2023–2025) has changed the classic effect:</strong></p>
+<ul>
+<li>0DTE is now <strong>~59% of SPX option volume (2025)</strong> → hedging pressure has been <strong>redistributed from once-a-month OPEX to every session's open and close.</strong> What used to concentrate monthly now scatters daily.</li>
+<li>Above all, <strong>Cboe's own study:</strong> market-maker net gamma averages <strong>$170M–$670M/day</strong> — that's <strong>0.04–0.17% of daily S&amp;P futures liquidity (~$400B),</strong> with extremes around 1.3–1.9%, and <strong>no uptick in intraday gap moves.</strong> → The <strong>strongest single rebuttal</strong> to the <em>"dealer hedging dominates the market"</em> narrative.</li>
+</ul>
+<p><img alt="The OPEX narrative — how much is true" src="../../../assets/diagrams_en/opex-story-vs-fact.svg" /></p>
+<hr />
+<h2 id="dealer-positioning-how-much-is-actually-known">Dealer positioning — how much is actually known?<a class="headerlink" href="#dealer-positioning-how-much-is-actually-known" title="Permanent link">&para;</a></h2>
+<p>Vanna, charm, and gamma flows all rest on <strong>one assumption:</strong> <em>"customers buy puts / sell calls → the dealer takes the other side → its hedging is predictable."</em> Separate what's <strong>known</strong> from what's <strong>inferred.</strong></p>
+<ul>
+<li><strong>Known (measured):</strong> customers are net long index options (especially OTM puts) → dealers net short vol. <strong>The one link actually shown with holdings data</strong> (GPP 2009).</li>
+<li><strong>Inferred (most of the rest):</strong> nobody sees dealer inventory directly in real time. Public chains show strike, greeks, volume, OI — but <strong>not who is long or short.</strong> The dealer sign is <strong>assumed.</strong></li>
+</ul>
+<p><strong>Who measures it, and how:</strong></p>
+<ul>
+<li><strong>Cboe Open-Close</strong> — closest to a <em>direct</em> measurement (buckets every trade by originator · buy/sell · open/close). The raw feed behind positioning estimates.</li>
+<li><strong>SqueezeMetrics (GEX/DIX)·SpotGamma·MenthorQ·Tier1Alpha</strong> — each with its <strong>own proprietary "dealer-sign" model.</strong></li>
+</ul>
+<p><strong>Documented limitations (this is the crux):</strong></p>
+<ul>
+<li><strong>The sign is an assumption, not a Greek property</strong> — flip one label and the whole regime inverts (long-gamma/range ↔ short-gamma/trend) while every magnitude still "looks right" (Chilingarian, <em>The Sign of Dealer Gamma</em>).</li>
+<li><strong>OI is a stale prior-night snapshot</strong> — static intraday, so it drifts out of date within the session.</li>
+<li><strong>Not all customer buying is dealer-absorbed</strong> — buy-writes, spreads, index replication muddy the sign.</li>
+<li><strong>Models disagree</strong> — two vendors both "doing GEX" can differ on sign and levels.</li>
+<li><strong>Best-validated on the broad index (SPX), weakest on single names.</strong> And <strong>GEX describes structure (vol sensitivity), not the next direction.</strong></li>
+</ul>
+<p>Every limitation from the <a href="../gex-calculator/">GEX post</a> — OI is last night's close, direction unknown, BSM-theoretical gamma — applies to vanna and charm <strong>the same way, one layer more,</strong> since they lean one assumption deeper than gamma.</p>
+<hr />
+<h2 id="takeaway-look-beyond-gamma-but-stay-humble">Takeaway — look beyond gamma, but stay humble<a class="headerlink" href="#takeaway-look-beyond-gamma-but-stay-humble" title="Permanent link">&para;</a></h2>
+<p>Keep it in three layers and it won't blur:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">Content</th>
+<th style="text-align: left;">Stance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">✅ <strong>Solid</strong> (textbook / peer-reviewed)</td>
+<td style="text-align: left;">Greek definitions &amp; signs / the three flows (price·vol·time) / dealers net short vol (GPP) / expiration pinning (NPP) / dealer gamma's intraday amplify·dampen (B&amp;B) / 0DTE ~59%</td>
+<td style="text-align: left;">state plainly</td>
+</tr>
+<tr>
+<td style="text-align: left;">🟡 <strong>Framework</strong> (heuristic)</td>
+<td style="text-align: left;">vanna rally / charm's OPEX drift / GEX flip &amp; regime "map"</td>
+<td style="text-align: left;">as "a common framework," <strong>not a directional forecast</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">⛔ <strong>Overstated — avoid</strong></td>
+<td style="text-align: left;">dealer hedging dominates the market / a reliable post-OPEX "window of weakness" / any one vendor's GEX as ground truth / applying it confidently to single names / the monthly-OPEX effect unchanged in 2025</td>
+<td style="text-align: left;">avoid or <strong>rebut</strong> (Cboe's de-minimis data)</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="The honesty layer — solid / heuristic / overstated" src="../../../assets/diagrams_en/vanna-honesty-layer.svg" /></p>
+<p><strong>The one thing to remember:</strong> the <strong>math</strong> of vanna and charm is <strong>solid.</strong> But the <strong>positioning</strong> stacked on top is partly measured and mostly inferred, and the <strong>market-impact</strong> claims span peer-reviewed-modest (pinning, intraday gamma) to vendor-inflated certainty. For a long-term investor, the value here isn't a trade signal — it's understanding, <em>structurally but without overconfidence,</em> that a sudden index lurch <strong>might</strong> owe something to dealer-hedging structure — while remembering that structure is smaller than the stories claim.</p>
+<hr />
+<p><em>Related: <a href="../gex-calculator/">Compute GEX Yourself</a> · <a href="../gex-0dte-patterns/">0DTE Gamma Patterns</a></em></p>
+<h3 id="sources-notes">Sources &amp; notes<a class="headerlink" href="#sources-notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Gârleanu, Pedersen &amp; Poteshman, <em>Demand-Based Option Pricing</em>, Review of Financial Studies (2009) — holdings-data evidence that dealers are net short index vol</li>
+<li>Ni, Pearson &amp; Poteshman, <em>Stock Price Clustering on Option Expiration Dates</em>, Journal of Financial Economics (2005) — expiration pinning</li>
+<li>Barbon &amp; Buraschi, <em>Gamma Fragility</em> (2021) — dealer gamma's intraday momentum/reversal effect</li>
+<li>Cboe, <em>Evaluating the Market Impact of SPX 0DTE Options</em> — market-maker net-gamma magnitude &amp; 0DTE share</li>
+<li>Chilingarian, <em>The Sign of Dealer Gamma</em> — fragility of the dealer-sign assumption</li>
+<li>SqueezeMetrics (GEX/DIX whitepaper), SpotGamma·MenthorQ (methodology) — cited for <em>what the framework claims,</em> not as evidence it's true</li>
+</ul>
+<p>Figures are approximations that vary over time. Cboe, SPX, and VIX are trademarks of Cboe Exchange, Inc., used here for identification only. <strong>This article is educational and is not advice to make any trade or investment.</strong></p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>Delta</em> — option price change per $1 move in spot</li>
+<li><em>Gamma</em> — how delta changes when spot moves (∂Delta/∂spot)</li>
+<li><em>Vanna</em> — how delta changes when volatility moves (∂Delta/∂σ = ∂Vega/∂spot)</li>
+<li><em>Charm</em> — how delta changes as time passes (∂Delta/∂time, delta decay)</li>
+<li><em>Vega</em> — option price change per 1-point move in implied vol</li>
+<li><em>OPEX</em> — options expiration (esp. the monthly third-Friday expiry)</li>
+<li><em>Pinning</em> — price sticking, at expiry, to a strike with heavy open interest</li>
+<li><em>Dealer positioning</em> — the (mostly inferred) option position a market maker holds opposite customers, and its hedging tendency</li>
+</ul>
+<hr />
+<p><em>Previous: <a href="../gex-0dte-patterns/">0DTE Gamma Patterns — How GEX shifts intraday</a> | Next: <a href="../volatility-dashboard/">Volatility Dashboard — Tracking Correlation + Skew</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

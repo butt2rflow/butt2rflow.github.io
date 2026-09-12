@@ -1,0 +1,2664 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Two 10 kg-class cobots, nearly identical on paper — so why does their Physical AI readiness diverge? Comparing Universal Robots and FANUC not on specs but on openness (RTDE 500Hz, external force control, ROS 2, Isaac). Cobot series, Part 2 of 3.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/cobot-ur-vs-fanuc/">
+      
+      
+        <link rel="prev" href="../cobot-basics/">
+      
+      
+        <link rel="next" href="../cobot-investing/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/cobot-ur-vs-fanuc/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ur-vs-fanuc-for-physical-ai-what-decides-isnt-specs-its-openness" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/cobot-ur-vs-fanuc/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../stereo-to-grasp/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms — How a Robot Knows Where to Grab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-specs-are-basically-a-tie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The specs are basically a tie
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ease-and-precision-the-two-camps-started-from-opposite-ends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ease and precision — the two camps started from opposite ends
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-real-fork-how-open-is-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The real fork — how open is it?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The real fork — how open is it?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-500hz-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why 500Hz matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-software-ecosystem-python-or-a-vendor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The software ecosystem — Python, or a vendor?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#force-control-it-all-comes-down-to-whether-the-ai-can-touch-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Force control — it all comes down to whether the AI can touch it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-the-physical-ai-coverage-diverges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        So the Physical AI coverage diverges
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#that-doesnt-mean-fanuc-loses-different-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        That doesn't mean FANUC loses — different jobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-trademarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; trademarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#in-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In 30 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-specs-are-basically-a-tie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The specs are basically a tie
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ease-and-precision-the-two-camps-started-from-opposite-ends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ease and precision — the two camps started from opposite ends
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-real-fork-how-open-is-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The real fork — how open is it?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The real fork — how open is it?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-500hz-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why 500Hz matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-software-ecosystem-python-or-a-vendor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The software ecosystem — Python, or a vendor?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#force-control-it-all-comes-down-to-whether-the-ai-can-touch-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Force control — it all comes down to whether the AI can touch it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-the-physical-ai-coverage-diverges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        So the Physical AI coverage diverges
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#that-doesnt-mean-fanuc-loses-different-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        That doesn't mean FANUC loses — different jobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-trademarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources &amp; trademarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ur-vs-fanuc-for-physical-ai-what-decides-isnt-specs-its-openness">UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness<a class="headerlink" href="#ur-vs-fanuc-for-physical-ai-what-decides-isnt-specs-its-openness" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Cobot series · Part 2 of 3.</strong> <a href="../cobot-basics/">Part 1</a> was what a cobot is and why it's different. Now we put the two flagships head to head — <strong>Universal Robots (UR)</strong> and <strong>FANUC</strong> — before <a href="../cobot-investing/">Part 3</a> connects it to investing (UR = Teradyne · FANUC · NVIDIA).</p>
+</blockquote>
+<p>Set two 10 kg-class cobots side by side: UR's <strong>UR10e</strong> and FANUC's <strong>CRX-10iA/L</strong>. Payload, reach, repeatability… on the spec sheet they're near twins. The prices are close too. So — same thing, right?</p>
+<p>Then you put <strong>Physical AI</strong> in front of them — the flow from the <a href="../stereo-to-grasp/">Robot Vision series</a>, where AI becomes the robot's eyes and hands — and the two arms become completely different machines. One lets the AI reach far into it; the other hits a wall. And the difference isn't the arm's performance. It's <strong>how open the robot is.</strong></p>
+<p>This is the story of why that openness is decisive.</p>
+<hr />
+<h2 id="in-30-seconds">In 30 seconds<a class="headerlink" href="#in-30-seconds" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The specs are basically a tie.</strong> UR10e (12.5 kg / 1300 mm) and FANUC CRX-10iA/L (10 kg / 1249 mm) overlap on repeatability (±0.05 mm class), safety (ISO/TS 15066), and hand guiding.</li>
+<li><strong>The decider is external-control openness.</strong> UR opens <strong>RTDE</strong> — 500Hz bidirectional data — so you can <strong>read wrist force/torque externally</strong> and <strong>command force from outside</strong> via <code>force_mode()</code>, open and free out of the box. FANUC's force control is strong too, but it runs <strong>inside the robot only</strong> — there's no open channel to reach into the force loop from outside in real time.</li>
+<li><strong>Why 500Hz matters:</strong> for contact tasks (insertion, touch-off), an AI closing a force loop needs millisecond command intervals. UR gives you 2 ms (500Hz) natively. FANUC has a paid high-rate streaming option too, but it's <strong>position-only,</strong> and the free path runs at tens of Hz — too slow to react to force.</li>
+<li><strong>The ecosystem splits too.</strong> UR: URScript, <code>ur_rtde</code> (Python), an official ROS 2 driver, MoveIt 2, Isaac ROS, free simulators. FANUC centers on proprietary Karel/TP and ROBOGUIDE — though in late 2025 it <strong>partnered with NVIDIA and shipped official ROS 2 + Isaac Sim</strong> to start opening up (more below).</li>
+<li>So <strong>how much the AI can touch</strong> diverges. In one field analysis it worked out to roughly <strong>75–80% (open) vs 40–50% (closed)</strong> Physical AI coverage — and the entire gap was <strong>force-control access.</strong></li>
+<li>FANUC, in return, is strong on <strong>scale, high-volume precision, CNC integration, and fitting into existing plants.</strong> "Physical AI first" → UR; "traditional automation's stability and scale" → FANUC. Different jobs.</li>
+</ul>
+<hr />
+<h2 id="the-specs-are-basically-a-tie">The specs are basically a tie<a class="headerlink" href="#the-specs-are-basically-a-tie" title="Permanent link">&para;</a></h2>
+<p>Clear up the misconception first: this comparison isn't "which arm is better." In the 10 kg class they're strikingly similar.</p>
+<table>
+<thead>
+<tr>
+<th>Spec</th>
+<th>FANUC CRX-10iA/L</th>
+<th>UR10e</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Payload</td>
+<td>10 kg</td>
+<td>12.5 kg</td>
+</tr>
+<tr>
+<td>Reach</td>
+<td>1,249 mm</td>
+<td>1,300 mm</td>
+</tr>
+<tr>
+<td>Repeatability</td>
+<td>±0.04 mm</td>
+<td>±0.05 mm</td>
+</tr>
+<tr>
+<td>DoF</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Weight</td>
+<td>45 kg</td>
+<td>33.5 kg</td>
+</tr>
+<tr>
+<td>IP rating</td>
+<td>IP54</td>
+<td>IP54</td>
+</tr>
+<tr>
+<td>Collaborative safety</td>
+<td>ISO/TS 15066</td>
+<td>ISO/TS 15066</td>
+</tr>
+<tr>
+<td>Hand guiding</td>
+<td>built-in</td>
+<td>built-in</td>
+</tr>
+<tr>
+<td>Approx. price</td>
+<td>~$45–55k</td>
+<td>~$35–45k</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Figures are approximate and vary by datasheet and date.)</em></p>
+<p>Payload, reach, precision — all comparable, with UR a bit lighter and cheaper. <strong>On the arm alone, you can't really separate them.</strong> The contest is decided where the spec sheet doesn't look.</p>
+<p><img alt="Specs are twins; openness is what splits them" src="../../../assets/diagrams_en/cobot-spec-vs-openness.svg" /></p>
+<hr />
+<h2 id="ease-and-precision-the-two-camps-started-from-opposite-ends">Ease and precision — the two camps started from opposite ends<a class="headerlink" href="#ease-and-precision-the-two-camps-started-from-opposite-ends" title="Permanent link">&para;</a></h2>
+<p>The two companies' DNA is opposite.</p>
+<ul>
+<li><strong>UR</strong> started from <strong>ease.</strong> A Danish startup created the category with the first commercial cobot in 2008, selling "a robot anyone can hand-guide." The trade-off was a reputation for weaker <strong>speed, rigidity, and absolute accuracy</strong> than caged industrial arms.</li>
+<li><strong>FANUC</strong> is the heavyweight of <strong>precision and scale</strong> — the world's largest industrial-robot maker and the dominant supplier of machine-tool CNC. Caged high-speed, high-precision mass production is home turf. It answered the cobot category with the <strong>CRX series,</strong> leading on tablet drag-and-drop programming aimed straight at UR's ease-of-use.</li>
+</ul>
+<p>The interesting part is that <strong>the two camps are converging on each other's weaknesses.</strong> FANUC chases "ease" with CRX, and <strong>UR's newest arms (UR20/UR30) pushed up payload (20–30 kg), reach, speed, rigidity, and sealing (IP65)</strong> — moving into territory that used to force you into a caged industrial robot.</p>
+<p>One thing to state precisely, though. People say "UR is easy but less precise," but that's <strong>not about repeatability</strong> (returning to the same taught point) — there UR sat at ±0.03–0.05 mm on the e-Series, within about one class of industrial arms. In fact the big new UR20/UR30 are <strong>±0.1 mm — slightly <em>looser</em> than the e-Series</strong> (the normal trade-off for a bigger, faster, heavier arm). UR's real historical weakness was <strong>speed, rigidity, and <em>absolute</em> accuracy</strong> (hitting a commanded pose it was never taught — from CAD or a vision offset), which it addresses with per-arm kinematic calibration. And the software was re-architected from PolyScope 5.x to <strong>PolyScope X</strong> — but that's a UX/extensibility story, not a more precise arm (and it didn't ship in lockstep with UR20/UR30). In short, what UR narrowed was <strong>payload, reach, and rigidity</strong> — the things that used to force a caged robot — not the repeatability number itself. Either way, on paper the two are now close. But the real fork isn't here.</p>
+<hr />
+<h2 id="the-real-fork-how-open-is-it">The real fork — how open is it?<a class="headerlink" href="#the-real-fork-how-open-is-it" title="Permanent link">&para;</a></h2>
+<p>The heart of Physical AI is a <strong>tight perception → action loop.</strong> The AI sees with a camera, moves the robot, feels force, corrects instantly — and how tightly you can close that loop is everything. For that, <strong>the AI has to read the robot's internal data and issue commands from outside.</strong> This is exactly where the two diverge.</p>
+<p><img alt="Open vs closed — can the AI reach into the robot's force loop?" src="../../../assets/diagrams_en/cobot-openness.svg" /></p>
+<ul>
+<li><strong>UR — open.</strong> The <strong>RTDE (Real-Time Data Exchange)</strong> protocol opens <strong>500Hz</strong> bidirectional communication. You read joint positions and <strong>wrist force/torque externally in real time,</strong> and command <strong>force, speed, and impedance from outside</strong> (e.g. from an edge computer) with calls like <code>force_mode()</code> and <code>speedl()</code>. An AI policy can drive the robot's force behavior live.</li>
+<li><strong>FANUC — more closed.</strong> The free standard path is EtherNet/IP + Karel registers, plus a recent official ROS 2 driver — updating at <strong>tens of Hz.</strong> For faster external streaming you buy a <strong>paid option like Stream Motion</strong> (~125–250Hz), and even that is <strong>position-only.</strong> Wrist force/torque can be polled slowly over registers, but that's not a real-time force channel, and <strong>there's no open path to command force from outside in real time.</strong> FANUC's force control is capable — but it runs <strong>inside the robot only.</strong></li>
+</ul>
+<h3 id="why-500hz-matters">Why 500Hz matters<a class="headerlink" href="#why-500hz-matters" title="Permanent link">&para;</a></h3>
+<p>The numbers make it obvious: <strong>UR is 500Hz — 2 ms between commands.</strong> FANUC's free path (tens of Hz) sits in the tens-to-100 ms range, and even the paid high-rate option updates position at 4–8 ms. On a contact task — seating a connector, a light touch-off — an AI that needs to feel resistance and modulate force can't work at 100 ms; it's already shoved past. 2 ms can react like a fingertip. But more decisive than the rate: <strong>UR carries <em>force<em> over that fast channel, while FANUC's channel carries only </em>position.</em></strong> That's the <strong>threshold for reactive force control.</strong></p>
+<hr />
+<h2 id="the-software-ecosystem-python-or-a-vendor">The software ecosystem — Python, or a vendor?<a class="headerlink" href="#the-software-ecosystem-python-or-a-vendor" title="Permanent link">&para;</a></h2>
+<p>Openness doesn't stop at one interface; it spreads across the whole ecosystem.</p>
+<table>
+<thead>
+<tr>
+<th>Software</th>
+<th>FANUC CRX</th>
+<th>UR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Native language</td>
+<td>Karel / TP (proprietary)</td>
+<td>URScript (open, Python-like)</td>
+</tr>
+<tr>
+<td>Python SDK</td>
+<td>none</td>
+<td><code>ur_rtde</code> (open source)</td>
+</tr>
+<tr>
+<td>ROS 2 driver</td>
+<td>official (new 2025) · tens of Hz</td>
+<td>official · 500Hz</td>
+</tr>
+<tr>
+<td>MoveIt 2</td>
+<td>limited</td>
+<td>full</td>
+</tr>
+<tr>
+<td>Isaac ROS</td>
+<td>partial</td>
+<td>full</td>
+</tr>
+<tr>
+<td>Simulator</td>
+<td>ROBOGUIDE + Isaac Sim (NVIDIA partnership)</td>
+<td>URSim (free), Gazebo, Isaac Sim</td>
+</tr>
+<tr>
+<td>Open documentation</td>
+<td>limited</td>
+<td>comprehensive</td>
+</tr>
+<tr>
+<td>External-vendor dependency</td>
+<td>usually required</td>
+<td>not required</td>
+</tr>
+</tbody>
+</table>
+<p>On the UR side, the entire control stack runs as <strong>Python on the edge computer.</strong> You write, debug, and iterate the control code yourself — so you <strong>don't have to call an external FANUC programming vendor every time you add a task.</strong> That slashes reprogramming cost and lead time.</p>
+<p>FANUC's closedness isn't automatically bad, of course. <strong>Proven stability, accountable vendor support, and seamless integration with existing FANUC lines</strong> — on a traditional automation floor, those are strengths. It's just a different direction.</p>
+<hr />
+<h2 id="force-control-it-all-comes-down-to-whether-the-ai-can-touch-it">Force control — it all comes down to whether the AI can touch it<a class="headerlink" href="#force-control-it-all-comes-down-to-whether-the-ai-can-touch-it" title="Permanent link">&para;</a></h2>
+<p>Both robots do force control <strong>internally.</strong> UR has a wrist force/torque sensor built into the e-Series; FANUC does it with a separate F/T sensor + Force Control package (a paid option) — force following, force-threshold touch-off, pressing to a set force. Both get a checkmark on the spec sheet; "FANUC has no force control" is a myth.</p>
+<p>The decisive difference: <strong>UR opens that force to the outside; FANUC doesn't.</strong></p>
+<ul>
+<li>UR: force/torque data streams to the edge computer at 500Hz, and the edge's AI policy commands force back via <code>force_mode()</code> → <strong>the AI controls force in real time.</strong></li>
+<li>FANUC: force control is locked inside the robot, and the AI policy <strong>can't intervene</strong> in its behavior.</li>
+</ul>
+<p>On contact-critical work — insertion, assembly, fine touch — this difference is exactly "solvable with AI" vs "frozen in a script." Same for the demonstration data used in <strong>imitation learning.</strong> When you hand-guide to teach, UR records <strong>position <em>and</em> force,</strong> while FANUC captures <strong>position only.</strong> The more a task depends on force, the more the very quality of your dataset diverges.</p>
+<hr />
+<h2 id="so-the-physical-ai-coverage-diverges">So the Physical AI coverage diverges<a class="headerlink" href="#so-the-physical-ai-coverage-diverges" title="Permanent link">&para;</a></h2>
+<p>To sum up: the <strong>perception layer</strong> (finding the target with a camera and getting 3D coordinates) is the same on both — the edge computer and camera handle it anyway. What diverges is the <strong>manipulation layer,</strong> especially <strong>force-bearing tasks.</strong></p>
+<ul>
+<li>Open (UR): the AI controls force too, so contact tasks like insertion, touch-off, and compliant assembly are <strong>solvable with an AI policy.</strong></li>
+<li>Closed (FANUC): perception works, but with the force-control layer walled off, contact tasks stay <strong>frozen in scripts.</strong></li>
+</ul>
+<p>In one field analysis, that difference came out as roughly <strong>75–80% (open) vs 40–50% (closed)</strong> Physical AI coverage. The number itself is an illustrative estimate that varies by application — but the point is that <strong>the entire gap traces to one thing: force-control access.</strong> Not a worse arm — a less open one.</p>
+<p><img alt="Physical AI coverage — open vs closed" src="../../../assets/diagrams_en/cobot-pai-coverage.svg" /></p>
+<hr />
+<h2 id="that-doesnt-mean-fanuc-loses-different-jobs">That doesn't mean FANUC loses — different jobs<a class="headerlink" href="#that-doesnt-mean-fanuc-loses-different-jobs" title="Permanent link">&para;</a></h2>
+<p>Keep the balance here. The argument above rests on the premise <strong>"if Physical AI is the top priority."</strong> Drop that premise and the picture changes.</p>
+<p><strong>Where FANUC wins:</strong>
+- <strong>Scale and reliability</strong> — the world's largest robot maker, a million-plus units shipped. Proven durability and a support network.
+- <strong>High-precision, high-volume</strong> — home turf for caged industrial arms; lines where cycle time and throughput are everything.
+- <strong>CNC / factory-automation integration</strong> — in a plant already running on FANUC robots and CNC, bolting on the same ecosystem is natural and stable.
+- <strong>Closed = stable</strong> — a validated, vendor-backed stack. For fixed processes that rarely change, that's a plus, not a minus.</p>
+<p><strong>Where UR wins:</strong>
+- <strong>Open · Physical AI · research</strong> — contact tasks where the AI must touch force, fast iteration, a Python/ROS 2/Isaac stack.
+- <strong>Vendor independence · fast high-mix deployment</strong> — reprogram a new task in-house, immediately.</p>
+<p>So: <strong>"stability and scale for a fixed high-speed line" → FANUC; "a flexible cell the AI keeps touching and evolving" → UR.</strong> Not replacement — different uses.</p>
+<p><strong>And FANUC isn't standing still.</strong> In late 2025 it announced an official Physical AI partnership with NVIDIA — putting <strong>NVIDIA Jetson</strong> (on-robot edge AI) and <strong>Isaac Sim / Omniverse</strong> (digital-twin simulation) onto its robots, and lowering the Python barrier with <strong>official ROS 2 support.</strong> The direction is clearly toward <em>more</em> open. But what's public so far is mostly <strong>simulation, edge compute, and programming access</strong> — not yet the thing this piece hinges on: <strong>opening the real-time force loop to the outside.</strong> Whether that gap closes ties directly into Part 3's investment story, so we'll pick it up there.</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>FANUC CRX</th>
+<th>UR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arm spec (10 kg class)</td>
+<td>comparable (±0.04 mm)</td>
+<td>comparable, a bit lighter/cheaper</td>
+</tr>
+<tr>
+<td>External control</td>
+<td>free tens of Hz / paid 125–250Hz · position-only, no real-time force</td>
+<td><strong>RTDE 500Hz · read + command force</strong></td>
+</tr>
+<tr>
+<td>Software</td>
+<td>Karel/TP · ROBOGUIDE — opening up via ROS 2 · NVIDIA</td>
+<td>URScript · Python · official ROS 2 · Isaac</td>
+</tr>
+<tr>
+<td>AI force control</td>
+<td>no (locked inside)</td>
+<td><strong>yes (live external control)</strong></td>
+</tr>
+<tr>
+<td>Demo data</td>
+<td>position only</td>
+<td><strong>position + force</strong></td>
+</tr>
+<tr>
+<td>Physical AI coverage</td>
+<td>low (perception only)</td>
+<td>high (through force control)</td>
+</tr>
+<tr>
+<td>Wins instead on</td>
+<td>scale · high-volume precision · CNC · stability</td>
+<td>openness · flexibility · fast iteration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The one thing to remember:</strong> the two arms are nearly the same. What decides Physical AI is <strong>whether the AI can reach into the robot's force loop — i.e. openness.</strong> And being open ultimately means you can <strong>fuse AI with the robot</strong> — a "fusion" that comes back as the key thread of Part 3. Which leads straight to the third question: <em>so if you were investing in this, in whom?</em> <a href="../cobot-investing/">Part 3</a> breaks down <strong>UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA</strong> through a Physical AI investing lens.</p>
+<hr />
+<p><em>Related: <a href="../cobot-basics/">Part 1 — What Is a Collaborative Robot (Cobot)?</a> · <a href="../cobot-investing/">Part 3 — Physical AI investing</a> · <a href="../stereo-to-grasp/">From Stereo to Grasp</a></em></p>
+<h3 id="sources-trademarks">Sources &amp; trademarks<a class="headerlink" href="#sources-trademarks" title="Permanent link">&para;</a></h3>
+<p>Specs and interfaces follow the manufacturers' (Universal Robots, FANUC) public documentation and open-source tools (<code>ur_rtde</code>, ROS 2 drivers); figures and prices are approximations that vary by model and date. The platform-openness comparison and "Physical AI coverage" estimates are illustrative, based on general technical characteristics, not any specific customer or application. RTDE, URScript, and PolyScope are trademarks of Universal Robots (Teradyne); FANUC, CRX, Karel, and ROBOGUIDE are trademarks of FANUC Corporation, used here for identification only. This article is not advice to buy any product or make any investment.</p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>RTDE (Real-Time Data Exchange)</em> — UR's real-time bidirectional data interface (up to 500Hz); the channel for reading robot state and issuing commands from outside.</li>
+<li><em>force_mode()</em> — the UR call that lets an external program directly control the robot's force behavior.</li>
+<li><em>Karel / TP</em> — FANUC's proprietary robot programming language and teach-pendant program.</li>
+<li><em>EtherNet/IP</em> — a standard industrial communication protocol; FANUC's main external interface.</li>
+<li><em>Stream Motion</em> — FANUC's paid external motion-streaming option; an outside PC can send position commands, but not force/torque.</li>
+<li><em>Force/torque (F/T) control</em> — the robot's ability to sense and modulate contact force; core to insertion, touch-off, and other contact tasks.</li>
+<li><em>Imitation learning</em> — training an AI policy from human demonstration data.</li>
+<li><em>ROS 2 · MoveIt 2 · Isaac ROS</em> — the common robotics middleware, motion planning, and NVIDIA GPU-accelerated robot packages.</li>
+<li><em>TCO (total cost of ownership)</em> — the real cost including not just hardware but programming, integration, and maintenance.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>
