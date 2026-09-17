@@ -1,5 +1,36 @@
 # Claude Change Log — BlogMigration
 
+## 2026-09-17 (Session 8)
+
+### Session: Robot-vision 심화 2부작 + GEX/0DTE dashboard fixes
+
+**Robot Vision 심화 2부작 (new, bilingual — 416 team training + public):**
+- `inside-the-models.{ko,en}.md` (심화 1부 — 세 모델의 안쪽: FoundationStereo·SAM 2·FoundationPose 개념 + 실패 모드)
+- `model-anatomy.{ko,en}.md` (심화 2부 — 모델 해부: 아키텍처/텐서/손실, 수식 전부 `<details>` 접이식)
+- 38 self-theming SVG (`rvd*.svg`, light/dark `@media`) + 38 English-label (`diagrams_en/`), geometry byte-identical
+- nav: Physical AI › Robot Vision, after `frames-transforms`
+- 약배경 독자 기준 재작성, 5-gate 리뷰 통과 (copyright·fact·de-AI·persona·editorial), 논문 대조 팩트체크
+- Fact fixes: STA = Depth Anything V2, FoundationPose ~60만 장면/120만 이미지, Vention "…with GRIIP"
+
+**GEX tile degenerate-read fix (commit 6e74a50):**
+- 증상: `+0.0B / flip — / Max Pain 5675` (spot 7552)가 스냅샷으로 재노출
+- 원인: present-but-degenerate Yahoo chain (net~0, no flip, MP far strike)이 `usable<20`/`==0` guard 통과 → 표시 + 캐시 오염 → 매 empty window 재노출
+- `_gex_plausible()` 추가 → `fetch_gex` + `_load_gex_cache` 양쪽 게이트 (degenerate는 표시·캐시 안 함, 오염 캐시는 타일 생략 후 self-heal). 라이브 확인: net −0.8B / flip 7643 / MP 7655
+
+**0DTE gamma tile (new, commits e0f6a0d + a03403e):**
+- `fetch_gex_0dte()`: 최근접 만기만, sub-day T (1/√T 감마 포착), live-only · omit-on-doubt (>1DTE·<10분·빈체인이면 생략)
+- OI(전일 종가) → 국면 + 감마 플립 (만기로 넘어온 포지션); 오늘 per-strike 거래량 → 라이브 "오늘 핀"(±5% ATM 최다거래 = 위치, 부호 아님)
+- `gex-0dte-patterns` 포스트로 링크. 무료 데이터 한계 명시 (signed live gamma는 유료 signed-flow 피드 필요; OI는 하루 1회 = 전일 종가)
+
+**레짐 → 국면 (commit 193694f):** KO 대시보드 카드 + `gex-calculator`/`vanna-charm` 본문 9곳 (VIX 카드의 안도/긴장 국면과 통일). EN "regime" 유지.
+
+**Ops:** 깨진 repo 클론 복구 (crashed-git `index.lock` → `reset --hard`, 유실 없음). `mkdocs build --strict` 검증 (내 콘텐츠 경고 0; 남은 5경고는 기존 dashboard PNG). 배포 green + 라이브 URL 200 확인.
+
+**Notes for Next Session:**
+- 0DTE "오늘 핀" 라이브 렌더는 장중 배포(주중 <20:00 UTC)에서만 — **2026-09-18 18:30 UTC 검증 routine 예약됨** (`trig_01KaGaMQJmxKnuaTcpjQgvCW`)
+- signed live 0DTE gamma 원하면 유료 signed-flow 피드 결정 필요
+- 로봇비전 심화 2부작 Naver 크로스포스트 미실시
+
 ## 2026-04-10 (Session 7)
 
 ### Session: Excalidraw Diagrams for Tool Articles + Editorial Review
