@@ -122,6 +122,8 @@ nav:
     - "Robot Vision":
       - posts/stereo-to-grasp.md
       - posts/frames-transforms.md
+      - posts/inside-the-models.md
+      - posts/model-anatomy.md
     - "Cobots":
       - posts/cobot-basics.md
       - posts/cobot-ur-vs-fanuc.md

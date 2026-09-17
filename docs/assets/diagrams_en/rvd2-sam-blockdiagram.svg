@@ -1,0 +1,56 @@
+<svg width="100%" viewBox="0 0 360 386" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">SAM 2 full block diagram</title>
+<desc id="de">SAM 2 has six blocks; the three blue ones (memory attention, encoder, bank) were added for temporal processing. It is a streaming design that passes one frame at a time.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="386" rx="12"/>
+<text class="t" x="18" y="22">Six blocks — the blue three are new in SAM 2</text>
+<rect class="bx" x="16" y="34" width="150" height="44" rx="8"/>
+<text class="st" x="91" y="53" text-anchor="middle">Current frame</text>
+<text class="lb" x="91" y="69" text-anchor="middle">[3, H, W]</text>
+<rect class="bx" x="194" y="34" width="150" height="44" rx="8"/>
+<text class="st" x="269" y="53" text-anchor="middle">Prompt</text>
+<text class="lb" x="269" y="69" text-anchor="middle">point · box · mask</text>
+<path class="ar" d="M91,78 L91,94"/>
+<rect class="bxc" x="16" y="96" width="150" height="46" rx="8"/>
+<text class="lb" x="91" y="115" text-anchor="middle">① Image encoder</text>
+<text class="lb" x="91" y="131" text-anchor="middle">Hiera · multi-scale</text>
+<path class="ar" d="M269,78 L269,94"/>
+<rect class="bxc" x="194" y="96" width="150" height="46" rx="8"/>
+<text class="lb" x="269" y="115" text-anchor="middle">② Prompt encoder</text>
+<text class="lb" x="269" y="131" text-anchor="middle">→ tokens</text>
+<path class="arb" d="M91,142 L91,160"/>
+<rect x="16" y="162" width="150" height="46" rx="8" fill="var(--bg)" stroke="var(--blue)" stroke-width="1.6"/>
+<text class="lb" x="91" y="181" text-anchor="middle" style="fill:var(--blue)">③ Memory attention</text>
+<text class="lb" x="91" y="197" text-anchor="middle">refines features from the past</text>
+<path class="ar" d="M91,208 L91,226"/>
+<path class="ar" d="M269,142 L269,226"/>
+<rect class="bxc" x="16" y="228" width="328" height="50" rx="8"/>
+<text class="lb" x="180" y="248" text-anchor="middle">④ Mask decoder (two-way transformer)</text>
+<text class="lb" x="180" y="266" text-anchor="middle">→ 3 masks + IoU score + occlusion flag</text>
+<path class="arb" d="M180,278 L180,296"/>
+<rect x="16" y="298" width="328" height="44" rx="8" fill="var(--bg)" stroke="var(--blue)" stroke-width="1.6"/>
+<text class="lb" x="180" y="318" text-anchor="middle" style="fill:var(--blue)">⑤ Memory encoder — summarizes the result to store</text>
+<text class="lb" x="180" y="334" text-anchor="middle">⑥ Loads into the memory bank</text>
+<path class="arb" d="M16,320 C4,320 4,185 14,185"/>
+<text class="lb" x="180" y="366" text-anchor="middle">The next frame starts carrying this memory</text>
+<text class="lb" x="180" y="382" text-anchor="middle" style="fill:var(--blue)">Streaming design, one frame at a time — never holds the whole video</text>
+</svg>

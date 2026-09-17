@@ -1,0 +1,43 @@
+<svg width="100%" viewBox="0 0 360 306" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">세 단계 도입 순서</title>
+<desc id="de">기어가기→걷기→뛰기 순서의 도입. 1단계는 저장된 사진으로 오프라인 검증, 2단계는 셀에서 Isaac ROS 실시간 구동, 3단계는 Isaac Lab의 학습된 제어. 1단계를 건너뛰면 2단계에서 원인 분리가 불가능해진다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="306" rx="12"/>
+<text class="t" x="18" y="22">기어가기 → 걷기 → 뛰기</text>
+<rect class="bx" x="16" y="34" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="54" style="fill:var(--teal)">1단계 · 저장된 사진으로, 오프라인</text>
+<text class="st" x="30" y="73">노트북/젯슨에서 SAM 2 → FoundationStereo 순서로</text>
+<text class="st" x="30" y="90">찍어둔 프레임에 그냥 돌려본다. ROS 필요 없음.</text>
+<text class="lb" x="30" y="105" style="fill:var(--teal)">확인 지점 : 구멍 나던 자리에 깊이가 채워졌는가</text>
+<path class="arb" d="M180,110 L180,126"/>
+<rect class="bx" x="16" y="128" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="148" style="fill:var(--blue)">2단계 · 셀에서 실시간 (Isaac ROS)</text>
+<text class="st" x="30" y="167">모델을 GPU 그래프로 감싸 엣지 보드에서 상시 구동.</text>
+<text class="st" x="30" y="184">여기서 좌표 변환·핸드아이가 본격적으로 등장.</text>
+<text class="lb" x="30" y="199" style="fill:var(--blue)">확인 지점 : 실제 부품을 반복해서 집는가</text>
+<path class="arb" d="M180,204 L180,220"/>
+<rect class="bx" x="16" y="222" width="328" height="70" rx="10"/>
+<text class="lb" x="30" y="242" style="fill:var(--amber)">3단계 · 학습된 제어 (Isaac Lab)</text>
+<text class="st" x="30" y="261">시뮬레이션에서 조작 정책을 학습해 배포.</text>
+<text class="lb" x="30" y="278" style="fill:var(--amber)">확인 지점 : 규칙으로 못 짜던 동작이 되는가</text>
+<text class="lb" x="180" y="302" text-anchor="middle">1단계를 건너뛰면 2단계에서 원인 분리가 불가능해진다</text>
+</svg>

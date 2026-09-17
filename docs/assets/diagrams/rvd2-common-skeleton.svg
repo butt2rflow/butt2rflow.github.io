@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">세 모델의 공통 4단 구조</title>
+<desc id="de">세 모델은 인코더·자료구조·반복정제·헤드의 네 단계를 공유한다. 특히 넷째 단계에서 결과와 신뢰도를 함께 내는 것이 로봇 시스템의 핵심이다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="340" rx="12"/>
+<text class="t" x="18" y="22">네 단계 — 셋 다 똑같다</text>
+<rect class="bx" x="16" y="34" width="328" height="62" rx="10"/>
+<text class="lb" x="30" y="53">① 인코더 — 관측을 특징으로</text>
+<text class="st" x="30" y="72">픽셀 → 의미 있는 벡터. 여기서 <tspan style="fill:var(--blue)">얼린 사전학습 모델</tspan>을</text>
+<text class="st" x="30" y="88">빌려 쓰는 게 세 모델의 공통 전략.</text>
+<path class="arb" d="M180,96 L180,112"/>
+<rect class="bx" x="16" y="114" width="328" height="70" rx="10"/>
+<text class="lb" x="30" y="133">② 문제별 자료구조 — 가설을 담는 그릇</text>
+<text class="st" x="30" y="152">Stereo : 코스트 볼륨 (후보 시차마다 점수)</text>
+<text class="st" x="30" y="168">SAM : 프롬프트 토큰 ↔ 이미지 토큰</text>
+<text class="st" x="30" y="180">Pose : 포즈 가설 수백 개</text>
+<path class="arb" d="M180,184 L180,200"/>
+<rect class="bx" x="16" y="202" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="221">③ 반복 정제 — 한 번에 안 맞힌다</text>
+<text class="st" x="30" y="240">거친 답을 내고 여러 번 고친다. 세 모델 전부</text>
+<text class="st" x="30" y="256">같은 블록을 <tspan style="fill:var(--teal)">N번 재사용</tspan>하는 구조.</text>
+<path class="arb" d="M180,268 L180,284"/>
+<rect class="bx" x="16" y="286" width="328" height="46" rx="10"/>
+<text class="lb" x="30" y="305">④ 헤드 — 답 + 자기 확신도</text>
+<text class="st" x="30" y="322">결과와 함께 "얼마나 믿을 만한가"를 같이 낸다</text>
+</svg>

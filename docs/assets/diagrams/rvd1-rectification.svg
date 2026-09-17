@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 360 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">정렬 전후의 탐색 범위 비교</title>
+<desc id="de">정렬 전에는 오른쪽 이미지 평면 전체를 뒤져야 하지만, 정렬 후에는 같은 가로줄만 훑으면 되어 탐색량이 수천 배 줄고 오차 방향도 1차원으로 고정된다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="208" rx="12"/>
+<text class="t" x="18" y="22">정렬이 하는 일</text>
+<rect class="bx" x="16" y="34" width="156" height="120" rx="10"/>
+<text class="lb" x="94" y="54" text-anchor="middle" style="fill:var(--red)">정렬 전</text>
+<g fill="var(--mut)" opacity=".38">
+<circle cx="44" cy="76" r="3"/><circle cx="70" cy="90" r="3"/><circle cx="96" cy="70" r="3"/><circle cx="122" cy="98" r="3"/><circle cx="148" cy="80" r="3"/>
+<circle cx="52" cy="112" r="3"/><circle cx="78" cy="128" r="3"/><circle cx="104" cy="114" r="3"/><circle cx="132" cy="130" r="3"/><circle cx="60" cy="140" r="3"/>
+<circle cx="112" cy="140" r="3"/><circle cx="140" cy="112" r="3"/>
+</g>
+<text class="st" x="94" y="172" text-anchor="middle">평면 전체를 뒤진다</text>
+<rect class="bx" x="188" y="34" width="156" height="120" rx="10"/>
+<text class="lb" x="266" y="54" text-anchor="middle" style="fill:var(--teal)">정렬 후</text>
+<path d="M206,100 L326,100" stroke="var(--teal)" stroke-width="2"/>
+<g class="hi2">
+<circle cx="214" cy="100" r="3.4"/><circle cx="238" cy="100" r="3.4"/><circle cx="262" cy="100" r="3.4"/><circle cx="286" cy="100" r="3.4"/><circle cx="310" cy="100" r="3.4"/>
+</g>
+<text class="st" x="266" y="172" text-anchor="middle">같은 가로줄만 훑는다</text>
+<text class="lb" x="180" y="196" text-anchor="middle">탐색량 수천 배 감소 · 오차 방향도 1차원으로 고정</text>
+</svg>
