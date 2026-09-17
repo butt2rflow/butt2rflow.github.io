@@ -2010,6 +2010,7 @@ def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
         rows = []
         coi_by_k: dict = defaultdict(float)
         poi_by_k: dict = defaultdict(float)
+        vol_by_k: dict = defaultdict(float)      # today's 0DTE volume — updates intraday, unlike OI
         for k in set(calls) | set(puts):
             c = calls.get(k, {})
             p = puts.get(k, {})
@@ -2020,6 +2021,7 @@ def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
             rows.append((k, coi, poi, civ, piv))
             coi_by_k[k] += coi
             poi_by_k[k] += poi
+            vol_by_k[k] += float(c.get("volume") or 0) + float(p.get("volume") or 0)
         usable = sum(1 for (k, coi, poi, civ, piv) in rows
                      if (coi and civ > 0) or (poi and piv > 0))
         if usable < 15:
@@ -2049,18 +2051,29 @@ def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
         near = [k for k in sorted(set(coi_by_k) | set(poi_by_k))
                 if spot * 0.9 <= k <= spot * 1.1]
 
+        # OI-based Max Pain (prior-close OI) — sanity-checks the net-GEX read below.
         def pain(S):
             return sum(coi_by_k[k] * max(0.0, S - k) + poi_by_k[k] * max(0.0, k - S)
                        for k in near)
-        pin = min(near, key=pain) if near else None
-        if pin is None or not (spot * 0.9 <= pin <= spot * 1.1):
-            raise ValueError(f"0DTE pin {pin} implausible vs spot {spot:.0f}")
+        oi_pin = min(near, key=pain) if near else None
+        if oi_pin is None or not (spot * 0.9 <= oi_pin <= spot * 1.1):
+            raise ValueError(f"0DTE OI Max Pain {oi_pin} implausible vs spot {spot:.0f}")
+
+        # LIVE volume-based pin: today's most-active near-ATM (±5%) 0DTE strike.
+        # Volume (unlike OI) updates intraday, so this reflects TODAY's flow. It is
+        # a LOCATION, not a sign — 0DTE flow is roughly balanced, so no long/short
+        # claim is drawn from it; needs a floor of activity to be meaningful.
+        vnear = [k for k in vol_by_k if spot * 0.95 <= k <= spot * 1.05]
+        vol_total = sum(vol_by_k[k] for k in vnear)
+        vol_pin = (max(vnear, key=lambda k: vol_by_k[k])
+                   if (vnear and vol_total >= 500) else None)
         return {
             "spot": spot,
-            "net_bn": cur / 1e9,
+            "net_bn": cur / 1e9,            # OI-based (prior close) — positioning into expiry
             "regime": "long" if cur > 0 else "short",
-            "flip": flip,
-            "pin": pin,
+            "flip": flip,                   # OI-based
+            "vol_pin": vol_pin,             # volume-based (today, live) — location only
+            "vol_near": vol_total,
             "dte": dte,
             "hours": secs / 3600.0,
             "date": now.strftime("%Y-%m-%d"),
@@ -2142,10 +2155,10 @@ def render_gex_chart(g: dict, out_path: Path) -> bool:
 
 
 def render_gex_0dte_card_ko(g: dict) -> list[str]:
-    reg = ("🟢 롱 감마 — 장중 변동성 억제(핀)" if g["regime"] == "long"
-           else "🔴 숏 감마 — 장중 변동성 증폭")
+    reg = ("🟢 롱 감마 — 딜러가 변동성 억제" if g["regime"] == "long"
+           else "🔴 숏 감마 — 딜러 헷지가 변동성 증폭")
     flip_s = f"{g['flip']:.0f}" if g.get("flip") else "—"
-    pin_s = f"{g['pin']:.0f}" if g.get("pin") else "—"
+    vpin_s = f"{g['vol_pin']:.0f}" if g.get("vol_pin") else "—"
     pos = ("플립 위 = 롱 감마" if (g.get("flip") and g["spot"] >= g["flip"])
            else "플립 아래 = 숏 감마" if g.get("flip") else "—")
     dte_lab = "당일 만기(0DTE)" if g.get("dte") == 0 else "익일 만기(1DTE)"
@@ -2160,22 +2173,23 @@ def render_gex_0dte_card_ko(g: dict) -> list[str]:
         "|:-----|---:|:-----|",
         f"| **0DTE 국면** (넷 GEX) | {g['net_bn']:+.1f}B | {reg} |",
         f"| 감마 플립 / 현재가 | {flip_s} / {g['spot']:.0f} | {pos} |",
-        f"| 핀(맥스페인) / 만기까지 | {pin_s} / {g['hours']:.1f}h | {dte_lab} |",
+        f"| 오늘 핀 (거래량 집중) / 만기까지 | {vpin_s} / {g['hours']:.1f}h | {dte_lab} |",
         "",
         "</div>",
         "",
-        "<small>*Yahoo ^SPX **당일 만기 체인만** 추정. 0DTE 감마는 만기 임박할수록 급증(1/√T)해 "
-        "**장중 스냅샷은 시시각각** 바뀝니다. 국면 타일(전체 만기)과 별개의 장중 참고용 · "
+        "<small>*Yahoo ^SPX **당일 만기 체인만** 추정. **국면·플립은 미결제약정(전일 종가)** 기준 "
+        "= 만기로 넘어온 포지션, **오늘 핀은 당일 거래량** 기준으로 장중 갱신됩니다(부호 아님·위치). "
+        "0DTE 감마는 만기 임박할수록 급증(1/√T) · 전체 만기 국면 타일과 별개의 장중 참고용 · "
         f"[0DTE 감마 패턴 →](posts/gex-0dte-patterns.md) · {g['date']} 기준*</small>",
         "",
     ]
 
 
 def render_gex_0dte_card_en(g: dict) -> list[str]:
-    reg = ("🟢 Long gamma — intraday vol dampened (pin)" if g["regime"] == "long"
-           else "🔴 Short gamma — intraday vol amplified")
+    reg = ("🟢 Long gamma — dealers dampen vol" if g["regime"] == "long"
+           else "🔴 Short gamma — dealer hedging amplifies vol")
     flip_s = f"{g['flip']:.0f}" if g.get("flip") else "—"
-    pin_s = f"{g['pin']:.0f}" if g.get("pin") else "—"
+    vpin_s = f"{g['vol_pin']:.0f}" if g.get("vol_pin") else "—"
     pos = ("above flip = long gamma" if (g.get("flip") and g["spot"] >= g["flip"])
            else "below flip = short gamma" if g.get("flip") else "—")
     dte_lab = "same-day (0DTE)" if g.get("dte") == 0 else "next-day (1DTE)"
@@ -2190,13 +2204,14 @@ def render_gex_0dte_card_en(g: dict) -> list[str]:
         "|:-------|------:|:------|",
         f"| **0DTE regime** (net GEX) | {g['net_bn']:+.1f}B | {reg} |",
         f"| Gamma flip / spot | {flip_s} / {g['spot']:.0f} | {pos} |",
-        f"| Pin (max pain) / to close | {pin_s} / {g['hours']:.1f}h | {dte_lab} |",
+        f"| Today's pin (volume) / to close | {vpin_s} / {g['hours']:.1f}h | {dte_lab} |",
         "",
         "</div>",
         "",
-        "<small>*Estimated from the Yahoo ^SPX **same-day chain only.** 0DTE gamma spikes as "
-        "expiry nears (~1/√T), so **this intraday snapshot shifts constantly** — a separate "
-        f"read from the regime tile (all expiries) · [0DTE gamma patterns →](posts/gex-0dte-patterns.md) · as of {g['date']}*</small>",
+        "<small>*Estimated from the Yahoo ^SPX **same-day chain only.** **Regime & flip use open "
+        "interest (prior close)** = positions carried into expiry; **today's pin uses same-day "
+        "volume** (updates intraday — a location, not a sign). 0DTE gamma spikes ~1/√T into the "
+        f"close · separate from the all-expiry regime tile · [0DTE gamma patterns →](posts/gex-0dte-patterns.md) · as of {g['date']}*</small>",
         "",
     ]
 
