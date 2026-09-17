@@ -2158,14 +2158,14 @@ def render_gex_0dte_card_ko(g: dict) -> list[str]:
         "",
         "| 신호 | 값 | 상태 |",
         "|:-----|---:|:-----|",
-        f"| **0DTE 레짐** (넷 GEX) | {g['net_bn']:+.1f}B | {reg} |",
+        f"| **0DTE 국면** (넷 GEX) | {g['net_bn']:+.1f}B | {reg} |",
         f"| 감마 플립 / 현재가 | {flip_s} / {g['spot']:.0f} | {pos} |",
         f"| 핀(맥스페인) / 만기까지 | {pin_s} / {g['hours']:.1f}h | {dte_lab} |",
         "",
         "</div>",
         "",
         "<small>*Yahoo ^SPX **당일 만기 체인만** 추정. 0DTE 감마는 만기 임박할수록 급증(1/√T)해 "
-        "**장중 스냅샷은 시시각각** 바뀝니다. 레짐 타일(전체 만기)과 별개의 장중 참고용 · "
+        "**장중 스냅샷은 시시각각** 바뀝니다. 국면 타일(전체 만기)과 별개의 장중 참고용 · "
         f"[0DTE 감마 패턴 →](posts/gex-0dte-patterns.md) · {g['date']} 기준*</small>",
         "",
     ]
@@ -2212,13 +2212,13 @@ def render_gex_card_ko(g: dict) -> list[str]:
     return [
         "---",
         "",
-        "### GEX — 딜러 감마 레짐 (SPX 지수옵션)",
+        "### GEX — 딜러 감마 국면 (SPX 지수옵션)",
         "",
         '<div class="dash-tight" markdown>',
         "",
         "| 신호 | 값 | 상태 |",
         "|:-----|---:|:-----|",
-        f"| **레짐** (넷 GEX 부호) | {g['net_bn']:+.1f}B | {reg} |",
+        f"| **국면** (넷 GEX 부호) | {g['net_bn']:+.1f}B | {reg} |",
         f"| 감마 플립 / 현재가 | {flip_s} / {g['spot']:.0f} | {pos} |",
         f"| Max Pain (만기 참고) | {mp_s} | 맹신 금물 |",
         "",
@@ -2227,7 +2227,7 @@ def render_gex_card_ko(g: dict) -> list[str]:
         "![딜러 감마 노출 — 행사가별](assets/diagrams/gex_regime.png)",
         "",
         "<small>*Yahoo ^SPX 지수옵션 체인 추정. **감마는 잔물결, 파도는 델타** — "
-        "부호는 추정이라 방향 신호가 아니라 레짐(증폭/억제) 참고용, Max Pain은 만기일 참고치일 뿐 · "
+        "부호는 추정이라 방향 신호가 아니라 국면(증폭/억제) 참고용, Max Pain은 만기일 참고치일 뿐 · "
         f"[GEX 직접 계산 →](posts/gex-calculator.md){stamp}*</small>",
         "",
     ]
