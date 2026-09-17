@@ -1921,7 +1921,7 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
                 g_one = _bs_gamma(spot, k, Tm, ivm, r_rate) if ivm > 0 else 0.0
                 prof.append((k, (g_one * coi_by_k[k] - g_one * poi_by_k[k])
                              * 100 * spot * spot * 0.01))
-        return {
+        result = {
             "spot": spot,
             "net_bn": cur / 1e9,
             "regime": "long" if cur > 0 else "short",
@@ -1930,9 +1930,33 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
             "date": now.strftime("%Y-%m-%d"),
             "profile": prof,
         }
+        if not _gex_plausible(result):
+            raise ValueError(
+                f"degenerate read (net {cur / 1e9:+.2f}B, flip {flip}, "
+                f"max_pain {max_pain}, spot {spot:.0f})")
+        return result
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] GEX fetch failed ({e}); tile skipped")
         return None
+
+
+def _gex_plausible(g: dict) -> bool:
+    """Reject a present-but-degenerate read (the failure behind the tile showing
+    +0.0B / flip — / an implausible Max Pain). A meaningful dealer-gamma read has
+    Max Pain sitting in the open-interest mass near spot, and is not a flat
+    net-~0 profile with no gamma flip anywhere in the ±12% window. Such reads
+    (sparse or asymmetric OI, near-cancelling IVs from a half-rebuilt Yahoo
+    chain) must never be shown OR cached, or they poison the last-good snapshot."""
+    try:
+        spot = float(g["spot"])
+        mp = g.get("max_pain")
+        if mp is None or not (spot * 0.85 <= float(mp) <= spot * 1.15):
+            return False
+        if g.get("flip") is None and abs(float(g.get("net_bn") or 0.0)) < 0.05:
+            return False
+        return True
+    except Exception:  # noqa: BLE001
+        return False
 
 
 def _save_gex_cache(g: dict) -> None:
@@ -1953,6 +1977,9 @@ def _load_gex_cache() -> dict | None:
     try:
         req = urllib.request.Request(GEX_CACHE_URL, headers={"User-Agent": "Mozilla/5.0"})
         g = json.load(urllib.request.urlopen(req, timeout=15))
+        if not _gex_plausible(g):
+            print("  [WARN] cached GEX implausible; tile omitted (self-heals on next good fetch)")
+            return None
         g["live"] = False
         _save_gex_cache(g)
         return g
