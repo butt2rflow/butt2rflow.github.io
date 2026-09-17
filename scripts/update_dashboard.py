@@ -1959,6 +1959,117 @@ def _gex_plausible(g: dict) -> bool:
         return False
 
 
+def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
+    """Intraday 0DTE dealer-gamma read — the NEAREST SPX expiry only, with a
+    sub-day time-to-expiry so 0DTE's outsized gamma (~1/sqrt(T)) is captured.
+    The multi-expiry regime tile (fetch_gex) SKIPS same-day expiry (integer-day
+    T rounds to 0), so this is a separate, complementary read. Live-only: 0DTE is
+    ephemeral, so there is NO snapshot cache — the tile shows when a live same-day
+    (or next-day) read is available and is omitted otherwise (overnight, weekends,
+    empty/degenerate chain)."""
+    import datetime as _dt
+    import http.cookiejar
+    from collections import defaultdict
+    try:
+        cj = http.cookiejar.CookieJar()
+        op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+        op.addheaders = [("User-Agent", "Mozilla/5.0")]
+        try:
+            op.open("https://fc.yahoo.com", timeout=10)
+        except Exception:  # noqa: BLE001  (expected error; sets the cookie)
+            pass
+        crumb = op.open("https://query2.finance.yahoo.com/v1/test/getcrumb",
+                        timeout=10).read().decode()
+        _cq = urllib.parse.quote(crumb)
+        d0 = json.load(op.open(f"{YF_OPTIONS}?crumb={_cq}", timeout=25))
+        oc = d0["optionChain"]["result"][0]
+        spot = float(oc["quote"]["regularMarketPrice"])
+        if not (1000 <= spot <= 10000):
+            raise ValueError(f"SPX spot {spot} out of range")
+        expiries = list(oc.get("expirationDates", []))
+        if not expiries:
+            raise ValueError("no expiries")
+        ed = expiries[0]                       # nearest expiry = today's 0DTE on a trading day
+        now = _dt.datetime.now(_dt.timezone.utc)
+        exp_date = _dt.datetime.fromtimestamp(ed, _dt.timezone.utc).date()
+        dte = (exp_date - now.date()).days
+        if dte > 1:
+            raise ValueError(f"nearest expiry is {dte}DTE (no 0DTE window)")
+        # SPX settles at the cash close, ~20:00 UTC (16:00 ET). Seconds to close,
+        # floored below so gamma stays finite in the final minutes.
+        exp_close = _dt.datetime.combine(exp_date, _dt.time(20, 0),
+                                         tzinfo=_dt.timezone.utc)
+        secs = (exp_close - now).total_seconds()
+        if secs <= 600:
+            raise ValueError(f"0DTE not live (secs_to_close={secs:.0f})")
+        T = secs / (365 * 24 * 3600)
+        dd = json.load(op.open(f"{YF_OPTIONS}?date={ed}&crumb={_cq}", timeout=25))
+        opt = dd["optionChain"]["result"][0]["options"][0]
+        calls = {float(c["strike"]): c for c in opt.get("calls", [])}
+        puts = {float(p["strike"]): p for p in opt.get("puts", [])}
+        rows = []
+        coi_by_k: dict = defaultdict(float)
+        poi_by_k: dict = defaultdict(float)
+        for k in set(calls) | set(puts):
+            c = calls.get(k, {})
+            p = puts.get(k, {})
+            coi = float(c.get("openInterest") or 0)
+            poi = float(p.get("openInterest") or 0)
+            civ = float(c.get("impliedVolatility") or 0)
+            piv = float(p.get("impliedVolatility") or 0)
+            rows.append((k, coi, poi, civ, piv))
+            coi_by_k[k] += coi
+            poi_by_k[k] += poi
+        usable = sum(1 for (k, coi, poi, civ, piv) in rows
+                     if (coi and civ > 0) or (poi and piv > 0))
+        if usable < 15:
+            raise ValueError(f"0DTE chain present but OI/IV empty (usable={usable})")
+
+        def net_gex_at(S):
+            g = 0.0
+            for (k, coi, poi, civ, piv) in rows:
+                gc = _bs_gamma(S, k, T, civ, r_rate) if (civ > 0 and coi) else 0.0
+                gp = _bs_gamma(S, k, T, piv, r_rate) if (piv > 0 and poi) else 0.0
+                g += (gc * coi - gp * poi) * 100 * S * S * 0.01
+            return g
+
+        cur = net_gex_at(spot)
+        if cur == 0.0:
+            raise ValueError("0DTE net GEX exactly 0 (empty chain)")
+        # 0DTE gamma concentrates near ATM, so search a tight ±3% band for the flip.
+        lo, hi, steps = spot * 0.97, spot * 1.03, 40
+        prev_s, prev_g, flip = lo, net_gex_at(lo), None
+        for i in range(1, steps + 1):
+            s = lo + (hi - lo) * i / steps
+            g = net_gex_at(s)
+            if (prev_g < 0) != (g < 0) and (g - prev_g) != 0:
+                flip = prev_s + (hi - lo) / steps * (0 - prev_g) / (g - prev_g)
+                break
+            prev_s, prev_g = s, g
+        near = [k for k in sorted(set(coi_by_k) | set(poi_by_k))
+                if spot * 0.9 <= k <= spot * 1.1]
+
+        def pain(S):
+            return sum(coi_by_k[k] * max(0.0, S - k) + poi_by_k[k] * max(0.0, k - S)
+                       for k in near)
+        pin = min(near, key=pain) if near else None
+        if pin is None or not (spot * 0.9 <= pin <= spot * 1.1):
+            raise ValueError(f"0DTE pin {pin} implausible vs spot {spot:.0f}")
+        return {
+            "spot": spot,
+            "net_bn": cur / 1e9,
+            "regime": "long" if cur > 0 else "short",
+            "flip": flip,
+            "pin": pin,
+            "dte": dte,
+            "hours": secs / 3600.0,
+            "date": now.strftime("%Y-%m-%d"),
+        }
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] 0DTE GEX fetch failed ({e}); tile omitted")
+        return None
+
+
 def _save_gex_cache(g: dict) -> None:
     """Publish the last good GEX next to the chart so a later deploy that hits
     Yahoo's empty-chain window can fall back to it over HTTP. gh-pages (the
@@ -2030,6 +2141,66 @@ def render_gex_chart(g: dict, out_path: Path) -> bool:
     return True
 
 
+def render_gex_0dte_card_ko(g: dict) -> list[str]:
+    reg = ("🟢 롱 감마 — 장중 변동성 억제(핀)" if g["regime"] == "long"
+           else "🔴 숏 감마 — 장중 변동성 증폭")
+    flip_s = f"{g['flip']:.0f}" if g.get("flip") else "—"
+    pin_s = f"{g['pin']:.0f}" if g.get("pin") else "—"
+    pos = ("플립 위 = 롱 감마" if (g.get("flip") and g["spot"] >= g["flip"])
+           else "플립 아래 = 숏 감마" if g.get("flip") else "—")
+    dte_lab = "당일 만기(0DTE)" if g.get("dte") == 0 else "익일 만기(1DTE)"
+    return [
+        "---",
+        "",
+        "### 0DTE 감마 — 장중 딜러 포지션 (SPX 당일물)",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **0DTE 레짐** (넷 GEX) | {g['net_bn']:+.1f}B | {reg} |",
+        f"| 감마 플립 / 현재가 | {flip_s} / {g['spot']:.0f} | {pos} |",
+        f"| 핀(맥스페인) / 만기까지 | {pin_s} / {g['hours']:.1f}h | {dte_lab} |",
+        "",
+        "</div>",
+        "",
+        "<small>*Yahoo ^SPX **당일 만기 체인만** 추정. 0DTE 감마는 만기 임박할수록 급증(1/√T)해 "
+        "**장중 스냅샷은 시시각각** 바뀝니다. 레짐 타일(전체 만기)과 별개의 장중 참고용 · "
+        f"[0DTE 감마 패턴 →](posts/gex-0dte-patterns.md) · {g['date']} 기준*</small>",
+        "",
+    ]
+
+
+def render_gex_0dte_card_en(g: dict) -> list[str]:
+    reg = ("🟢 Long gamma — intraday vol dampened (pin)" if g["regime"] == "long"
+           else "🔴 Short gamma — intraday vol amplified")
+    flip_s = f"{g['flip']:.0f}" if g.get("flip") else "—"
+    pin_s = f"{g['pin']:.0f}" if g.get("pin") else "—"
+    pos = ("above flip = long gamma" if (g.get("flip") and g["spot"] >= g["flip"])
+           else "below flip = short gamma" if g.get("flip") else "—")
+    dte_lab = "same-day (0DTE)" if g.get("dte") == 0 else "next-day (1DTE)"
+    return [
+        "---",
+        "",
+        "### 0DTE gamma — intraday dealer position (SPX same-day)",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **0DTE regime** (net GEX) | {g['net_bn']:+.1f}B | {reg} |",
+        f"| Gamma flip / spot | {flip_s} / {g['spot']:.0f} | {pos} |",
+        f"| Pin (max pain) / to close | {pin_s} / {g['hours']:.1f}h | {dte_lab} |",
+        "",
+        "</div>",
+        "",
+        "<small>*Estimated from the Yahoo ^SPX **same-day chain only.** 0DTE gamma spikes as "
+        "expiry nears (~1/√T), so **this intraday snapshot shifts constantly** — a separate "
+        f"read from the regime tile (all expiries) · [0DTE gamma patterns →](posts/gex-0dte-patterns.md) · as of {g['date']}*</small>",
+        "",
+    ]
+
+
 def render_gex_card_ko(g: dict) -> list[str]:
     reg = ("🟢 롱 감마 — 딜러가 변동성 억제(잔물결)" if g["regime"] == "long"
            else "🔴 숏 감마 — 딜러 헷지가 변동성 증폭")
@@ -2098,7 +2269,8 @@ def render_gex_card_en(g: dict) -> list[str]:
 def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
                       cot: dict | None = None, fw: dict | None = None,
-                      move: dict | None = None, gex: dict | None = None):
+                      move: dict | None = None, gex: dict | None = None,
+                      gex_0dte: dict | None = None):
     spread_label = "역전" if cs["spread_state"] == "danger" else KO_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -2253,6 +2425,8 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         parts += _dash_card(render_credit_card_ko(creds))
     if gex:
         parts += _dash_card(render_gex_card_ko(gex))
+    if gex_0dte:
+        parts += _dash_card(render_gex_0dte_card_ko(gex_0dte))
     parts += [
         "</div>",
         "",
@@ -2342,7 +2516,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
 def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
                       vix_stale_date: str | None = None, creds: dict | None = None,
                       cot: dict | None = None, fw: dict | None = None,
-                      move: dict | None = None, gex: dict | None = None):
+                      move: dict | None = None, gex: dict | None = None,
+                      gex_0dte: dict | None = None):
     spread_label = "Inverted" if cs["spread_state"] == "danger" else EN_LABEL[cs["spread_state"]]
     # One timestamp next to the H2 title is enough — the per-section
     # H3 suffix was repetitive (all charts share the same build instant).
@@ -2505,6 +2680,8 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         parts += _dash_card(render_credit_card_en(creds), "📈 Show chart")
     if gex:
         parts += _dash_card(render_gex_card_en(gex), "📈 Show chart")
+    if gex_0dte:
+        parts += _dash_card(render_gex_0dte_card_en(gex_0dte))
     parts += [
         "</div>",
         "",
@@ -2610,6 +2787,12 @@ def main():
         tag = "" if gex.get("live") else f" [cached, as of {gex.get('date')}]"
         print(f"  GEX: net {gex['net_bn']:+.1f}B ({gex['regime']}), "
               f"flip {gex['flip']}, max_pain {gex['max_pain']} (spot {gex['spot']:.0f}){tag}")
+
+    print("Fetching 0DTE GEX (intraday same-day SPX gamma)...")
+    gex0 = fetch_gex_0dte()
+    if gex0:
+        print(f"  0DTE: net {gex0['net_bn']:+.1f}B ({gex0['regime']}), flip {gex0['flip']}, "
+              f"pin {gex0['pin']}, {gex0['hours']:.1f}h to close (DTE {gex0['dte']})")
 
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
@@ -2747,12 +2930,12 @@ def main():
     ko_changed = patch_home(
         ROOT / "docs" / "index.ko.md",
         render_section_ko(cs, vs, vvs, ks, ts, update_label=update_label_ko,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move, gex=gex),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move, gex=gex, gex_0dte=gex0),
     )
     en_changed = patch_home(
         ROOT / "docs" / "index.en.md",
         render_section_en(cs, vs, vvs, ks, ts, update_label=update_label_en,
-                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move, gex=gex),
+                          vix_stale_date=vix_data_stale_date, creds=creds, cot=cot, fw=fw, move=move, gex=gex, gex_0dte=gex0),
     )
     print(f"  index.ko.md: {'updated' if ko_changed else 'unchanged'}")
     print(f"  index.en.md: {'updated' if en_changed else 'unchanged'}")
