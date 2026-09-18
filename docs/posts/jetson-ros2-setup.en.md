@@ -46,7 +46,7 @@ That **one setup changed the speed of everything after it.** The walls coming up
 
 ![Letting an agentic AI into the board over SSH](../assets/diagrams_en/jetson-ssh-agent.svg)
 
-There's a nice nesting here. The generations from the Robot Vision series — 1st-gen generative (text, images), 2nd-gen agentic (decides for itself and uses tools), 3rd-gen physical (AI that moves into the robot). I used **2nd-gen agentic AI to stand up the edge box where 3rd-gen Physical AI will land.** The 2nd generation laid the runway for the 3rd. So this isn't an experts-only story: with an AI beside me, I got past work that was beyond my own knowledge.
+There's a nice nesting here. The generations from the Robot Vision series — 1st-gen generative (text, images), 2nd-gen agentic (decides for itself and uses tools), 3rd-gen physical (AI that moves into the robot). I used **2nd-gen agentic AI to stand up the edge box where 3rd-gen Physical AI will land.** The 2nd generation laid the runway for the 3rd. So this isn't an experts-only story: with the AI on the board, I got past work that was beyond my own knowledge.
 
 ---
 

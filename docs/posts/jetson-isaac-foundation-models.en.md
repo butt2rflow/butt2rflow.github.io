@@ -57,7 +57,7 @@ Let's walk the pipeline again — this time marking **where training is and isn'
 | **FoundationPose** | where is it in 3D? | **any object, given its CAD**, even unseen (no training) | perception |
 | **cuMotion** | how does the arm reach it? | (not a learned model — a geometric planner) | motion |
 
-There's one misconception worth killing here. **"No training needed when a new part arrives" is really a claim about one stage, FoundationPose** — because that's the only stage that takes a CAD. The two stages before it (depth, mask) were object-agnostic to begin with, and the one after (path) is math with nothing to learn. So don't be dazzled by the blanket phrase "zero-shot pipeline" — remember that **the real magic is in the pose stage.**
+There's one misconception worth killing here. **"No training needed when a new part arrives" is really a claim about one stage, FoundationPose** — because that's the only stage that takes a CAD. The two stages before it (depth, mask) were object-agnostic to begin with, and the one after (path) is math with nothing to learn. So even when "zero-shot pipeline" gets used as a blanket phrase, **the real work is in the pose stage.**
 
 One more thing: why FoundationStereo for depth? As we saw in the deep dive, shiny metal and smooth, featureless surfaces are exactly what stereo struggles with most — there's no texture to match, so depth comes back full of **holes.** FoundationStereo's strength is mixing in a single-camera depth guess (Depth Anything V2) to fill those holes. The lightweight ESS is real-time but weaker on such reflective surfaces. So when the target is a *shiny part*, the heavy option earns its keep.
 
@@ -93,7 +93,7 @@ Here's what I watched run on the Jetson this session, stage by stage.
 
 ![The second object — only the CAD file was swapped, to a drill](../assets/demos/jetson-foundationpose-desk.gif)
 
-*Here only the CAD file changed, to a drill, not a line of code. Bottle to drill: that's what "new part, no training" actually looks like.*
+*This time we swapped in just the electric drill's CAD file — not a line of code. Bottle to drill: that's what "new part, no training" actually looks like.*
 
 **Path — cuMotion.** Finally, the collision-free route the arm takes to the object: a path for a 7-axis arm (Franka demo config), planned in 210 ms.
 
@@ -149,7 +149,7 @@ To see *why* the heavy model earns its keep, take the same stereo pair three way
 | Hard surfaces | weak on shiny/featureless | fills the holes with a mono depth prior → strong |
 | Setup | ships with Isaac ROS (drop-in) | separate setup, heavy |
 
-**How to choose.** For ordinary surfaces where you need real-time, ESS. For hard surfaces — chrome-like reflections, or featureless faces that punch holes in the depth — FoundationStereo earns its keep. But it isn't real-time on a 16 GB board, so if you want both accuracy and speed you need a bigger board.
+**How to choose.** For ordinary surfaces where you need real-time, ESS. For hard surfaces — chrome-like reflections, or featureless faces that punch holes in the depth — FoundationStereo pays off. But it isn't real-time on a 16 GB board, so if you want both accuracy and speed you need a bigger board.
 
 So the takeaway here: **on a 16 GB board today, the depth model you'd actually run in production is ESS**, while FoundationStereo shows the accuracy ceiling — how clean depth can get. (Within the real-time tier there was also a research alternative, ESMStereo, but ESS is an officially supported Isaac ROS drop-in, far less hand-work than building one yourself.)
 
@@ -190,7 +190,7 @@ Part 1's big picture holds here too. **Heavy training on the desktop/cloud, infe
 The next things to check are clear now, too.
 
 - **A field test on real objects, swapping CADs on the fly** — not the demo's bottle and drill, but an actual part in hand.
-- **A depth comparison on shiny metal surfaces** — whether FoundationStereo's hole-filling really earns its keep on a highly reflective hard surface, side by side with the lightweight ESS.
+- **A depth comparison on shiny metal surfaces** — whether FoundationStereo's hole-filling really pulls its weight on a highly reflective hard surface, side by side with the lightweight ESS.
 - And **if a task is judged worth this zero-shot pick pipeline** — then the spec is a single **AGX Orin 64 GB.**
 
 ---
@@ -206,7 +206,7 @@ The next things to check are clear now, too.
 | **Setup** | versions chained in a single line | pin numpy 1.x · SAM 2 `--no-deps` · mesh OOM |
 | **Hardware** | proof on 16 GB, production on one 64 GB board | desktop-GPU engines don't transfer to the Jetson |
 
-**The one thing to remember:** the foundation-model pick pipeline **already runs on a palm-sized edge board** — the picture of grabbing an unseen object from a single CAD, no training, not in the cloud but on a small computer beside the work cell. That the two heavy models still walk instead of sprint is a problem you fix by stepping up one board size. Prove "does it work" cheaply first, then climb a rung when you need to — that's the practical ladder of edge AI.
+**The one thing to remember:** the foundation-model pick pipeline **already runs on a palm-sized edge board** — the picture of grabbing an unseen object from a single CAD, no training — running right beside the work cell instead of in a datacenter. That the two heavy models still walk instead of sprint is a problem you fix by stepping up one board size. Prove "does it work" cheaply first, then climb a rung when you need to — that's the practical ladder of edge AI.
 
 ---
 
