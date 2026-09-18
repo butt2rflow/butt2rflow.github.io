@@ -10,11 +10,11 @@ description: "A robot-vision pipeline ultimately has to run on a small computer 
 
 > **Field notes · "The Robot's Brain on the Edge," Part 1 of 2.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 puts **Isaac ROS** on top for GPU-accelerated perception.
 
-First, a word on how this piece was written. A good share of the setup below, I **didn't type myself.** The first thing I did at the start was **open SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly**, and from there the AI ran the commands, read the logs, and worked through the blockers faster than my own hands. I **climbed past my own knowledge and ability with 2nd-gen AI, up onto 3rd-gen Physical AI.** How I wired that up comes shortly — first, what we're building and why.
+First, a word on how this piece was written. A good share of the setup below, I **didn't type myself.** The first thing I did at the start was **open SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly**, and from there the AI ran the commands, read the logs, and worked through the blockers faster than my own hands. Walls that would have cost me days alone, I got past with an AI sitting beside me. How I wired that up comes in a moment; first, what we're building and why.
 
 The [Robot Vision series](stereo-to-grasp.md) was about how a robot *sees* — the pipeline that measures depth from stereo, cuts out the object with a mask, and pins down a 6-DoF pose. But all of that has to **actually run somewhere** — not in the cloud, but on a palm-sized computer bolted to the cell.
 
-This is the story of building that "somewhere." Standing up the stack that becomes a robot's brain, from scratch, on a small edge computer called a **Jetson Orin NX**. And the honest version — the walls that hit me between unboxing the board and getting ROS 2 to run.
+This is the story of building that "somewhere." Standing up the stack that becomes a robot's brain, from scratch, on a small edge computer called a **Jetson Orin NX**. And the honest version: the walls I hit between unboxing the board and getting ROS 2 to run.
 
 Physical AI is really about "AI moving into the robot." The place that AI actually **lands** is this edge computer. So this isn't a glamorous story; it's a story of grinding at the bottom of the stack. If it saves someone else the same grinding, good.
 
@@ -28,7 +28,7 @@ Physical AI is really about "AI moving into the robot." The place that AI actual
 - **ROS 2 Humble** via apt — the common language of robot software. This part was relatively smooth.
 - **The biggest wall:** `pip install torch` pulls the wrong CUDA build and won't run → you have to get it from a Jetson-specific index. The point where desktop instincts betray you.
 - **The big picture:** heavy **training on a desktop or cloud GPU**, **inference on the Jetson.** ROS 2 is the on-ramp to the next step, **Isaac ROS** — which is Part 2.
-- **Why it went fast:** I started by opening **SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly.** I climbed past my own knowledge with 2nd-gen AI to get up onto **3rd-gen Physical AI.**
+- **Why it went fast:** I started by opening **SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the board directly.** Every time I hit a wall, it read the logs and worked through it, so this went far faster than doing it alone.
 - *This is a general Jetson setup experience, not a specific field deployment.*
 
 ---
@@ -46,7 +46,7 @@ That **one setup changed the speed of everything after it.** The walls coming up
 
 ![Letting an agentic AI into the board over SSH](../assets/diagrams_en/jetson-ssh-agent.svg)
 
-There's a nice nesting here. The generations from the Robot Vision series — 1st-gen generative (text, images), 2nd-gen agentic (decides for itself and uses tools), 3rd-gen physical (AI that moves into the robot). I used **2nd-gen agentic AI to stand up the edge box where 3rd-gen Physical AI will land.** The 2nd generation laid the runway for the 3rd. So this isn't a story about an experts-only domain — even work beyond my own knowledge, I could get over it with an AI beside me.
+There's a nice nesting here. The generations from the Robot Vision series — 1st-gen generative (text, images), 2nd-gen agentic (decides for itself and uses tools), 3rd-gen physical (AI that moves into the robot). I used **2nd-gen agentic AI to stand up the edge box where 3rd-gen Physical AI will land.** The 2nd generation laid the runway for the 3rd. So this isn't an experts-only story: with an AI beside me, I got past work that was beyond my own knowledge.
 
 ---
 
@@ -71,7 +71,7 @@ The board shipped on an old JetPack (5.x). To get newer CUDA / Ubuntu / ROS 2, I
 
 But one thing here was a **deliberate choice** — stopping at **JetPack 6, not the newest JetPack 7.** On the edge, "newest" isn't the answer. JetPack 6 is already well-stabilized, and its ecosystem support is **thick**: drivers, prebuilt ML packages (the Jetson PyTorch that comes up later), Isaac ROS, and a pile of accumulated community answers. The newest 7 is out front, but its support is still thin. I chose **"proven and supported" over "newest"** — a judgment that matters more the closer a thing gets to the floor.
 
-Here are the walls that hit me — all real:
+Here are the walls I hit, all real:
 
 - **Do not run `sudo apt upgrade`.** Type it out of habit and you break the kernel. If you don't first `apt-mark hold` the `nvidia-l4t-*` packages, the A/B-partition post-install step fails on a single-NVMe layout and boot dies with `Rootfs AB is not enabled`. **Drop the update habit on JetPack.**
 - **`nvcc` isn't on PATH.** CUDA is installed but the compiler isn't found. You have to add `/usr/local/cuda/bin` to PATH and the library path to `LD_LIBRARY_PATH` yourself (`.bashrc`).
@@ -133,7 +133,7 @@ One fork worth flagging ahead of time: Isaac ROS recently **split into two track
 
 ## Summary
 
-| Step | Core | The wall that hit me |
+| Step | Core | The wall I hit |
 |---|---|---|
 | **Hardware** | Orin NX 16GB + NVMe SSD | SD card too small — NVMe required, grow the partition |
 | **JetPack 6** | OS+drivers+CUDA bundle, flashed via SDK Manager | `apt upgrade` breaks the kernel · nvcc PATH · missing basics · NIC renames |

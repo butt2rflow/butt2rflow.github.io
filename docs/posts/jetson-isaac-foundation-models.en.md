@@ -14,7 +14,7 @@ In the [robot-vision series](stereo-to-grasp.md) we traced, as concepts, the pat
 
 This post is about running those models **on electricity, not on paper.** NVIDIA paints a "**zero-shot**" picture — *pick an object you've never seen, with no extra training, given just its CAD.* There are slick demo videos, too. But whether that runs on a palm-sized computer bolted to a work cell, rather than on a big cloud GPU, is an entirely separate question.
 
-So I put it on one directly — the **Jetson Orin NX 16 GB** we already had. And — **it runs.** An object it's never seen, with no training, from a single CAD. This post is how we stood it up, what I watched with my own eyes, and what the next step is if this goes to production.
+So I put it on one directly, the **Jetson Orin NX 16 GB** we already had. And it runs: an object it's never seen, with no training, from a single CAD. This post is how we stood it up, what I watched with my own eyes, and what the next step is if this goes to production.
 
 *(As in Part 1, this is a general edge-R&D experience, not a specific field deployment.)*
 
@@ -107,7 +107,7 @@ All four stages ran. The picture of "grab a new object from a single CAD, no tra
 
 ## What's fast, and what's still slow
 
-Run the five pieces side by side on the same Jetson and the speed splits in two. Worth stating plainly.
+Run the five pieces side by side on the same Jetson and the speed splits cleanly in two.
 
 ![Component scorecard — what runs at usable speed, and what's still slow](../assets/diagrams_en/jetson-feasibility-scorecard.svg)
 
@@ -149,7 +149,7 @@ So the takeaway here: **on a 16 GB board today, the depth model you'd actually r
 
 ---
 
-## The walls that bit me — setup field notes
+## The walls I hit — setup field notes
 
 Getting foundation models onto a Jetson is where Part 1's lesson — **"the versions are all chained in a single line"** — repeats itself, harder. A few samples.
 
@@ -191,7 +191,7 @@ The next things to check are clear now, too.
 
 ## Wrap-up
 
-| Stage | The core | The wall that bit me |
+| Stage | The core | The wall I hit |
 |---|---|---|
 | **Isaac ROS** | GPU-accelerated ROS 2 perception layer | Two tracks (JetPack 6/3.x vs 7/4.x) — newest models need a reflash |
 | **What "zero-shot" is** | four-stage pipeline | "new part, no training" is really a claim about **one stage, FoundationPose** |
