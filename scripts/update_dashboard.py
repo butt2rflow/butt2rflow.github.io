@@ -2807,7 +2807,7 @@ def main():
     gex0 = fetch_gex_0dte()
     if gex0:
         print(f"  0DTE: net {gex0['net_bn']:+.1f}B ({gex0['regime']}), flip {gex0['flip']}, "
-              f"pin {gex0['pin']}, {gex0['hours']:.1f}h to close (DTE {gex0['dte']})")
+              f"pin {gex0['vol_pin']}, {gex0['hours']:.1f}h to close (DTE {gex0['dte']})")
 
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)
