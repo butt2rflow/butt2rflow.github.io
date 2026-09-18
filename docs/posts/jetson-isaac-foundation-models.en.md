@@ -87,13 +87,13 @@ Here's what I watched run on the Jetson this session, stage by stage.
 
 **Pose — FoundationPose.** This is the heart of "new part, no training." Swapping the CAD between them, it tracked the 6-DoF pose of two objects (a bottle, a drill) across 300+ frames each. Same code, just a different CAD file.
 
-![FoundationPose tracking a drill's 6-DoF pose frame by frame](../assets/demos/jetson-foundationpose-demo.gif)
+![FoundationPose tracking a mustard bottle's 6-DoF pose frame by frame](../assets/demos/jetson-foundationpose-demo.gif)
 
-*The green box is the drill's 6-DoF pose. Give it just a CAD file and, with no training, it keeps tracking the pose as the object moves. Captured live on the Orin NX.*
+*The green box is the 6-DoF pose of the first object, a mustard bottle. Give it just a CAD file and, with no training, it tracks the pose as the object moves. Captured live on the Orin NX.*
 
-![The same model running in a completely different scene — a desk](../assets/demos/jetson-foundationpose-desk.gif)
+![The second object — only the CAD file was swapped, to a drill](../assets/demos/jetson-foundationpose-desk.gif)
 
-*Swap the scene from a work cell to a dim desk and it still locks on. Same model, different environment — that's what "zero-shot" really means.*
+*Here only the CAD file changed, to a drill, not a line of code. Bottle to drill: that's what "new part, no training" actually looks like.*
 
 **Path — cuMotion.** Finally, the collision-free route the arm takes to the object: a path for a 7-axis arm (Franka demo config), planned in 210 ms.
 
