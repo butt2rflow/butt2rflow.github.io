@@ -135,6 +135,12 @@ The same model can run in a generic way, or in a form that's been "pre-optimized
 
 Earlier I said FoundationStereo is the strong one on shiny surfaces. So which do you actually run for depth? Both are learned stereo, both are passive (no infrared, so no ghost depth), and the real split comes down to speed vs accuracy.
 
+To see *why* the heavy model earns its keep, take the same stereo pair three ways — the raw depth a classic block-matching pipeline produces, next to what FoundationStereo makes of it.
+
+![The same desk scene three ways: RGB, a simulated raw block-matching depth full of speckle and holes, and FoundationStereo's clean, gap-free depth](../assets/demos/jetson-depth-3panel.png)
+
+*Left is the RGB the camera saw. The middle is how classic block-matching fails on the same scene — speckle, horizontal scanline streaks, and black invalid holes across the dark, low-texture regions. The right is FoundationStereo filling those holes into a clean, gap-free map. The left and right panels are the real Orin NX capture; the middle panel is **simulated** from them to depict the block-matching failure mode. It's modeled on an actual raw block-matching depth heatmap captured on the tester, though — so while it isn't a second live capture, it closely mirrors what the real failure looks like. The gap between that middle and the right is the whole argument for FoundationStereo on a shiny part.*
+
 | | ESS | FoundationStereo |
 |---|---|---|
 | Character | lightweight, real-time | accuracy-first, large & general |
