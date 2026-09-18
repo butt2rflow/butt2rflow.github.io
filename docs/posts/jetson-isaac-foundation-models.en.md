@@ -8,7 +8,7 @@ description: "We put the 'grab a new part with no training' foundation-model pip
 
 # Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge
 
-> **Field notes · Part 2 of the two-part "brain on the edge."** In [Part 1](jetson-ros2-setup.md) we walked a bare Jetson board all the way to a **running ROS 2**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge board in our hands**.
+> **Field notes · Part 2 of the two-part "brain on the edge."** In [Part 1](jetson-ros2-setup.md) we brought a bare Jetson board up on JetPack and got **ROS 2 running**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge board in our hands**.
 
 In the [robot-vision series](stereo-to-grasp.md) we traced, as concepts, the path a robot walks to pick something up: read depth from stereo → cut out the object with a mask → find its 6-DoF pose → plan the arm's path. And in the [deep dive](inside-the-models.md) we opened up the models behind each stage — FoundationStereo, SAM 2, FoundationPose.
 
@@ -71,16 +71,35 @@ Some depth cameras project an infrared (IR) dot pattern and read distance from h
 
 ## What actually ran — proof of concept
 
-Not "it works" on paper — here's what I watched run on the Jetson this session. This is the heart of the post.
+Here's what I watched run on the Jetson this session, stage by stage.
 
-- **FoundationStereo** — pulled a dense depth map on an unseen scene. (No training, the whole scene at once.)
-- **SAM 2** — gave it one box + one point as a hint on a single drill, and it cut a clean mask. Confidence **0.86**, and of course zero training.
-- **FoundationPose** — tracked the 6-DoF pose of two objects (one bottle, one drill) across **300+ frames each**, **swapping the CAD** between them. This is the live proof of "swap the part, no retraining" — same code, just a different CAD file.
-- **cuMotion** — planned a collision-free path for a 7-axis arm (Franka demo config) in **210 ms**.
+**Depth — FoundationStereo.** It turned a desk scene it had never seen into a dense depth map, whole, with no training.
 
-![FoundationPose tracking a drill's 6-DoF pose frame by frame — from a single CAD, no training. Captured live on the Orin NX.](../assets/demos/jetson-foundationpose-demo.gif)
+![FoundationStereo depth — camera view on the left, estimated depth on the right](../assets/demos/jetson-depth-demo.jpg)
 
-*The green box is the drill's 6-DoF pose. Give it just a CAD file and, with no training, it keeps tracking the object's pose as it moves — captured live on the Orin NX.*
+*Left is what the camera saw; right is the depth FoundationStereo produced. Closer is red, farther is blue. On a scene it never trained on, the mug, keyboard, and tissue box still separate cleanly by distance.*
+
+**Mask — SAM 2.** One box and one point as a hint, and it cut the object out of the background cleanly. Confidence 0.86, again with no training.
+
+![SAM 2 mask — a click hint alone separates the object from the background](../assets/demos/jetson-sam2-demo.jpg)
+
+*The green region is what SAM 2 picked out (the drill). It has no pre-learned list of objects — point at something and it carves out that spot.*
+
+**Pose — FoundationPose.** This is the heart of "new part, no training." Swapping the CAD between them, it tracked the 6-DoF pose of two objects (a bottle, a drill) across 300+ frames each. Same code, just a different CAD file.
+
+![FoundationPose tracking a drill's 6-DoF pose frame by frame](../assets/demos/jetson-foundationpose-demo.gif)
+
+*The green box is the drill's 6-DoF pose. Give it just a CAD file and, with no training, it keeps tracking the pose as the object moves. Captured live on the Orin NX.*
+
+![The same model running in a completely different scene — a desk](../assets/demos/jetson-foundationpose-desk.gif)
+
+*Swap the scene from a work cell to a dim desk and it still locks on. Same model, different environment — that's what "zero-shot" really means.*
+
+**Path — cuMotion.** Finally, the collision-free route the arm takes to the object: a path for a 7-axis arm (Franka demo config), planned in 210 ms.
+
+![cuMotion path planning — the seven joints' angle trajectories](../assets/demos/jetson-cumotion-plan.png)
+
+*The seven joints (J1–J7) sweep smoothly from start to goal — one collision-free trajectory, solved in a single pass.*
 
 All four stages ran. The picture of "grab a new object from a single CAD, no training" was actually reproduced — not in the cloud, but on **a small computer you can bolt beside the work cell.** As a proof of concept, that's enough.
 
