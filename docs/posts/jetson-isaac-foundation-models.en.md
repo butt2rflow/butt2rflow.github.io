@@ -8,7 +8,7 @@ description: "We put the 'grab a new part with no training' foundation-model pip
 
 # Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge
 
-> **Field notes · Part 2 of the two-part "brain on the edge."** In [Part 1](jetson-ros2-setup.md) we brought a bare Jetson board up on JetPack and got **ROS 2 running**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge board in our hands**.
+> **Field notes · Part 2 of the two-part "brain on the edge."** In [Part 1](jetson-ros2-setup.md) we brought a bare Jetson board up on JetPack and got **ROS 2 running**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge board we already have**.
 
 In the [robot-vision series](stereo-to-grasp.md) we traced, as concepts, the path a robot walks to pick something up: read depth from stereo → cut out the object with a mask → find its 6-DoF pose → plan the arm's path. And in the [deep dive](inside-the-models.md) we opened up the models behind each stage — FoundationStereo, SAM 2, FoundationPose.
 
@@ -24,7 +24,7 @@ So I put it on one directly — the **Jetson Orin NX 16 GB** we already had. And
 
 - **A foundation model = a big general model you don't have to train for your specific object.** No collecting data and retraining every time a new part shows up — that's the appeal.
 - **Four stages:** depth (FoundationStereo) → mask (SAM 2) → **6-DoF pose (FoundationPose)** → path (cuMotion). The real star of "new part, no training" is **one stage, FoundationPose** — it's the only one that takes a CAD.
-- **What we proved:** dense depth on an unseen scene; a clean mask of a drill (score 0.86); 6-DoF pose tracked across 300+ frames each on **two swapped CADs** (a bottle, a drill); a collision-free 7-axis path in 210 ms — all on the Orin NX in our hands.
+- **What we proved:** dense depth on an unseen scene; a clean mask of a drill (score 0.86); 6-DoF pose tracked across 300+ frames each on **two swapped CADs** (a bottle, a drill); a collision-free 7-axis path in 210 ms — all on our own Orin NX.
 - **Speed:** the light stereo model (ESS, 44 frames/sec) and the path planner (cuMotion, 210 ms) run at usable speed today. The two heavy models run at seconds per frame on this small board — a walk, not a sprint — which is no flaw if a pick can take a few seconds.
 - **Hardware:** the concept is proven on this 16 GB board. To run the whole pipeline **at full speed on one board** in production, the next rung — the **AGX Orin 64 GB** ($1,999) — is the answer.
 - *Heavy training on a desktop/cloud, inference on the edge — Part 1's big picture holds here too.*
@@ -40,7 +40,7 @@ Here's where the fork Part 1 warned about becomes real. Isaac ROS now comes in *
 - **JetPack 6 / Isaac ROS 3.x** — where I stood. Stable, with a thick ecosystem. The cost: a few of the newest models don't land here.
 - **JetPack 7 / Isaac ROS 4.x** — the latest. If you want the newest FoundationStereo or the proper SAM 2, you go here — but you have to **reflash the whole board.**
 
-Rather than tear down a board I'd already brought up on 6, I pushed **as far as 3.x could go.** That turns out to be the honest answer to "what runs on the board in our hands *right now*."
+Rather than tear down a board I'd already brought up on 6, I pushed **as far as 3.x could go.** That turns out to be the honest answer to "what runs on the board we actually have *right now*."
 
 ---
 
@@ -131,6 +131,24 @@ The same model can run in a generic way, or in a form that's been "pre-optimized
 
 ---
 
+## ESS or FoundationStereo — trading speed for accuracy
+
+Earlier I said FoundationStereo is the strong one on shiny surfaces. So which do you actually run for depth? Both are learned stereo, both are passive (no infrared, so no ghost depth), and the real split comes down to speed vs accuracy.
+
+| | ESS | FoundationStereo |
+|---|---|---|
+| Character | lightweight, real-time | accuracy-first, large & general |
+| Speed (16 GB) | 44 FPS, real-time | ~0.1 FPS, a walk |
+| Accel engine (16 GB) | builds | won't build (fallback only) |
+| Hard surfaces | weak on shiny/featureless | fills the holes with a mono depth prior → strong |
+| Setup | ships with Isaac ROS (drop-in) | separate setup, heavy |
+
+**How to choose.** For ordinary surfaces where you need real-time, ESS. For hard surfaces — chrome-like reflections, or featureless faces that punch holes in the depth — FoundationStereo earns its keep. But it isn't real-time on a 16 GB board, so if you want both accuracy and speed you need a bigger board.
+
+So the takeaway here: **on a 16 GB board today, the depth model you'd actually run in production is ESS**, while FoundationStereo shows the accuracy ceiling — how clean depth can get. (Within the real-time tier there was also a research alternative, ESMStereo, but ESS is an officially supported Isaac ROS drop-in, far less hand-work than building one yourself.)
+
+---
+
 ## The walls that bit me — setup field notes
 
 Getting foundation models onto a Jetson is where Part 1's lesson — **"the versions are all chained in a single line"** — repeats itself, harder. A few samples.
@@ -146,7 +164,7 @@ It sounds tedious, but the point is one thing. **The difficulty of standing foun
 
 ## If this goes to production — which board?
 
-Now that we've reached "the concept is proven on the 16 GB in our hands," the natural next question for production — *what do you buy to get full speed?*
+Now that we've reached "the concept is proven on our 16 GB board," the natural next question for production — *what do you buy to get full speed?*
 
 ![Hardware tiers — where 'proof of concept' ends and 'production' begins](../assets/diagrams_en/jetson-hw-tiers.svg)
 
@@ -161,7 +179,7 @@ In one line: **the proof is done on 16 GB; the one production board is 64 GB.**
 
 ## The big picture — so where does this go?
 
-Part 1's big picture holds here too. **Heavy training on the desktop/cloud, inference on the edge.** What this part adds is actually seating foundation models in that "inference" slot, and confirming the picture runs on the board in our hands.
+Part 1's big picture holds here too. **Heavy training on the desktop/cloud, inference on the edge.** What this part adds is actually seating foundation models in that "inference" slot, and confirming the picture runs on the board we have.
 
 The next things to check are clear now, too.
 
@@ -177,7 +195,7 @@ The next things to check are clear now, too.
 |---|---|---|
 | **Isaac ROS** | GPU-accelerated ROS 2 perception layer | Two tracks (JetPack 6/3.x vs 7/4.x) — newest models need a reflash |
 | **What "zero-shot" is** | four-stage pipeline | "new part, no training" is really a claim about **one stage, FoundationPose** |
-| **Proof of concept** | all four stages ran, new object via a CAD swap | (proven — on the Orin NX in our hands) |
+| **Proof of concept** | all four stages ran, new object via a CAD swap | (proven — on our own Orin NX) |
 | **Speed** | light models/planner usable, the heavy two still slow | the small board's unified memory — clears on a bigger board |
 | **Setup** | versions chained in a single line | pin numpy 1.x · SAM 2 `--no-deps` · mesh OOM |
 | **Hardware** | proof on 16 GB, production on one 64 GB board | desktop-GPU engines don't transfer to the Jetson |
