@@ -1,0 +1,36 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>내재 부도율 vs 실제 부도율 — 사라진 위험 프리미엄</title>
+<desc>스프레드에서 뽑은 내재 부도율은 약 4.3%, 실제 실현 부도율은 약 4.0%다. 둘이 거의 같아서 위험을 떠안은 대가로 남는 여윳돈, 즉 위험 프리미엄이 사실상 없다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.vb { font-size:16px; font-weight:600; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+</style>
+<rect x="0" y="0" width="680" height="360" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="42">시장이 매긴 위험 vs 실제 위험</text>
+
+<line x1="120" y1="300" x2="600" y2="300" stroke="var(--br)" stroke-width="0.5"/>
+<line x1="120" y1="85" x2="600" y2="85" stroke="var(--br)" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.6"/>
+
+<!-- 내재 bar (4.3% -> 215px, top y=85) -->
+<rect x="205" y="85" width="110" height="215" rx="5" fill="#F6D8C9" stroke="#D85A30" stroke-width="0.6"/>
+<text class="vb" x="260" y="110" text-anchor="middle" fill="#7A2E12">4.3%</text>
+<text class="th" x="260" y="322" text-anchor="middle">내재 부도율</text>
+<text class="s" x="260" y="340" text-anchor="middle">스프레드에서 뽑은 값</text>
+
+<!-- 실제 bar (4.0% -> 200px, top y=100) -->
+<rect x="405" y="100" width="110" height="200" rx="5" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.6"/>
+<text class="vb" x="460" y="125" text-anchor="middle" fill="#0F3D30">4.0%</text>
+<text class="th" x="460" y="322" text-anchor="middle">실제 부도율</text>
+<text class="s" x="460" y="340" text-anchor="middle">최근 실현치</text>
+
+<!-- gap annotation -->
+<line x1="315" y1="85" x2="405" y2="85" stroke="#b06a4a" stroke-width="0.6" stroke-dasharray="2 3"/>
+<path d="M560,85 L560,100" stroke="#b06a4a" stroke-width="1"/>
+<path d="M556,89 L560,85 L564,89 M556,96 L560,100 L564,96" fill="none" stroke="#b06a4a" stroke-width="1"/>
+<text class="s" x="572" y="90" fill="#7A2E12">위험 프리미엄</text>
+<text class="s" x="572" y="106" fill="#7A2E12">≈ 0.3%p (거의 0)</text>
+</svg>

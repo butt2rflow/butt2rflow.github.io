@@ -1,0 +1,90 @@
+<svg width="100%" viewBox="0 0 680 450" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>뷰에 따른 도구 선택</title>
+<desc>내 뷰가 방향뿐이면 SSF, 폭이나 변동성까지 포함하면 옵션 매수, IV가 과대하다고 보면 프리미엄 매도. 발표를 걸치고 버텨야 하는 중기 포지션에는 SSF가 부적합하다.</desc>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --ln:#73726c;
+  --gf:#F1EFE8; --gk:#5F5E5A; --gt:#2C2C2A; --gu:#5F5E5A;
+  --tf:#E1F5EE; --tk:#0F6E56; --tt:#04342C; --tu:#0F6E56;
+  --pf:#EEEDFE; --pk:#534AB7; --pt:#26215C; --pu:#534AB7;
+  --cf:#FAECE7; --ck:#993C1D; --ct:#4A1B0C; --cu:#993C1D; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.cap { font-size:12px; font-weight:400; fill:var(--ts); }
+.g rect { fill:var(--gf); stroke:var(--gk); }
+.g .n { font-size:14px; font-weight:500; fill:var(--gt); }
+.g .m { font-size:12px; font-weight:400; fill:var(--gu); }
+.t rect { fill:var(--tf); stroke:var(--tk); }
+.t .n { font-size:14px; font-weight:500; fill:var(--tt); }
+.t .m { font-size:12px; font-weight:400; fill:var(--tu); }
+.p rect { fill:var(--pf); stroke:var(--pk); }
+.p .n { font-size:14px; font-weight:500; fill:var(--pt); }
+.p .m { font-size:12px; font-weight:400; fill:var(--pu); }
+.c rect { fill:var(--cf); stroke:var(--ck); }
+.c .n { font-size:14px; font-weight:500; fill:var(--ct); }
+.c .m { font-size:12px; font-weight:400; fill:var(--cu); }
+.fl { stroke:var(--ln); stroke-width:1.5; fill:none; }
+</style>
+<rect x="0" y="0" width="680" height="450" rx="12" fill="#FAF8F2"/>
+
+<g class="g">
+<rect x="200" y="54" width="280" height="52" rx="8" stroke-width="0.5"/>
+<text class="n" x="340" y="72" text-anchor="middle" dominant-baseline="central">내 뷰가 정확히 무엇인가</text>
+<text class="m" x="340" y="90" text-anchor="middle" dominant-baseline="central">방향뿐인가, 폭까지인가</text>
+</g>
+
+<path class="fl" d="M340,106 L340,124 L130,124 L130,148" marker-end="url(#ar)"/>
+<path class="fl" d="M340,106 L340,148" marker-end="url(#ar)"/>
+<path class="fl" d="M340,106 L340,124 L550,124 L550,148" marker-end="url(#ar)"/>
+
+<g class="t">
+<rect x="45" y="152" width="170" height="56" rx="8" stroke-width="0.5"/>
+<text class="n" x="130" y="172" text-anchor="middle" dominant-baseline="central">방향만 있다</text>
+<text class="m" x="130" y="190" text-anchor="middle" dominant-baseline="central">부호만, 폭은 모름</text>
+</g>
+
+<g class="g">
+<rect x="255" y="152" width="170" height="56" rx="8" stroke-width="0.5"/>
+<text class="n" x="340" y="172" text-anchor="middle" dominant-baseline="central">폭까지 본다</text>
+<text class="m" x="340" y="190" text-anchor="middle" dominant-baseline="central">크게 움직일 것</text>
+</g>
+
+<g class="g">
+<rect x="465" y="152" width="170" height="56" rx="8" stroke-width="0.5"/>
+<text class="n" x="550" y="172" text-anchor="middle" dominant-baseline="central">IV가 비싸다</text>
+<text class="m" x="550" y="190" text-anchor="middle" dominant-baseline="central">폭이 과대반영됨</text>
+</g>
+
+<line class="fl" x1="130" y1="208" x2="130" y2="244" marker-end="url(#ar)"/>
+<line class="fl" x1="340" y1="208" x2="340" y2="244" marker-end="url(#ar)"/>
+<line class="fl" x1="550" y1="208" x2="550" y2="244" marker-end="url(#ar)"/>
+
+<g class="t">
+<rect x="45" y="248" width="170" height="56" rx="8" stroke-width="1"/>
+<text class="n" x="130" y="268" text-anchor="middle" dominant-baseline="central">SSF</text>
+<text class="m" x="130" y="286" text-anchor="middle" dominant-baseline="central">델타 1.0, IV 노출 0</text>
+</g>
+
+<g class="p">
+<rect x="255" y="248" width="170" height="56" rx="8" stroke-width="1"/>
+<text class="n" x="340" y="268" text-anchor="middle" dominant-baseline="central">옵션 매수</text>
+<text class="m" x="340" y="286" text-anchor="middle" dominant-baseline="central">컨벡시티가 필요</text>
+</g>
+
+<g class="p">
+<rect x="465" y="248" width="170" height="56" rx="8" stroke-width="1"/>
+<text class="n" x="550" y="268" text-anchor="middle" dominant-baseline="central">프리미엄 매도</text>
+<text class="m" x="550" y="286" text-anchor="middle" dominant-baseline="central">변동성 축소에 베팅</text>
+</g>
+
+<g class="c">
+<rect x="45" y="344" width="590" height="60" rx="8" stroke-width="0.5" stroke-dasharray="5 4"/>
+<text class="n" x="340" y="366" text-anchor="middle" dominant-baseline="central">단, 발표를 걸치고 버텨야 하는 중기 포지션이면 SSF는 답이 아니다</text>
+<text class="m" x="340" y="386" text-anchor="middle" dominant-baseline="central">방향이 맞아도 갭에 청산될 수 있다 — 이 경우는 옵션</text>
+</g>
+
+<text class="cap" x="340" y="432" text-anchor="middle">SSF가 깔끔한 경우는 하나뿐이다 — 방향 뷰가 있고 변동성 노출을 0으로 만들고 싶을 때</text>
+</svg>

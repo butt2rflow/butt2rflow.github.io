@@ -1,0 +1,27 @@
+<svg width="100%" viewBox="0 0 680 348" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Gamma is ripples, delta is the wave — short gamma amplifies, long gamma dampens</title>
+<desc>Ripples (gamma hedging) sit on top of the wave (delta — large order flow). In a short-gamma regime dealers hedge with the flow and enlarge the wave; in a long-gamma regime they hedge against it and shave the wave down. Gamma is only the trigger; the energy comes from delta.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:13px;font-weight:700;}
+.s{font-size:11px;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="348" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="38" style="fill:#3d3d3a">Gamma is ripples, delta is the wave</text>
+
+<rect x="40" y="62" width="290" height="212" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="t" x="60" y="90" style="fill:#d84a3a">Short gamma · amplify</text>
+<path d="M55,190 Q87.5,150 120,190 Q152.5,230 185,190 Q217.5,150 250,190 Q282.5,230 315,190" fill="none" stroke="#c4c0b4" stroke-width="2"/>
+<path d="M55,190 Q87.5,122 120,190 Q152.5,258 185,190 Q217.5,122 250,190 Q282.5,258 315,190" fill="none" stroke="#d84a3a" stroke-width="2.6"/>
+<text class="s" x="60" y="262">gamma rides the delta wave (grey) → bigger wave</text>
+
+<rect x="350" y="62" width="290" height="212" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="t" x="370" y="90" style="fill:#16a34a">Long gamma · dampen</text>
+<path d="M365,190 Q397.5,150 430,190 Q462.5,230 495,190 Q527.5,150 560,190 Q592.5,230 625,190" fill="none" stroke="#c4c0b4" stroke-width="2"/>
+<path d="M365,190 Q397.5,172 430,190 Q462.5,208 495,190 Q527.5,172 560,190 Q592.5,208 625,190" fill="none" stroke="#16a34a" stroke-width="2.6"/>
+<text class="s" x="370" y="262">gamma shaves the delta wave → calm</text>
+
+<text class="t" x="40" y="302" style="fill:#3d3d3a">Wave = delta (large order flow) · ripples = gamma hedging</text>
+<text class="s" x="40" y="326" style="fill:#8a6d3b">Gamma is the trigger, not the fuel — the energy is in delta.</text>
+</svg>

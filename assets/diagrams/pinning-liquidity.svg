@@ -1,0 +1,32 @@
+<svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>핀닝은 왜 개별주에서만 통하나</title>
+<desc>핀닝은 옵션 헷지 물량이 그 종목의 거래량보다 충분히 커야 주가를 행사가에 붙들 수 있다. 얕은 개별주에선 헷지 물량이 거래량을 웃돌아 주가가 행사가에 핀되지만, 유동성이 바다 같은 지수에선 같은 헷지 물량이 한 방울이라 거의 통하지 않는다.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
+.h{font-size:15px;font-weight:700;}
+.nm{font-size:13.5px;font-weight:700;}
+.d{font-size:11.5px;fill:#73726c;}
+.tag{font-size:11px;font-weight:600;}
+.res{font-size:12.5px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="292" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="36" style="fill:#3d3d3a">핀닝은 왜 개별주에서만 통하나</text>
+
+<rect x="34" y="58" width="300" height="214" rx="10" fill="#fff" stroke="#16a34a" stroke-width="1.3"/>
+<text class="nm" x="54" y="86" style="fill:#15803d">개별주 — 얕은 유동성</text>
+<text class="tag" x="54" y="118" style="fill:#8a6d3b">옵션 헷지 물량</text>
+<rect x="54" y="124" width="230" height="18" rx="4" fill="#f0b64a"/>
+<text class="tag" x="54" y="164" style="fill:#3f4d66">종목 거래량</text>
+<rect x="54" y="170" width="110" height="18" rx="4" fill="#8fb3e6"/>
+<text class="res" x="54" y="216" style="fill:#3d3d3a">헷지 ≥ 거래량</text>
+<text class="res" x="54" y="244" style="fill:#15803d">→ 주가가 행사가에 붙음 (핀)</text>
+
+<rect x="346" y="58" width="300" height="214" rx="10" fill="#fff" stroke="#d84a3a" stroke-width="1.3"/>
+<text class="nm" x="366" y="86" style="fill:#b23a2c">지수(SPX) — 바다 같은 유동성</text>
+<text class="tag" x="366" y="118" style="fill:#8a6d3b">옵션 헷지 물량</text>
+<rect x="366" y="124" width="42" height="18" rx="4" fill="#f0b64a"/>
+<text class="tag" x="366" y="164" style="fill:#3f4d66">지수 거래량</text>
+<rect x="366" y="170" width="260" height="18" rx="4" fill="#8fb3e6"/>
+<text class="res" x="366" y="216" style="fill:#3d3d3a">헷지 ≪ 거래량 (한 방울)</text>
+<text class="res" x="366" y="244" style="fill:#b23a2c">→ 거의 안 통함</text>
+</svg>

@@ -1,0 +1,30 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Physical AI coverage — open vs closed</title>
+<desc>In one field analysis, Physical AI coverage split to roughly 75 to 80 percent for the open side (UR) and 40 to 50 percent for the closed side (FANUC). The entire gap traces to one thing: force-control access — not a worse arm, a less open one.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.lb{font-size:13px;font-weight:700;fill:#3d3d3a;}
+.pct{font-size:13px;font-weight:700;}
+.s{font-size:11px;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="270" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">Physical AI coverage — open vs closed</text>
+
+<line x1="210" y1="70" x2="210" y2="180" stroke="#d6d3c8" stroke-width="1"/>
+<text class="s" x="210" y="200" text-anchor="middle">0%</text>
+<text class="s" x="600" y="200" text-anchor="middle">100%</text>
+
+<text class="lb" x="40" y="98">Open (UR)</text>
+<rect x="210" y="82" width="390" height="24" rx="5" fill="#e7e4da"/>
+<rect x="210" y="82" width="305" height="24" rx="5" style="fill:#16a34a"/>
+<text class="pct" x="525" y="99" style="fill:#15803d">75–80%</text>
+
+<text class="lb" x="40" y="150">Closed (FANUC)</text>
+<rect x="210" y="134" width="390" height="24" rx="5" fill="#e7e4da"/>
+<rect x="210" y="134" width="176" height="24" rx="5" style="fill:#d84a3a"/>
+<text class="pct" x="396" y="151" style="fill:#b23a2c">40–50%</text>
+
+<text class="s" x="40" y="230" style="fill:#8a6d3b">The entire gap traces to one thing — force-control access. Not a worse arm; a less open one.</text>
+<text class="s" x="40" y="250">※ One field-analysis example. Absolute numbers vary by application; the relative structure is the point.</text>
+</svg>

@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 360 318" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Four Boxes — Four Pipeline Stages</title>
+<desc id="de">The robot-vision pipeline flows as four questions, top to bottom. 1 FoundationStereo (how far), 2 SAM 2 (which pixels), 3 FoundationPose (where and rotated how), 4 path planning. Stage 1's depth feeds not only Stage 3 but also Stage 4's obstacle map.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+</style>
+<defs>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="318" rx="12"/>
+<text class="t" x="18" y="22">Four Questions, Top to Bottom</text>
+<rect class="bx" x="16" y="34" width="328" height="56" rx="10"/>
+<text class="lb" x="30" y="53" fill="var(--blue)">1 · FOUNDATIONSTEREO</text>
+<text class="st" x="30" y="72">Left+right image pair → depth map</text>
+<text class="st" x="30" y="86" style="fill:var(--blue)">"How far?"</text>
+<path class="arb" d="M180,90 L180,106"/>
+<rect class="bx" x="16" y="108" width="328" height="56" rx="10"/>
+<text class="lb" x="30" y="127" fill="var(--teal)">2 · SAM 2</text>
+<text class="st" x="30" y="146">Image + one click → mask</text>
+<text class="st" x="30" y="160" style="fill:var(--teal)">"Which pixels are the part?"</text>
+<path class="arb" d="M180,164 L180,180"/>
+<rect class="bx" x="16" y="182" width="328" height="56" rx="10"/>
+<text class="lb" x="30" y="201" fill="var(--amber)">3 · FOUNDATIONPOSE</text>
+<text class="st" x="30" y="220">Depth + mask + CAD → 6-DoF pose</text>
+<text class="st" x="30" y="234" style="fill:var(--amber)">"Where, and rotated how?"</text>
+<path class="arb" d="M180,238 L180,254"/>
+<rect class="bx" x="16" y="256" width="328" height="50" rx="10"/>
+<text class="lb" x="30" y="275">4 · Path Planning (RRT* / cuMotion)</text>
+<text class="st" x="30" y="294">Pose + point cloud → collision-free path</text>
+<path class="ln dash" d="M340,62 C364,62 364,281 340,281"/>
+<text class="lb" x="352" y="175" text-anchor="middle" transform="rotate(90,352,175)" style="fill:var(--blue)">Stage 1 depth feeds Stage 4 too</text>
+</svg>

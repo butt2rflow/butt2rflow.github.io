@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>대체가 아니라 시장 확대</title>
+<desc>코봇은 고속·대량 라인(여전히 산업용 로봇의 몫)을 대체하는 것이 아니라, 그 옆에 자동화가 안 되던 새 영역 — 중소기업, 다품종 소량생산, 사람 곁의 일 — 을 새로 열어젖혔다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.zt{font-size:14px;font-weight:700;}
+.s{font-size:11.5px;fill:#73726c;}
+.it{font-size:12px;font-weight:600;fill:#3d3d3a;}
+.big{font-size:14px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="330" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">대체가 아니라 시장 확대</text>
+
+<!-- existing zone: industrial -->
+<circle cx="205" cy="175" r="98" fill="#eef1f6" stroke="#9aa0a8" stroke-width="1.3"/>
+<text class="zt" x="205" y="150" text-anchor="middle" style="fill:#3f4d66">고속·대량 라인</text>
+<text class="s" x="205" y="172" text-anchor="middle">여전히 산업용 로봇의 몫</text>
+<text class="s" x="205" y="192" text-anchor="middle">(차체 용접 등)</text>
+<text class="s" x="205" y="210" text-anchor="middle">이미 자동화된 영역</text>
+
+<!-- new zone: cobot -->
+<circle cx="470" cy="175" r="115" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.6"/>
+<text class="zt" x="470" y="140" text-anchor="middle" style="fill:#15803d">코봇이 새로 연 영역</text>
+<text class="it" x="470" y="168" text-anchor="middle">· 중소기업</text>
+<text class="it" x="470" y="188" text-anchor="middle">· 다품종 소량생산</text>
+<text class="it" x="470" y="208" text-anchor="middle">· 사람 곁의 일</text>
+<text class="s" x="470" y="230" text-anchor="middle">전엔 자동화가 안 되던 곳</text>
+
+<text class="big" x="340" y="306" text-anchor="middle" style="fill:#3d3d3a">기존 라인을 뺏는 게 아니라, 옆에 새 시장을 연다</text>
+</svg>

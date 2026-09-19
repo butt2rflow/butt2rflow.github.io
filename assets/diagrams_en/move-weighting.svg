@@ -1,0 +1,35 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>MOVE composition — curve-weighted (10-year = 40%)</title>
+<desc>MOVE is a weighted average of the option volatility on 2, 5, 10 and 30-year Treasuries. The weights are 2-year 20 percent, 5-year 20 percent, 10-year 40 percent, 30-year 20 percent, so the 10-year carries the most weight.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.v { font-size:14px; font-weight:600; }
+.lab { font-size:13px; font-weight:500; fill:var(--tp); }
+</style>
+<rect x="0" y="0" width="680" height="340" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="40">MOVE composition — curve-weighted (10-year = 40%)</text>
+
+<line x1="120" y1="280" x2="600" y2="280" stroke="var(--br)" stroke-width="0.5"/>
+
+<rect x="150" y="190" width="80" height="90" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="v" x="190" y="178" text-anchor="middle" fill="#5c5a52">20%</text>
+<text class="lab" x="190" y="300" text-anchor="middle">2yr</text>
+
+<rect x="270" y="190" width="80" height="90" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="v" x="310" y="178" text-anchor="middle" fill="#5c5a52">20%</text>
+<text class="lab" x="310" y="300" text-anchor="middle">5yr</text>
+
+<rect x="390" y="100" width="80" height="180" rx="4" fill="#EEEDFE" stroke="#7c3aed" stroke-width="0.8"/>
+<text class="v" x="430" y="88" text-anchor="middle" fill="#4a2f9e">40%</text>
+<text class="lab" x="430" y="300" text-anchor="middle" fill="#4a2f9e">10yr</text>
+
+<rect x="510" y="190" width="80" height="90" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="v" x="550" y="178" text-anchor="middle" fill="#5c5a52">20%</text>
+<text class="lab" x="550" y="300" text-anchor="middle">30yr</text>
+
+<text class="s" x="40" y="326">The 10-year is the world's benchmark rate — MOVE's center of gravity</text>
+</svg>

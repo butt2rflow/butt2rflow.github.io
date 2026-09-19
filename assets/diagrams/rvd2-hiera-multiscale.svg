@@ -1,0 +1,44 @@
+<svg width="100%" viewBox="0 0 360 236" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">다중 스케일 인코더 비교</title>
+<desc id="de">단일 해상도 plain ViT 대신 Hiera는 1/4·1/8·1/16 다중 스케일을 낸다. 경계는 위층이, 의미는 아래층이 담당한다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="236" rx="12"/>
+<text class="t" x="18" y="22">해상도를 하나만 볼 것인가</text>
+<rect class="bx" x="16" y="36" width="150" height="150" rx="10"/>
+<text class="lb" x="91" y="56" text-anchor="middle">plain ViT (SAM 1)</text>
+<rect class="bxc" x="36" y="88" width="110" height="46" rx="5"/>
+<text class="lb" x="91" y="116" text-anchor="middle">1/16 만</text>
+<text class="lb" x="91" y="158" text-anchor="middle">경계가 뭉툭</text>
+<text class="lb" x="91" y="174" text-anchor="middle">업샘플로 때움</text>
+<rect class="bx" x="194" y="36" width="150" height="150" rx="10"/>
+<text class="lb" x="269" y="56" text-anchor="middle" style="fill:var(--teal)">Hiera (SAM 2)</text>
+<rect class="bxc" x="206" y="68" width="126" height="22" rx="4"/>
+<text class="lb" x="269" y="83" text-anchor="middle">1/4 — 세밀</text>
+<rect class="bxc" x="218" y="96" width="102" height="22" rx="4"/>
+<text class="lb" x="269" y="111" text-anchor="middle">1/8</text>
+<rect class="bxc" x="230" y="124" width="78" height="22" rx="4"/>
+<text class="lb" x="269" y="139" text-anchor="middle">1/16 — 의미</text>
+<text class="lb" x="269" y="166" text-anchor="middle" style="fill:var(--teal)">경계는 위층이</text>
+<text class="lb" x="269" y="180" text-anchor="middle" style="fill:var(--teal)">의미는 아래층이</text>
+<text class="lb" x="180" y="212" text-anchor="middle">게다가 Hiera는 MAE로 사전학습 — 라벨 없이 배운 시각 표현</text>
+<text class="lb" x="180" y="230" text-anchor="middle">같은 정확도에 더 빠르다</text>
+</svg>

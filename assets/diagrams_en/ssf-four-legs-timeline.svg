@@ -1,0 +1,68 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>How long each of the four legs existed</title>
+<desc>Index futures, index options, and single-stock options traded continuously. Only single-stock futures vanished in September 2020, absent for 6 years, returning in July 2026. During those 6 years the expiration was effectively triple witching.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8;
+  --gf:#F1EFE8; --gk:#5F5E5A; --gt:#2C2C2A;
+  --tf:#E1F5EE; --tk:#0F6E56; --tt:#04342C; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.div { stroke:var(--br); stroke-width:0.5; stroke-dasharray:4 4; opacity:0.8; }
+.g rect { fill:var(--gf); stroke:var(--gk); }
+.g text { font-size:14px; font-weight:500; fill:var(--gt); }
+.t rect { fill:var(--tf); stroke:var(--tk); }
+.t text { font-size:14px; font-weight:500; fill:var(--tt); }
+</style>
+<rect x="0" y="0" width="680" height="330" rx="12" fill="#FAF8F2"/>
+
+<line class="div" x1="390" y1="46" x2="390" y2="212"/>
+<line class="div" x1="540" y1="46" x2="540" y2="212"/>
+
+<text class="s" x="240" y="42" text-anchor="middle">2002 – 2020</text>
+<text class="s" x="465" y="42" text-anchor="middle">2020 – 2026</text>
+<text class="s" x="580" y="42" text-anchor="middle">2026 –</text>
+
+<g class="g">
+<rect x="90" y="56" width="530" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="70" dominant-baseline="central">Index futures</text>
+</g>
+
+<g class="g">
+<rect x="90" y="92" width="530" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="106" dominant-baseline="central">Index options</text>
+</g>
+
+<g class="g">
+<rect x="90" y="128" width="530" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="142" dominant-baseline="central">Single-stock options</text>
+</g>
+
+<g class="t">
+<rect x="90" y="172" width="300" height="28" rx="6" stroke-width="0.5"/>
+<text x="104" y="186" dominant-baseline="central">Single-stock futures</text>
+</g>
+
+<rect x="392" y="172" width="146" height="28" rx="6" fill="none" stroke="#D85A30" stroke-width="0.5" stroke-dasharray="5 4"/>
+
+<g class="t">
+<rect x="540" y="172" width="80" height="28" rx="6" stroke-width="1"/>
+</g>
+
+<text class="s" x="465" y="222" text-anchor="middle">Only three witches for these 6 years</text>
+
+<line x1="390" y1="248" x2="390" y2="262" stroke="#D85A30" stroke-width="0.5"/>
+<circle cx="390" cy="248" r="2.5" fill="#D85A30"/>
+<text class="th" x="390" y="280" text-anchor="middle">2020.09.18</text>
+<text class="s" x="390" y="298" text-anchor="middle">OneChicago closes</text>
+
+<line x1="580" y1="248" x2="580" y2="262" stroke="#1D9E75" stroke-width="0.5"/>
+<circle cx="580" cy="248" r="2.5" fill="#1D9E75"/>
+<text class="th" x="580" y="280" text-anchor="middle">2026.07.27</text>
+<text class="s" x="580" y="298" text-anchor="middle">CME relists</text>
+
+<text class="s" x="160" y="280" text-anchor="middle">2002.11.08</text>
+<text class="s" x="160" y="298" text-anchor="middle">First listed</text>
+<line x1="160" y1="248" x2="160" y2="262" stroke="var(--br)" stroke-width="0.5"/>
+<circle cx="160" cy="248" r="2.5" fill="var(--ts)"/>
+</svg>

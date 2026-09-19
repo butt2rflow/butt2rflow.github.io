@@ -1,0 +1,44 @@
+<svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Hand-eye calibration — many views of one fixed board</title>
+<desc>A fixed checkerboard sits at the top, its geometry perfectly known. Three robot arm poses at the bottom each raise a camera and look at the same board along a dashed sight-line. About twenty poses, each recording a photo plus the wrist reading, all converge on one Camera-to-Wrist transform.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.s{font-size:12px;fill:var(--ts);}
+</style>
+<rect x="0" y="0" width="680" height="250" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">Hand-eye calibration — one fixed board, many views</text>
+
+<!-- checkerboard (fixed, top center) -->
+<g>
+<rect x="292" y="54" width="96" height="60" fill="#fff" stroke="var(--br)"/>
+<g fill="#3d3d3a">
+<rect x="292" y="54" width="16" height="15"/><rect x="324" y="54" width="16" height="15"/><rect x="356" y="54" width="16" height="15"/>
+<rect x="308" y="69" width="16" height="15"/><rect x="340" y="69" width="16" height="15"/><rect x="372" y="69" width="16" height="15"/>
+<rect x="292" y="84" width="16" height="15"/><rect x="324" y="84" width="16" height="15"/><rect x="356" y="84" width="16" height="15"/>
+<rect x="308" y="99" width="16" height="15"/><rect x="340" y="99" width="16" height="15"/><rect x="372" y="99" width="16" height="15"/>
+</g>
+</g>
+<text class="s" x="340" y="132" text-anchor="middle">checkerboard — FIXED, geometry known</text>
+
+<!-- three robot poses -->
+<!-- pose 1 (faded) -->
+<g opacity="0.4">
+<line x1="120" y1="220" x2="150" y2="176" stroke="#9333ea" stroke-width="4" stroke-linecap="round"/>
+<circle cx="150" cy="176" r="10" fill="#2f6fed"/>
+<line x1="156" y1="170" x2="300" y2="106" stroke="#73726c" stroke-width="1" stroke-dasharray="4 3"/>
+</g>
+<!-- pose 2 (solid, center) -->
+<line x1="330" y1="224" x2="330" y2="178" stroke="#9333ea" stroke-width="5" stroke-linecap="round"/>
+<circle cx="330" cy="176" r="11" fill="#2f6fed"/>
+<line x1="330" y1="164" x2="335" y2="118" stroke="#73726c" stroke-width="1" stroke-dasharray="4 3"/>
+<!-- pose 3 (faded) -->
+<g opacity="0.4">
+<line x1="560" y1="220" x2="520" y2="176" stroke="#9333ea" stroke-width="4" stroke-linecap="round"/>
+<circle cx="520" cy="176" r="10" fill="#2f6fed"/>
+<line x1="514" y1="170" x2="378" y2="106" stroke="#73726c" stroke-width="1" stroke-dasharray="4 3"/>
+</g>
+
+<text class="s" x="340" y="242" text-anchor="middle">~20 robot poses, each: photo + wrist reading → one Camera→Wrist transform</text>
+</svg>
