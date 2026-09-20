@@ -132,5 +132,6 @@ nav:
     - "Field Notes":
       - posts/jetson-ros2-setup.md
       - posts/jetson-isaac-foundation-models.md
+      - posts/jetson-foundationpose-16gb.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"
