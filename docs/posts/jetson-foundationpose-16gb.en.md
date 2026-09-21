@@ -3,7 +3,7 @@ title: "Putting the Robot's Brain on the Edge — A Correction: Reversing the '1
 date: 2026-09-20
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: en
-description: "In Part 2 I wrote that a 16 GB edge computer was proof-of-concept only and that production needed a 64 GB board. I was wrong. Once I freed the board, the same 16 GB built the FoundationPose engine and ran the node live. The real culprit behind 'the engine won't build' — and a reproduction that joins the forum success cases. A follow-up to the two-part 'brain on the edge' series."
+description: "In Part 2 I wrote that a 16 GB edge computer was proof-of-concept only and that production needed a 64 GB board. I was wrong. Once I freed the board, the same 16 GB built the FoundationPose engine — and then the last holdout, FoundationStereo, followed: the whole depth-detect-mask-pose stack builds and runs on 16 GB (four models co-resident at 8.2 GB peak). The real culprit behind 'the engine won't build,' and two different flavors of the 16 GB wall. A follow-up to the two-part 'brain on the edge' series."
 ---
 
 # Putting the Robot's Brain on the Edge — A Correction: Reversing the "16 GB Can't Do It" Verdict
@@ -12,7 +12,7 @@ description: "In Part 2 I wrote that a 16 GB edge computer was proof-of-concept 
 
 Something nagged at me after Part 2. The two heavy models (FoundationStereo, FoundationPose) ran at "walking speed" on the 16 GB edge computer only because the **accelerated engine** (a TensorRT engine — a model pre-baked and optimized for the specific hardware) wouldn't build on 16 GB. So they fell back to a slow, generic path, and I wrote that up as "the 16 GB limit."
 
-Then, digging through the forums, I found **success cases on the same 16 GB board**. So I went back at it. Bottom line: **it works.** On the very same Orin NX 16 GB, the FoundationPose engine builds, and the node puts out a live 6-DoF pose of a never-before-seen object. What I'd taken for a hardware wall was not hardware at all — it was one **memory thief** I hadn't spotted.
+Then, digging through the forums, I found **success cases on the same 16 GB board**. So I went back at it. Bottom line: **it works.** On the very same Orin NX 16 GB, the FoundationPose engine builds, and the node puts out a live 6-DoF pose of a never-before-seen object. What I'd taken for a hardware wall was not hardware at all — it was one **memory thief** I hadn't spotted. And once that door opened, the rest — including FoundationStereo, the other model I'd also called "64 GB only" in Part 2 — **came inside the same 16 GB, the whole stack.**
 
 *(As in Parts 1 and 2, this is general edge-R&D experience, not a specific field deployment.)*
 
@@ -24,6 +24,7 @@ Then, digging through the forums, I found **success cases on the same 16 GB boar
 - **The real culprit wasn't "not enough memory" — it was "fragmented contiguous memory."** An **idle container I'd forgotten to stop** from an earlier experiment was holding memory, so at build time the largest *contiguous* free block was only ~12 MB (the build requested a ~1.29 GB scratch allocation). Every optimization attempt got skipped, and it looked like "can't build."
 - **The recipe: free the board first.** Stop idle containers and drop the page cache and free memory jumps **663 MB → 14 GB**, the largest contiguous block returns **~12 MB → ~1.2 GB**. Add a **workspace cap** (`--memPoolSize`) and a **higher optimization level**, and the engine bakes.
 - **Result: ~6.2 GB peak / 16 GB.** Engine build plus a live 6-DoF node — with the detector front-end loaded too — fit inside 16 GB with over 9 GB to spare. The 16 GB wall existed only **at the moment of baking the engine**, not at run time.
+- **It's not just FoundationPose — the whole stack runs on 16 GB.** The last holdout, FoundationStereo, fell too (lower resolution + FP32), and the four-model detect → mask → pose chain fits **at 8.2 GB / 16 GB even with all of them resident at once.**
 - **Lesson:** "can't build the engine" and "can't run it" are different sentences. And before you blame the hardware, look at **what's eating the memory.**
 
 ---
@@ -94,6 +95,31 @@ Once the engine bakes, the rest falls into place.
 
 **Speed is still "walking pace"** — heavy transformers, a few seconds per frame. But as Part 2 said, if a pick can take a few seconds, that's fine. What changed isn't "16 GB can't even do this"; it's "**16 GB runs it on the proper path (the engine), too.**"
 
+## And all the rest — the whole stack runs on 16 GB
+
+Once that one door opened, the remaining pieces fell in turn — including **FoundationStereo** (stereo images → depth), the *other* heavy model I'd also labeled "needs 64 GB" in Part 2.
+
+This one is honestly a notch subtler. FoundationStereo wouldn't bake even after I freed the board. The log showed that this time memory really was short — one operation asked for **a single ~7.4 GB contiguous scratch**, which isn't the "fragmentation" from before but a genuinely tough ask for 16 GB. So there were **two different flavors of the 16 GB wall**: FoundationPose was fragmentation (fixed by cleaning), FoundationStereo a real capacity hump.
+
+This time the fix wasn't cleaning but **input size and precision**:
+
+- **Lower the resolution.** 480×640 → **288×480** (the size NVIDIA recommends for Jetson). That alone shrank the ~7.4 GB request to **~187 MB**.
+- **FP32 instead of FP16.** This model's docs say FP16 conversion is blocked, so FP32 was the right answer, not a fallback.
+- **Skip the post-build benchmark** (`--skipInference`) — bake and save the engine only.
+
+Result: **a 258 MB engine, ~2 h build, running ~1.97 s/frame @ 5.95 GB peak — 5× faster than the no-engine path (~9.8 s).** The last piece, too, runs on its proper path inside 16 GB.
+
+At that point the picture was complete. **Depth (FoundationStereo) · detection (SyntheticaDETR) · mask (SAM2) · pose (FoundationPose)** — plus ESS and cuMotion — the whole stack builds and runs on this one board.
+
+And the number I really wanted: **do all four fit in 16 GB at once?** They do. With the four models of the open-vocab chain (detect → mask → pose) **all resident simultaneously**, peak was **8.2 GB / 16 GB**, over 7 GB to spare (measured). Beyond each piece working on its own, they **fit together** inside 16 GB.
+
+![The open-vocab 4-model chain co-resident within the 16 GB budget — 8.2 GB peak, 7 GB+ free](../assets/diagrams_en/jetson-stack-fits-16gb.svg)
+
+Two honest footnotes:
+
+- The **language-promptable open-vocabulary detector** (e.g. Grounding DINO) loads and co-runs on 16 GB, but the currently-published deployable checkpoint localized poorly — a **model (checkpoint) limitation, not the board**. For fixed, known parts a closed-set detector (SyntheticaDETR) is the production answer; open-vocab is a flexibility option.
+- Whether the mask came from real SAM2 or a box-shaped rectangle, **the final pose moved by only ~1 mm / ~1°** — once the region of interest is roughly right, the back end (FoundationPose) finishes the job with depth.
+
 ## Why this digging was worth it
 
 Three lessons, all traps I'll hit again.
@@ -112,9 +138,11 @@ Correcting Part 2's hardware table:
 | **AGX Orin 64 GB** | Production, the answer | **For headroom / real-time / full resolution.** A choice when you need it, not a must-have to run |
 
 - **Orin NX 16 GB** (roughly $800–1,400) — beyond *it runs*, it carries a **non-real-time production** load where a pick can take a few seconds. The lever isn't capacity; it's the **operational habit of keeping the board clear at build time.**
-- **AGX Orin 64 GB** ($1,999) — when you need real-time, or build headroom for full-resolution meshes or heavier models (like FoundationStereo). **"You must have 64 GB to bake and run the engine" is now simply false.**
+- **AGX Orin 64 GB** ($1,999) — when you need real-time, or headroom for full resolution and full speed. (FoundationStereo builds on 16 GB too — you just have to drop the resolution, and 64 GB removes that constraint.) **"You must have 64 GB to bake and run the engine" is now simply false.**
 
 Prove *whether it works* cheaply first, then step up when you need to — that's what Part 2 said. This time I went one step further: it turns out that cheap board clears the production bar too, and what had been blocking it was not hardware but one memory thief I never cleared. The practical ladder for edge AI starts a rung lower than I thought.
+
+> **Note — wouldn't upgrading to JetPack 7 / Isaac ROS 4.0 help?** Not on the Orin NX 16 GB. JetPack 7.2 does support the Orin NX, but **Isaac ROS 4.0 is Thor-first** — NVIDIA's recommended stack for the Orin NX 16 GB is still **Isaac ROS 3.2 / JetPack 6.2**. And 4.0's foundation models are heavier, so the 16 GB baking hump gets tighter, not looser, with little Orin-NX precedent (most testing is on Thor's larger memory). Newer isn't automatically better; on this board, staying on the proven 3.2 / 6.2 is the safe call.
 
 ---
 
@@ -124,6 +152,7 @@ Prove *whether it works* cheaply first, then step up when you need to — that's
 | --- | --- | --- |
 | **Engine build (16 GB)** | No → needs 64 GB | ✅ Yes — free the board + workspace cap + higher level |
 | **Live node (16 GB)** | (walking speed, no engine) | ✅ Live 6-DoF, ~6.2 GB peak (with detector) |
+| **Whole stack (16 GB)** | (only looked at FoundationPose) | ✅ depth·detect·mask·pose all build+run, **4 models co-resident 8.2 GB** |
 | **Real cause** | "unified memory is tight" | An idle container **fragmenting contiguous memory** (not the total) |
 | **Hardware** | Proof 16 GB / production 64 GB | **Non-real-time production on 16 GB too**; 64 GB for headroom/real-time |
 
