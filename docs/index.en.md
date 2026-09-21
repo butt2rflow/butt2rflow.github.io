@@ -200,10 +200,15 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 - [**From Stereo to Grasp**](posts/stereo-to-grasp.md) — How a robot learns to see a part
 - [**Frames & Transforms**](posts/frames-transforms.md) — How a robot knows where to grab
+- [**Inside the Three Models**](posts/inside-the-models.md) — FoundationStereo · SAM 2 · FoundationPose, opened up (deep dive)
+- [**Model Anatomy**](posts/model-anatomy.md) — Unfolding three networks' blueprints (deep dive)
+- [**Why Robots Learn in a 'Fake World' First**](posts/robot-simulation.md) — Simulation and sim-to-real
 - [**What Is a Collaborative Robot?**](posts/cobot-basics.md) — The basics of robots that work beside people
 - [**UR vs FANUC — Openness**](posts/cobot-ur-vs-fanuc.md) — Comparing the two camps' openness and ecosystems
 - [**Investing in Physical AI**](posts/cobot-investing.md) — Where the value migrates (the cobot investing angle)
 - [**The Robot's Brain at the Edge — Jetson & ROS 2**](posts/jetson-ros2-setup.md) — Field Notes (1): setting up a Jetson Orin NX
+- [**The Robot's Brain at the Edge (2) — Isaac ROS & Foundation Models**](posts/jetson-isaac-foundation-models.md) — Field Notes (2): running it on the edge
+- [**The Robot's Brain at the Edge — A Correction**](posts/jetson-foundationpose-16gb.md) — Field Notes: the whole stack runs on 16 GB after all
 
 ---
 

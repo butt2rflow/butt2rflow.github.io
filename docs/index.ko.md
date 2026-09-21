@@ -200,10 +200,15 @@ title: Home
 
 - [**스테레오 비전에서 목표물 잡기까지**](posts/stereo-to-grasp.md) — 로봇은 목표한 사물을 어떻게 발견하는가
 - [**좌표계와 변환**](posts/frames-transforms.md) — 로봇은 어디를 잡을지 어떻게 아는가
+- [**세 모델의 안쪽**](posts/inside-the-models.md) — FoundationStereo · SAM 2 · FoundationPose를 뜯어보다 (심화)
+- [**모델 해부**](posts/model-anatomy.md) — 세 네트워크의 설계도를 펼치다 (심화)
+- [**로봇은 왜 '가짜 세계'에서 먼저 배우나**](posts/robot-simulation.md) — 시뮬레이션과 sim-to-real
 - [**협동로봇(cobot)이란**](posts/cobot-basics.md) — 사람 옆에서 일하는 로봇의 기초
 - [**UR vs 화낙 — 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
 - [**Physical AI에 투자한다면**](posts/cobot-investing.md) — 가치는 어디로 이동하는가 (코봇 투자편)
 - [**로봇의 뇌를 엣지에 — Jetson·ROS 2**](posts/jetson-ros2-setup.md) — 현장 노트 (1): Jetson Orin NX 셋업
+- [**로봇의 뇌를 엣지에 (2) — Isaac ROS·파운데이션 모델**](posts/jetson-isaac-foundation-models.md) — 현장 노트 (2): 엣지에서 실행해 보다
+- [**로봇의 뇌를 엣지에 — 정정편**](posts/jetson-foundationpose-16gb.md) — 현장 노트: 16GB로도 스택 전체가 동작한다
 
 ---
 
