@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Dispersion across credit ratings — the index and single-B are calm while only CCC widens</title>
+<desc>This year the broad high-yield index (about 260bp) and single-B (about 275bp) both sit near the bottom, nearly flat. CCC-and-lower alone climbs steeply to over 1,000bp, pushing the CCC−B gap past 700bp. The index looks calm, but the lowest rating is already repricing.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.ax { stroke:var(--br); stroke-width:0.5; }
+.gr { stroke:var(--br); stroke-width:0.5; stroke-dasharray:3 4; opacity:0.6; }
+</style>
+<rect x="0" y="0" width="680" height="430" rx="12" fill="#FAF8F2"/>
+
+<text class="s" x="40" y="40">Spread by rating (bp), this year</text>
+
+<line class="ax" x1="90" y1="60" x2="90" y2="340"/>
+<line class="ax" x1="90" y1="340" x2="628" y2="340"/>
+<line class="gr" x1="90" y1="86" x2="620" y2="86"/>
+<line class="gr" x1="90" y1="213" x2="620" y2="213"/>
+
+<text class="s" x="80" y="90" text-anchor="end">1,000</text>
+<text class="s" x="80" y="217" text-anchor="end">500</text>
+<text class="s" x="80" y="344" text-anchor="end">0</text>
+
+<path d="M90,142 L196,129 L302,114 L408,98 L514,87 L620,78 L620,268 L514,268 L408,269 L302,270 L196,270 L90,271 Z" fill="#D85A30" opacity="0.09"/>
+
+<path d="M90,142 L196,129 L302,114 L408,98 L514,87 L620,78" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M90,271 L196,270 L302,270 L408,269 L514,268 L620,268" fill="none" stroke="#C99A2E" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M90,275 L196,274 L302,274 L408,274 L514,274 L620,274" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+
+<text class="th" x="250" y="104">CCC &amp; lower — widening alone</text>
+<text class="s" x="300" y="258" text-anchor="middle">Single-B ~275bp</text>
+<text class="th" x="270" y="296">HY index ~260bp — calm</text>
+
+<text class="s" x="486" y="180" text-anchor="middle">CCC−B gap</text>
+<text class="s" x="486" y="196" text-anchor="middle">~750bp (+150bp this yr)</text>
+
+<text class="s" x="90" y="362">Start of year</text>
+<text class="s" x="620" y="362" text-anchor="end">Now · Aug 2026</text>
+
+<rect x="90" y="392" width="10" height="10" rx="2" fill="#1D9E75" opacity="0.9"/>
+<text class="s" x="108" y="401">HY index</text>
+<rect x="188" y="392" width="10" height="10" rx="2" fill="#C99A2E" opacity="0.9"/>
+<text class="s" x="206" y="401">Single-B</text>
+<rect x="280" y="392" width="10" height="10" rx="2" fill="#D85A30" opacity="0.9"/>
+<text class="s" x="298" y="401">CCC &amp; lower</text>
+<text class="s" x="392" y="401">— index &amp; single-B calm, only CCC widens</text>
+</svg>

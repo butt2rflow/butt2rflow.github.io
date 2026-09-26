@@ -1,0 +1,43 @@
+<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>MOVE vs VIX — the divergence is the signal</title>
+<desc>The horizontal axis is VIX (equity fear), the vertical axis is MOVE (bond fear). Both low is calm, both high is crisis. Bonds high alone means the rate market sensed Fed or rate risk first; equities high alone means a pure equity issue.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.cn { font-size:13px; font-weight:500; }
+.cm { font-size:11px; font-weight:400; }
+.ax { font-size:12px; font-weight:500; fill:var(--ts); }
+</style>
+<rect x="0" y="0" width="680" height="430" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="38">MOVE vs VIX — the divergence is the signal</text>
+
+<rect x="150" y="210" width="230" height="140" fill="#CDE7DC" opacity="0.5"/>
+<rect x="380" y="70" width="230" height="140" fill="#EFB6AB" opacity="0.55"/>
+<rect x="150" y="70" width="230" height="140" fill="#F0E4C4" opacity="0.7" stroke="#C99A2E" stroke-width="1.5" stroke-dasharray="5 4"/>
+<rect x="380" y="210" width="230" height="140" fill="#F1EFE8"/>
+
+<rect x="150" y="70" width="460" height="280" fill="none" stroke="var(--br)" stroke-width="1"/>
+<line x1="380" y1="70" x2="380" y2="350" stroke="var(--br)" stroke-width="0.6"/>
+<line x1="150" y1="210" x2="610" y2="210" stroke="var(--br)" stroke-width="0.6"/>
+
+<text class="cn" x="265" y="132" text-anchor="middle" fill="#7a5e18">Bonds tense only</text>
+<text class="cm" x="265" y="150" text-anchor="middle" fill="#7a5e18">rate / Fed risk sensed first</text>
+<text class="cm" x="265" y="166" text-anchor="middle" fill="#7a5e18">← bonds fear first</text>
+
+<text class="cn" x="495" y="135" text-anchor="middle" fill="#7A2E12">Both stressed</text>
+<text class="cm" x="495" y="153" text-anchor="middle" fill="#7A2E12">crisis</text>
+
+<text class="cn" x="265" y="278" text-anchor="middle" fill="#0F3D30">Both calm</text>
+<text class="cm" x="265" y="296" text-anchor="middle" fill="#0F3D30">little information</text>
+
+<text class="cn" x="495" y="278" text-anchor="middle" fill="#5c5a52">Equities tense only</text>
+<text class="cm" x="495" y="296" text-anchor="middle" fill="#5c5a52">pure equity issue</text>
+
+<text class="ax" x="380" y="378" text-anchor="middle">VIX (equity fear) →</text>
+<text class="ax" x="132" y="210" text-anchor="middle" transform="rotate(-90 132 210)">MOVE (bond fear) ↑</text>
+
+<text class="s" x="340" y="410" text-anchor="middle">Stress usually starts top-left (bonds tense first)</text>
+</svg>

@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>프리드라이브 vs 티치 펜던트 — 손으로 끌기 vs 좌표 찍기</title>
+<desc>왼쪽은 코봇의 프리드라이브: 로봇 팔을 손으로 잡고 원하는 자세로 끌면 그 위치가 그대로 기록된다. 오른쪽은 전통 티치 펜던트: 단말기로 로봇을 한 점씩 이동시켜 좌표를 찍고 로봇 언어로 프로그램을 짠다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.n{font-size:15px;font-weight:700;}
+.s{font-size:12px;}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;}
+</style>
+<rect x="0" y="0" width="680" height="290" rx="12" fill="#FAF8F2"/>
+
+<!-- LEFT: freedrive -->
+<rect x="40" y="52" width="280" height="188" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="n" x="180" y="80" text-anchor="middle" style="fill:#16a34a">프리드라이브</text>
+<!-- robot arm -->
+<g stroke="#5c6675" stroke-width="5" stroke-linecap="round" fill="none">
+<line x1="110" y1="196" x2="110" y2="158"/>
+<line x1="110" y1="158" x2="150" y2="135"/>
+<line x1="150" y1="135" x2="196" y2="150"/>
+</g>
+<circle cx="110" cy="196" r="7" fill="#5c6675"/>
+<!-- drag arc -->
+<path d="M196,150 q40,-30 78,-6" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5 4"/>
+<path d="M268,140 L276,144 L269,150" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+<!-- hand on gripper -->
+<circle cx="200" cy="150" r="10" fill="#16a34a"/>
+<text class="s" x="180" y="214" text-anchor="middle" style="fill:#73726c">손으로 끌면 그 자세를 기록</text>
+<text class="s" x="180" y="232" text-anchor="middle" style="fill:#16a34a">쉽고 빠름 · 누구나</text>
+
+<!-- RIGHT: teach pendant -->
+<rect x="360" y="52" width="280" height="188" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="n" x="500" y="80" text-anchor="middle" style="fill:#8a6d3b">티치 펜던트</text>
+<!-- robot arm (background, faint) -->
+<g stroke="#c2c0b8" stroke-width="5" stroke-linecap="round" fill="none">
+<line x1="452" y1="196" x2="452" y2="162"/>
+<line x1="452" y1="162" x2="486" y2="142"/>
+<line x1="486" y1="142" x2="520" y2="156"/>
+</g>
+<!-- pendant device -->
+<rect x="540" y="112" width="74" height="96" rx="8" fill="#eef0f4" stroke="#a9a7a0" stroke-width="1.4"/>
+<rect x="550" y="122" width="54" height="46" rx="3" fill="#1e2430"/>
+<text class="mono" x="556" y="138" style="fill:#8fe3b0">P[1] P[2]</text>
+<text class="mono" x="556" y="152" style="fill:#8fe3b0">TOUCHUP</text>
+<text class="mono" x="556" y="164" style="fill:#7fb0ff">KAREL…</text>
+<circle cx="560" cy="186" r="4" fill="#a9a7a0"/><circle cx="577" cy="186" r="4" fill="#a9a7a0"/><circle cx="594" cy="186" r="4" fill="#a9a7a0"/>
+<text class="s" x="480" y="222" text-anchor="middle" style="fill:#73726c">좌표를 한 점씩 · 코드로</text>
+<text class="s" x="480" y="240" text-anchor="middle" style="fill:#8a6d3b">전문가 · 몇 주</text>
+</svg>

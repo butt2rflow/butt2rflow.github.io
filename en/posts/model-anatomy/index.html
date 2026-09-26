@@ -1,0 +1,3555 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The inner workings of FoundationStereo, SAM 2, and FoundationPose, taken right up to the edge of the papers — what shape the tensors take as they flow, what losses train them, what metrics grade them. Every equation lives in a fold.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/model-anatomy/">
+      
+      
+        <link rel="prev" href="../inside-the-models/">
+      
+      
+        <link rel="next" href="../robot-simulation/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/model-anatomy/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Model Anatomy — Unfolding Three Networks' Blueprints - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-anatomy-unfolding-three-networks-blueprints" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model Anatomy — Unfolding Three Networks' Blueprints
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/model-anatomy/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../stereo-to-grasp/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms — How a Robot Knows Where to Grab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models — FoundationStereo · SAM 2 · FoundationPose, Opened Up
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy — Unfolding Three Networks' Blueprints
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy — Unfolding Three Networks' Blueprints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-skeleton-all-three-models-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The skeleton all three models share
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-foundationstereo-dissected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. FoundationStereo, dissected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. FoundationStereo, dissected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-path-a-tensor-travels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The path a tensor travels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bolting-a-frozen-model-onto-the-side-sta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bolting a frozen model onto the side — STA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-ways-to-build-a-cost-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three ways to build a cost volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitting-the-3d-convolution-to-widen-the-view-apc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splitting the 3D convolution to widen the view — APC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-disparity-axis-all-at-once-the-disparity-transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the disparity axis all at once — the Disparity Transformer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-differentiable-pick-the-minimum-soft-argmin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A differentiable "pick the minimum" — soft-argmin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterative-refinement-and-the-loss-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterative refinement and the loss function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-randomization-what-actually-gets-shaken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain randomization — what actually gets shaken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-its-graded-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it's graded on
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-sam-2-dissected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. SAM 2, dissected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. SAM 2, dissected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-full-block-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The full block diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-it-dropped-plain-vit-for-hiera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why it dropped plain ViT for Hiera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-a-prompt-becomes-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a prompt becomes numbers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-way-attention-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two-way attention decoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-ambiguity-punish-only-the-best-fitting-of-three" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning ambiguity — punish only the best-fitting of three
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inside-the-memory-bank" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside the memory bank
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-losses-are-put-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the losses are put together
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-data-engine-human-and-model-take-turns-accelerating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The data engine — human and model take turns accelerating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-foundationpose-dissected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FoundationPose, dissected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. FoundationPose, dissected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-branches-one-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two branches, one pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-theres-no-cad-a-neural-object-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When there's no CAD — a neural object field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-hypotheses-are-sprinkled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the hypotheses are sprinkled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-refiner-what-it-looks-at-and-what-it-emits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Refiner — what it looks at and what it emits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deciding-the-ranking-let-the-candidates-look-at-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deciding the ranking — let the candidates look at each other
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-synthetic-data-is-made" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the synthetic data is made
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-add-and-add-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation — ADD and ADD-S
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-three-design-principles-running-through-all-three" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Three design principles running through all three
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-where-to-look-in-the-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Where to look in the papers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-numbers-at-a-glance-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Numbers at a glance · glossary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Numbers at a glance · glossary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#related-posts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related posts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First — Simulation and sim-to-real
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge — A Correction: Reversing the '16 GB Can't Do It' Verdict
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-skeleton-all-three-models-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The skeleton all three models share
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-foundationstereo-dissected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. FoundationStereo, dissected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. FoundationStereo, dissected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-path-a-tensor-travels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The path a tensor travels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bolting-a-frozen-model-onto-the-side-sta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bolting a frozen model onto the side — STA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-ways-to-build-a-cost-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three ways to build a cost volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitting-the-3d-convolution-to-widen-the-view-apc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splitting the 3D convolution to widen the view — APC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-disparity-axis-all-at-once-the-disparity-transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the disparity axis all at once — the Disparity Transformer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-differentiable-pick-the-minimum-soft-argmin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A differentiable "pick the minimum" — soft-argmin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterative-refinement-and-the-loss-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterative refinement and the loss function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-randomization-what-actually-gets-shaken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain randomization — what actually gets shaken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-its-graded-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it's graded on
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-sam-2-dissected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. SAM 2, dissected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. SAM 2, dissected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-full-block-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The full block diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-it-dropped-plain-vit-for-hiera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why it dropped plain ViT for Hiera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-a-prompt-becomes-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a prompt becomes numbers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-way-attention-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two-way attention decoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-ambiguity-punish-only-the-best-fitting-of-three" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning ambiguity — punish only the best-fitting of three
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inside-the-memory-bank" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside the memory bank
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-losses-are-put-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the losses are put together
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-data-engine-human-and-model-take-turns-accelerating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The data engine — human and model take turns accelerating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-foundationpose-dissected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FoundationPose, dissected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. FoundationPose, dissected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-branches-one-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two branches, one pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-theres-no-cad-a-neural-object-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When there's no CAD — a neural object field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-hypotheses-are-sprinkled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the hypotheses are sprinkled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-refiner-what-it-looks-at-and-what-it-emits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Refiner — what it looks at and what it emits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deciding-the-ranking-let-the-candidates-look-at-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deciding the ranking — let the candidates look at each other
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-synthetic-data-is-made" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the synthetic data is made
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-add-and-add-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation — ADD and ADD-S
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-three-design-principles-running-through-all-three" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Three design principles running through all three
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-where-to-look-in-the-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Where to look in the papers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-numbers-at-a-glance-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Numbers at a glance · glossary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Numbers at a glance · glossary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#related-posts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related posts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="model-anatomy-unfolding-three-networks-blueprints">Model Anatomy — Unfolding Three Networks' Blueprints<a class="headerlink" href="#model-anatomy-unfolding-three-networks-blueprints" title="Permanent link">&para;</a></h1>
+<p><em>Robot vision · Deep dive, Part 2. If <a href="../inside-the-models/">Part 1</a> was about "why they were designed that way," this piece is about "what's inside."</em></p>
+<blockquote>
+<p><strong>How to read this</strong></p>
+<p>This goes a step deeper than Part 1. It stops right before you'd open the papers. Don't let that scare you off, though. Every equation and tensor notation is tucked inside a fold (▶), and the body reads through to the end on pictures and plain words alone.</p>
+<p><strong>A word about the numbers.</strong> Concrete figures like parameter counts and dataset sizes are <strong>approximations</strong> drawn from public sources. The design <strong>structure</strong> is accurate, but if you're going to cite a number, check it against the tables in the original papers. Chapter 6 tells you where to look.</p>
+</blockquote>
+<h2 id="1-the-skeleton-all-three-models-share">1. The skeleton all three models share<a class="headerlink" href="#1-the-skeleton-all-three-models-share" title="Permanent link">&para;</a></h2>
+<p>Start with one big-picture idea. The three models do completely different jobs, yet <strong>their block layout is almost identical.</strong> Fix that in your head and every one of these papers reads faster.</p>
+<p><img alt="The shared four-stage structure of the three models" src="../../../assets/diagrams_en/rvd2-common-skeleton.svg" /></p>
+<p>Stage ④ matters most. All three emit <strong>a result and a confidence together.</strong> In a system like a robot, where a wrong answer means damage, a model that can say "I'm not sure" is essential.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>FoundationStereo</th>
+<th>SAM 2</th>
+<th>FoundationPose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① Borrowed prior knowledge</td>
+<td>Single-image depth model (Depth Anything V2)</td>
+<td>Hiera pretrained with MAE</td>
+<td>Large-scale synthetic rendering</td>
+</tr>
+<tr>
+<td>② Data structure</td>
+<td>Cost volume</td>
+<td>Cross-attention between tokens</td>
+<td>A set of pose hypotheses</td>
+</tr>
+<tr>
+<td>③ Iterative block</td>
+<td>ConvGRU update</td>
+<td>Memory attention (across time)</td>
+<td>Re-applying the Refiner</td>
+</tr>
+<tr>
+<td>④ Confidence</td>
+<td>Disparity uncertainty</td>
+<td>IoU (overlap ratio) prediction + occlusion flag</td>
+<td>Hypothesis ranking score</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-foundationstereo-dissected">2. FoundationStereo, dissected<a class="headerlink" href="#2-foundationstereo-dissected" title="Permanent link">&para;</a></h2>
+<h3 id="the-path-a-tensor-travels">The path a tensor travels<a class="headerlink" href="#the-path-a-tensor-travels" title="Permanent link">&para;</a></h3>
+<p>From the moment a left and a right image go in to the moment a single depth map (a disparity map, to be exact) comes out, let's follow what shape the data takes at each waypoint.</p>
+<p><img alt="FoundationStereo tensor flow" src="../../../assets/diagrams_en/rvd2-fstereo-tensor.svg" /></p>
+<p>The key is the <strong>four-dimensional block</strong> that shows up in the middle. Ordinary image processing handles three dimensions (channels, height, width); stereo tacks on one more — a <strong>disparity-candidate axis</strong>. That axis is what makes memory explode, which is why every technique that follows is really an answer to "how do we handle this four-dimensional thing cheaply?"</p>
+<h3 id="bolting-a-frozen-model-onto-the-side-sta">Bolting a frozen model onto the side — STA<a class="headerlink" href="#bolting-a-frozen-model-onto-the-side-sta" title="Permanent link">&para;</a></h3>
+<p>In Part 1 we only said the model "mixes in single-image cues." Let's open that up. The problem is this. A single-image depth model is already trained beautifully on an enormous amount of data — but <strong>drag it straight into stereo training and it breaks.</strong></p>
+<p>The fix is <strong>side-tuning</strong>. You keep the original model <strong>frozen</strong> (its weights fixed) and attach a small, trainable branch beside it, borrowing only its output.</p>
+<p><img alt="Side-tuning adapter structure" src="../../../assets/diagrams_en/rvd2-side-tuning.svg" /></p>
+<p>The frozen body knows "what objects generally look like," and the side branch learns only "how to translate that knowledge into stereo matching." Because it trains few parameters, it stays stable on little data.</p>
+<blockquote>
+<p><strong>💡 Why this is the real secret behind zero-shot.</strong> No matter that the synthetic stereo data runs to a million images, it can't contain <strong>every object in the world.</strong> But the single-image model bolted alongside it (<strong>Depth Anything V2</strong>) is trained on internet-scale real photographs. So FoundationStereo effectively fuses two sources — <strong>"geometry from the simulator, object common sense from real photos."</strong> A good part of why it runs well on a part it has never seen lives right here.</p>
+</blockquote>
+<h3 id="three-ways-to-build-a-cost-volume">Three ways to build a cost volume<a class="headerlink" href="#three-ways-to-build-a-cost-volume" title="Permanent link">&para;</a></h3>
+<p>"Contrast the left and right features" actually hides several choices. Each has a different character.</p>
+<p><img alt="Three ways to build a cost volume" src="../../../assets/diagrams_en/rvd2-cost-volume-3ways.svg" /></p>
+<p>That's exactly what the "hybrid" in "hybrid cost volume" means. You build two kinds at once and take the strengths of each.</p>
+<h3 id="splitting-the-3d-convolution-to-widen-the-view-apc">Splitting the 3D convolution to widen the view — APC<a class="headerlink" href="#splitting-the-3d-convolution-to-widen-the-view-apc" title="Permanent link">&para;</a></h3>
+<p>Filtering a four-dimensional volume calls for a 3D convolution, and that is murderously expensive. You can't grow the kernel (the window it looks through at once) even when you want to. The solution is to <strong>split it by axis.</strong> Instead of taking in all three dimensions at once, you run it once along the spatial direction and once along the disparity direction.</p>
+<p><img alt="Decomposing a 3D convolution" src="../../../assets/diagrams_en/rvd2-apc-decompose.svg" /></p>
+<p>Saving the compute isn't the point — you split <strong>so you can grow the kernel.</strong> A broad, featureless region like a chrome surface only fills in when the model looks at <strong>distant context.</strong></p>
+<details>
+<summary>How much compute it saves (skip if you like)</summary>
+
+The compute of a 3D convolution with kernel size k scales as k³. At k=7 that's 343. Split by axis and it becomes k² + k, or 56. That's roughly a 6× saving, and the budget you free up goes into a larger kernel that sees wider context.
+
+</details>
+
+<h3 id="reading-the-disparity-axis-all-at-once-the-disparity-transformer">Reading the disparity axis all at once — the Disparity Transformer<a class="headerlink" href="#reading-the-disparity-axis-all-at-once-the-disparity-transformer" title="Permanent link">&para;</a></h3>
+<p>A convolution, however big, only sees its <strong>neighbors.</strong> But along the disparity axis you need <strong>long-range comparisons</strong> like "candidate #12 or candidate #180 — which one is right?" That's the job of attention (the operation that pits far-apart things directly against each other).</p>
+<p><img alt="Attention along the disparity axis" src="../../../assets/diagrams_en/rvd2-disparity-attention.svg" /></p>
+<p>When <strong>several candidates all fit equally well</strong> — think of a screw thread or a grid pattern — a local filter can't tell them apart. You need a global comparison to judge "only one of these makes sense with its surroundings."</p>
+<h3 id="a-differentiable-pick-the-minimum-soft-argmin">A differentiable "pick the minimum" — soft-argmin<a class="headerlink" href="#a-differentiable-pick-the-minimum-soft-argmin" title="Permanent link">&para;</a></h3>
+<p>Snapping to the single best candidate on the scorecard can't be trained (it isn't differentiable). So you use a soft version. You give the high-scoring candidates large weights and take a <strong>weighted average of the candidate numbers.</strong> This has a decisive side effect. The answer comes out not as a whole number but as a <strong>fraction.</strong> The <strong>sub-pixel precision</strong> we mentioned in Part 1 is born right here.</p>
+<details>
+<summary>In an equation (skip if you like)</summary>
+
+`d̂ = Σ_d  d × softmax(−c_d)`
+
+Give the candidate d with a good (small) score c a large weight and take a weighted average of the candidate numbers. Because it's a weighted average, the result lands on a fraction. There's a catch, though. **If there are two valleys,** you get a bogus value between them (the empty-space depth between the front and back faces at an object boundary). That's exactly why iterative refinement is needed afterward, and soft-argmin is never more than a **starting point.**
+
+</details>
+
+<h3 id="iterative-refinement-and-the-loss-function">Iterative refinement and the loss function<a class="headerlink" href="#iterative-refinement-and-the-loss-function" title="Permanent link">&para;</a></h3>
+<p>Holding the initial disparity, the model loops through the same block several times. On each pass it re-queries the volume, updates its memory, and predicts "how much to correct," fixing the estimate a little at a time.</p>
+<p>The interesting part is <strong>how training grades it.</strong> It doesn't just look at the final result — it grades <strong>every intermediate result across all iterations,</strong> but weights them more heavily the later they come.</p>
+<p><img alt="Per-iteration loss weighting" src="../../../assets/diagrams_en/rvd2-loss-weighting.svg" /></p>
+<p>Because of that, <strong>you can change the number of iterations at run time.</strong> Since the intermediate results are properly trained too, cutting 22 passes down to 10 still yields a usable answer. You get a speed-versus-accuracy dial.</p>
+<details>
+<summary>The iteration loop and loss (skip if you like)</summary>
+
+<div class="highlight"><pre><span></span><code>for i in 1..N:
+    lookup = query the volume around the current disparity
+    h      = ConvGRU(h, lookup, context features)   # update memory
+    Δd     = Head(h)                                 # how much to correct
+    d      = d + Δd                                  # update
+</code></pre></div>
+
+The loss measures the gap from ground truth at every iteration but weights later iterations more: `L = Σ_i γ^(N−i) · ‖dᵢ − d_gt‖₁` (γ ≈ 0.9). Because γ is less than 1, early iterations are graded lightly and the last iteration heavily.
+
+</details>
+
+<h3 id="domain-randomization-what-actually-gets-shaken">Domain randomization — what actually gets shaken<a class="headerlink" href="#domain-randomization-what-actually-gets-shaken" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>What's shaken</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Light color, intensity, direction, count</td>
+<td>Lighting changes between shifts, sunlight through an open door</td>
+</tr>
+<tr>
+<td>Surface material (roughness, metallicity)</td>
+<td>From matte plastic to mirror-finish chrome</td>
+</tr>
+<tr>
+<td>Background and clutter</td>
+<td>A messy workbench, overlap with other parts</td>
+</tr>
+<tr>
+<td>Camera intrinsics</td>
+<td>So it works across lenses and resolutions</td>
+</tr>
+<tr>
+<td>Baseline</td>
+<td>So it doesn't overfit to one particular rig</td>
+</tr>
+<tr>
+<td>Sensor noise, motion blur</td>
+<td>Shrinking the gap to real footage (sim-to-real)</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>shake the baseline</strong> item is the important one. Skip it and the model memorizes a <strong>lookup table for one specific rig</strong> — "30 pixels of disparity = 0.8 m." The moment you mount it on a different camera, it collapses.</p>
+<h3 id="what-its-graded-on">What it's graded on<a class="headerlink" href="#what-its-graded-on" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Meaning</th>
+<th>Watch out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EPE</strong> (End-Point Error)</td>
+<td>Mean disparity error (pixels)</td>
+<td>Swayed by a few large errors</td>
+</tr>
+<tr>
+<td><strong>bad-2.0</strong> / D1</td>
+<td>Fraction of pixels off by more than 2 pixels (%)</td>
+<td>Closer to what you feel on the floor</td>
+</tr>
+<tr>
+<td>Occlusion excluded or not</td>
+<td>Whether ground-truth-free regions were dropped</td>
+<td>Conditions must match when comparing</td>
+</tr>
+</tbody>
+</table>
+<p>Zero-shot performance is usually measured on <strong>datasets not used in training</strong> (Middlebury, ETH3D, KITTI). The column labeled "zero-shot" in a paper's tables is that, and it's the closest thing to the number you can expect on the floor.</p>
+<h2 id="3-sam-2-dissected">3. SAM 2, dissected<a class="headerlink" href="#3-sam-2-dissected" title="Permanent link">&para;</a></h2>
+<h3 id="the-full-block-diagram">The full block diagram<a class="headerlink" href="#the-full-block-diagram" title="Permanent link">&para;</a></h3>
+<p>SAM 1 was three pieces — image encoder, prompt encoder, mask decoder. SAM 2 adds three more blocks that handle <strong>time.</strong></p>
+<p><img alt="The full SAM 2 block diagram" src="../../../assets/diagrams_en/rvd2-sam-blockdiagram.svg" /></p>
+<p>Streaming is the key to real time. Because it never loads the whole video into memory, it runs at a constant cost <strong>regardless of length</strong> and hooks straight onto a live camera stream.</p>
+<h3 id="why-it-dropped-plain-vit-for-hiera">Why it dropped plain ViT for Hiera<a class="headerlink" href="#why-it-dropped-plain-vit-for-hiera" title="Permanent link">&para;</a></h3>
+<p>SAM 1's encoder was <strong>single-resolution.</strong> The trouble is that a mask demands <strong>pixel-level precision.</strong> Low-resolution features alone make it hard to hold an edge.</p>
+<p><img alt="Single-scale versus multi-scale encoder" src="../../../assets/diagrams_en/rvd2-hiera-multiscale.svg" /></p>
+<p>MAE (Masked Autoencoder) is <strong>self-supervised</strong> pretraining that masks part of an image and makes the model restore it. It buys visual representations from a large pile of photos with no labels, so the shared strategy of "borrowing frozen prior knowledge" repeats here too.</p>
+<h3 id="how-a-prompt-becomes-numbers">How a prompt becomes numbers<a class="headerlink" href="#how-a-prompt-becomes-numbers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th>Turned into a tensor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Point (include/exclude)</td>
+<td>Positional encoding of the coordinate + a learned <strong>"include"/"exclude" embedding</strong> added on</td>
+</tr>
+<tr>
+<td>Box</td>
+<td>Treated as <strong>two points</strong> (top-left, bottom-right), each with its own embedding</td>
+</tr>
+<tr>
+<td>Previous mask</td>
+<td>Downsampled by convolution and <strong>added directly</strong> to the image features</td>
+</tr>
+<tr>
+<td>(none)</td>
+<td>A single learned default token — "just go ahead and segment the whole thing"</td>
+</tr>
+</tbody>
+</table>
+<p>Points and boxes become <strong>sparse tokens</strong> while a mask becomes a <strong>dense signal,</strong> so they take different paths. Tokens stay cheap as their count grows, but a dense signal costs as much as the image itself. That's why you can click as many times as you like without paying for it.</p>
+<h3 id="the-two-way-attention-decoder">The two-way attention decoder<a class="headerlink" href="#the-two-way-attention-decoder" title="Permanent link">&para;</a></h3>
+<p>The decoder's secret to being light yet accurate is a structure where <strong>"the two look at each other."</strong> The prompt looks at the image, and <strong>the image looks at the prompt too.</strong></p>
+<p><img alt="Two-way attention structure" src="../../../assets/diagrams_en/rvd2-twoway-attention.svg" /></p>
+<p>Without step ② (image → tokens), you'd know "where this part is" but not "down to which pixel." The final mask comes from sweeping a <strong>dynamic filter</strong> built from the tokens across the image features to get a per-pixel score.</p>
+<h3 id="learning-ambiguity-punish-only-the-best-fitting-of-three">Learning ambiguity — punish only the best-fitting of three<a class="headerlink" href="#learning-ambiguity-punish-only-the-best-fitting-of-three" title="Permanent link">&para;</a></h3>
+<p>Part 1 mentioned that it emits three masks. But <strong>how do you train it</strong> so the three split naturally into different levels (part / whole / assembly)? The answer is clever. You grade only <strong>the one closest to ground truth</strong> and leave the other two alone. Each output then begins to specialize in "the level I'm good at." Nobody asked for it, yet a division of labor emerges.</p>
+<p><img alt="Minimum-loss training" src="../../../assets/diagrams_en/rvd2-min-loss.svg" /></p>
+<p>At the same time, an IoU head predicts "how well each mask will fit." The IoU head is the device that judges on your behalf <strong>at run time, when the answer is unknown</strong> (during training it learns separately to shrink the gap between "predicted IoU" and "actual IoU"). Think of IoU as the ratio by which two regions overlap.</p>
+<h3 id="inside-the-memory-bank">Inside the memory bank<a class="headerlink" href="#inside-the-memory-bank" title="Permanent link">&para;</a></h3>
+<p>Make "it remembers the past" concrete and it looks like this. The bank holds three kinds of thing, each with a different character.</p>
+<p><img alt="How the memory bank is built" src="../../../assets/diagrams_en/rvd2-memory-bank.svg" /></p>
+<p>Because it has ② (frames a human pointed to) and ③ (a summary of the object's identity), a part inside a bin can be fully hidden behind another part and reappear, and it's still carried through as the same object. With only ① (recent frames), it loses the object when the occlusion runs long.</p>
+<blockquote>
+<p><strong>💡 The occlusion head — saying "not visible right now."</strong> SAM 2 has a separate output that predicts <strong>whether the object is in this frame at all.</strong> Force out a mask when it isn't there and the model insists some random pixels are the object. For a robot, a clear <strong>"not visible" signal</strong> is far safer. It's the same principle as "treat not-knowing as an obstacle" from the end of Part 1.</p>
+</blockquote>
+<h3 id="how-the-losses-are-put-together">How the losses are put together<a class="headerlink" href="#how-the-losses-are-put-together" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Loss</th>
+<th>Why that one</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mask</td>
+<td><strong>Focal</strong> + <strong>Dice</strong></td>
+<td>Focal handles the overwhelming imbalance of mostly-background; Dice directly optimizes the overlap ratio</td>
+</tr>
+<tr>
+<td>IoU prediction</td>
+<td>L1 (mean absolute error)</td>
+<td>A regression problem — the gap between predicted and actual quality</td>
+</tr>
+<tr>
+<td>Occlusion flag</td>
+<td>Cross-entropy</td>
+<td>Present/absent binary classification</td>
+</tr>
+</tbody>
+</table>
+<p>In pixel segmentation, a naive approach easily falls into the trap of <strong>answering "it's all background."</strong> If a part is 2% of the frame, "all background" alone scores 98% accuracy. The Focal-plus-Dice combination stops that.</p>
+<h3 id="the-data-engine-human-and-model-take-turns-accelerating">The data engine — human and model take turns accelerating<a class="headerlink" href="#the-data-engine-human-and-model-take-turns-accelerating" title="Permanent link">&para;</a></h3>
+<p><img alt="The three stages of the SAM data engine" src="../../../assets/diagrams_en/rvd2-data-engine.svg" /></p>
+<p>Stage 3's <strong>sprinkling a grid of points</strong> becomes a production feature as-is. That's "automatic mask generation," the mode you reach for when you want to segment every object on screen with no prompt. Video data was built the same way, and because what was learned on photos transfers to video, far less of it was enough.</p>
+<h3 id="evaluation-metrics">Evaluation metrics<a class="headerlink" href="#evaluation-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Where it's used</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>mIoU</strong></td>
+<td>Image segmentation</td>
+<td>Mean of overlap area ÷ union area</td>
+</tr>
+<tr>
+<td><strong>J</strong> (Jaccard)</td>
+<td>Video tracking</td>
+<td>How well the region matched (= IoU)</td>
+</tr>
+<tr>
+<td><strong>F</strong> (boundary F-score)</td>
+<td>Video tracking</td>
+<td>How well the <strong>contour</strong> matched</td>
+</tr>
+<tr>
+<td><strong>J&amp;F</strong></td>
+<td>Overall video tracking</td>
+<td>The average of the two — the standard for video segmentation</td>
+</tr>
+<tr>
+<td>Performance vs. click count</td>
+<td>Interactive segmentation</td>
+<td>IoU at 1 / 3 / 5 clicks</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why J and F are read separately</strong> ties directly to the floor. The area can match 99%, but if <strong>the outermost 2 pixels bite into the neighboring part,</strong> J barely drops while F drops sharply. And it's precisely that edge that harms pose estimation. <strong>Read F on its own in the paper's tables.</strong></p>
+<h2 id="4-foundationpose-dissected">4. FoundationPose, dissected<a class="headerlink" href="#4-foundationpose-dissected" title="Permanent link">&para;</a></h2>
+<h3 id="two-branches-one-pipeline">Two branches, one pipeline<a class="headerlink" href="#two-branches-one-pipeline" title="Permanent link">&para;</a></h3>
+<p>This is why the paper's title carries the word <strong>"Unified."</strong> Whether or not there's a CAD model, it's designed so that <strong>the back end is the same.</strong> Only the front end forks.</p>
+<p><img alt="The full FoundationPose structure" src="../../../assets/diagrams_en/rvd2-pose-structure.svg" /></p>
+<p>Nail down the one ability to "render from an arbitrary pose" and the later stages never need to care what kind of object it is. It's a design that <strong>hides the difference between CAD and photo-based representations behind a renderer interface.</strong></p>
+<h3 id="when-theres-no-cad-a-neural-object-field">When there's no CAD — a neural object field<a class="headerlink" href="#when-theres-no-cad-a-neural-object-field" title="Permanent link">&para;</a></h3>
+<p>This block is what makes "render from an arbitrary pose" possible from a handful of reference photos. It's in the NeRF family (networks that learn a 3D scene you can re-render from any angle), but it uses <strong>signed distance (SDF) instead of density.</strong> There's a reason for that choice.</p>
+<p><img alt="Density representation versus SDF representation" src="../../../assets/diagrams_en/rvd2-sdf-vs-density.svg" /></p>
+<p>Pose estimation has to pin down the <strong>surface location</strong> to the millimeter. "There's some material around here" isn't enough; you need "the surface is exactly here." Hence SDF. As a bonus, SDF makes depth rendering more accurate. Since the Refiner compares not just color but depth, a blurry rendered depth throws the entire refinement off.</p>
+<p>For the spatial representation it uses a <strong>multi-resolution hash grid.</strong> Instead of memorizing everything in one large network, it spreads it across many small grids, so training finishes in <strong>tens of seconds.</strong> That's why registering a new part fits inside a realistic amount of time.</p>
+<h3 id="how-the-hypotheses-are-sprinkled">How the hypotheses are sprinkled<a class="headerlink" href="#how-the-hypotheses-are-sprinkled" title="Permanent link">&para;</a></h3>
+<p>Here's the concrete method behind "sprinkle hundreds of them." It's not haphazard — it <strong>covers the sphere evenly.</strong></p>
+<p><img alt="Pose hypothesis sampling" src="../../../assets/diagrams_en/rvd2-hypothesis-sampling.svg" /></p>
+<p>Divide evenly by latitude and longitude and the points pile up at the poles. Subdivide an icosphere (a geodesic sphere) and they spread uniformly across the whole sphere. Whichever direction a part happens to lie in, it gets a fair starting point.</p>
+<blockquote>
+<p><strong>💡 Why position isn't sprinkled.</strong> Because position is <strong>almost free to know.</strong> The mask's center gives left-right and up-down position, and the median depth of that region gives fore-aft distance. So the hypotheses only need to sprinkle <strong>rotation.</strong> This is where it links back to the structure from Part 1. SAM's mask and Stereo's depth <strong>shrink the search space from six dimensions to three.</strong> If either one is bad, the initial position is off and refinement can't converge.</p>
+</blockquote>
+<h3 id="the-refiner-what-it-looks-at-and-what-it-emits">The Refiner — what it looks at and what it emits<a class="headerlink" href="#the-refiner-what-it-looks-at-and-what-it-emits" title="Permanent link">&para;</a></h3>
+<p>The Refiner sets the rendered appearance and the real photo side by side and predicts "a bit to the left, turn it a touch more" to nudge the pose. The core design choice is to <strong>anchor translation and rotation in different coordinate frames.</strong> The two are utterly different in nature.</p>
+<p><img alt="Separating the reference frames for translation and rotation" src="../../../assets/diagrams_en/rvd2-refiner-frames.svg" /></p>
+<p>Without this separation (disentanglement), the iterations oscillate. You get a vicious cycle where "a rotation correction creates a position error, and a position correction disturbs the rotation."</p>
+<details>
+<summary>The Refiner's inputs and outputs (skip if you like)</summary>
+
+<div class="highlight"><pre><span></span><code>input  : rendered RGB-D patch   (drawn per the hypothesis)
+         observed RGB-D patch   (the real camera photo)
+         ↓ encode the two side by side
+output : Δtranslation (3)  — in the camera frame
+         Δrotation (3)     — in the object frame
+         ↓
+update : pose ← pose ⊕ Δ      (repeated several times)
+</code></pre></div>
+
+</details>
+
+<h3 id="deciding-the-ranking-let-the-candidates-look-at-each-other">Deciding the ranking — let the candidates look at each other<a class="headerlink" href="#deciding-the-ranking-let-the-candidates-look-at-each-other" title="Permanent link">&para;</a></h3>
+<p>Part 1 mentioned that it "learns which of two is better." The actual implementation goes one step further. Rather than comparing candidates in pairs, it <strong>runs attention over the whole candidate set.</strong></p>
+<p><img alt="Global attention across candidates for ranking" src="../../../assets/diagrams_en/rvd2-ranking-attention.svg" /></p>
+<p>If a reflection docked every candidate's score by the same amount, that effect vanishes in a <strong>comparison.</strong> It's something absolute scoring can never do.</p>
+<h3 id="how-the-synthetic-data-is-made">How the synthetic data is made<a class="headerlink" href="#how-the-synthetic-data-is-made" title="Permanent link">&para;</a></h3>
+<p>The bottleneck wasn't the number of 3D models but the <strong>textures.</strong> Public 3D assets are plentiful, but most have poor textures or none. So they're made like this.</p>
+<div class="highlight"><pre><span></span><code>3D asset (public dataset)
+   ↓
+Ask a language model: "What surface suits this object?"
+   ↓  "Scratched matte aluminum with fine hairlines..."
+A diffusion model generates a texture from that description
+   ↓
+Render in Isaac Sim while randomizing lighting, background, clutter
+   ↓
+RGB + depth + ground-truth pose (all free)
+</code></pre></div>
+<p>That's how they built and ran on about 600,000 scenes (roughly 1.2 million images). Texture diversity matters because the Refiner judges alignment <strong>by looking at color.</strong> If the range of surfaces seen in training is thin, it collapses on a material it hasn't seen before.</p>
+<h3 id="evaluation-add-and-add-s">Evaluation — ADD and ADD-S<a class="headerlink" href="#evaluation-add-and-add-s" title="Permanent link">&para;</a></h3>
+<p>How do you measure that a pose "matched"? Measure rotation-in-degrees and position-in-millimeters separately and the meaning shifts with object size. So instead you directly measure <strong>how far the object's surface points are off.</strong></p>
+<p><img alt="The difference between ADD and ADD-S" src="../../../assets/diagrams_en/rvd2-add-adds.svg" /></p>
+<p>But for a symmetric object, ADD comes out <strong>unfairly.</strong> A cylinder turned 180° is indistinguishable to the eye, yet ADD reports a large error. So for symmetric objects you use a variant, ADD-S, which measures against the nearest matching point.</p>
+<details>
+<summary>The equations for the two metrics (skip if you like)</summary>
+
+`ADD = mean_x ‖(R·x + t) − (R*·x + t*)‖` — the average distance between a point moved by the estimated pose and the same point moved by the ground-truth pose. Measured point-to-point (fixed correspondence).
+
+`ADD-S = mean_x min_y ‖(R·x + t) − (R*·y + t*)‖` — for each point, it finds the **nearest** counterpart and measures against it. It doesn't penalize a rotation that symmetry makes indistinguishable. The usual pass rule is "within 10% of the object's diameter."
+
+</details>
+
+<blockquote>
+<p><strong>📝 A unified benchmark.</strong> There's a shared leaderboard called <strong>BOP</strong> that bundles several datasets and metrics. To compare different papers <strong>under the same conditions,</strong> BOP is far fairer than any single paper's own tables.</p>
+</blockquote>
+<h2 id="5-three-design-principles-running-through-all-three">5. Three design principles running through all three<a class="headerlink" href="#5-three-design-principles-running-through-all-three" title="Permanent link">&para;</a></h2>
+<p>If you've made it this far, you'll start to see the same pattern repeating across the three papers. Distilled, there are three.</p>
+<p><img alt="The three shared design principles" src="../../../assets/diagrams_en/rvd2-three-principles.svg" /></p>
+<p>Principle ③ is the deepest insight. Real-world sensor input is <strong>too dirty to set an absolute standard against.</strong> So all three models reframe the problem from "how good is it" to <strong>"is it better than the others."</strong></p>
+<h2 id="6-where-to-look-in-the-papers">6. Where to look in the papers<a class="headerlink" href="#6-where-to-look-in-the-papers" title="Permanent link">&para;</a></h2>
+<p>A guide for when you finally open the originals. Reading a paper straight through from the top is inefficient. There's a <strong>reading order.</strong></p>
+<p><img alt="The reading order for a paper" src="../../../assets/diagrams_en/rvd2-paper-reading.svg" /></p>
+<p>The <strong>ablation studies (item 2)</strong> are the real treasure. The authors have measured for you "how much worse it gets if you remove this block." That is precisely the answer to "what should I care about in my situation."</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Paper title / search term</th>
+<th>Look especially at</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FoundationStereo</td>
+<td>FoundationStereo: Zero-Shot Stereo Matching (CVPR 2025)</td>
+<td>STA and AHCF ablations, the makeup of the FSD data</td>
+</tr>
+<tr>
+<td>SAM</td>
+<td>Segment Anything (ICCV 2023)</td>
+<td>The three data-engine stages, handling ambiguity</td>
+</tr>
+<tr>
+<td>SAM 2</td>
+<td>SAM 2: Segment Anything in Images and Videos</td>
+<td>The memory structure, the speed comparison</td>
+</tr>
+<tr>
+<td>FoundationPose</td>
+<td>FoundationPose: Unified 6D Pose Estimation and Tracking of Novel Objects (CVPR 2024 Highlight)</td>
+<td>The ranking-network ablation, the model-free path</td>
+</tr>
+<tr>
+<td>Foundational techniques</td>
+<td>RAFT-Stereo / Instant-NGP / Hiera / DINOv2</td>
+<td>The skeletons each model borrowed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-numbers-at-a-glance-glossary">7. Numbers at a glance · glossary<a class="headerlink" href="#7-numbers-at-a-glance-glossary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>FoundationStereo</th>
+<th>SAM 2</th>
+<th>FoundationPose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encoder</td>
+<td>CNN + frozen single-image model</td>
+<td>Hiera (MAE-pretrained)</td>
+<td>CNN + transformer</td>
+</tr>
+<tr>
+<td>Intermediate structure</td>
+<td>4D cost volume</td>
+<td>Sparse tokens + dense features</td>
+<td>~500 pose hypotheses</td>
+</tr>
+<tr>
+<td>Core operation</td>
+<td>APC + disparity attention</td>
+<td>Two-way attention + memory attention</td>
+<td>Render-and-compare + attention across hypotheses</td>
+</tr>
+<tr>
+<td>Iterative structure</td>
+<td>ConvGRU × N</td>
+<td>Streaming, frame by frame</td>
+<td>Refiner × a few times</td>
+</tr>
+<tr>
+<td>Main loss</td>
+<td>Decay-weighted L1</td>
+<td>Focal + Dice (+ L1, CE)</td>
+<td>Pose regression + ranking loss</td>
+</tr>
+<tr>
+<td>Training data</td>
+<td>Synthetic ~1M pairs</td>
+<td>11M real photos / 1.1B masks</td>
+<td>Synthetic ~600K scenes (~1.2M images)</td>
+</tr>
+<tr>
+<td>Evaluation metrics</td>
+<td>EPE · bad-2.0</td>
+<td>mIoU · J&amp;F</td>
+<td>ADD · ADD-S · BOP</td>
+</tr>
+<tr>
+<td>Confidence output</td>
+<td>Disparity uncertainty</td>
+<td>IoU prediction · occlusion flag</td>
+<td>Hypothesis ranking score</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>In one sentence.</strong> The three models solve different problems but play <strong>the same three moves.</strong> They borrow someone else's prior knowledge and keep it frozen, they fix the answer over several passes instead of nailing it in one, and they make candidates compete instead of scoring them in the absolute. These three are a shared answer that emerged from "the data is scarce and the observations are dirty," which is why you can take the same eye to the next robot-perception model that comes along.</p>
+</blockquote>
+<h3 id="related-posts">Related posts<a class="headerlink" href="#related-posts" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The previous piece, <a href="../inside-the-models/">Inside the Three Models</a> — pin down the concepts and failure modes first and this one gets much easier.</li>
+<li>Same series: <a href="../stereo-to-grasp/">From Stereo Vision to Grasping the Target</a> · <a href="../frames-transforms/">Frames and Transforms</a></li>
+</ul>
+<h3 id="extra-terms">Extra terms<a class="headerlink" href="#extra-terms" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Side-tuning</strong> — a technique that freezes a pretrained model and attaches a small trainable branch alongside it to adapt.</li>
+<li><strong>soft-argmin</strong> — a differentiable version of picking the minimum. Being a weighted average, it yields a fractional result (sub-pixel).</li>
+<li><strong>ConvGRU</strong> — a recurrent neural cell built with convolutions. In iterative refinement it remembers "the judgment so far."</li>
+<li><strong>MAE (Masked Autoencoder)</strong> — self-supervised pretraining that masks part of an image and makes the model restore it.</li>
+<li><strong>Focal loss</strong> — a loss that curbs the contribution of easy samples to handle imbalance.</li>
+<li><strong>Dice loss</strong> — a segmentation loss that directly optimizes the overlap ratio.</li>
+<li><strong>SDF (signed distance function)</strong> — the distance from each point to the surface (negative inside). The zero surface is the object's surface.</li>
+<li><strong>Hash-grid encoding</strong> — a representation that spreads space across multi-resolution grids to speed up training dramatically.</li>
+<li><strong>ADD / ADD-S</strong> — pose-accuracy metrics. The average displacement of surface points (nearest-match for symmetric objects).</li>
+<li><strong>BOP</strong> — a shared benchmark for 6D pose estimation. Compares different methods under the same conditions.</li>
+<li><strong>Ablation</strong> — an experiment that removes components one at a time to measure their contribution. The heart of a paper's tables.</li>
+<li><strong>EPE / bad-2.0</strong> — stereo error metrics. Mean disparity error / the fraction of errors above 2 pixels.</li>
+<li><strong>J&amp;F</strong> — a video-segmentation metric. The average of region accuracy and boundary accuracy.</li>
+</ul>
+<hr />
+<p><em>The architectural structure follows what each paper made public; parameter counts, dataset sizes, and hyperparameters are approximations. If you're going to cite them, check the tables in the original papers. NVIDIA Isaac, FoundationStereo, and FoundationPose, and Meta's Segment Anything (SAM), are trademarks of their respective owners, used here for identification only. All diagrams were drawn by hand.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

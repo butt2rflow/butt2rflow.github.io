@@ -1,0 +1,2634 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="In Part 2 I wrote that a 16 GB edge computer was proof-of-concept only and that production needed a 64 GB board. I was wrong. Once I freed the board, the same 16 GB built the FoundationPose engine — and then the last holdout, FoundationStereo, followed: the whole depth-detect-mask-pose stack builds and runs on 16 GB (four models co-resident at 8.2 GB peak). The real culprit behind 'the engine won't build,' and two different flavors of the 16 GB wall. A follow-up to the two-part 'brain on the edge' series.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/jetson-foundationpose-16gb/">
+      
+      
+        <link rel="prev" href="../jetson-isaac-foundation-models/">
+      
+      
+      
+        
+          <link rel="alternate" href="../../../posts/jetson-foundationpose-16gb/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Putting the Robot's Brain on the Edge — A Correction: Reversing the '16 GB Can't Do It' Verdict - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#putting-the-robots-brain-on-the-edge-a-correction-reversing-the-16-gb-cant-do-it-verdict" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Putting the Robot's Brain on the Edge — A Correction: Reversing the '16 GB Can't Do It' Verdict
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/jetson-foundationpose-16gb/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../stereo-to-grasp/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing? — TWR vs MWR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return — A Probability View of QQQ vs TQQQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives — Same 3×, Wildly Different Bills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again — Single Stock Futures and the Directional Earnings Play
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report — Reading the Spot Market Through the Futures Market
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool — How rate-cut probabilities work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator — The Index Is Calm While the Bottom Already Moves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX — How to Read the MOVE Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices — Implied Correlation and the IV Surface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics — Calls and Puts via Car Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew — The S&P 500's Smirk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings — Cheap Tail-Risk Insurance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader — Seasonality analysis (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself — Google Sheets + Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns — How GEX shifts intraday
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma — The Vanna Rally, Pinning, and the Dealer's Real Hands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard — Tracking Correlation + Skew (Google Sheets + Python)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure — Reading Contango and Backwardation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation — Kelly meets risk signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp — How a Robot Learns to See a Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms — How a Robot Knows Where to Grab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models — FoundationStereo · SAM 2 · FoundationPose, Opened Up
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy — Unfolding Three Networks' Blueprints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First — Simulation and sim-to-real
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge — A Correction: Reversing the '16 GB Can't Do It' Verdict
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Putting the Robot's Brain on the Edge — A Correction: Reversing the '16 GB Can't Do It' Verdict
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-i-wrote-in-part-2-and-why-it-nagged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I wrote in Part 2 — and why it nagged
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#going-back-at-it-the-real-culprit-was-a-memory-thief" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Going back at it — the real culprit was a memory thief
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-recipe-free-the-board-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The recipe — free the board first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-what-actually-runs-engine-build-live-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        So what actually runs — engine build + live node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#and-all-the-rest-the-whole-stack-runs-on-16-gb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And all the rest — the whole stack runs on 16 GB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-digging-was-worth-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this digging was worth it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-verdict-rewritten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware verdict — rewritten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-i-wrote-in-part-2-and-why-it-nagged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I wrote in Part 2 — and why it nagged
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#going-back-at-it-the-real-culprit-was-a-memory-thief" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Going back at it — the real culprit was a memory thief
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-recipe-free-the-board-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The recipe — free the board first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-what-actually-runs-engine-build-live-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        So what actually runs — engine build + live node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#and-all-the-rest-the-whole-stack-runs-on-16-gb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And all the rest — the whole stack runs on 16 GB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-digging-was-worth-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this digging was worth it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-verdict-rewritten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware verdict — rewritten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="putting-the-robots-brain-on-the-edge-a-correction-reversing-the-16-gb-cant-do-it-verdict">Putting the Robot's Brain on the Edge — A Correction: Reversing the "16 GB Can't Do It" Verdict<a class="headerlink" href="#putting-the-robots-brain-on-the-edge-a-correction-reversing-the-16-gb-cant-do-it-verdict" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Field notes · a correction to the two-part "brain on the edge" series.</strong> In <a href="../jetson-ros2-setup/">Part 1</a> we brought a bare board up to <strong>ROS 2</strong>; in <a href="../jetson-isaac-foundation-models/">Part 2</a> we stacked <strong>Isaac ROS</strong> and a foundation-model pipeline on top and proved the "grab a new part with no training" picture. And at the end of Part 2 I wrote: <em>"The proof is done on 16 GB; production wants the next tier up, an AGX Orin 64 GB."</em> <strong>This post reverses that verdict.</strong></p>
+</blockquote>
+<p>Something nagged at me after Part 2. The two heavy models (FoundationStereo, FoundationPose) ran at "walking speed" on the 16 GB edge computer only because the <strong>accelerated engine</strong> (a TensorRT engine — a model pre-baked and optimized for the specific hardware) wouldn't build on 16 GB. So they fell back to a slow, generic path, and I wrote that up as "the 16 GB limit."</p>
+<p>Then, digging through the forums, I found <strong>success cases on the same 16 GB board</strong>. So I went back at it. Bottom line: <strong>it works.</strong> On the very same Orin NX 16 GB, the FoundationPose engine builds, and the node puts out a live 6-DoF pose of a never-before-seen object. What I'd taken for a hardware wall was not hardware at all — it was one <strong>memory thief</strong> I hadn't spotted. And once that door opened, the rest — including FoundationStereo, the other model I'd also called "64 GB only" in Part 2 — <strong>came inside the same 16 GB, the whole stack.</strong></p>
+<p><em>(As in Parts 1 and 2, this is general edge-R&amp;D experience, not a specific field deployment.)</em></p>
+<hr />
+<h2 id="the-30-second-version">The 30-second version<a class="headerlink" href="#the-30-second-version" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Part 2's verdict ("16 GB is proof-only, production needs 64 GB") was an overstatement.</strong> On the same 16 GB, the FoundationPose engine <strong>builds</strong> and the node <strong>runs live</strong>.</li>
+<li><strong>The real culprit wasn't "not enough memory" — it was "fragmented contiguous memory."</strong> An <strong>idle container I'd forgotten to stop</strong> from an earlier experiment was holding memory, so at build time the largest <em>contiguous</em> free block was only ~12 MB (the build requested a ~1.29 GB scratch allocation). Every optimization attempt got skipped, and it looked like "can't build."</li>
+<li><strong>The recipe: free the board first.</strong> Stop idle containers and drop the page cache and free memory jumps <strong>663 MB → 14 GB</strong>, the largest contiguous block returns <strong>~12 MB → ~1.2 GB</strong>. Add a <strong>workspace cap</strong> (<code>--memPoolSize</code>) and a <strong>higher optimization level</strong>, and the engine bakes.</li>
+<li><strong>Result: ~6.2 GB peak / 16 GB.</strong> Engine build plus a live 6-DoF node — with the detector front-end loaded too — fit inside 16 GB with over 9 GB to spare. The 16 GB wall existed only <strong>at the moment of baking the engine</strong>, not at run time.</li>
+<li><strong>It's not just FoundationPose — the whole stack runs on 16 GB.</strong> The last holdout, FoundationStereo, fell too (lower resolution + FP32), and the four-model detect → mask → pose chain fits <strong>at 8.2 GB / 16 GB even with all of them resident at once.</strong></li>
+<li><strong>Lesson:</strong> "can't build the engine" and "can't run it" are different sentences. And before you blame the hardware, look at <strong>what's eating the memory.</strong></li>
+</ul>
+<hr />
+<h2 id="what-i-wrote-in-part-2-and-why-it-nagged">What I wrote in Part 2 — and why it nagged<a class="headerlink" href="#what-i-wrote-in-part-2-and-why-it-nagged" title="Permanent link">&para;</a></h2>
+<p>Part 2's hardware verdict read:</p>
+<blockquote>
+<p>The concept is proven on the 16 GB edge computer. The heavy models are at walking speed, but to run the whole thing at speed on one box in production, you want the next tier: an AGX Orin 64 GB.</p>
+</blockquote>
+<p>I gave the reasoning, too: on a Jetson the CPU and GPU share one pool (unified memory — 16 GB total here). To run a big model at full speed you first <strong>bake it into an accelerated engine</strong>, and that <strong>baking step</strong> spikes memory hard, so a small edge computer can't clear the hump.</p>
+<p>All of that was correct — the baking step is the hump, and unified memory is tight. What was <strong>wrong was the conclusion, "therefore 16 GB can't do it."</strong> I traced the hump to the hardware's <em>capacity</em> but never checked <strong>how empty that 16 GB actually was at that moment.</strong></p>
+<h2 id="going-back-at-it-the-real-culprit-was-a-memory-thief">Going back at it — the real culprit was a memory thief<a class="headerlink" href="#going-back-at-it-the-real-culprit-was-a-memory-thief" title="Permanent link">&para;</a></h2>
+<p>Reopening the build log, the failure was very specific:</p>
+<div class="highlight"><pre><span></span><code>[W] Skipping tactic 0 due to insufficient memory on requested size of 1290442752
+[E] Error[10]: Could not find any implementation for node .../conv2/Conv + Add + Relu
+&amp;&amp;&amp;&amp; FAILED
+</code></pre></div>
+<p><code>1290442752</code> is about 1.29 GB. The optimizer wanted that much <strong>scratch memory</strong> for a fast way to run an operation (a <em>tactic</em>), didn't have it, skipped it — and eventually <strong>couldn't find any workable way</strong>, so it failed. Capacity is 16 GB. So why?</p>
+<p>Watching live memory answered it:</p>
+<ul>
+<li>At startup 13 GB was free, but <strong>while the build ran, only 140 MB was free to the GPU.</strong></li>
+<li>Worse, the <strong>largest contiguous free block</strong> that Jetson's <code>tegrastats</code> reports (<code>lfb</code>) was a mere <strong>3×4 MB (~12 MB)</strong> — while the build needed a big contiguous scratch (the log's ~1.29 GB request). It wasn't the total; it was that no large <strong>contiguous</strong> block existed.</li>
+</ul>
+<p>The culprit surfaced fast: <strong>a container I'd forgotten to stop</strong> from an earlier experiment had been up for 39 hours, holding ~4 GB and fragmenting memory. That's why six build attempts had all died at the <strong>same spot</strong> for the same reason. Not a hardware wall — a memory thief I never cleared.</p>
+<p><img alt="The same 16 GB board — before freeing it the build reports &amp;&amp;&amp;&amp; FAILED; after stopping the idle container and dropping caches, &amp;&amp;&amp;&amp; PASSED" src="../../../assets/demos/jetson-freeboard-proof.png" /></p>
+<p><em>The actual terminal: </em><em>BEFORE</em><em> (free 663 MB · lfb 3×4 MB · requested 1.29 GB → <code>&amp;&amp;&amp;&amp; FAILED</code>) → </em><em>free the board</em><em> (free 14 GB · lfb 303×4 MB) → </em><em>BUILD</em><em> (<code>workspace:10240</code> + <code>optLevel=5</code> → <code>&amp;&amp;&amp;&amp; PASSED</code>). refine 34M · score 32M · detector (RT-DETR/SyntheticaDETR) 85M — all three engines come off this one 16 GB board.</em></p>
+<h2 id="the-recipe-free-the-board-first">The recipe — free the board first<a class="headerlink" href="#the-recipe-free-the-board-first" title="Permanent link">&para;</a></h2>
+<p>Three steps. The first is 90% of it.</p>
+<ol>
+<li><strong>Free the board (this is the key).</strong> Stop idle containers; drop the page cache.
+   <div class="highlight"><pre><span></span><code>docker stop &lt;idle containers&gt;
+sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
+</code></pre></div>
+   → free <strong>663 MB → 14 GB</strong>, largest contiguous block <strong>3×4 MB → 303×4 MB (~1.2 GB)</strong>. Before a build, <strong>check</strong> that <code>tegrastats</code>' <code>lfb</code> is large and <code>free -h</code> shows &gt; 12 GB.</li>
+<li><strong>Give it a workspace cap.</strong> Tell the baking tool it has generous scratch.
+   <div class="highlight"><pre><span></span><code>trtexec --onnx=refine_model.onnx --fp16 \
+        --builderOptimizationLevel=5 \
+        --memPoolSize=workspace:10240      # 10 GB scratch
+</code></pre></div>
+   The earlier failing attempt set <strong>no</strong> such cap at all.</li>
+<li><strong>Raise the optimization level.</strong> <code>--builderOptimizationLevel=5</code> (max) tries more tactics — attacking "couldn't find any implementation" head-on. Earlier runs were at a lower level.</li>
+</ol>
+<p><img alt="The free-the-board recipe — clear it, cap the scratch, raise the level" src="../../../assets/diagrams_en/jetson-freeboard-recipe.svg" /></p>
+<p>With that combination the <strong>engine baked.</strong> Both FoundationPose pieces (refine and score) came out as proper engine files, and the "couldn't find any implementation" error was gone.</p>
+<h2 id="so-what-actually-runs-engine-build-live-node">So what actually runs — engine build + live node<a class="headerlink" href="#so-what-actually-runs-engine-build-live-node" title="Permanent link">&para;</a></h2>
+<p>Once the engine bakes, the rest falls into place.</p>
+<ul>
+<li><strong>The FoundationPose node runs live.</strong> It takes camera input and puts out a never-before-seen object's 6-DoF pose frame by frame. With the engine prebuilt, the "memory blows up while baking" hump from Part 2 simply isn't there.</li>
+<li><strong>Peak memory ~6.2 GB / 16 GB (with the detector front-end loaded too).</strong> Over 9 GB to spare. In other words, <strong>the 16 GB wall existed only at the "bake the engine" moment, never at run time.</strong> That's the one-line takeaway — <em>can't build the engine ≠ can't run it.</em></li>
+<li>The <strong>detector front-end</strong> that tells the pipeline <em>where</em> the object is (whether a closed-set one or a language-promptable open-vocabulary one) also fits on the same board <strong>alongside</strong> FoundationPose, inside 16 GB — the three engines in the capture above are exactly that (~6.2 GB peak). Which detector you pick is a topic for a later post.</li>
+</ul>
+<p><strong>Speed is still "walking pace"</strong> — heavy transformers, a few seconds per frame. But as Part 2 said, if a pick can take a few seconds, that's fine. What changed isn't "16 GB can't even do this"; it's "<strong>16 GB runs it on the proper path (the engine), too.</strong>"</p>
+<h2 id="and-all-the-rest-the-whole-stack-runs-on-16-gb">And all the rest — the whole stack runs on 16 GB<a class="headerlink" href="#and-all-the-rest-the-whole-stack-runs-on-16-gb" title="Permanent link">&para;</a></h2>
+<p>Once that one door opened, the remaining pieces fell in turn — including <strong>FoundationStereo</strong> (stereo images → depth), the <em>other</em> heavy model I'd also labeled "needs 64 GB" in Part 2.</p>
+<p>This one is honestly a notch subtler. FoundationStereo wouldn't bake even after I freed the board. The log showed that this time memory really was short — one operation asked for <strong>a single ~7.4 GB contiguous scratch</strong>, which isn't the "fragmentation" from before but a genuinely tough ask for 16 GB. So there were <strong>two different flavors of the 16 GB wall</strong>: FoundationPose was fragmentation (fixed by cleaning), FoundationStereo a real capacity hump.</p>
+<p>This time the fix wasn't cleaning but <strong>input size and precision</strong>:</p>
+<ul>
+<li><strong>Lower the resolution.</strong> 480×640 → <strong>288×480</strong> (the size NVIDIA recommends for Jetson). That alone shrank the ~7.4 GB request to <strong>~187 MB</strong>.</li>
+<li><strong>FP32 instead of FP16.</strong> This model's docs say FP16 conversion is blocked, so FP32 was the right answer, not a fallback.</li>
+<li><strong>Skip the post-build benchmark</strong> (<code>--skipInference</code>) — bake and save the engine only.</li>
+</ul>
+<p>Result: <strong>a 258 MB engine, ~2 h build, running ~1.97 s/frame @ 5.95 GB peak — 5× faster than the no-engine path (~9.8 s).</strong> The last piece, too, runs on its proper path inside 16 GB.</p>
+<p>At that point the picture was complete. <strong>Depth (FoundationStereo) · detection (SyntheticaDETR) · mask (SAM2) · pose (FoundationPose)</strong> — plus ESS and cuMotion — the whole stack builds and runs on this one board.</p>
+<p>And the number I really wanted: <strong>do all four fit in 16 GB at once?</strong> They do. With the four models of the open-vocab chain (detect → mask → pose) <strong>all resident simultaneously</strong>, peak was <strong>8.2 GB / 16 GB</strong>, over 7 GB to spare (measured). Beyond each piece working on its own, they <strong>fit together</strong> inside 16 GB.</p>
+<p><img alt="The open-vocab 4-model chain co-resident within the 16 GB budget — 8.2 GB peak, 7 GB+ free" src="../../../assets/diagrams_en/jetson-stack-fits-16gb.svg" /></p>
+<p>Two honest footnotes:</p>
+<ul>
+<li>The <strong>language-promptable open-vocabulary detector</strong> (e.g. Grounding DINO) loads and co-runs on 16 GB, but the currently-published deployable checkpoint localized poorly — a <strong>model (checkpoint) limitation, not the board</strong>. For fixed, known parts a closed-set detector (SyntheticaDETR) is the production answer; open-vocab is a flexibility option.</li>
+<li>Whether the mask came from real SAM2 or a box-shaped rectangle, <strong>the final pose moved by only ~1 mm / ~1°</strong> — once the region of interest is roughly right, the back end (FoundationPose) finishes the job with depth.</li>
+</ul>
+<h2 id="why-this-digging-was-worth-it">Why this digging was worth it<a class="headerlink" href="#why-this-digging-was-worth-it" title="Permanent link">&para;</a></h2>
+<p>Three lessons, all traps I'll hit again.</p>
+<ul>
+<li><strong>"Can't build the engine" and "can't run it" are different problems.</strong> Baking demands a big contiguous chunk for a moment; running doesn't. Give up on the second because the first is blocked, and you write down "impossible" for something that works (which is exactly what I did in Part 2).</li>
+<li><strong>Before blaming the hardware, look at how empty those 16 GB actually are right now</strong> — not the total, but the <strong>largest contiguous block</strong> (<code>tegrastats lfb</code>). Idle containers and zombie processes fragment memory quietly; the total alone will never show it.</li>
+<li><strong>Re-verify forum success cases "on your own image."</strong> Someone else succeeding doesn't guarantee you will, and someone else hitting a wall doesn't guarantee you will either. This post <em>is</em> that re-verification — I saw "it works" on the forums, went at it, and confirmed it on my own board: <strong>one more success case.</strong></li>
+</ul>
+<h2 id="hardware-verdict-rewritten">Hardware verdict — rewritten<a class="headerlink" href="#hardware-verdict-rewritten" title="Permanent link">&para;</a></h2>
+<p>Correcting Part 2's hardware table:</p>
+<table>
+<thead>
+<tr>
+<th>Edge computer</th>
+<th>What Part 2 said</th>
+<th>Now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Orin NX 16 GB</strong> (the one we have)</td>
+<td>Proof-of-concept; production is the next tier</td>
+<td>★ <strong>Handles non-real-time production too</strong> (a pick can take a few seconds). Free the board → engine builds + node runs live</td>
+</tr>
+<tr>
+<td><strong>AGX Orin 64 GB</strong></td>
+<td>Production, the answer</td>
+<td><strong>For headroom / real-time / full resolution.</strong> A choice when you need it, not a must-have to run</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Orin NX 16 GB</strong> (roughly $800–1,400) — beyond <em>it runs</em>, it carries a <strong>non-real-time production</strong> load where a pick can take a few seconds. The lever isn't capacity; it's the <strong>operational habit of keeping the board clear at build time.</strong></li>
+<li><strong>AGX Orin 64 GB</strong> ($1,999) — when you need real-time, or headroom for full resolution and full speed. (FoundationStereo builds on 16 GB too — you just have to drop the resolution, and 64 GB removes that constraint.) <strong>"You must have 64 GB to bake and run the engine" is now simply false.</strong></li>
+</ul>
+<p>Prove <em>whether it works</em> cheaply first, then step up when you need to — that's what Part 2 said. This time I went one step further: it turns out that cheap board clears the production bar too, and what had been blocking it was not hardware but one memory thief I never cleared. The practical ladder for edge AI starts a rung lower than I thought.</p>
+<blockquote>
+<p><strong>Note — wouldn't upgrading to JetPack 7 / Isaac ROS 4.0 help?</strong> Not on the Orin NX 16 GB. JetPack 7.2 does support the Orin NX, but <strong>Isaac ROS 4.0 is Thor-first</strong> — NVIDIA's recommended stack for the Orin NX 16 GB is still <strong>Isaac ROS 3.2 / JetPack 6.2</strong>. And 4.0's foundation models are heavier, so the 16 GB baking hump gets tighter, not looser, with little Orin-NX precedent (most testing is on Thor's larger memory). Newer isn't automatically better; on this board, staying on the proven 3.2 / 6.2 is the safe call.</p>
+</blockquote>
+<hr />
+<h2 id="in-summary">In summary<a class="headerlink" href="#in-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Part 2</th>
+<th>Now (corrected)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Engine build (16 GB)</strong></td>
+<td>No → needs 64 GB</td>
+<td>✅ Yes — free the board + workspace cap + higher level</td>
+</tr>
+<tr>
+<td><strong>Live node (16 GB)</strong></td>
+<td>(walking speed, no engine)</td>
+<td>✅ Live 6-DoF, ~6.2 GB peak (with detector)</td>
+</tr>
+<tr>
+<td><strong>Whole stack (16 GB)</strong></td>
+<td>(only looked at FoundationPose)</td>
+<td>✅ depth·detect·mask·pose all build+run, <strong>4 models co-resident 8.2 GB</strong></td>
+</tr>
+<tr>
+<td><strong>Real cause</strong></td>
+<td>"unified memory is tight"</td>
+<td>An idle container <strong>fragmenting contiguous memory</strong> (not the total)</td>
+</tr>
+<tr>
+<td><strong>Hardware</strong></td>
+<td>Proof 16 GB / production 64 GB</td>
+<td><strong>Non-real-time production on 16 GB too</strong>; 64 GB for headroom/real-time</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The one thing to remember:</strong> sometimes the wall isn't a wall. This time it wasn't hardware capacity but the <strong>contiguous memory at build time</strong>, and clearing the board alone fixed it. Before you move "can't build the engine" over to "this hardware can't do it," read one line — the largest contiguous block in <code>tegrastats</code>. That's what this round of digging bought.</p>
+<hr />
+<details>
+<summary>Notes — evidence and disclaimer</summary>
+
+The numbers (free memory, contiguous-block size, peak RAM, whether the engine builds) are **values I measured directly in this R&D**; they vary with software versions and settings (Isaac ROS 3.2, JetPack 6.2 line, TensorRT 10.3, max-power mode) and over time. Edge-computer prices are approximate public list figures.
+
+This post is **one more reproduction, on my own board, of success cases already public in the community and forums.** The build recipe (free the board, cap the workspace, raise the optimization level) and the failure diagnosis lean on NVIDIA's public TensorRT and Isaac ROS docs and public NVIDIA Developer Forum threads; check the latest docs for each model and tool before deploying.
+
+This is general edge-R&D experience, not a specific field deployment. Jetson, Orin, AGX, JetPack, Isaac ROS, TensorRT, and CUDA are NVIDIA's; other product names are their respective owners' — used for reference only.
+
+</details>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/sidebar-widget.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+    
+  </body>
+</html>

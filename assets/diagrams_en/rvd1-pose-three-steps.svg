@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 360 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">The Three Steps of FoundationPose</title>
+<desc id="de">The three steps of render-and-compare. ① Render CAD at hundreds of poses to scatter hypotheses, ② a Refiner network sees the difference from the real image and nudges each hypothesis into place, ③ a scoring network ranks the candidates against each other to give the final 6-DoF pose.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="330" rx="12"/>
+<text class="t" x="18" y="22">Hypothesize → Refine → Score</text>
+<rect class="bx" x="16" y="34" width="328" height="80" rx="10"/>
+<text class="lb" x="30" y="54" style="fill:var(--amber)">① Scatter hypotheses</text>
+<text class="st" x="30" y="73">Render CAD at hundreds of poses</text>
+<g opacity=".9">
+<rect x="30" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".75"/>
+<rect x="60" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".55" transform="rotate(18,71,94)"/>
+<rect x="90" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".7" transform="rotate(-24,101,94)"/>
+<rect x="120" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".5" transform="rotate(42,131,94)"/>
+<rect x="150" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".65" transform="rotate(-8,161,94)"/>
+<rect x="180" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".45" transform="rotate(66,191,94)"/>
+</g>
+<text class="st" x="222" y="99">… hundreds</text>
+<path class="ar" d="M180,114 L180,130"/>
+<rect class="bx" x="16" y="132" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="152" style="fill:var(--amber)">② Refiner network</text>
+<text class="st" x="30" y="171">Sees the render vs. real image (color+depth) gap and</text>
+<text class="st" x="30" y="188">predicts "a bit left, turn a bit more" to nudge each one</text>
+<text class="lb" x="30" y="202" style="fill:var(--teal)">Even coarse hypotheses find their place here</text>
+<path class="ar" d="M180,208 L180,224"/>
+<rect class="bx" x="16" y="226" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="246" style="fill:var(--amber)">③ Scoring network</text>
+<text class="st" x="30" y="265">Compares remaining candidates and ranks them</text>
+<text class="st" x="30" y="282">A model trained on "which of A, B fits better"</text>
+<text class="lb" x="180" y="314" text-anchor="middle" style="fill:var(--amber)">Final: x, y, z + rotation — six numbers</text>
+</svg>

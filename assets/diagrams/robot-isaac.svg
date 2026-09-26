@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Isaac 스택 — 우리 파이프라인은 앞 두 상자에 산다</title>
+<desc>NVIDIA Isaac의 네 층을 왼쪽에서 오른쪽으로: Isaac Sim은 모델을 학습시키고, Isaac ROS는 엣지에서 실행하며, Isaac Lab은 새 기술을 가르치고, GR00T는 범용 로봇의 최전선이다. 우리의 스테레오-포즈 파이프라인은 앞 두 상자에 산다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.n{font-size:14px;font-weight:700;fill:#5b57e0;}
+.r{font-size:11px;fill:var(--ts);}
+.cap{font-size:11px;fill:#0d9488;}
+</style>
+<rect x="0" y="0" width="680" height="210" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">Isaac 스택</text>
+
+<rect x="40" y="60" width="140" height="82" rx="10" fill="#ecebfd" stroke="#5b57e0" stroke-width="0.7"/>
+<text class="n" x="110" y="96" text-anchor="middle">Isaac Sim</text>
+<text class="r" x="110" y="118" text-anchor="middle">모델을 학습</text>
+<text class="h" x="192" y="106" fill="var(--ts)">→</text>
+<rect x="210" y="60" width="140" height="82" rx="10" fill="#ecebfd" stroke="#5b57e0" stroke-width="0.7"/>
+<text class="n" x="280" y="96" text-anchor="middle">Isaac ROS</text>
+<text class="r" x="280" y="118" text-anchor="middle">실행 (엣지)</text>
+<text class="h" x="362" y="106" fill="var(--ts)">→</text>
+<rect x="380" y="60" width="140" height="82" rx="10" fill="#ecebfd" stroke="#5b57e0" stroke-width="0.7"/>
+<text class="n" x="450" y="96" text-anchor="middle">Isaac Lab</text>
+<text class="r" x="450" y="118" text-anchor="middle">새 기술 학습</text>
+<text class="h" x="532" y="106" fill="var(--ts)">→</text>
+<rect x="550" y="60" width="130" height="82" rx="10" fill="#5b57e0"/>
+<text class="n" x="615" y="96" text-anchor="middle" style="fill:#ffffff">GR00T ★</text>
+<text class="r" x="615" y="118" text-anchor="middle" style="fill:#e9e8ff">범용 최전선</text>
+
+<path d="M40,158 L40,150 L350,150 L350,158" fill="none" stroke="#0d9488" stroke-width="1.2"/>
+<text class="cap" x="195" y="180" text-anchor="middle">우리 스테레오 → SAM → 포즈 파이프라인이 여기에 들어간다</text>
+</svg>
