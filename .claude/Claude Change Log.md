@@ -1,4 +1,118 @@
-# Claude Change Log — BlogMigration
+# Claude Change Log — butterflow 블로그/네이버
+
+> `/end-session` 스킬이 세션 끝마다 최상단에 항목을 추가합니다. 최신이 위(역순).
+> 형식: `## YYYY-MM-DD — 한 줄 제목` + 변경/커밋/검증.
+> 2026-09-27: butterflow-ssf 작업폴더 로그 + 저장소 추적 로그(BlogMigration) 통합.
+
+---
+
+## 2026-09-20 (2) — Field Notes 팔로업 발행: FoundationPose가 Orin NX 16GB에서 빌드+구동
+
+- **신규 발행(라이브):** `jetson-foundationpose-16gb`(한/영) — Field Notes **2부작의 독립 정정편**(1·2부는 2부작 유지, renumber 안 함). 2부의 "16GB 증명·실전은 AGX 64GB" 결론을 뒤집음: 보드 비우기(유휴 컨테이너 stop + drop_caches: free 663MB→14GB, lfb 3×4MB→303×4MB) + `--memPoolSize=workspace:10240` + `optLevel=5`로 **엔진 빌드 성공**, 노드 라이브 6-DoF, 검출기까지 co-resident 피크 **~6.2GB/16GB**. 진짜 범인=유휴 컨테이너의 **연속 메모리 조각남**(용량 아님).
+- **그림 2종:** 히어로 `demos/jetson-freeboard-proof.png`(실제 터미널 FAILED→비우기→PASSED, 사용자 제공·기밀 클린) + `jetson-freeboard-recipe.svg`(한/영, 라이트카드). 메모리 diagram은 히어로와 중복이라 제거.
+- **기밀:** 공개 포럼 성공 사례(361112)의 **재현기**로 프레이밍. 클라이언트 식별자 0 — `physical-ai-vault-confidentiality` 선 준수. 회사 세션의 실측 수치는 캡처(사용자 제공)로만 반영, 세션 내용 직접 인용 안 함.
+- **5게이트:** 저작권·상표 고지, 팩트(수치를 히어로 캡처에 정합: 1290442752·6.2GB·196MB 제거), de-AI(자기정정 훅), 페르소나(비유·글로스·네이티브), 용어(돌다→동작/타동사 돌리다→실행) 적용.
+- **네이버:** 스킵(수작업 부담 — 이 글은 블로그만).
+
+**커밋:** `ffc29cb`(6 files, +399). butt2rflow 계정 + 자격증명 오버라이드로 push.
+**검증:** clone을 `origin/main`(dd81d38, VIX 스냅샷)과 동기화 후 발행 → GitHub Actions `mkdocs build --strict` **green**(Node20 경고만) → gh-pages 배포 success → `curl` ko/en/히어로 **200** + 라이브 grep(정정편·메모리 도둑·1290442752·6.2GB·히어로·레시피·nav 3항목) 확인.
+
+---
+
+## 2026-09-20 — 커리큘럼 워크스트림 분리 (→ ~/Documents/physical-ai-course)
+
+- Physical-AI 로봇 코스를 butterflow-ssf(블로그 워크디렉토리)에서 **완전 분리**: `curriculum/`(은퇴 드래프트)·메모리 `physical-ai-robotics-course.md`·코스 핸드오프(§8)·start/end 스킬을 새 폴더 `~/Documents/physical-ai-course`로 이동(`prefer-visual-heavy`는 공유라 복사). butterflow는 **블로그/네이버 전용**, 핸드오프 §8은 포인터 한 줄만.
+- 정본 Claude Doc는 폴더 무관(그대로). 회사 업무와 양방향 분리 규칙 유지.
+- 아래 `2026-09-19~20` 코스 이력은 butterflow 세션에서 수행된 것 — **이후 코스 이력은 physical-ai-course 체인지로그**로 간다.
+
+---
+
+## 2026-09-19~20 — 코스 Claude Doc 대규모 보강 (작업상태 이관 + 비전 하드웨어/추론/엣지 Q&A 심화)
+
+정본 Claude Doc 단일 문서에 집중 편집(세션이 09-19→09-20 연속, rev 80까지). **butterflow 블로그·git 미변경(이번 세션 배포 없음 — 코스 문서 전용). 회사 업무 세션과 양방향 분리 유지(그 세션의 실측·수치·파일 코스 미반입).**
+
+- **작업 상태 탭 이관·zip 폐기:** rev5 `physical-ai-course-handoff.zip`의 00(맥락)·02(미결 질문)·03(다음 액션)을 Doc **"작업 상태(납품 시 제거)" 탭**에 세 섹션으로 이관. 01·04는 본문 탭에 이미 반영 → **zip 폐기, 문서 하나로 통합.** 🔒 작업상태 탭엔 실명·사업·유통 채널·장비 주문 등 사적 정보 → 공개물 반입 금지.
+- **미결 질문 8 신설·정리:** Isaac Sim 모듈 편입 여부. 게이트=GPU만(라이선스는 확인 후 **비이슈로 제거** — 소스 Apache 2.0, AI Enterprise는 외부 서비스형 제공에만; 강의실 공유 서버=내부 사용).
+- **본문 부록 — Isaac Sim 선택 모듈:** 필수 트랙 아님. 값=디지털 트윈(실물 전 예행)·Track A 합성데이터(Track B엔 안 씀, sim2real 갭). 운영=**강의실 내 공유 서버**(비용·라이선스 최선). Isaac Sim 5.1.0 최소 **RTX 4080/16GB**·RT코어 필수(3090은 개발기로 충분).
+- **하드웨어 구성 — "카메라 선택" 소절:** 동작거리=장착위치(손목 근접 D405 vs 오버헤드 중거리+FOV), RealSense range 표, **min-Z(뎁스 하드리밋) vs K 유효밴드(렌즈 DoF·캘리브 표본)** 구분, 작업거리에서 캘리브.
+- **Track A — 고정초점 교육 포인트:** AF는 focus로 K(fx·fy) 흔듦(Luxonis OAK AF 경험담); RealSense 전 계열 고정초점이라 원천 회피.
+- **강사 노트 FAQ 3연(추론·엣지):** ① VPU vs GPU(온-VPU=nano 천장·CPU+내장가속기가 VPU-nano 이긴 실사례·RVC4≈32배·구글 TurboQuant/PolarQuant는 **LLM KV용이라 비전 무관**) ② Track A on Jetson Orin(NX16GB 경계선·AGX64GB 실전, **현시점 가성비=AGX Orin 64GB**) ③ **모델(ONNX)은 이식·TensorRT 엔진은 타깃 재빌드·CAD 교체는 재빌드 불필요**(엔진=네트워크별·캐시 재사용).
+- **포럼 검증(사용자 요청):** NX 16GB에서 RT-DETR+FoundationPose 튜토리얼 완주 사례(포럼 361112) 확인 → 표현을 **"엔진 빌드 불가"→"빡빡·OOM 잦으나 우회로(`--memPoolSize`·헤드리스·컨테이너 밖·메시 성기게)로 가능"** 으로 정정. 빌드 OOM은 AGX 64GB에서도 발생 사례(359545).
+
+- **15주 잔여 5주 채움(본문 모듈 구성):** 주차별 표 — W11 Isaac Sim 디지털 트윈(선택) · W12 심화 랩1(자기 물체로 트랙 판정) · W13 심화 랩2(실패 진단·강건성) · W14~15 팀 캡스톤. 평가축=트랙 선택 근거+동작+실패 분석; 선택 기준 계단·부록 Isaac Sim과 교차연결.
+- **부록 '산업용 팔로의 확장' 기종 확충:** 적합도 표에 **KUKA(iisy·iiwa·KR)·Franka·ABB·야스카와·두산** 행 추가(제어 인터페이스·주기·내장 F/T·평가) + 브랜드 한 줄 설명(KUKA=RSI/EKI/FRI/EAC 옵션이 Track B 전제 / Franka=FCI 연구표준·산업 대형 아님 / ABB=EGM / 야스카와=MotoROS2 / 두산=dsr_ros2). 핵심=**실시간 외부제어 경로 유무가 Track B 가부.**
+- **회사 업무 분리 원칙 기록:** 커리큘럼은 회사 업무와 코드·IP·자료 미혼합(양방향) — 작업상태 탭 제약·메모리·핸드오프에 명시.
+
+- **강사 노트 FAQ — Cognex 비교 추가:** 현장 머신비전 매핑 — Cognex 고전(비딥러닝) 비전=결정론 기하 세계(PatMax 2D=계단 ② 2D 비전 · 3D 정합=Track 0 ICP 계열), **"모델 train"은 ML 학습이 아니라 기하 템플릿 1회 캡처**(Track B 학습과 다름), Cognex Deep Learning(ViDi)=학습형. ICP=Iterative Closest Point 명시.
+
+- **본문 Track 0 — ICP 비유 박스 추가:** "직관 — 투명 모형 겹치기"(H3) — 포인트클라우드↔CAD 정합을 투명 모형 겹치기로 설명(①최근접 대응 ②회전·이동 ③반복→6-DoF), 신경망 없음·결정론·잔차, 지역최소/대칭 약점. ICP 정식 명칭(Iterative Closest Point) 포함.
+
+- **NX 16GB 톤 공개-소스 정정(2026-09-20):** Track A 엣지 FAQ·현시점 결론을 "경계선/AGX 필수" → **"메모리 확보가 관건 — 유휴 컨테이너·백그라운드 GPU 정리 + `--memPoolSize` 워크스페이스 캡 + 빌더 최적화로 NX 16GB에서도 엔진 빌드·구동 가능"**으로 완화. 블로그의 '걷는 속도(~0.1 FPS)'는 엔진 미빌드(범용 경로) 상태였음을 명확화, 포럼 361112 링크 추가. **근거=공개 소스(포럼 361112/359545 + butterflow 블로그)만** — 회사 업무 세션 내용·수치는 미사용(양방향 분리 유지). 오해 소지의 "사내" 표현도 "공개/블로그"로 정리.
+
+- **강사 노트 FAQ — RT-DETR vs YOLO 한 줄 추가:** 둘 다 2D 검출 앞단(계단 ② 2D 비전, 트랙 아님); YOLO=CNN·RT-DETR=트랜스포머(DETR) 계보로 하는 일 동일; Track A에서 박스→SAM2→FoundationPose; Isaac ROS 기본 SyntheticaDETR은 정확-인스턴스라 새 물체 재학습 필요.
+
+- **본문 Track A — "위치(마스크) 주는 3가지" 표 추가:** FoundationPose는 **zero-shot이 포즈지 검출이 아님**(물체가 어디 있는지=마스크를 받아야 6-DoF) → 위치 공급 방법 표 ① 고정 ROI(지그) ② 검출기(RT-DETR/YOLO) ③ 수동 태깅. **팔렛/픽스처 공차** 대응 명시: 고정 ROI는 픽셀 완벽 불필요 — 공차 봉투를 덮는 넉넉한 ROI면 되고 정밀 6-DoF는 FoundationPose/ICP가 계산(대략 위치=지그, 정밀 자세=비전). 수동 태깅은 "검출기도 없고 위치도 안 정해진" 경우에만 필요.
+
+- **본문 Track A — "보인다 전제 5조건" 표 + ROI·지그 용어 글로스 추가:** 고정 ROI(검출기 없음)가 성립할 "대상이 보인다"의 5조건(① ROI 안 ② 가림 적음 ③ 유효 깊이 ④ 단일·식별 인스턴스 ⑤ 배경 분리); 하나라도 깨지면 검출기 필요. ROI=Region of Interest, 지그=부품을 같은 위치·자세로 붙잡는 기계적 고정구.
+
+- **강사 노트 FAQ — Grounded-SAM + VLA 스펙트럼 추가:** Grounded-SAM = Grounding DINO(텍스트→박스) + SAM2(박스→마스크) = 텍스트→마스크(Track A 앞단에 끼우면 검출까지 zero-shot=언어 조건 지각). VLA 스펙트럼 표 = 모듈 파이프라인(Track 0/A) → +open-vocab(Grounded-SAM) → VLA end-to-end(RT-2/OpenVLA/π0, Track B 언어 확장); 구조화 산업엔 모듈이 대개 우위.
+- **Q&A로 확정(메모리 기록, 일부 Doc 반영):** SAM2 프롬프트=점·박스·마스크(**텍스트 아님**; 실사진 SA-1B/SA-V 사전학습 zero-shot 분할). 검출기 YOLO=RT-DETR **학습 부담 동일**(라벨 필요) — 던 건 합성(SyntheticaDETR)·open-vocab·SAM 자동라벨. **Orin NX 16GB 검출 실현성**: SyntheticaDETR 됨(가벼움·닫힌집합·forum 361112), **Grounding DINO 1.5 Edge(open-vocab) ~10.7 FPS TRT**(원조 1.1); Track A는 검출 init-only라 유리. **Track B는 검출기·SAM2·포즈·CAD 전부 없음**(픽셀→행동). (모두 공개 소스/일반 개념 — 회사 업무 세션 미인용.)
+
+- **부록(산업용 확장) — 무질서 빈피킹 대목 추가:** 지그 없는 랜덤 빈피킹 = Track A(CAD 6-DoF, 산업 표준)의 가장 어려운 끝(가림·엉킴·대칭·반사·인스턴스 검출·그랩이 병목); Track 0 보조·Track B 부적합; 확장 = 학습형 그랩 검출(GraspNet/Contact-GraspNet/Dex-Net). 상황별 접근 표 포함.
+
+**검증:** Claude Doc **rev 85**까지 반영·저장(Docs 커넥터). 근거 링크 문서 내 인용 — NVIDIA Isaac ROS 릴리스노트·포럼 361112/359545, Isaac Sim 5.1.0 요구사양, Luxonis RVC/OAK 문서, RealSense D405/D455 사양, 구글 TurboQuant. **git 배포 없음**(블로그 미변경).
+
+---
+
+## 2026-09-19 — 네이버 크로스포스트 7편 발행 + URL 기록, physical-ai-course-handoff.zip
+
+- **네이버 발행(사용자 수동):** 대기였던 7편 전부 네이버 발행 완료 — cds · stereo-to-grasp · frames-transforms · cobot-investing · vanna-charm · jetson-ros2-setup · jetson-isaac-foundation-models. jetson 2편은 전날 편집(전동드릴·엣지 컴퓨터·톤·3패널·hw-tiers)까지 반영된 패키지로 게시.
+- **URL 확보 방법(신규 gotcha):** 네이버 본체·RSS 모두 WebFetch **차단** → 사용자가 `rss.blog.naver.com/bflownet.xml` 내용을 붙여 주면 `<guid>`에서 logNo 추출. 7건 확보.
+- **기록:** logNo 7건 `naver-published-urls` 메모리에 추가(총 9편), 8개 `naver/*/UPLOAD.md`의 "발행 완료" 줄에 URL 스탬프, 핸드오프 §7 "네이버 발행 대기 없음"으로 갱신.
+- **핸드오프 zip:** `physical-ai-course-handoff.zip`(프로젝트 루트) — 커리큘럼 Unit 1~5(28 md)·다이어그램 32 SVG·README, 이미지 상대경로 resolve 검증, forward-slash 크로스플랫폼. Python `zipfile`로 재패키징.
+- **⚠️ 커리큘럼 divergence 발견(2026-09-19):** 코스 설계가 별도 대화에서 진화 — 본편 팔 myCobot→**SO-101**, **Track 0/A/B** 구조, **LeRobot/LeLab**, 산업용 확장(UR/FANUC/KUKA + GELLO), 2채널. 정본은 별도 Claude Doc(rev 26+)+그쪽 핸드오프. butterflow `curriculum/`·zip은 myCobot 기반 **이전 드래프트→stale**. 핸드오프 §8 배너·메모리 `physical-ai-robotics-course` SUPERSEDED 배너로 표시.
+- **정본 3-트랙 모델 확보·기록(2026-09-19):** 사용자가 정본 스크린샷/텍스트 제공 → **Track 0(ICP)·A(FoundationPose)·B(ACT)** 정의+비교축+선택 계단+정정("Track B=모방학습 자체, 실시간 외부제어는 산업용 팔의 전제일 뿐")을 handoff §8·메모리에 반영. 플랜을 **REV 2로 재-스파인**(SO-101 주팔·3트랙·LeRobot/LeLab·산업용 확장+GELLO·ROS2/MoveIt=sim Franka), 하단 REV 1(myCobot)은 참고용. **모듈 본체 28개 재정렬(특히 Unit 5→3트랙)은 사용자 확인 후 진행 예정.** 정본은 여전히 별도 Claude Doc rev 26+.
+- **커리큘럼 홈 결정·정리(2026-09-19):** 사용자가 정본 패키지 zip(00~04, rev 4)을 프로젝트 루트로 교체 다운로드 → 제가 `01-decisions`·`04-technical-reference`·`00-context`·README를 **읽어** 정본 실체 확인(본문은 **Claude Doc rev 26**, 구조는 **M0~M9 3트랙**·SO-101·RealSense D405·ChArUco·LeRobot/ACT, butterflow Unit1~5와 완전 다름). 결정: **Claude Doc = 단일 정본 유지, butterflow=블로그.** butterflow의 myCobot Unit1~5 드래프트 28 md는 `curriculum/_superseded-mycobot-draft-2026-09-18/`로 **은퇴**, `curriculum/README.md` 포인터 신설. **재구축 안 함**(패키지가 "사본 두지 말 것" 명시 — 드리프트 방지). 핸드오프 §8·메모리 `physical-ai-robotics-course` 정본 기준으로 갱신. 🔒 `00-context` 사적 정보는 공개물 반입 금지.
+
+---
+
+## 2026-09-18 (2) — Physical-AI 로봇 커리큘럼 구축 + robot-simulation 발행 + jetson 글 대규모 용어·편집 정리
+
+복구 이후 하루치 작업. 세 갈래.
+
+### A. Physical-AI / 로봇 커리큘럼 (로컬 `curriculum/`, git 아님 — 발행분만 배포)
+- **계획**: `physical-ai-robotics-course-plan.md`. 결정: 이중언어 KO/EN · 독립 코스 문서 · 저가팔 **myCobot 280** · 하드웨어 사다리(sim 무료 Franka → myCobot → 보유 UR/FANUC 캡스톤) · Unit 2 **이중용도**(블로그+코스).
+- **신규 저술(이중언어)**: Unit 3(ROS 2 기초 3.1 / MoveIt 2 vs cuMotion 3.2), Unit 2(시뮬·sim-to-real), Unit 5(myCobot 집기 5.1 / UR·FANUC 캡스톤 5.2 / 경제성 5.3), + 재사용 Unit 1·4 **연습문제 래퍼 16종**.
+- **다이어그램 16종/32 SVG**(rvd 자기테마, 각 워크드 예시). 사용자 피드백 "그림·예시 더" 반영([[prefer-visual-heavy]]).
+- **tech-verify**: myCobot `mycobot_ros2`/`mycobot_280`·`mycobot_280_moveit2 demo.launch.py`, cuMotion 플러그인 **`isaac_ros_cumotion_moveit/CumotionPlanner`**(오기 수정), OMPL·`moveit_py` 확인.
+
+### B. robot-simulation 발행 + 용어 통일(돌다→동작/실행)
+- **신규 블로그 글** `robot-simulation`(KO+EN, 그림 5종) — Unit 2 이중용도 발행. Physical AI › Robot Vision, model-anatomy 뒤. 커밋 `c194de5`, CI green, 라이브 200.
+- **용어 규칙 확정**: 소프트웨어가 "돈다"=**동작하다**(돕니다→동작합니다/돈다→동작한다/도는→동작하는/돌아가다·돌기), 타동사 "돌리다"=**실행하다**. 회전·복귀·자세·후보렌더링·금융글은 제외. 2패스로 로봇 글 전체 적용 — 커밋 `6016fe8`, `8e78a9a`. 핸드오프 §5 규칙화.
+
+### C. "엉뚱한 세션" 복구 + jetson 글 대규모 편집 (persistent clone `~/Documents/butt2rflow.github.io`)
+- **3패널 깊이 비교 그림**(다른 세션에서 커밋된 `e44b742`가 stale base) → origin/main 위로 리베이스 발행 `d91ea1d`. 캡션 문구 `f0a09b2`.
+- **톤 3게이트 재검토**(persona/de-AI/final, Field Notes 2편 KO+EN) — 셈/거고요 등 잔여 AI톤 정리 `0bee78b`.
+- **일괄 표현 정리** `badd861`: 드릴→전동드릴, 보드→**엣지 컴퓨터**(키보드·캐리어보드·제품명 Jetson보드·GPU보드 제외), 팔→로봇 팔, 오프너 "사무실에서 굴러 다니던", 새 부품이 와도→새로운 부품을 가져와도; **3패널 그림을 'ESS냐 FoundationStereo냐'→'why FoundationStereo' 섹션으로 이동+리프레이밍**(학습형 vs 순진한 블록 매칭, "가운데는 ESS 아님" 명시 — 블록매칭/ESS 혼동 해소).
+- **"한 엣지 컴퓨터"(수 세기) → "한 대"/생략** `cceba8b` (손바닥만 한/증명한 은 보존).
+- **hw-tiers 그림 SVG** '한 보드'→'한 대'·'실전은 64GB' `8a03203` (블로그는 SVG 직접 임베드 → 라이브; 네이버 `hw-tiers.png` 1360×600 재렌더).
+- **네이버 패키지 전 구간 동기화**(jetson-isaac/jetson-ros2 txt·UPLOAD·배너PNG·hw-tiers PNG) — 아직 미발행(수동 붙여넣기 대기)이라 배포 없음.
+
+**커밋(블로그, 전부 push·CI green·라이브 검증):** `c194de5` `6016fe8` `8e78a9a` `d91ea1d` `f0a09b2` `0bee78b` `badd861` `cceba8b` `8a03203`.
+**검증:** 매 배포 `mkdocs build --strict`(기존 대시보드 PNG 5경고만) + GitHub Actions success + `curl` 200 + 핵심 문구 라이브 grep.
+
+---
+
+## 2026-09-18 — 세션 크래시 복구 + jetson-isaac 네이버 패키지 완성
+
+세션이 크래시로 유실 → `/start-session` 복구. **콘텐츠 손실 없음** 확인(전부 디스크에 있고 라이브 발행됨).
+
+- **복구 진단:** 크래시 세션(오늘 10:02, id `1789740155_1427`)은 **`jetson-isaac-foundation-models` 네이버 크로스포스트 패키지** 제작 중이었음(스크래치패드에 gifframes 추출·SVG→PNG 래퍼·site 빌드 흔적). 결과물은 `naver/jetson-isaac-foundation-models/`에 온전.
+- **네이버 패키지(완성):** `jetson-isaac-naver.txt`(전문 평문) + 대표 세로배너(1360×1800) + 이미지 6종 + **움짤 GIF 2종**(FoundationPose 포즈추적) + scorecard/hw-tiers + `UPLOAD.md`(8곳 이미지 마커 배치표·절차). "로봇의 뇌를 엣지에 (2) — Isaac ROS·파운데이션 모델", 현장 노트 2부작 중 2부.
+- **검증:** 블로그 원문 `posts/jetson-isaac-foundation-models/` 한/영 **라이브 200**. 네이버 발행은 사용자 수동 붙여넣기 대기(발행 후 URL → `naver-published-urls`).
+- **주의:** 크래시로 `/end-session` 미실행 → 핸드오프·체인지로그가 09-09에 멈춰 있던 것을 이번에 현행화.
+
+---
 
 ## 2026-09-17 (Session 8)
 
@@ -30,6 +144,107 @@
 - 0DTE "오늘 핀" 라이브 렌더는 장중 배포(주중 <20:00 UTC)에서만 — **2026-09-18 18:30 UTC 검증 routine 예약됨** (`trig_01KaGaMQJmxKnuaTcpjQgvCW`)
 - signed live 0DTE gamma 원하면 유료 signed-flow 피드 결정 필요
 - 로봇비전 심화 2부작 Naver 크로스포스트 미실시
+
+
+## 2026-09-17 — 로봇 비전 심화 2부작 발행 (inside-the-models · model-anatomy, 한/영)
+
+Physical AI › 로봇 비전 **심화 2부작** 신규 발행. 본편(stereo-to-grasp → frames-transforms) 뒤에 붙는 개념·구조 심화.
+
+- **글:** `inside-the-models`(심화 1부 · 개념) + `model-anatomy`(심화 2부 · 구조), 각 한/영. 본문 30KB+ 규모.
+- **그림:** `rvd*` SVG **한국어 38종 + 영문 38종**(1:1 완전 매칭, 누락 없음) — `docs/assets/diagrams/`(KO) · `docs/assets/diagrams_en/`(EN). 자기테마 rvd 템플릿 사용(메모리 `robot-vision-deep-dive-series`).
+- **nav:** `mkdocs-nav-snippet-robotvision.yml` 배치대로 로봇 비전 섹션 frames-transforms 뒤에 두 글 추가.
+- **검증:** 한/영 라이브 200(`posts/inside-the-models/`·`posts/model-anatomy/`, sitemap lastmod 2026-09-18). 시리즈: 본편 2부작 → 심화 2부작.
+- **비고:** 이 세션도 `/end-session` 미실행이라 당시 체인지로그 미기록 → 09-18 복구 시 소급 기록.
+
+---
+
+## 2026-09-09 (4) — GEX 타일 추가 (딜러 감마 레짐, 라이브 계산)
+
+대시보드 지표 그리드에 **8번째 카드 = GEX(딜러 감마 노출)** 추가(한/영, 라이브).
+
+- **데이터·계산:** 기존 파이프라인에 GEX 소스가 없어 **Yahoo SPY 옵션 체인**에서 라이브 계산(SPX 대리). 근월 ~6개 만기 집계 → **BSM 감마**로 넷 GEX·감마플립·Max Pain. 표시: 레짐(넷 GEX 부호, 🟢롱/🔴숏)·플립 vs 현재가·Max Pain(참고). `fetch_gex()`/`render_gex_card_{ko,en}`/`render_gex_chart()`(→ `gex_regime.png`, 글의 정적 `gex_profile.png`와 별개). 실패 시 타일 생략(graceful).
+- **프레이밍:** 부호 취약성 때문에 방향 신호가 아니라 **레짐(잔물결/증폭·억제) 참고용** + Max Pain "맹신 금물" 면책 — 글(`gex-calculator`)의 "감마는 잔물결, 파도는 델타" 논지와 정합.
+- **⚠️ Yahoo v7 옵션 함정(해결):** `v7/finance/options`가 이제 **401**(v8 chart는 무인증 OK) → **쿠키+crumb 핸드셰이크**(`fc.yahoo.com` 쿠키 → `getcrumb` → `&crumb=`)로 우회. GitHub Actions IP에서도 동작 확인.
+- **검증:** stdlib만으로 로직 복제 로컬 테스트(numpy 없이) → SPY 762 / 넷 −5.5B(숏) / 플립 770 / maxpain 768 (일관·sane). 배포 후 CI 로그 동일 값 + KO/EN 스크린샷·이미지 200 확인. 커밋 `72c0a5c`.
+- 메모리 `home-dashboard-layout`에 GEX·crumb 함정 추가, 핸드오프 §6/§7 반영.
+
+---
+
+## 2026-09-09 (3) — 홈 대시보드 2존 재편 (구현·배포, 한/영)
+
+사용자 "돗데기 시장" 지적 → 진단(메모리)만 있던 것을 **실제 구현·배포**.
+
+- **레이아웃(before → after):** 긴 단일 컬럼(지표 8종 풀폭 + 각 풀폭 차트, ~4200px) → **① 오늘의 결정**(비중·Kelly·공격) / **② 시장 신호 한눈에**(지표 7종) **2존** + 지표를 **반응형 그리드 카드**(데스크톱 2열/모바일 1열) + 각 카드 **무거운 차트를 `<details>` 접이식**(기본은 표+상태만).
+- **구현:** `scripts/update_dashboard.py`에 `_dash_card()` 헬퍼(카드 래핑+`---` 제거+차트 접기) 추가, KO/EN 조립부 각각 존 헤더·그리드·카드 래핑. `custom.css`에 `.dash-zone`/`.dash-grid`/`.dash-card`/`.dash-chart`(+slate 다크 오버라이드).
+- **검증:** py_compile OK → `deploy.yml`이 CI에서 `update_dashboard.py` 재생성 후 gh-deploy → KO(`08fe598`)·EN(`263c8b1`) 라이브 **전체 스크린샷으로 시각 확인**. EN `/en/` 차트 이미지가 접이식 깊은 중첩에도 `../assets/diagrams_en/…`로 정상 재작성됨(200) 확인.
+- 미적용(의도): Kelly×VIX 곡선은 결정존 Kelly 카드에 노출 유지(유용, 잡음 아님); 지표는 스파크라인 대신 상태표+접이식 풀차트.
+- 메모리 `home-dashboard-layout` DONE으로 갱신, 핸드오프 §6/§7 반영.
+
+---
+
+## 2026-09-09 (2) — 전체 글 리뷰 배포: 그림 버그·HIGH 용어·상호링크·vanna-charm 개선 + 5게이트 표준화
+
+**긴급 버그 수정 (published):**
+- **"감마 너머"(vanna-charm) honesty-layer SVG가 안 뜨던 문제** — `<desc>`의 `Barbon&Buraschi` 등 **이스케이프 안 된 `&`**로 `<img>` 로드 시 XML 파싱 실패(three-flows는 정상이라 "그림 하나만" 증상). 한/영 수정(`&`→`&amp;`), 전체 diagram SVG XML 재검증(나머지 정상). 커밋 `054b19f`.
+
+**전체 글 리뷰 (published, strict 통과·라이브 검증, 커밋 `d875511`·`e0f1387`):**
+- **HIGH 용어 설명(한/영, 14개 투자글)**: 감마·IV·EFFR·vol drag·0DTE·M1/M2·COR1M/COR1Y/COR90D·OTM·순 숏 변동성 — 첫 등장에 비유 우선 글로스. (용어 감사 에이전트 결과 중 HIGH만 채택 — 사용자 선택.)
+- **상호링크 22건 + 오래된 앵커 수정**: 링크 감사 결과 깨진 내부링크 0건. 옵션기초·deriv→SSF 앵커를 신제목으로, gex-calculator "Vanna·Charm" 앵커 4곳 통일. 신설 상호링크: skew↔implied-corr, impl↔move/vix-ts, credit↔fedwatch, jetson↔cobot-investing, stereo/frames→cobot-investing.
+- **nav 재분류**: MOVE·Implied Correlation을 Options 101 → **Market Data**.
+- **vanna-charm 개선**: 제목 → **"감마 너머 — 바나 랠리, 핀닝, 딜러의 진짜 손놀림"**(inbound 앵커 6곳 동기화), 오프너 문구("금융권 트위터"→"업계 헤드라인 이벤트 사실관계"), 핀닝(자석 비유+유동성 이유+**감마 효과임 명시**), 0DTE 중립화, vanna rally에 **변동성 타깃 재레버리징 교란요인** 추가.
+
+**리뷰 게이트 — 5게이트로 표준화 (사용자 지시):**
+- **③ '사람이 쓴 느낌(de-AI)' 게이트 신설.** 표준: ① 저작권 ② 팩트체크 ③ 사람이 쓴 느낌 ④ 페르소나 ⑤ 최종편집. 각 게이트를 `git diff` 대상 병렬 서브에이전트로 실행.
+- 반영: 팩트(핀닝=감마 명시·감마 gloss "불어나는지→바뀌는지"·0DTE 중립), 페르소나("갉이는"→"갉아먹히는" 등 비표준어·군더더기), 저작권(pass), 최종편집(OTM "행사가에서 멀어"→"현재가에서 멀어"·gex-calc 앵커), **사람이 쓴 느낌**(반복 3분할 완화·경고박스 중복+"→슬로건" 제거·중첩괄호/화살표 사슬 풀기).
+- 메모리 `review-gates` 신설, 핸드오프 §5 갱신.
+
+**대기(사용자 확인 필요):** 홈 대시보드 2존 재편(메모리 `home-dashboard-layout`).
+
+---
+
+## 2026-09-09 — GEX 후속편(Vanna·Charm) 신설 + gex-calculator 보강 + 홈 대시보드 진단
+
+**블로그 (published, strict 빌드 통과·라이브 검증):**
+- **후속편 신설** `vanna-charm.{ko,en}` — "감마 너머 — Vanna·Charm와 딜러의 진짜 손놀림" / "Beyond Gamma". 팩트체크 먼저(GPP'09·NPP'05·Barbon&Buraschi'21·Cboe 0DTE·Chilingarian) → **정직 레이어**(✅견고/🟡휴리스틱/⛔과장)로 차별화. 결론: 영향은 있으나 **규모는 과장**, 실제론 크지 않다. 그림 2장(vanna-three-flows·vanna-honesty-layer). Tools 체인에 gex-0dte-patterns 뒤로 삽입, 이전/다음 링크 갱신(gex-0dte→vanna→volatility-dashboard).
+- **gex-calculator 보강**(제목 유지): 오프너 + 신규 섹션 "감마는 잔물결, 파도는 델타 — 직접 트레이딩하며 배운 것"(gex-ripple-wave 그림·레짐·방아쇠≠연료·균형 결론) + "Max Pain, 얼마나 믿나" + Cboe 0DTE 각주. 사용자 실전 통찰("감마=잔물결, 파도=대량 델타; 나비효과 인정하되 맹신 금물").
+- 문구 확정: "세션 안에서 금세 **실제와 어긋나기 시작**"(사용자 승인). 게이트(팩트·저작권·페르소나·최종편집) 통과.
+
+**홈 대시보드 진단(제안만, 미시행):** 사용자 "돗데기 시장" 지적 → 전체 캡처(1280×4200) 감사. 진단: ~8개 동일폭 스택·차트 과다·상단 카드 vs 하단 raw PNG **두 시각 체계 혼재**·그룹 없음. 제안: **① 결정존**(비중/Kelly/공격) + **② 지표 그리드**(소형 타일·상태점·스파크라인, 차트는 상세페이지로) 2존 재편. 상세는 메모리 `home-dashboard-layout`. **사용자 사인오프 대기.**
+
+**메모리:** `home-dashboard-layout` 신규. `butt2rflow-push-auth`에 **VIX 스냅샷 자동커밋 → push 전 fetch+rebase --autostash** 함정 추가(이번 세션 4회).
+
+**참고 커밋:** `5f5d471`(최종 문구) 외 vanna-charm 신설·gex-calculator 보강·체인/그림 커밋들.
+
+---
+
+## 2026-09-07~08 — 코봇 3부작 완결 + Jetson 현장노트 1부 + 네이버 패키지들
+
+**블로그 (published, strict 빌드 통과·라이브 검증):**
+- **코봇 3부작** 완성·정합화 (한/영, Physical AI › Cobots):
+  - 1부 `cobot-basics`, 2부 `cobot-ur-vs-fanuc`, 3부 `cobot-investing`(투자편)
+  - 그림 대폭 보강(1부 4·2부 3·3부 4장), 트릴로지-arc 리뷰 반영(화낙 표기·전방링크·중복 완화·용어)
+  - 2부 정확성 정정: 화낙 외부제어 ~10Hz→Stream Motion 유료 125~250Hz·위치만, 힘 제어 프레이밍, CRX ±0.04mm, NVIDIA 파트너십
+  - 3부: 세 갈래 희석·P/E 반전·순수플레이 부재(ABB→소프트뱅크)·가치이동·융합 스파인. 팩트 리서치 3회.
+- **Field Notes 신설** + 1부 `jetson-ros2-setup` (Jetson Orin NX·JetPack 6·ROS 2 Humble, 실제 함정, SSH-에이전트 오프너, 그림 3장). nav "현장 노트" 추가.
+- 용어 통일: 잇다→연결하다, 누르는→눌리는 쪽, 인컴번트→기존 강자.
+
+**네이버 패키지 (준비 완료, 붙여넣기 대기):**
+- `naver/cobot-investing/` · `naver/jetson-ros2-setup/` 신규 (txt + 배너 + 그림 PNG + UPLOAD.md)
+- (기존: ssf·move=발행됨, cds·stereo·frames=대기)
+
+**메모리:** `physical-ai-vault-confidentiality` 추가(고객 기밀 경계). `naver-published-urls` 유지.
+
+**주요 커밋:** `c201a57`(2부) → `1a92e67`(2부 정정) → `33da02e`(3부) → `6756ce4`(그림·arc) → `f643c8a`(융합씨앗) → `fc6b2ca`(jetson 1부) → `4d106ee`/`be650f0`(3부 용어) 외.
+
+---
+
+## 그 이전 (이 로그 시작 전)
+
+SSF 재출시, MOVE 지수, 크레딧 스프레드(CDS), 로봇 비전 2부작(stereo/frames), 홈 대시보드 타일 등은 이 로그 이전에 작업됨. 세부는 메모리(`naver-publishing`, `naver-published-urls`, `dashboard-indicator-tiles`, `butt2rflow-push-auth`)와 git 히스토리 참고.
+
+
+---
+# Earlier log (BlogMigration, 2026-04)
 
 ## 2026-04-10 (Session 7)
 
