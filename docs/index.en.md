@@ -209,6 +209,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**UR vs FANUC — Openness**](posts/cobot-ur-vs-fanuc.md) — Comparing the two camps' openness and ecosystems
 - [**Investing in Physical AI**](posts/cobot-investing.md) — Physical AI Investing (1): where the value migrates
 - [**Investing in Physical AI (2)**](posts/physical-ai-investing-actuators.md) — Physical AI Investing (2): value shifts seen through one joint, reducers, motors and ETFs
+- [**Investing in Physical AI (3)**](posts/physical-ai-investing-power.md) — Physical AI Investing (3): the humanoid power problem, batteries, uptime and reactors
 - [**The Robot's Brain at the Edge — Jetson & ROS 2**](posts/jetson-ros2-setup.md) — Field Notes (1): setting up a Jetson Orin NX
 - [**The Robot's Brain at the Edge (2) — Isaac ROS & Foundation Models**](posts/jetson-isaac-foundation-models.md) — Field Notes (2): running it on the edge
 - [**The Robot's Brain at the Edge — A Correction**](posts/jetson-foundationpose-16gb.md) — Field Notes: the whole stack runs on 16 GB after all

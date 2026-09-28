@@ -192,7 +192,7 @@ That closes the trilogy. What a cobot is (Part 1), what divides them (Part 2), a
 
 ---
 
-**Next** · [Investing in Physical AI (2) — Value Shifts Seen Through One Joint](physical-ai-investing-actuators.md)
+**Next** · [Investing in Physical AI (2) — Value Shifts Seen Through One Joint](physical-ai-investing-actuators.md) · [(3) — The Humanoid Power Problem](physical-ai-investing-power.md)
 
 *Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [UR vs FANUC — Openness](cobot-ur-vs-fanuc.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Jetson + ROS 2 Setup — Field Notes (1)](jetson-ros2-setup.md)*
 

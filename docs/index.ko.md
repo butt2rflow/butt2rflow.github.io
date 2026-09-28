@@ -209,6 +209,7 @@ title: Home
 - [**UR vs 화낙 — 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
 - [**Physical AI에 투자한다면**](posts/cobot-investing.md) — Physical AI 투자 (1): 가치는 어디로 이동하는가
 - [**Physical AI에 투자한다면 (2)**](posts/physical-ai-investing-actuators.md) — Physical AI 투자 (2): 관절 하나로 보는 가치 이동, 감속기·모터·ETF
+- [**Physical AI에 투자한다면 (3)**](posts/physical-ai-investing-power.md) — Physical AI 투자 (3): 휴머노이드의 전력 문제, 배터리·가동률·원자로
 - [**로봇의 뇌를 엣지에 — Jetson·ROS 2**](posts/jetson-ros2-setup.md) — 현장 노트 (1): Jetson Orin NX 셋업
 - [**로봇의 뇌를 엣지에 (2) — Isaac ROS·파운데이션 모델**](posts/jetson-isaac-foundation-models.md) — 현장 노트 (2): 엣지에서 실행해 보다
 - [**로봇의 뇌를 엣지에 — 정정편**](posts/jetson-foundationpose-16gb.md) — 현장 노트: 16GB로도 스택 전체가 동작한다

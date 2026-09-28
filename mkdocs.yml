@@ -138,6 +138,7 @@ nav:
     - "Physical AI Investing":
       - posts/cobot-investing.md
       - posts/physical-ai-investing-actuators.md
+      - posts/physical-ai-investing-power.md
     - "Field Notes":
       - posts/jetson-ros2-setup.md
       - posts/jetson-isaac-foundation-models.md
