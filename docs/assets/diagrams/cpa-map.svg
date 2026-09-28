@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">이 블로그의 Physical AI 지도</title>
-<desc id="de">가운데 이 글이 있고, 각 개념을 자세히 다룬 글로 연결된다. 3단 Track A의 인식 단계는 로봇 비전 시리즈, 좌표 변환은 좌표계와 변환, ROS 2와 MoveIt 2와 결정론적 셀 설계는 펜던트에서 ROS 2로 시리즈, 엣지 컴퓨터에서 실행하는 법은 현장 노트, 로봇 제조사별 차이는 코봇 시리즈, 시뮬레이션과 sim-to-real은 로봇 시뮬레이션 글. Track B는 아직 별도 글이 없다.</desc>
+<desc id="de">가운데 이 글이 있고, 각 개념을 자세히 다룬 글로 연결된다. 3단 Track A의 인식 단계는 로봇 비전 시리즈, 좌표 변환은 좌표계와 변환, ROS 2와 MoveIt 2와 결정론적 셀 설계는 펜던트에서 ROS 2로 시리즈, 엣지 컴퓨터에서 실행하는 법은 현장 노트, 로봇 제조사별 차이는 코봇 시리즈, 시뮬레이션과 sim-to-real은 로봇 시뮬레이션 글. Track B는 별도 글에서 다룬다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -82,5 +82,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <line class="arg" x1="108" y1="236" x2="340" y2="192"/>
 <line class="arg" x1="340" y1="236" x2="340" y2="192"/>
 <line class="arg" x1="572" y1="236" x2="340" y2="192"/>
-<text class="sm" x="470" y="170" style="fill:var(--amber)">Track B (학습 정책): 별도 글 예정</text>
+<text class="sm" x="470" y="170" style="fill:var(--amber)">Track B (학습 정책): 별도 글</text>
 </svg>

@@ -96,7 +96,7 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 | Actually running it on an edge computer | [Field Notes, Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [correction](jetson-foundationpose-16gb.md) |
 | Differences between robot makers | [What Is a Collaborative Robot](cobot-basics.md) · [UR vs FANUC](cobot-ur-vs-fanuc.md) |
 | Simulation and sim-to-real | [Why Robots Learn in a 'Fake World' First](robot-simulation.md) |
-| Track B, learned policies | (post to come) |
+| Track B, learned policies | [Learned Policies (Track B)](learned-policy-track-b.md) |
 
 ---
 
@@ -114,6 +114,8 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 | **Acceptance** | "It repeats" → "X of N succeed, and it knows when it failed" |
 
 ---
+
+**Series** · [Next: Learned Policies (Track B) →](learned-policy-track-b.md)
 
 *Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Field Notes, Part 2](jetson-isaac-foundation-models.md)*
 

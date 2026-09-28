@@ -121,7 +121,9 @@ nav:
       - "Extension (preview)": series/s3-preview.md
       - "Depth (preview)": series/s4-preview.md
   - "Physical AI":
-    - "Start Here": posts/choosing-physical-ai.md
+    - "Start Here":
+      - posts/choosing-physical-ai.md
+      - posts/learned-policy-track-b.md
     - "Robot Vision":
       - posts/stereo-to-grasp.md
       - posts/frames-transforms.md

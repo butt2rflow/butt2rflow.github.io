@@ -1,6 +1,6 @@
-<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">Map of this blog's Physical AI posts</title>
-<desc id="de">This post sits in the middle and links to the posts that cover each concept in depth. Step 3 Track A's perception stages: the Robot Vision series. Frame conversion: Frames &amp; Transforms. ROS 2, MoveIt 2 and deterministic cell design: the Pendant to ROS 2 series. Running on an edge computer: Field Notes. Differences between robot makers: the Cobots series. Simulation and sim-to-real: the robot simulation post. Track B has its own post.</desc>
+<svg width="100%" viewBox="0 0 680 276" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">On industrial arms, a real-time control port comes first</title>
+<desc id="de">A learned policy sends new joint targets dozens of times a second, so the robot needs a port for streaming commands in real time from outside. UR has RTDE built in; FANUC needs the Stream Motion option; ABB and KUKA each need their own option. If a robot only accepts whole paths, it can follow planned paths but not a streamed policy. And a new arm usually needs new demonstrations and fine-tuning.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -53,34 +53,29 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
-<text class="t" x="18" y="26">This post is the map; the details live in each post</text>
-<rect class="hi" x="250" y="138" width="180" height="54" rx="8"/>
-<text class="lb" x="340.0" y="162.0" text-anchor="middle">Choosing Physical AI</text>
-<text class="sm" x="340.0" y="177.0" text-anchor="middle">Track 0 · A · B</text>
-<rect class="bx" x="18" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="108.0" y="72.0" text-anchor="middle">Robot Vision series</text>
-<text class="sm" x="108.0" y="87.0" text-anchor="middle">Track A: depth, mask, pose</text>
-<rect class="bx" x="250" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="340.0" y="72.0" text-anchor="middle">Frames &amp; Transforms</text>
-<text class="sm" x="340.0" y="87.0" text-anchor="middle">camera → robot frame</text>
-<rect class="bx" x="482" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="572.0" y="72.0" text-anchor="middle">Pendant to ROS 2</text>
-<text class="sm" x="572.0" y="87.0" text-anchor="middle">ROS 2, MoveIt 2, deterministic cell</text>
-<rect class="bx" x="18" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="108.0" y="260.0" text-anchor="middle">Field Notes</text>
-<text class="sm" x="108.0" y="275.0" text-anchor="middle">running on the edge</text>
-<rect class="bx" x="250" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="340.0" y="260.0" text-anchor="middle">Cobots series</text>
-<text class="sm" x="340.0" y="275.0" text-anchor="middle">maker openness, interfaces</text>
-<rect class="bx" x="482" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="572.0" y="260.0" text-anchor="middle">Robot simulation</text>
-<text class="sm" x="572.0" y="275.0" text-anchor="middle">sim-to-real, randomization</text>
-<line class="arg" x1="108" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="340" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="572" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="108" y1="236" x2="340" y2="192"/>
-<line class="arg" x1="340" y1="236" x2="340" y2="192"/>
-<line class="arg" x1="572" y1="236" x2="340" y2="192"/>
-<text class="sm" x="470" y="170" style="fill:var(--amber)">Track B (learned policy): its own post</text>
+<rect class="bg" x="0" y="0" width="680" height="276" rx="12"/>
+<text class="t" x="18" y="26">A policy streams commands dozens of times a second. Is there a port?</text>
+<text class="lb" x="18" y="78">built in</text>
+<rect class="bxt" x="130" y="56" width="188" height="36" rx="8"/>
+<text class="sm" x="224.0" y="78.0" text-anchor="middle">UR e-Series (RTDE)</text>
+<rect class="bxt" x="326" y="56" width="188" height="36" rx="8"/>
+<text class="sm" x="420.0" y="78.0" text-anchor="middle">Franka Research 3 (FCI)</text>
+<text class="lb" x="18" y="134">paid option</text>
+<rect class="bxa" x="130" y="112" width="188" height="36" rx="8"/>
+<text class="sm" x="224.0" y="134.0" text-anchor="middle">FANUC Stream Motion</text>
+<rect class="bxa" x="326" y="112" width="188" height="36" rx="8"/>
+<text class="sm" x="420.0" y="134.0" text-anchor="middle">ABB EGM · KUKA RSI</text>
+<text class="lb" x="18" y="190">whole paths only</text>
+<rect class="bxg" x="130" y="168" width="188" height="36" rx="8"/>
+<text class="sm" x="224.0" y="190.0" text-anchor="middle">queued trajectories</text>
+<rect class="bxg" x="326" y="168" width="188" height="36" rx="8"/>
+<text class="sm" x="420.0" y="190.0" text-anchor="middle">robot language only</text>
+<rect class="fam" x="532" y="50" width="130" height="160" rx="10"/>
+<text class="sm" x="546" y="74">policy rate needed</text>
+<text class="t" x="597" y="116" text-anchor="middle" style="font-size:22px;fill:var(--amber)">~30–50</text>
+<text class="sm" x="597" y="138" text-anchor="middle">per second</text>
+<text class="sm" x="546" y="170">interpolate to</text>
+<text class="sm" x="546" y="186">the port's rate</text>
+<text class="sm" x="18" y="238" style="fill:var(--fg)">Planned paths (step 3) work on any arm; a streamed policy (step 4) needs a real-time port.</text>
+<text class="sm" x="18" y="258">A new arm usually means new demos and fine-tuning. Check rates and options with the maker.</text>
 </svg>

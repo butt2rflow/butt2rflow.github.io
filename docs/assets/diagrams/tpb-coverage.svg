@@ -1,10 +1,10 @@
-<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">Map of this blog's Physical AI posts</title>
-<desc id="de">This post sits in the middle and links to the posts that cover each concept in depth. Step 3 Track A's perception stages: the Robot Vision series. Frame conversion: Frames &amp; Transforms. ROS 2, MoveIt 2 and deterministic cell design: the Pendant to ROS 2 series. Running on an edge computer: Field Notes. Differences between robot makers: the Cobots series. Simulation and sim-to-real: the robot simulation post. Track B has its own post.</desc>
+<svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">배운 범위 밖에서</title>
+<desc id="de">시연이 덮은 영역(초록) 안에서는 잘 동작한다. 영역 밖, 예를 들어 표시한 구역 바깥이나 팔이 닿지 않는 곳에 물체가 있으면 정책은 무너지지만, 스스로 실패를 알리는 신호가 없어 그럴듯한 동작을 계속 내놓을 수 있다. 조명, 배경, 카메라 위치가 바뀌어도 영역 밖이 된다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
-text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
 .bg{fill:var(--card);}
 .t{font-size:14px;font-weight:700}
 .lb{font-size:12.5px;font-weight:700}
@@ -53,34 +53,25 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
-<text class="t" x="18" y="26">This post is the map; the details live in each post</text>
-<rect class="hi" x="250" y="138" width="180" height="54" rx="8"/>
-<text class="lb" x="340.0" y="162.0" text-anchor="middle">Choosing Physical AI</text>
-<text class="sm" x="340.0" y="177.0" text-anchor="middle">Track 0 · A · B</text>
-<rect class="bx" x="18" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="108.0" y="72.0" text-anchor="middle">Robot Vision series</text>
-<text class="sm" x="108.0" y="87.0" text-anchor="middle">Track A: depth, mask, pose</text>
-<rect class="bx" x="250" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="340.0" y="72.0" text-anchor="middle">Frames &amp; Transforms</text>
-<text class="sm" x="340.0" y="87.0" text-anchor="middle">camera → robot frame</text>
-<rect class="bx" x="482" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="572.0" y="72.0" text-anchor="middle">Pendant to ROS 2</text>
-<text class="sm" x="572.0" y="87.0" text-anchor="middle">ROS 2, MoveIt 2, deterministic cell</text>
-<rect class="bx" x="18" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="108.0" y="260.0" text-anchor="middle">Field Notes</text>
-<text class="sm" x="108.0" y="275.0" text-anchor="middle">running on the edge</text>
-<rect class="bx" x="250" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="340.0" y="260.0" text-anchor="middle">Cobots series</text>
-<text class="sm" x="340.0" y="275.0" text-anchor="middle">maker openness, interfaces</text>
-<rect class="bx" x="482" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="572.0" y="260.0" text-anchor="middle">Robot simulation</text>
-<text class="sm" x="572.0" y="275.0" text-anchor="middle">sim-to-real, randomization</text>
-<line class="arg" x1="108" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="340" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="572" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="108" y1="236" x2="340" y2="192"/>
-<line class="arg" x1="340" y1="236" x2="340" y2="192"/>
-<line class="arg" x1="572" y1="236" x2="340" y2="192"/>
-<text class="sm" x="470" y="170" style="fill:var(--amber)">Track B (learned policy): its own post</text>
+<rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
+<text class="t" x="18" y="26">시연이 덮은 곳에서만 믿을 수 있다</text>
+<rect class="panel" x="16" y="44" width="420" height="204" rx="10"/>
+<rect class="bxt" x="96" y="80" width="200" height="120" rx="40" style="fill:none;stroke-dasharray:6 4"/>
+<text class="sm" x="196" y="72" text-anchor="middle" style="fill:var(--teal)">시연이 덮은 영역</text>
+<circle class="dott" cx="140" cy="120" r="4"/>
+<circle class="dott" cx="180" cy="150" r="4"/>
+<circle class="dott" cx="230" cy="110" r="4"/>
+<circle class="dott" cx="250" cy="170" r="4"/>
+<circle class="dott" cx="160" cy="175" r="4"/>
+<circle class="dotr" cx="360" cy="140" r="6"/>
+<text class="sm" x="360" y="124" text-anchor="middle" style="fill:var(--red)">여기에 두면?</text>
+<text class="sm" x="30" y="232">초록 점 = 시연 때 물체 위치</text>
+<rect class="fam" x="452" y="44" width="210" height="204" rx="10"/>
+<text class="lb" x="466" y="68">영역 밖이 되는 것들</text>
+<text class="st" x="466" y="96">• 표시 구역 밖의 위치</text>
+<text class="st" x="466" y="118">• 팔이 닿지 않는 곳</text>
+<text class="st" x="466" y="140">• 조명·배경 변화</text>
+<text class="st" x="466" y="162">• 카메라 위치 변화</text>
+<text class="st" x="466" y="184">• 처음 보는 물체</text>
+<text class="sm" x="466" y="222" style="fill:var(--red)">그래도 신호 없이 계속한다</text>
 </svg>

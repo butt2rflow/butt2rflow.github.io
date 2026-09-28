@@ -1,10 +1,10 @@
-<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">Map of this blog's Physical AI posts</title>
-<desc id="de">This post sits in the middle and links to the posts that cover each concept in depth. Step 3 Track A's perception stages: the Robot Vision series. Frame conversion: Frames &amp; Transforms. ROS 2, MoveIt 2 and deterministic cell design: the Pendant to ROS 2 series. Running on an edge computer: Field Notes. Differences between robot makers: the Cobots series. Simulation and sim-to-real: the robot simulation post. Track B has its own post.</desc>
+<svg width="100%" viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">결과가 매번 같아야 하는 셀에서의 자리</title>
+<desc id="de">셀 전체에서 학습 정책이 맡는 건 좁은 구간 하나다. 앞쪽의 이동과 정렬은 티칭 경로나 3단의 자세와 플래너가 맡고, 정책은 끼우기나 케이블 배선 같은 마지막 접촉만 맡는다. 합격과 불합격은 정책이 아니라 기존 센서와 게이지가 판정하고, 정책이 실패하면 분명한 복귀 지점으로 돌아간다. 인수는 조건별 N회 시험의 통계로 한다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
-text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
 .bg{fill:var(--card);}
 .t{font-size:14px;font-weight:700}
 .lb{font-size:12.5px;font-weight:700}
@@ -53,34 +53,26 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
-<text class="t" x="18" y="26">This post is the map; the details live in each post</text>
-<rect class="hi" x="250" y="138" width="180" height="54" rx="8"/>
-<text class="lb" x="340.0" y="162.0" text-anchor="middle">Choosing Physical AI</text>
-<text class="sm" x="340.0" y="177.0" text-anchor="middle">Track 0 · A · B</text>
-<rect class="bx" x="18" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="108.0" y="72.0" text-anchor="middle">Robot Vision series</text>
-<text class="sm" x="108.0" y="87.0" text-anchor="middle">Track A: depth, mask, pose</text>
-<rect class="bx" x="250" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="340.0" y="72.0" text-anchor="middle">Frames &amp; Transforms</text>
-<text class="sm" x="340.0" y="87.0" text-anchor="middle">camera → robot frame</text>
-<rect class="bx" x="482" y="48" width="180" height="54" rx="8"/>
-<text class="nd" x="572.0" y="72.0" text-anchor="middle">Pendant to ROS 2</text>
-<text class="sm" x="572.0" y="87.0" text-anchor="middle">ROS 2, MoveIt 2, deterministic cell</text>
-<rect class="bx" x="18" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="108.0" y="260.0" text-anchor="middle">Field Notes</text>
-<text class="sm" x="108.0" y="275.0" text-anchor="middle">running on the edge</text>
-<rect class="bx" x="250" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="340.0" y="260.0" text-anchor="middle">Cobots series</text>
-<text class="sm" x="340.0" y="275.0" text-anchor="middle">maker openness, interfaces</text>
-<rect class="bx" x="482" y="236" width="180" height="54" rx="8"/>
-<text class="nd" x="572.0" y="260.0" text-anchor="middle">Robot simulation</text>
-<text class="sm" x="572.0" y="275.0" text-anchor="middle">sim-to-real, randomization</text>
-<line class="arg" x1="108" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="340" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="572" y1="102" x2="340" y2="138"/>
-<line class="arg" x1="108" y1="236" x2="340" y2="192"/>
-<line class="arg" x1="340" y1="236" x2="340" y2="192"/>
-<line class="arg" x1="572" y1="236" x2="340" y2="192"/>
-<text class="sm" x="470" y="170" style="fill:var(--amber)">Track B (learned policy): its own post</text>
+<rect class="bg" x="0" y="0" width="680" height="272" rx="12"/>
+<text class="t" x="18" y="26">정책은 좁은 구간만, 판정은 센서가</text>
+<rect class="bxt" x="16" y="56" width="190" height="64" rx="8"/>
+<text class="lb" x="111.0" y="85.0" text-anchor="middle">이동·정렬</text>
+<text class="sm" x="111.0" y="100.0" text-anchor="middle">티칭 경로 / 3단</text>
+<line class="ar" x1="208" y1="88" x2="220" y2="88"/>
+<rect class="bxa" x="222" y="56" width="150" height="64" rx="8"/>
+<text class="lb" x="297.0" y="85.0" text-anchor="middle">마지막 접촉</text>
+<text class="sm" x="297.0" y="100.0" text-anchor="middle">학습 정책 (4단)</text>
+<line class="ar" x1="374" y1="88" x2="386" y2="88"/>
+<rect class="bxt" x="388" y="56" width="150" height="64" rx="8"/>
+<text class="lb" x="463.0" y="85.0" text-anchor="middle">판정</text>
+<text class="sm" x="463.0" y="100.0" text-anchor="middle">센서·게이지·PLC</text>
+<line class="ar" x1="540" y1="88" x2="552" y2="88"/>
+<rect class="bxt" x="554" y="56" width="110" height="64" rx="8"/>
+<text class="lb" x="609.0" y="85.0" text-anchor="middle">배출</text>
+<text class="sm" x="609.0" y="100.0" text-anchor="middle">티칭 경로</text>
+<path class="arr" d="M 297 122 L 297 156 L 110 156 L 110 124"/>
+<text class="sm" x="204" y="174" text-anchor="middle" style="fill:var(--red)">실패 → 복귀 지점</text>
+<rect class="fam" x="16" y="192" width="646" height="62" rx="10"/>
+<text class="st" x="30" y="214">인수: 조건별(위치, 조명, 부품 변형) N회 중 성공 횟수 + 실패를 감지해 멈추는지</text>
+<text class="st" x="30" y="236">정책의 범위가 좁을수록 시험할 수 있고, 판정은 늘 결정론적으로 남는다</text>
 </svg>

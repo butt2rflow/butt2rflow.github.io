@@ -96,7 +96,7 @@ Track 0(ICP로 CAD를 점구름에 맞추기)은 결정론적이고 설명하기
 | 엣지 컴퓨터에서 실제로 실행하기 | [현장 노트 1부](jetson-ros2-setup.md) · [2부](jetson-isaac-foundation-models.md) · [정정편](jetson-foundationpose-16gb.md) |
 | 로봇 제조사별 차이 | [협동로봇이란](cobot-basics.md) · [UR vs 화낙](cobot-ur-vs-fanuc.md) |
 | 시뮬레이션과 sim-to-real | [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) |
-| Track B, 학습 정책 | (별도 글 예정) |
+| Track B, 학습 정책 | [학습 정책(Track B)](learned-policy-track-b.md) |
 
 ---
 
@@ -114,6 +114,8 @@ Track 0(ICP로 CAD를 점구름에 맞추기)은 결정론적이고 설명하기
 | **인수 기준** | "반복한다" → "N번 중 X번 성공하고, 실패를 스스로 안다" |
 
 ---
+
+**시리즈** · [다음: 학습 정책(Track B) →](learned-policy-track-b.md)
 
 *관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md)*
 
