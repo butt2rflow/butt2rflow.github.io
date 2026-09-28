@@ -1,0 +1,80 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Asking TF2, and the timing trap</title>
+<desc id="de">Top: hand TF2 a part position measured relative to the camera and it returns the position relative to the robot base. Bottom: if the camera rides on the arm, the arm moves between the moment the picture was taken and the moment you compute, so ask for the transform at the picture's timestamp. Using the latest transform can put the part centimeters off.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
+<text class="t" x="18" y="26">TF2: "Where is this point, relative to the base?"</text>
+<rect class="bxt" x="18" y="44" width="190" height="54" rx="8"/>
+<text class="nd" x="113.0" y="68.0" text-anchor="middle">part position</text>
+<text class="st" x="113.0" y="83.0" text-anchor="middle">relative to the camera</text>
+<line class="ar" x1="210" y1="71" x2="256" y2="71"/>
+<rect class="hi" x="262" y="44" width="156" height="54" rx="8"/>
+<text class="nd" x="340.0" y="68.0" text-anchor="middle">TF2</text>
+<text class="st" x="340.0" y="83.0" text-anchor="middle">walks the frame chain</text>
+<line class="ar" x1="420" y1="71" x2="466" y2="71"/>
+<rect class="bx" x="472" y="44" width="190" height="54" rx="8"/>
+<text class="nd" x="567.0" y="68.0" text-anchor="middle">part position</text>
+<text class="st" x="567.0" y="83.0" text-anchor="middle">relative to base_link</text>
+<rect class="panel" x="18" y="116" width="644" height="138" rx="10"/>
+<text class="lb" x="34" y="140" style="fill:var(--red)">If the camera rides on the arm, which moment matters</text>
+<line class="ln" x1="60" y1="190" x2="620" y2="190"/>
+<circle class="dott" cx="120" cy="190" r="6"/>
+<text class="sm" x="120" y="178" text-anchor="middle">t = 0.00 s</text>
+<text class="st" x="120" y="210" text-anchor="middle">picture taken</text>
+<circle class="dotr" cx="520" cy="190" r="6"/>
+<text class="sm" x="520" y="178" text-anchor="middle">t = 0.15 s</text>
+<text class="st" x="520" y="210" text-anchor="middle">computing now</text>
+<text class="st" x="320" y="182" text-anchor="middle">the arm moves in between</text>
+<text class="st" x="34" y="238" style="fill:var(--fg)">✓ ask for the transform at the picture's time → correct      ✗ latest transform → cm off</text>
+</svg>

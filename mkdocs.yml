@@ -39,6 +39,7 @@ plugins:
             "Robot Vision": 로봇 비전
             Cobots: 협동로봇
             "Field Notes": 현장 노트
+            "Pendant to ROS 2": 펜던트에서 ROS 2로
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -133,5 +134,10 @@ nav:
       - posts/jetson-ros2-setup.md
       - posts/jetson-isaac-foundation-models.md
       - posts/jetson-foundationpose-16gb.md
+    - "Pendant to ROS 2":
+      - posts/ros2-for-robot-programmers.md
+      - posts/ros2-robot-description.md
+      - posts/moveit2-goals-not-points.md
+      - posts/isaac-ros-gpu.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"

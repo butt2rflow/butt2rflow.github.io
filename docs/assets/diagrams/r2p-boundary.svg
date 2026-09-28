@@ -1,0 +1,46 @@
+<svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">ROS 2가 맡는 일과 컨트롤러에 남는 일</title>
+<desc id="de">왼쪽 ROS 2 컴퓨터는 보기, 판단, 경로 계획을 맡아 궤적을 보낸다. 오른쪽 로봇 컨트롤러는 모터를 정밀하게 따라가게 하는 서보 제어, 안전 기능, 비상정지, 설정한 속도와 영역 제한을 계속 맡는다. 가운데 화살표는 궤적이 내려가고 관절 상태가 올라오는 것을 나타낸다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.it{font-size:12px;font-weight:600}
+.ros{fill:var(--bg);stroke:var(--blue);stroke-width:1.6}
+.ctl{fill:var(--bg);stroke:var(--red);stroke-width:1.6}
+.ar{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arr{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ag)}
+.mk{fill:var(--blue)}
+.mkg{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
+<text class="t" x="18" y="26">ROS 2가 가져가는 일, 컨트롤러에 남는 일</text>
+<rect class="ros" x="18" y="44" width="262" height="198" rx="10"/>
+<text class="lb" x="34" y="68" style="fill:var(--blue)">ROS 2 컴퓨터 (PC, Jetson)</text>
+<text class="it" x="34" y="98">보기: 카메라로 부품 찾기</text>
+<text class="it" x="34" y="124">판단: 다음에 무엇을 할지</text>
+<text class="it" x="34" y="150">계획: 부딪히지 않는 경로</text>
+<text class="st" x="34" y="182">몇 밀리초 늦어도 큰일은</text>
+<text class="st" x="34" y="198">나지 않는 일들</text>
+<text class="st" x="34" y="224">일반 리눅스, 실시간 보장 없음</text>
+<line class="ar" x1="286" y1="118" x2="392" y2="118"/>
+<text class="st" x="339" y="108" text-anchor="middle">궤적</text>
+<line class="arr" x1="392" y1="160" x2="286" y2="160"/>
+<text class="st" x="339" y="178" text-anchor="middle">관절 상태</text>
+<rect class="ctl" x="398" y="44" width="264" height="198" rx="10"/>
+<text class="lb" x="414" y="68" style="fill:var(--red)">로봇 컨트롤러 (그대로)</text>
+<text class="it" x="414" y="98">서보: 모터가 궤적을 정확히 따라가게</text>
+<text class="it" x="414" y="124">안전: 비상정지, 보호 정지</text>
+<text class="it" x="414" y="150">제한: 속도·영역 (코봇은 힘도)</text>
+<text class="st" x="414" y="182">늦으면 안 되는 일,</text>
+<text class="st" x="414" y="198">사람을 지키는 일</text>
+<text class="st" x="414" y="224">제조사의 안전 기능, 설정한 대로</text>
+</svg>
