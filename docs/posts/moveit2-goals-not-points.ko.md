@@ -158,7 +158,7 @@ plan_and_run(above, straight_line=True)                #   곧게 올라옴 (L)
 
 **시리즈** · [← 이전 글: 2부 — 로봇을 ROS에 설명하기](ros2-robot-description.md) · [다음 글: 4부 — Isaac ROS와 cuMotion →](isaac-ros-gpu.md)
 
-*관련: [2부 — 로봇을 ROS에 설명하기](ros2-robot-description.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [UR vs 화낙 — 개방성](cobot-ur-vs-fanuc.md)*
+*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [2부 — 로봇을 ROS에 설명하기](ros2-robot-description.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [UR vs 화낙 — 개방성](cobot-ur-vs-fanuc.md)*
 
 ### 출처와 표기
 

@@ -1,0 +1,97 @@
+<svg width="100%" viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">From deterministic to black box</title>
+<desc id="de">Moving left to right, more of the system is learned. Taught-point automation is fully deterministic because a fixture guarantees the position. Track 0 has no neural networks and is deterministic. Track A uses a network only for perception, so its stages stay visible. Track B is learned end to end and can't be looked inside. The bottom rows show what each needs and how its failures show up.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="272" rx="12"/>
+<text class="t" x="18" y="26">The more is learned, the harder failure is to notice</text>
+<line class="ar" x1="40" y1="64" x2="640" y2="64"/>
+<text class="sm" x="40" y="56" style="fill:var(--teal)">deterministic</text>
+<text class="sm" x="640" y="56" text-anchor="end" style="fill:var(--red)">black box</text>
+<text class="sm" x="18" y="132">needs</text>
+<text class="sm" x="18" y="176">neural nets</text>
+<text class="sm" x="18" y="220">how failure shows</text>
+<rect class="bxt" x="120" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="184.0" y="97.0" text-anchor="middle">taught points</text>
+<rect class="bxg" x="120" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="184" y="138" text-anchor="middle" style="fill:var(--fg)">fixture guarantees</text>
+<rect class="bxg" x="120" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="184" y="182" text-anchor="middle" style="fill:var(--fg)">none</text>
+<rect class="bxg" x="120" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="184" y="226" text-anchor="middle" style="fill:var(--fg)">obvious (sensor, crash)</text>
+<rect class="bxt" x="256" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="320.0" y="97.0" text-anchor="middle">Track 0</text>
+<rect class="bxg" x="256" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="320" y="138" text-anchor="middle" style="fill:var(--fg)">CAD + calibration</text>
+<rect class="bxg" x="256" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="320" y="182" text-anchor="middle" style="fill:var(--fg)">none</text>
+<rect class="bxg" x="256" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="320" y="226" text-anchor="middle" style="fill:var(--fg)">fit error grows</text>
+<rect class="bx" x="392" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="456.0" y="97.0" text-anchor="middle">Track A</text>
+<rect class="bxg" x="392" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="456" y="138" text-anchor="middle" style="fill:var(--fg)">CAD + mask, no retrain</text>
+<rect class="bxg" x="392" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="456" y="182" text-anchor="middle" style="fill:var(--fg)">perception only</text>
+<rect class="bxg" x="392" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="456" y="226" text-anchor="middle" style="fill:var(--fg)">check stage by stage</text>
+<rect class="bxa" x="528" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="592.0" y="97.0" text-anchor="middle">Track B</text>
+<rect class="bxg" x="528" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="592" y="138" text-anchor="middle" style="fill:var(--fg)">50–100 demos per task</text>
+<rect class="bxg" x="528" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="592" y="182" text-anchor="middle" style="fill:var(--fg)">everything</text>
+<rect class="bxg" x="528" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="592" y="226" text-anchor="middle" style="fill:var(--fg)">carries on, no signal</text>
+<text class="st" x="18" y="262" style="fill:var(--fg)">The issue isn't non-determinism itself; it's whether failure can be detected.</text>
+</svg>

@@ -158,7 +158,7 @@ One concern remains. Step 1's perception has to run a neural network on every pi
 
 **Series** · [← Previous: Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [Next: Part 4 — Isaac ROS and cuMotion →](isaac-ros-gpu.md)
 
-*Related: [Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
+*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
 
 ### Sources and notices
 

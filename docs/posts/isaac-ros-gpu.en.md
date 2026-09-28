@@ -141,7 +141,7 @@ Read them in this order; each builds on the one before. Pick the documentation f
 
 **Series** · [← Previous: Part 3 — MoveIt 2](moveit2-goals-not-points.md)
 
-*Related: [Part 3 — MoveIt 2](moveit2-goals-not-points.md) · [Putting the Robot's Brain on the Edge (2) — Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md)*
+*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Part 3 — MoveIt 2](moveit2-goals-not-points.md) · [Putting the Robot's Brain on the Edge (2) — Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md)*
 
 ### Sources and notices
 

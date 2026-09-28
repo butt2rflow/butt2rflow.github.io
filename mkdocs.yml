@@ -40,6 +40,7 @@ plugins:
             Cobots: 협동로봇
             "Field Notes": 현장 노트
             "Pendant to ROS 2": 펜던트에서 ROS 2로
+            "Start Here": 시작하기
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -120,6 +121,7 @@ nav:
       - "Extension (preview)": series/s3-preview.md
       - "Depth (preview)": series/s4-preview.md
   - "Physical AI":
+    - "Start Here": posts/choosing-physical-ai.md
     - "Robot Vision":
       - posts/stereo-to-grasp.md
       - posts/frames-transforms.md

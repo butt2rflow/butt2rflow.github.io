@@ -1,0 +1,97 @@
+<svg width="100%" viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">결정론에서 블랙박스까지</title>
+<desc id="de">왼쪽에서 오른쪽으로 갈수록 학습된 부분이 늘어난다. 티칭 기반 자동화는 지그가 위치를 보장해 완전히 결정론적이다. Track 0은 신경망이 없어 결정론적이다. Track A는 인식만 신경망이라 단계가 보인다. Track B는 전부 학습되어 속을 볼 수 없다. 아래 줄은 무엇이 필요한지와 실패할 때 어떻게 드러나는지.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="272" rx="12"/>
+<text class="t" x="18" y="26">학습된 부분이 늘수록, 실패를 알아채기 어려워진다</text>
+<line class="ar" x1="40" y1="64" x2="640" y2="64"/>
+<text class="sm" x="40" y="56" style="fill:var(--teal)">결정론적</text>
+<text class="sm" x="640" y="56" text-anchor="end" style="fill:var(--red)">블랙박스</text>
+<text class="sm" x="18" y="132">필요한 것</text>
+<text class="sm" x="18" y="176">신경망</text>
+<text class="sm" x="18" y="220">실패가 드러나는 방식</text>
+<rect class="bxt" x="120" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="184.0" y="97.0" text-anchor="middle">티칭 기반</text>
+<rect class="bxg" x="120" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="184" y="138" text-anchor="middle" style="fill:var(--fg)">지그가 보장</text>
+<rect class="bxg" x="120" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="184" y="182" text-anchor="middle" style="fill:var(--fg)">없음</text>
+<rect class="bxg" x="120" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="184" y="226" text-anchor="middle" style="fill:var(--fg)">충돌·센서로 바로</text>
+<rect class="bxt" x="256" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="320.0" y="97.0" text-anchor="middle">Track 0</text>
+<rect class="bxg" x="256" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="320" y="138" text-anchor="middle" style="fill:var(--fg)">CAD + 캘리브레이션</text>
+<rect class="bxg" x="256" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="320" y="182" text-anchor="middle" style="fill:var(--fg)">없음</text>
+<rect class="bxg" x="256" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="320" y="226" text-anchor="middle" style="fill:var(--fg)">맞춤 오차가 커진다</text>
+<rect class="bx" x="392" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="456.0" y="97.0" text-anchor="middle">Track A</text>
+<rect class="bxg" x="392" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="456" y="138" text-anchor="middle" style="fill:var(--fg)">CAD+마스크, 물체별 학습 0</text>
+<rect class="bxg" x="392" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="456" y="182" text-anchor="middle" style="fill:var(--fg)">인식만</text>
+<rect class="bxg" x="392" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="456" y="226" text-anchor="middle" style="fill:var(--fg)">단계별로 확인 가능</text>
+<rect class="bxa" x="528" y="76" width="128" height="34" rx="8"/>
+<text class="lb" x="592.0" y="97.0" text-anchor="middle">Track B</text>
+<rect class="bxg" x="528" y="116" width="128" height="36" rx="6"/>
+<text class="sm" x="592" y="138" text-anchor="middle" style="fill:var(--fg)">작업당 시연 50~100회</text>
+<rect class="bxg" x="528" y="160" width="128" height="36" rx="6"/>
+<text class="sm" x="592" y="182" text-anchor="middle" style="fill:var(--fg)">전부</text>
+<rect class="bxg" x="528" y="204" width="128" height="36" rx="6"/>
+<text class="sm" x="592" y="226" text-anchor="middle" style="fill:var(--fg)">신호 없이 계속한다</text>
+<text class="st" x="18" y="262" style="fill:var(--fg)">문제는 비결정론 그 자체가 아니라, 실패를 알아챌 수 있느냐다.</text>
+</svg>

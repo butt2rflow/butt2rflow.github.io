@@ -161,7 +161,7 @@ With the robot now connected to the node graph from Part 1, [the next part](move
 
 **Series** · [← Previous: Part 1 — One Program Becomes a Conversation](ros2-for-robot-programmers.md) · [Next: Part 3 — MoveIt 2 →](moveit2-goals-not-points.md)
 
-*Related: [Part 1 — One Robot Program Becomes a Conversation Between Programs](ros2-for-robot-programmers.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md)*
+*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Part 1 — One Robot Program Becomes a Conversation Between Programs](ros2-for-robot-programmers.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md)*
 
 ### Sources and notices
 
