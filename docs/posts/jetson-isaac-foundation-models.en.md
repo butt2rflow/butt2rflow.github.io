@@ -62,9 +62,20 @@ There's one misconception worth killing here. **"No training needed when you bri
 
 One more thing: why FoundationStereo for depth? As we saw in the deep dive, shiny metal and smooth, featureless surfaces are exactly what stereo struggles with most — there's no texture to match, so depth comes back full of **holes.** FoundationStereo's strength is mixing in a single-camera depth guess (Depth Anything V2) to fill those holes. The lightweight ESS is real-time but weaker on such reflective surfaces. So when the target is a *shiny part*, the heavy option earns its keep.
 
-![The same desk scene three ways: RGB, a naive block-matching depth full of speckle and holes, and FoundationStereo's clean, gap-free depth](../assets/demos/jetson-depth-3panel.png)
+![Same instant, same camera: the camera's on-chip block-matching depth vs FoundationStereo depth on the Orin NX](../assets/demos/jetson-live-depth-compare.jpg)
 
-*How different a learned stereo model is from the naive approach, at a glance. Left is the camera RGB; the middle is **classic block-matching** (the most naive baseline) breaking down — speckle, scanline streaks, and black holes across dark, textureless regions; the right is FoundationStereo filling those holes into a clean map. (The middle is *not* ESS — ESS is also a learned model and beats this naive baseline; this figure is about why learned beats naive.) The left and right panels are real Orin NX captures; the middle is a simulation modeled on an actual raw block-matching depth heatmap captured on the tester, so while it isn't a second live capture, it closely mirrors the real failure mode.*
+*Replaced with a real capture on 2026-09-28. All three panels come from the same instant and the same camera (OAK-D S2). Left is the RGB image, the middle is the **block-matching depth** the camera chip computes itself, and the right is **FoundationStereo** depth computed from the same stereo pair on the Orin NX (about 2 s per frame). The middle is full of streaks and holes; the right is continuous. A few fair caveats. Part of the middle's gaps up close comes from being inside this setting's minimum range (about 31 cm). The black crescents on the right are areas the RGB camera sees but the stereo pair cannot, a re-projection effect rather than a FoundationStereo failure. And on the Orin NX it runs at 480×288, so fine detail such as individual keys is smoothed.*
+
+Accuracy was measured too. A checkerboard tilted at about 31 cm gives a plane whose true position is known exactly. Against that plane:
+
+| Method | Error vs. reference plane | Area with depth |
+|---|---|---|
+| On-chip block matching | +2.6% | about 78% |
+| FoundationStereo (Orin NX) | +7 mm (+1.9%) | 100% |
+
+![Checkerboard reference: on-chip block matching leaves many gaps on the board; FoundationStereo returns the whole board as one surface](../assets/demos/jetson-live-checkerboard.jpg)
+
+At this distance both are within 2–3% of the reference, so accuracy is not the big difference. Where FoundationStereo clearly wins is **density**: depth everywhere, with no gaps. Pose estimation downstream is only stable when every pixel inside the object mask has depth, so in practice this difference matters a lot.
 
 <details>
 <summary>Aside — why NOT using infrared can be the better choice</summary>

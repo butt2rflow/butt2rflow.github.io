@@ -116,9 +116,22 @@ And the number I really wanted: **do all four fit in 16 GB at once?** They do. W
 
 ![The open-vocab 4-model chain co-resident within the 16 GB budget — 8.2 GB peak, 7 GB+ free](../assets/diagrams_en/jetson-stack-fits-16gb.svg)
 
+There is also a run of the whole chain on a real camera in one pass (2026-09-28, OAK-D S2 + Orin NX 16 GB). Given only the text "a computer mouse", it goes from detection all the way to a 3D position.
+
+![One text prompt, no training: detection, mask, depth and 3D position](../assets/demos/jetson-live-chain.jpg)
+
+| Stage | Model | Result | Time |
+|---|---|---|---|
+| Detect (text → box) | Grounding DINO tiny | mouse 0.89, keyboard 0.76 | 1.2 s |
+| Segment (box → mask) | SAM2.1 tiny | mouse 0.988, keyboard 0.905 | 0.84 s |
+| Depth (stereo → depth) | FoundationStereo | depth on 96.7% of the mouse mask | 2.0 s |
+| 3D position (mask × depth) | — | about 25 cm from the camera, width 60.4 mm (product spec 62.2 mm) | under 1 s |
+
+Nothing was trained on this scene. The 6-DoF pose (FoundationPose) needs the object's CAD, so it is not part of this figure.
+
 Two honest footnotes:
 
-- The **language-promptable open-vocabulary detector** (e.g. Grounding DINO) loads and co-runs on 16 GB, but the currently-published deployable checkpoint localized poorly — a **model (checkpoint) limitation, not the board**. For fixed, known parts a closed-set detector (SyntheticaDETR) is the production answer; open-vocab is a flexibility option.
+- The **language-promptable open-vocabulary detector** (e.g. Grounding DINO) loads and co-runs on 16 GB, but the currently-published deployable checkpoint localized poorly — a **model (checkpoint) limitation, not the board**. Switching to a different public checkpoint (grounding-dino-tiny on Hugging Face) did find the mouse and keyboard in the desk scene above (0.89, 0.76), so the choice of checkpoint is what matters. For fixed, known parts a closed-set detector (SyntheticaDETR) is the production answer; open-vocab is a flexibility option.
 - Whether the mask came from real SAM2 or a box-shaped rectangle, **the final pose moved by only ~1 mm / ~1°** — once the region of interest is roughly right, the back end (FoundationPose) finishes the job with depth.
 
 ## Why this digging was worth it
