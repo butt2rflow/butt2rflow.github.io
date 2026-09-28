@@ -3,12 +3,12 @@ title: "UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
 date: 2026-09-09
 tags: [physical-ai, cobot, universal-robots, fanuc, rtde, ros2, force-control, robotics]
 lang: en
-description: "Two 10 kg-class cobots, nearly identical on paper — so why does their Physical AI readiness diverge? Comparing Universal Robots and FANUC not on specs but on openness (RTDE 500Hz, external force control, ROS 2, Isaac). Cobot series, Part 2 of 3."
+description: "Two 10 kg-class cobots, nearly identical on paper — so why does their Physical AI readiness diverge? Comparing Universal Robots and FANUC not on specs but on openness (RTDE 500Hz, external force control, ROS 2, Isaac). Cobot series, Part 2 of 2."
 ---
 
 # UR vs FANUC — For Physical AI, What Decides Isn't Specs, It's Openness
 
-> **Cobot series · Part 2 of 3.** [Part 1](cobot-basics.md) was what a cobot is and why it's different. Now we put the two flagships head to head — **Universal Robots (UR)** and **FANUC** — before [Part 3](cobot-investing.md) connects it to investing (UR = Teradyne · FANUC · NVIDIA).
+> **Cobot series · Part 2 of 2.** [Part 1](cobot-basics.md) covered what a cobot is and why it's different. This part puts the two leading makers, **Universal Robots (UR)** and **FANUC**, side by side. Turning this comparison into an investing view continues in [Investing in Physical AI, Part 1](cobot-investing.md).
 
 Set two 10 kg-class cobots side by side: UR's **UR10e** and FANUC's **CRX-10iA/L**. Payload, reach, repeatability… on the spec sheet they're near twins. The prices are close too. So — same thing, right?
 
@@ -164,7 +164,9 @@ So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible c
 
 ---
 
-*Related: [Part 1 — What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [Part 3 — Physical AI investing](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+**Series** · [← Part 1: What Is a Collaborative Robot?](cobot-basics.md) · Continues in: [Investing in Physical AI, Part 1 →](cobot-investing.md)
+
+*Related: [Part 1 — What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [Investing in Physical AI, Part 1](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
 
 ### Sources & trademarks
 

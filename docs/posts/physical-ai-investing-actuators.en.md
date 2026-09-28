@@ -9,7 +9,7 @@ description: "Take apart one humanoid joint and you can see where value is likel
 
 # Investing in Physical AI (2) — Value Shifts Seen Through One Joint: Reducers, Motors and ETFs
 
-> **Investing in Physical AI · Part 2.** [Part 1, "Investing in Physical AI"](cobot-investing.md) (the last post of the cobot series) argued that "there's no pure play, and the value is moving." This part looks at that movement at the level of **one humanoid joint**. It's information, not investment advice.
+> **Investing in Physical AI · Part 2.** [Part 1, "Investing in Physical AI"](cobot-investing.md) argued that "there's no pure play, and the value is moving." This part looks at that movement at the level of **one humanoid joint**. It's information, not investment advice.
 
 Part 1 called reducer makers the real picks and shovels, since "whoever wins, the joints all come from here." That was only half right; the other half comes with a condition. Depending on **how the joint is designed**, the money can go to the reducer, or it can move to motors and magnets. This post draws that condition out in pictures and checks how much of that logic the ETFs you can actually buy really capture.
 

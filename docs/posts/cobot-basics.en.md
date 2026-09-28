@@ -3,12 +3,12 @@ title: "What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the
 date: 2026-09-08
 tags: [physical-ai, cobot, collaborative-robot, universal-robots, fanuc, robotics, automation]
 lang: en
-description: "Why industrial robots lived behind a fence, and how cobots stepped out of the cage — the safety standards, the four collaborative methods, why 'ease' is the real weapon, and UR vs FANUC. Cobot series, Part 1 of 3."
+description: "Why industrial robots lived behind a fence, and how cobots stepped out of the cage — the safety standards, the four collaborative methods, why 'ease' is the real weapon, and UR vs FANUC. Cobot series, Part 1 of 2."
 ---
 
 # What Is a Collaborative Robot (Cobot)? — Why Robots Stepped Out of the Cage
 
-> **Cobot series · Part 1 of 3.** This one is *what a cobot is and why it's different*. [Part 2](cobot-ur-vs-fanuc.md) compares UR vs FANUC products; [Part 3](cobot-investing.md) connects it to Physical AI investing (UR = Teradyne · FANUC · NVIDIA).
+> **Cobot series · Part 1 of 2.** This one covers *what a cobot is and why it's different*. [Part 2](cobot-ur-vs-fanuc.md) compares UR and FANUC, and the investing angle continues in [Investing in Physical AI, Part 1](cobot-investing.md).
 
 Walk into a factory and most robots are behind bars. Yellow fencing, a red e-stop, a sign that says "open the door and it halts." Inside, the arm moves with a speed and force no human could match — and that speed and force is exactly **why it has to be caged.** Stand next to it and you're in danger.
 
@@ -141,7 +141,9 @@ And one more: **"collaborative" is a property of the operation, not the robot.**
 
 ---
 
-*Related: [Part 2 — UR vs FANUC, openness](cobot-ur-vs-fanuc.md) · [Part 3 — Physical AI investing](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+**Series** · [Part 2: UR vs FANUC →](cobot-ur-vs-fanuc.md)
+
+*Related: [Part 2 — UR vs FANUC, openness](cobot-ur-vs-fanuc.md) · [Investing in Physical AI, Part 1](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
 
 ### Sources & trademarks
 

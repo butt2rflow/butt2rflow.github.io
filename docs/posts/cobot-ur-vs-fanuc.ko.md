@@ -3,12 +3,12 @@ title: "UR vs 화낙(FANUC) — Physical AI를 가르는 건 스펙이 아니라
 date: 2026-09-09
 tags: [physical-ai, cobot, universal-robots, fanuc, rtde, ros2, force-control, robotics]
 lang: ko
-description: "같은 10kg급 코봇인데 Physical AI 준비도는 왜 갈리나 — UR과 화낙(FANUC)을 스펙이 아니라 '개방성'(RTDE 500Hz·외부 힘 제어·ROS 2·Isaac)으로 비교한다. 코봇 3부작 2부."
+description: "같은 10kg급 코봇인데 Physical AI 준비도는 왜 갈리나 — UR과 화낙(FANUC)을 스펙이 아니라 '개방성'(RTDE 500Hz·외부 힘 제어·ROS 2·Isaac)으로 비교한다. 코봇 2부작 2부."
 ---
 
 # UR vs 화낙(FANUC) — Physical AI를 가르는 건 스펙이 아니라 '개방성'
 
-> **코봇 3부작 · 2부.** [1부](cobot-basics.md)는 코봇이 무엇이고 왜 다른가였습니다. 이번엔 대표 두 진영 — **Universal Robots(UR)**과 **화낙(FANUC)** — 을 맞대고, [3부](cobot-investing.md)에서 이걸 투자 관점(UR=Teradyne · 화낙 · NVIDIA)으로 연결합니다.
+> **코봇 2부작 · 2부.** [1부](cobot-basics.md)에서는 코봇이 무엇이고 왜 다른지를 봤습니다. 이번에는 대표 제조사인 **Universal Robots(UR)**와 **화낙(FANUC)**을 나란히 놓고 비교합니다. 이 비교를 투자로 잇는 이야기는 [Physical AI 투자 1편](cobot-investing.md)에서 이어집니다.
 
 같은 10kg급 협동로봇 두 대를 나란히 놓아봅시다. UR의 **UR10e**와 화낙의 **CRX-10iA/L**. 가반하중, 리치, 반복정밀도… 스펙표만 보면 거의 쌍둥이입니다. 가격도 비슷해요. 그러니 "그게 그거 아니야?" 싶죠.
 
@@ -166,7 +166,9 @@ UR 쪽은 로봇 제어 스택 전체가 **엣지 컴퓨터 위 파이썬**으�
 
 ---
 
-*관련: [1부 — 협동로봇(cobot)이란](cobot-basics.md) · [3부 — Physical AI 투자편](cobot-investing.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
+**시리즈** · [← 1부: 협동로봇(cobot)이란](cobot-basics.md) · 이어지는 글: [Physical AI 투자 1편 →](cobot-investing.md)
+
+*관련: [1부 — 협동로봇(cobot)이란](cobot-basics.md) · [Physical AI 투자 1편](cobot-investing.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
 
 ### 출처와 표기
 

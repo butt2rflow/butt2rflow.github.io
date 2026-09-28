@@ -4,12 +4,12 @@ nav_title: "Part 1 · The value is moving"
 date: 2026-09-11
 tags: [physical-ai, investing, cobot, humanoid, nvidia, teradyne, fanuc, robotics]
 lang: en
-description: "If you believe Physical AI is real, how do you invest? There's no pure-play — NVIDIA, Teradyne, and FANUC are each diluted differently — and the real question is where value moves. The narrative is humanoids; the money is cobots. Cobot series finale."
+description: "If you believe Physical AI is real, how do you invest? There's no pure-play — NVIDIA, Teradyne, and FANUC are each diluted differently — and the real question is where value moves. The narrative is humanoids; the money is cobots. Investing in Physical AI, Part 1."
 ---
 
 # Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
 
-> **Cobot series · Part 3 of 3 (finale) · Investing in Physical AI, Part 1.** [Part 1](cobot-basics.md) was what a cobot is; [Part 2](cobot-ur-vs-fanuc.md) split UR vs FANUC on "openness." Now we connect it to **investing** — if Physical AI is real, how do we buy it?
+> **Investing in Physical AI · Part 1.** The two-part cobot series covered what a cobot is ([Part 1](cobot-basics.md)) and why "openness" is what divides UR and FANUC ([Part 2](cobot-ur-vs-fanuc.md)). This post turns that story into **investing**: if Physical AI is real, how can we buy it?
 
 Suppose the first two parts convinced you Physical AI is real. AI becomes the robot's eyes and hands (the [Robot Vision series](stereo-to-grasp.md)), and what decides the contest isn't specs but openness (Part 2).
 
@@ -53,7 +53,7 @@ The point: **the hot narrative and valuation crowd around humanoids, but the rev
 
 And here's the trap. **The hot side (humanoids) is mostly un-buyable** — the Western leaders Figure, Agility, Apptronik, 1X are all private. The only listed pure humanoid plays are **Chinese** — UBTech, and Unitree (up +487% on its 2026 debut day). **The buyable side (cobots) is all a slice of a bigger company,** so it's diluted.
 
-That gap — *you can't buy what you want, and what you can buy is diluted* — is where Part 3 starts.
+That gap — *you can't buy what you want, and what you can buy is diluted* — is where this post starts.
 
 ![Humanoid vs cobot — a 2×2 of maturity and generality](../assets/diagrams_en/invest-humanoid-vs-cobot.svg)
 
@@ -176,7 +176,7 @@ So it's not a game of picking one ticker — it's a game of reading **where valu
 
 Picks (NVDA) sell, joints (reducers) turn, open arms (UR) take AI in, and deterministic eyes (Cognex/Keyence) are positioned to absorb AI. **Physical AI's real moat isn't with the robot makers or the AI makers — it forms with whoever bridges the two.**
 
-That closes the trilogy. What a cobot is (Part 1), what divides them (Part 2), and how to read and invest in the board (Part 3) — the one word running through all of it was **openness,** and, built on top of it, **fusion.**
+We have now covered what a cobot is (cobot Part 1), what divides the two makers (cobot Part 2), and how to read and invest in the board (this post). The one word running through all three is **openness,** and, built on top of it, **fusion.**
 
 ---
 

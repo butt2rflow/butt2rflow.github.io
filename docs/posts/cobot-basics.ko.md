@@ -3,12 +3,12 @@ title: "협동로봇(cobot)이란 — 로봇이 안전 펜스 밖으로 나온 �
 date: 2026-09-08
 tags: [physical-ai, cobot, collaborative-robot, universal-robots, fanuc, robotics, automation]
 lang: ko
-description: "산업용 로봇은 왜 우리(cage) 안에 갇혀 있었고, 협동로봇은 어떻게 펜스 밖으로 나왔나 — 안전 규격, 네 가지 협동 방식, '쉬움'이라는 진짜 무기, 그리고 UR과 화낙(FANUC). 코봇 3부작 1부."
+description: "산업용 로봇은 왜 우리(cage) 안에 갇혀 있었고, 협동로봇은 어떻게 펜스 밖으로 나왔나 — 안전 규격, 네 가지 협동 방식, '쉬움'이라는 진짜 무기, 그리고 UR과 화낙(FANUC). 코봇 2부작 1부."
 ---
 
 # 협동로봇(cobot)이란 — 로봇이 안전 펜스 밖으로 나온 이유
 
-> **코봇 3부작 · 1부.** 이 글은 협동로봇이 *무엇이고 왜 다른가*입니다. [2부](cobot-ur-vs-fanuc.md)는 UR vs 화낙(FANUC) 제품 비교, [3부](cobot-investing.md)는 이걸 Physical AI 투자 관점(UR·화낙·NVIDIA)으로 연결합니다.
+> **코봇 2부작 · 1부.** 이 글은 협동로봇이 *무엇이고 왜 다른지*를 다룹니다. [2부](cobot-ur-vs-fanuc.md)에서는 UR과 화낙(FANUC)을 비교하고, 투자 관점은 [Physical AI 투자 1편](cobot-investing.md)에서 이어집니다.
 
 공장에 처음 가보면 로봇은 대부분 **철창 안**에 있습니다. 노란 펜스, 빨간 비상정지 버튼, "문 열면 정지"라는 경고판. 그 안에서 로봇 팔은 사람은 흉내도 못 낼 속도와 힘으로 움직여요. 그리고 그 속도와 힘이야말로 그 로봇을 **우리 안에 가둬야 하는 이유**입니다. 사람이 그 옆에 서 있으면 위험하니까요.
 
@@ -141,7 +141,9 @@ description: "산업용 로봇은 왜 우리(cage) 안에 갇혀 있었고, 협�
 
 ---
 
-*관련: [2부 — UR vs 화낙, 개방성](cobot-ur-vs-fanuc.md) · [3부 — Physical AI 투자편](cobot-investing.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
+**시리즈** · [2부: UR vs 화낙(FANUC) →](cobot-ur-vs-fanuc.md)
+
+*관련: [2부 — UR vs 화낙, 개방성](cobot-ur-vs-fanuc.md) · [Physical AI 투자 1편](cobot-investing.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
 
 ### 출처와 표기
 
