@@ -16,7 +16,7 @@ description: "Three designs that turn what a camera sees into robot motion (geom
 
 ## The 30-second version
 
-- There are three designs from camera to motion: **Track 0** (geometry, no neural networks), **Track A** (neural perception + planner) and **Track B** (a policy learned from demonstrations).
+- There are three designs from camera to motion: **Track 0** (geometry, no neural networks), **Track A** (neural perception + planner) and **Track B** (a policy learned from demonstrations). Track 0 is the baseline that perceives without neural networks; A and B are the two paths that use them.
 - The further right, the more is learned and the harder it is to look inside. Taught-point automation sits at the far left, step 1.
 - You choose by **asking questions in order**: can it be fixed, does it only shift in the plane, can it be described with geometry, can a person demonstrate it. Stop at the step where the answer is yes.
 - Track 0 vs A comes down to **engineer hours per new part**; real step 4 is a **hybrid**.
@@ -127,6 +127,7 @@ The three-design split, the staircase and the failure comparison are a framework
 
 - *Physical AI*: robot technology that looks, decides and moves, rather than relying only on fixtures and taught points
 - *Deterministic · non-deterministic*: the same input always gives the same result · learned behavior whose results are statistical
+- *Track 0 · A · B*: 0 is the baseline that finds parts with a camera using geometry alone, no neural networks (not the same as a fixture-and-taught-points cell). A and B are the two paths that use neural networks: A for perception only, B for the whole motion
 - *ICP (Iterative Closest Point)*: geometry that nudges and turns a CAD model until it fits the point cloud; the leftover distance (residual) acts as confidence, though symmetric parts or a bad starting pose can give a wrong answer with a small residual
 - *Point cloud*: thousands of surface points measured by a depth camera
 - *Calibration*: measuring the relationship between camera coordinates and robot coordinates
