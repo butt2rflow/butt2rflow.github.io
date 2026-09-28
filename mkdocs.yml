@@ -85,9 +85,11 @@ extra_javascript:
   - assets/vix-history-player.js
   - assets/kelly-toggle.js
   - assets/dashboard-wizard.js
+  - assets/home-sidebar.js
 
 hooks:
   - hooks/nav_titles.py
+  - hooks/home_sidebar.py
 
 nav:
   - Home: index.md

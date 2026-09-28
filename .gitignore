@@ -39,6 +39,7 @@ _archive/
 !scripts/compute_backtest.py
 # MkDocs build hook (short sidebar labels) runs in CI too
 !hooks/nav_titles.py
+!hooks/home_sidebar.py
 blogstyle.css
 RachetEffect.gif
 .claude/

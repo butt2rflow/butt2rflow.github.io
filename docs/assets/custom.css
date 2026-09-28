@@ -297,6 +297,54 @@ img {
 }
 
 /* ==========================================================================
+   Home sidebar: recent posts + categories (hooks/home_sidebar.py)
+   ========================================================================== */
+
+.home-side {
+  margin: 0.8rem 0.6rem 1.5rem 0.6rem;
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+.home-side__title {
+  margin: 1.1em 0 0.5em;
+  padding: 0.4em 0.6em;
+  border-left: 3px solid var(--md-accent-fg-color);
+  border-radius: 0 4px 4px 0;
+  background: var(--md-accent-fg-color--transparent);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.home-side ul {
+  list-style: none;
+  margin: 0 0 0 0.6rem;
+  padding: 0 0 0 0.6rem;
+  border-left: 1px solid var(--md-default-fg-color--lightest);
+}
+.home-side li {
+  margin: 0.45em 0;
+}
+.home-side a {
+  color: var(--md-default-fg-color);
+}
+.home-side a:hover {
+  color: var(--md-accent-fg-color);
+}
+.home-side__recent li {
+  margin: 0.6em 0;
+}
+.home-side__meta {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--md-default-fg-color--light);
+  font-variant-numeric: tabular-nums;
+}
+.home-side__tab {
+  margin: 0.8em 0 0.3em 0.2rem;
+  font-weight: 700;
+  color: var(--md-default-fg-color--light);
+}
+
+/* ==========================================================================
    VIX history player — slider + play/pause + speed control on home dashboard
    ========================================================================== */
 
