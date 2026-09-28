@@ -106,7 +106,7 @@ The key point: **cobots are not replacing high-volume lines.** A car-body weld l
 
 ## Who makes them — UR, and FANUC's answer
 
-- **Universal Robots (UR)** — founded in Odense, Denmark in 2005; its **first commercial cobot, the UR5, shipped in 2008,** effectively creating the category. The lineup, by payload: **UR3e (3 kg) · UR5e (5 kg) · UR10e (12.5 kg) · UR16e (16 kg) · UR20 (20 kg) · UR30 (30 kg).** Since 2015 it's been a subsidiary of the US company **Teradyne.** (That ownership is the key hook for the Part 3 investing piece.)
+- **Universal Robots (UR)** — founded in Odense, Denmark in 2005; its **first commercial cobot, the UR5, shipped in 2008,** effectively creating the category. The lineup, by payload: **UR3e (3 kg) · UR5e (5 kg) · UR10e (12.5 kg) · UR16e (16 kg) · UR20 (20 kg) · UR30 (30 kg).** Since 2015 it's been a subsidiary of the US company **Teradyne.** (That ownership is the key hook for Investing in Physical AI, Part 1.)
 - **FANUC** — the industrial-robot heavyweight (a "Big Four" with ABB, KUKA, Yaskawa) and the dominant supplier of machine-tool **CNC controls.** It announced its **one-millionth robot** shipped in 2023. Its answer in the cobot category is the **CRX series** — aimed squarely at UR's ease-of-use — e.g. the **CRX-25iA (25 kg payload, 1,889 mm reach).**
 - Plenty of others compete too — Doosan Robotics, Techman, ABB (GoFa/YuMi), KUKA (LBR iiwa) — and UR remains the cobot market-share leader.
 
@@ -137,7 +137,7 @@ And one more: **"collaborative" is a property of the operation, not the robot.**
 | **Who makes it** | UR (category creator, owned by Teradyne), FANUC CRX (incumbent's answer), others |
 | **Biggest myth** | the arm alone doesn't make it safe — safety is a property of the whole *application* |
 
-**The one thing to remember:** the cobot's innovation wasn't making the robot stronger — it was **removing the barriers to entry: the safety fence and the specialist integrator.** So the cobot story is really about *who sells that accessibility best* — which is where **[Part 2](cobot-ur-vs-fanuc.md) puts UR and FANUC head to head,** before **[Part 3](cobot-investing.md) connects it to Physical AI investing (UR = Teradyne · FANUC · NVIDIA).**
+**The one thing to remember:** the cobot's innovation wasn't making the robot stronger — it was **removing the barriers to entry: the safety fence and the specialist integrator.** So the cobot story is really about *who sells that accessibility best* — which is where **[Part 2](cobot-ur-vs-fanuc.md) puts UR and FANUC head to head,** before **[Investing in Physical AI, Part 1](cobot-investing.md) connects it to Physical AI investing (UR = Teradyne · FANUC · NVIDIA).**
 
 ---
 

@@ -10,6 +10,8 @@ description: "We put the 'grab a new part with no training' foundation-model pip
 # Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge
 
 > **Field notes · Part 2 of the two-part "brain on the edge."** In [Part 1](jetson-ros2-setup.md) we brought a bare Jetson board up on JetPack and got **ROS 2 running**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge computer we already have**.
+>
+> **Correction note:** this post's hardware verdict ("production wants 64 GB") was later reversed in the [correction](jetson-foundationpose-16gb.md).
 
 In the [robot-vision series](stereo-to-grasp.md) we traced, as concepts, the path a robot walks to pick something up: read depth from stereo → cut out the object with a mask → find its 6-DoF pose → plan the robot arm's path. And in the [deep dive](inside-the-models.md) we opened up the models behind each stage — FoundationStereo, SAM 2, FoundationPose.
 

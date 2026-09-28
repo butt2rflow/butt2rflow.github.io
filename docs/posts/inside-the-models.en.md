@@ -3,7 +3,7 @@ title: "Inside the Three Models — FoundationStereo · SAM 2 · FoundationPose,
 date: 2026-09-17
 tags: [robot-vision, physical-ai, foundation-models, stereo, segmentation, pose-estimation, FoundationStereo, SAM, FoundationPose]
 lang: en
-series-prev: "[From Stereo Vision to Grasping](stereo-to-grasp.md)"
+series-prev: "[From Stereo to Grasp](stereo-to-grasp.md)"
 description: What the three models in a robot-vision pipeline (FoundationStereo, SAM 2, FoundationPose) are really computing on the inside, why they're built the way they are, and where they break — the math folded away, told in pictures and analogies.
 ---
 
@@ -15,7 +15,7 @@ description: What the three models in a robot-vision pipeline (FoundationStereo,
 >
 > There are exactly two equations here, and both live inside collapsible blocks (▶). You never have to open them — the body reads end to end on pictures and analogies alone. Open one only when you're curious.
 >
-> If there's an order to it, this is it. [From Stereo Vision to Grasping](stereo-to-grasp.md) gave you the big picture of how a robot *sees*; this piece takes the inside apart. If the coordinate-frame story is what you're after, [Frames and Transforms](frames-transforms.md) has its own home. And if you want to go deeper still, right up to the papers, [Deep dive Part 2 — Model Anatomy](model-anatomy.md) continues from here.
+> If there's an order to it, this is it. [From Stereo to Grasp](stereo-to-grasp.md) gave you the big picture of how a robot *sees*; this piece takes the inside apart. If the coordinate-frame story is what you're after, [Frames and Transforms](frames-transforms.md) has its own home. And if you want to go deeper still, right up to the papers, [Deep dive Part 2 — Model Anatomy](model-anatomy.md) continues from here.
 
 ## 1. Four Boxes, Again
 
@@ -314,7 +314,7 @@ Stage 1 takes a day. And if depth doesn't fill in at stage 1, stages 2 and 3 are
 ### Further reading
 
 - The follow-on [Deep dive Part 2 — Model Anatomy](model-anatomy.md): what shape the tensors flow in and what loss they train against, right up to the papers.
-- Same series: [From Stereo Vision to Grasping](stereo-to-grasp.md) · [Frames and Transforms](frames-transforms.md)
+- Same series: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames and Transforms](frames-transforms.md)
 - **FoundationStereo** — "Zero-Shot Stereo Matching" (NVIDIA, CVPR 2025). nvlabs.github.io/FoundationStereo
 - **SAM 2** — "Segment Anything in Images and Videos" (Meta AI). github.com/facebookresearch/sam2
 - **FoundationPose** — "Unified 6D Pose Estimation and Tracking of Novel Objects" (NVIDIA, CVPR 2024 Highlight). nvlabs.github.io/FoundationPose

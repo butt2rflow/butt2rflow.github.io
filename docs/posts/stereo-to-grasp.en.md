@@ -13,7 +13,7 @@ description: "Two camera photos become a precise 3D grasp — the beginner's wal
 
 I learned this the hard way. I started where most of us do — photographing a part by hand and drawing a box around it, image after image, in a labelling tool. Then I spent weeks fighting the results: depth maps full of holes on the shiny metal, a model that worked under one set of lights and fell apart under the next, and — once — a gripper that drove straight into the part because a single bad depth reading told it to.
 
-Then I watched a webinar called [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM), and it uncovered my eyes. The problem had never been my effort. It was that **you can't get this kind of training data from the real world at all** — so the whole approach has to change. This is the walkthrough I wish someone had handed me on day one.
+Then I watched a webinar called [*Picking the Impossible Parts*](https://www.youtube.com/watch?v=Zl_KhE1_9SM), and it opened my eyes. The problem had never been my effort. It was that **you can't get this kind of training data from the real world at all** — so the whole approach has to change. This is the walkthrough I wish someone had handed me on day one.
 
 Step back, and the timing makes sense. The first wave of AI *generated* — text and images, like ChatGPT. The second learned to *act* — reasoning and using tools, like Claude. The third is **physical AI**: that same intelligence moving into robots that see and move in the real world. This is a look at how that third wave actually runs on a factory floor.
 

@@ -144,7 +144,7 @@ Keep the balance here. The argument above rests on the premise **"if Physical AI
 
 So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible cell the AI keeps touching and evolving" → UR.** Not replacement — different uses.
 
-**And FANUC isn't standing still.** In late 2025 it announced an official Physical AI partnership with NVIDIA — putting **NVIDIA Jetson** (on-robot edge AI) and **Isaac Sim / Omniverse** (digital-twin simulation) onto its robots, and lowering the Python barrier with **official ROS 2 support.** The direction is clearly toward *more* open. But what's public so far is mostly **simulation, edge compute, and programming access** — not yet the thing this piece hinges on: **opening the real-time force loop to the outside.** Whether that gap closes ties directly into Part 3's investment story, so we'll pick it up there.
+**And FANUC isn't standing still.** In late 2025 it announced an official Physical AI partnership with NVIDIA — putting **NVIDIA Jetson** (on-robot edge AI) and **Isaac Sim / Omniverse** (digital-twin simulation) onto its robots, and lowering the Python barrier with **official ROS 2 support.** The direction is clearly toward *more* open. But what's public so far is mostly **simulation, edge compute, and programming access** — not yet the thing this piece hinges on: **opening the real-time force loop to the outside.** Whether that gap closes ties directly into the investment story, so we'll pick it up in Investing in Physical AI, Part 1.
 
 ---
 
@@ -160,7 +160,7 @@ So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible c
 | Physical AI coverage | low (perception only) | high (through force control) |
 | Wins instead on | scale · high-volume precision · CNC · stability | openness · flexibility · fast iteration |
 
-**The one thing to remember:** the two arms are nearly the same. What decides Physical AI is **whether the AI can reach into the robot's force loop — i.e. openness.** And being open ultimately means you can **fuse AI with the robot** — a "fusion" that comes back as the key thread of Part 3. Which leads straight to the third question: *so if you were investing in this, in whom?* [Part 3](cobot-investing.md) breaks down **UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA** through a Physical AI investing lens.
+**The one thing to remember:** the two arms are nearly the same. What decides Physical AI is **whether the AI can reach into the robot's force loop — i.e. openness.** And being open ultimately means you can **fuse AI with the robot** — a "fusion" that comes back as the key thread of the investing series. Which leads straight to the next question: *so if you were investing in this, in whom?* [Investing in Physical AI, Part 1](cobot-investing.md) breaks down **UR (parent Teradyne) · FANUC (Tokyo 6954 / ADR FANUY) · NVIDIA** through a Physical AI investing lens.
 
 ---
 

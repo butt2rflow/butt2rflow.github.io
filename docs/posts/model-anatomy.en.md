@@ -369,7 +369,7 @@ The **ablation studies (item 2)** are the real treasure. The authors have measur
 ### Related posts
 
 - The previous piece, [Inside the Three Models](inside-the-models.md) — pin down the concepts and failure modes first and this one gets much easier.
-- Same series: [From Stereo Vision to Grasping the Target](stereo-to-grasp.md) · [Frames and Transforms](frames-transforms.md)
+- Same series: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames and Transforms](frames-transforms.md)
 
 ### Extra terms
 
