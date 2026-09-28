@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
-<text class="t" x="18" y="26">용량만 키우면 무게가 일부를 다시 먹는다</text>
+<text class="t" x="18" y="26">용량만 키우면 늘어난 무게가 효과를 깎는다</text>
 <rect class="bxa" x="40" y="60" width="260" height="50" rx="8"/>
 <text class="lb" x="170.0" y="89.0" text-anchor="middle">배터리 용량 ↑</text>
 <rect class="bx" x="380" y="60" width="260" height="50" rx="8"/>

@@ -22,7 +22,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
-<text class="t" x="18" y="26">ROS 2가 가져가는 일, 컨트롤러에 남는 일</text>
+<text class="t" x="18" y="26">ROS 2로 넘어가는 일, 컨트롤러에 남는 일</text>
 <rect class="ros" x="18" y="44" width="262" height="198" rx="10"/>
 <text class="lb" x="34" y="68" style="fill:var(--blue)">ROS 2 컴퓨터 (PC, Jetson)</text>
 <text class="it" x="34" y="98">보기: 카메라로 부품 찾기</text>

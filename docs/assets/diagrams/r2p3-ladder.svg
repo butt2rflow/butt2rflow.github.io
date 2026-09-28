@@ -57,7 +57,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="t" x="18" y="26">필요할 때만 한 단씩 올라간다</text>
 <rect class="bxr" x="16" y="44" width="520" height="50" rx="10"/>
 <text class="lb" x="32" y="66">4 학습 정책</text>
-<text class="sm" x="32" y="84" style="fill:var(--fg)">보여 줄 수는 있지만 좌표로 못 적는 일. 실패해도 조용하다</text>
+<text class="sm" x="32" y="84" style="fill:var(--fg)">보여 줄 수는 있지만 좌표로 못 적는 일. 실패해도 알리지 않는다</text>
 <rect class="bxg" x="552" y="50" width="110" height="38" rx="8"/>
 <text class="nd" x="607.0" y="73.0" text-anchor="middle">검사 셀엔 부적합</text>
 <rect class="bxa" x="16" y="102" width="520" height="50" rx="10"/>

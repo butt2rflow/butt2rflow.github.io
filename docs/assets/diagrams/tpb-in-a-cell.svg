@@ -74,5 +74,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="204" y="174" text-anchor="middle" style="fill:var(--red)">실패 → 복귀 지점</text>
 <rect class="fam" x="16" y="192" width="646" height="62" rx="10"/>
 <text class="st" x="30" y="214">인수: 조건별(위치, 조명, 부품 변형) N회 중 성공 횟수 + 실패를 감지해 멈추는지</text>
-<text class="st" x="30" y="236">정책의 범위가 좁을수록 시험할 수 있고, 판정은 늘 결정론적으로 남는다</text>
+<text class="st" x="30" y="236">정책의 범위가 좁을수록 시험하기 쉽고, 판정은 늘 결정론적으로 남는다</text>
 </svg>

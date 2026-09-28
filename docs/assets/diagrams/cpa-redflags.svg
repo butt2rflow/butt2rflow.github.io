@@ -1,5 +1,5 @@
 <svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">범위를 정할 때의 경계 신호</title>
+<title id="ti">범위를 정할 때의 경고 신호</title>
 <desc id="de">여섯 가지 경계 신호. 지그로 될 일에 AI를 원할 때, 반사나 투명 부품에 3D 자세를 쓸 때, CAD도 없고 부품 종류가 많을 때, 품질이나 안전에 중요한 단계에 학습 정책을 단독으로 쓸 때, 무제한 변화를 약속할 때, 데모 영상의 정확도를 사양으로 삼을 때.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}

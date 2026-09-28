@@ -79,5 +79,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="418" y="190" text-anchor="middle" style="fill:var(--teal)">GPU 그대로</text>
 <rect class="bxgr" x="460" y="176" width="126" height="40" rx="8"/>
 <text class="nd" x="523.0" y="200.0" text-anchor="middle">자세</text>
-<text class="sm" x="40" y="238">같은 프로세스 안에서 묶여 있을 때 복사가 빠진다. 보통 노드가 들으면 한 번 변환한다.</text>
+<text class="sm" x="40" y="238">같은 프로세스 안에서 묶여 있을 때 복사를 하지 않는다. 보통 노드가 들으면 한 번 변환한다.</text>
 </svg>

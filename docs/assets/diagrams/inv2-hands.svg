@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
-<text class="t" x="18" y="26">수요는 현실이 되는 중, 병목은 손과 공급망</text>
+<text class="t" x="18" y="26">수요는 늘고 있지만, 병목은 손과 공급망</text>
 <rect class="bx" x="60" y="180" width="70" height="20" rx="4"/>
 <text class="sm" x="95" y="220" text-anchor="middle">2분기</text>
 <text class="sm" x="95" y="172" text-anchor="middle" style="fill:var(--fg)">주당 수십 대</text>

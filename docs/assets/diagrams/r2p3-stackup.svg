@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">작은 편차가 쌓이면</title>
-<desc id="de">지그와 테이블은 고정이어도 팔레트 위치 오차, 컨베이어 편차, 제품 자체의 조립 공차가 더해져 이번 사이클의 부품 위치가 된다. 각각은 작아도 합치면 티칭 점 하나로는 맞지 않는 편차가 된다. 인식이 이번 편차를 재서 보정하고, 예상한 누적 범위를 넘으면 무언가 정말 잘못된 것이므로 멈춘다.</desc>
+<desc id="de">지그와 테이블은 고정이어도 팔레트 위치 오차, 컨베이어 편차, 제품 자체의 조립 공차가 더해져 이번 사이클의 부품 위치가 된다. 각각은 작아도 합치면 티칭 점 하나로는 맞지 않는 편차가 된다. 인식이 이번 편차를 재서 보정하고, 예상한 누적 범위를 넘으면 뭔가 크게 잘못된 것이니 멈춘다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}

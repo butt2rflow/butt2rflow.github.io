@@ -60,7 +60,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="st" x="32" y="100">• 반복 정밀도 mm 단위 (취미용 서보)</text>
 <text class="st" x="32" y="122">• 무거운 물체 불가</text>
 <text class="st" x="32" y="144">• 관절 5개: 손끝 방향을 다 맞추지 못한다</text>
-<text class="st" x="32" y="166">• 놓친 집기 = 팔 탓일 수도</text>
+<text class="st" x="32" y="166">• 집기 실패 = 팔 탓일 수도</text>
 <rect class="bx" x="348" y="48" width="314" height="150" rx="10"/>
 <text class="lb" x="364" y="72" style="fill:var(--blue)">URSim</text>
 <text class="st" x="364" y="100">• 카메라 없음</text>

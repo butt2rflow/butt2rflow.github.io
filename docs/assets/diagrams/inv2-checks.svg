@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">볼 지표 네 가지</title>
-<desc id="de">액추에이터 부품 기업을 볼 때 확인할 지표. 수주 잔고는 6~12개월 뒤 매출을 먼저 보여 준다. 매출 대비 R&amp;D 비중은 기술 우위를 지키는지 보여 준다. 글로벌 제조업 PMI와 자동차 업계 설비 투자 계획은 산업용 로봇 수요의 경기를 보여 준다. 휴머노이드 기대는 주가에 먼저 반영되지만, 실적은 여전히 산업용 로봇 경기가 좌우한다.</desc>
+<desc id="de">액추에이터 부품 기업을 볼 때 확인할 지표. 수주 잔고는 6~12개월 뒤 매출을 먼저 보여 준다. 매출 대비 R&amp;D 비중은 기술 우위를 지키는지 보여 준다. 글로벌 제조업 PMI와 자동차 업계 설비 투자 계획은 산업용 로봇 경기를 보여 준다. 휴머노이드 기대는 주가에 먼저 반영되지만, 실적은 여전히 산업용 로봇 경기가 좌우한다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -67,6 +67,6 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bx" x="505" y="50" width="155" height="120" rx="10"/>
 <text class="lb" x="583" y="90" text-anchor="middle">자동차 설비 투자</text>
 <text class="sm" x="583" y="130" text-anchor="middle" style="fill:var(--fg)">산업용 로봇 최대 수요처</text>
-<text class="st" x="18" y="200" style="fill:var(--fg)">휴머노이드 프리미엄은 QDD 확산과 저가 경쟁에 취약하다. 산업용 로봇 회복만으로 실적이 나오는지가 버팀목이다.</text>
+<text class="st" x="18" y="200" style="fill:var(--fg)">휴머노이드 프리미엄은 QDD 확산과 저가 경쟁에 취약하다. 산업용 로봇 회복만으로도 실적이 나온다는 점이 버팀목이다.</text>
 <text class="sm" x="18" y="226">체크 지표는 원 블로그가 제시한 것을 참고. 투자 권유가 아닌 정보 정리</text>
 </svg>

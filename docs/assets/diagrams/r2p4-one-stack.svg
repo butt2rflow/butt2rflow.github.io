@@ -86,5 +86,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="code" x="422.0" y="250.0" text-anchor="middle">ur_moveit_config</text>
 <rect class="bxa" x="506" y="230" width="152" height="32" rx="8"/>
 <text class="code" x="582.0" y="250.0" text-anchor="middle">fanuc_moveit_config</text>
-<text class="sm" x="18" y="282">로봇 이름·관절 번호를 내 코드에 박아 두지 않으면 교체가 이만큼 작아진다.</text>
+<text class="sm" x="18" y="282">로봇 이름·관절 번호를 내 코드에 박아 두지 않으면 바꿀 곳이 이만큼 줄어든다.</text>
 </svg>

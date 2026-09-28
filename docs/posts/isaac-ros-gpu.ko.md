@@ -4,7 +4,7 @@ nav_title: "4부 · Isaac ROS와 cuMotion"
 date: 2026-09-28
 tags: [physical-ai, ros2, isaac-ros, cumotion, nvidia, jetson, moveit2, robotics]
 lang: ko
-description: "매 프레임 신경망을 실행하는 인식과 복잡한 경로 계획은 CPU로는 느립니다. 같은 ROS 2 그래프에서 무거운 노드만 GPU로 옮기는 Isaac ROS, 복사를 없애는 NITROS, MoveIt 2의 플래너 자리에 꽂히는 cuMotion, 버전 맞추기, 인식 결과의 관문, 그리고 한 스택으로 여러 로봇을. 4부작 중 4부(완결)."
+description: "매 프레임 신경망을 실행하는 인식과 복잡한 경로 계획은 CPU로는 느립니다. 같은 ROS 2 그래프에서 무거운 노드만 GPU로 옮기는 Isaac ROS, 복사를 없애는 NITROS, MoveIt 2의 플래너 자리에 끼워 쓰는 cuMotion, 버전 맞추기, 인식 결과의 관문, 그리고 한 스택으로 여러 로봇을. 4부작 중 4부(완결)."
 ---
 
 # 티치 펜던트에서 ROS 2로 (4) — Isaac ROS와 cuMotion: 느린 부분을 GPU로
@@ -21,7 +21,7 @@ description: "매 프레임 신경망을 실행하는 인식과 복잡한 경로
 
 - Isaac ROS 노드는 **평범한 ROS 2 노드**입니다. 같은 토픽, 같은 메시지 형식으로 그래프에 들어가고, 무거운 계산만 GPU에서 합니다.
 - **NITROS**는 GPU 노드끼리 이미지를 GPU 메모리에 둔 채 넘기는 방식입니다. Isaac ROS 5.0부터는 같은 기능이 ROS 2 자체에 들어갔어요.
-- **cuMotion**은 MoveIt 2의 플래너 자리에 꽂히는 GPU 플래너입니다. 코드는 그대로 두고, MoveIt 설정에 cuMotion 파이프라인을 추가해 OMPL 대신 고르면 됩니다. 로봇마다 **XRDF**라는 보조 파일이 필요해요.
+- **cuMotion**은 MoveIt 2의 플래너 자리에 끼워 쓰는 GPU 플래너입니다. 코드는 그대로 두고, MoveIt 설정에 cuMotion 파이프라인을 추가해 OMPL 대신 고르면 됩니다. 로봇마다 **XRDF**라는 보조 파일이 필요해요.
 - JetPack, ROS 2, Isaac ROS는 **한 세트**로 맞추고 함께 올립니다.
 - 인식 결과는 **관문**(신뢰도·누적 공차 범위)을 통과해야 보정에 쓰고, 벗어나면 멈추고 알립니다. 판정에는 넣지 않습니다.
 - 로봇을 바꿔도 **위층은 그대로**입니다. 갈아 끼우는 건 설계도, 드라이버, MoveIt 설정 세 가지예요.
@@ -56,7 +56,7 @@ GPU 노드를 그냥 연결하기만 하면 기대만큼 빨라지지 않을 때
 
 Isaac ROS를 쓰기 시작하면 버전 번호가 많아집니다. 이건 따로따로 바꾸지 말고 한 세트로 다뤄야 합니다.
 
-![따로 올리지 말고 세트로](../assets/diagrams/r2p4-versions.svg)
+![따로 바꾸지 말고 세트로](../assets/diagrams/r2p4-versions.svg)
 
 **JetPack**은 Jetson 보드용 NVIDIA 운영체제 묶음입니다(리눅스, GPU 드라이버, CUDA 등). 그 위에 ROS 2, 그 위에 Isaac ROS가 올라가고, 세 버전이 서로 맞아야 동작합니다. NVIDIA가 이 조합을 미리 넣어 둔 컨테이너(도커 개발 환경)를 주기 때문에, 보통은 그걸 받아 쓰는 게 가장 빠릅니다. 팀원 모두가 똑같은 환경을 쓰게 되는 장점도 있고요.
 
@@ -80,9 +80,9 @@ cuMotion을 쓰려면 로봇마다 파일이 하나 더 필요합니다.
 
 [1부](ros2-for-robot-programmers.md)에서 판정은 결정론적 하드웨어에 두고, 인식은 움직임을 맞추는 데만 쓴다고 했습니다. 그 둘을 연결하는 지점이 이 관문이에요.
 
-![통과하면 보정, 실패하면 크게 멈춘다](../assets/diagrams/r2p4-gate.svg)
+![통과하면 보정, 실패하면 멈추고 알린다](../assets/diagrams/r2p4-gate.svg)
 
-신경망 인식은 조명이나 반사에 따라 결과가 조금씩 흔들립니다. 그래서 결과를 그대로 믿지 않고 두 가지를 확인합니다. 모델이 내는 신뢰도나 맞춤 오차(CAD를 맞췄을 때 남는 거리)가 기준 안인지, 그리고 [3부](moveit2-goals-not-points.md)에서 본 누적 공차 범위 안인지. 범위를 벗어났다면 인식이 틀렸거나 부품이 정말 이상한 자리에 있는 것이니, 조용히 넘어가지 말고 멈추고 알립니다. 조용한 실패가 요란한 실패보다 위험해요.
+신경망 인식은 조명이나 반사에 따라 결과가 조금씩 흔들립니다. 그래서 결과를 그대로 믿지 않고 두 가지를 확인합니다. 모델이 내는 신뢰도나 맞춤 오차(CAD를 맞췄을 때 남는 거리)가 기준 안인지, 그리고 [3부](moveit2-goals-not-points.md)에서 본 누적 공차 범위 안인지. 범위를 벗어났다면 인식이 틀렸거나 부품이 정말 이상한 자리에 있는 것이니, 조용히 넘어가지 말고 멈추고 알립니다. 조용한 실패가 드러나는 실패보다 위험해요.
 
 결과가 흔들리는 곳이 두 군데 더 있습니다. 같은 모델이라도 TensorRT 엔진을 다시 빌드하면 내부 계산 방식이 바뀌어 결과가 아주 조금 달라질 수 있어요. 버전 세트에 엔진 파일까지 포함해 고정하고, 바꿀 때는 [2부](ros2-robot-description.md)의 rosbag2 기록으로 옛 결과와 비교하세요. cuMotion도 무작위 시작점 여러 개에서 최적화하는 방식이라 같은 요청에 경로가 조금씩 다를 수 있습니다. 매번 같은 모양이 필요하면 3부의 Pilz나 저장된 궤적을 쓰세요.
 
@@ -92,7 +92,7 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 ![로봇을 바꿔도 위층은 그대로](../assets/diagrams/r2p4-one-stack.svg)
 
-통합니다. 작업 순서, 비전, 좌표계, 목표 자세, 잡는 위치처럼 내가 짠 코드 대부분은 로봇이 바뀌어도 바뀌지 않아요. 갈아 끼우는 건 2부의 설계도(URDF)와 드라이버(ros2_control 하드웨어 인터페이스), 3부의 MoveIt 설정 세 가지입니다. UR은 이 셋을 `ur_description`, `ur_robot_driver`, `ur_moveit_config` 패키지로 제공하고, 컨트롤러 쪽에는 External Control URCap을 설치합니다(PolyScope 5는 URCap, PolyScope X는 URCapX). 화낙도 공식 ROS 2 설명·드라이버·MoveIt 설정 패키지(`fanuc_description`, `fanuc_driver`, `fanuc_moveit_config`)를 내고 있어요. 이 교체를 작게 유지하려면 로봇 이름이나 관절 번호를 내 코드에 박아 두지 마세요.
+통합니다. 작업 순서, 비전, 좌표계, 목표 자세, 잡는 위치처럼 내가 짠 코드 대부분은 로봇이 바뀌어도 바뀌지 않아요. 갈아 끼우는 건 2부의 설계도(URDF)와 드라이버(ros2_control 하드웨어 인터페이스), 3부의 MoveIt 설정 세 가지입니다. UR은 이 셋을 `ur_description`, `ur_robot_driver`, `ur_moveit_config` 패키지로 제공하고, 컨트롤러 쪽에는 External Control URCap을 설치합니다(PolyScope 5는 URCap, PolyScope X는 URCapX). 화낙도 공식 ROS 2 설명·드라이버·MoveIt 설정 패키지(`fanuc_description`, `fanuc_driver`, `fanuc_moveit_config`)를 내고 있어요. 바꿀 곳을 최소로 줄이려면 로봇 이름이나 관절 번호를 내 코드에 박아 두지 마세요.
 
 ## 처음 하는 사람이 거의 다 겪는 여섯 가지
 
@@ -157,7 +157,7 @@ Isaac ROS의 구성, NITROS, cuMotion과 MoveIt 2 플러그인, XRDF의 내용, 
 - *구성 가능 노드(composable node)*: 여러 노드를 한 프로세스 안에 묶어 실행하는 ROS 2 방식
 - *JetPack*: Jetson 보드용 NVIDIA 운영체제 묶음 (리눅스, GPU 드라이버, CUDA 등)
 - *컨테이너*: 소프트웨어 환경을 통째로 묶어 어느 컴퓨터에서나 똑같이 실행하게 하는 방식 (도커)
-- *cuMotion*: MoveIt 2의 플래너 자리에 꽂히는 NVIDIA의 GPU 모션 플래너
+- *cuMotion*: MoveIt 2의 플래너 자리에 끼워 쓰는 NVIDIA의 GPU 모션 플래너
 - *XRDF*: cuMotion용으로 URDF를 보완하는 파일. 충돌용 공, 자기 충돌 규칙, 툴 좌표계, 가속도·저크 한계
 - *URCap · URCapX*: UR 펜던트(PolyScope 5 · PolyScope X)에 설치하는 확장 기능
 - *관문*: 인식 결과를 움직임에 쓰기 전에 신뢰도와 누적 공차 범위를 검사하는 단계

@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
-<text class="t" x="18" y="26">통과하면 보정, 실패하면 크게 멈춘다</text>
+<text class="t" x="18" y="26">통과하면 보정, 실패하면 멈추고 알린다</text>
 <rect class="bxa" x="16" y="64" width="122" height="72" rx="8"/>
 <text class="nd" x="77.0" y="97.0" text-anchor="middle">인식 결과</text>
 <text class="sm" x="77.0" y="112.0" text-anchor="middle">부품 자세</text>

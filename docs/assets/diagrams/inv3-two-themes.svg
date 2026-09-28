@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">휴머노이드 전력과 AI 전력은 다른 테마</title>
-<desc id="de">휴머노이드 몸의 전력 문제에 직접 걸린 쪽은 배터리 셀(LG에너지솔루션, 삼성SDI, SK온, CATL), 전고체 배터리 개발사(QuantumScape, Solid Power, 삼성SDI), 그리고 배터리 관리·충전·교체 설비다. 원자력과 발전 사업자(Oklo(전력 판매 전), NuScale, BWXT, Cameco, Constellation, Vistra)는 로봇 몸이 아니라 AI 데이터센터와 공장의 전력 수요에 걸린 별개 테마다.</desc>
+<desc id="de">휴머노이드 몸의 전력 문제에 직접 관련된 쪽은 배터리 셀(LG에너지솔루션, 삼성SDI, SK온, CATL), 전고체 배터리 개발사(QuantumScape, Solid Power, 삼성SDI), 그리고 배터리 관리·충전·교체 설비다. 원자력과 발전 사업자(Oklo(전력 판매 전), NuScale, BWXT, Cameco, Constellation, Vistra)는 로봇 몸이 아니라 AI 데이터센터와 공장의 전력 수요에 좌우되는 별개 테마다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="290" rx="12"/>
-<text class="t" x="18" y="26">같은 '전력'이라도 걸린 곳이 다르다</text>
+<text class="t" x="18" y="26">같은 '전력'이라도 주가를 좌우하는 것이 다르다</text>
 <rect class="hi" x="16" y="50" width="316" height="190" rx="10"/>
 <text class="lb" x="32" y="76">직접: 로봇 몸의 전원</text>
 <text class="sm" x="32" y="98">휴머노이드 판매량에 연동</text>

@@ -1,5 +1,5 @@
 <svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">두 가지 관절 설계, 두 가지 가치 흐름</title>
+<title id="ti">관절 설계에 따라 돈이 가는 곳이 다르다</title>
 <desc id="de">왼쪽은 감속비가 높은 전통 방식으로, 작은 모터의 힘을 정밀 감속기가 키운다. 정밀하고 힘세지만 비싸고, 가치는 감속기(하모닉 드라이브, 나브테스코, 중국 업체)에 모인다. 오른쪽은 감속비가 낮은 QDD(준직접구동) 방식으로, 힘을 주로 강한 모터에서 얻는다. 빠르고 충격에 강하며 학습 기반 제어에 잘 맞지만 큰 힘은 어렵고, 가치는 모터, 희토류 자석, 드라이버 보드로 이동한다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
@@ -67,7 +67,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="lb" x="362" y="68" style="fill:var(--amber)">감속비 낮음 (QDD)</text>
 <rect class="bxa" x="362" y="82" width="288" height="40" rx="8"/>
 <text class="nd" x="506.0" y="106.0" text-anchor="middle">강한 모터 + 가벼운 감속</text>
-<text class="st" x="362" y="146" style="fill:var(--fg)">빠름·충격 흡수, 큰 힘은 약함</text>
+<text class="st" x="362" y="146" style="fill:var(--fg)">빠름·충격 흡수, 큰 힘은 내기 어렵다</text>
 <rect class="hi" x="362" y="162" width="288" height="40" rx="8"/>
 <text class="lb" x="506.0" y="186.0" text-anchor="middle">가치 → 모터·자석·드라이버</text>
 <text class="sm" x="362" y="226">희토류 자석, 모터, 드라이버 보드</text>

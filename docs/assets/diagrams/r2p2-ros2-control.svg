@@ -81,6 +81,6 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="st" x="450" y="160">외부 모션 명령 창구</text>
 <text class="st" x="450" y="192">mock = ROBOGUIDE·URSim처럼</text>
 <text class="st" x="450" y="208">로봇 없이 먼저 실행해 보기</text>
-<text class="st" x="450" y="240" style="fill:var(--fg)">"ROS 2 지원 로봇"을 산다는 건</text>
-<text class="st" x="450" y="256" style="fill:var(--fg)">결국 이 층을 산다는 뜻</text>
+<text class="st" x="450" y="240" style="fill:var(--fg)">"ROS 2 지원"이란</text>
+<text class="st" x="450" y="256" style="fill:var(--fg)">결국 이 층이 있다는 뜻</text>
 </svg>

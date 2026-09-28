@@ -91,7 +91,7 @@ The difference is in the shape. A pendant keeps a few numbered UFRAMEs and UTOOL
 
 Because the whole tree is connected, you can ask TF2 for the relationship between any two frames. Once you add a camera, this is the feature you'll use most.
 
-![TF2: where is this point, relative to the base?](../assets/diagrams_en/r2p2-tf-lookup.svg)
+![TF2: "Where is this point, relative to the base?"](../assets/diagrams_en/r2p2-tf-lookup.svg)
 
 A camera reports the part position **relative to the camera**. To send the robot there, you need the position **relative to the base**. Ask TF2 to "restate this point relative to base_link" and it walks the tree for you. You can check the relationship between two frames from a terminal, too.
 

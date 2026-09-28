@@ -127,7 +127,7 @@ Connecting a PLC and a robot in a TP cell means matching IP addresses and signal
 
 There is one rule, though.
 
-![They find each other with no setup, but only in the same room](../assets/diagrams_en/r2p-discovery.svg)
+![No setup needed, but only within the same "room number"](../assets/diagrams_en/r2p-discovery.svg)
 
 Only nodes with the same **`ROS_DOMAIN_ID`** can see each other. It's a room number that keeps several cells on the same network from mixing. The default is 0.
 
@@ -144,7 +144,7 @@ One more point: by default, ROS 2 doesn't check who is sending commands. Keep th
 
 TP is written on the pendant and runs right away. ROS 2 code goes through four steps.
 
-![Write, build, source, launch](../assets/diagrams_en/r2p-build-source-launch.svg)
+![Write → build → source → launch](../assets/diagrams_en/r2p-build-source-launch.svg)
 
 1. **Write a package.** Related nodes and settings are bundled into a **package**. Packages go under `src/` in a working folder called a workspace.
 2. **Build.** `colcon build` turns them into something runnable.

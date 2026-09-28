@@ -70,7 +70,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bx" x="280" y="44" width="122" height="150" rx="10"/>
 <text class="lb" x="341" y="70" text-anchor="middle">3 잡을 자리</text>
 <text class="sm" x="341" y="100" text-anchor="middle" style="fill:var(--fg)">부품 + 잡는 오프셋</text>
-<text class="sm" x="341" y="120" text-anchor="middle">= TP의 UTOOL 생각</text>
+<text class="sm" x="341" y="120" text-anchor="middle">= TP의 UTOOL과 같음</text>
 <text class="code" x="341" y="176" text-anchor="middle" style="fill:var(--teal);font-size:10px">z + 0.02</text>
 <line class="ar" x1="404" y1="118" x2="412" y2="118"/>
 <rect class="bx" x="412" y="44" width="122" height="150" rx="10"/>
