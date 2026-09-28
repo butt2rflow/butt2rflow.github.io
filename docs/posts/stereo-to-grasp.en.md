@@ -1,5 +1,6 @@
 ---
 title: "From Stereo to Grasp — How a Robot Learns to See a Part"
+nav_title: "From Stereo to Grasp"
 date: 2026-09-07
 tags: [physical-ai, robot-vision, foundation-models, stereo, segmentation, pose-estimation, isaac, robotics]
 lang: en

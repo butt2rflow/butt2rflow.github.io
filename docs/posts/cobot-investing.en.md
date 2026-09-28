@@ -1,5 +1,6 @@
 ---
 title: "Investing in Physical AI — There's No Pure-Play, and the Value Is Moving"
+nav_title: "Part 1 · The value is moving"
 date: 2026-09-11
 tags: [physical-ai, investing, cobot, humanoid, nvidia, teradyne, fanuc, robotics]
 lang: en

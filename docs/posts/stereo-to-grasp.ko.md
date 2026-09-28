@@ -1,5 +1,6 @@
 ---
 title: "스테레오 비전(Stereo Vision)에서 목표물 잡기(grasping)까지 — 로봇은 목표한 사물을 어떻게 발견하는가"
+nav_title: "스테레오 비전에서 목표물 잡기까지"
 date: 2026-09-07
 tags: [physical-ai, robot-vision, foundation-models, stereo, segmentation, pose-estimation, isaac, robotics]
 lang: ko

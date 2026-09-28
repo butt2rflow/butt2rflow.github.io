@@ -1,5 +1,6 @@
 ---
 title: "티치 펜던트에서 ROS 2로 (1) — 로봇 프로그램 하나가 여러 프로그램의 대화가 된다"
+nav_title: "1부 · ROS 2 노드와 그래프"
 date: 2026-09-28
 tags: [physical-ai, ros2, robotics, teach-pendant, fanuc, universal-robots]
 lang: ko

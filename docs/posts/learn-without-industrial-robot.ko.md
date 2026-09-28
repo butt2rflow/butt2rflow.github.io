@@ -1,5 +1,6 @@
 ---
 title: "실습 노트 (0) — 실물 산업용 로봇 없이 배우기: SO-101과 URSim"
+nav_title: "0편 · 실물 로봇 없이 배우기"
 date: 2026-09-28
 tags: [physical-ai, hands-on, ros2, moveit2, isaac-ros, so-101, ursim, jetson]
 lang: ko

@@ -1,5 +1,6 @@
 ---
 title: "Putting the Robot's Brain on the Edge — A Correction: Reversing the '16 GB Can't Do It' Verdict"
+nav_title: "Correction · 16 GB is enough"
 date: 2026-09-20
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: en

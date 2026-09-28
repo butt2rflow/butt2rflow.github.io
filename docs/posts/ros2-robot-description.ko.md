@@ -1,5 +1,6 @@
 ---
 title: "티치 펜던트에서 ROS 2로 (2) — 로봇을 ROS에 설명하기: URDF, TF2, ros2_control, RViz"
+nav_title: "2부 · URDF·TF2·ros2_control"
 date: 2026-09-28
 tags: [physical-ai, ros2, urdf, tf2, ros2-control, rviz, robotics]
 lang: ko

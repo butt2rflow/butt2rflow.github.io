@@ -252,32 +252,48 @@ img {
 }
 
 /* ==========================================================================
-   Sidebar TradingView ticker widget — injected on homepage only
+   Left navigation hierarchy (desktop): highlighted section bands, indented posts
    ========================================================================== */
 
-.sidebar-tv-widget {
-  margin: 1rem 0.6rem 1.5rem 0.6rem;
-  padding-top: 0.8rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.sidebar-tv-widget__title {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #525252;
-  margin-bottom: 0.4rem;
-  letter-spacing: 0.02em;
-}
-
-.sidebar-tv-widget .tradingview-widget-container {
-  width: 100%;
-}
-
-/* TradingView ticker tape is naturally horizontal; let it scroll within the
-   sidebar without bursting the container */
-.sidebar-tv-widget iframe {
-  max-width: 100% !important;
-  border-radius: 4px;
+@media screen and (min-width: 76.25em) {
+  /* top-level tab title, e.g. "Physical AI" */
+  .md-sidebar--primary .md-nav--primary > .md-nav__title {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--md-default-fg-color);
+  }
+  /* section heading ("시작하기", "로봇 비전"): highlighted band */
+  .md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item--section > .md-nav__link {
+    margin: 1.1em 0 0.3em;
+    padding: 0.4em 0.6em;
+    border-left: 3px solid var(--md-accent-fg-color);
+    border-radius: 0 4px 4px 0;
+    background: var(--md-accent-fg-color--transparent);
+    color: var(--md-default-fg-color);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item--section:first-child > .md-nav__link {
+    margin-top: 0.3em;
+  }
+  /* posts inside a section: indented behind a per-section guide line */
+  .md-sidebar--primary .md-nav[data-md-level="2"] > .md-nav__list {
+    margin-left: 0.6rem;
+    padding-left: 0.6rem;
+    border-left: 1px solid var(--md-default-fg-color--lightest);
+  }
+  .md-sidebar--primary .md-nav[data-md-level="2"] .md-nav__link {
+    font-size: 0.68rem;
+    line-height: 1.35;
+    margin-top: 0.45em;
+  }
+  /* current post: accent marker on the guide line */
+  .md-sidebar--primary .md-nav[data-md-level="2"] .md-nav__link--active {
+    font-weight: 700;
+    margin-left: -0.65rem;
+    padding-left: 0.55rem;
+    border-left: 2px solid var(--md-accent-fg-color);
+  }
 }
 
 /* ==========================================================================

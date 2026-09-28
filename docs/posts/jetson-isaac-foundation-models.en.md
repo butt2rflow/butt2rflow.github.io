@@ -1,5 +1,6 @@
 ---
 title: "Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge"
+nav_title: "Part 2 · Isaac ROS and foundation models"
 date: 2026-09-18
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: en

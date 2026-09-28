@@ -1,5 +1,6 @@
 ---
 title: "티치 펜던트에서 ROS 2로 (4) — Isaac ROS와 cuMotion: 느린 부분을 GPU로"
+nav_title: "4부 · Isaac ROS와 cuMotion"
 date: 2026-09-28
 tags: [physical-ai, ros2, isaac-ros, cumotion, nvidia, jetson, moveit2, robotics]
 lang: ko

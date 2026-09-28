@@ -1,5 +1,6 @@
 ---
 title: "Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit"
+nav_title: "Part 1 · From JetPack to ROS 2"
 date: 2026-09-12
 tags: [physical-ai, jetson, ros2, edge-ai, robotics, field-notes]
 lang: en

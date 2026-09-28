@@ -1,5 +1,6 @@
 ---
 title: "티치 펜던트에서 ROS 2로 (3) — MoveIt 2: 점을 가르치는 대신 목표를 준다"
+nav_title: "3부 · MoveIt 2"
 date: 2026-09-28
 tags: [physical-ai, ros2, moveit2, motion-planning, robotics, fanuc, universal-robots]
 lang: ko

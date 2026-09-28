@@ -1,5 +1,6 @@
 ---
 title: "Physical AI에 투자한다면 (2) — 관절 하나로 보는 가치 이동: 감속기, 모터, 그리고 ETF"
+nav_title: "2편 · 관절 하나로 보는 가치 이동"
 date: 2026-09-28
 tags: [physical-ai, investing, humanoid, actuator, harmonic-drive, nabtesco, etf, rare-earth]
 lang: ko

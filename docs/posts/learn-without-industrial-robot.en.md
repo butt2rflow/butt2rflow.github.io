@@ -1,5 +1,6 @@
 ---
 title: "Hands-on Notes (0) — Learning Without a Real Industrial Robot: SO-101 and URSim"
+nav_title: "Part 0 · Learning without a real robot"
 date: 2026-09-28
 tags: [physical-ai, hands-on, ros2, moveit2, isaac-ros, so-101, ursim, jetson]
 lang: en

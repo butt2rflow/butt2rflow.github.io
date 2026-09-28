@@ -1,5 +1,6 @@
 ---
 title: "From Teach Pendant to ROS 2 (2) — Describing the Robot to ROS: URDF, TF2, ros2_control, RViz"
+nav_title: "Part 2 · URDF, TF2, ros2_control"
 date: 2026-09-28
 tags: [physical-ai, ros2, urdf, tf2, ros2-control, rviz, robotics]
 lang: en

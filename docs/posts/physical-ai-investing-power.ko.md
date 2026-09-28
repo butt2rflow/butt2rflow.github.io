@@ -1,5 +1,6 @@
 ---
 title: "Physical AI에 투자한다면 (3) — 휴머노이드의 전력 문제: 배터리, 가동률, 그리고 원자로가 답이 아닌 이유"
+nav_title: "3편 · 휴머노이드의 전력 문제"
 date: 2026-09-28
 tags: [physical-ai, investing, humanoid, battery, energy, nuclear, smr]
 lang: ko

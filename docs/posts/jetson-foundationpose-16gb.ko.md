@@ -1,5 +1,6 @@
 ---
 title: "로봇의 뇌를 엣지에 올리기 — 정정편: 16GB로 안 된다던 그 결론, 뒤집었습니다"
+nav_title: "정정편 · 16GB로도 된다"
 date: 2026-09-20
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: ko

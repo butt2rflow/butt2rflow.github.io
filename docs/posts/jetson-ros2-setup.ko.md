@@ -1,5 +1,6 @@
 ---
 title: "로봇의 뇌를 엣지에 올리기 (1) — JetPack부터 ROS 2까지, 내가 부딪힌 벽들"
+nav_title: "1편 · JetPack부터 ROS 2까지"
 date: 2026-09-12
 tags: [physical-ai, jetson, ros2, edge-ai, robotics, field-notes]
 lang: ko

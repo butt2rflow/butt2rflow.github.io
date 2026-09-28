@@ -1,5 +1,6 @@
 ---
 title: "From Teach Pendant to ROS 2 (1) — One Robot Program Becomes a Conversation Between Programs"
+nav_title: "Part 1 · ROS 2 nodes and graph"
 date: 2026-09-28
 tags: [physical-ai, ros2, robotics, teach-pendant, fanuc, universal-robots]
 lang: en

@@ -1,5 +1,6 @@
 ---
 title: "Investing in Physical AI (2) — Value Shifts Seen Through One Joint: Reducers, Motors and ETFs"
+nav_title: "Part 2 · Value shifts in one joint"
 date: 2026-09-28
 tags: [physical-ai, investing, humanoid, actuator, harmonic-drive, nabtesco, etf, rare-earth]
 lang: en

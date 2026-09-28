@@ -1,5 +1,6 @@
 ---
 title: "From Teach Pendant to ROS 2 (3) — MoveIt 2: Give a Goal Instead of Teaching Points"
+nav_title: "Part 3 · MoveIt 2"
 date: 2026-09-28
 tags: [physical-ai, ros2, moveit2, motion-planning, robotics, fanuc, universal-robots]
 lang: en

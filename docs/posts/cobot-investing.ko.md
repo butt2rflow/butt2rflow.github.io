@@ -1,5 +1,6 @@
 ---
 title: "Physical AI에 투자한다면 — 순수 플레이는 없고, 가치는 이동한다"
+nav_title: "1편 · 가치는 이동한다"
 date: 2026-09-11
 tags: [physical-ai, investing, cobot, humanoid, nvidia, teradyne, fanuc, robotics]
 lang: ko

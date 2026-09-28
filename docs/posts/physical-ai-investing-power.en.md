@@ -1,5 +1,6 @@
 ---
 title: "Investing in Physical AI (3) — The Humanoid Power Problem: Batteries, Uptime, and Why Reactors Aren't the Answer"
+nav_title: "Part 3 · The humanoid power problem"
 date: 2026-09-28
 tags: [physical-ai, investing, humanoid, battery, energy, nuclear, smr]
 lang: en

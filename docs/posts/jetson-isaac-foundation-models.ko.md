@@ -1,5 +1,6 @@
 ---
 title: "로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델, 엣지에서 돌려보다"
+nav_title: "2편 · Isaac ROS와 파운데이션 모델"
 date: 2026-09-18
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: ko

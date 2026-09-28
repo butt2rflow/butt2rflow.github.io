@@ -1,5 +1,6 @@
 ---
 title: "From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion: Moving the Slow Parts to the GPU"
+nav_title: "Part 4 · Isaac ROS and cuMotion"
 date: 2026-09-28
 tags: [physical-ai, ros2, isaac-ros, cumotion, nvidia, jetson, moveit2, robotics]
 lang: en
