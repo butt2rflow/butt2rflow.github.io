@@ -41,6 +41,10 @@ OUT_EN = ROOT / "docs" / "assets" / "diagrams_en"
 # chart, and a deploy that hits Yahoo's empty-chain window reloads it over HTTP.
 GEX_CACHE = OUT_KO / "gex_last.json"
 GEX_CACHE_URL = "https://butt2rflow.github.io/assets/diagrams/gex_last.json"
+# Last LIVE 0DTE read, shown (labelled) outside the session — same gh-pages store as GEX_CACHE.
+GEX0_CACHE = OUT_KO / "gex0dte_last.json"
+GEX0_CACHE_URL = "https://butt2rflow.github.io/assets/diagrams/gex0dte_last.json"
+NY = ZoneInfo("America/New_York")
 
 matplotlib.rcParams["axes.unicode_minus"] = False
 plt.rcParams.update({"figure.facecolor": "white"})
@@ -1963,10 +1967,9 @@ def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
     """Intraday 0DTE dealer-gamma read — the NEAREST SPX expiry only, with a
     sub-day time-to-expiry so 0DTE's outsized gamma (~1/sqrt(T)) is captured.
     The multi-expiry regime tile (fetch_gex) SKIPS same-day expiry (integer-day
-    T rounds to 0), so this is a separate, complementary read. Live-only: 0DTE is
-    ephemeral, so there is NO snapshot cache — the tile shows when a live same-day
-    (or next-day) read is available and is omitted otherwise (overnight, weekends,
-    empty/degenerate chain)."""
+    T rounds to 0), so this is a separate, complementary read. Live only during
+    the SPX session (09:30–16:00 America/New_York, DST-aware); outside it the caller
+    falls back to the last live snapshot (_load_gex0_cache), shown labelled as such."""
     import datetime as _dt
     import http.cookiejar
     from collections import defaultdict
@@ -1991,14 +1994,18 @@ def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
             raise ValueError("no expiries")
         ed = expiries[0]                       # nearest expiry = today's 0DTE on a trading day
         now = _dt.datetime.now(_dt.timezone.utc)
+        now_ny = now.astimezone(NY)
         exp_date = _dt.datetime.fromtimestamp(ed, _dt.timezone.utc).date()
-        dte = (exp_date - now.date()).days
-        if dte > 1:
-            raise ValueError(f"nearest expiry is {dte}DTE (no 0DTE window)")
-        # SPX settles at the cash close, ~20:00 UTC (16:00 ET). Seconds to close,
-        # floored below so gamma stays finite in the final minutes.
-        exp_close = _dt.datetime.combine(exp_date, _dt.time(20, 0),
-                                         tzinfo=_dt.timezone.utc)
+        dte = (exp_date - now_ny.date()).days
+        if dte != 0:
+            raise ValueError(f"nearest expiry is {dte}DTE (no 0DTE session now)")
+        # SPX trades 09:30–16:00 America/New_York and settles at the cash close.
+        # zoneinfo keeps this right across DST (16:00 ET = 20:00 UTC summer, 21:00 UTC winter).
+        sess_open = _dt.datetime.combine(exp_date, _dt.time(9, 30), tzinfo=NY)
+        exp_close = _dt.datetime.combine(exp_date, _dt.time(16, 0), tzinfo=NY)
+        if now < sess_open:
+            raise ValueError("0DTE not live (before the 09:30 ET open)")
+        # Seconds to close, floored below so gamma stays finite in the final minutes.
         secs = (exp_close - now).total_seconds()
         if secs <= 600:
             raise ValueError(f"0DTE not live (secs_to_close={secs:.0f})")
@@ -2076,11 +2083,252 @@ def fetch_gex_0dte(r_rate: float = 0.043) -> dict | None:
             "vol_near": vol_total,
             "dte": dte,
             "hours": secs / 3600.0,
-            "date": now.strftime("%Y-%m-%d"),
+            "date": now_ny.strftime("%Y-%m-%d"),
+            "asof_et": now_ny.strftime("%Y-%m-%d %H:%M"),
+            "live": True,
         }
     except Exception as e:  # noqa: BLE001
-        print(f"  [WARN] 0DTE GEX fetch failed ({e}); tile omitted")
+        print(f"  [WARN] 0DTE GEX live read unavailable ({e}); using last intraday snapshot")
         return None
+
+
+def _save_gex0_cache(g: dict) -> None:
+    """Publish the last LIVE 0DTE read (gh-pages is the store, like GEX_CACHE)."""
+    try:
+        GEX0_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        GEX0_CACHE.write_text(json.dumps(g, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] could not write 0DTE cache ({e})")
+
+
+def _load_gex0_cache(max_age_days: int = 7) -> dict | None:
+    """Outside the session, reload the last live 0DTE read from the published site,
+    mark it not-live, and re-write it locally so the next deploy keeps it on the site."""
+    try:
+        req = urllib.request.Request(GEX0_CACHE_URL, headers={"User-Agent": "Mozilla/5.0"})
+        g = json.load(urllib.request.urlopen(req, timeout=15))
+        if not all(k in g for k in ("spot", "net_bn", "regime", "asof_et")):
+            print("  [WARN] cached 0DTE snapshot incomplete; tile omitted")
+            return None
+        asof = datetime.strptime(g["asof_et"], "%Y-%m-%d %H:%M").replace(tzinfo=NY)
+        if (datetime.now(NY) - asof).days > max_age_days:
+            print(f"  [WARN] cached 0DTE snapshot too old ({g['asof_et']} ET); tile omitted")
+            return None
+        g["live"] = False
+        _save_gex0_cache(g)
+        return g
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] 0DTE snapshot reload failed ({e}); tile omitted")
+        return None
+
+
+def _peek_gex0_published() -> dict | None:
+    """Read the published 0DTE snapshot as-is (for the intraday series); None if absent."""
+    try:
+        req = urllib.request.Request(GEX0_CACHE_URL, headers={"User-Agent": "Mozilla/5.0"})
+        return json.load(urllib.request.urlopen(req, timeout=15))
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _gex0_add_series(g: dict) -> None:
+    """Append this live read to today's intraday series (reset when the date changes)."""
+    prev = _peek_gex0_published()
+    series = list(prev.get("series") or []) if (prev and prev.get("date") == g["date"]) else []
+    hhmm = g["asof_et"][11:16]
+    series = [p for p in series if p[0] != hhmm]
+    series.append([hhmm, round(g["net_bn"], 2), round(g["spot"], 1),
+                   round(g["flip"], 1) if g.get("flip") else None])
+    series.sort(key=lambda p: p[0])
+    g["series"] = series
+
+
+def fetch_gex_0dte_next(r_rate: float = 0.043) -> dict | None:
+    """Preview of the NEXT regular session's 0DTE gamma, from the current chain of
+    that expiry. Open interest here is the prior close (it only refreshes overnight),
+    so this is a rough read of how positioning looks going into the open — not a
+    forecast. T is taken at that session's 09:30 ET open (6.5 h to the cash close).
+    Also returns net GEX if SPX opens -2%..+2% from the current level."""
+    import datetime as _dt
+    import http.cookiejar
+    from collections import defaultdict
+    try:
+        cj = http.cookiejar.CookieJar()
+        op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+        op.addheaders = [("User-Agent", "Mozilla/5.0")]
+        try:
+            op.open("https://fc.yahoo.com", timeout=10)
+        except Exception:  # noqa: BLE001  (expected error; sets the cookie)
+            pass
+        crumb = op.open("https://query2.finance.yahoo.com/v1/test/getcrumb",
+                        timeout=10).read().decode()
+        _cq = urllib.parse.quote(crumb)
+        d0 = json.load(op.open(f"{YF_OPTIONS}?crumb={_cq}", timeout=25))
+        oc = d0["optionChain"]["result"][0]
+        spot = float(oc["quote"]["regularMarketPrice"])
+        if not (1000 <= spot <= 10000):
+            raise ValueError(f"SPX spot {spot} out of range")
+        now = _dt.datetime.now(_dt.timezone.utc)
+        now_ny = now.astimezone(NY)
+        ed = exp_date = None
+        for e in oc.get("expirationDates", []):
+            d = _dt.datetime.fromtimestamp(e, _dt.timezone.utc).date()
+            sess_open = _dt.datetime.combine(d, _dt.time(9, 30), tzinfo=NY)
+            if sess_open > now:                 # first session that has not opened yet
+                ed, exp_date = e, d
+                break
+        if ed is None:
+            raise ValueError("no upcoming expiry")
+        if (exp_date - now_ny.date()).days > 4:
+            raise ValueError(f"next expiry {exp_date} too far for a next-session read")
+        T = 6.5 / (365 * 24)                    # at that session's open
+        dd = json.load(op.open(f"{YF_OPTIONS}?date={ed}&crumb={_cq}", timeout=25))
+        opt = dd["optionChain"]["result"][0]["options"][0]
+        calls = {float(c["strike"]): c for c in opt.get("calls", [])}
+        puts = {float(p["strike"]): p for p in opt.get("puts", [])}
+        rows = []
+        coi_by_k: dict = defaultdict(float)
+        poi_by_k: dict = defaultdict(float)
+        for k in set(calls) | set(puts):
+            c = calls.get(k, {})
+            p = puts.get(k, {})
+            coi = float(c.get("openInterest") or 0)
+            poi = float(p.get("openInterest") or 0)
+            civ = float(c.get("impliedVolatility") or 0)
+            piv = float(p.get("impliedVolatility") or 0)
+            rows.append((k, coi, poi, civ, piv))
+            coi_by_k[k] += coi
+            poi_by_k[k] += poi
+        usable = sum(1 for (k, coi, poi, civ, piv) in rows
+                     if (coi and civ > 0) or (poi and piv > 0))
+        if usable < 15:
+            raise ValueError(f"next-session chain OI/IV too thin (usable={usable})")
+
+        def net_gex_at(S):
+            g = 0.0
+            for (k, coi, poi, civ, piv) in rows:
+                gc = _bs_gamma(S, k, T, civ, r_rate) if (civ > 0 and coi) else 0.0
+                gp = _bs_gamma(S, k, T, piv, r_rate) if (piv > 0 and poi) else 0.0
+                g += (gc * coi - gp * poi) * 100 * S * S * 0.01
+            return g
+
+        cur = net_gex_at(spot)
+        if cur == 0.0:
+            raise ValueError("next-session net GEX exactly 0")
+        lo, hi, steps = spot * 0.97, spot * 1.03, 40
+        prev_s, prev_g, flip = lo, net_gex_at(lo), None
+        for i in range(1, steps + 1):
+            x = lo + (hi - lo) * i / steps
+            gx = net_gex_at(x)
+            if (prev_g < 0) != (gx < 0) and (gx - prev_g) != 0:
+                flip = prev_s + (hi - lo) / steps * (0 - prev_g) / (gx - prev_g)
+                break
+            prev_s, prev_g = x, gx
+        near = [k for k in sorted(set(coi_by_k) | set(poi_by_k)) if spot * 0.95 <= k <= spot * 1.05]
+        oi_peak = max(near, key=lambda k: coi_by_k[k] + poi_by_k[k]) if near else None
+        scen = [[pct, round(net_gex_at(spot * (1 + pct / 100)) / 1e9, 2)] for pct in (-2, -1, 0, 1, 2)]
+        return {
+            "exp_date": exp_date.isoformat(),
+            "spot": spot,
+            "net_bn": cur / 1e9,
+            "regime": "long" if cur > 0 else "short",
+            "flip": flip,
+            "oi_peak": oi_peak,
+            "scen": scen,
+        }
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] next-session 0DTE preview unavailable ({e})")
+        return None
+
+
+def render_gex0_trend_chart(series: list, out_path: Path) -> bool:
+    """Today's intraday 0DTE net GEX (one point per hourly deploy)."""
+    if not series or len(series) < 2:
+        return False
+    xs = [p[0] for p in series]
+    ys = [p[1] for p in series]
+    fig, ax = plt.subplots(figsize=(12, 3.2))
+    ax.axhline(0, color="#888", linewidth=0.8)
+    ax.plot(xs, ys, color="#4a2f9e", linewidth=1.8, marker="o")
+    for x, y in zip(xs, ys):
+        ax.annotate(f"{y:+.1f}B", (x, y), textcoords="offset points", xytext=(0, 8),
+                    ha="center", fontsize=9, color="#1D9E75" if y >= 0 else "#D85A30")
+    ax.set_ylabel("0DTE net GEX ($bn / 1%)")
+    ax.set_xlabel("ET")
+    ax.set_title("0DTE net GEX through today's session (above 0 = long gamma, below = short)")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=110)
+    plt.close(fig)
+    return True
+
+
+def _gex0_next_rows_ko(n: dict) -> list[str]:
+    reg = "🟢 롱 감마" if n["regime"] == "long" else "🔴 숏 감마"
+    flip_s = f"{n['flip']:.0f}" if n.get("flip") else "—"
+    peak_s = f"{n['oi_peak']:.0f}" if n.get("oi_peak") else "—"
+    scen = " · ".join(f"{p:+d}% {v:+.1f}B" if p else f"0% {v:+.1f}B" for p, v in n["scen"])
+    d = n["exp_date"][5:].replace("-", "/").lstrip("0")
+    return [
+        f"#### 다음 정규장({d}) 0DTE 예상 — 전일 미결제약정 기준",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| 신호 | 값 | 상태 |",
+        "|:-----|---:|:-----|",
+        f"| **예상 국면** (개장 시점 넷 GEX) | {n['net_bn']:+.1f}B | {reg} |",
+        f"| 예상 감마 플립 / 현재가 | {flip_s} / {n['spot']:.0f} | "
+        f"{'플립 위에서 출발' if (n.get('flip') and n['spot'] >= n['flip']) else '플립 아래에서 출발' if n.get('flip') else '—'} |",
+        f"| 미결제약정 최대 집중 행사가 | {peak_s} | 끌림 후보(위치) |",
+        "",
+        "</div>",
+        "",
+        f"<small>**개장 갭 시나리오**(넷 GEX): {scen}. 미결제약정은 전일 종가 기준이라 밤사이·개장 후 포지션 변화는 반영되지 않습니다. "
+        "방향 예측이 아니라 개장 전 포지션 지형을 대략 보는 용도입니다.</small>",
+        "",
+    ]
+
+
+def _gex0_next_rows_en(n: dict) -> list[str]:
+    reg = "🟢 Long gamma" if n["regime"] == "long" else "🔴 Short gamma"
+    flip_s = f"{n['flip']:.0f}" if n.get("flip") else "—"
+    peak_s = f"{n['oi_peak']:.0f}" if n.get("oi_peak") else "—"
+    scen = " · ".join(f"{p:+d}% {v:+.1f}B" if p else f"0% {v:+.1f}B" for p, v in n["scen"])
+    t = datetime.strptime(n["exp_date"], "%Y-%m-%d")
+    return [
+        f"#### Next session ({t:%b} {t.day}) 0DTE preview — from prior-close open interest",
+        "",
+        '<div class="dash-tight" markdown>',
+        "",
+        "| Signal | Value | State |",
+        "|:-------|------:|:------|",
+        f"| **Expected regime** (net GEX at the open) | {n['net_bn']:+.1f}B | {reg} |",
+        f"| Expected gamma flip / spot | {flip_s} / {n['spot']:.0f} | "
+        f"{'starts above the flip' if (n.get('flip') and n['spot'] >= n['flip']) else 'starts below the flip' if n.get('flip') else '—'} |",
+        f"| Largest open-interest strike | {peak_s} | pin candidate (location) |",
+        "",
+        "</div>",
+        "",
+        f"<small>**Open-gap scenarios** (net GEX): {scen}. Open interest is from the prior close, so overnight and "
+        "post-open position changes are not included. A rough map of positioning into the open, not a direction call.</small>",
+        "",
+    ]
+
+
+def _ny_in_session() -> bool:
+    """True during the regular SPX session (Mon–Fri 09:30–16:00 America/New_York; holidays not modelled)."""
+    t = datetime.now(NY)
+    return t.weekday() < 5 and (9, 30) <= (t.hour, t.minute) < (16, 0)
+
+
+def _gex0_asof_ko(g: dict) -> str:
+    t = datetime.strptime(g["asof_et"], "%Y-%m-%d %H:%M")
+    return f"{t.month}/{t.day} {t:%H:%M} ET"
+
+
+def _gex0_asof_en(g: dict) -> str:
+    t = datetime.strptime(g["asof_et"], "%Y-%m-%d %H:%M")
+    return f"{t:%b} {t.day}, {t.strftime('%I:%M %p').lstrip('0')} ET"
 
 
 def _save_gex_cache(g: dict) -> None:
@@ -2162,26 +2410,35 @@ def render_gex_0dte_card_ko(g: dict) -> list[str]:
     pos = ("플립 위 = 롱 감마" if (g.get("flip") and g["spot"] >= g["flip"])
            else "플립 아래 = 숏 감마" if g.get("flip") else "—")
     dte_lab = "당일 만기(0DTE)" if g.get("dte") == 0 else "익일 만기(1DTE)"
+    live = g.get("live", True)
+    to_close = f"{g['hours']:.1f}h" if live else "마감"
+    note = ([] if live else
+            [f"<small>**마지막 장중 값 · {_gex0_asof_ko(g)}** — "
+             + ("실시간 조회에 실패해 직전 값을 보여 줍니다. 다음 갱신 때 다시 계산합니다.</small>" if _ny_in_session()
+                else "지금은 장중이 아니라 갱신되지 않습니다. 다음 정규장(09:30 ET)부터 다시 실시간으로 계산합니다.</small>"), ""])
     return [
         "---",
         "",
         "### 0DTE 감마 — 장중 딜러 포지션 (SPX 당일물)",
         "",
+        *note,
         '<div class="dash-tight" markdown>',
         "",
         "| 신호 | 값 | 상태 |",
         "|:-----|---:|:-----|",
         f"| **0DTE 국면** (넷 GEX) | {g['net_bn']:+.1f}B | {reg} |",
         f"| 감마 플립 / 현재가 | {flip_s} / {g['spot']:.0f} | {pos} |",
-        f"| 오늘 핀 (거래량 집중) / 만기까지 | {vpin_s} / {g['hours']:.1f}h | {dte_lab} |",
+        f"| 오늘 핀 (거래량 집중) / 만기까지 | {vpin_s} / {to_close} | {dte_lab} |",
         "",
         "</div>",
         "",
         "<small>*Yahoo ^SPX **당일 만기 체인만** 추정. **국면·플립은 미결제약정(전일 종가)** 기준 "
         "= 만기로 넘어온 포지션, **오늘 핀은 당일 거래량** 기준으로 장중 갱신됩니다(부호 아님·위치). "
         "0DTE 감마는 만기 임박할수록 급증(1/√T) · 전체 만기 국면 타일과 별개의 장중 참고용 · "
-        f"[0DTE 감마 패턴 →](posts/gex-0dte-patterns.md) · {g['date']} 기준*</small>",
+        f"[0DTE 감마 패턴 →](posts/gex-0dte-patterns.md) · {_gex0_asof_ko(g) if 'asof_et' in g else g['date']} 기준*</small>",
         "",
+        *(["![0DTE 넷 GEX 장중 추이](assets/diagrams/gex0_trend.png)", ""] if g.get("has_trend") else []),
+        *(_gex0_next_rows_ko(g["next"]) if g.get("next") else []),
     ]
 
 
@@ -2193,26 +2450,35 @@ def render_gex_0dte_card_en(g: dict) -> list[str]:
     pos = ("above flip = long gamma" if (g.get("flip") and g["spot"] >= g["flip"])
            else "below flip = short gamma" if g.get("flip") else "—")
     dte_lab = "same-day (0DTE)" if g.get("dte") == 0 else "next-day (1DTE)"
+    live = g.get("live", True)
+    to_close = f"{g['hours']:.1f}h" if live else "closed"
+    note = ([] if live else
+            [f"<small>**Last intraday read · {_gex0_asof_en(g)}** — "
+             + ("the live read failed, so this is the previous value; it retries on the next refresh.</small>" if _ny_in_session()
+                else "the market is not in session, so this is not updating. Live values resume at the next regular open (09:30 ET).</small>"), ""])
     return [
         "---",
         "",
         "### 0DTE gamma — intraday dealer position (SPX same-day)",
         "",
+        *note,
         '<div class="dash-tight" markdown>',
         "",
         "| Signal | Value | State |",
         "|:-------|------:|:------|",
         f"| **0DTE regime** (net GEX) | {g['net_bn']:+.1f}B | {reg} |",
         f"| Gamma flip / spot | {flip_s} / {g['spot']:.0f} | {pos} |",
-        f"| Today's pin (volume) / to close | {vpin_s} / {g['hours']:.1f}h | {dte_lab} |",
+        f"| Today's pin (volume) / to close | {vpin_s} / {to_close} | {dte_lab} |",
         "",
         "</div>",
         "",
         "<small>*Estimated from the Yahoo ^SPX **same-day chain only.** **Regime & flip use open "
         "interest (prior close)** = positions carried into expiry; **today's pin uses same-day "
         "volume** (updates intraday — a location, not a sign). 0DTE gamma spikes ~1/√T into the "
-        f"close · separate from the all-expiry regime tile · [0DTE gamma patterns →](posts/gex-0dte-patterns.md) · as of {g['date']}*</small>",
+        f"close · separate from the all-expiry regime tile · [0DTE gamma patterns →](posts/gex-0dte-patterns.md) · as of {_gex0_asof_en(g) if 'asof_et' in g else g['date']}*</small>",
         "",
+        *(["![0DTE net GEX through the session](assets/diagrams_en/gex0_trend.png)", ""] if g.get("has_trend") else []),
+        *(_gex0_next_rows_en(g["next"]) if g.get("next") else []),
     ]
 
 
@@ -2441,7 +2707,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
     if gex:
         parts += _dash_card(render_gex_card_ko(gex))
     if gex_0dte:
-        parts += _dash_card(render_gex_0dte_card_ko(gex_0dte))
+        parts += _dash_card(render_gex_0dte_card_ko(gex_0dte), "📈 장중 추이 보기")
     parts += [
         "</div>",
         "",
@@ -2696,7 +2962,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
     if gex:
         parts += _dash_card(render_gex_card_en(gex), "📈 Show chart")
     if gex_0dte:
-        parts += _dash_card(render_gex_0dte_card_en(gex_0dte))
+        parts += _dash_card(render_gex_0dte_card_en(gex_0dte), "📈 Show intraday trend")
     parts += [
         "</div>",
         "",
@@ -2806,8 +3072,24 @@ def main():
     print("Fetching 0DTE GEX (intraday same-day SPX gamma)...")
     gex0 = fetch_gex_0dte()
     if gex0:
+        _gex0_add_series(gex0)
+        _save_gex0_cache(gex0)
         print(f"  0DTE: net {gex0['net_bn']:+.1f}B ({gex0['regime']}), flip {gex0['flip']}, "
               f"pin {gex0['vol_pin']}, {gex0['hours']:.1f}h to close (DTE {gex0['dte']})")
+    else:
+        gex0 = _load_gex0_cache()
+        if gex0:
+            print(f"  0DTE: last intraday snapshot {gex0['asof_et']} ET "
+                  f"(net {gex0['net_bn']:+.1f}B, {gex0['regime']}) [not live]")
+            gex0["next"] = fetch_gex_0dte_next()
+            if gex0["next"]:
+                n = gex0["next"]
+                print(f"  0DTE next session {n['exp_date']}: net {n['net_bn']:+.1f}B ({n['regime']}), "
+                      f"flip {n['flip']}, OI peak {n['oi_peak']}, scen {n['scen']}")
+    if gex0:
+        gex0["has_trend"] = render_gex0_trend_chart(gex0.get("series") or [], OUT_KO / "gex0_trend.png")
+        if gex0["has_trend"]:
+            shutil.copy2(OUT_KO / "gex0_trend.png", OUT_EN / "gex0_trend.png")
 
     print("Rendering charts...")
     render_cor_skew(tenor, skew, OUT_KO / "vol_dashboard.png", spx=spx)

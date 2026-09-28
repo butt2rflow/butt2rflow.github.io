@@ -19,12 +19,14 @@ on:
     # vix_history snapshot before the deploy regenerates the home page. See
     # dashboard-update.yml for why we wait until ~11 PM ET (Cboe publish lag).
     - cron: '10 3 * * 2-6'
-    # Intraday snapshot refresh — hourly during US market hours (14:00–21:00
-    # UTC, Mon–Fri). Mainly freshens the Yahoo-sourced numbers (MOVE, FedWatch
-    # ZQ); Cboe/FRED/CFTC tiles hold their last EOD/weekly value until the
-    # post-close run. A full rebuild+deploy each time (charts too — harmless);
-    # only gh-pages is updated, main is untouched. Public repo → free minutes.
-    - cron: '0 14-21 * * 1-5'
+    # Intraday snapshot refresh — hourly across the US session, Mon–Fri. Runs at
+    # :23 past the hour, not :00: GitHub delays or drops top-of-hour schedules
+    # under load (2026-09 history showed only ~3 scheduled runs/day), which
+    # starved the 0DTE tile. 13:23–21:23 UTC covers 09:30–16:00 ET in both EDT
+    # and EST. Mainly freshens Yahoo-sourced numbers (MOVE, FedWatch ZQ, 0DTE);
+    # Cboe/FRED/CFTC tiles hold their last EOD/weekly value until the post-close
+    # run. Only gh-pages is updated, main is untouched. Public repo → free minutes.
+    - cron: '23 13-21 * * 1-5'
   workflow_dispatch:
 
 permissions:
