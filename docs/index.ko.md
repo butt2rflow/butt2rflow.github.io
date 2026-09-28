@@ -198,6 +198,8 @@ title: Home
 
 ### Physical AI
 
+- [**Physical AI를 고르는 법**](posts/choosing-physical-ai.md) — 시작하기: 결정론적 자동화에서 학습된 행동까지, Track 0·A·B
+- [**학습 정책 (Track B)**](posts/learned-policy-track-b.md) — 시작하기: 보여 준 대로 따라 하는 로봇과 그 한계
 - [**스테레오 비전에서 목표물 잡기까지**](posts/stereo-to-grasp.md) — 로봇은 목표한 사물을 어떻게 발견하는가
 - [**좌표계와 변환**](posts/frames-transforms.md) — 로봇은 어디를 잡을지 어떻게 아는가
 - [**세 모델의 안쪽**](posts/inside-the-models.md) — FoundationStereo · SAM 2 · FoundationPose를 뜯어보다 (심화)
@@ -205,10 +207,13 @@ title: Home
 - [**로봇은 왜 '가짜 세계'에서 먼저 배우나**](posts/robot-simulation.md) — 시뮬레이션과 sim-to-real
 - [**협동로봇(cobot)이란**](posts/cobot-basics.md) — 사람 옆에서 일하는 로봇의 기초
 - [**UR vs 화낙 — 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
-- [**Physical AI에 투자한다면**](posts/cobot-investing.md) — 가치는 어디로 이동하는가 (코봇 투자편)
+- [**Physical AI에 투자한다면**](posts/cobot-investing.md) — Physical AI 투자 (1): 가치는 어디로 이동하는가
+- [**Physical AI에 투자한다면 (2)**](posts/physical-ai-investing-actuators.md) — Physical AI 투자 (2): 관절 하나로 보는 가치 이동, 감속기·모터·ETF
 - [**로봇의 뇌를 엣지에 — Jetson·ROS 2**](posts/jetson-ros2-setup.md) — 현장 노트 (1): Jetson Orin NX 셋업
 - [**로봇의 뇌를 엣지에 (2) — Isaac ROS·파운데이션 모델**](posts/jetson-isaac-foundation-models.md) — 현장 노트 (2): 엣지에서 실행해 보다
 - [**로봇의 뇌를 엣지에 — 정정편**](posts/jetson-foundationpose-16gb.md) — 현장 노트: 16GB로도 스택 전체가 동작한다
+- [**티치 펜던트에서 ROS 2로 (1~4)**](posts/ros2-for-robot-programmers.md) — 펜던트 프로그래머를 위한 ROS 2 · [URDF·TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
+- [**실습 노트 (0) — 실물 산업용 로봇 없이 배우기**](posts/learn-without-industrial-robot.md) — SO-101과 URSim으로 연습장 고르기
 
 ---
 

@@ -198,6 +198,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ### Physical AI
 
+- [**Choosing a Physical AI Approach**](posts/choosing-physical-ai.md) — Start here: from deterministic automation to learned behavior, Tracks 0, A, B
+- [**Learned Policies (Track B)**](posts/learned-policy-track-b.md) — Start here: robots that copy what you show them, and where that breaks
 - [**From Stereo to Grasp**](posts/stereo-to-grasp.md) — How a robot learns to see a part
 - [**Frames & Transforms**](posts/frames-transforms.md) — How a robot knows where to grab
 - [**Inside the Three Models**](posts/inside-the-models.md) — FoundationStereo · SAM 2 · FoundationPose, opened up (deep dive)
@@ -205,10 +207,13 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**Why Robots Learn in a 'Fake World' First**](posts/robot-simulation.md) — Simulation and sim-to-real
 - [**What Is a Collaborative Robot?**](posts/cobot-basics.md) — The basics of robots that work beside people
 - [**UR vs FANUC — Openness**](posts/cobot-ur-vs-fanuc.md) — Comparing the two camps' openness and ecosystems
-- [**Investing in Physical AI**](posts/cobot-investing.md) — Where the value migrates (the cobot investing angle)
+- [**Investing in Physical AI**](posts/cobot-investing.md) — Physical AI Investing (1): where the value migrates
+- [**Investing in Physical AI (2)**](posts/physical-ai-investing-actuators.md) — Physical AI Investing (2): value shifts seen through one joint, reducers, motors and ETFs
 - [**The Robot's Brain at the Edge — Jetson & ROS 2**](posts/jetson-ros2-setup.md) — Field Notes (1): setting up a Jetson Orin NX
 - [**The Robot's Brain at the Edge (2) — Isaac ROS & Foundation Models**](posts/jetson-isaac-foundation-models.md) — Field Notes (2): running it on the edge
 - [**The Robot's Brain at the Edge — A Correction**](posts/jetson-foundationpose-16gb.md) — Field Notes: the whole stack runs on 16 GB after all
+- [**From Teach Pendant to ROS 2 (1–4)**](posts/ros2-for-robot-programmers.md) — ROS 2 for pendant programmers · [URDF, TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
+- [**Hands-on Notes (0) — Learning Without a Real Industrial Robot**](posts/learn-without-industrial-robot.md) — choosing practice grounds with SO-101 and URSim
 
 ---
 

@@ -8,7 +8,7 @@ description: "Physical AI가 진짜라고 믿으면 어떻게 투자하나 — �
 
 # Physical AI에 투자한다면 — 순수 플레이는 없고, 가치는 이동한다
 
-> **코봇 3부작 · 3부(완결).** [1부](cobot-basics.md)는 코봇이 무엇인가, [2부](cobot-ur-vs-fanuc.md)는 UR vs 화낙(FANUC)을 '개방성'으로 갈랐습니다. 이번엔 그걸 **투자**와 연결합니다 — Physical AI가 진짜라면, 우리는 그걸 어떻게 사는가.
+> **코봇 3부작 · 3부(완결) · Physical AI 투자 1편.** [1부](cobot-basics.md)는 코봇이 무엇인가, [2부](cobot-ur-vs-fanuc.md)는 UR vs 화낙(FANUC)을 '개방성'으로 갈랐습니다. 이번엔 그걸 **투자**와 연결합니다 — Physical AI가 진짜라면, 우리는 그걸 어떻게 사는가.
 
 앞의 두 편에서 Physical AI가 진짜라는 걸 봤다고 칩시다. AI가 로봇의 눈과 손이 되고([로봇 비전 시리즈](stereo-to-grasp.md)), 그 승부를 가르는 건 스펙이 아니라 '개방성'이었죠(2부).
 

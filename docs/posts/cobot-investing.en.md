@@ -8,7 +8,7 @@ description: "If you believe Physical AI is real, how do you invest? There's no 
 
 # Investing in Physical AI — There's No Pure-Play, and the Value Is Moving
 
-> **Cobot series · Part 3 of 3 (finale).** [Part 1](cobot-basics.md) was what a cobot is; [Part 2](cobot-ur-vs-fanuc.md) split UR vs FANUC on "openness." Now we connect it to **investing** — if Physical AI is real, how do we buy it?
+> **Cobot series · Part 3 of 3 (finale) · Investing in Physical AI, Part 1.** [Part 1](cobot-basics.md) was what a cobot is; [Part 2](cobot-ur-vs-fanuc.md) split UR vs FANUC on "openness." Now we connect it to **investing** — if Physical AI is real, how do we buy it?
 
 Suppose the first two parts convinced you Physical AI is real. AI becomes the robot's eyes and hands (the [Robot Vision series](stereo-to-grasp.md)), and what decides the contest isn't specs but openness (Part 2).
 
