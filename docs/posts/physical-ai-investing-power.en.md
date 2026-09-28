@@ -22,7 +22,7 @@ So humanoid investing comes with the question "how long does the battery last?",
 
 - Today's humanoids work **1.5–5 hours** on one charge. None covers an 8-hour shift on one battery.
 - A bigger battery adds weight, and the joints then draw more power, so capacity alone hits a limit. The industry is moving to **uptime** (hours worked per day), keeping robots running with battery swaps and short charges.
-- In cells, **LG Energy Solution** moved first, with reported supply to several humanoid makers; Samsung SDI and SK On are following.
+- In cells, **LG Energy Solution** moved first, with reported supply to several humanoid makers; Samsung SDI and SK On are following. Even Korean cells, though, contain **materials processed mostly in China**.
 - **Small reactors and nuclear batteries are not robot power.** The first is far too big, the second far too small. Nuclear is a separate theme about power for AI data centers and factories.
 
 ---
@@ -53,6 +53,16 @@ Figure says the Figure 03 battery enclosure doubles as a torso structural member
 
 Humanoids are a tiny share of cell makers' results today. Their share prices and earnings are still driven by the EV market, and humanoids are extra demand far in the future. Solid-state batteries (QuantumScape, Solid Power, Samsung SDI and others) could raise energy density a lot and would suit robots well, but they are not yet commercial and no robot adoption has been confirmed.
 
+## Korean cells, Chinese materials
+
+![Mining is spread out; processing sits in China](../assets/diagrams_en/inv3-materials.svg)
+
+Lithium ore is mined in many places, including Australia, China and Chile, but refining it into chemicals a battery can use happens mostly in China. Graphite for the anode is even more concentrated: over 95% of battery-grade graphite comes from China. It's the same structure as the rare-earth magnets in [Part 2](physical-ai-investing-actuators.md). Even the weak point matches: the processing plant, not the mine.
+
+![Controls switch on and off; the dependence stays](../assets/diagrams_en/inv3-controls.svg)
+
+That's why China's export controls reach Korean cell makers directly. Korean companies aren't standing still: POSCO Future M makes precursors in Korea and has signed an anode deal with a US automaker using Mozambican natural graphite among other sources, widening supply outside China. Still, materials that are over 90% dependent can't be switched in a few years. And humanoid batteries are tiny next to EV volumes, so robot makers have even less power to change this structure.
+
 ## Could a "portable reactor" be the answer?
 
 In the comics, Astro Boy ran on nuclear power. In the 1950s nuclear energy looked like the answer to everything, and in 1958 Ford even showed the Nucleon, a concept car with a small reactor in the trunk. Only scale models were made; no working car was ever built. What stopped it is what stops humanoids now: the shielding is too heavy, and an accident would be dangerous.
@@ -75,7 +85,7 @@ The right side hangs on data-center power contracts and reactor licensing timeli
 
 ![In the end: how many humanoids sell](../assets/diagrams_en/inv3-checks.svg)
 
-Until humanoids sell in the tens of thousands a year, cell contracts and solid-state adoption stay small numbers in cell makers' results.
+Until humanoids sell in the tens of thousands a year, cell contracts and solid-state adoption stay small numbers in cell makers' results. One date outside the picture is worth marking: November 10, 2026, when China's suspension of battery-material export controls ends.
 
 ---
 
@@ -87,8 +97,9 @@ Until humanoids sell in the tens of thousands a year, cell contracts and solid-s
 | Where things stand | 1.5–5 hours per charge. Nothing covers an 8-hour shift |
 | Industry direction | Uptime over capacity: autonomous swaps (~3 min), docking, wireless charging |
 | Cell supply | LG Energy Solution first, Samsung SDI and SK On following. Robots are still a small share of sales |
+| Materials | Processing is concentrated in China (graphite 95%+, cathode ~85%). The export-control suspension runs to Nov 10, 2026 |
 | Reactors | Not robot power. A separate theme: AI data-center and factory power |
-| What to watch | Uptime claims, cell contract size, solid-state timelines, humanoid output |
+| What to watch | Uptime claims, cell contract size, solid-state timelines, humanoid output, whether China extends the export-control suspension |
 
 Part 3's conclusion: **the humanoid power problem is not about a bigger battery but about never stopping, and nuclear is an infrastructure story, not a robot-body story.**
 
@@ -100,7 +111,7 @@ Part 3's conclusion: **the humanoid power problem is not about a bigger battery 
 
 ### Sources and notices
 
-Runtimes and battery swap and charging methods follow each company's statements and reporting: Figure 03 and its battery development, Figure AI's official announcements (battery development 2025-07-17, Figure 03 2025-10); Atlas's autonomous battery swap, Interesting Engineering; UBTech Walker S2, CnEVPost (2025-07-17); Agility Digit 5, Agility Robotics' announcement (2026-09) and The Robot Report; the uptime race, Digital Today; Optimus battery capacity, Tesla AI Day (2022); LG Energy Solution's humanoid cell supply, KED Global (2026-07-02) and Digitimes (2026-07-07); nuclear batteries, reporting on Betavolt's announcement (Tom's Hardware, 2024-01); the microreactor pilot program, the American Nuclear Society (2025-11), Neutron Bytes (2026-07-08) and World Nuclear News; the Mars rover RTG, NASA's MMRTG fact sheet and JPL; plutonium-238 production, Oak Ridge National Laboratory and the US Department of Energy; the Ford Nucleon, an American Nuclear Society article; Samsung SDI's solid-state schedule, battery-news (2026-08-03); the Hyundai and Kia agreement, Hyundai News; Oklo's finances, its quarterly SEC filing (Q2 2026). Some supply relationships and runtimes are reports the companies have not officially confirmed, and the humanoid's average power draw is an estimate computed from public specs. All figures are values at the time of research (2026-09-28) and will change. Company and product names are trademarks of their owners, used here only for reference. **This post is not a recommendation to buy or sell any stock, nor investment advice, and the author accepts no responsibility for any investment outcome.** Investment decisions and their results are entirely the reader's own.
+Runtimes and battery swap and charging methods follow each company's statements and reporting: Figure 03 and its battery development, Figure AI's official announcements (battery development 2025-07-17, Figure 03 2025-10); Atlas's autonomous battery swap, Interesting Engineering; UBTech Walker S2, CnEVPost (2025-07-17); Agility Digit 5, Agility Robotics' announcement (2026-09) and The Robot Report; the uptime race, Digital Today; Optimus battery capacity, Tesla AI Day (2022); LG Energy Solution's humanoid cell supply, KED Global (2026-07-02) and Digitimes (2026-07-07); nuclear batteries, reporting on Betavolt's announcement (Tom's Hardware, 2024-01); the microreactor pilot program, the American Nuclear Society (2025-11), Neutron Bytes (2026-07-08) and World Nuclear News; the Mars rover RTG, NASA's MMRTG fact sheet and JPL; plutonium-238 production, Oak Ridge National Laboratory and the US Department of Energy; the Ford Nucleon, an American Nuclear Society article; Samsung SDI's solid-state schedule, battery-news (2026-08-03); the Hyundai and Kia agreement, Hyundai News; Oklo's finances, its quarterly SEC filing (Q2 2026). Some supply relationships and runtimes are reports the companies have not officially confirmed, and the humanoid's average power draw is an estimate computed from public specs. China's shares of battery materials follow the IEA Global Critical Minerals Outlook 2025 and Global EV Outlook 2026, the Cobalt Institute's market report (2026-05) and the USGS Mineral Commodity Summaries 2026; export controls and their suspension, China's Ministry of Commerce announcements (No. 39 of 2023, Nos. 58 and 70 of 2025), the MOFCOM–MOST export-restricted technology catalogue revision (2025-07-15), Benchmark Mineral Intelligence and Herbert Smith Freehills Kramer; Korea's material dependence and diversification, Energy Innovation Reform Project data (2024-05) cited by the Korea Economic Institute of America (2025-08-25), KED Global (2025-10-15) and the POSCO newsroom. Reference years differ by material. All figures are values at the time of research (2026-09-28) and will change. Company and product names are trademarks of their owners, used here only for reference. **This post is not a recommendation to buy or sell any stock, nor investment advice, and the author accepts no responsibility for any investment outcome.** Investment decisions and their results are entirely the reader's own.
 
 ### Glossary
 
@@ -116,6 +127,9 @@ Runtimes and battery swap and charging methods follow each company's statements 
 - *Wireless inductive charging*: sending power without a cable through the magnetic field between coils
 - *Nuclear (betavoltaic) battery*: a cell that makes a tiny current for decades from electrons emitted by a radioisotope
 - *Microreactor · SMR (small modular reactor)*: a reactor of a few MW · a factory-built modular reactor of tens to hundreds of MW
+- *Refining*: turning mined ore into chemicals pure enough for batteries
+- *Cathode · anode material*: the materials of a battery's positive and negative sides; cathodes use lithium, nickel, cobalt and so on, anodes mostly graphite
+- *Precursor*: the intermediate material (mostly nickel, cobalt and manganese compounds) made just before the cathode
 - *RTG (radioisotope thermoelectric generator)*: a device that turns the heat of decaying radioactive material into electricity; not a reactor
 - *UN38.3*: the international safety tests for shipping lithium batteries
 - *Criticality*: the point where the chain reaction in a reactor sustains itself; the first step toward commercial power
