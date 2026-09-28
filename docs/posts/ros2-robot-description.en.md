@@ -26,6 +26,7 @@ This post works through the four rows of that picture from the top.
 - **robot_state_publisher** combines the blueprint with the live joint angles to work out where every part of the robot is.
 - **TF2** is the frame manager. It plays the role of UFRAME and UTOOL, but instead of picking a few by number, it connects all the frames into a tree. Converting a position the camera saw into robot coordinates is TF2's job too.
 - **ros2_control** splits motor control into layers. The controller that follows trajectories is the same for every robot; only the hardware interface at the bottom differs.
+- For tables and fixtures, trust **measurement** over CAD: simple boxes with a margin for collision, positions from a 3-point touch, kept in a version-controlled config.
 - **RViz** shows all of this in 3D. It's where you catch mistakes before the robot moves.
 
 ---
@@ -43,6 +44,27 @@ You rarely write one from scratch. Robot makers ship per-model blueprints as pac
 ![Maker's blueprint + what you added = your cell](../assets/diagrams_en/r2p2-urdf-compose.svg)
 
 Adding the gripper and camera matters more than it seems. Leave them out and ROS believes there's nothing on the end of the arm, so when it plans a path it has no idea the gripper will catch on the fixture. The same goes for the table and fixed jigs.
+
+## When the installed cell differs from the CAD
+
+The gripper usually comes straight from its CAD file, but the table and fixtures don't have to be CAD at all. Commissioning (on-site installation and start-up) often ends with them installed at different dimensions and positions than the drawing, and then trusting the CAD is the risky choice.
+
+![Simple collision shapes, positions from measurement](../assets/diagrams_en/r2p2-as-built.svg)
+
+Each URDF link holds two shapes: the one you see on screen (`<visual>`) and the one used for collision checks (`<collision>`). The visual can be the CAD mesh (a 3D shape made of triangles), but for collision a **simple box or cylinder** sized from measurement, with a margin, is better. It's easy to update, fast to check, and doesn't lean on a drawing that no longer matches the floor.
+
+```xml
+<link name="fixture">
+  <visual>    <geometry><mesh filename="package://my_cell/meshes/fixture.stl"/></geometry></visual>
+  <collision> <geometry><box size="0.42 0.30 0.18"/></geometry></collision>  <!-- measured + 1 cm margin -->
+</link>
+<joint name="table_to_fixture" type="fixed">
+  <parent link="table"/>  <child link="fixture"/>
+  <origin xyz="${fx_x} ${fx_y} ${fx_z}" rpy="0 0 ${fx_yaw}"/>  <!-- values measured at commissioning -->
+</joint>
+```
+
+Positions come from measurement, not the drawing. The 3-point touch in step ② is the same job as teaching a UFRAME with the 3-point method. Keeping the measured values in a version-controlled config file (values like `fx_x` above) leaves a record of who moved what, and when; if a fixture is moved or replaced, re-touch the three points and commit the new values. A camera can also build a live obstacle map, but in a cell that must give the same result every time, use that for checking only and plan against fixed, measured values.
 
 ## Add joint angles to the blueprint
 
@@ -64,7 +86,7 @@ The difference is in the shape. A pendant keeps a few numbered UFRAMEs and UTOOL
 
 - **UTOOL** corresponds to the `tool0 → gripper_tip` branch: how far the gripper tip is from the flange.
 - **UFRAME** corresponds to a frame attached to the base, like `base_link → table`.
-- **The camera** is a branch too. A camera on the arm hangs under `tool0`, and its position is measured once by hand-eye calibration (measuring precisely where the camera sits on the tool).
+- **The camera** is a branch too. A camera on the arm hangs under `tool0`, and its position is measured at installation by hand-eye calibration (measuring precisely where the camera sits on the tool).
 
 Because the whole tree is connected, you can ask TF2 for the relationship between any two frames. Once you add a camera, this is the feature you'll use most.
 
@@ -86,6 +108,8 @@ The trap at the bottom of the picture is the most common bug in cells with a cam
 
 Cameras usually have two frames. There's `camera_link`, aligned with the camera body, and an optical frame (`..._optical_frame`) whose z axis points out of the lens. If you don't check which one a detection is relative to, you get answers with the axes rotated by 90°.
 
+Calibration isn't a one-time job, either. If the camera's focus moves, the lens characteristics change and distance calculations drift, so turn autofocus off and fix the focus manually before calibrating. If the camera was bumped or its bracket re-tightened, redo the hand-eye calibration.
+
 ## ros2_control, swapping in only the robot-specific layer
 
 Now for the part that actually moves the robot. **ros2_control** splits motor control into layers.
@@ -99,6 +123,8 @@ On a UR, the hardware interface reads state through UR's RTDE real-time data cha
 
 To test without a robot, use the **mock** interface: fake hardware that simply answers "moved as commanded" with no robot attached. Like ROBOGUIDE or URSim, it lets you run the whole cell's software before the robot arrives. Moving to the real thing only means changing the hardware interface setting in software; the first moves on the real robot still go slow, inside a risk-assessed cell.
 
+The natural partner to mock hardware is **rosbag2**. Record camera images and joint states on the floor with `ros2 bag record`, then feed them back with `ros2 bag play` in the office, and you can run perception and planning on the same input as many times as you like. That's also how you check that the same input gives the same result, and that a new version gives the same perception and planning results as the old one.
+
 Changing the controller changes how the robot behaves. You might switch from the trajectory-following controller to a force-control controller that pushes with a set force, if the robot supports that.
 
 ## RViz, where mistakes get caught before the robot moves
@@ -107,9 +133,9 @@ Changing the controller changes how the robot behaves. You might switch from the
 
 ![RViz shows the world as the software believes it is](../assets/diagrams_en/r2p2-rviz.svg)
 
-You turn on what you want from the list on the left: the robot drawn from its blueprint, small axes for each frame, the points the camera sees, and the motion planning panel used in Part 3. In that panel you can drag a goal into place with the mouse, preview the planned path, and then press execute.
+You turn on what you want from the list on the left: the robot drawn from its blueprint, small axes for each frame, the points the camera sees, and the motion planning panel used in Part 3. The robot in RViz mirrors the real robot's joint states, like a live shadow. In the motion planning panel you can drag a goal into place with the mouse, watch the planned path as an animation, and then press execute. If a pose being planned hits an obstacle or the robot's own body, the colliding link turns red, so you can see where a collision check failed.
 
-RViz **only displays data**. If the camera frame points the wrong way, the part is sunk into the table, or the path skims the fixture, then the data really is wrong. Catch it here, before the robot moves.
+RViz **only displays data**. If the camera frame points the wrong way, the part is sunk into the table, or the path skims the fixture, then it's the data that's wrong, not the robot. Catch it here, before the robot moves.
 
 If the view is empty, the picture shows where to look (the Fixed Frame is the frame everything is drawn in). The easy thing to confuse is that RViz isn't a simulator. To imitate physics or simulated cameras you need a simulator such as Isaac Sim.
 
@@ -124,12 +150,16 @@ If the view is empty, the picture shows where to look (the Fixed Frame is the fr
 | **robot_state_publisher** | Blueprint + joint angles → every link's position on `/tf` | The math behind the position screen |
 | **TF2 / TF tree** | Connects frames into a tree; relates any two frames | UFRAME, UTOOL |
 | **ros2_control** | Shared controller + robot-specific hardware interface | Motion engine + external motion-command port |
+| **visual / collision** | Separate shapes for display and for collision checks | (none) |
 | **mock** | Fake hardware for testing without a robot | ROBOGUIDE, URSim |
+| **rosbag2** | Record floor data and play it back | Replaying a trace log |
 | **RViz** | Shows robot, frames, sensors and plans in 3D | The pendant's 3D view |
 
 With the robot now connected to the node graph from Part 1, [the next part](moveit2-goals-not-points.md) finally sends it somewhere: MoveIt 2, which computes a path when you give it just a goal instead of teaching every point. You'll see what FANUC's CONFIG, interference zones and J and L moves become there.
 
 ---
+
+**Series** · [← Previous: Part 1 — One Program Becomes a Conversation](ros2-for-robot-programmers.md) · [Next: Part 3 — MoveIt 2 →](moveit2-goals-not-points.md)
 
 *Related: [Part 1 — One Robot Program Becomes a Conversation Between Programs](ros2-for-robot-programmers.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md)*
 
@@ -153,4 +183,7 @@ The behavior of URDF, xacro, robot_state_publisher, TF2, ros2_control and RViz f
 - *Hardware interface*: the part that turns shared commands into one robot's communication; what a "ROS 2 driver" really is
 - *Mock hardware*: fake hardware that answers "moved as commanded" with no robot attached
 - *RTDE*: UR's channel for exchanging data with the controller in real time
+- *visual / collision*: a URDF link's display shape / collision-check shape
+- *Point cloud*: the 3D set of points measured by a depth camera
+- *rosbag2*: a tool that records topics and plays them back exactly
 - *RViz*: ROS's 3D viewer; the Fixed Frame is the frame everything is drawn in

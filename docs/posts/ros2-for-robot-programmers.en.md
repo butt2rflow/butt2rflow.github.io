@@ -3,7 +3,7 @@ title: "From Teach Pendant to ROS 2 (1) — One Robot Program Becomes a Conversa
 date: 2026-09-28
 tags: [physical-ai, ros2, robotics, teach-pendant, fanuc, universal-robots]
 lang: en
-description: "A ROS 2 introduction for people who have programmed robots in TP or URScript. How one program on the controller turns into a graph of nodes, topics vs services vs actions, automatic discovery, build and launch, and what stays on the robot controller. Part 1 of 4."
+description: "A ROS 2 introduction for people who have programmed robots in TP or URScript. How one program on the controller turns into a graph of nodes, topics vs services vs actions, automatic discovery, build and launch, what stays on the robot controller, and designing a cell whose verdict must be the same every time. Part 1 of 4."
 ---
 
 # From Teach Pendant to ROS 2 (1) — One Robot Program Becomes a Conversation Between Programs
@@ -24,7 +24,8 @@ This series is written for that person. Each new idea starts from the pendant ta
 - Nodes talk in three basic ways: a **topic** streams data continuously, a **service** answers one question, and an **action** takes on a long job and reports progress.
 - Nodes on the same network **find each other with no configuration**, as long as they share the same `ROS_DOMAIN_ID`, a kind of room number.
 - Code goes through **write → build → source → launch**. Forgetting to source in a new terminal (the window where you type commands) is the number-one beginner error.
-- The robot controller **doesn't go away**. Servo control and safety functions stay on the controller. ROS 2 takes over seeing, deciding and planning paths on top of it.
+- The robot controller **doesn't go away**. Servo control and safety functions stay on the controller. ROS 2 takes over seeing, choosing the next move and planning paths on top of it.
+- In a cell whose pass/fail must come out the same every time, separate **motion** from the **verdict**. Motion adapts every cycle through perception and planning; the verdict stays with the sensors, gauges and PLC interlocks you already use.
 
 ---
 
@@ -113,7 +114,11 @@ $ ros2 topic list           # the channels in use
 
 ![Same information, different screen](../assets/diagrams_en/r2p-pendant-vs-echo.svg)
 
-Other commands you'll use often are `ros2 topic hz` (how many messages per second), `ros2 service list` and `ros2 action list`. When something doesn't work, start with `ros2 topic list` to see whether the channels are visible. If none show up, the most common cause is the network setup in the next section.
+Other commands you'll use often are `ros2 topic hz` (how many messages per second), `ros2 service list` and `ros2 action list`.
+
+To see the whole graph as a picture, run `rqt_graph`. It draws a diagram like the pick-cell picture above, automatically, from the nodes and topics that are running. It only displays, though; it isn't an editor where you draw lines to connect nodes. Connections are set in code and launch files by topic name: if the names match, the nodes connect on their own, so there are no lines to draw. Graphical editing does exist on the task-sequence side: write the sequence as a Behavior Tree and you can edit it by dragging blocks in an editor such as Groot2, the closest thing to a TP editor.
+
+When something doesn't work, start with `ros2 topic list` to see whether the channels are visible. If none show up, the most common cause is the network setup in the next section.
 
 ## A network where nodes find each other
 
@@ -165,7 +170,22 @@ If a ROS 2 program freezes or sends a strange trajectory, the limits and stop fu
 
 In a real cell, the controller also runs a small program that accepts commands coming from ROS. On a UR, that's External Control, one of the add-ons installed on the pendant (URCaps). FANUC now publishes an official ROS 2 driver too. Part 2 covers this together with ros2_control.
 
-So think of it like this: the part of your TP program that decided **where to go and in what order** moves to ROS 2, and the part that **makes the robot move safely** stays where it was.
+## If the result must be the same every time
+
+In a cell where pass/fail has to come out the same every time, such as a test cell, design gets easier once you separate two things: the robot's **motion** and the **verdict**.
+
+![Motion may differ every cycle. The verdict must not](../assets/diagrams_en/r2p-determinism.svg)
+
+When tolerances (allowed dimensional errors) stack up, the part arrives in a slightly different place every cycle ([Part 3](moveit2-goals-not-points.md) covers this). So the motion may differ every time; in fact it should adapt to that variation. The verdict, on the other hand, stays with the deterministic (same input, always the same output) hardware you already use: the existing measurement hardware (sensors, gauges, PLC interlocks). Perception results adapt the motion only through a correction that has passed a gate ([Part 4](isaac-ros-gpu.md)), and path-planning variation is reduced by choosing the right approach in [Part 3](moveit2-goals-not-points.md). Neither feeds the verdict.
+
+There are two things to watch on the ROS 2 side.
+
+- **QoS (quality of service).** Each topic sets whether messages must be delivered (reliable) or may be dropped when late (best-effort). Camera images are usually best-effort, so the occasional frame goes missing. Make topics that must not lose anything, such as commands and results, reliable. If the subscriber requires reliable but the publisher is best-effort, no data arrives at all and ROS logs an "incompatible QoS" warning.
+- **Timing.** On ordinary Linux, the order and timing in which nodes handle messages vary a little every time. Keep anything that must finish within a fixed time, like interlocks, on the PLC and the robot controller.
+
+Keep every cycle's inputs and results with **rosbag2** (a tool that records and replays topics). [Part 2](ros2-robot-description.md) shows how to play them back to check results.
+
+So think of it like this: the part of your TP program that decided **where to go and in what order** moves to ROS 2, and the parts that **make the robot move safely** and **decide pass or fail** stay where they were.
 
 ---
 
@@ -178,6 +198,8 @@ So think of it like this: the part of your TP program that decided **where to go
 | **Topic** | A continuous data broadcast | A status signal that's always on |
 | **Service** | One question, one answer | Reading a register, turning an output on once |
 | **Action** | A long job, with progress and cancel | A subprogram started with `CALL` (except the caller doesn't wait) |
+| **QoS** | Per-topic delivery quality (reliable / best-effort) | (none) |
+| **rosbag2** | Record topics and play them back exactly | Data logging + replay |
 | **`ROS_DOMAIN_ID`** | Only nodes with the same number see each other | No direct equivalent; closest is giving each cell its own network |
 | **Package, build, source, launch** | Bundle, build, register in the window, start together | Write → load → register in list → select & start |
 | **Controller** | Servo and safety functions stay here | Unchanged |
@@ -187,6 +209,8 @@ In the end, ROS 2 doesn't replace the robot controller. It's wiring on top of th
 [The next part](ros2-robot-description.md) looks at how ROS understands a robot: the blueprint file that describes its shape (URDF), TF2 for managing coordinate frames, ros2_control, which lets you swap in only the parts that differ between robot makers, and RViz for checking all of it by eye. That's also where you'll see what your pendant's UFRAME and UTOOL become in ROS. (If coordinate frames themselves are new to you, [Frames & Transforms](frames-transforms.md) is a good first read.)
 
 ---
+
+**Series** · [Next: Part 2 — Describing the Robot to ROS →](ros2-robot-description.md)
 
 *Related: [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2](jetson-ros2-setup.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
 
@@ -210,4 +234,10 @@ ROS 2 concepts (nodes, topics, services, actions, domain ID, discovery, colcon, 
 - *colcon*: the tool that builds a ROS 2 workspace
 - *Terminal · source*: the window where you type commands · the command that loads build results into that window; needed in every window
 - *Launch file*: a file that starts several nodes, with their settings, at once
+- *Deterministic*: always giving the same result for the same input
+- *Verdict · gate*: deciding pass or fail · the step that checks a perception result's range and confidence before it is used for motion
+- *QoS (Quality of Service)*: per-topic delivery quality; reliable must deliver, best-effort may drop late messages
+- *rosbag2*: a tool that records topics and plays them back exactly
+- *rqt_graph*: a tool that draws the running nodes and topics (view only)
+- *Behavior Tree · Groot2*: a format for writing a task sequence as a tree of blocks · a graphical editor for it
 - *Radian*: a unit of angle; 180° is about 3.14 radians

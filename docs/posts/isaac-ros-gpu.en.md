@@ -3,7 +3,7 @@ title: "From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion: Moving the S
 date: 2026-09-28
 tags: [physical-ai, ros2, isaac-ros, cumotion, nvidia, jetson, moveit2, robotics]
 lang: en
-description: "Perception that runs a neural network on every frame and planning in a crowded cell are slow on a CPU. Isaac ROS moves only the heavy nodes of the same ROS 2 graph to the GPU, NITROS removes the copies, cuMotion plugs into MoveIt 2's planner slot, versions go together as a set, and one stack serves many robots. Part 4 of 4 (final)."
+description: "Perception that runs a neural network on every frame and planning in a crowded cell are slow on a CPU. Isaac ROS moves only the heavy nodes of the same ROS 2 graph to the GPU, NITROS removes the copies, cuMotion plugs into MoveIt 2's planner slot, versions go together as a set, perception results pass a gate, and one stack serves many robots. Part 4 of 4 (final)."
 ---
 
 # From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion: Moving the Slow Parts to the GPU
@@ -22,6 +22,7 @@ Two of the five steps from Part 3 take a long time. Step 1, perception, has to r
 - **NITROS** passes images between GPU nodes while keeping them in GPU memory. From Isaac ROS 5.0 the same capability is built into ROS 2 itself.
 - **cuMotion** is a GPU planner that plugs into MoveIt 2's planner slot. Keep your code, add the cuMotion pipeline to the MoveIt config and pick it instead of OMPL. Each robot needs a companion file called **XRDF**.
 - JetPack, ROS 2 and Isaac ROS go together **as a set** and are upgraded together.
+- Perception results feed corrections only after passing a **gate** (confidence, stack-up range); outside it, the cell stops and reports. They never feed the verdict.
 - Change robots and **the upper layers stay put**. You swap three things: the blueprint, the driver and the MoveIt configuration.
 
 ---
@@ -33,6 +34,8 @@ Look at Part 1's pick-cell graph again and the heavy spots are clear.
 ![Isaac ROS = ROS 2 nodes that use the GPU](../assets/diagrams_en/r2p4-gpu-nodes.svg)
 
 Depth from two cameras (ESS, FoundationStereo), segmentation that cuts the part out of the picture (SAM 2), pose estimation that finds the part's position and orientation from its CAD model (FoundationPose), and path planning (cuMotion); the FoundationStereo and SAM 2 packages arrived in Isaac ROS 4.0. Only these four become Isaac ROS nodes; the rest, like the task node and the robot driver, stays as it is. What each model does and how is covered separately in [From Stereo to Grasp](stereo-to-grasp.md) and [Inside the Three Models](inside-the-models.md).
+
+Isaac ROS has no dedicated screen of its own. Its nodes are ordinary ROS 2 nodes, so you view them with the same tools: `rqt_graph` from Part 1, RViz from Part 2, or a web-based ROS tool such as Foxglove. A graphical editor where you connect blocks with lines does exist, on the simulator side: Isaac Sim's Action Graph (OmniGraph) wires virtual cameras and robots to ROS 2 topics with blocks and lines. That lives inside the simulator, though; in a real cell, nodes are still connected in launch files.
 
 Running neural networks fast on the GPU uses NVIDIA's TensorRT. A model has to be converted for that GPU once in advance (an engine build), and on an edge computer with little memory that step is often the first wall. The [Field Notes](jetson-foundationpose-16gb.md) describe getting past it on an Orin NX 16GB.
 
@@ -72,6 +75,16 @@ To use cuMotion, each robot needs one more file.
 
 **XRDF** is a file that supplements the URDF, and its main part is a collision model that approximates each link of the robot with a set of spheres. Collision checks between complex 3D shapes are slow, but distances between spheres are very fast to compute, which is what lets the GPU filter so many candidates quickly. Link pairs allowed to touch, tool frames, and joint acceleration and jerk (how abruptly acceleration changes) limits go in the same file. NVIDIA's documentation includes a UR10e example, and other robots can be built with the robot description editor in Isaac Sim. If a model looks similar but its link dimensions differ, refit the spheres instead of reusing an existing file.
 
+## Perception results pass through a gate
+
+[Part 1](ros2-for-robot-programmers.md) said the verdict stays with deterministic hardware and perception is used only to adapt the motion. This gate is where the two meet.
+
+![Pass: apply the correction. Fail: stop loudly](../assets/diagrams_en/r2p4-gate.svg)
+
+Neural-network perception wobbles a little with lighting and reflections, so don't take its result at face value; check two things. Is the model's confidence, or its fit error (the distance left over after fitting the CAD), within the threshold? And is the result inside the tolerance stack-up range from [Part 3](moveit2-goals-not-points.md)? If it's outside, either perception is wrong or the part really is somewhere odd, so stop and report instead of carrying on quietly. A quiet failure is more dangerous than a loud one.
+
+Results can wobble in two more places. Even with the same model, rebuilding the TensorRT engine can change its internal choices and shift results very slightly, so pin the engine files as part of the version set and, when you change them, compare against old results using the rosbag2 recordings from [Part 2](ros2-robot-description.md). cuMotion also optimizes from several random starting points, so the same request can give slightly different paths. When you need the same shape every time, use Pilz or a stored trajectory from Part 3.
+
 ## One stack, many robots
 
 Does practice on mock hardware or a desktop teaching arm (like the five-joint kind mentioned in Part 3) carry over to a factory robot?
@@ -108,6 +121,8 @@ Most of the debugging time in the first few weeks goes into these six boxes. The
 | J · L · C | Pilz PTP · LIN · CIRC | Part 3 |
 | Jogging | MoveIt Servo | Part 3 |
 | Interference zones | The planning scene (safety stays on the controller) | Part 3 |
+| Vision offset (VOFFSET) | Taught path + offset (still valid, ladder rung 2) | Part 3 |
+| Pass/fail verdict | Unchanged: sensors, gauges, PLC interlocks (perception only adapts motion, through a gate) | Parts 1, 4 |
 | (Perception and planning, slow on a CPU) | Isaac ROS · NITROS · cuMotion | Part 4 |
 
 Leave "moving safely" on the robot controller where it was, and let programs from many companies talk to each other to compute only the "where and how" a person used to teach: that's what all four parts were about. Experience with a teach pendant stays useful. People who already understand frames and tools, motion types and safety pick up ROS much faster.
@@ -123,6 +138,8 @@ Read them in this order; each builds on the one before. Pick the documentation f
 5. **Isaac ROS documentation** (nvidia-isaac-ros.github.io): GPU packages, NITROS, cuMotion, XRDF
 
 ---
+
+**Series** · [← Previous: Part 3 — MoveIt 2](moveit2-goals-not-points.md)
 
 *Related: [Part 3 — MoveIt 2](moveit2-goals-not-points.md) · [Putting the Robot's Brain on the Edge (2) — Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md)*
 
@@ -142,4 +159,6 @@ Isaac ROS's structure, NITROS, cuMotion and its MoveIt 2 plugin, the contents of
 - *cuMotion*: NVIDIA's GPU motion planner that plugs into MoveIt 2's planner slot
 - *XRDF*: a file supplementing the URDF for cuMotion: collision spheres, self-collision rules, tool frames, acceleration and jerk limits
 - *URCap · URCapX*: add-ons installed on the UR pendant (PolyScope 5 · PolyScope X)
+- *Gate*: the step that checks a perception result's confidence and stack-up range before it is used for motion
+- *Confidence · fit error*: the model's own certainty score · the distance left after fitting the CAD
 - *frame_id*: the name attached to a ROS message saying which frame it is relative to

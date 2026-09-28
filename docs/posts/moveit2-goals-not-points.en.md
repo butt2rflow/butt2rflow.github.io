@@ -3,7 +3,7 @@ title: "From Teach Pendant to ROS 2 (3) — MoveIt 2: Give a Goal Instead of Tea
 date: 2026-09-28
 tags: [physical-ai, ros2, moveit2, motion-planning, robotics, fanuc, universal-robots]
 lang: en
-description: "In TP a person teaches every via point; in MoveIt 2 you give a goal and the path is computed. move_group, IK and FANUC's CONFIG, the planning scene and where safety stays, J and L moves with Pilz, and the five steps from camera to grasp. Part 3 of 4."
+description: "First, whether you need path planning at all (the automation ladder, tolerance stack-up, VOFFSET); then MoveIt 2, which computes the path from a goal. move_group, IK and FANUC's CONFIG, the planning scene and where safety stays, J and L moves with Pilz, and the five steps from camera to grasp. Part 3 of 4."
 ---
 
 # From Teach Pendant to ROS 2 (3) — MoveIt 2: Give a Goal Instead of Teaching Points
@@ -26,9 +26,22 @@ When the part arrives in the same place every time, that's the most reliable way
 - Turning a tool pose into joint angles is **IK (inverse kinematics)**. There can be several answers, and FANUC's CONFIG is exactly the record of which one.
 - MoveIt 2 avoids only the objects you've put in the **planning scene**. Safety for people and equipment is still the job of the robot controller's safety configuration.
 - Motion types are the ones you know: **joint moves (J, movej)**, **straight-line moves (L, movel)** and **arcs (C, movec)**. MoveIt 2's Pilz planner does them as PTP, LIN and CIRC.
+- Path planning isn't always the answer. Parts always in the same place: taught points. Flat variation: taught path + offset (VOFFSET). Height and tilt vary too: MoveIt 2. When the same request must give the same path, use Pilz or a stored trajectory.
 - From camera to grasp takes five steps: **detect → convert → grasp point → plan → execute**.
 
 ---
+
+## First: do you really need path planning?
+
+![Climb one rung only when you have to](../assets/diagrams_en/r2p3-ladder.svg)
+
+The rule is to use the lowest rung that works. If the part always arrives in the same place, rung 1 (a jig plus taught points) is the most reliable and gives the same result every time. The trouble starts when small variations stack up.
+
+![Each is small; added up, they miss the taught point](../assets/diagrams_en/r2p3-stackup.svg)
+
+Even with a fixed fixture, pallet, conveyor and product tolerances (allowed dimensional errors) add up to more than a single taught point can absorb. The expected range of that sum is the **tolerance stack-up**. Define it in advance and any result outside it can be caught and stopped at the gate in [Part 4](isaac-ros-gpu.md). The fix a TP programmer already knows is rung 2: vision measures this cycle's offset and the whole taught path is shifted by it (FANUC's VOFFSET or a PR offset). The path's shape is the same every time and only its position moves, so the motion adapts to the variation and stays predictable. Climb to rung 3, MoveIt 2, when height and tilt vary too, or when the shifted path could hit nearby equipment.
+
+On every rung, the pass/fail verdict stays with the existing measurement hardware (sensors, gauges, PLC interlocks), as in [Part 1](ros2-for-robot-programmers.md). Rung 4, a learned policy (an AI trained on demonstrations that decides the motion), is for tasks that can't be written as coordinates (routing a cable, say); because it carries on without reporting its own failure, it doesn't suit test cells and this series doesn't cover it.
 
 ## move_group, three inputs in and one trajectory out
 
@@ -58,7 +71,7 @@ The list of obstacles MoveIt 2 plans around is the **planning scene**: the robot
 
 ![MoveIt 2 avoids only what you told it about](../assets/diagrams_en/r2p3-scene.svg)
 
-If someone puts a box on the table and nobody adds it to the planning scene, MoveIt 2 will calmly plan a path straight through it. So fixed equipment goes into the blueprint or a scene file, and moving objects are seen by the camera and filled into the scene (this is for planning, not for detecting people).
+If someone puts a box on the table and nobody adds it to the planning scene, MoveIt 2 will calmly plan a path straight through it. So fixed equipment goes into the blueprint or a scene file, and moving objects are seen by the camera and filled into the scene (this is for planning, not for detecting people). In a cell that must give the same result every time, keep fixed equipment at measured values as in [Part 2](ros2-robot-description.md) and use the camera map for checking.
 
 And the planning scene is **for planning paths**, not a safety device. The speed limits, work-area limits, and people detection and stopping you configure in FANUC DCS or the UR safety settings remain the job of the robot controller and safety equipment when you use ROS. Copying your interference zones into MoveIt 2 is no reason to delete the safety settings on the robot controller.
 
@@ -68,9 +81,23 @@ The motion types are exactly the ones you use on the pendant.
 
 ![The tool tip traces a different line](../assets/diagrams_en/r2p3-joint-vs-line.svg)
 
-MoveIt 2 lets you plug in different ways of finding paths (planners). **OMPL**, widely used by default, finds any collision-free path, whatever its shape, which is good for getting around in open space; the shape of the path can vary a little from run to run, though. If you want the fixed shapes of an industrial robot, the **Pilz** planner does PTP (joint move), LIN (straight line) and CIRC (arc) directly. Both check for collisions, but only OMPL goes around obstacles; Pilz computes the fixed shape and rejects the whole plan if it collides.
+MoveIt 2 lets you plug in different ways of finding paths (planners). **OMPL**, widely used by default, finds any collision-free path, whatever its shape, which is good for getting around in open space; because it draws candidates at random, though, the default setup produces a different path for the same request every time. If you want the fixed shapes of an industrial robot, the **Pilz** planner does PTP (joint move), LIN (straight line) and CIRC (arc) directly. Both check for collisions, but only OMPL goes around obstacles; Pilz computes the fixed shape and rejects the whole plan if it collides.
 
 Straight-line moves come with one condition: there has to be an IK answer at every point along the line. If the line passes a joint limit or a singularity (a pose, such as a fully stretched arm, where some directions become impossible), it breaks off partway. MoveIt 2's straight-line path calculation reports how much of the line it could plan; anything short of 100% means part of it is unreachable. It's the same thing as an L move alarming near a singularity in TP.
+
+## Keeping motion predictable
+
+Part 1 said motion may differ every cycle, but it should still be predictable. A robot whose cycle time jumps around, or that swings left today and right tomorrow, is hard to trust on the floor. Approaches differ in whether the same request gives the same path.
+
+| Approach | Same path for the same request? | Where to use it |
+|---|---|---|
+| Taught path + offset (rung 2) | Same shape, only shifted | When the variation stays in the plane |
+| Pilz PTP · LIN · CIRC | Yes (fixed shapes) | Approaching and leaving the part |
+| A path planned once, validated and stored | Yes | Long moves repeated every cycle |
+| OMPL (default setup) | No (random) | Setup, getting around obstacles |
+| cuMotion | May vary slightly (random starts) | Crowded scenes, fast planning ([Part 4](isaac-ros-gpu.md)) |
+
+The start pose matters too. IK usually picks the answer closest to the current joint state, so starting every cycle from the same home position keeps the arm's shape on the same side.
 
 ## Five steps from camera to grasp
 
@@ -115,17 +142,21 @@ To follow a moving target or nudge the arm little by little, the way you'd jog i
 
 | Concept | What it does | On the pendant, roughly |
 |---|---|---|
-| **move_group** | current pose + goal + obstacles → trajectory | The path you used to plan in your head |
+| **Automation ladder** | Lowest rung first: jig → 2D offset → 3D pose | Teaching → VOFFSET → (new) |
+| **move_group** | current joint state + goal + obstacles → trajectory | The path you used to plan in your head |
 | **IK** | tool pose → joint angles; may have several answers | FANUC's CONFIG choice |
 | **Planning scene** | The objects path planning avoids | Interference zones (but not a safety function) |
 | **OMPL** | Any collision-free path, any shape | (none) |
 | **Pilz PTP · LIN · CIRC** | Moves with a fixed shape | J · L · C, movej · movel · movec |
 | **Five steps** | detect → convert → grasp point → plan → execute | Vision offset + pick program |
 | **MoveIt Servo** | Small real-time motions | Jogging |
+| **Stored trajectory** | Reuse a validated path every cycle | A taught path |
 
 One concern remains. Step 1's perception has to run a neural network on every picture, which is slow, and in a crowded cell planning takes time too. [The last part](isaac-ros-gpu.md) looks at NVIDIA's Isaac ROS and cuMotion, which move these slow parts onto the GPU.
 
 ---
+
+**Series** · [← Previous: Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [Next: Part 4 — Isaac ROS and cuMotion →](isaac-ros-gpu.md)
 
 *Related: [Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
 
@@ -144,4 +175,8 @@ The behavior of move_group, the planning scene, OMPL, the Pilz industrial motion
 - *Planner*: a method for finding paths; OMPL (any shape), Pilz (PTP, LIN, CIRC) and others plug in
 - *Singularity*: a pose, such as a fully stretched arm, where some directions of motion become impossible
 - *MoveIt Servo*: sends small motion commands in real time, without planning
+- *Automation ladder*: jig → 2D vision + offset → 3D pose from CAD → learned policy; use the lowest rung that works
+- *Tolerance · stack-up*: allowed dimensional error · the expected range when several tolerances add up
+- *VOFFSET · PR offset*: FANUC features that shift a taught path by the offset vision measured
+- *Stored trajectory*: a path planned once, validated and reused every cycle
 - *Force control (force mode)*: moving to push with a set force rather than to a position
