@@ -88,7 +88,7 @@ My reasoning for the order: seeing an arm copy a demo first should give the stam
 
 **Series** · Next: Hands-on Notes, Part 1: Building the SO-101 and Recording Demos (in preparation)
 
-*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Learned Policies (Track B)](learned-policy-track-b.md) · [Putting the Robot's Brain on the Edge (1)](jetson-ros2-setup.md)*
+*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Learned Policies (Track B)](learned-policy-track-b.md) · [Putting the Robot's Brain on the Edge (1)](jetson-ros2-setup.md) · [How Many Cameras, and Where](camera-placement.md)*
 
 ### Sources and notices
 

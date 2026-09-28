@@ -136,6 +136,7 @@ nav:
       - posts/inside-the-models.md
       - posts/model-anatomy.md
       - posts/robot-simulation.md
+      - posts/camera-placement.md
     - "Cobots":
       - posts/cobot-basics.md
       - posts/cobot-ur-vs-fanuc.md

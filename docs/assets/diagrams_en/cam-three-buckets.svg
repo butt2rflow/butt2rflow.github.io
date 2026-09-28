@@ -1,0 +1,80 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Put what is in the cell into three buckets</title>
+<desc id="de">Split what is in the cell by who handles it. Things that never move (table, jig, fence, frame) go into the design file (URDF, planning scene) as measured values. Things that change every cycle through tolerance stack-up (pallet position, parts, product on the conveyor) go to the camera. People are handled by certified safety devices (area scanners, safety PLC), not by the camera or the planner.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
+<text class="t" x="18" y="26">Fixed things to the design file, changing things to the camera, people to safety devices</text>
+<rect class="bx" x="16" y="46" width="210" height="184" rx="10"/>
+<text class="lb" x="121" y="72" text-anchor="middle">Design file (URDF)</text>
+<text class="sm" x="121" y="92" text-anchor="middle">never moves</text>
+<text class="it" x="121" y="124" text-anchor="middle">table · jig</text>
+<text class="it" x="121" y="150" text-anchor="middle">fence · frame</text>
+<text class="it" x="121" y="176" text-anchor="middle">measured, not CAD</text>
+<text class="sm" x="121" y="218" text-anchor="middle" style="fill:var(--fg)">no noise, same every time</text>
+<rect class="bxa" x="234" y="46" width="210" height="184" rx="10"/>
+<text class="lb" x="339" y="72" text-anchor="middle">Camera (perception)</text>
+<text class="sm" x="339" y="92" text-anchor="middle">changes each cycle</text>
+<text class="it" x="339" y="124" text-anchor="middle">pallet position error</text>
+<text class="it" x="339" y="150" text-anchor="middle">part · assembly tolerance</text>
+<text class="it" x="339" y="176" text-anchor="middle">product on the conveyor</text>
+<text class="sm" x="339" y="218" text-anchor="middle" style="fill:var(--fg)">absorbs tolerance stack-up</text>
+<rect class="bxr" x="452" y="46" width="210" height="184" rx="10"/>
+<text class="lb" x="557" y="72" text-anchor="middle">Safety devices</text>
+<text class="sm" x="557" y="92" text-anchor="middle">people</text>
+<text class="it" x="557" y="124" text-anchor="middle">area scanner</text>
+<text class="it" x="557" y="150" text-anchor="middle">safety PLC</text>
+<text class="it" x="557" y="176" text-anchor="middle">collaborative slow mode</text>
+<text class="sm" x="557" y="218" text-anchor="middle" style="fill:var(--fg)">certified safety function</text>
+<text class="sm" x="18" y="256">Collision-avoidance planning is not a safety function. Don't leave people to the camera</text>
+</svg>

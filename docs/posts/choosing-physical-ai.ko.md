@@ -117,7 +117,7 @@ Track 0(ICP로 CAD를 점구름에 맞추기)은 결정론적이고 설명하기
 
 **시리즈** · [다음: 학습 정책(Track B) →](learned-policy-track-b.md)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

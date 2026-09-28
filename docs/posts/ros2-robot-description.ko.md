@@ -162,7 +162,7 @@ RViz는 **데이터를 보여 주기만** 합니다. 화면에서 카메라 좌�
 
 **시리즈** · [← 이전 글: 1부 — 로봇 프로그램 하나가 여러 프로그램의 대화가 된다](ros2-for-robot-programmers.md) · [다음 글: 3부 — MoveIt 2 →](moveit2-goals-not-points.md)
 
-*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [1부 — 로봇 프로그램 하나가 여러 프로그램의 대화가 된다](ros2-for-robot-programmers.md) · [좌표계와 변환 — 로봇은 어디를 잡을지 어떻게 아는가](frames-transforms.md) · [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md)*
+*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [1부 — 로봇 프로그램 하나가 여러 프로그램의 대화가 된다](ros2-for-robot-programmers.md) · [좌표계와 변환 — 로봇은 어디를 잡을지 어떻게 아는가](frames-transforms.md) · [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

@@ -88,7 +88,7 @@ SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했�
 
 **시리즈** · 다음: 실습 노트 1편, SO-101 조립과 시연 기록 (준비 중)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [로봇의 뇌를 엣지에 올리기 (1)](jetson-ros2-setup.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [로봇의 뇌를 엣지에 올리기 (1)](jetson-ros2-setup.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 
