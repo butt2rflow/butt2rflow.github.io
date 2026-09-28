@@ -102,7 +102,7 @@ The much-discussed VLA (vision-language-action) models belong to the same family
 
 **Series** · [← Choosing a Physical AI Approach](choosing-physical-ai.md)
 
-*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [UR vs FANUC (openness)](cobot-ur-vs-fanuc.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md)*
+*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [UR vs FANUC (openness)](cobot-ur-vs-fanuc.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 
 ### Sources and notices
 

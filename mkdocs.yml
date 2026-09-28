@@ -41,6 +41,7 @@ plugins:
             "Field Notes": 현장 노트
             "Pendant to ROS 2": 펜던트에서 ROS 2로
             "Start Here": 시작하기
+            "Hands-on Notes": 실습 노트
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -134,6 +135,7 @@ nav:
       - posts/cobot-basics.md
       - posts/cobot-ur-vs-fanuc.md
       - posts/cobot-investing.md
+      - posts/physical-ai-investing-actuators.md
     - "Field Notes":
       - posts/jetson-ros2-setup.md
       - posts/jetson-isaac-foundation-models.md
@@ -143,5 +145,7 @@ nav:
       - posts/ros2-robot-description.md
       - posts/moveit2-goals-not-points.md
       - posts/isaac-ros-gpu.md
+    - "Hands-on Notes":
+      - posts/learn-without-industrial-robot.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"

@@ -141,7 +141,7 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 **시리즈** · [← 이전 글: 3부 — MoveIt 2](moveit2-goals-not-points.md)
 
-*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [3부 — MoveIt 2](moveit2-goals-not-points.md) · [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md)*
+*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [3부 — MoveIt 2](moveit2-goals-not-points.md) · [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 

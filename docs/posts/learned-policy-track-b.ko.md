@@ -102,7 +102,7 @@ TP의 티칭은 사람이 정한 점을 로봇이 똑같이 재생합니다. 시
 
 **시리즈** · [← Physical AI를 고르는 법](choosing-physical-ai.md)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md) · [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md) · [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 

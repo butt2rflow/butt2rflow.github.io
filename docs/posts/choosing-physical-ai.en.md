@@ -117,7 +117,7 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 
 **Series** · [Next: Learned Policies (Track B) →](learned-policy-track-b.md)
 
-*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Field Notes, Part 2](jetson-isaac-foundation-models.md)*
+*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Field Notes, Part 2](jetson-isaac-foundation-models.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 
 ### Sources and notices
 

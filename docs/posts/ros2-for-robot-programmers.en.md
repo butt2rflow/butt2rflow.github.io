@@ -212,7 +212,7 @@ In the end, ROS 2 doesn't replace the robot controller. It's wiring on top of th
 
 **Series** · [Next: Part 2 — Describing the Robot to ROS →](ros2-robot-description.md)
 
-*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2](jetson-ros2-setup.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
+*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2](jetson-ros2-setup.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 
 ### Sources and notices
 
