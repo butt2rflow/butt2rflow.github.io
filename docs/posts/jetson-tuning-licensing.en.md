@@ -22,7 +22,7 @@ A chain that runs and a chain you can use on a line are separated by two thresho
 - **Same chain, same Orin NX 16GB: 11.4 s → 4.0 s per object (2.8×).** Every network moved to a TensorRT engine and two slow pieces of code were fixed. The pose stayed within 1.5° and 3.4 mm of the verified orientation.
 - **FoundationPose shrank the most (6.3 s → 1.25 s).** The bottleneck now is the depth model, FoundationStereo (2.0 s), about half of the total.
 - **After each speed-up we checked the answers stayed the same.** Masks overlap 99.95 %+, detection boxes 0.99+, pose-model outputs within 0.3 %. That check also caught a bug in the conversion tool.
-- **Swap the depth model for ESS, NVIDIA's real-time stereo model, and the chain takes 2.1 s.** Depth drops from 2.0 s to 61 ms; pose error grows a little, to 2.0° and 4.9 mm.
+- **Swap the depth model for ESS, NVIDIA's real-time stereo model, and the chain takes 2.1 s.** Depth drops from 2.0 s to 61 ms; pose error grows a little, to 2.0° and 4.9 mm. On shiny parts, though, the two models fail differently, so control the background first.
 - **Licensing splits the chain in two.** The NVLabs FoundationPose and FoundationStereo code is non-commercial (research and evaluation). For commercial use you take the Isaac ROS node and the weights published on NGC. That commercial chain ran at **3.3 s per object** and tracked at **34 ms per frame**.
 
 ---
@@ -88,6 +88,29 @@ Half of the 4.0 s is FoundationStereo, so going further means changing the model
 
 Swapping the depth model made the biggest difference; the detector choices were worth about half a second. The order of tuning came down to one rule: **measure where the bottleneck is, then change that**.
 
+### Shiny parts change the picture
+
+ESS is faster, but the two depth models fail in different ways. So we compared them again on shiny parts: a glossy plastic mouse and a mirror-smooth black cup.
+
+![Same cup, same camera: on a checkerboard, FoundationStereo reads half the cup as the board; on a plain black table it reads the whole cup](../assets/demos/jetson-mirror-cup.jpg)
+
+*From left: camera image, FoundationStereo depth, ESS depth. The white line is the cup's outline. In the top row, the lower left of the FoundationStereo depth is missing from the outline: the depth there came out at the height of the surface behind, not the cup.*
+
+| Part and background | FoundationStereo | ESS |
+|---|---|---|
+| Glossy mouse: surface noise (RMS) | **3.3 mm** | 6.0 mm |
+| Mirror-like cup on a checkerboard: "see-through" | **48 %** | 12 % |
+| Same cup on a plain **black** table | **1.6 %** | 6.3 % |
+| Cup with the lid off, on plain **white** paper | ~11 % | ~11 % |
+
+"See-through" is the share of the part whose depth came out at the height of the surface below instead of the part. When stereo matches a pattern reflected in a shiny surface, it places the depth where that pattern really is, behind the surface.
+
+- **Normally FoundationStereo is cleaner.** Its surface noise on the mouse is about half of ESS's.
+- **But it follows reflections more confidently.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for 94 % of the cup, so coverage alone hides the problem completely.
+- **The background decides.** The problem grew from a plain black surface to plain white to a patterned one. With shiny parts, controlling **what the part reflects** works better than changing models.
+
+So "swap to ESS and halve the time" holds for matte parts. In a cell with many glossy parts, clean up the background first, then compare both models on those parts before choosing. (One cup and one mouse show a tendency, not a statistic.)
+
 ## Licensing: same four stages, different terms
 
 Here a problem appears that has nothing to do with speed. The FoundationPose and FoundationStereo code used so far is what NVIDIA's research lab (NVLabs) published on GitHub, and the licence says:
@@ -122,6 +145,8 @@ So we rebuilt the chain from commercial parts and measured it: Grounding DINO �
 | **Tracking afterwards (per frame)** | **34 ms** (about 2× the NVLabs research tracker) |
 
 It's actually faster than the tuned research chain (4.0 s). Swapping in ESS does most of that, and the Isaac ROS node was tuned for Jetson from the start, so tracking is especially quick. At least for this combination, the worry that going commercial means going slower didn't hold.
+
+To go further, we also cut the number of pose candidates the node checks at the start. The first pose got faster, 1.0–1.8 s instead of 2.5 s, but flipped poses rose from 2 to 4–6 out of 23. With a near-symmetric object, fewer candidates make it likelier to pick the opposite orientation. Saving a second isn't worth two to three times as many wrong answers, so we left it as it was.
 
 ![Live tracking of the mini PC with the commercial chain — the top line shows the chain and per-stage times](../assets/demos/jetson-tuning-live-track.jpg)
 
