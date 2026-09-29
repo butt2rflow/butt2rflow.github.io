@@ -203,7 +203,7 @@ This kind of failure is silent. Every stage returns normal values, so there's no
 - **Change the bottleneck.** Here it was the depth model; with ESS the chain halved.
 - **Check licences at the start.** Prove performance with research code, then look for the commercial path to the same technology and measure again with it.
 
-What about objects with no CAD file? We also tried putting the object on a printed board and taking about twenty photos to build a mesh. That gets its own post next.
+What about objects with no CAD file? We also tried putting the object on a printed board and taking about twenty photos to build a mesh. That got [its own post](jetson-scan-no-cad.md).
 
 ---
 
@@ -218,6 +218,6 @@ Jetson, Orin, Isaac ROS, TensorRT and NGC are trademarks of NVIDIA; other produc
 
 </details>
 
-**Series** · [← Previous: A Correction — reversing the "16 GB can't do it" verdict](jetson-foundationpose-16gb.md)
+**Series** · [← Previous: A Correction — reversing the "16 GB can't do it" verdict](jetson-foundationpose-16gb.md) · [Next: Scanning — no CAD? One printed board and twenty photos →](jetson-scan-no-cad.md)
 
 *Related: [Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion](isaac-ros-gpu.md)*

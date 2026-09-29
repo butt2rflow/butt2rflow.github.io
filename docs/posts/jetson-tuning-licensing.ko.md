@@ -203,7 +203,7 @@ YOLO-World는 조건이 또 다릅니다. GPL·AGPL 같은 카피레프트 라�
 - **병목을 바꾼다.** 여기서는 깊이 모델이었고, ESS로 바꾸자 체인이 절반이 됐습니다.
 - **라이선스는 처음에 확인한다.** 연구용 코드로 성능을 확인한 뒤, 같은 기술의 상업용 경로가 있는지 찾아 그걸로 다시 잽니다.
 
-CAD 파일이 없는 물체는 어떻게 할까요? 인쇄한 보드 위에 물체를 올리고 사진 스무 장쯤 찍어 메시를 만드는 방법도 시험해 봤는데, 이건 다음 글에서 따로 다루겠습니다.
+CAD 파일이 없는 물체는 어떻게 할까요? 인쇄한 보드 위에 물체를 올리고 사진 스무 장쯤 찍어 메시를 만드는 방법도 시험해 봤는데, 이건 [스캔편](jetson-scan-no-cad.md)에서 따로 다뤘습니다.
 
 ---
 
@@ -218,6 +218,6 @@ Jetson·Orin·Isaac ROS·TensorRT·NGC는 NVIDIA의, 그 외 제품명은 각 �
 
 </details>
 
-**시리즈** · [← 이전 글: 정정편 — 16GB로 안 된다던 그 결론, 뒤집었습니다](jetson-foundationpose-16gb.md)
+**시리즈** · [← 이전 글: 정정편 — 16GB로 안 된다던 그 결론, 뒤집었습니다](jetson-foundationpose-16gb.md) · [다음 글: 스캔편 — CAD가 없는 물체, 인쇄한 보드 한 장과 사진 스무 장으로 →](jetson-scan-no-cad.md)
 
 *관련: [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [티치 펜던트에서 ROS 2로 (4) — Isaac ROS와 cuMotion](isaac-ros-gpu.md)*
