@@ -106,7 +106,7 @@ ESS is faster, but the two depth models fail in different ways. So we compared t
 "See-through" is the share of the part whose depth came out at the height of the surface below instead of the part. When stereo matches a pattern reflected in a shiny surface, it places the depth where that pattern really is, behind the surface.
 
 - **Normally FoundationStereo is cleaner.** Its surface noise on the mouse is about half of ESS's.
-- **But it follows reflections more confidently.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for 94 % of the cup, so coverage alone hides the problem completely.
+- **But it is more easily fooled by reflections.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for 94 % of the cup, so coverage alone hides the problem completely.
 - **The background decides.** The problem grew from a plain black surface to plain white to a patterned one. With shiny parts, controlling **what the part reflects** works better than changing models.
 
 So "swap to ESS and halve the time" holds for matte parts. In a cell with many glossy parts, clean up the background first, then compare both models on those parts before choosing. (One cup and one mouse show a tendency, not a statistic.)

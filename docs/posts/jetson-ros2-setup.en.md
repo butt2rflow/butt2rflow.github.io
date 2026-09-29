@@ -9,7 +9,7 @@ description: "A robot-vision pipeline ultimately has to run on a small computer 
 
 # Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2, and the Walls I Hit
 
-> **Field notes · "The Robot's Brain on the Edge," Part 1 of 2.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 puts **Isaac ROS** on top for GPU-accelerated perception.
+> **Field notes · "The Robot's Brain on the Edge," Part 1.** This part is the road from a bare Jetson board to **ROS 2 running.** Part 2 puts **Isaac ROS** on top for GPU-accelerated perception.
 
 First, a word on how this piece was written. A good share of the setup below, I **didn't type myself.** The first thing I did at the start was **open SSH on the Jetson so an agentic AI (2nd-gen — Claude) could reach the edge computer directly**, and from there the AI ran the commands, read the logs, and worked through the blockers faster than my own hands. Walls that would have cost me days alone, I got past with an AI sitting beside me. How I wired that up comes in a moment; first, what we're building and why.
 
@@ -146,6 +146,8 @@ One fork worth flagging ahead of time: Isaac ROS recently **split into two track
 **The one thing to remember:** edge setup is hard not because Linux is hard, but because **architecture, CUDA, JetPack, and framework versions are all interlocked in one chain.** Knowing in advance where desktop instincts betray you turns days of grinding into an afternoon.
 
 ---
+
+**Series** · [Next: Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models →](jetson-isaac-foundation-models.md)
 
 *Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames & Transforms](frames-transforms.md) · [Investing in Physical AI](cobot-investing.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 

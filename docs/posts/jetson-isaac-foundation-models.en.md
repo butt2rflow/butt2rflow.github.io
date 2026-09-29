@@ -9,7 +9,7 @@ description: "We put the 'grab a new part with no training' foundation-model pip
 
 # Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models, Running on the Edge
 
-> **Field notes · Part 2 of the two-part "brain on the edge."** In [Part 1](jetson-ros2-setup.md) we brought a bare Jetson board up on JetPack and got **ROS 2 running**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge computer we already have**.
+> **Field notes · "brain on the edge," Part 2.** In [Part 1](jetson-ros2-setup.md) we brought a bare Jetson board up on JetPack and got **ROS 2 running**. This time we stack **Isaac ROS** and a **foundation-model pipeline** on top of it, to see for ourselves whether the "grab a new part with no training" promise really runs on the **small edge computer we already have**.
 >
 > **Correction note:** this post's hardware verdict ("production wants 64 GB") was later reversed in the [correction](jetson-foundationpose-16gb.md).
 
@@ -227,6 +227,8 @@ The next things to check are clear now, too.
 **The one thing to remember:** the foundation-model pick pipeline **already runs on a palm-sized edge computer** — the picture of grabbing an unseen object from a single CAD, no training — running right beside the work cell instead of in a datacenter. That the two heavy models still walk instead of sprint is a problem you fix by stepping up one size. Prove "does it work" cheaply first, then climb a rung when you need to — that's the practical ladder of edge AI.
 
 ---
+
+**Series** · [← Previous: Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2](jetson-ros2-setup.md) · [Next: A Correction — reversing the "16 GB can't do it" verdict →](jetson-foundationpose-16gb.md)
 
 *Related: [From stereo vision to grasping the target](stereo-to-grasp.md) · [Inside the models — deep dive, part 1](inside-the-models.md) · [The robot's brain on the edge (1) — from JetPack to ROS 2](jetson-ros2-setup.md) · [If you're investing in Physical AI — the cobot angle](cobot-investing.md)*
 

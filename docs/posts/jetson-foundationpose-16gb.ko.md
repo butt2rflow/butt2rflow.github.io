@@ -4,12 +4,12 @@ nav_title: "정정편 · 16GB로도 된다"
 date: 2026-09-20
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: ko
-description: "2부에서 '16GB 엣지 컴퓨터로는 증명까지, 실전은 64GB'라고 적었다. 그런데 틀렸다. 메모리를 비웠더니 같은 16GB에서 FoundationPose 엔진이 구워졌고, 마지막 남은 FoundationStereo까지 이어져 깊이·검출·마스크·자세 스택 전체가 16GB에서 빌드+구동됐다(4모델 동시 피크 8.2GB). '엔진이 안 구워진다'의 진짜 범인과 두 종류의 16GB 벽. 2부작 '로봇의 뇌를 엣지에'의 정정편."
+description: "2부에서 '16GB 엣지 컴퓨터로는 증명까지, 실전은 64GB'라고 적었다. 그런데 틀렸다. 메모리를 비웠더니 같은 16GB에서 FoundationPose 엔진이 구워졌고, 마지막 남은 FoundationStereo까지 이어져 깊이·검출·마스크·자세 스택 전체가 16GB에서 빌드+구동됐다(4모델 동시 피크 8.2GB). '엔진이 안 구워진다'의 진짜 범인과 두 종류의 16GB 벽. '로봇의 뇌를 엣지에' 현장 노트의 정정편."
 ---
 
 # 로봇의 뇌를 엣지에 올리기 — 정정편: 16GB로 안 된다던 그 결론, 뒤집었습니다
 
-> **현장 노트 · '로봇의 뇌를 엣지에' 2부작의 정정편.** [1부](jetson-ros2-setup.md)에선 빈 엣지 컴퓨터에 JetPack과 **ROS 2**를 올렸고, [2부](jetson-isaac-foundation-models.md)에선 그 위에 **Isaac ROS**와 파운데이션 모델 파이프라인을 얹어 "학습 없이 새 부품을 잡는" 그림을 증명했습니다. 그리고 2부 끝에서 이렇게 적었죠. *"증명은 16GB로 끝났고, 실전용은 다음 칸 AGX Orin 64GB다."* **이 글은 그 결론을 뒤집는 정정입니다.**
+> **현장 노트 · '로봇의 뇌를 엣지에' 정정편.** [1부](jetson-ros2-setup.md)에선 빈 엣지 컴퓨터에 JetPack과 **ROS 2**를 올렸고, [2부](jetson-isaac-foundation-models.md)에선 그 위에 **Isaac ROS**와 파운데이션 모델 파이프라인을 얹어 "학습 없이 새 부품을 잡는" 그림을 증명했습니다. 그리고 2부 끝에서 이렇게 적었죠. *"증명은 16GB로 끝났고, 실전용은 다음 칸 AGX Orin 64GB다."* **이 글은 그 결론을 뒤집는 정정입니다.**
 
 2부를 쓰고 나서도 마음 한구석이 개운치 않았습니다. 무거운 두 모델(FoundationStereo·FoundationPose)이 16GB 엣지 컴퓨터에서 "걷는 속도"로 동작한 건, 하드웨어에 맞춰 미리 최적화해 굽는 **가속 엔진**(TensorRT 엔진)이 16GB에서 안 만들어졌기 때문이었습니다. 그래서 엔진 없는 느린 범용 경로로 동작했고, 저는 그걸 "16GB의 한계"로 적었어요.
 
@@ -224,4 +224,4 @@ description: "2부에서 '16GB 엣지 컴퓨터로는 증명까지, 실전은 64
 
 </details>
 
-**시리즈** · [다음 글: 튜닝편 — 11초를 4초로, 그리고 상업용으로 쓸 수 있는 조합 →](jetson-tuning-licensing.md)
+**시리즈** · [← 이전 글: 로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [다음 글: 튜닝편 — 11초를 4초로, 그리고 상업용으로 쓸 수 있는 조합 →](jetson-tuning-licensing.md)

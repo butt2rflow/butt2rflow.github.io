@@ -4,12 +4,12 @@ nav_title: "Correction · 16 GB is enough"
 date: 2026-09-20
 tags: [physical-ai, jetson, isaac-ros, foundation-models, edge-ai, robotics, field-notes]
 lang: en
-description: "In Part 2 I wrote that a 16 GB edge computer was proof-of-concept only and that production needed a 64 GB board. I was wrong. Once I freed the board, the same 16 GB built the FoundationPose engine — and then the last holdout, FoundationStereo, followed: the whole depth-detect-mask-pose stack builds and runs on 16 GB (four models co-resident at 8.2 GB peak). The real culprit behind 'the engine won't build,' and two different flavors of the 16 GB wall. A follow-up to the two-part 'brain on the edge' series."
+description: "In Part 2 I wrote that a 16 GB edge computer was proof-of-concept only and that production needed a 64 GB board. I was wrong. Once I freed the board, the same 16 GB built the FoundationPose engine — and then the last holdout, FoundationStereo, followed: the whole depth-detect-mask-pose stack builds and runs on 16 GB (four models co-resident at 8.2 GB peak). The real culprit behind 'the engine won't build,' and two different flavors of the 16 GB wall. A correction in the 'brain on the edge' Field Notes."
 ---
 
 # Putting the Robot's Brain on the Edge — A Correction: Reversing the "16 GB Can't Do It" Verdict
 
-> **Field notes · a correction to the two-part "brain on the edge" series.** In [Part 1](jetson-ros2-setup.md) we brought a bare board up to **ROS 2**; in [Part 2](jetson-isaac-foundation-models.md) we stacked **Isaac ROS** and a foundation-model pipeline on top and proved the "grab a new part with no training" picture. And at the end of Part 2 I wrote: *"The proof is done on 16 GB; production wants the next tier up, an AGX Orin 64 GB."* **This post reverses that verdict.**
+> **Field notes · a correction to the "brain on the edge" series.** In [Part 1](jetson-ros2-setup.md) we brought a bare board up to **ROS 2**; in [Part 2](jetson-isaac-foundation-models.md) we stacked **Isaac ROS** and a foundation-model pipeline on top and proved the "grab a new part with no training" picture. And at the end of Part 2 I wrote: *"The proof is done on 16 GB; production wants the next tier up, an AGX Orin 64 GB."* **This post reverses that verdict.**
 
 Something nagged at me after Part 2. The two heavy models (FoundationStereo, FoundationPose) ran at "walking speed" on the 16 GB edge computer only because the **accelerated engine** (a TensorRT engine — a model pre-baked and optimized for the specific hardware) wouldn't build on 16 GB. So they fell back to a slow, generic path, and I wrote that up as "the 16 GB limit."
 
@@ -224,4 +224,4 @@ This is general edge-R&D experience, not a specific field deployment. Jetson, Or
 
 </details>
 
-**Series** · [Next: Tuning — from 11 seconds to 4, and a chain you can ship →](jetson-tuning-licensing.md)
+**Series** · [← Previous: Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Next: Tuning — from 11 seconds to 4, and a chain you can ship →](jetson-tuning-licensing.md)

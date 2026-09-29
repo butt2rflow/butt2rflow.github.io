@@ -4,12 +4,12 @@ nav_title: "1부 · JetPack부터 ROS 2까지"
 date: 2026-09-12
 tags: [physical-ai, jetson, ros2, edge-ai, robotics, field-notes]
 lang: ko
-description: "로봇 비전 파이프라인은 결국 셀에 붙은 작은 컴퓨터 위에서 동작해야 한다. Jetson Orin NX에 JetPack과 ROS 2를 올리기까지, 실제로 부딪힌 벽들의 현장 노트. 2부작 중 1부."
+description: "로봇 비전 파이프라인은 결국 셀에 붙은 작은 컴퓨터 위에서 동작해야 한다. Jetson Orin NX에 JetPack과 ROS 2를 올리기까지, 실제로 부딪힌 벽들의 현장 노트. 현장 노트 1부."
 ---
 
 # 로봇의 뇌를 엣지에 올리기 (1) — JetPack부터 ROS 2까지, 내가 부딪힌 벽들
 
-> **현장 노트 · '로봇의 뇌를 엣지에' 2부작 중 1부.** 이번 편은 아무것도 깔리지 않은 Jetson을 **ROS 2가 동작하는 상태**까지 세운 기록입니다. 2부는 그 위에 **Isaac ROS**를 올려 GPU 가속 인식을 붙입니다.
+> **현장 노트 · '로봇의 뇌를 엣지에' 1부.** 이번 편은 아무것도 깔리지 않은 Jetson을 **ROS 2가 동작하는 상태**까지 세운 기록입니다. 2부는 그 위에 **Isaac ROS**를 올려 GPU 가속 인식을 붙입니다.
 
 이 글이 어떻게 쓰였는지부터 밝혀 둘게요. 여기 나오는 셋업의 상당 부분을 저는 직접 키보드로 치지 않았습니다. 시작할 때 Jetson에 **SSH를 열어 에이전트형 AI(2세대·Claude)가 엣지 컴퓨터에 직접 들어오게** 해뒀고, 그 뒤로는 AI가 제 손보다 빠르게 명령을 치고 로그를 읽고 막힌 데를 풀었어요. 혼자였다면 며칠은 헤맸을 벽들을 AI와 함께 넘은 셈입니다. 붙인 방법은 조금 뒤에 설명하고, 먼저 무엇을 왜 만드는지부터 보겠습니다.
 
@@ -146,6 +146,8 @@ ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로
 **기억할 한 가지:** 엣지 셋업의 어려움은 리눅스가 어려워서가 아니라, **아키텍처·CUDA·JetPack·프레임워크 버전이 전부 한 줄로 맞물려** 있어서입니다. 데스크톱 상식이 통하지 않는 지점들을 미리 알면, 며칠 헤맬 일이 반나절로 줄어요.
 
 ---
+
+**시리즈** · [다음 글: 로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델 →](jetson-isaac-foundation-models.md)
 
 *관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md) · [Physical AI에 투자한다면 — 코봇 투자편](cobot-investing.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
 

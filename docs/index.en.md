@@ -213,6 +213,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**The Robot's Brain at the Edge — Jetson & ROS 2**](posts/jetson-ros2-setup.md) — Field Notes (1): setting up a Jetson Orin NX
 - [**The Robot's Brain at the Edge (2) — Isaac ROS & Foundation Models**](posts/jetson-isaac-foundation-models.md) — Field Notes (2): running it on the edge
 - [**The Robot's Brain at the Edge — A Correction**](posts/jetson-foundationpose-16gb.md) — Field Notes: the whole stack runs on 16 GB after all
+- [**The Robot's Brain at the Edge — Tuning**](posts/jetson-tuning-licensing.md) — Field Notes: 11 s to 4 s, and a chain you can ship
+- [**The Robot's Brain at the Edge — Scanning**](posts/jetson-scan-no-cad.md) — Field Notes: scanning an object with no CAD on one printed board
 - [**From Teach Pendant to ROS 2 (1–4)**](posts/ros2-for-robot-programmers.md) — ROS 2 for pendant programmers · [URDF, TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
 - [**Hands-on Notes (0) — Learning Without a Real Industrial Robot**](posts/learn-without-industrial-robot.md) — choosing practice grounds with SO-101 and URSim
 
