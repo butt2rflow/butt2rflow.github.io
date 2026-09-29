@@ -127,6 +127,10 @@ There is also a run of the whole chain on a real camera in one pass (2026-09-28,
 | Depth (stereo → depth) | FoundationStereo | depth on 96.7% of the mouse mask | 2.0 s |
 | 3D position (mask × depth) | — | about 25 cm from the camera, width 60.4 mm (product spec 62.2 mm) | under 1 s |
 
+![Mask plus depth: the mouse and keyboard come out as a 3D point cloud](../assets/demos/jetson-live-3d.jpg)
+
+*The last stage, opened up. Left: detection and masks labelled with camera-frame coordinates (XYZ, mm). Middle: the mask outlines over FoundationStereo depth. Right: the same data as 3D points (purple = mouse, green = keyboard). The width measured from the mouse's points, 60.4 mm, is within 2 mm of the 62.2 mm product spec.*
+
 Nothing was trained on this scene. The 6-DoF pose (FoundationPose) needs the object's CAD, so it is not part of this figure.
 
 Two honest footnotes:

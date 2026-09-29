@@ -79,6 +79,12 @@ Accuracy was measured too. A checkerboard tilted at about 31 cm gives a plane wh
 
 At this distance both are within 2–3% of the reference, so accuracy is not the big difference. Where FoundationStereo clearly wins is **density**: depth everywhere, with no gaps. Pose estimation downstream is only stable when every pixel inside the object mask has depth, so in practice this difference matters a lot.
 
+It has weak spots too. In front of glass, the two methods give different answers.
+
+![PC with a glass side panel: on-chip block matching partly sees the parts behind the glass; FoundationStereo sees the glass as one flat plane](../assets/demos/jetson-live-glass.jpg)
+
+*A PC case with a glass side panel. The middle panel (on-chip block matching) partly sees through the glass to the parts inside, while the right panel (FoundationStereo) returns the glass as one smooth plane. Which is "right" depends on the job. If you need to pick something behind the glass, FoundationStereo's depth points at the wrong place; if you need to avoid hitting the glass, it is the safer answer. Transparent or highly reflective surfaces need separate validation whatever depth method you use.*
+
 <details>
 <summary>Aside — why NOT using infrared can be the better choice</summary>
 
