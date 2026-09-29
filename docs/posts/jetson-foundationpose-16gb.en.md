@@ -140,23 +140,37 @@ The last piece, the 6-DoF pose (FoundationPose), was checked on a real camera to
 | Stage | Result | Time |
 |---|---|---|
 | Detect (Grounding DINO tiny) | 0.68 | 1.2 s |
-| Segment (SAM2.1 tiny) | 0.98 | 0.77 s |
-| Depth (FoundationStereo) | dense depth | 2.0 s |
-| Pose (FoundationPose, first estimate) | 44 cm from the camera, 6-DoF | 6.9 s |
+| Segment (SAM2.1 tiny) | 0.98 | 0.8 s |
+| Depth (FoundationStereo) | 98% filled depth | 2.0 s |
+| Pose (FoundationPose, first estimate) | 44 cm from the camera, 6-DoF | 1.8 s (6.3 s before optimization) |
+| Tracking afterwards (per frame) | follows the same pose | about 70 ms, 14 frames/s (excluding depth) |
 
-![The pose FoundationPose found: a CAD-sized box and the object axes overlaid on the real unit](../assets/demos/jetson-live-foundationpose-pose.jpg)
+![The pose FoundationPose found: the CAD's antenna caps (pink dots) land exactly on the real ANT1–4](../assets/demos/jetson-live-foundationpose-pose.jpg)
 
-*The green box is the CAD's outer size; the red, green and blue lines are the object axes. Rendering the CAD at this pose and overlapping it with the SAM2 mask gives an IoU of 0.934. With the object left in place, four consecutive estimates varied by at most 2.2 mm in position and 1.4° in angle.*
+*The green box is the CAD's outline; the pink, white and green dots are the CAD's antenna caps, ports and terminals drawn at this pose. The four antenna caps sit right on the real ANT1–4. The CAD silhouette overlaps the SAM2 mask at an IoU of 0.92, and with the object left in place, four consecutive estimates varied by at most 0.94 mm and 0.48°. (The figure first posted earlier the same day was the 180°-flipped result described below, and has been replaced.)*
 
-Two cautions when reading these numbers:
+One lesson from this. At first the CAD went in as a plain black mesh. The outline fit well (IoU 0.93), but the pose was **flipped 180° on every frame**. This PC is a box whose front and back look almost the same, so shape alone cannot tell them apart. Keeping the colours of the CAD's own antenna caps, ports and terminals fixed it immediately.
 
-- **They are not measured against a ground-truth pose.** They are self-consistency checks: does the silhouette match, and does it give the same answer again. Absolute accuracy has to be measured separately.
-- **The CAD has to be the right one.** A CAD of a similar but different model still produces a plausible-looking box (IoU 0.78, versus 0.93 for the correct CAD). That is hard to tell by eye, so check the CAD's dimensions against the real part first.
+![A plain CAD fits the outline but is flipped 180°; a painted CAD finds the right orientation](../assets/demos/jetson-live-foundationpose-orientation.jpg)
+
+So there are three cautions when reading these numbers:
+
+- **A matching outline does not mean a correct orientation.** For objects whose sides look alike, keep colour or features in the CAD and check orientation separately from feature positions, as in this figure.
+- **They are not measured against a ground-truth pose.** They are self-consistency checks: orientation features, silhouette and repeatability. Absolute accuracy has to be measured separately.
+- **The CAD has to be the right one.** A CAD of a similar model with a different size still produces a plausible-looking box (IoU 0.78, versus 0.92 for the correct CAD). That is hard to tell by eye, so check the CAD's dimensions against the real part first.
+
+Speed came down further too. With every model loaded once in a single process, the detector, SAM2 and FoundationPose's refinement step moved to TensorRT engines, and two slow code paths fixed, one object now takes **4.3 s instead of 11.4 s**. The pose result is unchanged, and memory use is 7.2 of 16 GB. The slowest stage is now FoundationStereo (2.0 s), about half the total.
+
+![Same chain, same Orin NX: TensorRT and code fixes take it from 11.4 s to 4.3 s per object](../assets/demos/jetson-live-chain-speed.jpg)
 
 Two honest footnotes:
 
 - The **language-promptable open-vocabulary detector** (e.g. Grounding DINO) loads and co-runs on 16 GB, but the currently-published deployable checkpoint localized poorly — a **model (checkpoint) limitation, not the board**. Switching to a different public checkpoint (grounding-dino-tiny on Hugging Face) did find the mouse and keyboard in the desk scene above (0.89, 0.76), so the choice of checkpoint is what matters. For fixed, known parts a closed-set detector (SyntheticaDETR) is the production answer; open-vocab is a flexibility option.
 - Whether the mask came from real SAM2 or a box-shaped rectangle, **the final pose moved by only ~1 mm / ~1°** — once the region of interest is roughly right, the back end (FoundationPose) finishes the job with depth.
+
+We also tried a faster detector. NanoOWL (OWL-ViT, TensorRT) takes 88 ms, 13× faster than Grounding DINO, and found the mouse and the mini PC just as well. But for the keyboard lying at a grazing angle it returned a wrong box under every prompt, and SAM2 then cut out the cable inside that box. A fast detector belongs only on objects you have already checked, with a failure check behind it.
+
+![Grounding DINO vs NanoOWL: 13× apart in speed, but NanoOWL grabbed the cable instead of the keyboard](../assets/demos/jetson-live-detector-compare.jpg)
 
 ## Why this digging was worth it
 
