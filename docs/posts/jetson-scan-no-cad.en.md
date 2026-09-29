@@ -103,6 +103,8 @@ So should you lock the focus manually? Up close, that isn't the answer either.
 
 At 17 cm, moving just ±15 steps from the autofocus position blurs the image. Lock the focus in one place and other distances go blurry, and in a blurry image the board corners can't be found precisely.
 
+Two more things when you use autofocus. After a big lens move, the lens takes time to settle: 2.5 s later it was still about 1 % off, so use only frames where the lens position has stopped changing. And at the lens's end stop (its closest focus), the error grows to +6 %.
+
 There are two fixes.
 
 - **A per-camera correction table:** tabulate the focal length per lens position, and on every frame look up the value from the lens position the camera reports. Tested on sessions not used to build the table, the error dropped from 1.4 % median (5.9 % max) to **0.24 % (1.1 % max)**. It has to be built separately for each camera.
