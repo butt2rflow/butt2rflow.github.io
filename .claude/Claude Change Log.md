@@ -6,6 +6,63 @@
 
 ---
 
+## 2026-09-29 — 현장 노트 튜닝편·스캔편 발행, 코스 갱신(라이선스·클라우드 GPU·반사·스캔)
+
+- **캡처 팩 점검:** `FoundationModels_live_capture_handoff_2026-09-28.zip`(09-29 후속 + session 2 추가), `FoundationStereo_live_demo_keyboard_*.zip`(같은 팩에 책상 장면 루트 배치). 이미 쓴 이미지는 변경 없음, README만 추가. 사용자 요청으로 두 zip 삭제.
+- **튜닝편 `jetson-tuning-licensing`(한/영, 라이브):**
+  - 속도: 11.4→4.0초, 단계별 시간, TensorRT 전후 결과 비교
+  - 대안: ESS 2.1초, YOLO-World(연구용), 고정 상자
+  - 라이선스 지도, 상업용 체인 3.26초·34ms, 가림 시험·손 시험, 크기 검사
+  - 이후 추가: 반짝이는 부품 거울 컵 시험, 후보 줄이기 결과
+  - 그림: SVG 3종(한/영), 사진 4장. 마우스 로고는 흐림 처리.
+  - 커밋 `d0200e9`, `b11fed6`
+- **스캔편 `jetson-scan-no-cad`(한/영, `3baa2ce`, 라이브):**
+  - 인쇄용 ChArUco 보드 내려받기, 자동 촬영 조건, 보드 평면 재맞춤, 높이 지도 메시(4.5초, 100×66mm)
+  - BundleSDF 비교, 뒤집힘 한계, 카메라 보정 함정 2개(1080p K 5.6%, 정렬 1.9px)
+  - 그림: SVG 3종(한/영), 사진 3장
+  - 근거는 회사 저장소 R&D 문서 §9c·9r·9s와 스캐너 코드. 일반적인 방법만 옮기고 고객 관련 내용은 뺐다.
+- **스캔편 함정 3 자동 초점(`f0f52fb`):** 17:04에 다시 온 캡처 팩의 `autofocus_vs_calibration/`에서 반영했다.
+  - 공장 K는 한 초점 위치(약 44cm)에서만 맞았다. 17cm에서는 +3.3%, 24cm에서는 +2.3% 틀어졌다.
+  - 가까이서 초점을 고정하면 흐려진다. 카메라별 보정표로 오차가 1.4%에서 0.24%로 줄었다.
+  - 그림 2장을 넣었다. 보정표 JSON은 파일명에 카메라 일련번호가 있어 뺐다.
+  - 이 반영 뒤 두 zip을 다시 삭제했다.
+- **스캔편 인쇄 메모(`6af3cc8`, 코스 `6334cd9`·아티팩트 v15):** 사용자 경험을 넣었다. 보드 SVG를 정확히 100%로 인쇄한 앱은 Inkscape뿐이었고, 다른 앱은 "실제 크기"로 설정해도 크기가 조금씩 달라졌다.
+- **최종 편집·교차 참조(`e6aa3bd`):**
+  - 사이트 전체 100개 md 파일을 스크립트로 점검했다(링크·이미지 대상, 한/영 쌍).
+  - 누락은 CI가 만드는 PNG 5개뿐이었다. 홈 한/영 링크 수 차이도 CI가 다시 만드는 대시보드 블록 안에 있어 스코프 밖이다.
+  - 현장 노트 5편 전부에 시리즈 이전/다음 줄을 달았다. 1·2부에는 없었고, 정정편에는 이전 글이 빠져 있었다.
+  - 1·2부와 정정편의 "2부작" 표기를 없앴다.
+  - 홈 현장 노트 목록에 튜닝편·스캔편을 추가했다.
+  - 튜닝편·스캔편 한국어를 한 줄씩 편집했다. 돌리다→실행하다, "반사를 죽이다"→없애다/줄이다, "확신 있게 따라간다"→"더 쉽게 속는다", 긴 문장 분리.
+  - 09-28 전체 편집 이후 바뀐 글만 줄 단위로 봤고, 나머지는 스크립트 점검만 했다.
+- **정정편:** 속도 4.1→4.0초, 다음 글 링크.
+- **코스(`physical-ai-course`, 별도 저장소):**
+  - 튜닝·라이선스 표, Isaac Sim 클라우드 GPU 운영안(Brev/AWS/RunPod, 20명 기준 비용 예시)
+  - 반사 부품의 조용한 실패, CAD 없는 물체 스캔 대안, 보드 SVG, K·정렬 점검 체크리스트
+  - 읽기용 아티팩트 재게시("링크 있는 누구나" 공유 상태)
+- **검증:** 로컬 `mkdocs build --strict` 기존 경고 5개 외 없음. Deploy MkDocs 성공 후 라이브 200 확인(글 한/영, 보드 SVG).
+
+---
+
+## 2026-09-27 — 작업폴더·clone 통합: butterflow-ssf + butt2rflow.github.io → ~/Documents/Blog 하나로
+
+### Session 1 (started 21:19)
+
+- **작업폴더 병합:** `~/Documents/butterflow-ssf` → `~/Documents/Blog`. `naver/`(패키지 10종)·`drafts/`·`tools/`는 Blog 루트로(로컬 전용, `.git/info/exclude`에 등록 — 추적 `.gitignore`는 안 건드림). `SESSION-HANDOFF.md`·`skills/`는 `Blog/.claude/`로. zip·COMMIT_MSG·jetson PNG·nav 스니펫·발행 완료된 SSF 번들(`docs/`+CLAUDE.md)은 `_archive/2026-09-27_butterflow-ssf/`. `naver/` 이동은 파일 잠금으로 rename 실패 → 복사 후 `diff -rq` 동일 확인하고 원본 삭제.
+- **메모리 병합:** `projects/C--Users-jae-Documents-butterflow-ssf/memory`의 12개 파일을 Blog 메모리로 이동(이름 충돌 없음), MEMORY.md 인덱스 합침. 구 메모리 디렉터리 삭제.
+- **clone 하나로 통합:** Blog는 stale `master`(origin/main보다 101커밋 뒤, 미추적/변경 131개)였음. 비교 결과 전부 `main`과 동일하거나 stale/CI 생성물(VIX 스냅샷·kelly/volvol PNG·동기화 충돌 사본) → `_archive/2026-09-27_clone-consolidation/`에 경로 보존 백업 후 `main`으로 ff(`7d2e745`). ⚠️ 함정: `*.py`가 로컬에서 ignore라 `scripts/update_dashboard.py`(구버전)가 checkout 시 경고 없이 덮일 뻔 → 먼저 백업. 로컬 브랜치 `master`/`fix-index-tools`/`i18n-en-translations`는 `git branch -d`(병합 확인)로 삭제. 구 지속 clone `~/Documents/butt2rflow.github.io`(클린, 5커밋 뒤)는 은퇴 후 삭제.
+- **체인지로그 통합 + 푸시 `446db38`:** 작업폴더 로그(09-07~20) + 저장소 추적 로그(BlogMigration, 09-17 Session 8 포함)를 날짜순 한 파일로. **공개 저장소라 발행 전 편집:** 고객 식별자·잡번호 제거, 회사 프로젝트명→"회사 업무"(사용자 선택), 비공개 Claude Doc ID·"개인 사업" 문구 삭제. 원본 비편집본은 로컬 archive에만. Deploy MkDocs 성공. push는 `gh auth switch -u butt2rflow` → 오버라이드 push → 회사 계정으로 복귀.
+- **문서 갱신:** 핸드오프 §1·§2·§3, Blog `CLAUDE.md`(폴더 트리·브랜치), 메모리 `butt2rflow-push-auth` #5(“clone 하나 = ~/Documents/Blog, 스크래치패드 clone 금지”)·`project_repo_layout`(master 폐기)·`robot-vision-deep-dive-series`(경로).
+- **⚠️ 모순 — 사용자 결정 필요:** `/end-session` 규칙은 체인지로그·time-log를 "로컬 전용, 절대 커밋 금지, 추적 중이면 untrack"이라 하는데, 이번 세션에 사용자가 **명시적으로 커밋·푸시 요청**함. end-session에서 untrack 안 함 — 공개 저장소에 계속 둘지(원래 추적되던 파일) 아니면 `git rm --cached` 할지 결정.
+
+**다음 세션:**
+- 세션은 `~/Documents/Blog`에서 시작. 빈 `~/Documents/butterflow-ssf` 폴더 삭제(이 세션 cwd라 잠겨 있었음).
+- VSCode 등 다른 세션이 구 `butt2rflow.github.io` 경로를 쓰면 `~/Documents/Blog`로 변경.
+- 동기화 클라이언트에서 `Blog\.git`·`venv`(662MB) 제외 검토 — "conflicted copy" 원인.
+- `_archive/2026-09-27_*`는 확인 후 정리 가능.
+
+---
+
 ## 2026-09-20 (2) — Field Notes 팔로업 발행: FoundationPose가 Orin NX 16GB에서 빌드+구동
 
 - **신규 발행(라이브):** `jetson-foundationpose-16gb`(한/영) — Field Notes **2부작의 독립 정정편**(1·2부는 2부작 유지, renumber 안 함). 2부의 "16GB 증명·실전은 AGX 64GB" 결론을 뒤집음: 보드 비우기(유휴 컨테이너 stop + drop_caches: free 663MB→14GB, lfb 3×4MB→303×4MB) + `--memPoolSize=workspace:10240` + `optLevel=5`로 **엔진 빌드 성공**, 노드 라이브 6-DoF, 검출기까지 co-resident 피크 **~6.2GB/16GB**. 진짜 범인=유휴 컨테이너의 **연속 메모리 조각남**(용량 아님).
@@ -118,7 +175,7 @@
 
 ### Session: Robot-vision 심화 2부작 + GEX/0DTE dashboard fixes
 
-**Robot Vision 심화 2부작 (new, bilingual — 416 team training + public):**
+**Robot Vision 심화 2부작 (new, bilingual — company team training + public):**
 - `inside-the-models.{ko,en}.md` (심화 1부 — 세 모델의 안쪽: FoundationStereo·SAM 2·FoundationPose 개념 + 실패 모드)
 - `model-anatomy.{ko,en}.md` (심화 2부 — 모델 해부: 아키텍처/텐서/손실, 수식 전부 `<details>` 접이식)
 - 38 self-theming SVG (`rvd*.svg`, light/dark `@media`) + 38 English-label (`diagrams_en/`), geometry byte-identical
@@ -616,3 +673,83 @@ SSF 재출시, MOVE 지수, 크레딧 스프레드(CDS), 로봇 비전 2부작(s
 - VIX 양동 전략 상세 (deep ITM $10-11 콜 + ZVOL DRIP) — 시뮬레이션 결과 후 결정
 - 동적 헷지 아이디어 (IVTS Warning 시에만 VIX 콜) — user가 생각 중
 - 5-7편에 standalone 시각적 코드블록 ~6개 Excalidraw 변환 미완료
+
+---
+
+## 2026-09-28
+
+### Session (account split + nav cleanup + investing 2–3 + hands-on 0)
+
+- **Posts published:**
+  - `physical-ai-investing-actuators` (investing 2), `f4a9921`/`8d5f1dd`
+  - `physical-ai-investing-power` (investing 3: humanoid power problem, Astro Boy / Nucleon / Mars RTG, battery materials section `1861ed4`)
+  - `learn-without-industrial-robot` (Hands-on Notes 0)
+- **New nav section:** "Physical AI Investing / Physical AI 투자" holds parts 1–3 (`eb5799c`).
+- **Track 0/A/B naming** explained in choosing-physical-ai (`9f8f0fe`).
+- **Left nav cleanup** (`90c7f3d`):
+  - `hooks/nav_titles.py` gives short labels (front matter `nav_title`, else the text before " — ").
+  - Section headings get the highlighted-band CSS.
+  - The home TradingView ticker is removed.
+  - Gotcha: `.gitignore` has `*.py`, so the hook needed a `!hooks/...` exception.
+- **Home sidebar** (`fab9d33`): `hooks/home_sidebar.py` + `assets/home-sidebar.js` add recent posts (one per section) and a category list.
+- **Accounts:**
+  - The user switched Claude accounts mid-session (work ↔ personal). Blog and course now belong to butterflow; see memory `user-accounts-split`.
+  - The first push after the switch failed until gh was explicitly switched to butt2rflow.
+- **Fixed:** SESSION-HANDOFF.md had a stray leading backtick on every line from an earlier escape bug; stripped.
+- **Next:**
+  - Recheck China's battery-material export-control suspension after 2026-11-10 (investing 3).
+  - Naver crossposts of the new posts are still undone.
+
+### Session (later, 2026-09-28): camera post, 0DTE rework, translationese sweep
+
+- **New post `camera-placement` (KO/EN, 7 diagrams).** Grew out of the user's URDF/overhead/multi-camera questions. The position it takes lives in memory `camera-placement-post`. The fact gate corrected: GRIIP = pipeline, Rapid Operator AI = product; camera details are webinar-only; FoundationStereo computes depth rather than cleaning it; some SO-101 kits ship with cameras; the segmenter package name.
+- **0DTE tile rework (`17fb2cf`).**
+  - Root cause of the missing tile: GitHub dropped top-of-hour schedules, leaving ~3 runs/day.
+  - Now: cron at :23; DST-aware session; last-read fallback (gex0dte_last.json on gh-pages); intraday series + trend chart; next-session preview with open-gap scenarios.
+  - Follow-up: redundant local `import shutil` → UnboundLocalError once the trend reached 2 points → all deploys failed until `d4aa8fe`.
+- **Translationese.** The user caught "시연이 덮은 범위 밖에서는 무너지는데". A native-Korean sweep then fixed 64 calques across posts and diagram strings (`e818962`), and 6 old alt/title mismatches were realigned. The 번역투 pass is now mandatory in review-gates memory.
+- **Also:** Orbbec Gemini 335/336 price check (see course memory). Course got the wrist-camera commercial-example section (`47933ea`, private repo).
+- **Next:**
+  - Watch that the :23 schedules actually fire (first ones pending).
+  - After 2026-11-10, recheck the China export-control suspension (investing 3).
+  - Naver crossposts are still undone.
+
+### Session (evening, 2026-09-28): cobot series, scheduling, live captures
+
+- **Cobots is 2 parts (`d7db694`):** the user caught leftover "코봇 3부작" framing after cobot-investing moved to Physical AI Investing. Fixed intros, descriptions and closing lines in KO/EN, added series prev/next lines, and rewrote the calque-y "두 진영 — … — 을 맞대고" intro.
+- **Dashboard scheduling:** GitHub `schedule` events have been absent since 9/26 (all 3 workflows active). The user chose cron-job.org → workflow_dispatch. The API dispatch was tested OK and showed the off-session last-read + next-session preview live. Pending: the user creates the PAT and the cron job.
+- **Live captures (`c697ed1`):** from the user's OAK-D S2 + Orin NX pack. It replaced Field Notes 2's simulated block-matching panel with a real same-frame comparison, added a checkerboard accuracy table, and added the live open-vocab chain to the 16 GB correction post. The Grounding DINO note now says the tiny checkpoint works. Shop-floor frames were excluded (car seats = client).
+- Two background watches were stopped by the system: the 0DTE watch (memory pressure) and the course artifact watch (the account switched to the work account; the artifact lives in the personal account).
+
+### Session (night, 2026-09-28): Physical AI editorial pass
+
+- **Whole-section editorial review (`775dff4`).** The user asked for one pass over every Physical AI post, fixing literal-translation phrasing and cross-refs.
+  - Six parallel agents, one per series group, made about 300 KO edits across 21 posts. EN was touched only where needed.
+  - Main patterns fixed: dash asides, colon headings, 무너지다/돌다 misuse, captions restated in the body, particle errors.
+- **Cross-refs.**
+  - Cobot posts: the leftover "3부/Part 3" is gone; they now point to 투자 1편.
+  - Field Notes: the menu 1편/2편 became 1부/2부 to match the body.
+  - Field Notes 2: added a correction notice linking the 16 GB correction post.
+- **Verification.**
+  - A script checked alt text = SVG y=26 title and that all links resolve: 0 issues.
+  - A numeric-token diff showed no fact changes.
+  - Build clean, deploy green, live pages checked.
+- **Next:**
+  - Regenerate the investing 2·3 Naver packages if they're not uploaded yet.
+  - Ask the user about the untracked `physical-ai-investment-notes.md` in the repo root.
+
+### Session (night, 2026-09-28): Naver repack, account check
+
+- Rebuilt the Naver packages for investing 2·3 with the 775dff4 wording. The `[투자 고지]` line was re-appended by hand, since naver_pack.py doesn't emit it.
+- Found the Claude login had fallen back to the work account without the user noticing. The user switched to butterflow, and the course artifact was republished. Memory `user-accounts-split` now has the `Artifact list` check.
+- `8cda26b`: from the live capture pack, added a glass-panel depth caveat (Field Notes 2, "L8" wall marker blurred) and the 3D point-cloud triptych (16GB correction). The re-sent pack was byte-identical to the earlier one.
+- `9ca10f4`: added a FoundationPose 6-DoF chain from capture pack scene08.
+- `68685c5`: the pack's next update revealed that pose was 180° flipped (plain mesh). Replaced it with the painted-CAD result (1.8 s, IoU 0.92, 0.94 mm / 0.48°) and added:
+  - the orientation lesson figure
+  - the whole-chain speed chart (11.4 → 4.3 s)
+  - the NanoOWL vs Grounding DINO comparison
+  - an in-caption note that the image was replaced
+- The product code on the image footer was cropped out, and the wrong-CAD figure was skipped.
+- Pending: the user decides whether to update the course's "~0.1 FPS" FoundationPose text.
+- `894b02c`: added the live-camera chain bullet to the 16GB correction post's 30-second summary. The course was updated to match (course repo `5373427`). Field Notes 2 keeps its original "walking speed" claim under the correction notice.
+- `29883b5`: whole-chain speed updated to 4.05 s (TensorRT scorer); chart replaced. Course `ab088f8`, artifact v9.
