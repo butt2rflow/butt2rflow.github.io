@@ -148,6 +148,7 @@ nav:
       - posts/jetson-ros2-setup.md
       - posts/jetson-isaac-foundation-models.md
       - posts/jetson-foundationpose-16gb.md
+      - posts/jetson-tuning-licensing.md
     - "Pendant to ROS 2":
       - posts/ros2-for-robot-programmers.md
       - posts/ros2-robot-description.md
