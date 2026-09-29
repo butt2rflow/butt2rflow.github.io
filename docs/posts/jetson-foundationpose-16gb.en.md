@@ -131,7 +131,27 @@ There is also a run of the whole chain on a real camera in one pass (2026-09-28,
 
 *The last stage, opened up. Left: detection and masks labelled with camera-frame coordinates (XYZ, mm). Middle: the mask outlines over FoundationStereo depth. Right: the same data as 3D points (purple = mouse, green = keyboard). The width measured from the mouse's points, 60.4 mm, is within 2 mm of the 62.2 mm product spec.*
 
-Nothing was trained on this scene. The 6-DoF pose (FoundationPose) needs the object's CAD, so it is not part of this figure.
+Nothing was trained on this scene. The mouse has no CAD file, so this chain stops at a 3D position.
+
+The last piece, the 6-DoF pose (FoundationPose), was checked on a real camera too. This time the object was one whose maker publishes a CAD file: a Seeed reComputer Industrial (an industrial mini PC built around an Orin NX) sitting on the desk. The prompt was "a black mini computer with cooling fins", and the only extra input was the vendor CAD. Again, no training.
+
+![From a text prompt to a 6-DoF pose: detection, mask, depth, then FoundationPose](../assets/demos/jetson-live-foundationpose-chain.jpg)
+
+| Stage | Result | Time |
+|---|---|---|
+| Detect (Grounding DINO tiny) | 0.68 | 1.2 s |
+| Segment (SAM2.1 tiny) | 0.98 | 0.77 s |
+| Depth (FoundationStereo) | dense depth | 2.0 s |
+| Pose (FoundationPose, first estimate) | 44 cm from the camera, 6-DoF | 6.9 s |
+
+![The pose FoundationPose found: a CAD-sized box and the object axes overlaid on the real unit](../assets/demos/jetson-live-foundationpose-pose.jpg)
+
+*The green box is the CAD's outer size; the red, green and blue lines are the object axes. Rendering the CAD at this pose and overlapping it with the SAM2 mask gives an IoU of 0.934. With the object left in place, four consecutive estimates varied by at most 2.2 mm in position and 1.4° in angle.*
+
+Two cautions when reading these numbers:
+
+- **They are not measured against a ground-truth pose.** They are self-consistency checks: does the silhouette match, and does it give the same answer again. Absolute accuracy has to be measured separately.
+- **The CAD has to be the right one.** A CAD of a similar but different model still produces a plausible-looking box (IoU 0.78, versus 0.93 for the correct CAD). That is hard to tell by eye, so check the CAD's dimensions against the real part first.
 
 Two honest footnotes:
 
