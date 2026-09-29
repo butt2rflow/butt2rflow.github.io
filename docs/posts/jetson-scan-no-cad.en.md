@@ -49,6 +49,8 @@ A ChArUco board combines a checkerboard (black-and-white grid) with ArUco marker
 
 **[Download the board (SVG, actual size)](../assets/downloads/charuco-scan-board-letter.svg)**. Turn off "fit to page" and print at **100 % / actual size**. If the bar isn't 100 mm, every dimension is off by the same ratio. Our print measured exactly 100 mm, so the 19.0 mm square size could be trusted as is.
 
+> **Print it from Inkscape.** In our tests, the only app that printed the SVG at exactly 100 % was the free vector editor **Inkscape**. Other apps changed the size slightly even when set to "actual size". Open the file in Inkscape, print it on Letter landscape as is, and check the bar is 100 mm with a ruler.
+
 <details>
 <summary>Making the same board with OpenCV</summary>
 
