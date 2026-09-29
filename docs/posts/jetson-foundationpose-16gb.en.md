@@ -26,7 +26,7 @@ Then, digging through the forums, I found **success cases on the same 16 GB boar
 - **The recipe: free the board first.** Stop idle containers and drop the page cache and free memory jumps **663 MB → 14 GB**, the largest contiguous block returns **~12 MB → ~1.2 GB**. Add a **workspace cap** (`--memPoolSize`) and a **higher optimization level**, and the engine bakes.
 - **Result: ~6.2 GB peak / 16 GB.** Engine build plus a live 6-DoF node — with the detector front-end loaded too — fit inside 16 GB with over 9 GB to spare. The 16 GB wall existed only **at the moment of baking the engine**, not at run time.
 - **It's not just FoundationPose — the whole stack runs on 16 GB.** The last holdout, FoundationStereo, fell too (lower resolution + FP32), and the four-model detect → mask → pose chain fits **at 8.2 GB / 16 GB even with all of them resident at once.**
-- **Confirmed on a real camera too (2026-09-28).** The whole chain, text prompt → detection → mask → depth → 6-DoF pose, runs on the Orin NX 16 GB at **4.3 s per object** (11.4 s before optimization): first pose 1.8 s, then tracking at about 70 ms per frame. Objects whose front and back look alike need a CAD that keeps its colours, or the orientation can come out flipped.
+- **Confirmed on a real camera too (2026-09-28).** The whole chain, text prompt → detection → mask → depth → 6-DoF pose, runs on the Orin NX 16 GB at **4.1 s per object** (11.4 s before optimization): first pose 1.8 s, then tracking at about 70 ms per frame. Objects whose front and back look alike need a CAD that keeps its colours, or the orientation can come out flipped.
 - **Lesson:** "can't build the engine" and "can't run it" are different sentences. And before you blame the hardware, look at **what's eating the memory.**
 
 ---
@@ -160,9 +160,9 @@ So there are three cautions when reading these numbers:
 - **They are not measured against a ground-truth pose.** They are self-consistency checks: orientation features, silhouette and repeatability. Absolute accuracy has to be measured separately.
 - **The CAD has to be the right one.** A CAD of a similar model with a different size still produces a plausible-looking box (IoU 0.78, versus 0.92 for the correct CAD). That is hard to tell by eye, so check the CAD's dimensions against the real part first.
 
-Speed came down further too. With every model loaded once in a single process, the detector, SAM2 and FoundationPose's refinement step moved to TensorRT engines, and two slow code paths fixed, one object now takes **4.3 s instead of 11.4 s**. The pose result is unchanged, and memory use is 7.2 of 16 GB. The slowest stage is now FoundationStereo (2.0 s), about half the total.
+Speed came down further too. With every model loaded once in a single process, the detector, SAM2 and FoundationPose's refinement and scoring steps moved to TensorRT engines, and two slow code paths fixed, one object now takes **4.1 s instead of 11.4 s**. The pose result is unchanged, and memory use is 7.2 of 16 GB. The slowest stage is now FoundationStereo (2.0 s), about half the total.
 
-![Same chain, same Orin NX: TensorRT and code fixes take it from 11.4 s to 4.3 s per object](../assets/demos/jetson-live-chain-speed.jpg)
+![Same chain, same Orin NX: TensorRT and code fixes take it from 11.4 s to 4.1 s per object](../assets/demos/jetson-live-chain-speed.jpg)
 
 Two honest footnotes:
 
