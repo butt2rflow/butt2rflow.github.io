@@ -4,7 +4,7 @@ nav_title: "Scanning · A Mesh Without CAD"
 date: 2026-09-29
 tags: [physical-ai, jetson, foundationpose, charuco, calibration, 3d-scanning, bundlesdf, edge-ai, field-notes]
 lang: en
-description: "FoundationPose needs an object's CAD file to find its pose. What if there isn't one? We put the object on a printed ChArUco board, took about twenty photos, and had a mesh in 4.5 seconds (100×66 mm against the real 100×62 mm). How the board gives the camera position, how a height map becomes the mesh, how it compares with BundleSDF (model-free), and two camera-calibration traps to check before scanning. Field Notes, scanning."
+description: "FoundationPose needs an object's CAD file to find its pose. What if there isn't one? We put the object on a printed ChArUco board, took about twenty photos, and had a mesh in 4.5 seconds (100×66 mm against the real 100×62 mm). How the board gives the camera position, how a height map becomes the mesh, how it compares with BundleSDF (model-free), and three camera-calibration traps to check before scanning (autofocus included). Field Notes, scanning."
 ---
 
 # Putting the Robot's Brain on the Edge — Scanning: No CAD? One Printed Board and Twenty Photos
@@ -25,7 +25,7 @@ We tried two answers. One is a simple method: **photograph the object on a print
 - **The mesh takes 4.5 seconds.** A "height map" splits the board into 1 mm cells with one height each; the result is 100×66×29.7 mm against the real 100×62×34 mm.
 - **Track with that mesh straight away.** The detect → mask → depth → FoundationPose chain follows the mouse at about 7 frames per second using the scanned mesh instead of CAD, all with commercially usable parts.
 - **BundleSDF (model-free) ran on the same photos.** It got the width more exactly (61.7 mm), but took 8.7 minutes, fit the live depth less well than the height map, and is research-licensed.
-- **Check the camera before scanning.** Using the 1080p mode's lens parameters (K) as supplied puts every distance 5.6 % short.
+- **Check the camera before scanning.** Using the 1080p mode's lens parameters (K) as supplied put every distance 5.6 % short, and autofocus shifted the focal length by 3.3 % up close (17 cm).
 
 ---
 
@@ -66,9 +66,9 @@ A PNG's print scale depends easily on printer settings, so for the real print, a
 
 </details>
 
-## Before scanning: two camera-calibration traps
+## Three camera-calibration traps to check before scanning
 
-To compute the camera position from the board, you need the camera's **lens parameters (K)**: focal length and image centre. If they're wrong, the distance to the board is wrong, and the mesh and poses built on it are wrong with it. We found two traps.
+To compute the camera position from the board, you need the camera's **lens parameters (K)**: focal length and image centre. If they're wrong, the distance to the board is wrong, and the mesh and poses built on it are wrong with it. We found three traps.
 
 ![Get the 1080p lens parameters wrong and every distance is 5.6 % short](../assets/diagrams_en/jetson-scan-k-trap.svg)
 
@@ -78,10 +78,39 @@ It shows up directly in distance. With the default, the checkerboard came out at
 
 **Trap 2: the stereo rectification was 1.9 pixels off vertically.** A stereo camera aligns (rectifies) its left and right images to the same height, then measures depth from the left–right shift. Matching hundreds of the same points in the rectified pair and comparing their vertical positions showed a consistent 1.8–1.9 px offset, regardless of the scene. A well-calibrated camera is within 0.5 px. That's enough to degrade the camera's on-board depth, so this unit needs recalibrating.
 
-Both traps **produce plausible numbers**, so you can't spot them from the results. When you use a new camera or a new resolution mode, check two things first:
+**Trap 3: autofocus changes the lens parameters.** This camera's colour lens is autofocus (AF), so the lens moves to focus on near objects. When the lens moves, the focal length changes a little too. But the factory lens parameters are a single value, for one lens position (the one that focuses at about 44 cm).
+
+We measured how much it changes. The stereo cameras have fixed focus, so their lens parameters don't change; using them as the reference, we put the board at several distances and compared the colour camera's real focal length.
+
+![The colour camera's focal length changes with the autofocus lens position: +3.3 % at 17 cm, almost 0 at 44 cm](../assets/demos/jetson-af-focal-shift.jpg)
+
+*The horizontal axis is the lens position (higher = closer focus); the vertical axis is the real focal length relative to the factory value. The stars are where autofocus actually settled; the black dashed line is the correction table built for this camera.*
+
+| Board distance | Autofocus lens position | Error vs factory value |
+|---|---|---|
+| 17 cm | 180 | **+3.3 %** |
+| 24 cm | 161 | +2.3 % |
+| 44 cm | 143 | +0.2 % |
+| 59–77 cm | 133–137 | −0.4 % |
+
+The closer, the bigger the error. At 17 cm, 3.3 % means an object 20 cm away is placed 6–7 mm off. Depth comes from the fixed-focus stereo cameras, so it's unaffected; only positions computed from the colour image (the board pose, FoundationPose's input) are skewed. Our scan was taken at about 40 cm, right where the factory value holds, which is why the problem didn't show.
+
+So should you lock the focus manually? Up close, that isn't the answer either.
+
+![The same board at 17 cm, changing only the lens position: only the autofocus position (180) is sharp](../assets/demos/jetson-af-sharpness.jpg)
+
+At 17 cm, moving just ±15 steps from the autofocus position blurs the image. Lock the focus in one place and other distances go blurry, and in a blurry image the board corners can't be found precisely.
+
+There are two fixes.
+
+- **A per-camera correction table:** tabulate the focal length per lens position, and on every frame look up the value from the lens position the camera reports. Tested on sessions not used to build the table, the error dropped from 1.4 % median (5.9 % max) to **0.24 % (1.1 % max)**. It has to be built separately for each camera.
+- **A fixed-focus camera:** if measurement is the goal, a fixed-focus model is cleanest from the start. Check that its closest sharp distance is nearer than your working distance.
+
+All three traps **produce plausible numbers**, so you can't spot them from the results. When you use a new camera or a new resolution mode, check three things first:
 
 - With a flat target at a known distance (a checkerboard), does the distance from the lens parameters match the stereo distance?
 - In the rectified pair, is the vertical offset between matching points within 0.5 px?
+- With an autofocus camera, does the first check still hold at your actual working distance? (The factory value is right at only one distance.)
 
 ## How to scan
 
@@ -181,7 +210,7 @@ We started on merging a scan of the underside but stopped. The mouse's outline a
 
 - **If you have CAD, CAD is best.** It includes the underside, and as in [the correction post](jetson-foundationpose-16gb.md), colouring it by part prevents front-back flips. The scanner is the fallback when there's no CAD.
 - **One board solves the camera-position problem.** ChArUco tolerates hidden corners, so it works with the object on it, and one bar tells you whether it printed at 100 %.
-- **Camera first.** Wrong lens parameters or stereo rectification skew the mesh and poses silently.
+- **Camera first.** Wrong lens parameters, stereo rectification or autofocus drift skew the mesh and poses silently.
 - **Kill reflections on shiny objects.** The low height came from reflection, not from too few views.
 
 ---
@@ -189,7 +218,7 @@ We started on merging a scan of the underside but stopped. The mouse's outline a
 <details>
 <summary>Notes — sources and disclaimers</summary>
 
-The figures were **measured directly** on a Jetson Orin NX 16GB (MAXN) with an OAK-D stereo camera. They come from one object (a wireless mouse, maker's spec 100×62×34 mm) and one session, so read them as tendencies, not statistics. The height-map vs BundleSDF comparison is 30 seconds of tracking each, and pose quality is judged by consistency (difference from measured depth, outline overlap), not absolute accuracy against separate equipment. The lens-parameter trap applies to this camera's colour sensor (4056×3040) in 1080p mode; for other cameras and modes, check how the SDK crops and scales.
+The figures were **measured directly** on a Jetson Orin NX 16GB (MAXN) with an OAK-D stereo camera. They come from one object (a wireless mouse, maker's spec 100×62×34 mm) and one session, so read them as tendencies, not statistics. The height-map vs BundleSDF comparison is 30 seconds of tracking each, and pose quality is judged by consistency (difference from measured depth, outline overlap), not absolute accuracy against separate equipment. The lens-parameter trap applies to this camera's colour sensor (4056×3040) in 1080p mode, and the autofocus measurement comes from one camera unit (principal-point and distortion shifts were below this test's resolution); for other cameras and modes, check how the SDK crops and scales.
 
 The BundleSDF and FoundationPose model-free code is under the NVLabs repositories' research/evaluation licence. The height-map method was implemented directly with OpenCV and NumPy. The ChArUco board was generated from OpenCV's `CharucoBoard` definition.
 
