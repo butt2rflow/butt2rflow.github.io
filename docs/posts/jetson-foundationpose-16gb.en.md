@@ -26,6 +26,7 @@ Then, digging through the forums, I found **success cases on the same 16 GB boar
 - **The recipe: free the board first.** Stop idle containers and drop the page cache and free memory jumps **663 MB → 14 GB**, the largest contiguous block returns **~12 MB → ~1.2 GB**. Add a **workspace cap** (`--memPoolSize`) and a **higher optimization level**, and the engine bakes.
 - **Result: ~6.2 GB peak / 16 GB.** Engine build plus a live 6-DoF node — with the detector front-end loaded too — fit inside 16 GB with over 9 GB to spare. The 16 GB wall existed only **at the moment of baking the engine**, not at run time.
 - **It's not just FoundationPose — the whole stack runs on 16 GB.** The last holdout, FoundationStereo, fell too (lower resolution + FP32), and the four-model detect → mask → pose chain fits **at 8.2 GB / 16 GB even with all of them resident at once.**
+- **Confirmed on a real camera too (2026-09-28).** The whole chain, text prompt → detection → mask → depth → 6-DoF pose, runs on the Orin NX 16 GB at **4.3 s per object** (11.4 s before optimization): first pose 1.8 s, then tracking at about 70 ms per frame. Objects whose front and back look alike need a CAD that keeps its colours, or the orientation can come out flipped.
 - **Lesson:** "can't build the engine" and "can't run it" are different sentences. And before you blame the hardware, look at **what's eating the memory.**
 
 ---
