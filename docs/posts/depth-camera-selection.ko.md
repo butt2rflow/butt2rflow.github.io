@@ -20,7 +20,7 @@ description: "로봇에 달 깊이 카메라는 스펙 표의 최대 거리가 �
 - **장착 위치 → 물체까지 거리 → 그 거리가 권장 구간 안에 드는 카메라** 순서로 고릅니다. 해상도와 정밀도는 그다음입니다.
 - 스테레오 카메라는 **너무 가까우면 깊이가 없고, 멀어지면 오차가 거리의 제곱으로 커집니다.** 두 렌즈 사이가 좁은 카메라는 가까이에, 넓은 카메라는 멀리에 강합니다.
 - 컬러와 깊이를 **같은 센서**에서 얻는 카메라(D405, OAK-D SR)는 정렬 문제가 없습니다. 컬러 카메라가 따로 있으면 정렬 단계에서 어긋남이 생깁니다.
-- 손목 근거리라면 **RealSense D405와 Orbbec Gemini 305**가 후보입니다. 305는 D405와 같은 자리의 카메라인데 더 가까이(4cm) 보고 더 쌉니다.
+- 손목 근거리라면 **RealSense D405와 Orbbec Gemini 305**가 후보입니다. 305는 D405와 같은 자리의 카메라인데 근거리 설정에서 더 가까이(4~5cm) 보고 더 쌉니다.
 - 어떤 카메라를 사든 **그 카메라의 특성은 직접 확인**합니다. 같은 모델이라도 한 대 한 대가 다릅니다.
 
 ---
@@ -75,7 +75,7 @@ Z = f·B / d
 
 ![정렬 단계가 있으면 문제도 그 단계에서 생긴다](../assets/diagrams/dcs-alignment.svg)
 
-D405, OAK-D SR, ZED는 스테레오 센서 중 하나가 컬러 영상도 찍습니다. 컬러와 깊이가 처음부터 같은 픽셀이라 따로 맞출 게 없어요. OAK-D와 OAK-D Pro는 흑백 스테레오 한 쌍 가운데에 컬러 카메라가 따로 있습니다. 깊이를 컬러 카메라 시점으로 옮기려면 공장에서 잰 두 센서의 위치 관계(외부 파라미터)를 써야 하고, 이 단계에서 문제가 생깁니다.
+D405, Gemini 305, OAK-D SR, ZED는 스테레오 센서 중 하나가 컬러 영상도 찍습니다. 컬러와 깊이가 처음부터 같은 픽셀이라 따로 맞출 게 없어요. OAK-D와 OAK-D Pro는 흑백 스테레오 한 쌍 가운데에 컬러 카메라가 따로 있습니다. 깊이를 컬러 카메라 시점으로 옮기려면 공장에서 잰 두 센서의 위치 관계(외부 파라미터)를 써야 하고, 이 단계에서 문제가 생깁니다.
 
 1. **가장자리가 어긋납니다.** 흑백 센서와 컬러 센서가 몇 cm 떨어져 있어서, 물체 가장자리에 깊이 구멍이나 번짐이 생깁니다. 가까울수록 심해요. 분할 마스크로 깊이를 자르면 마스크 경계로 배경 깊이가 섞여 들어와 자세가 틀어집니다.
 2. **자동 초점이면 정렬이 흔들립니다.** 정렬에 쓰는 컬러 카메라의 렌즈 값은 보정할 때의 초점 위치에서만 맞습니다. 자동 초점이 렌즈를 움직이면 거리마다 어긋남이 달라집니다.
@@ -98,13 +98,13 @@ D405, OAK-D SR, ZED는 스테레오 센서 중 하나가 컬러 영상도 찍습
 
 ## 근거리 카메라 나란히 보기
 
-물체에서 50cm 안쪽에 둘 카메라라면 후보가 좁혀집니다. D405와 Gemini 305 두 모델이 가장 가까이 보고(권장 7~50cm, 305는 최소 4cm), OAK-D SR은 20~30cm부터 보는 대신 카메라 안에서 AI를 실행합니다.
+물체에서 50cm 안쪽에 둘 카메라라면 후보가 좁혀집니다. D405와 Gemini 305 두 모델이 가장 가까이 보고(권장 7~50cm), OAK-D SR은 20~30cm부터 보는 대신 카메라 안에서 AI를 실행합니다.
 
 | 모델 | 깊이 정확도 | 무게 | 전원·데이터 | 방진·방수 | 카메라 내 AI | 정가(USD) |
 |---|---|---|---|---|---|---|
-| RealSense D405 | 50cm에서 2% 미만 | 60g | USB-C | 등급 없음 | 없음 | 272 |
-| Orbbec Gemini 305 | 50cm에서 1% 이하 | 68g | USB-C | IP54 | 없음 | 229 |
-| Orbbec Gemini 305g | 50cm에서 1% 이하 | 116g | GMSL2 동축(12V+데이터), USB-C | IP65 | 없음 | 279 |
+| RealSense D405 | 50cm에서 ±2% 이내 | 60g | USB-C | 등급 없음 | 없음 | 272 |
+| Orbbec Gemini 305 | 50cm에서 ±1.8% 이내 | 68g | USB-C | IP54 | 없음 | 229 |
+| Orbbec Gemini 305g | 50cm에서 ±1.8% 이내 | 116g | GMSL2 동축(12V+데이터), USB-C | IP65 | 없음 | 279 |
 | Luxonis OAK-D SR | 공개 안 됨 | 72g | USB | 등급 없음 | 있음(1.4 TOPS) | 329 |
 | Luxonis OAK-D SR PoE | ToF 실내 1%, 실외 2% 미만 | 확인 못 함 | PoE(M12) | IP67 | 있음 | 479 |
 
@@ -112,12 +112,12 @@ D405, OAK-D SR, ZED는 스테레오 센서 중 하나가 컬러 영상도 찍습
 
 고르는 기준은 이렇습니다.
 
-- **USB 케이블을 손목까지 끌어도 된다면:** Gemini 305나 D405. 크기와 베이스라인(18mm)이 같고, 305가 정확도 수치가 더 좋고 더 가까이(4cm 대 7cm) 보며 방진(IP54)도 되는데 더 쌉니다. 305는 2026년 1월에 나온 신제품이라 ROS 2 드라이버(OrbbecSDK_ROS2)는 v2.7.2부터 지원합니다. NVIDIA Isaac ROS 예제는 대부분 RealSense 기준이라 예제를 손볼 각오는 해야 해요.
+- **USB 케이블을 손목까지 끌어도 된다면:** Gemini 305나 D405. 크기와 베이스라인(18mm), 컬러와 깊이가 같은 센서라는 점까지 같습니다. 305는 정확도가 조금 낫고(±1.8% 대 ±2%), 방진(IP54, 전용 케이블을 나사로 고정했을 때)이 되며 더 쌉니다. 최소 거리는 설정에 따라 다릅니다. 기본 설정에서 1280×800은 9cm, 848×530은 6cm이고, 시차 탐색을 256으로 넓히는 근거리 설정에서는 5cm와 4cm까지 내려갑니다. 근거리 설정은 전력이 늘고(1.57W → 1.88W) 최고 동작 온도가 45°C에서 40°C로 낮아집니다. 305는 2026년 1월에 나온 신제품이라 ROS 2 드라이버(OrbbecSDK_ROS2)는 v2.7.2부터 지원합니다. NVIDIA Isaac ROS 예제는 대부분 RealSense 기준이라 예제를 손볼 각오는 해야 해요.
 - **팔이 움직일 때마다 케이블이 휘는 자리라면:** Gemini 305g. GMSL2는 차량과 로봇에 쓰는 가는 동축 케이블 규격으로, 휘어도 견디게 만들어졌고 전원과 데이터를 한 줄로 보냅니다. 호스트 쪽에 GMSL2 입력 보드가 있어야 하고, 책상 테스트는 USB-C로 합니다.
 - **호스트 GPU 없이 카메라 안에서 검출까지 해야 한다면:** OAK-D SR. 가까운 쪽 한계(약 20~30cm)보다 멀리 달아야 합니다.
 - **반짝이는 금속 부품이 많다면:** ToF를 주 깊이로 쓰지 않습니다(위의 다중 경로 문제). 패시브 모델은 무늬나 조명을 챙깁니다.
 
-Gemini 305와 305g 모두 사양표에 IR 프로젝터가 없으니 무늬 없는 면에 대비한 조명 계획이 필요합니다. 공급 쪽도 봐 둘 만합니다. RealSense는 2025년 7월 Intel에서 독립했고, 2026년 9월 Cognex가 인수하기로 발표했습니다. 제품 라인과 가격이 바뀔 수 있으니 여러 대를 살 계획이라면 대체 후보를 하나 정해 두세요.
+Gemini 305와 305g 모두 IR 프로젝터가 없는 패시브 스테레오라, 데이터시트도 무늬가 있는 물체에서 깊이를 평가하라고 적어 둡니다. 무늬 없는 면에 대비한 조명 계획이 필요합니다. 살 때는 포장도 확인하세요. 정품 포장(Box)에는 1m USB-C 케이블과 안내서가 들어 있고, 벌크(Bulk)는 카메라만 들어 있습니다. 공급 쪽도 봐 둘 만합니다. RealSense는 2025년 7월 Intel에서 독립했고, 2026년 9월 Cognex가 인수하기로 발표했습니다. 제품 라인과 가격이 바뀔 수 있으니 여러 대를 살 계획이라면 대체 후보를 하나 정해 두세요.
 
 ## 큰 팔에서는
 
@@ -151,7 +151,7 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 - **고정초점을 지정합니다.** 자동 초점은 렌즈 값을 흔듭니다(웹캠, 휴대폰, OAK의 자동 초점 모델). Luxonis는 고정초점 모델을 따로 주문할 수 있어요.
 - **작업 거리를 최대 스펙이 아니라 권장 구간과 비교합니다.** 더 가까이 봐야 해서 탐색 범위를 옮긴다면 먼 쪽이 줄어든다는 것도 계산에 넣습니다.
 - **Luxonis에서는 탐색 범위 이동과 카메라 내 정렬을 같이 쓰지 않습니다.** depthai-core에 "disparity shift를 켜면 RGB-깊이 정렬이 동작하지 않는다"는 알려진 제약이 열려 있습니다(issue #831). 같이 써야 한다면 정렬을 직접 확인합니다.
-- **분할 마스크로 깊이를 자를 거라면 컬러와 깊이가 같은 센서인 모델을 고릅니다**(D405, OAK-D SR, ZED).
+- **분할 마스크로 깊이를 자를 거라면 컬러와 깊이가 같은 센서인 모델을 고릅니다**(D405, Gemini 305, OAK-D SR, ZED).
 - **무늬 없는 부품이나 반짝이는 부품이 많으면** 프로젝터(D435, OAK-D Pro), ToF, 또는 mm 단위 정합이 필요한 경우 구조광 산업용 카메라(Zivid, Photoneo 등)를 봅니다.
 - **소프트웨어도 같이 고릅니다.** RealSense는 librealsense/realsense-ros, Orbbec은 OrbbecSDK_ROS2, Luxonis는 DepthAI/depthai-ros, Stereolabs는 ZED SDK(NVIDIA GPU 필요)입니다. 한 셀이나 한 강의실에서 섞으면 문제 해결 경로도 갈라집니다.
 - **카메라 내 AI**(Luxonis)는 호스트 PC가 없고 전력이 빠듯할 때 의미가 있습니다. GPU 호스트가 있으면 얻는 게 적습니다.
@@ -168,7 +168,7 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 | 5 | 부품 표면(무늬 없음, 반짝임)에 맞는 깊이 방식을 고른다 |
 | 6 | 받은 카메라의 렌즈 값, 정렬, 초점을 직접 확인한다 |
 
-손목 근거리의 기본값은 여전히 D405이고, Gemini 305는 같은 자리에서 더 가까이 보고 더 싼 후보입니다. 어느 쪽이든 스펙 표보다 받은 카메라에서 직접 잰 숫자를 믿으세요.
+손목 근거리의 기본값은 여전히 D405이고, Gemini 305는 같은 자리에서 조금 더 정확하고 더 싼 후보입니다. 어느 쪽이든 스펙 표보다 받은 카메라에서 직접 잰 숫자를 믿으세요.
 
 ---
 
@@ -176,7 +176,7 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 
 ### 출처와 표기
 
-수치는 각 제조사의 공개 사양과 문서를 기준으로 했습니다: [RealSense D400 데이터시트(2026-03)](https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf) · [RealSense 카메라 비교](https://www.realsenseai.com/stereo-depth/compare/) · [Orbbec Gemini 305](https://www.orbbec.com/gemini-305/) · [Gemini 305 스토어](https://store.orbbec.com/products/gemini-305) · [Gemini 305g 스토어](https://store.orbbec.com/products/gemini-305g) · [orbbec_camera(ROS 2)](https://index.ros.org/p/orbbec_camera/) · [Luxonis OAK-D SR](https://docs.luxonis.com/hardware/products/OAK-D%20SR) · [OAK ToF(OAK-D SR PoE)](https://shop.luxonis.com/products/oak-d-sr-poe) · [OAK-D Pro](https://docs.luxonis.com/hardware/products/OAK-D%20Pro) · [Luxonis 초점 방식](https://docs.luxonis.com/hardware/platform/sensors/focus-type) · [Luxonis 스테레오 설정(disparity shift)](https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/) · [depthai-core #831](https://github.com/luxonis/depthai-core/issues/831) · [Stereolabs ZED X](https://www.stereolabs.com/products/zed-x) · [ZED 드라이버](https://www.stereolabs.com/developers/drivers) · [ZED 깊이 모드](https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md) · [RealSense 분사(2025-07)](https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/) · [Cognex의 RealSense 인수 발표(2026-09)](https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense). 최소 거리와 오차 그래프는 Z = f·B/d로 계산한 대략값입니다. 가격과 사양은 바뀔 수 있으니 사기 전에 제조사에서 확인하세요. 특정 제품의 추천이 아닙니다. RealSense는 RealSense Inc., Orbbec·Gemini·Femto는 Orbbec Inc., Luxonis·OAK·DepthAI는 Luxonis, ZED는 Stereolabs, NVIDIA·Jetson·Isaac ROS는 NVIDIA Corporation의 상표이며 지칭 목적으로만 사용했습니다.
+수치는 각 제조사의 공개 사양과 문서를 기준으로 했습니다: [RealSense D400 데이터시트(2026-03)](https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf) · [RealSense 카메라 비교](https://www.realsenseai.com/stereo-depth/compare/) · [Orbbec Gemini 305](https://www.orbbec.com/gemini-305/) · [Gemini 305 데이터시트 V1.0(2026-01)](https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/8888/Orbbec_Gemini-305-Datasheet.pdf) · [Gemini 305 스토어](https://store.orbbec.com/products/gemini-305) · [Gemini 305g 스토어](https://store.orbbec.com/products/gemini-305g) · [orbbec_camera(ROS 2)](https://index.ros.org/p/orbbec_camera/) · [Luxonis OAK-D SR](https://docs.luxonis.com/hardware/products/OAK-D%20SR) · [OAK ToF(OAK-D SR PoE)](https://shop.luxonis.com/products/oak-d-sr-poe) · [OAK-D Pro](https://docs.luxonis.com/hardware/products/OAK-D%20Pro) · [Luxonis 초점 방식](https://docs.luxonis.com/hardware/platform/sensors/focus-type) · [Luxonis 스테레오 설정(disparity shift)](https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/) · [depthai-core #831](https://github.com/luxonis/depthai-core/issues/831) · [Stereolabs ZED X](https://www.stereolabs.com/products/zed-x) · [ZED 드라이버](https://www.stereolabs.com/developers/drivers) · [ZED 깊이 모드](https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md) · [RealSense 분사(2025-07)](https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/) · [Cognex의 RealSense 인수 발표(2026-09)](https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense). 최소 거리와 오차 그래프는 Z = f·B/d로 계산한 대략값입니다. 가격과 사양은 바뀔 수 있으니 사기 전에 제조사에서 확인하세요. 특정 제품의 추천이 아닙니다. RealSense는 RealSense Inc., Orbbec·Gemini·Femto는 Orbbec Inc., Luxonis·OAK·DepthAI는 Luxonis, ZED는 Stereolabs, NVIDIA·Jetson·Isaac ROS는 NVIDIA Corporation의 상표이며 지칭 목적으로만 사용했습니다.
 
 ### 용어 설명
 

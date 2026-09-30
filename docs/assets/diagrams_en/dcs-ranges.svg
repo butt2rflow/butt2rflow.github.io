@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Recommended range per camera vs wrist working distance</title>
-<desc id="de">Recommended working ranges per camera, as bars on a log-scale axis. Only the D405 and Gemini 305 (down to 4 cm) include the whole 15–40 cm wrist band. The OAK-D SR starts around 20–30 cm, the D435 at 30 cm, the D455 at 60 cm and the OAK-D Pro at about 80 cm by default, so they suit overhead mounts or larger arms rather than a close wrist.</desc>
+<desc id="de">Recommended working ranges per camera, as bars on a log-scale axis. Only the D405 and Gemini 305 (down to 4–5 cm in its close-range preset) include the whole 15–40 cm wrist band. The OAK-D SR starts around 20–30 cm, the D435 at 30 cm, the D455 at 60 cm and the OAK-D Pro at about 80 cm by default, so they suit overhead mounts or larger arms rather than a close wrist.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -63,7 +63,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="nd" x="18" y="109">Orbbec Gemini 305 · 18 mm</text>
 <rect x="222.8" y="98" width="44.3" height="14" rx="3" style="fill:none;stroke:var(--mut);stroke-width:1.2;stroke-dasharray:3 3"/>
 <rect class="bxgr" x="267.09372043827835" y="96" width="155.68766605323532" height="18" rx="4"/>
-<text class="sm" x="428.7813864915137" y="109" style="fill:var(--fg)">7–50 cm (min 4 cm)</text>
+<text class="sm" x="428.7813864915137" y="109" style="fill:var(--fg)">7–50 cm (4 cm+ close preset)</text>
 <text class="nd" x="18" y="139">Luxonis OAK-D SR · 20 mm</text>
 <rect x="350.2" y="128" width="32.1" height="14" rx="3" style="fill:none;stroke:var(--mut);stroke-width:1.2;stroke-dasharray:3 3"/>
 <rect class="bx" x="382.33139458665727" y="126" width="95.33721082668552" height="18" rx="4"/>

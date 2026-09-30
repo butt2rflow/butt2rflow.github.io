@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">컬러와 깊이 — 같은 센서 vs 별도 컬러 카메라</title>
-<desc id="de">왼쪽은 스테레오 센서 중 하나가 컬러 영상도 찍는 구조(D405, OAK-D SR, ZED)라 컬러와 깊이가 처음부터 같은 픽셀이다. 오른쪽은 흑백 스테레오 한 쌍과 가운데 별도 컬러 카메라가 있는 구조(OAK-D, OAK-D Pro)라, 깊이를 공장에서 잰 센서 간 위치 관계(외부 파라미터)로 컬러 시점에 다시 옮겨야 한다. 이 단계에서 가장자리 어긋남, 자동 초점, 셔터 시점, 해상도 차이 문제가 생긴다.</desc>
+<desc id="de">왼쪽은 스테레오 센서 중 하나가 컬러 영상도 찍는 구조(D405, Gemini 305, OAK-D SR, ZED)라 컬러와 깊이가 처음부터 같은 픽셀이다. 오른쪽은 흑백 스테레오 한 쌍과 가운데 별도 컬러 카메라가 있는 구조(OAK-D, OAK-D Pro)라, 깊이를 공장에서 잰 센서 간 위치 관계(외부 파라미터)로 컬러 시점에 다시 옮겨야 한다. 이 단계에서 가장자리 어긋남, 자동 초점, 셔터 시점, 해상도 차이 문제가 생긴다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -56,7 +56,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
 <text class="t" x="18" y="26">정렬 단계가 있으면 문제도 그 단계에서 생긴다</text>
 <rect class="bxgr" x="16" y="44" width="316" height="236" rx="10"/>
-<text class="lb" x="30" y="68">같은 센서 (D405 · OAK-D SR · ZED)</text>
+<text class="lb" x="30" y="68">같은 센서 (D405 · Gemini 305 · OAK-D SR)</text>
 <rect class="bx" x="46" y="88" width="110" height="40" rx="8"/>
 <text class="nd" x="101.0" y="105.0" text-anchor="middle">왼쪽 센서</text>
 <text class="st" x="101.0" y="120.0" text-anchor="middle">컬러 + 깊이</text>

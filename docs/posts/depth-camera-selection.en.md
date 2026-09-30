@@ -20,7 +20,7 @@ On a depth camera's spec sheet the eye goes first to numbers like "up to 10 m" a
 - Choose in this order: **mount position → distance to the object → a camera whose recommended range includes that distance.** Resolution and precision come after.
 - A stereo camera **gives no depth when the object is too close, and its error grows with the square of distance as it moves away.** Cameras with the two lenses close together are strong up close; widely spaced lenses are strong far away.
 - Cameras that take colour and depth from the **same sensor** (D405, OAK-D SR) have no alignment problem. A separate colour camera adds an alignment step, and that's where things drift.
-- For close wrist work the candidates are the **RealSense D405 and the Orbbec Gemini 305**. The 305 fills the same slot as the D405, sees closer (4 cm) and costs less.
+- For close wrist work the candidates are the **RealSense D405 and the Orbbec Gemini 305**. The 305 fills the same slot as the D405, sees closer in its close-range preset (4–5 cm) and costs less.
 - Whatever you buy, **check that camera's characteristics yourself.** Units of the same model differ.
 
 ---
@@ -75,7 +75,7 @@ Depth alone rarely tells you which pixels are the part, so the usual approach is
 
 ![If there's an alignment step, that's where the bugs live](../assets/diagrams_en/dcs-alignment.svg)
 
-On the D405, OAK-D SR and ZED, one of the stereo sensors also captures the colour image. Colour and depth share pixels from the start, so there's nothing to align. The OAK-D and OAK-D Pro have a separate colour camera between a mono stereo pair. Moving depth into the colour camera's view needs the factory-measured position of one sensor relative to the other (the extrinsics), and that step is where problems appear.
+On the D405, Gemini 305, OAK-D SR and ZED, one of the stereo sensors also captures the colour image. Colour and depth share pixels from the start, so there's nothing to align. The OAK-D and OAK-D Pro have a separate colour camera between a mono stereo pair. Moving depth into the colour camera's view needs the factory-measured position of one sensor relative to the other (the extrinsics), and that step is where problems appear.
 
 1. **Edges don't line up.** The mono and colour sensors sit a few centimetres apart, so object edges get depth holes or bleeding, worse up close. Cut depth with a segmentation mask and background depth leaks in at the mask boundary, skewing the pose.
 2. **Autofocus makes alignment drift.** The colour camera's lens parameters used for alignment hold only at the focus position they were calibrated at. When autofocus moves the lens, the misalignment changes with distance.
@@ -98,13 +98,13 @@ With passive stereo, put texture stickers or a patterned mat on the parts and ta
 
 ## Close-range cameras side by side
 
-For a camera within half a metre of the part, the field narrows. The D405 and Gemini 305 see closest (7–50 cm ideal, the 305 down to 4 cm); the OAK-D SR starts at 20–30 cm but runs AI on the camera itself.
+For a camera within half a metre of the part, the field narrows. The D405 and Gemini 305 see closest (7–50 cm ideal); the OAK-D SR starts at 20–30 cm but runs AI on the camera itself.
 
 | Model | Depth accuracy | Weight | Power + data | Sealing | AI on camera | List price (USD) |
 |---|---|---|---|---|---|---|
-| RealSense D405 | <2% at 50 cm | 60 g | USB-C | Not rated | No | 272 |
-| Orbbec Gemini 305 | ≤1% at 50 cm | 68 g | USB-C | IP54 | No | 229 |
-| Orbbec Gemini 305g | ≤1% at 50 cm | 116 g | GMSL2 coax (12 V + data), USB-C | IP65 | No | 279 |
+| RealSense D405 | ±2% at 50 cm | 60 g | USB-C | Not rated | No | 272 |
+| Orbbec Gemini 305 | ±1.8% at 50 cm | 68 g | USB-C | IP54 | No | 229 |
+| Orbbec Gemini 305g | ±1.8% at 50 cm | 116 g | GMSL2 coax (12 V + data), USB-C | IP65 | No | 279 |
 | Luxonis OAK-D SR | Not published | 72 g | USB | Not rated | Yes (1.4 TOPS) | 329 |
 | Luxonis OAK-D SR PoE | ToF <1% indoors, <2% outdoors | Not confirmed | PoE (M12) | IP67 | Yes | 479 |
 
@@ -112,12 +112,12 @@ For a camera within half a metre of the part, the field narrows. The D405 and Ge
 
 How to choose:
 
-- **A USB cable to the wrist is fine:** Gemini 305 or D405. Same size and baseline (18 mm); the 305 lists better accuracy, sees closer (4 cm vs 7 cm), is dust- and splash-rated (IP54) and costs less. It's new (January 2026), and its ROS 2 driver (OrbbecSDK_ROS2) supports it from v2.7.2. Most NVIDIA Isaac ROS examples assume RealSense, so expect to adapt them.
+- **A USB cable to the wrist is fine:** Gemini 305 or D405. Same size, same baseline (18 mm), and both take colour and depth from the same sensor. The 305 is slightly more accurate (±1.8% vs ±2%), is dust- and splash-rated (IP54, with its cable screwed in) and costs less. Its minimum distance depends on the setting: 9 cm at 1280×800 and 6 cm at 848×530 by default, down to 5 cm and 4 cm in the close-range preset that widens the disparity search to 256. That preset draws more power (1.57 W → 1.88 W) and lowers the maximum operating temperature from 45 °C to 40 °C. It's new (January 2026), and its ROS 2 driver (OrbbecSDK_ROS2) supports it from v2.7.2. Most NVIDIA Isaac ROS examples assume RealSense, so expect to adapt them.
 - **The cable flexes every time the arm moves:** Gemini 305g. GMSL2 is a thin coax standard used in vehicles and robots, built to survive bending, and it carries power and data on one cable. The host needs a GMSL2 input; bench-test over USB-C.
 - **Detection has to run on the camera, with no host GPU:** OAK-D SR. Mount it beyond its near limit (about 20–30 cm).
 - **Lots of shiny metal parts:** don't use ToF as the main depth source (the multipath problem above). With passive models, plan texture or lighting.
 
-Neither Gemini 305 model lists an IR projector, so plan lighting for plain surfaces. Supply is worth watching too: RealSense spun out of Intel in July 2025, and in September 2026 Cognex announced it would acquire the company. Product lines and prices may change, so if you're buying several, pick a fallback candidate.
+Both Gemini 305 models are passive stereo with no IR projector, and the datasheet itself says depth should be evaluated on textured objects, so plan lighting for plain surfaces. Check the packaging when buying: the boxed unit includes a 1 m USB-C cable and a guide; bulk is the camera only. Supply is worth watching too: RealSense spun out of Intel in July 2025, and in September 2026 Cognex announced it would acquire the company. Product lines and prices may change, so if you're buying several, pick a fallback candidate.
 
 ## On a larger arm
 
@@ -151,7 +151,7 @@ Write the result as one line, "this camera is within ○ % from ○ to ○ cm". 
 - **Specify fixed focus.** Autofocus moves the lens parameters (webcams, phones, autofocus OAK models). Luxonis sells fixed-focus versions to order.
 - **Compare the working distance with the recommended range, not the maximum.** If you shift the search window to see closer, account for the shorter far range.
 - **On Luxonis, don't combine a disparity shift with on-camera alignment.** depthai-core has an open known limitation that RGB-depth alignment doesn't work with a disparity shift enabled (issue #831). If you need both, check the alignment yourself.
-- **If depth will be cut with a segmentation mask, choose a model with colour and depth on the same sensor** (D405, OAK-D SR, ZED).
+- **If depth will be cut with a segmentation mask, choose a model with colour and depth on the same sensor** (D405, Gemini 305, OAK-D SR, ZED).
 - **For many plain or shiny parts,** look at a projector (D435, OAK-D Pro), ToF, or, for millimetre-level matching, a structured-light industrial camera (Zivid, Photoneo and others).
 - **Choose the software too.** RealSense uses librealsense/realsense-ros, Orbbec uses OrbbecSDK_ROS2, Luxonis uses DepthAI/depthai-ros, Stereolabs uses the ZED SDK (needs an NVIDIA GPU). Mix them in one cell or one classroom and troubleshooting splits into several paths.
 - **On-camera AI** (Luxonis) matters when there's no host PC and power is tight. With a GPU host it adds little.
@@ -168,7 +168,7 @@ Write the result as one line, "this camera is within ○ % from ○ to ○ cm". 
 | 5 | Match the depth type to the part surfaces (plain, shiny) |
 | 6 | Check the received camera's lens parameters, rectification and focus yourself |
 
-The D405 is still the default for close wrist work, and the Gemini 305 is a candidate for the same slot that sees closer and costs less. Either way, trust the numbers you measure on the camera you received over the spec sheet.
+The D405 is still the default for close wrist work, and the Gemini 305 is a candidate for the same slot that is slightly more accurate and costs less. Either way, trust the numbers you measure on the camera you received over the spec sheet.
 
 ---
 
@@ -176,7 +176,7 @@ The D405 is still the default for close wrist work, and the Gemini 305 is a cand
 
 ### Sources and notices
 
-Figures follow each vendor's public specs and documentation: [RealSense D400 datasheet (Mar 2026)](https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf) · [RealSense camera comparison](https://www.realsenseai.com/stereo-depth/compare/) · [Orbbec Gemini 305](https://www.orbbec.com/gemini-305/) · [Gemini 305 store](https://store.orbbec.com/products/gemini-305) · [Gemini 305g store](https://store.orbbec.com/products/gemini-305g) · [orbbec_camera (ROS 2)](https://index.ros.org/p/orbbec_camera/) · [Luxonis OAK-D SR](https://docs.luxonis.com/hardware/products/OAK-D%20SR) · [OAK ToF (OAK-D SR PoE)](https://shop.luxonis.com/products/oak-d-sr-poe) · [OAK-D Pro](https://docs.luxonis.com/hardware/products/OAK-D%20Pro) · [Luxonis focus types](https://docs.luxonis.com/hardware/platform/sensors/focus-type) · [Luxonis stereo configuration (disparity shift)](https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/) · [depthai-core #831](https://github.com/luxonis/depthai-core/issues/831) · [Stereolabs ZED X](https://www.stereolabs.com/products/zed-x) · [ZED drivers](https://www.stereolabs.com/developers/drivers) · [ZED depth modes](https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md) · [RealSense spin-out (Jul 2025)](https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/) · [Cognex to acquire RealSense (Sep 2026)](https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense). The minimum-distance and error chart values are approximations from Z = f·B/d. Prices and specs change; confirm with the vendor before buying. This is not a product endorsement. RealSense is a trademark of RealSense Inc.; Orbbec, Gemini and Femto of Orbbec Inc.; Luxonis, OAK and DepthAI of Luxonis; ZED of Stereolabs; NVIDIA, Jetson and Isaac ROS of NVIDIA Corporation. They are used for identification only.
+Figures follow each vendor's public specs and documentation: [RealSense D400 datasheet (Mar 2026)](https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf) · [RealSense camera comparison](https://www.realsenseai.com/stereo-depth/compare/) · [Orbbec Gemini 305](https://www.orbbec.com/gemini-305/) · [Gemini 305 datasheet V1.0 (Jan 2026)](https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/8888/Orbbec_Gemini-305-Datasheet.pdf) · [Gemini 305 store](https://store.orbbec.com/products/gemini-305) · [Gemini 305g store](https://store.orbbec.com/products/gemini-305g) · [orbbec_camera (ROS 2)](https://index.ros.org/p/orbbec_camera/) · [Luxonis OAK-D SR](https://docs.luxonis.com/hardware/products/OAK-D%20SR) · [OAK ToF (OAK-D SR PoE)](https://shop.luxonis.com/products/oak-d-sr-poe) · [OAK-D Pro](https://docs.luxonis.com/hardware/products/OAK-D%20Pro) · [Luxonis focus types](https://docs.luxonis.com/hardware/platform/sensors/focus-type) · [Luxonis stereo configuration (disparity shift)](https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/) · [depthai-core #831](https://github.com/luxonis/depthai-core/issues/831) · [Stereolabs ZED X](https://www.stereolabs.com/products/zed-x) · [ZED drivers](https://www.stereolabs.com/developers/drivers) · [ZED depth modes](https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md) · [RealSense spin-out (Jul 2025)](https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/) · [Cognex to acquire RealSense (Sep 2026)](https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense). The minimum-distance and error chart values are approximations from Z = f·B/d. Prices and specs change; confirm with the vendor before buying. This is not a product endorsement. RealSense is a trademark of RealSense Inc.; Orbbec, Gemini and Femto of Orbbec Inc.; Luxonis, OAK and DepthAI of Luxonis; ZED of Stereolabs; NVIDIA, Jetson and Isaac ROS of NVIDIA Corporation. They are used for identification only.
 
 ### Glossary
 
