@@ -1,0 +1,86 @@
+<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">장착 위치 → 거리 → 카메라</title>
+<desc id="de">깊이 카메라는 이 순서로 고른다. 먼저 카메라를 어디에 달지 정하고, 그 자리에서 물체까지 거리를 구한 뒤, 권장 구간이 그 거리를 포함하는 카메라를 고른다. 해상도와 정밀도 비교는 그다음이다. 손목 카메라는 물체까지 15~40cm라 D405나 Gemini 305 같은 근거리형이, 작업대 위 50cm~1m 이상에서 내려다보는 오버헤드는 D435·D455 같은 중거리형이 맞는다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="290" rx="12"/>
+<text class="t" x="18" y="26">해상도보다 거리가 먼저</text>
+<rect class="bx" x="16" y="46" width="150" height="56" rx="8"/>
+<text class="nd" x="91.0" y="71.0" text-anchor="middle">① 장착 위치</text>
+<text class="st" x="91.0" y="86.0" text-anchor="middle">손목? 오버헤드?</text>
+<line class="ar" x1="167" y1="74" x2="179" y2="74"/>
+<rect class="bx" x="180" y="46" width="150" height="56" rx="8"/>
+<text class="nd" x="255.0" y="71.0" text-anchor="middle">② 물체까지 거리</text>
+<text class="st" x="255.0" y="86.0" text-anchor="middle">그 자리에서 몇 cm?</text>
+<line class="ar" x1="331" y1="74" x2="343" y2="74"/>
+<rect class="bxa" x="344" y="46" width="150" height="56" rx="8"/>
+<text class="nd" x="419.0" y="71.0" text-anchor="middle">③ 구간이 맞는 카메라</text>
+<text class="st" x="419.0" y="86.0" text-anchor="middle">최대 말고 권장 구간</text>
+<line class="ar" x1="495" y1="74" x2="507" y2="74"/>
+<rect class="bx" x="508" y="46" width="150" height="56" rx="8"/>
+<text class="nd" x="583.0" y="71.0" text-anchor="middle">④ 해상도·정밀도</text>
+<text class="st" x="583.0" y="86.0" text-anchor="middle">그다음에 비교</text>
+<rect class="bxgr" x="16" y="128" width="200" height="48" rx="8"/>
+<text class="nd" x="116.0" y="149.0" text-anchor="middle">손목·그리퍼 카메라</text>
+<text class="st" x="116.0" y="164.0" text-anchor="middle">물체까지 15~40cm</text>
+<line class="arg" x1="218" y1="152" x2="250" y2="152"/>
+<rect class="bxgr" x="254" y="128" width="408" height="48" rx="8"/>
+<text class="nd" x="458.0" y="156.0" text-anchor="middle">근거리형: D405, Gemini 305 (권장 7~50cm)</text>
+<rect class="bxt" x="16" y="190" width="200" height="48" rx="8"/>
+<text class="nd" x="116.0" y="211.0" text-anchor="middle">오버헤드 카메라</text>
+<text class="st" x="116.0" y="226.0" text-anchor="middle">작업대 위 50cm~1m 이상</text>
+<line class="arg" x1="218" y1="214" x2="250" y2="214"/>
+<rect class="bxt" x="254" y="190" width="408" height="48" rx="8"/>
+<text class="nd" x="458.0" y="218.0" text-anchor="middle">중거리형: D435 (0.3~3m), D455 (0.6~6m)</text>
+<text class="sm" x="18" y="268" style="fill:var(--fg)">근거리형을 오버헤드에 달면 상한을 넘어서, 중거리형을 손목에 달면 하한 안쪽이라서 깊이가 빈다</text>
+</svg>
