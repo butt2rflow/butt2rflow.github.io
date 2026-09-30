@@ -185,6 +185,6 @@ URDF·xacro·robot_state_publisher·TF2·ros2_control·RViz의 동작은 ROS 2 H
 - *mock 하드웨어*: 로봇 없이 명령받은 대로 움직였다고 대답하는 가짜 하드웨어
 - *RTDE*: UR 컨트롤러와 실시간으로 데이터를 주고받는 통로
 - *visual / collision*: URDF 링크의 보이는 모양 / 충돌 검사용 모양
-- *점구름(point cloud)*: 깊이 카메라가 잰 점들의 3D 집합
+- *점구름(point cloud)*: 3D 카메라가 잰 점들의 3D 집합
 - *rosbag2*: 토픽을 기록했다가 그대로 다시 흘려 넣는 도구
 - *RViz*: ROS의 3D 표시 도구. Fixed Frame은 모든 것을 그리는 기준 좌표계

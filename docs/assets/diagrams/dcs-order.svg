@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">장착 위치 → 거리 → 카메라</title>
-<desc id="de">깊이 카메라는 이 순서로 고른다. 먼저 카메라를 어디에 달지 정하고, 그 자리에서 물체까지 거리를 구한 뒤, 권장 구간이 그 거리를 포함하는 카메라를 고른다. 해상도와 정밀도 비교는 그다음이다. 손목 카메라는 물체까지 15~40cm라 D405나 Gemini 305 같은 근거리형이, 작업대 위 50cm~1m 이상에서 내려다보는 오버헤드는 D435·D455 같은 중거리형이 맞는다.</desc>
+<desc id="de">3D 카메라는 이 순서로 고른다. 먼저 카메라를 어디에 달지 정하고, 그 자리에서 물체까지 거리를 구한 뒤, 권장 구간이 그 거리를 포함하는 카메라를 고른다. 해상도와 정밀도 비교는 그다음이다. 손목 카메라는 물체까지 15~40cm라 D405나 Gemini 305 같은 근거리형이, 작업대 위 50cm~1m 이상에서 내려다보는 오버헤드는 D435·D455 같은 중거리형이 맞는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}

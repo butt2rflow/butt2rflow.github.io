@@ -85,7 +85,7 @@ Vention은 공개 웨비나에서 자사 Physical AI 파이프라인 GRIIP 기�
 
 ---
 
-*다음 글: [어떤 깊이 카메라를](depth-camera-selection.md)*
+*다음 글: [어떤 3D 카메라를](depth-camera-selection.md)*
 
 *관련: [펜던트에서 ROS 2로 2부 — URDF와 CAD vs 실측](ros2-robot-description.md) · [4부 — Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [직접 해 보기: 실습 노트 (0)](learn-without-industrial-robot.md)*
 

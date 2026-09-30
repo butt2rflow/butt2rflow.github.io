@@ -237,4 +237,4 @@ Jetson·Orin·Isaac ROS는 NVIDIA의, OAK-D는 Luxonis의, 그 외 제품명은 
 
 **시리즈** · [← 이전 글: 튜닝편 — 11초를 4초로, 그리고 상업용으로 쓸 수 있는 조합](jetson-tuning-licensing.md)
 
-*관련: [어떤 깊이 카메라를](depth-camera-selection.md) · [좌표계와 변환](frames-transforms.md) · [세 모델의 안쪽](inside-the-models.md) · [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md)*
+*관련: [어떤 3D 카메라를](depth-camera-selection.md) · [좌표계와 변환](frames-transforms.md) · [세 모델의 안쪽](inside-the-models.md) · [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md)*
