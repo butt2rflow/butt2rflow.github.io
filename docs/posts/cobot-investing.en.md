@@ -24,7 +24,7 @@ Bad news first. **There's no clean stock to buy.** The names that come up when y
 - **The narrative is humanoids; the money is cobots.** When people say Physical AI they picture a robot that walks like a person — but those are mostly **prototypes and pilots,** and mostly **private.** The actual revenue comes from the **cobots and industrial arms** already installed by the tens of thousands.
 - **No pure-play.** No US large-cap sells "just cobots" or "just Physical AI." The closest are small (Korea's Doosan Robotics) or Chinese (humanoid makers UBTech and Unitree) — and the one that was supposed to become a ticker, ABB's robotics spin-off, was **sold to SoftBank instead of listing.**
 - **Three flavors of dilution.** **NVIDIA** = the picks-and-shovels seller of brains to everyone (but Physical AI is ~1% of revenue, 90% is Data Center). **Teradyne** = the openness winner via UR (but ~10% of revenue; 79% is semiconductor test). **FANUC** = the purest automation name (but robots are 41% and mostly *traditional* industrial arms; China-cyclical).
-- **A valuation twist.** On earnings (P/E), **NVDA is the cheapest of the three (~29x), and the cobot owner, TER, is the most expensive (~47x).** The pick-seller trades cheaper than the miner.
+- **A valuation twist.** On earnings (P/E), **NVDA is the cheapest of the three (~29x), and the cobot owner, TER, is the most expensive (~55x).** The pick-seller trades cheaper than the miner.
 - **Value is moving.** Physical AI *lifts* one side (compute, robot-joint reducers, open force control) and *presses* another (the robot-guidance premium of traditional 3D machine vision).
 - **The real moat = fusion.** AI is non-deterministic; industrial inspection is deterministic. Whoever **bridges** the two wins — not the pure-AI player, not the pure-legacy incumbent.
 - *This is a viewpoint, not stock advice. Please read the disclosure at the bottom.*
@@ -51,7 +51,7 @@ They're at completely different maturities.
 
 The point: **the hot narrative and valuation crowd around humanoids, but the revenue and cash flow come from cobots and industrial arms.** While the walking-robot clips rack up views, the money is quietly welding in a car plant.
 
-And here's the trap. **The hot side (humanoids) is mostly un-buyable** — the Western leaders Figure, Agility, Apptronik, 1X are all private. The only listed pure humanoid plays are **Chinese** — UBTech, and Unitree (up +487% on its 2026 debut day). **The buyable side (cobots) is all a slice of a bigger company,** so it's diluted.
+And here's the trap. **The hot side (humanoids) is mostly un-buyable** — the Western leaders Figure, Agility, Apptronik, 1X are all private (Agility is heading for a US listing via a SPAC merger by end-2026, expected ticker AGLT). The only listed pure humanoid plays are **Chinese** — UBTech, and Unitree (up +460% at the close of its August 2026 debut). **The buyable side (cobots) is all a slice of a bigger company,** so it's diluted.
 
 That gap — *you can't buy what you want, and what you can buy is diluted* — is where this post starts.
 
@@ -101,7 +101,7 @@ The most direct public route to Part 2's openness winner, **Universal Robots,** 
 
 **But don't nail it down as "declining."** Robotics is **rebounding** after two 2025 restructurings (which cut breakeven revenue from $440M to $365M) — Q2 2026 hit a **record $100M quarter (+33%).** A side-business, but a growing one.
 
-- Valuation: **the most expensive of the three (P/E ~47x)** — the AI-chip-test + robotics rebound is already priced in.
+- Valuation: **the most expensive of the three (P/E ~55x)** — the AI-chip-test + robotics rebound is already priced in.
 - One line: **the most direct buy on the openness winner (UR), but it arrives wrapped in the semiconductor-test cycle.**
 
 ### FANUC — the purest robotics of the three, but the "closed" side
@@ -122,10 +122,10 @@ The **purest factory-automation company** here is FANUC. Robots + CNC + Robomach
 | Part 2 openness position | enabler (sells to both) | **open (UR)** | closed (+NVIDIA hedge) |
 | Dilution | Data Center 90% | semi test 79% | CNC·Robomachine·Service + China |
 | Financial strength | hyper-growth | semi cycle | **debt-free · net cash · high margin** |
-| Valuation (P/E, approx) | ~29x (**lowest**) | ~47x (**highest**) | ~31x |
+| Valuation (P/E trailing / forward) | ~29x / ~19x (**lowest**) | ~55x / ~41x (**highest**) | ~31x / ~27x |
 | Access | mega-cap, top liquidity | large-cap | 6954 primary / FANUY thin |
 
-*(Figures are 2025–2026 approximations; they move with timing, FX, and the AI cycle.)*
+*(P/Es as of the 2026-09-29 close (StockAnalysis); other figures are 2025–2026 approximations. They move with timing, FX, and the AI cycle.)*
 
 ---
 
