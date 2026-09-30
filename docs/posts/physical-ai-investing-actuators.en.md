@@ -52,6 +52,14 @@ Precision reducers have long been an oligopoly of two Japanese companies. Harmon
 
 The biggest risk is the low-price chase from Chinese makers such as Leaderdrive. A stronger yen would weigh on Japanese exporters, and high interest rates on factory capex.
 
+On the QDD side, value moves to motors and magnets. The US-listed names in this layer carry very different amounts of hope too, just like the reducer makers. Figures are as of the 2026-09-29 close.
+
+- **Allient (ALNT, Nasdaq):** a small cap (about $1.9B market cap) that offers frameless and axial-flux motors for humanoids. The share price has roughly 2.5x'd in a year and sits near its 52-week high, at a forward P/E in the mid-30s. Being small, one order moves it a lot, and a lot of hope is already in the price.
+- **Regal Rexnord (RRX, NYSE):** its Kollmorgen unit supplies frameless servo motors for robot joints. Cheap at about 13x forward earnings, but robotics is a small slice of the whole company, so the humanoid effect is diluted. The shares are about 37% below their 52-week high.
+- **MP Materials (MP, NYSE):** the only mine-to-magnet operation in the West. It is still loss-making, so P/E comparisons do not work well (forward P/E above 100), and the shares are about 55% below their 52-week high, swinging hard on US-China news.
+
+China's Unitree, well known for QDD joints, listed on Shanghai's STAR Market in August 2026 (688836), but foreign retail investors can hardly buy it directly. In the US, Agility Robotics is heading for a year-end listing through a SPAC merger (expected ticker AGLT), and in Korea, Robotis (DYNAMIXEL-Q) and Higen RNM (developing QDD drive modules) are the names mentioned on the QDD side.
+
 ## Demand is becoming real; the hands are the bottleneck
 
 ![Demand is becoming real; the bottleneck is hands and supply](../assets/diagrams_en/inv2-hands.svg)
@@ -99,6 +107,7 @@ Humanoid news moves share prices first, but what drives component makers' earnin
 | Why actuators | One per joint, and humanoids have several times more joints |
 | Where value goes | High-ratio designs: reducers. QDD: motors, magnets, drivers. Mixed across joints |
 | Reducer makers | Industrial recovery is the floor; the humanoid premium is exposed to QDD and cheap Chinese rivals |
+| QDD-side stocks | ALNT (hope priced in), RRX (cheap but diluted), MP (loss-making, politics). Unitree is hard for foreign retail to buy |
 | Bottlenecks | Hand assembly, reliance on outside suppliers, rare earths |
 | ETFs | KOID (parts), ROBO (broad), BOTZ (large caps), BOTT (robotics pure-plays, small caps). ROBO+BOTZ overlap heavily |
 | What to watch | Order backlog, R&D share, manufacturing PMI, auto capex |
@@ -113,7 +122,7 @@ If Part 1's conclusion was "the value is moving," Part 2's is this: **joint desi
 
 ### Sources and notices
 
-This post is based on study notes from reading the Korean Naver blog post ["The technology moats and risks of Japanese and European robot joint actuators"](https://m.blog.naver.com/kjrmilk/224190206246) (즐겁게 먹고 맛있게 투자하기, 2026-03-03) and the YouTube video ["The key humanoid part, the actuator: these companies win!"](https://www.youtube.com/watch?v=jdx4aJ1K_d4) by 엔지니어TV (2025-11-02), rechecked against public sources. Only the gist is summarized, not the original wording, and the indicators to watch follow the original blog. Optimus production and the hand bottleneck follow Electrek (2026-09-25, citing The Information); Tesla's actuator count, the Baron Capital conference conversation of November 2025; the reducer vs QDD value shift, Corematter's public analysis (2026-09-08); rare earths, public reporting; P/E, Stockopedia; ETF holdings and fees, each issuer's official pages and full-holdings files (KraneShares, ROBO Global, Global X, Themes ETFs; 2026-09-24–28). All figures are values at the time of research and will change. Tax notes are general information and depend on your situation. Company, fund and product names are trademarks of their owners, used here only for reference. **This post is not a recommendation to buy or sell any stock or ETF, nor investment advice, and the author accepts no responsibility for any investment outcome.** Investment decisions and their results are entirely the reader's own.
+This post is based on study notes from reading the Korean Naver blog post ["The technology moats and risks of Japanese and European robot joint actuators"](https://m.blog.naver.com/kjrmilk/224190206246) (즐겁게 먹고 맛있게 투자하기, 2026-03-03) and the YouTube video ["The key humanoid part, the actuator: these companies win!"](https://www.youtube.com/watch?v=jdx4aJ1K_d4) by 엔지니어TV (2025-11-02), rechecked against public sources. Only the gist is summarized, not the original wording, and the indicators to watch follow the original blog. Optimus production and the hand bottleneck follow Electrek (2026-09-25, citing The Information); Tesla's actuator count, the Baron Capital conference conversation of November 2025; the reducer vs QDD value shift, Corematter's public analysis (2026-09-08); rare earths, public reporting; reducer-maker P/E, Stockopedia; motor and magnet share prices and P/E, StockAnalysis (2026-09-29 close); the Unitree listing, Caixin (2026-08-19); the Agility merger, SEC filings (Churchill Capital Corp XI, Form 425); ETF holdings and fees, each issuer's official pages and full-holdings files (KraneShares, ROBO Global, Global X, Themes ETFs; 2026-09-24–28). All figures are values at the time of research and will change. Tax notes are general information and depend on your situation. Company, fund and product names are trademarks of their owners, used here only for reference. **This post is not a recommendation to buy or sell any stock or ETF, nor investment advice, and the author accepts no responsibility for any investment outcome.** Investment decisions and their results are entirely the reader's own.
 
 ### Glossary
 
@@ -124,6 +133,8 @@ This post is based on study notes from reading the Korean Naver blog post ["The 
 - *QDD (quasi-direct drive)*: a joint design with a low reduction ratio that gets its force mainly from a strong motor
 - *Backlash*: the play between gears; large backlash makes precise gripping or stopping hard
 - *Rare-earth permanent magnet*: the magnet in strong motors; production is concentrated in China
+- *Frameless motor*: a motor supplied as bare rotor and stator, with no housing or shaft, so it can be built straight into a joint. Common in QDD joints
+- *SPAC*: a shell company created only to list, which then merges with a private company to take it public
 - *P/E (price-to-earnings)*: share price divided by earnings per share; higher means more future hope priced in (simplified)
 - *Over-the-counter (OTC)*: trading outside a regular exchange; volume is often thin
 - *Expense ratio*: the annual cost of holding an ETF, as a share of assets

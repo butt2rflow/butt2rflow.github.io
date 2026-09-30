@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 318" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">액추에이터 공급망 지도 (상장사 예시)</title>
-<desc id="de">부품별 상장사 예시. 모터는 콜모건(레갈 렉스노드 자회사), 노반타. 파동 감속기는 하모닉 드라이브, 니덱, 셰플러. 사이클로이드 감속기는 나브테스코. 롤러스크류는 셰플러 계열. 베어링은 THK, 셰플러, 팀켄. 엔코더는 레니쇼, 브로드컴. 자석은 신에쓰화학, TDK, MP 머티리얼즈. 중국 업체(리더드라이브 등)는 원가 경쟁력으로 추격 중.</desc>
+<desc id="de">부품별 상장사 예시. 모터는 콜모건(레갈 렉스노드 자회사), 얼라이언트, 노반타. 파동 감속기는 하모닉 드라이브, 니덱, 셰플러. 사이클로이드 감속기는 나브테스코. 롤러스크류는 셰플러 계열. 베어링은 THK, 셰플러, 팀켄. 엔코더는 레니쇼, 브로드컴. 자석은 신에쓰화학, TDK, MP 머티리얼즈. 중국 업체(리더드라이브 등)는 원가 경쟁력으로 추격 중.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -57,7 +57,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="t" x="18" y="26">부품마다 강자가 다르다</text>
 <text class="it" x="18" y="66">모터</text>
 <rect class="bx" x="196" y="46" width="466" height="32" rx="8"/>
-<text class="st" x="429.0" y="66.0" text-anchor="middle" style="fill:var(--fg)">Kollmorgen (RRX) · Novanta</text>
+<text class="st" x="429.0" y="66.0" text-anchor="middle" style="fill:var(--fg)">Kollmorgen (RRX) · Allient · Novanta</text>
 <text class="it" x="18" y="106">파동 감속기</text>
 <rect class="hi" x="196" y="86" width="466" height="32" rx="8"/>
 <text class="st" x="429.0" y="106.0" text-anchor="middle" style="fill:var(--fg)">하모닉 드라이브 · 니덱 · 셰플러</text>

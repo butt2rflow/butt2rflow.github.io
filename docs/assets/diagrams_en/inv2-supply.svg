@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 318" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Actuator supply-chain map (listed examples)</title>
-<desc id="de">Listed examples by component. Motors: Kollmorgen (a Regal Rexnord unit), Novanta. Strain-wave reducers: Harmonic Drive, Nidec, Schaeffler. Cycloidal reducers: Nabtesco. Roller screws: the Schaeffler group. Bearings: THK, Schaeffler, Timken. Encoders: Renishaw, Broadcom. Magnets: Shin-Etsu Chemical, TDK, MP Materials. Chinese makers such as Leaderdrive are closing in on cost.</desc>
+<desc id="de">Listed examples by component. Motors: Kollmorgen (a Regal Rexnord unit), Allient, Novanta. Strain-wave reducers: Harmonic Drive, Nidec, Schaeffler. Cycloidal reducers: Nabtesco. Roller screws: the Schaeffler group. Bearings: THK, Schaeffler, Timken. Encoders: Renishaw, Broadcom. Magnets: Shin-Etsu Chemical, TDK, MP Materials. Chinese makers such as Leaderdrive are closing in on cost.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -57,7 +57,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="t" x="18" y="26">Each component has different leaders</text>
 <text class="it" x="18" y="66">motors</text>
 <rect class="bx" x="196" y="46" width="466" height="32" rx="8"/>
-<text class="st" x="429.0" y="66.0" text-anchor="middle" style="fill:var(--fg)">Kollmorgen (RRX) · Novanta</text>
+<text class="st" x="429.0" y="66.0" text-anchor="middle" style="fill:var(--fg)">Kollmorgen (RRX) · Allient · Novanta</text>
 <text class="it" x="18" y="106">strain-wave reducers</text>
 <rect class="hi" x="196" y="86" width="466" height="32" rx="8"/>
 <text class="st" x="429.0" y="106.0" text-anchor="middle" style="fill:var(--fg)">Harmonic Drive · Nidec · Schaeffler</text>
