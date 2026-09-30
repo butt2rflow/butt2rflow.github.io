@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">China's battery-material export controls and Korea's dependence</title>
-<desc id="de">China put graphite exports under licensing in December 2023 (still in force) and restricted exports of cathode and lithium-refining technology in July 2025. In October 2025 it announced controls on high-performance lithium-ion cells, cathode materials, precursors, synthetic graphite anodes and production equipment, but after the November US–China deal it suspended them until November 10, 2026. As of September 2023, China supplied 96.6% of Korea's precursor imports, 93.7% of its synthetic graphite and 80.4% of its lithium hydroxide.</desc>
+<desc id="de">China put graphite exports under licensing in December 2023 (still in force) and restricted exports of cathode and lithium-refining technology in July 2025. In October 2025 it announced controls on high-performance lithium-ion cells, cathode materials, precursors, synthetic graphite anodes and production equipment, but after the November US–China deal it suspended them until November 10, 2026. After the September 2026 summit the US said the deal runs to January 10, 2027, but whether the battery-material suspension is included is unconfirmed. As of September 2023, China supplied 96.6% of Korea's precursor imports, 93.7% of its synthetic graphite and 80.4% of its lithium hydroxide.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -84,5 +84,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="it" x="18" y="263">lithium hydroxide</text>
 <rect class="bxr" x="170" y="250" width="321.6" height="18" rx="4"/>
 <text class="nd" x="499.6" y="264">80.4%</text>
-<text class="sm" x="18" y="292">No word yet on extending past Nov 10, 2026. Dependence: Energy Innovation Reform Project data cited by KEI</text>
+<text class="sm" x="18" y="292">Deal extended to Jan 10, 2027; battery materials unconfirmed. Dependence: EIRP data cited by KEI</text>
 </svg>
