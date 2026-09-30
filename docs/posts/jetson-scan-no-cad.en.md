@@ -25,7 +25,7 @@ We tried two answers. One is a simple method: **photograph the object on a print
 - **The mesh takes 4.5 seconds.** A "height map" splits the board into 1 mm cells with one height each; the result is 100×66×29.7 mm against the real 100×62×34 mm.
 - **Track with that mesh straight away.** The detect → mask → depth → FoundationPose chain follows the mouse at about 7 frames per second using the scanned mesh instead of CAD, all with commercially usable parts.
 - **BundleSDF (model-free) ran on the same photos.** It got the width more exactly (61.7 mm), but took 8.7 minutes, fit the live depth less well than the height map, and is research-licensed.
-- **Check the camera before scanning.** On the OAK-D we used, the 1080p mode's default lens parameters (K) put every distance 5.6 % short, and autofocus shifted the focal length by 3.3 % up close (17 cm). Every camera behaves differently, both in the numbers and in whether the trap exists at all, so check the one you're using.
+- **Check the camera before scanning.** On the OAK-D we used, the 1080p mode's default lens parameters (K) put every distance 5.6 % short, and autofocus shifted the focal length by 3.3 % up close (17 cm). With an autofocus camera and its factory values, the key is **don't get closer than the factory-calibration distance (about 44 cm on this camera)**; going farther barely changed the error. Every camera behaves differently, both in the numbers and in whether the trap exists at all, so check the one you're using.
 
 ---
 
@@ -111,7 +111,7 @@ We found two more things on this camera. After a big lens move, the lens takes t
 
 There are three fixes.
 
-- **Work near the factory-calibration distance:** if you use the factory values as they are, with no table, the simplest fix is to keep the object near the distance where they hold. On this camera the error was +0.2 % at 44 cm and −0.4 % at 59–77 cm: it barely changes going farther, and climbs steeply going closer. The key is "don't get close". Too far has its own cost, though: the object covers fewer pixels and stereo depth error grows, so about 40–50 cm looks like a safe range for this camera. Which distance the factory values fit differs by camera, so check yours first.
+- **Work near the factory-calibration distance:** if you use the factory values as they are, with no table, the simplest fix is to keep the object near the distance where they hold. On this camera the error was +0.2 % at 44 cm and −0.4 % at 59–77 cm: it barely changes going farther, and climbs steeply going closer. It's less "44 cm is optimal" than **"don't get closer than the factory-calibration distance"**. Too far has its own cost, though: the object covers fewer pixels and stereo depth error grows, so about 40–50 cm looks like a safe range for this camera. Which distance the factory values fit differs by camera, so check yours first.
 - **A per-camera correction table:** tabulate the focal length per lens position, and on every frame look up the value from the lens position the camera reports. Tested on sessions not used to build the table, the error dropped from 1.4 % median (5.9 % max) to **0.24 % (1.1 % max)**. It has to be built separately for each camera.
 - **A fixed-focus camera:** if measurement is the goal, a fixed-focus model is cleanest from the start. Check that its closest sharp distance is nearer than your working distance.
 
@@ -219,7 +219,7 @@ We started on merging a scan of the underside but stopped. The mouse's outline a
 
 - **If you have CAD, CAD is best.** It includes the underside, and as in [the correction post](jetson-foundationpose-16gb.md), colouring it by part prevents front-back flips. The scanner is the fallback when there's no CAD.
 - **One board solves the camera-position problem.** ChArUco tolerates hidden corners, so it works with the object on it, and one bar tells you whether it printed at 100 %.
-- **Camera first.** On this camera, lens parameters, stereo rectification and autofocus drift were all off, and each skews the mesh and poses silently. Cameras differ, so check the one you're using.
+- **Camera first.** On this camera, lens parameters, stereo rectification and autofocus drift were all off, and each skews the mesh and poses silently. With an autofocus camera, **don't get closer than the factory-calibration distance.** Cameras differ, so check that distance and the error size on the one you're using.
 - **Kill reflections on shiny objects.** The low height came from reflection, not from too few views.
 
 ---

@@ -109,7 +109,7 @@ The trap at the bottom of the picture is the most common bug in cells with a cam
 
 Cameras usually have two frames. There's `camera_link`, aligned with the camera body, and an optical frame (`..._optical_frame`) whose z axis points out of the lens. If you don't check which one a detection is relative to, you get answers with the axes rotated by 90°.
 
-Calibration isn't a one-time job, either. If the camera's focus moves, the lens characteristics change and distance calculations drift, so turn autofocus off and fix the focus manually before calibrating. If the camera was bumped or its bracket re-tightened, redo the hand-eye calibration.
+Calibration isn't a one-time job, either. If the camera's focus moves, the lens characteristics change and distance calculations drift, so turn autofocus off and fix the focus manually **at your actual working distance** before calibrating. If an autofocus camera runs on its factory values, the key is not to get closer than the factory-calibration distance: the error grows quickly as you get closer (measured in [the scanning post](jetson-scan-no-cad.md)). If the camera was bumped or its bracket re-tightened, redo the hand-eye calibration.
 
 ## ros2_control, swapping in only the robot-specific layer
 
