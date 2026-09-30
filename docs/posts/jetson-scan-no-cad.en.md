@@ -4,7 +4,7 @@ nav_title: "Scanning · A Mesh Without CAD"
 date: 2026-09-29
 tags: [physical-ai, jetson, foundationpose, charuco, calibration, 3d-scanning, bundlesdf, edge-ai, field-notes]
 lang: en
-description: "FoundationPose needs an object's CAD file to find its pose. What if there isn't one? We put the object on a printed ChArUco board, took about twenty photos, and had a mesh in 4.5 seconds (100×66 mm against the real 100×62 mm). How the board gives the camera position, how a height map becomes the mesh, how it compares with BundleSDF (model-free), and three camera-calibration traps to check before scanning (autofocus included). Field Notes, scanning."
+description: "FoundationPose needs an object's CAD file to find its pose. What if there isn't one? We put the object on a printed ChArUco board, took about twenty photos, and had a mesh in 4.5 seconds (100×66 mm against the real 100×62 mm). How the board gives the camera position, how a height map becomes the mesh, how it compares with BundleSDF (model-free), the three calibration traps we found on this camera (autofocus included), and how to check yours. Field Notes, scanning."
 ---
 
 # Putting the Robot's Brain on the Edge — Scanning: No CAD? One Printed Board and Twenty Photos
@@ -25,7 +25,7 @@ We tried two answers. One is a simple method: **photograph the object on a print
 - **The mesh takes 4.5 seconds.** A "height map" splits the board into 1 mm cells with one height each; the result is 100×66×29.7 mm against the real 100×62×34 mm.
 - **Track with that mesh straight away.** The detect → mask → depth → FoundationPose chain follows the mouse at about 7 frames per second using the scanned mesh instead of CAD, all with commercially usable parts.
 - **BundleSDF (model-free) ran on the same photos.** It got the width more exactly (61.7 mm), but took 8.7 minutes, fit the live depth less well than the height map, and is research-licensed.
-- **Check the camera before scanning.** Using the 1080p mode's lens parameters (K) as supplied put every distance 5.6 % short, and autofocus shifted the focal length by 3.3 % up close (17 cm).
+- **Check the camera before scanning.** On the OAK-D we used, the 1080p mode's default lens parameters (K) put every distance 5.6 % short, and autofocus shifted the focal length by 3.3 % up close (17 cm). Every camera behaves differently, both in the numbers and in whether the trap exists at all, so check the one you're using.
 
 ---
 
@@ -68,25 +68,29 @@ A PNG's print scale depends easily on printer settings, so for the real print, a
 
 </details>
 
-## Three camera-calibration traps to check before scanning
+## Check the camera before scanning: three traps we found on this one
 
-To compute the camera position from the board, you need the camera's **lens parameters (K)**: focal length and image centre. If they're wrong, the distance to the board is wrong, and the mesh and poses built on it are wrong with it. We found three traps.
+To compute the camera position from the board, you need the camera's **lens parameters (K)**: focal length and image centre. If they're wrong, the distance to the board is wrong, and the mesh and poses built on it are wrong with it. We found three traps on the OAK-D we used.
+
+One thing first: the numbers below come from **this one camera**. They don't mean every camera behaves this way. How the sensor is cropped and scaled, the factory calibration, and the lens type all vary by camera (and unit to unit within a model); on another camera a trap may not exist at all, or may show up at a different size. What carries over is not the numbers but **the way to check** (the checklist at the end of this section).
 
 ![Get the 1080p lens parameters wrong and every distance is 5.6 % short](../assets/diagrams_en/jetson-scan-k-trap.svg)
 
-**Trap 1: the 1080p lens parameters were 5.6 % off.** This camera's colour sensor is 4056×3040, and its 1080p image is made by cropping the central 3840×2160 and halving it. But the 1080p lens parameters the camera SDK returned by default assumed "the whole sensor was scaled to 1920 wide". The focal length came out as 1465.5; following the crop-and-halve correctly gives 1547.9.
+**Trap 1: this camera's 1080p lens parameters were 5.6 % off.** This camera's colour sensor is 4056×3040, and its 1080p image is made by cropping the central 3840×2160 and halving it. But the 1080p lens parameters the camera SDK returned by default assumed "the whole sensor was scaled to 1920 wide". The focal length came out as 1465.5; following the crop-and-halve correctly gives 1547.9.
 
 It shows up directly in distance. With the default, the checkerboard came out at 298.8 mm; with the corrected value, 315.4 mm. The same scene measured separately with the stereo pair gave 315.2 mm, so the correction is right. FoundationPose computes distance from these lens parameters too, so with the default, **every pose would have come out about 5.6 % too close**, without a single error message.
 
 **Trap 2: the stereo rectification was 1.9 pixels off vertically.** A stereo camera aligns (rectifies) its left and right images to the same height, then measures depth from the left–right shift. Matching hundreds of the same points in the rectified pair and comparing their vertical positions showed a consistent 1.8–1.9 px offset, regardless of the scene. A well-calibrated camera is within 0.5 px. That's enough to degrade the camera's on-board depth, so this unit needs recalibrating.
 
-**Trap 3: autofocus changes the lens parameters.** This camera's colour lens is autofocus (AF), so the lens moves to focus on near objects. When the lens moves, the focal length changes a little too. But the factory lens parameters are a single value, for one lens position (the one that focuses at about 44 cm).
+**Trap 3: autofocus changes the lens parameters.** This camera's colour lens is autofocus (AF), so the lens moves to focus on near objects. When the lens moves, the focal length changes a little too. But this camera's factory lens parameters are a single value, for one lens position (the one that focuses at about 44 cm).
 
 We measured how much it changes. The stereo cameras have fixed focus, so their lens parameters don't change; using them as the reference, we put the board at several distances and compared the colour camera's real focal length.
 
 ![The colour camera's focal length changes with the autofocus lens position: +3.3 % at 17 cm, almost 0 at 44 cm](../assets/demos/jetson-af-focal-shift.jpg)
 
 *The horizontal axis is the lens position (higher = closer focus); the vertical axis is the real focal length relative to the factory value. The stars are where autofocus actually settled; the black dashed line is the correction table built for this camera.*
+
+These are from this one unit; a different lens will shift by a different amount.
 
 | Board distance | Autofocus lens position | Error vs factory value |
 |---|---|---|
@@ -101,16 +105,17 @@ So should you lock the focus manually? Up close, that isn't the answer either.
 
 ![The same board at 17 cm, changing only the lens position: only the autofocus position (180) is sharp](../assets/demos/jetson-af-sharpness.jpg)
 
-At 17 cm, moving just ±15 steps from the autofocus position blurs the image. Lock the focus in one place and other distances go blurry, and in a blurry image the board corners can't be found precisely.
+On this camera at 17 cm, moving just ±15 steps from the autofocus position blurs the image. Lock the focus in one place and other distances go blurry, and in a blurry image the board corners can't be found precisely.
 
-Two more things when you use autofocus. After a big lens move, the lens takes time to settle: 2.5 s later it was still about 1 % off, so use only frames where the lens position has stopped changing. And at the lens's end stop (its closest focus), the error grows to +6 %.
+We found two more things on this camera. After a big lens move, the lens takes time to settle: 2.5 s later it was still about 1 % off. And at the lens's end stop (its closest focus), the error grew to +6 %. The timing and size will differ by camera, but using only frames where the lens position has stopped changing holds for any autofocus camera.
 
-There are two fixes.
+There are three fixes.
 
+- **Work near the factory-calibration distance:** if you use the factory values as they are, with no table, the simplest fix is to keep the object near the distance where they hold. On this camera the error was +0.2 % at 44 cm and −0.4 % at 59–77 cm: it barely changes going farther, and climbs steeply going closer. The key is "don't get close". Too far has its own cost, though: the object covers fewer pixels and stereo depth error grows, so about 40–50 cm looks like a safe range for this camera. Which distance the factory values fit differs by camera, so check yours first.
 - **A per-camera correction table:** tabulate the focal length per lens position, and on every frame look up the value from the lens position the camera reports. Tested on sessions not used to build the table, the error dropped from 1.4 % median (5.9 % max) to **0.24 % (1.1 % max)**. It has to be built separately for each camera.
 - **A fixed-focus camera:** if measurement is the goal, a fixed-focus model is cleanest from the start. Check that its closest sharp distance is nearer than your working distance.
 
-All three traps **produce plausible numbers**, so you can't spot them from the results. When you use a new camera or a new resolution mode, check three things first:
+Again, the numbers above are this camera's. Yours may not have these traps, or may have them at a different size. What they share is that all three **produce plausible numbers**, so you can't spot them from the results. When you use a new camera or a new resolution mode (or even another unit of the same model), check three things first:
 
 - With a flat target at a known distance (a checkerboard), does the distance from the lens parameters match the stereo distance?
 - In the rectified pair, is the vertical offset between matching points within 0.5 px?
@@ -214,7 +219,7 @@ We started on merging a scan of the underside but stopped. The mouse's outline a
 
 - **If you have CAD, CAD is best.** It includes the underside, and as in [the correction post](jetson-foundationpose-16gb.md), colouring it by part prevents front-back flips. The scanner is the fallback when there's no CAD.
 - **One board solves the camera-position problem.** ChArUco tolerates hidden corners, so it works with the object on it, and one bar tells you whether it printed at 100 %.
-- **Camera first.** Wrong lens parameters, stereo rectification or autofocus drift skew the mesh and poses silently.
+- **Camera first.** On this camera, lens parameters, stereo rectification and autofocus drift were all off, and each skews the mesh and poses silently. Cameras differ, so check the one you're using.
 - **Kill reflections on shiny objects.** The low height came from reflection, not from too few views.
 
 ---
