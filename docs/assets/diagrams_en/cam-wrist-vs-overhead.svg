@@ -66,7 +66,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="lb" x="364" y="72">Wrist + overhead</text>
 <text class="it" x="364" y="104" style="fill:var(--green)">+ sees the whole cell</text>
 <text class="it" x="364" y="130" style="fill:var(--green)">+ finds the next part while moving</text>
-<text class="it" x="364" y="156" style="fill:var(--green)">+ can gate empty zones</text>
+<text class="it" x="364" y="156" style="fill:var(--green)">+ clear-space check</text>
 <text class="it" x="364" y="196" style="fill:var(--red)">− two calibrations</text>
 <text class="it" x="364" y="222" style="fill:var(--red)">− often blocked by the arm</text>
 <text class="sm" x="18" y="286" style="fill:var(--fg)">With two, the wrist camera owns the final pose; overhead does rough position and gating only</text>

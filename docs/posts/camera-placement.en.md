@@ -19,7 +19,7 @@ A camera looking down on the whole cell feels reassuring. It sees the table, the
 
 - Split what is in the cell three ways: **fixed things into the design file (URDF) as measured values**, **things that change every cycle to the camera**, and **people to certified safety devices**.
 - If the variation is at the level of tolerance stack-up, **one wrist camera** is often enough, with a single calibration.
-- Add overhead when any of **search area, cycle time, an empty-zone gate or a learned policy** applies. Even then, give the final pose to the wrist camera only.
+- Add overhead when any of **search area, cycle time, a clear-space check or a learned policy** applies. Even then, give the final pose to the wrist camera only.
 - More cameras stack calibration errors and easily create **ghost obstacles**. Whether you can manage calibration and overlap matters more than the count.
 
 ---
@@ -60,7 +60,7 @@ Each camera also adds work. The robot's own body has to be removed from every ca
 
 ![Three roles rather than live planner input](../assets/diagrams_en/cam-overhead-roles.svg)
 
-The empty-zone gate is the same idea as the perception gate in [Choosing a Physical AI Approach](choosing-physical-ai.md). When something unexpected appears, stop and call a person instead of looking for a detour. The robot's motion may vary, but the pass/fail verdict stays with the existing deterministic hardware.
+A **clear-space check** uses the overhead camera to confirm, before the robot moves, that the path and the drop spot are empty. If something unexpected is there, the robot does not plan a way around it; it stops and calls an operator. This follows the principle from [Choosing a Physical AI Approach](choosing-physical-ai.md): the camera only adjusts how the robot **moves**, while **verdicts** such as pass/fail stay with the existing sensors and PLC.
 
 ## A commercial example built on one wrist camera
 
@@ -77,7 +77,7 @@ In a public webinar, Vention described this setup for bin picking built on GRIIP
 | Should a camera watch the whole cell? | No. Fixed things go into the design file as measured values; only changing things go to the camera |
 | People? | Certified safety devices (area scanners, safety PLC) |
 | Default camera setup | One wrist camera, one hand-eye calibration |
-| When to add overhead | Any of search area, cycle time, empty-zone gate, learned policy |
+| When to add overhead | Any of search area, cycle time, clear-space check, learned policy |
 | With two cameras | Wrist owns the final pose; overhead does rough position and gating |
 | Pitfalls of many cameras | Stacked calibration errors (ghost obstacles), time sync, removing the robot body, compute load |
 
@@ -106,4 +106,4 @@ cuMotion, nvblox and the robot segmentation node follow NVIDIA's public Isaac RO
 - *Tolerance stack-up*: small errors in parts, jigs and pallets adding up so positions shift slightly each cycle
 - *Bin picking*: finding and picking parts one at a time from a bin of mixed parts
 - *Deterministic*: always gives the same output for the same input
-- *Gate*: a check that stops instead of proceeding when a condition is not met
+- *Clear-space check*: before the robot moves, confirm the path and drop spot are empty; if not, stop and call an operator

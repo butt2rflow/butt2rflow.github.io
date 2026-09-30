@@ -1,15 +1,15 @@
 ---
 title: "Physical AI에 투자한다면 — 순수 플레이는 없고, 가치는 이동한다"
-nav_title: "1편 · 가치는 이동한다"
+nav_title: "1부 · 가치는 이동한다"
 date: 2026-09-11
 tags: [physical-ai, investing, cobot, humanoid, nvidia, teradyne, fanuc, robotics]
 lang: ko
-description: "Physical AI가 진짜라고 믿으면 어떻게 투자하나 — 순수 플레이는 없고(NVDA·Teradyne·화낙 모두 다르게 희석), 진짜 질문은 '가치가 어디서 어디로 이동하나'다. 서사는 휴머노이드, 돈은 코봇. Physical AI 투자 1편."
+description: "Physical AI가 진짜라고 믿으면 어떻게 투자하나 — 순수 플레이는 없고(NVDA·Teradyne·화낙 모두 다르게 희석), 진짜 질문은 '가치가 어디서 어디로 이동하나'다. 서사는 휴머노이드, 돈은 코봇. Physical AI 투자 1부."
 ---
 
 # Physical AI에 투자한다면 — 순수 플레이는 없고, 가치는 이동한다
 
-> **Physical AI 투자 · 1편.** 코봇 2부작에서 코봇이 무엇인지([1부](cobot-basics.md)), UR과 화낙(FANUC)을 가르는 것이 왜 '개방성'인지([2부](cobot-ur-vs-fanuc.md))를 봤습니다. 이 글은 그 이야기를 **투자**로 잇습니다. Physical AI가 진짜라면, 우리는 그걸 어떻게 살 수 있을까요.
+> **Physical AI 투자 · 1부.** 코봇 2부작에서 코봇이 무엇인지([1부](cobot-basics.md)), UR과 화낙(FANUC)을 가르는 것이 왜 '개방성'인지([2부](cobot-ur-vs-fanuc.md))를 봤습니다. 이 글은 그 이야기를 **투자**로 잇습니다. Physical AI가 진짜라면, 우리는 그걸 어떻게 살 수 있을까요.
 
 앞의 두 편을 읽고 Physical AI가 진짜라고 받아들였다고 해 봅시다. AI가 로봇의 눈과 손이 되고([로봇 비전 시리즈](stereo-to-grasp.md)), 그 승부를 가르는 건 스펙이 아니라 '개방성'이었죠(2부).
 

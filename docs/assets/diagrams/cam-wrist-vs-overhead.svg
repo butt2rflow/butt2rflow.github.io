@@ -66,8 +66,8 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="lb" x="364" y="72">손목 + 오버헤드</text>
 <text class="it" x="364" y="104" style="fill:var(--green)">+ 셀 전체를 봄</text>
 <text class="it" x="364" y="130" style="fill:var(--green)">+ 움직이면서 다음 부품 탐색</text>
-<text class="it" x="364" y="156" style="fill:var(--green)">+ 빈 영역 관문 가능</text>
+<text class="it" x="364" y="156" style="fill:var(--green)">+ 빈 공간 확인 가능</text>
 <text class="it" x="364" y="196" style="fill:var(--red)">− 보정 두 벌</text>
 <text class="it" x="364" y="222" style="fill:var(--red)">− 팔에 자주 가림</text>
-<text class="sm" x="18" y="286" style="fill:var(--fg)">두 대를 쓰면 최종 포즈는 손목에만, 오버헤드는 대략 위치와 관문으로 제한</text>
+<text class="sm" x="18" y="286" style="fill:var(--fg)">두 대를 쓰면 최종 포즈는 손목에만, 오버헤드는 대략 위치와 빈 공간 확인으로 제한</text>
 </svg>

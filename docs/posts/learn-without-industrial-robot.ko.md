@@ -1,6 +1,6 @@
 ---
 title: "실습 노트 (0) — 실물 산업용 로봇 없이 배우기: SO-101과 URSim"
-nav_title: "0편 · 실물 로봇 없이 배우기"
+nav_title: "0부 · 실물 로봇 없이 배우기"
 date: 2026-09-28
 tags: [physical-ai, hands-on, ros2, moveit2, isaac-ros, so-101, ursim, jetson]
 lang: ko
@@ -9,7 +9,7 @@ description: "실물 UR이나 화낙을 붙여 배우기는 어렵다. 가상 �
 
 # 실습 노트 (0) — 실물 산업용 로봇 없이 배우기: SO-101과 URSim
 
-> **실습 노트 · 0편.** 개념 글([펜던트에서 ROS 2로](ros2-for-robot-programmers.md), [Physical AI를 고르는 법](choosing-physical-ai.md))에서 설명한 것을 직접 해 보며 기록하는 시리즈의 첫 글입니다. 이 편은 연습장을 고르는 계획 글이고, 결과는 해 본 뒤에 씁니다.
+> **실습 노트 · 0부.** 개념 글([펜던트에서 ROS 2로](ros2-for-robot-programmers.md), [Physical AI를 고르는 법](choosing-physical-ai.md))에서 설명한 것을 직접 해 보며 기록하는 시리즈의 첫 글입니다. 이 글은 연습장을 고르는 계획 글이고, 결과는 해 본 뒤에 씁니다.
 
 ROS 2, MoveIt 2, Isaac ROS를 글로 읽었다면, 다음은 로봇을 직접 움직여 볼 차례입니다. 그런데 배우는 단계에서 실물 UR이나 화낙을 붙이기는 쉽지 않아요.
 
@@ -52,7 +52,7 @@ e-Series URSim은 x86용이라 PC에서 실행하고, Jetson은 같은 네트워
 
 ![작은 실물 팔 하나로 Track A와 B를 모두](../assets/diagrams/hon-so101-setup.svg)
 
-Track 0·A·B는 [고르는 법](choosing-physical-ai.md)의 세 가지 설계입니다. SO-101은 LeRobot이 기본으로 지원해서 시연 기록과 학습(Track B, 시연 학습)은 바로 시작할 수 있습니다. ROS 2 쪽(Track A, 인식 + 플래너)은 커뮤니티가 만든 패키지를 씁니다. URDF, 서보용 ros2_control 드라이버, MoveIt 2 설정이 들어 있는 저장소가 여럿 있으니, 실습 2편에서 어떤 것을 왜 골랐는지 적겠습니다.
+Track 0·A·B는 [고르는 법](choosing-physical-ai.md)의 세 가지 설계입니다. SO-101은 LeRobot이 기본으로 지원해서 시연 기록과 학습(Track B, 시연 학습)은 바로 시작할 수 있습니다. ROS 2 쪽(Track A, 인식 + 플래너)은 커뮤니티가 만든 패키지를 씁니다. URDF, 서보용 ros2_control 드라이버, MoveIt 2 설정이 들어 있는 저장소가 여럿 있으니, 실습 2부에서 어떤 것을 왜 골랐는지 적겠습니다.
 
 ## 연습장과 개념 글의 짝
 
@@ -64,7 +64,7 @@ Track 0·A·B는 [고르는 법](choosing-physical-ai.md)의 세 가지 설계�
 
 ![연습장이 알려 주지 않는 것](../assets/diagrams/hon-limits.svg)
 
-SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했는지부터 가려야 합니다. 그래서 비교 실험(6편)에서는 같은 팔, 같은 블록, 같은 조건으로 20회씩 반복하고, 팔 자체의 반복 정밀도도 따로 재 둘 계획입니다.
+SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했는지부터 가려야 합니다. 그래서 비교 실험(6부)에서는 같은 팔, 같은 블록, 같은 조건으로 20회씩 반복하고, 팔 자체의 반복 정밀도도 따로 재 둘 계획입니다.
 
 ## 앞으로의 실습
 
@@ -86,7 +86,7 @@ SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했�
 
 ---
 
-**시리즈** · 다음: 실습 노트 1편, SO-101 조립과 시연 기록 (준비 중)
+**시리즈** · 다음: 실습 노트 1부, SO-101 조립과 시연 기록 (준비 중)
 
 *관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [로봇의 뇌를 엣지에 올리기 (1)](jetson-ros2-setup.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 

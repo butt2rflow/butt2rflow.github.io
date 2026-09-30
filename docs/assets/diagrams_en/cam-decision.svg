@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Do you need an overhead camera? Four questions</title>
-<desc id="de">If any of four questions is a yes, there is a reason to add an overhead camera. Is the search area wider than the wrist view from the look pose? Is the cycle time tight enough that the next part must be found while the robot moves? Do you need a gate that checks the path or drop zone is empty? Are you using a learned policy (Track B) that benefits from several viewpoints? If all are no, one wrist camera is enough.</desc>
+<desc id="de">If any of four questions is a yes, there is a reason to add an overhead camera. Is the search area wider than the wrist view from the look pose? Is the cycle time tight enough that the next part must be found while the robot moves? Do you need to check that the path or drop zone is empty? Are you using a learned policy (Track B) that benefits from several viewpoints? If all are no, one wrist camera is enough.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -68,7 +68,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bxa" x="362" y="106" width="300" height="42" rx="8"/>
 <text class="nd" x="512.0" y="131.0" text-anchor="middle">find the next part while moving</text>
 <rect class="bx" x="16" y="162" width="300" height="42" rx="8"/>
-<text class="nd" x="166.0" y="187.0" text-anchor="middle">need an empty-zone gate</text>
+<text class="nd" x="166.0" y="187.0" text-anchor="middle">need a clear-space check</text>
 <line class="ara" x1="318" y1="183" x2="358" y2="183"/>
 <text class="sm" x="338" y="177" text-anchor="middle" style="fill:var(--amber)">yes</text>
 <rect class="bxa" x="362" y="162" width="300" height="42" rx="8"/>

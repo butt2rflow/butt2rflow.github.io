@@ -60,12 +60,12 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="it" x="121" y="118" text-anchor="middle">CAD vs as-built</text>
 <text class="sm" x="121" y="160" text-anchor="middle" style="fill:var(--fg)">fix the design file, then freeze it</text>
 <rect class="bxr" x="234" y="50" width="210" height="150" rx="10"/>
-<text class="lb" x="339" y="82" text-anchor="middle">Empty-zone gate</text>
+<text class="lb" x="339" y="82" text-anchor="middle">Clear-space check</text>
 <text class="it" x="339" y="118" text-anchor="middle">path · drop zone</text>
 <text class="sm" x="339" y="160" text-anchor="middle" style="fill:var(--fg)">unexpected object → stop loudly</text>
 <rect class="bxa" x="452" y="50" width="210" height="150" rx="10"/>
 <text class="lb" x="557" y="82" text-anchor="middle">Rough position</text>
 <text class="it" x="557" y="118" text-anchor="middle">parts · pallets</text>
 <text class="sm" x="557" y="160" text-anchor="middle" style="fill:var(--fg)">wrist camera does the final pose</text>
-<text class="sm" x="18" y="232" style="fill:var(--fg)">A gate stops rather than detours, so the verdict stays deterministic</text>
+<text class="sm" x="18" y="232" style="fill:var(--fg)">Blocked means stop, not detour; the verdict stays with sensors and PLC</text>
 </svg>

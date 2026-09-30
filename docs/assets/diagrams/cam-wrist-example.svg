@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">상용 사례 — 손목 카메라 하나로 스캔과 파지</title>
-<desc id="de">Vention은 공개 웨비나(2026)에서 GRIIP 기반 빈피킹이 저가 스테레오 카메라 하나를 손목에 달고, FoundationStereo 스테레오 매칭으로 깊이를 구한 뒤 빈마다 그 위로 이동해 한 장씩 찍는다고 설명했다. 여러 카메라 융합은 하지 않는다. 고정 카메라도 지원하지만 기본은 아니고, 작업자는 영역 스캐너 같은 안전 센서가 맡는다.</desc>
+<desc id="de">Vention은 공개 웨비나(2026)에서 GRIIP 기반 빈피킹이 저가 스테레오 카메라 하나를 손목에 달고, FoundationStereo 스테레오 매칭으로 깊이를 구한 뒤 부품 통마다 그 위로 이동해 한 장씩 찍는다고 설명했다. 여러 카메라 융합은 하지 않는다. 고정 카메라도 지원하지만 기본은 아니고, 작업자는 영역 스캐너 같은 안전 센서가 맡는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,13 +54,13 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="250" rx="12"/>
-<text class="t" x="18" y="26">빈 세 개를 카메라 하나가 돌아가며 본다</text>
+<text class="t" x="18" y="26">부품 통 세 개를 카메라 하나가 돌아가며 본다</text>
 <rect class="bxg" x="60" y="150" width="110" height="50" rx="6"/>
-<text class="nd" x="115" y="180" text-anchor="middle">빈 1</text>
+<text class="nd" x="115" y="180" text-anchor="middle">부품 통 1</text>
 <rect class="bxg" x="210" y="150" width="110" height="50" rx="6"/>
-<text class="nd" x="265" y="180" text-anchor="middle">빈 2</text>
+<text class="nd" x="265" y="180" text-anchor="middle">부품 통 2</text>
 <rect class="bxg" x="360" y="150" width="110" height="50" rx="6"/>
-<text class="nd" x="415" y="180" text-anchor="middle">빈 3</text>
+<text class="nd" x="415" y="180" text-anchor="middle">부품 통 3</text>
 <rect class="bxgr" x="46" y="60" width="140" height="40" rx="8"/>
 <text class="nd" x="116.0" y="84.0" text-anchor="middle">손목 스테레오 1대</text>
 <line class="arg" x1="116" y1="102" x2="116" y2="146"/>
