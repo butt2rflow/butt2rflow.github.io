@@ -6,6 +6,34 @@
 
 ---
 
+## 2026-09-29 (2) — 카메라 글 문단 수정, 시리즈 번호 편→부, Physical AI 투자 1~3부 수치 갱신
+
+- **카메라 글 `camera-placement`(한/영, `d2e62bc`):**
+  - "빈 영역 관문" 문단을 새로 썼다. 원래 문단은 `choosing-physical-ai`에 없는 "인식 관문"을 참조했다. "관문"은 ROS 2 시리즈 4부의 용어이고 뜻도 달랐다.
+  - 용어를 "빈 공간 확인 / clear-space check"로 바꿨다(본문, 표, 용어, 그림 `cam-decision`·`cam-overhead-roles`·`cam-wrist-vs-overhead` 한/영).
+  - `cam-wrist-example`: "빈 1/2/3" → "부품 통 1/2/3"(bin이 한국어로 부자연스러움). "빈피킹"이라는 용어는 유지했다.
+- **시리즈 번호 통일(`d2e62bc`):** Physical AI 투자 1~3편과 실습 노트 0편을 "N부"로 바꿨다. 코봇 1·2부의 교차 링크 문구도 함께 바꿨다. 이름 붙은 글(스캔편·튜닝편·정정편)과 상품 편수(원칙편 4편 등)는 그대로 뒀다.
+- **투자 2부 `physical-ai-investing-actuators`(한/영, `063ed8c`):**
+  - "누가 무엇을 만드나"에 QDD 쪽 문단을 추가했다. ALNT(향후 PER 36.6배, 고점 근처, 1년 +156%), RRX(13.3배, 고점 대비 -37%), MP(107.7배·적자, 고점 대비 -55%)
+  - Unitree 상장(688836, 외국 개인은 매수 어려움), Agility SPAC(CCXI→AGLT), 국내 로보티즈·하이젠알앤엠도 다뤘다.
+  - 정리 표, 출처, 용어(프레임리스 모터·SPAC), `inv2-supply`에 Allient를 넣었다.
+- **투자 3부 `physical-ai-investing-power`(한/영, `5178c58`):**
+  - 수출 통제 유예: 미국 재무장관이 2026-09-25에 미·중 합의를 2027-01-10까지 연장한다고 밝혔다. 보도된 대상은 희토류다. 배터리 소재(공고 58호) 유예가 포함되는지는 **미확인**으로 적었다(본문, 표, `inv3-controls` 한/영).
+  - 원자력 수치: OKLO(시총 69억 달러, 매출 약 120만 달러, 주식 수 +30%, 1년 -66%), CEG(향후 21배, -20%), VST(14배, -32%)
+- **투자 1부 `cobot-investing`(한/영, `0ca9ae3`):**
+  - TER P/E를 ~47배에서 ~55배로 고쳤다. 비교표를 최근 12개월 / 향후 P/E로 나눴다(NVDA 29/19, TER 55/41, 화낙 31/27).
+  - Unitree 상장 첫날 +487%를 종가 기준 +460%로 바로잡았다. Agility SPAC 상장 소식을 한 줄 넣었다.
+- **로컬 노트 `physical-ai-investment-notes.md`(미추적, 커밋 안 함):**
+  - 8장: 네이버 ese4236 「휴머노이드 QDD 모터 시대…」 요약과 검토 메모(QDD "6~10:1"인데 사례 QC050은 25:1, 감속기 기업의 QDD 위험을 언급하지 않음)
+  - 9장: QDD 쪽 미국 투자 수단과 밸류에이션 표
+- 주가 수치는 전부 StockAnalysis 2026-09-29 종가 기준이다.
+
+**커밋:** `d2e62bc` · `063ed8c` · `5178c58` · `0ca9ae3` (모두 main에 푸시)
+
+**검증:** Deploy MkDocs 4회 모두 성공. 라이브 `curl` 200과 새 내용 확인(camera-placement "빈 공간 확인", actuators "Allient", power "2027년 1월 10일", cobot-investing "+460%", EN power "January 10, 2027"). 로컬 `mkdocs build` 에러 없음. 새 SVG 글자가 상자에 맞는지는 눈으로 확인하지 않았다.
+
+---
+
 ## 2026-09-29 — 현장 노트 튜닝편·스캔편 발행, 코스 갱신(라이선스·클라우드 GPU·반사·스캔)
 
 - **캡처 팩 점검:** `FoundationModels_live_capture_handoff_2026-09-28.zip`(09-29 후속 + session 2 추가), `FoundationStereo_live_demo_keyboard_*.zip`(같은 팩에 책상 장면 루트 배치). 이미 쓴 이미지는 변경 없음, README만 추가. 사용자 요청으로 두 zip 삭제.
