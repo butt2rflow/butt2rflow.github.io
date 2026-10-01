@@ -1,0 +1,93 @@
+<svg width="100%" viewBox="0 0 680 318" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Three ways obstacles reach cuMotion</title>
+<desc id="de">cuMotion checks collisions against three merged sources. First, the distance map nvblox builds from depth images after the robot itself has been removed. Second, boxes and meshes in the planning scene: fixtures such as jigs, and objects found by FoundationPose. Third, the robot itself as XRDF collision spheres, plus any object attached to it after a grasp. Objects FoundationPose does not know still enter the distance map as occupied space, so they are avoided. All of this is for planning; protecting people is the safety devices' job.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="318" rx="12"/>
+<text class="t" x="18" y="26">What the camera sees, what you know, the robot itself</text>
+<rect class="bxa" x="16" y="52" width="124" height="48" rx="8"/>
+<text class="nd" x="78.0" y="73.0" text-anchor="middle">depth camera</text>
+<text class="sm" x="78.0" y="88.0" text-anchor="middle">wrist / overhead</text>
+<line class="ar" x1="142" y1="76" x2="162" y2="76"/>
+<rect class="bx" x="166" y="52" width="144" height="48" rx="8"/>
+<text class="nd" x="238.0" y="73.0" text-anchor="middle">remove the robot</text>
+<text class="sm" x="238.0" y="88.0" text-anchor="middle">robot segmenter</text>
+<line class="ar" x1="312" y1="76" x2="332" y2="76"/>
+<rect class="bxt" x="336" y="52" width="148" height="48" rx="8"/>
+<text class="nd" x="410.0" y="73.0" text-anchor="middle">nvblox</text>
+<text class="sm" x="410.0" y="88.0" text-anchor="middle">distance map (SDF)</text>
+<rect class="bxg" x="16" y="120" width="124" height="48" rx="8"/>
+<text class="nd" x="78.0" y="141.0" text-anchor="middle">known objects</text>
+<text class="sm" x="78.0" y="156.0" text-anchor="middle">jigs, FoundationPose</text>
+<line class="ar" x1="142" y1="144" x2="162" y2="144"/>
+<rect class="bx" x="166" y="120" width="318" height="48" rx="8"/>
+<text class="nd" x="325.0" y="141.0" text-anchor="middle">planning scene: boxes and meshes</text>
+<text class="sm" x="325.0" y="156.0" text-anchor="middle">things whose shape you know exactly</text>
+<rect class="bxg" x="16" y="188" width="124" height="48" rx="8"/>
+<text class="nd" x="78.0" y="209.0" text-anchor="middle">the robot itself</text>
+<text class="sm" x="78.0" y="224.0" text-anchor="middle">URDF + XRDF</text>
+<line class="ar" x1="142" y1="212" x2="162" y2="212"/>
+<rect class="bx" x="166" y="188" width="318" height="48" rx="8"/>
+<text class="nd" x="325.0" y="209.0" text-anchor="middle">collision spheres + the held object</text>
+<text class="sm" x="325.0" y="224.0" text-anchor="middle">object attachment</text>
+<line class="ar" x1="486" y1="76" x2="516" y2="76"/>
+<line class="ar" x1="486" y1="144" x2="516" y2="144"/>
+<line class="ar" x1="486" y1="212" x2="516" y2="212"/>
+<rect class="hi" x="520" y="52" width="142" height="184" rx="10"/>
+<text class="lb" x="591" y="136" text-anchor="middle">cuMotion</text>
+<text class="sm" x="591" y="156" text-anchor="middle">merges all three</text>
+<text class="sm" x="591" y="170" text-anchor="middle">for collision checks</text>
+<rect class="fam" x="16" y="252" width="646" height="52" rx="10"/>
+<text class="st" x="30" y="273">Objects FoundationPose doesn't know still land in the distance map as 'something here', and get avoided.</text>
+<text class="st" x="30" y="293">All of this is for planning. Protecting people during motion is the safety devices' job.</text>
+</svg>

@@ -22,6 +22,7 @@ Two of the five steps from Part 3 take a long time. Step 1, perception, has to r
 - Isaac ROS nodes are **ordinary ROS 2 nodes**. They join the graph with the same topics and message types and just do the heavy math on the GPU.
 - **NITROS** passes images between GPU nodes while keeping them in GPU memory. From Isaac ROS 5.0 the same capability is built into ROS 2 itself.
 - **cuMotion** is a GPU planner that plugs into MoveIt 2's planner slot. Keep your code, add the cuMotion pipeline to the MoveIt config and pick it instead of OMPL. Each robot needs a companion file called **XRDF**.
+- cuMotion avoids the merge of **what the camera sees** (nvblox), **what you know** (the planning scene) and **the robot itself** (XRDF). It avoids objects FoundationPose doesn't know too, but it is not a way to protect people.
 - JetPack, ROS 2 and Isaac ROS go together **as a set** and are upgraded together.
 - Perception results feed corrections only after passing a **gate** (confidence, stack-up range); outside it, the cell stops and reports. They never feed the verdict.
 - Change robots and **the upper layers stay put**. You swap three things: the blueprint, the driver and the MoveIt configuration.
@@ -75,6 +76,39 @@ To use cuMotion, each robot needs one more file.
 ![Collision checks simplified to a few dozen spheres](../assets/diagrams_en/r2p4-xrdf.svg)
 
 **XRDF** is a file that supplements the URDF, and its main part is a collision model that approximates each link of the robot with a set of spheres. Collision checks between complex 3D shapes are slow, but distances between spheres are very fast to compute, which is what lets the GPU filter so many candidates quickly. Link pairs allowed to touch, tool frames, and joint acceleration and jerk (how abruptly acceleration changes) limits go in the same file. NVIDIA's documentation includes a UR10e example, and other robots can be built with the robot description editor in Isaac Sim. If a model looks similar but its link dimensions differ, refit the spheres instead of reusing an existing file.
+
+## What cuMotion avoids
+
+The XRDF settles the robot's own shape. How does cuMotion learn about everything around it? Obstacles come in three ways.
+
+![What the camera sees, what you know, the robot itself](../assets/diagrams_en/r2p4-obstacles.svg)
+
+The first is **what the camera sees**. nvblox takes the depth images from a depth camera, divides the cell into small cubes (voxels), and builds a map that records, for each cube, how far it is from the nearest object. One step comes before that. The camera also sees the robot arm, and left alone, the robot would treat its own arm as an obstacle and try to avoid it. So the robot segmentation node (`isaac_ros_cumotion_robot_segmenter`) computes the robot's shape from the current joint angles and erases it from the depth images first.
+
+The second is **what you already know**. Fixtures whose shape and position you know, such as jigs and tables, go into Part 3's planning scene as boxes or meshes. A part whose pose FoundationPose has found can go in as its CAD mesh too. Anything entered this way doesn't need to be seen again and carries no depth noise. How to split the work between fixtures and cameras is covered in [How many cameras, and where](camera-placement.md).
+
+The third is **the robot itself**: the XRDF spheres, and after a grasp, the held part approximated with spheres and attached to the robot's body (the object attachment package). That is what gives you a path where the part you're carrying doesn't hit the jig either.
+
+cuMotion merges all three and checks them together.
+
+### What about objects FoundationPose doesn't know?
+
+They still get avoided, because the two tools answer different questions.
+
+| | FoundationPose | nvblox |
+|---|---|---|
+| Question it answers | Which part is this, and how is it posed? | Is something here or not? |
+| Covers | Only parts whose CAD you registered | Everything the camera sees |
+| Used for | Choosing where to grasp | Avoiding collisions |
+
+A toolbox someone left in the cell, or a sagging cable, doesn't exist as far as FoundationPose is concerned. In the nvblox map, though, it shows up as "something here." To avoid an object you don't need to know what it is.
+
+### Four things to watch
+
+- **The part you want to pick becomes an obstacle too.** nvblox puts the target part on the map like everything else. Left alone, the planner steers around it and the gripper can't get close. A common fix is to clear the region of the part FoundationPose found from the distance map and handle that part separately as an exact mesh.
+- **What the camera hasn't seen isn't on the map.** A hidden spot, like the back of a shelf, may be indistinguishable from empty space. Check camera placement and the nvblox settings together.
+- **Wrong depth means a wrong map.** Shiny metal, transparent parts and black parts produce missing or noisy depth, so obstacles drop out or obstacles that aren't there appear (ghost obstacles). A small error in hand-eye calibration also puts obstacles in the wrong place.
+- **It's a planning tool.** cuMotion is a planner that computes a path and hands it off. It is not meant to dodge a hand that suddenly enters during motion. As Part 3 covered, protecting people stays with the robot controller's safety functions and the safety devices.
 
 ## Perception results pass through a gate
 
@@ -146,7 +180,7 @@ Read them in this order; each builds on the one before. Pick the documentation f
 
 ### Sources and notices
 
-Isaac ROS's structure, NITROS, cuMotion and its MoveIt 2 plugin, the contents of XRDF, and the versions each release targets (3.2 Humble / JetPack 6, 4.x Jazzy / JetPack 7, 5.0 ROS 2 Lyrical with NITROS folded into ROS 2) follow NVIDIA's official Isaac ROS documentation and release notes. The 210 ms figure was measured first-hand in the [Field Notes](jetson-isaac-foundation-models.md) and varies with scene, settings and version. The UR packages and External Control (URCap/URCapX) follow the Universal Robots ROS 2 driver documentation; the FANUC driver refers to FANUC Corporation's `fanuc_driver` repository. ROS is a trademark of Open Source Robotics Foundation (Open Robotics); MoveIt of PickNik Inc.; NVIDIA, Isaac ROS, Isaac Sim, Jetson, Orin, Thor, JetPack, TensorRT, CUDA, cuMotion and nvblox of NVIDIA Corporation; Docker of Docker, Inc.; Linux of Linus Torvalds; Pilz of Pilz GmbH & Co. KG; SAM of Meta; FANUC and ROBOGUIDE of FANUC Corporation; Universal Robots, UR, URSim, URCaps and PolyScope of Universal Robots A/S (a Teradyne company). They are used here only to refer to those products.
+Isaac ROS's structure, NITROS, cuMotion and its MoveIt 2 plugin, the contents of XRDF, obstacle representations (boxes, meshes, nvblox distance maps) and the robot segmentation and object attachment packages, and the versions each release targets (3.2 Humble / JetPack 6, 4.x Jazzy / JetPack 7, 5.0 ROS 2 Lyrical with NITROS folded into ROS 2) follow NVIDIA's official Isaac ROS documentation and release notes. The 210 ms figure was measured first-hand in the [Field Notes](jetson-isaac-foundation-models.md) and varies with scene, settings and version. The UR packages and External Control (URCap/URCapX) follow the Universal Robots ROS 2 driver documentation; the FANUC driver refers to FANUC Corporation's `fanuc_driver` repository. ROS is a trademark of Open Source Robotics Foundation (Open Robotics); MoveIt of PickNik Inc.; NVIDIA, Isaac ROS, Isaac Sim, Jetson, Orin, Thor, JetPack, TensorRT, CUDA, cuMotion and nvblox of NVIDIA Corporation; Docker of Docker, Inc.; Linux of Linus Torvalds; Pilz of Pilz GmbH & Co. KG; SAM of Meta; FANUC and ROBOGUIDE of FANUC Corporation; Universal Robots, UR, URSim, URCaps and PolyScope of Universal Robots A/S (a Teradyne company). They are used here only to refer to those products.
 
 ### Glossary
 
@@ -159,6 +193,10 @@ Isaac ROS's structure, NITROS, cuMotion and its MoveIt 2 plugin, the contents of
 - *Container*: a way of packaging a whole software environment so it runs identically on any computer (Docker)
 - *cuMotion*: NVIDIA's GPU motion planner that plugs into MoveIt 2's planner slot
 - *XRDF*: a file supplementing the URDF for cuMotion: collision spheres, self-collision rules, tool frames, acceleration and jerk limits
+- *nvblox*: an NVIDIA library that turns depth images into voxels and a distance map for the planner
+- *Voxel*: one small cube of space; a pixel carried into three dimensions
+- *Robot segmenter*: the node that erases the robot itself from depth images
+- *Object attachment*: attaching a held object to the robot's body so it is included in collision checks
 - *URCap · URCapX*: add-ons installed on the UR pendant (PolyScope 5 · PolyScope X)
 - *Gate*: the step that checks a perception result's confidence and stack-up range before it is used for motion
 - *Confidence · fit error*: the model's own certainty score · the distance left after fitting the CAD

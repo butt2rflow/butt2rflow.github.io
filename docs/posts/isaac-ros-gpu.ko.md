@@ -22,6 +22,7 @@ description: "매 프레임 신경망을 실행하는 인식과 복잡한 경로
 - Isaac ROS 노드는 **평범한 ROS 2 노드**입니다. 같은 토픽, 같은 메시지 형식으로 그래프에 들어가고, 무거운 계산만 GPU에서 합니다.
 - **NITROS**는 GPU 노드끼리 이미지를 GPU 메모리에 둔 채 넘기는 방식입니다. Isaac ROS 5.0부터는 같은 기능이 ROS 2 자체에 들어갔어요.
 - **cuMotion**은 MoveIt 2의 플래너 자리에 끼워 쓰는 GPU 플래너입니다. 코드는 그대로 두고, MoveIt 설정에 cuMotion 파이프라인을 추가해 OMPL 대신 고르면 됩니다. 로봇마다 **XRDF**라는 보조 파일이 필요해요.
+- cuMotion은 **카메라가 본 것**(nvblox), **알고 있는 것**(플래닝 씬), **로봇 자신**(XRDF)을 합쳐서 피합니다. FoundationPose가 모르는 물체도 피하지만, 사람을 지키는 수단은 아닙니다.
 - JetPack, ROS 2, Isaac ROS는 **한 세트**로 맞추고 함께 올립니다.
 - 인식 결과는 **관문**(신뢰도·누적 공차 범위)을 통과해야 보정에 쓰고, 벗어나면 멈추고 알립니다. 판정에는 넣지 않습니다.
 - 로봇을 바꿔도 **위층은 그대로**입니다. 갈아 끼우는 건 설계도, 드라이버, MoveIt 설정 세 가지예요.
@@ -75,6 +76,39 @@ cuMotion을 쓰려면 로봇마다 파일이 하나 더 필요합니다.
 ![충돌 검사를 공 몇십 개로 단순화](../assets/diagrams/r2p4-xrdf.svg)
 
 **XRDF**는 URDF를 보완하는 파일로, 가장 큰 부분은 로봇의 각 링크를 공 여러 개로 근사한 충돌 모델입니다. 복잡한 3D 모양끼리의 충돌 검사는 느리지만, 공끼리의 거리는 아주 빨리 계산할 수 있거든요. 그 덕에 GPU가 수많은 후보를 빨리 걸러 냅니다. 서로 부딪혀도 되는 링크 쌍, 툴 좌표계, 관절의 가속도 한계와 저크(가속도가 얼마나 급하게 바뀌는지) 한계도 같이 적습니다. NVIDIA 문서에 UR10e 예시가 있고, 다른 로봇은 Isaac Sim의 로봇 설명 편집기로 만들 수 있어요. 모양이 비슷해 보여도 링크 치수가 다른 모델이라면 기존 파일을 그대로 쓰지 말고 공을 다시 맞춰야 합니다.
+
+## cuMotion은 무엇을 피하나
+
+XRDF로 로봇 자신의 모양은 정해졌습니다. 그럼 주변 장애물은 어떻게 알까요? 세 갈래로 들어옵니다.
+
+![카메라가 본 것, 알고 있는 것, 로봇 자신](../assets/diagrams/r2p4-obstacles.svg)
+
+첫째는 **카메라가 본 것**입니다. nvblox가 3D 카메라의 깊이 영상을 받아 셀 안의 공간을 작은 정육면체(복셀)로 나누고, 칸마다 가장 가까운 물체까지의 거리를 적은 지도를 만듭니다. 그 전에 거치는 단계가 하나 있어요. 카메라에는 로봇 팔도 찍히니, 그대로 두면 로봇이 자기 팔을 장애물로 알고 피하려 듭니다. 그래서 로봇 분할 노드(`isaac_ros_cumotion_robot_segmenter`)가 현재 관절 각도로 로봇 모양을 계산해 깊이 영상에서 그 부분을 먼저 지웁니다.
+
+둘째는 **이미 알고 있는 것**입니다. 지그나 작업대처럼 모양과 위치를 아는 고정물은 3부의 플래닝 씬에 상자나 메시로 넣습니다. FoundationPose로 자세를 알아낸 부품도 CAD 메시째 넣을 수 있어요. 이렇게 넣은 것은 카메라로 다시 볼 필요가 없고 깊이 노이즈도 섞이지 않습니다. 고정물과 카메라의 역할 나누기는 [카메라는 몇 대, 어디에](camera-placement.md)에 따로 정리했습니다.
+
+셋째는 **로봇 자신**입니다. XRDF의 공들이고, 부품을 집어 든 뒤에는 그 부품도 공으로 근사해 로봇 몸에 붙입니다(object attachment 패키지). 그래야 들고 가는 부품까지 지그에 부딪히지 않는 경로가 나와요.
+
+cuMotion은 이 셋을 합쳐 한 번에 검사합니다.
+
+### FoundationPose가 모르는 물체는?
+
+그래도 피합니다. 두 도구가 답하는 질문이 다르기 때문이에요.
+
+| | FoundationPose | nvblox |
+|---|---|---|
+| 답하는 질문 | 이게 어떤 부품이고, 어떤 자세로 놓였나 | 이 자리에 뭔가 있나, 없나 |
+| 대상 | CAD를 등록해 둔 부품만 | 카메라에 찍힌 모든 것 |
+| 쓰임 | 잡을 곳 정하기 | 충돌 피하기 |
+
+누가 셀에 두고 간 공구 상자나 늘어진 케이블은 FoundationPose에게는 없는 물건입니다. 하지만 nvblox 지도에는 "무언가 있는 자리"로 들어가요. 피하는 데는 그게 무엇인지 알 필요가 없습니다.
+
+### 조심할 네 가지
+
+- **잡으려는 부품도 장애물이 됩니다.** nvblox는 집을 부품까지 지도에 올립니다. 그대로 두면 플래너가 부품을 피하느라 그리퍼가 다가가지 못해요. 흔한 해법은 FoundationPose가 찾은 부품 자리를 거리 지도에서 빼고, 그 부품은 정확한 메시로 따로 다루는 것입니다.
+- **카메라가 못 본 곳은 지도에 없습니다.** 선반 뒤처럼 가려진 곳은 비어 있는 곳과 구별되지 않을 수 있어요. 카메라 위치와 nvblox 설정을 함께 확인하세요.
+- **깊이가 틀리면 지도도 틀립니다.** 반짝이는 금속, 투명한 물체, 검은 물체는 깊이 값이 비거나 튀어서 장애물이 빠지거나 없는 장애물(유령 장애물)이 생깁니다. 핸드-아이 캘리브레이션이 조금만 어긋나도 장애물이 엉뚱한 자리에 찍히고요.
+- **계획용 도구입니다.** cuMotion은 경로를 계산해 넘기는 플래너입니다. 실행 도중 갑자기 들어온 사람 손을 피하는 용도가 아니에요. 사람 보호는 3부에서 본 것처럼 로봇 컨트롤러의 안전 기능과 안전 장치가 맡습니다.
 
 ## 인식 결과는 관문을 거쳐서
 
@@ -146,7 +180,7 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 ### 출처와 표기
 
-Isaac ROS의 구성, NITROS, cuMotion과 MoveIt 2 플러그인, XRDF의 내용, 릴리스별 대상 버전(3.2 Humble·JetPack 6, 4.x Jazzy·JetPack 7, 5.0 ROS 2 Lyrical과 NITROS의 ROS 2 편입)은 NVIDIA Isaac ROS 공식 문서와 릴리스 노트를 근거로 했습니다. 210 ms는 [현장 노트](jetson-isaac-foundation-models.md)에서 직접 측정한 값이며 장면·설정·버전에 따라 달라집니다. UR 패키지와 External Control(URCap/URCapX)은 Universal Robots ROS 2 드라이버 문서를, 화낙 드라이버는 FANUC Corporation의 `fanuc_driver` 저장소를 참고했습니다. ROS는 Open Source Robotics Foundation(Open Robotics)의, MoveIt은 PickNik Inc.의, NVIDIA·Isaac ROS·Isaac Sim·Jetson·Orin·Thor·JetPack·TensorRT·CUDA·cuMotion·nvblox는 NVIDIA Corporation의, Docker는 Docker, Inc.의, Linux는 Linus Torvalds의, Pilz는 Pilz GmbH & Co. KG의, SAM은 Meta의, FANUC·ROBOGUIDE는 FANUC Corporation의, Universal Robots·UR·URSim·URCaps·PolyScope는 Universal Robots A/S(Teradyne 계열)의 상표이며, 지칭 목적으로만 사용했습니다.
+Isaac ROS의 구성, NITROS, cuMotion과 MoveIt 2 플러그인, XRDF의 내용, 장애물 표현(상자·메시·nvblox 거리 지도)과 로봇 분할·물체 부착 패키지, 릴리스별 대상 버전(3.2 Humble·JetPack 6, 4.x Jazzy·JetPack 7, 5.0 ROS 2 Lyrical과 NITROS의 ROS 2 편입)은 NVIDIA Isaac ROS 공식 문서와 릴리스 노트를 근거로 했습니다. 210 ms는 [현장 노트](jetson-isaac-foundation-models.md)에서 직접 측정한 값이며 장면·설정·버전에 따라 달라집니다. UR 패키지와 External Control(URCap/URCapX)은 Universal Robots ROS 2 드라이버 문서를, 화낙 드라이버는 FANUC Corporation의 `fanuc_driver` 저장소를 참고했습니다. ROS는 Open Source Robotics Foundation(Open Robotics)의, MoveIt은 PickNik Inc.의, NVIDIA·Isaac ROS·Isaac Sim·Jetson·Orin·Thor·JetPack·TensorRT·CUDA·cuMotion·nvblox는 NVIDIA Corporation의, Docker는 Docker, Inc.의, Linux는 Linus Torvalds의, Pilz는 Pilz GmbH & Co. KG의, SAM은 Meta의, FANUC·ROBOGUIDE는 FANUC Corporation의, Universal Robots·UR·URSim·URCaps·PolyScope는 Universal Robots A/S(Teradyne 계열)의 상표이며, 지칭 목적으로만 사용했습니다.
 
 ### 용어 설명
 
@@ -159,6 +193,10 @@ Isaac ROS의 구성, NITROS, cuMotion과 MoveIt 2 플러그인, XRDF의 내용, 
 - *컨테이너*: 소프트웨어 환경을 통째로 묶어 어느 컴퓨터에서나 똑같이 실행하게 하는 방식 (도커)
 - *cuMotion*: MoveIt 2의 플래너 자리에 끼워 쓰는 NVIDIA의 GPU 모션 플래너
 - *XRDF*: cuMotion용으로 URDF를 보완하는 파일. 충돌용 공, 자기 충돌 규칙, 툴 좌표계, 가속도·저크 한계
+- *nvblox*: 깊이 영상을 복셀과 거리 지도로 바꿔 플래너가 쓸 수 있게 하는 NVIDIA 라이브러리
+- *복셀*: 공간을 작은 정육면체로 나눈 한 칸. 사진의 픽셀을 3차원으로 옮긴 것
+- *로봇 분할(robot segmenter)*: 깊이 영상에서 로봇 자신이 찍힌 부분을 지우는 노드
+- *물체 부착(object attachment)*: 집어 든 물체를 로봇 몸의 일부로 붙여 충돌 검사에 넣는 기능
 - *URCap · URCapX*: UR 펜던트(PolyScope 5 · PolyScope X)에 설치하는 확장 기능
 - *관문*: 인식 결과를 움직임에 쓰기 전에 신뢰도와 누적 공차 범위를 검사하는 단계
 - *신뢰도 · 맞춤 오차*: 모델이 스스로 내는 확신 점수 · CAD를 맞춘 뒤 남는 거리
