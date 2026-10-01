@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">무늬 없는 면과 반짝이는 면 — 깊이 방식별로</title>
-<desc id="de">패시브 스테레오(D405, Gemini 305, OAK-D SR USB)는 무늬 없는 면에서 대응점을 못 찾아 깊이에 구멍이 나고, 반짝이는 면에서는 깊이가 비거나 엉뚱하게 잡힌다. IR 점 프로젝터가 있는 스테레오(D435, D455, OAK-D Pro)는 무늬 없는 면이 훨씬 낫지만 거울 같은 반사에서는 틀린 깊이에 붙을 수 있다. ToF(비행시간, OAK-D SR PoE, Femto Bolt)는 무늬 없는 면에 강하지만 반짝이는 금속에서는 빛이 한 번 더 튕겨 돌아와 실제보다 멀게 읽는다.</desc>
+<desc id="de">패시브 스테레오(D405, Gemini 305, OAK-D SR USB)는 무늬 없는 면에서 대응점을 못 찾아 깊이에 구멍이 나고, 반짝이는 면에서는 깊이가 비거나 엉뚱하게 잡힌다. IR 점 프로젝터가 있는 스테레오(D435, D455, OAK-D Pro)는 무늬 없는 면이 훨씬 낫지만 거울 같은 반사에서는 틀린 깊이에 붙을 수 있다. ToF(OAK-D SR PoE, Femto Bolt)는 무늬 없는 면에 강하지만 반짝이는 금속에서는 빛이 한 번 더 튕겨 돌아와 실제보다 멀게 읽는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -69,7 +69,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="nd" x="389.0" y="118.0" text-anchor="middle">훨씬 나음</text>
 <rect class="bxa" x="306" y="158" width="166" height="36" rx="8"/>
 <text class="nd" x="389.0" y="180.0" text-anchor="middle">거울 반사에 틀림</text>
-<text class="lb" x="569" y="58" text-anchor="middle">ToF (비행시간)</text>
+<text class="lb" x="569" y="58" text-anchor="middle">ToF</text>
 <text class="sm" x="569" y="76" text-anchor="middle">OAK-D SR PoE · Femto Bolt</text>
 <rect class="bxgr" x="486" y="96" width="166" height="36" rx="8"/>
 <text class="nd" x="569.0" y="118.0" text-anchor="middle">좋음</text>
