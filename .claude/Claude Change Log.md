@@ -6,6 +6,26 @@
 
 ---
 
+## 2026-10-01 — ROS 2 4부에 cuMotion 장애물 절 추가, 대기 항목 점검
+
+- **ROS 2 4부 `isaac-ros-gpu`(한/영, `3d4ef74`):** XRDF 절 다음에 "cuMotion은 무엇을 피하나" 절을 넣었다.
+  - 장애물이 들어오는 길 세 가지: 깊이 → 로봇 분할기 → nvblox 거리 지도, 플래닝 씬의 상자·메시(FoundationPose로 자세를 잡은 부품 포함), XRDF 충돌 구와 물체 부착
+  - FoundationPose가 모르는 물체도 피하는 이유
+  - 주의 네 가지: 잡을 부품이 장애물이 되는 문제, 안 보인 공간, 깊이·핸드아이 보정 오차, 사람 보호가 아니라 경로 계획 보조라는 점
+  - 그림 `r2p4-obstacles`(한/영), 정리 줄, 용어, 출처 메모
+  - 이 커밋은 세션 마무리 없이 푸시돼서 이번 항목으로 기록한다.
+- **예약 실행 재개 확인:** 9/26 이후 멈췄던 GitHub 예약 실행이 10/01에 다시 돌았다(VIX 아카이브 09:58, 백테스트 10:32, Deploy 10:01·18:56·23:15 UTC, 모두 성공). 장중 cron(`23 13-21 * * 1-5`) 9회 중 대부분은 건너뛰어서 외부 트리거는 여전히 필요하다.
+- **홈 KO 대시보드 "프레임워크 설명" 링크 누락 → 문제 없음:** 라이브 한/영 홈의 대시보드 안 내부 링크 대상이 완전히 같다. "Framework details →" 링크는 저장소에 커밋된 옛 `docs/index.en.md`(2026-05-11 스냅샷)에만 있고, 배포 때 CI가 덮어쓴다. 대기 목록에서 지웠다.
+- **리뷰 게이트 실행:** `depth-camera-selection`, `jetson-tuning-licensing`, `jetson-scan-no-cad`, `isaac-ros-gpu` cuMotion 절에 저작권·팩트·기밀·사람 느낌·페르소나·한영 일치 게이트를 서브에이전트로 돌리고, 결과를 한/영 모두에 반영했다.
+  - **스캔편:** 🔴 "전부 상업용 부품" 주장 정정. 원자료 확인 결과 스캔 깊이는 FoundationStereo-S v2.0(NVLabs, 연구용 라이선스)이었다. 추적 체인(ESS)만 상업용이고, 상업용이면 스캔 깊이를 ESS로 바꾸라고 적었다(요약·본문·비교표·정리표·고지). 거리 오차 5.6% → 약 5%(5.3%)(초점 거리 오차가 5.6%), 그림 `jetson-scan-k-trap` 포함. BundleSDF는 "FoundationPose와 함께 내놓은" 것이 아니라 이전 연구라고 정정. `calibData.getLensPosition()`으로 보정 거리 찾는 법, depthai #842 링크, OpenCV 4.6 기준 표시. 반복된 "이 카메라 한 대" 문장 2개 삭제, 콜론 제목 2개 정리, "스테레오 카메라" → "3D 카메라", EN에 빠진 문장 2개 추가.
+  - **튜닝편:** 🔴 FoundationStereo 라이선스는 "연구 목적만"(FoundationPose는 "연구·평가")으로 구분. 🔴 "ready for commercial use"는 ESS·NGC판 FoundationStereo 카드 문구이고 FoundationPose 카드는 "상업용에 추가 학습 불필요"로 정정, 약관 매핑(EULA / Open Model License)과 EULA 조건(NVIDIA GPU 한정, 재배포 조건) 추가. 본문에 "법률 자문 아님" 한 줄. AGPL 설명 정확히(수정본의 네트워크 서비스), Ultralytics 상업 라이선스 언급. 커버리지 93~95%, 첫 자세 2.4초 통일, 초당 130°, 사진에 맞게 "사무실 책상" → "작업대", 난방기 "천장에 매단". TensorRT 버그는 "~로 보입니다". 그림 `jetson-license-lanes` 설명, `jetson-tuning-stages` 범례 "PyTorch 위주".
+  - **cuMotion 절:** FoundationPose가 모르는 물체를 피하는 건 nvblox를 켰을 때만(cuMotion 예제는 ESDF 조회가 꺼져 있음). object attachment가 들고 있는 부품 자리를 거리 지도에서 지운다는 점, `unobserved_esdf_policy`(기본은 못 본 곳을 장애물로 안 침), 분할기 여유 5cm, 간섭 영역 비유. 앞 문단의 중복 문구는 새 절로 넘김. 그림 `r2p4-obstacles` 하단 문구도 같은 조건.
+  - **「어떤 3D 카메라를」:** 🔴 D405 가격 272 → 325(공식 스토어, 2026-02 관세 추가분 반영, 직접 확인). 🔴 고압 세척은 IP67이 아니라 IP69K. 🔴 근거리형을 오버헤드에 달면 "깊이가 안 잡힘"이 아니라 "오차가 빠르게 커짐"(305도 1m까지는 깊이가 나옴), 그림 `dcs-order` 포함. OAK-D SR 1m 오차는 cm 단위가 아니라 5mm~1cm, OAK-D SR PoE 무게 297g, GMSL2 설명(휨 내성은 케이블에 달림)과 비유, ZED 0.3m는 ZED X 기준, Box 최소 30대·USB-C–USB-A 케이블. 기밀 게이트 지적으로 큰 팔 예시의 로봇 사양을 범위로 일반화했다. 상표 목록에 Cognex·reComputer·FoundationPose 추가.
+  - **반영 안 한 것(사용자 확인 필요):** 튜닝편 실시간 화면의 `pose_track 54ms` vs 본문 34ms, 체인 전체 메모리 7.7GB vs FoundationStereo 단독 7.9GB, 30초 요약의 1.5° vs 본문 1.4°. 측정 원자료 없이는 어느 쪽이 맞는지 알 수 없어 그대로 뒀다. 3D 카메라 글에서 확인 못 한 항목: 305g "FAKRA 포함 약 53mm", "로보틱스 GMSL 보드가 335Lg 기본 지원"(인용한 Seeed 글은 NDA 거절만 뒷받침), ZED X Mini 0.1~8m.
+- **검증:** 로컬 `mkdocs build --strict`는 기존 CI 생성 PNG 경고 5개 외에 없음. 볼드 짝 확인. 바뀐 그림 3개(`r2p4-obstacles` KO/EN, `dcs-order` KO/EN)는 헤드리스 Chrome으로 렌더링해 글자 넘침 없음 확인.
+
+---
+
 ## 2026-09-30 — 새 글 「어떤 3D 카메라를」, 스캔편 카메라 표현 정리, Gemini 305 데이터시트 대조
 
 - **스캔편 `jetson-scan-no-cad`(한/영):**
