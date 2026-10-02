@@ -82,7 +82,7 @@ Half of the 4.0 s is FoundationStereo, so going further means changing the model
 
 ![Time per object and pose error by chain variant](../assets/diagrams_en/jetson-tuning-alternatives.svg)
 
-- **Depth → ESS.** ESS is NVIDIA's real-time stereo depth model built for Isaac ROS. It does in **61 ms** what took FoundationStereo 2.0 s, using about 3 GB of memory instead of 7.9 GB. The whole chain halved to **2.11 s**. Pose error grew a little, from 1.4°/3.4 mm to 2.0°/4.9 mm, because FoundationStereo's depth is denser and smoother.
+- **Depth → ESS.** ESS is NVIDIA's real-time stereo depth model built for Isaac ROS. It does in **61 ms** what took FoundationStereo 2.0 s, using about 3 GB of memory. The whole chain halved to **2.11 s**. Pose error grew a little, from 1.4°/3.4 mm to 2.0°/4.9 mm, because FoundationStereo's depth is denser and smoother.
 - **Detector → YOLO-World.** An open-vocabulary detector (you can prompt it with any words, not a fixed list), returning boxes in 15 ms (32 ms inside the chain). Its boxes overlapped Grounding DINO's by 0.86–0.96, and the chain came down to **1.66 s**. Because of its licence, covered below, we kept it for research only.
 - **No detector at all.** If the object always arrives near a known spot, a fixed region of interest (a box) can replace detection. **1.52 s**, with the same error as the ESS chain. In a cell where a jig or pallet roughly fixes the position, this is the simplest answer.
 
@@ -146,7 +146,7 @@ So we rebuilt the chain from commercial parts and measured it: Grounding DINO �
 | First pose (2 refinement iterations) | 2.4 s |
 | First pose (3 iterations) | 3.4 s, 0.67° |
 | **Whole chain (per object)** | **3.26 s** |
-| **Tracking afterwards (per frame)** | **34 ms** (about 2× the NVLabs research tracker) |
+| **Tracking afterwards (per frame)** | **34 ms** (tracking stage alone, about 2× the NVLabs research tracker) |
 
 It's actually faster than the tuned research chain (4.0 s). Swapping in ESS does most of that, and the Isaac ROS node was tuned for Jetson from the start, so tracking is especially quick. At least for this combination, the worry that going commercial means going slower didn't hold.
 
@@ -154,7 +154,7 @@ To go further, we also cut the number of pose candidates the node checks at the 
 
 ![Live tracking of the mini PC with the commercial chain — the top line shows the chain and per-stage times](../assets/demos/jetson-tuning-live-track.jpg)
 
-*The top line shows the chain (gdino > SAM2 > ess > isaac) and per-stage times. The green dots are CAD model points drawn at the estimated pose; the red, green and blue arrows are the object's X, Y and Z axes. It sits about 42 cm from the camera.*
+*The top line shows the chain (gdino > SAM2 > ess > isaac) and per-stage times. The green dots are CAD model points drawn at the estimated pose; the red, green and blue arrows are the object's X, Y and Z axes. It sits about 42 cm from the camera. The on-screen pose_track 54 ms is measured in the live loop, where depth (ESS) also runs every frame; the 34 ms in the table is the tracking stage measured on its own.*
 
 ## Covered and moving
 
