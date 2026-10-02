@@ -14,7 +14,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 </style>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#9a988f"/></marker></defs>
 <rect x="0" y="0" width="680" height="288" rx="12" fill="#FAF8F2"/>
-<text class="h" x="40" y="32">Get the 1080p lens parameters (K) wrong and every distance is 5.6 % short</text>
+<text class="h" x="40" y="32">Get the 1080p lens parameters (K) wrong and every distance is about 5 % short</text>
 <text class="sub" x="40" y="50">Two ideas of how the same sensor (4056×3040) makes a 1080p image</text>
 <text class="m" x="40" y="78">Default's assumption: the whole sensor, scaled</text>
 <text class="s" x="40" y="93">4056 → 1920 (× 0.473)</text>
@@ -30,5 +30,5 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="s" x="354" y="220">4056×3040</text>
 <text class="g" x="526" y="150" style="font-size:13px">fx 1547.9</text>
 <text class="g" x="350" y="244">315.4 mm (matches stereo: 315.2 mm)</text>
-<text class="s" x="40" y="272">FoundationPose derives distance from K, so a wrong K puts every pose about 5.6 % too close</text>
+<text class="s" x="40" y="272">FoundationPose derives distance from K, so a wrong K puts every pose about 5 % too close</text>
 </svg>
