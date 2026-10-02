@@ -88,6 +88,6 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="sm" x="591" y="156" text-anchor="middle">merges all three</text>
 <text class="sm" x="591" y="170" text-anchor="middle">for collision checks</text>
 <rect class="fam" x="16" y="252" width="646" height="52" rx="10"/>
-<text class="st" x="30" y="273">Objects FoundationPose doesn't know still land in the distance map as 'something here', and get avoided.</text>
+<text class="st" x="30" y="273">With nvblox on, objects FoundationPose doesn't know land in the distance map as 'something here' and get avoided.</text>
 <text class="st" x="30" y="293">All of this is for planning. Protecting people during motion is the safety devices' job.</text>
 </svg>

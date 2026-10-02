@@ -22,7 +22,7 @@ Two of the five steps from Part 3 take a long time. Step 1, perception, has to r
 - Isaac ROS nodes are **ordinary ROS 2 nodes**. They join the graph with the same topics and message types and just do the heavy math on the GPU.
 - **NITROS** passes images between GPU nodes while keeping them in GPU memory. From Isaac ROS 5.0 the same capability is built into ROS 2 itself.
 - **cuMotion** is a GPU planner that plugs into MoveIt 2's planner slot. Keep your code, add the cuMotion pipeline to the MoveIt config and pick it instead of OMPL. Each robot needs a companion file called **XRDF**.
-- cuMotion avoids the merge of **what the camera sees** (nvblox), **what you know** (the planning scene) and **the robot itself** (XRDF). It avoids objects FoundationPose doesn't know too, but it is not a way to protect people.
+- cuMotion avoids the merge of **what the camera sees** (nvblox), **what you know** (the planning scene) and **the robot itself** (XRDF). With nvblox on, it avoids objects FoundationPose doesn't know too, but it is not a way to protect people.
 - JetPack, ROS 2 and Isaac ROS go together **as a set** and are upgraded together.
 - Perception results feed corrections only after passing a **gate** (confidence, stack-up range); outside it, the cell stops and reports. They never feed the verdict.
 - Change robots and **the upper layers stay put**. You swap three things: the blueprint, the driver and the MoveIt configuration.
@@ -69,7 +69,7 @@ Part 3 said MoveIt 2's planner can be swapped. **cuMotion** is NVIDIA's GPU plan
 
 ![Same inputs, same outputs, only the planner changes](../assets/diagrams_en/r2p4-cumotion-slot.svg)
 
-Only the way the path is found changes. To use it, you add the cuMotion planning pipeline to the MoveIt config next to OMPL and run the cuMotion node alongside. Where OMPL tries candidates one at a time, cuMotion tries and refines many at once on the GPU. With nvblox it can also turn camera depth into obstacles for planning (a planning aid, not a way to protect people). In my [Field Notes](jetson-isaac-foundation-models.md), it planned one path for a 7-axis arm in about 210 ms on an Orin NX 16GB. The number depends on the scene and settings, but it gives a sense that even an edge computer reaches practical speed.
+Only the way the path is found changes. To use it, you add the cuMotion planning pipeline to the MoveIt config next to OMPL and run the cuMotion node alongside. Where OMPL tries candidates one at a time, cuMotion tries and refines many at once on the GPU. With nvblox it can also turn camera depth into obstacles for planning (more in 'What cuMotion avoids' below). In my [Field Notes](jetson-isaac-foundation-models.md), it planned one path for a 7-axis arm in about 210 ms on an Orin NX 16GB. The number depends on the scene and settings, but it gives a sense that even an edge computer reaches practical speed.
 
 To use cuMotion, each robot needs one more file.
 
@@ -83,17 +83,17 @@ The XRDF settles the robot's own shape. How does cuMotion learn about everything
 
 ![What the camera sees, what you know, the robot itself](../assets/diagrams_en/r2p4-obstacles.svg)
 
-The first is **what the camera sees**. nvblox takes the depth images from a depth camera, divides the cell into small cubes (voxels), and builds a map that records, for each cube, how far it is from the nearest object. One step comes before that. The camera also sees the robot arm, and left alone, the robot would treat its own arm as an obstacle and try to avoid it. So the robot segmentation node (`isaac_ros_cumotion_robot_segmenter`) computes the robot's shape from the current joint angles and erases it from the depth images first.
+The first is **what the camera sees**. nvblox takes the depth images from a depth camera, divides the cell into small cubes (voxels), and builds a map that records, for each cube, how far it is from the nearest object. Think of Part 3's interference zones stretched over the whole cell, with every cube labeled 'this many mm to the nearest wall'. One step comes before that. The camera also sees the robot arm, and left alone, the robot would treat its own arm as an obstacle and try to avoid it. So the robot segmentation node (`isaac_ros_cumotion_robot_segmenter`) computes the robot's shape from the current joint angles and erases it from the depth images first (with a 5 cm margin).
 
 The second is **what you already know**. Fixtures whose shape and position you know, such as jigs and tables, go into Part 3's planning scene as boxes or meshes. A part whose pose FoundationPose has found can go in as its CAD mesh too. Anything entered this way doesn't need to be seen again and carries no depth noise. How to split the work between fixtures and cameras is covered in [How many cameras, and where](camera-placement.md).
 
-The third is **the robot itself**: the XRDF spheres, and after a grasp, the held part approximated with spheres and attached to the robot's body (the object attachment package). That is what gives you a path where the part you're carrying doesn't hit the jig either.
+The third is **the robot itself**: the XRDF spheres, and after a grasp, the held part approximated with spheres and attached to the robot's body (the object attachment package). That is what gives you a path where the part you're carrying doesn't hit the jig either. The moment the part is attached, its spot is cleared from the distance map, so the held part isn't counted twice as an obstacle.
 
 cuMotion merges all three and checks them together.
 
 ### What about objects FoundationPose doesn't know?
 
-They still get avoided, because the two tools answer different questions.
+If nvblox is connected, they still get avoided, because the two tools answer different questions.
 
 | | FoundationPose | nvblox |
 |---|---|---|
@@ -105,10 +105,10 @@ A toolbox someone left in the cell, or a sagging cable, doesn't exist as far as 
 
 ### Four things to watch
 
-- **The part you want to pick becomes an obstacle too.** nvblox puts the target part on the map like everything else. Left alone, the planner steers around it and the gripper can't get close. A common fix is to clear the region of the part FoundationPose found from the distance map and handle that part separately as an exact mesh.
-- **What the camera hasn't seen isn't on the map.** A hidden spot, like the back of a shelf, may be indistinguishable from empty space. Check camera placement and the nvblox settings together.
+- **The part you want to pick becomes an obstacle too.** nvblox puts the target part on the map like everything else. Left alone, the planner steers around it and the gripper can't get close. After the grasp, object attachment clears that spot from the map, but the approach has to be handled separately, for example by clearing the area around the part FoundationPose found and handling the part as an exact mesh.
+- **What the camera hasn't seen isn't on the map.** A hidden spot, like the back of a shelf, may be indistinguishable from empty space. By default nvblox does not count unseen space as an obstacle; if needed, set `unobserved_esdf_policy` to occupied (`kOccupied`) and check camera placement too.
 - **Wrong depth means a wrong map.** Shiny metal, transparent parts and black parts produce missing or noisy depth, so obstacles drop out or obstacles that aren't there appear (ghost obstacles). A small error in hand-eye calibration also puts obstacles in the wrong place.
-- **It's a planning tool.** cuMotion is a planner that computes a path and hands it off. It is not meant to dodge a hand that suddenly enters during motion. As Part 3 covered, protecting people stays with the robot controller's safety functions and the safety devices.
+- **It only helps with planning.** cuMotion is a planner that computes a path and hands it off. It is not meant to dodge a hand that suddenly enters during motion. As Part 3 covered, protecting people stays with the robot controller's safety functions and the safety devices.
 
 ## Perception results pass through a gate
 

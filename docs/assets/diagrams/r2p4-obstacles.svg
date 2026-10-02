@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 318" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">cuMotion이 피하는 것들이 들어오는 세 갈래</title>
-<desc id="de">cuMotion은 세 갈래의 충돌 정보를 합쳐서 검사한다. 첫째, 3D 카메라의 깊이 영상에서 로봇 자신을 지운 뒤 nvblox가 만든 거리 지도. 둘째, 플래닝 씬에 넣은 상자와 메시로, 지그 같은 고정물과 FoundationPose가 찾은 물체가 여기 들어간다. 셋째, XRDF의 충돌용 공으로 표현한 로봇 자신과, 집어 든 뒤 로봇에 붙인 물체. FoundationPose가 모르는 물체도 거리 지도에는 무언가 있는 자리로 들어가므로 피해 간다. 모두 계획용이며 사람 보호는 안전 장치가 맡는다.</desc>
+<desc id="de">cuMotion은 세 갈래의 충돌 정보를 합쳐서 검사한다. 첫째, 3D 카메라의 깊이 영상에서 로봇 자신을 지운 뒤 nvblox가 만든 거리 지도. 둘째, 플래닝 씬에 넣은 상자와 메시로, 지그 같은 고정물과 FoundationPose가 찾은 물체가 여기 들어간다. 셋째, XRDF의 충돌용 공으로 표현한 로봇 자신과, 집어 든 뒤 로봇에 붙인 물체. nvblox를 켜 두면 FoundationPose가 모르는 물체도 거리 지도에 무언가 있는 자리로 들어가므로 피해 간다. 모두 계획용이며 사람 보호는 안전 장치가 맡는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -88,6 +88,6 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="591" y="156" text-anchor="middle">셋을 합쳐</text>
 <text class="sm" x="591" y="170" text-anchor="middle">충돌 검사</text>
 <rect class="fam" x="16" y="252" width="646" height="52" rx="10"/>
-<text class="st" x="30" y="273">FoundationPose가 모르는 물체도 거리 지도에는 '무언가 있는 자리'로 들어가 피해 간다.</text>
+<text class="st" x="30" y="273">nvblox를 켜 두면 FoundationPose가 모르는 물체도 거리 지도에 '무언가 있는 자리'로 들어가 피해 간다.</text>
 <text class="st" x="30" y="293">모두 계획용 장애물이다. 실행 중에 사람을 지키는 일은 안전 장치가 맡는다.</text>
 </svg>
