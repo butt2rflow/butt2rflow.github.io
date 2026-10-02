@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 308" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>연구용 체인과 상업용 체인의 라이선스</title>
-<desc>연구용 체인은 Grounding DINO(Apache-2.0), SAM2(Apache-2.0), NVLabs FoundationStereo·FoundationPose(비상업 라이선스)로 이뤄진다. 상업용 체인은 앞 두 단계는 같고, 깊이는 ESS 또는 NGC판 FoundationStereo, 자세는 Isaac ROS FoundationPose 노드와 NGC 가중치를 쓴다. 둘 다 NVIDIA가 상업 사용 가능으로 표시한 모델이다. YOLO-World는 GPL/AGPL이라 연구용에만 둔다.</desc>
+<desc>연구용 체인은 Grounding DINO(Apache-2.0), SAM2(Apache-2.0), NVLabs FoundationStereo·FoundationPose(연구용 비상업 라이선스)로 이뤄진다. 상업용 체인은 앞 두 단계는 같고, 깊이는 ESS 또는 NGC판 FoundationStereo, 자세는 Isaac ROS FoundationPose 노드와 NGC 가중치를 쓴다. 둘 다 NVIDIA가 상업용으로 제공하는 모델이다. YOLO-World는 GPL/AGPL이라 연구용에만 둔다.</desc>
 <style>
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .h{font-size:15px;font-weight:700;fill:#3d3d3a;}

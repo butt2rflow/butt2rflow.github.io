@@ -13,7 +13,7 @@ description: "On the same Orin NX 16GB, the foundation-model chain went from 11.
 
 A chain that runs and a chain you can use on a line are separated by two thresholds. The first is speed. Eleven seconds per object is fine for a demo but slow next to a production line. The second is licensing. Many of the best models in this field are released first as lab code, and several of them come with a "research and evaluation only" condition. However fast and accurate they are, that condition keeps them out of equipment you sell.
 
-*(As with the earlier posts, this is general edge R&D with objects on an office desk, not a specific site deployment.)*
+*(As with the earlier posts, this is general edge R&D with objects on a workbench, not a specific site deployment.)*
 
 ---
 
@@ -23,7 +23,7 @@ A chain that runs and a chain you can use on a line are separated by two thresho
 - **FoundationPose shrank the most (6.3 s → 1.25 s).** The bottleneck now is the depth model, FoundationStereo (2.0 s), about half of the total.
 - **After each speed-up we checked the answers stayed the same.** Masks overlap 99.95 %+, detection boxes 0.99+, pose-model outputs within 0.3 %. That check also caught a bug in the conversion tool.
 - **Swap the depth model for ESS, NVIDIA's real-time stereo model, and the chain takes 2.1 s.** Depth drops from 2.0 s to 61 ms; pose error grows a little, to 2.0° and 4.9 mm. On shiny parts, though, the two models fail differently, so control the background first.
-- **Licensing splits the chain in two.** The NVLabs FoundationPose and FoundationStereo code is non-commercial (research and evaluation). For commercial use you take the Isaac ROS node and the weights published on NGC. That commercial chain ran at **3.3 s per object** and tracked at **34 ms per frame**.
+- **Licensing splits the chain in two.** The NVLabs FoundationPose code is for research and evaluation only, and the FoundationStereo code for research only. For commercial use you take the Isaac ROS node and the weights published on NGC. That commercial chain ran at **3.3 s per object** and tracked at **34 ms per frame**.
 
 ---
 
@@ -71,8 +71,8 @@ IoU measures how much two regions overlap, from 0 to 1, where 1 means identical.
 
 Without this comparison, two problems would have slipped through.
 
-- **A bug in the conversion tool.** The SAM2 mask decoder engine produced wrong masks. The cause was a bug in this TensorRT version (10.3): an optimization that fuses the decoder's small network layers into one got the arithmetic wrong. Exposing five intermediate results as extra outputs blocks that fusion, and the masks match the original again. Looking only at speed, we would have written "faster" and moved on.
-- **A fast but wrong detector.** An engine built earlier from a different Grounding DINO checkpoint that NVIDIA distributes ran at 166 ms, much faster, but drew boxes in the wrong places. TensorRT wasn't at fault; the checkpoint was. Rebuilt from the public Hugging Face weights, it detects correctly.
+- **A bug in the conversion tool.** The SAM2 mask decoder engine produced wrong masks. The cause appears to be a bug in this TensorRT version (10.3): an optimization that fuses the decoder's small network layers into one got the arithmetic wrong. Exposing five intermediate results as extra outputs blocks that fusion, and the masks match the original again. Looking only at speed, we would have written "faster" and moved on.
+- **A fast but wrong detector.** An engine built earlier from a different Grounding DINO checkpoint (a trained weights file) that NVIDIA distributes ran at 166 ms, much faster, but drew boxes in the wrong places. TensorRT wasn't at fault; the checkpoint was. Rebuilt from the public Hugging Face weights, it detects correctly.
 
 Every speed number should come with a note that says "same input, same answer". Only then can you rely on that speed.
 
@@ -83,7 +83,7 @@ Half of the 4.0 s is FoundationStereo, so going further means changing the model
 ![Time per object and pose error by chain variant](../assets/diagrams_en/jetson-tuning-alternatives.svg)
 
 - **Depth → ESS.** ESS is NVIDIA's real-time stereo depth model built for Isaac ROS. It does in **61 ms** what took FoundationStereo 2.0 s, using about 3 GB of memory instead of 7.9 GB. The whole chain halved to **2.11 s**. Pose error grew a little, from 1.4°/3.4 mm to 2.0°/4.9 mm, because FoundationStereo's depth is denser and smoother.
-- **Detector → YOLO-World.** An open-vocabulary detector that also takes a text prompt, returning boxes in 15 ms (32 ms inside the chain). Its boxes overlapped Grounding DINO's by 0.86–0.96, and the chain came down to **1.66 s**. Because of its licence, covered below, we kept it for research only.
+- **Detector → YOLO-World.** An open-vocabulary detector (you can prompt it with any words, not a fixed list), returning boxes in 15 ms (32 ms inside the chain). Its boxes overlapped Grounding DINO's by 0.86–0.96, and the chain came down to **1.66 s**. Because of its licence, covered below, we kept it for research only.
 - **No detector at all.** If the object always arrives near a known spot, a fixed region of interest (a box) can replace detection. **1.52 s**, with the same error as the ESS chain. In a cell where a jig or pallet roughly fixes the position, this is the simplest answer.
 
 Swapping the depth model made the biggest difference; the detector choices were worth about half a second. The order of tuning came down to one rule: **measure where the bottleneck is, then change that**.
@@ -98,7 +98,7 @@ ESS is faster, but the two depth models fail in different ways. So we compared t
 
 | Part and background | FoundationStereo | ESS |
 |---|---|---|
-| Glossy mouse: surface noise (RMS) | **3.3 mm** | 6.0 mm |
+| Glossy mouse: surface noise (how many mm a flat face wobbles on average, RMS) | **3.3 mm** | 6.0 mm |
 | Mirror-like cup on a checkerboard: "see-through" | **48 %** | 12 % |
 | Same cup on a plain **black** table | **1.6 %** | 6.3 % |
 | Cup with the lid off, on plain **white** paper | ~11 % | ~11 % |
@@ -106,7 +106,7 @@ ESS is faster, but the two depth models fail in different ways. So we compared t
 "See-through" is the share of the part whose depth came out at the height of the surface below instead of the part. When stereo matches a pattern reflected in a shiny surface, it places the depth where that pattern really is, behind the surface.
 
 - **Normally FoundationStereo is cleaner.** Its surface noise on the mouse is about half of ESS's.
-- **But it is more easily fooled by reflections.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for 94 % of the cup, so coverage alone hides the problem completely.
+- **But it is more easily fooled by reflections.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for a similar 93–95 % of the cup, so coverage alone hides the problem completely.
 - **The background decides.** The problem grew from a plain black surface to plain white to a patterned one. With shiny parts, controlling **what the part reflects** works better than changing models.
 
 So "swap to ESS and halve the time" holds for matte parts. In a cell with many glossy parts, clean up the background first, then compare both models on those parts before choosing. (One cup and one mouse show a tendency, not a statistic.)
@@ -117,7 +117,9 @@ Here a problem appears that has nothing to do with speed. The FoundationPose and
 
 > The Work and any derivative works thereof only may be used or intended for use non-commercially … "non-commercially" means for research or evaluation purposes only.
 
-So using this code to check performance is fine, but selling equipment that contains it is outside the terms. Fortunately NVIDIA also ships the same technology through a commercial path. Depending on which implementation and weights you pick at each stage, the chain splits in two.
+(That is the FoundationPose licence. The FoundationStereo licence says "for research purposes only", without "evaluation".)
+
+So checking performance for research is within the terms, but selling equipment that contains it is outside the terms. Fortunately NVIDIA also ships the same technology through a commercial path. Depending on which implementation and weights you pick at each stage, the chain splits in two.
 
 ![Licences in the research chain and the commercial chain](../assets/diagrams_en/jetson-license-lanes.svg)
 
@@ -129,9 +131,11 @@ So using this code to check performance is fine, but selling equipment that cont
 | Pose | FoundationPose, NVLabs code (non-commercial) | **Isaac ROS FoundationPose node + NGC weights** (ready for commercial use) |
 | Fast detector | YOLO-World (GPL-3.0 upstream, AGPL-3.0 in Ultralytics) | Not used |
 
-NGC is NVIDIA's catalogue for models and containers. The ESS and FoundationPose model cards there say "ready for commercial use", and each model follows its own terms (a model EULA or the NVIDIA Open Model License). Apache-2.0 is an open-source licence that broadly allows commercial use.
+NGC is NVIDIA's catalogue for models and containers. The ESS and NGC FoundationStereo model cards there say "ready for commercial use", and the FoundationPose card says it "does not require additional training for commercial applications". ESS and FoundationPose fall under NVIDIA's model EULA, FoundationStereo under the NVIDIA Open Model License. The EULA limits use to systems with NVIDIA GPUs and puts conditions on redistribution. Apache-2.0 is an open-source licence that broadly allows commercial use.
 
-YOLO-World sits under different terms again. Copyleft licences like GPL and AGPL don't forbid commercial use, but they require you to publish the source of any program you distribute combined with the code, under the same terms (for AGPL, even serving it over a network counts). Unless you plan to open the whole equipment software, it's safer to leave it out. That's why the good 1.66 s number carries a "research only" label.
+This is my reading, not legal advice. Check each licence's original text before shipping a product.
+
+YOLO-World sits under different terms again. Copyleft licences like GPL and AGPL don't forbid commercial use, but they require you to publish the source of any program you distribute combined with the code, under the same terms (for AGPL, serving a modified version over a network also triggers it; Ultralytics also sells a paid commercial licence). Unless you plan to open the whole equipment software, it's safer to leave it out. That's why the good 1.66 s number carries a "research only" label.
 
 ## How fast is the commercial chain?
 
@@ -146,7 +150,7 @@ So we rebuilt the chain from commercial parts and measured it: Grounding DINO �
 
 It's actually faster than the tuned research chain (4.0 s). Swapping in ESS does most of that, and the Isaac ROS node was tuned for Jetson from the start, so tracking is especially quick. At least for this combination, the worry that going commercial means going slower didn't hold.
 
-To go further, we also cut the number of pose candidates the node checks at the start. The first pose got faster, 1.0–1.8 s instead of 2.5 s, but flipped poses rose from 2 to 4–6 out of 23. With a near-symmetric object, fewer candidates make it likelier to pick the opposite orientation. Saving a second isn't worth two to three times as many wrong answers, so we left it as it was.
+To go further, we also cut the number of pose candidates the node checks at the start. The first pose got faster, 1.0–1.8 s instead of 2.4 s, but flipped poses rose from 2 to 4–6 out of 23. With a near-symmetric object, fewer candidates make it likelier to pick the opposite orientation. Saving a second isn't worth two to three times as many wrong answers, so we left it as it was.
 
 ![Live tracking of the mini PC with the commercial chain — the top line shows the chain and per-stage times](../assets/demos/jetson-tuning-live-track.jpg)
 
@@ -183,9 +187,9 @@ We also tried a real hand: a 98-second test of picking up the mini PC, moving it
 
 When you're tuning, it's tempting to drop checks because they're slow. This test made clear that one check has to stay.
 
-![Grounding DINO took a ceiling heater for a 'black mini computer', and the pose landed 5 m away](../assets/demos/jetson-tuning-size-check.jpg)
+![Grounding DINO took a ceiling-hung heater for a 'black mini computer', and the pose landed 5 m away](../assets/demos/jetson-tuning-size-check.jpg)
 
-When the camera tipped towards the ceiling, the detector picked a wall-mounted heater as "a black mini computer with cooling fins". The later stages trusted that box and dutifully computed a pose, 5 m from the camera. The object we wanted was on the desk, 40 cm away.
+When the camera tipped towards the ceiling, the detector picked a ceiling-hung heater as "a black mini computer with cooling fins". The later stages trusted that box and dutifully computed a pose, 5 m from the camera. The object we wanted was on the workbench, 40 cm away.
 
 This kind of failure is silent. Every stage returns normal values, so there's no error message. That's why the chain ends with a **size and distance check**: if the measured size doesn't match the CAD dimensions, or the distance is outside the work area, the result is thrown away. It takes a few milliseconds, so it costs almost nothing in speed.
 

@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 308" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>Licences in the research chain and the commercial chain</title>
-<desc>The research chain is Grounding DINO (Apache-2.0), SAM2 (Apache-2.0) and the NVLabs FoundationStereo and FoundationPose code (non-commercial licence). The commercial chain keeps the first two stages, uses ESS or the NGC FoundationStereo for depth, and the Isaac ROS FoundationPose node with NGC weights for pose; NVIDIA marks both models ready for commercial use. YOLO-World is GPL/AGPL, so it stays research only.</desc>
+<desc>The research chain is Grounding DINO (Apache-2.0), SAM2 (Apache-2.0) and the NVLabs FoundationStereo and FoundationPose code (non-commercial licence). The commercial chain keeps the first two stages, uses ESS or the NGC FoundationStereo for depth, and the Isaac ROS FoundationPose node with NGC weights for pose; NVIDIA offers both models for commercial use. YOLO-World is GPL/AGPL, so it stays research only.</desc>
 <style>
 text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 .h{font-size:15px;font-weight:700;fill:#3d3d3a;}

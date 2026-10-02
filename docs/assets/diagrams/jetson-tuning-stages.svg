@@ -17,7 +17,7 @@ text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "M
 <text class="h" x="40" y="32">물체 하나에 11.4초 → 4.0초, 어디서 줄었나</text>
 <text class="sub" x="40" y="50">Orin NX 16GB · 한 프로세스에 모델을 한 번만 올림 · 실시간 프레임 4장 평균 · 단위 초</text>
 <rect x="40" y="62" width="12" height="10" rx="2" fill="#a8a69d"/>
-<text class="s" x="58" y="71">최적화 전 (PyTorch)</text>
+<text class="s" x="58" y="71">최적화 전 (PyTorch 위주)</text>
 <rect x="200" y="62" width="12" height="10" rx="2" fill="#16a34a"/>
 <text class="s" x="218" y="71">최적화 후 (TensorRT + 수정)</text>
 <text class="m" x="40" y="104">FoundationPose</text>
