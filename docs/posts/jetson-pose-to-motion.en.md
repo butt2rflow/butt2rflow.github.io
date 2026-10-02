@@ -133,18 +133,34 @@ What to take from this is the **order** more than the numbers. Had I trusted day
 
 If every test means turning the camera on and placing things again, you can't tell whether a change came from the scene or the settings. So I saved the camera stream as a **ROS bag** (a file that records topics as they are). With the mini PC and a wireless mouse in front of the checkerboard, I moved the mouse by hand for 44 seconds. Colour, depth aligned to colour, the left and right images, lens information and transforms all went in, time-synced (1.3 GB, 434 frames per stream).
 
+![The recorded scene: a mini PC, a wireless mouse and a ChArUco board standing behind them](../assets/demos/jetson-motion-scene.jpg)
+
+*One colour frame from the bag. The glass-panel PC case is at the back left.*
+
 Two things mattered while recording:
 
 - **The colour camera's focus was locked at its factory-calibration position.** The [scanning post](jetson-scan-no-cad.md) measured that this camera's factory lens parameters hold at only one focus position. Locked there for the whole recording, the lens parameters stay right for anything later computed from this bag.
 - **One way of building image messages in ROS 2 Python made a 10× speed difference.** At first only 2.2 frames a second came out, while the camera was sending 10.4 synced sets a second and the Python work took 2.6 ms. The culprit was assigning a raw byte string to `Image.data`. Filling an `array("B")` instead let all 10 frames a second through.
 
-Replaying this bag into nvblox put all 425 depth frames into the map with no camera attached (about 1.8 ms each). Now the same scene can be compared while only the settings change.
+Replaying this bag into nvblox put all 425 depth frames into the map with no camera attached (about 1.8 ms each). Here is the resulting map laid over the same colour frame:
+
+![Left: the recorded colour frame. Right: the nvblox map overlaid on it, coloured by distance](../assets/demos/jetson-motion-map-overlay.jpg)
+
+*On the right, bluer is nearer and redder is farther. The map sits right on the board, the mini PC, the table and the mouse. At the glass case on the left and the wall edge on the right the stereo depth itself is noisy, so the map is patchy there too.*
+
+Now the same scene can be compared while only the settings change.
 
 ## Wiring the map into planning
 
 With the map confirmed, the next step was letting cuMotion read it as obstacles. The recorded depth built an nvblox map in the robot's base frame, with one transform placing the camera beside a UR10e base. Then I sent a few tool-down goal poses. Map off and map on, side by side:
 
 ![Without the map it plans straight into objects](../assets/diagrams_en/mot-planmap.svg)
+
+Marking the same goals on the recorded photo shows where each one was aimed:
+
+![Map-on results marked on the photo; dashed lines show the height from an object's surface to each goal](../assets/demos/jetson-motion-goals.jpg)
+
+*Numbers follow the rows of the figure above: 1 inside the mini PC, 2 12 cm above the mouse, 3 20 cm above the mouse, 4 15 cm above the mini PC (25 cm is off the top of the frame). The open-space goal (5) is out of frame too. White dots are the object surfaces, dashed lines the height above them. Green goals planned, red ones were rejected.*
 
 With the map off, even a goal inside the mini PC plans. cuMotion can't avoid an object it doesn't know about. With the map on, goals inside objects are rejected and open-space goals still plan. The goal 12 cm above the mouse was blocked not by the tool tip but by the **wrist** coming too close to a surface (8.9 cm). Goals above the mini PC were blocked by the glass PC case right behind it (1.7–4.7 cm). Each plan took 0.3–0.9 s, about 50 ms of it fetching the map.
 
