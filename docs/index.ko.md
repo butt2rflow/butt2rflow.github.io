@@ -215,6 +215,7 @@ title: Home
 - [**로봇의 뇌를 엣지에 — 정정편**](posts/jetson-foundationpose-16gb.md) — 현장 노트: 16GB로도 스택 전체가 동작한다
 - [**로봇의 뇌를 엣지에 — 튜닝편**](posts/jetson-tuning-licensing.md) — 현장 노트: 11초를 4초로, 상업용으로 쓸 수 있는 조합
 - [**로봇의 뇌를 엣지에 — 스캔편**](posts/jetson-scan-no-cad.md) — 현장 노트: CAD 없는 물체를 보드 한 장으로 스캔
+- [**로봇의 뇌를 엣지에 — 모션편**](posts/jetson-pose-to-motion.md) — 현장 노트: 경로 계획 186 ms, 첫 시도에 실패한 장애물 지도
 - [**티치 펜던트에서 ROS 2로 (1~4)**](posts/ros2-for-robot-programmers.md) — 펜던트 프로그래머를 위한 ROS 2 · [URDF·TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
 - [**실습 노트 (0) — 실물 산업용 로봇 없이 배우기**](posts/learn-without-industrial-robot.md) — SO-101과 URSim으로 연습장 고르기
 
