@@ -22,6 +22,12 @@
   - **cuMotion 절:** FoundationPose가 모르는 물체를 피하는 건 nvblox를 켰을 때만(cuMotion 예제는 ESDF 조회가 꺼져 있음). object attachment가 들고 있는 부품 자리를 거리 지도에서 지운다는 점, `unobserved_esdf_policy`(기본은 못 본 곳을 장애물로 안 침), 분할기 여유 5cm, 간섭 영역 비유. 앞 문단의 중복 문구는 새 절로 넘김. 그림 `r2p4-obstacles` 하단 문구도 같은 조건.
   - **「어떤 3D 카메라를」:** 🔴 D405 가격 272 → 325(공식 스토어, 2026-02 관세 추가분 반영, 직접 확인). 🔴 고압 세척은 IP67이 아니라 IP69K. 🔴 근거리형을 오버헤드에 달면 "깊이가 안 잡힘"이 아니라 "오차가 빠르게 커짐"(305도 1m까지는 깊이가 나옴), 그림 `dcs-order` 포함. OAK-D SR 1m 오차는 cm 단위가 아니라 5mm~1cm, OAK-D SR PoE 무게 297g, GMSL2 설명(휨 내성은 케이블에 달림)과 비유, ZED 0.3m는 ZED X 기준, Box 최소 30대·USB-C–USB-A 케이블. 기밀 게이트 지적으로 큰 팔 예시의 로봇 사양을 범위로 일반화했다. 상표 목록에 Cognex·reComputer·FoundationPose 추가.
   - **반영 안 한 것(사용자 확인 필요):** 튜닝편 실시간 화면의 `pose_track 54ms` vs 본문 34ms, 체인 전체 메모리 7.7GB vs FoundationStereo 단독 7.9GB, 30초 요약의 1.5° vs 본문 1.4°. 측정 원자료 없이는 어느 쪽이 맞는지 알 수 없어 그대로 뒀다. 3D 카메라 글에서 확인 못 한 항목: 305g "FAKRA 포함 약 53mm", "로보틱스 GMSL 보드가 335Lg 기본 지원"(인용한 Seeed 글은 NDA 거절만 뒷받침), ZED X Mini 0.1~8m.
+- **남은 항목 확인·정리(2차):**
+  - 튜닝편 34ms vs 화면 54ms: 34ms는 코스·업무 노트 모두 "추적 단계 단독" 실측. 화면 값은 같은 루프에서 ESS 깊이(56ms)도 매 프레임 실행되는 라이브 값이라고 캡션과 표에 밝혔다.
+  - 메모리: 체인 전체 최고치가 7.7GB인데 "FoundationStereo 7.9GB 대신"은 맞을 수 없어 비교를 빼고 ESS 약 3GB만 남겼다(원자료는 이 PC에 없음).
+  - 1.5° vs 1.4°: 요약은 "1.5° 안"(상한), 본문은 기준 체인 1.4°라 모순이 아니어서 그대로 뒀다.
+  - 3D 카메라 글: ZED X Mini 0.1~8m(2.2mm 렌즈)는 Stereolabs 스토어로, Seeed 로보틱스 GMSL 보드의 335Lg 지원은 Seeed 위키로 확인하고 출처에 위키를 추가했다. 305g "FAKRA 포함 약 53mm"는 데이터시트(42×42×40mm)에도 다른 곳에도 없어 지우고 "커넥터는 별도"로 고쳤다.
+  - 네이버 패키지 3개(스캔편·튜닝편·ROS 2 4부) 재생성. `tools/naver_refresh.py`의 ROOT를 다른 PC 경로에서 스크립트 기준 상대 경로로 바꿨다(로컬 전용 파일).
 - **검증:** 로컬 `mkdocs build --strict`는 기존 CI 생성 PNG 경고 5개 외에 없음. 볼드 짝 확인. 바뀐 그림 3개(`r2p4-obstacles` KO/EN, `dcs-order` KO/EN)는 헤드리스 Chrome으로 렌더링해 글자 넘침 없음 확인.
 
 ---
