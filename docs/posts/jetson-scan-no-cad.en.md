@@ -134,7 +134,7 @@ We also required at least 15 visible board corners and a board-pose error (repro
 Each photo yields three things.
 
 1. **Board pose:** the board's position and angle as seen by the camera, computed from the visible ChArUco corners
-2. **Depth:** per-pixel distance from FoundationStereo (NVLabs research licence; for commercial use, swap in ESS or NGC's commercial FoundationStereo)
+2. **Depth:** per-pixel distance from FoundationStereo (NVLabs research licence; for commercial use, swap in the same model's commercial NGC release, which Isaac ROS 5.0's `isaac_ros_foundationstereo` node uses and which needs JetPack 7.2. We haven't measured with the NGC release yet)
 3. **Object mask:** Grounding DINO finds a box for the text "a computer mouse" and SAM2 cuts it out. On top of that goes a condition: "points 1–150 mm above the board surface".
 
 Then all points inside the mask move into the board frame and are gathered together.
@@ -172,7 +172,7 @@ The mesh takes **4.5 seconds** to build.
 
 ## Tracking with the scanned mesh
 
-We put the mesh in place of CAD and ran the tuning post's commercial chain unchanged (Grounding DINO → SAM2 → ESS → Isaac ROS FoundationPose). It followed the correct pose at 6.9 frames/s from about 35 cm, and at 6.7 frames/s from a low angle (about 26 cm). **From scan to live 6-DoF tracking with no CAD.** The tracking chain is all commercially usable parts; only the scan's depth came from research-licensed FoundationStereo, so for commercial use swap that step to ESS.
+We put the mesh in place of CAD and ran the tuning post's commercial chain unchanged (Grounding DINO → SAM2 → ESS → Isaac ROS FoundationPose). It followed the correct pose at 6.9 frames/s from about 35 cm, and at 6.7 frames/s from a low angle (about 26 cm). **From scan to live 6-DoF tracking with no CAD.** The tracking chain is all commercially usable parts; only the scan's depth came from research-licensed FoundationStereo, so for commercial use swap that step to the commercial NGC FoundationStereo. A scan only processes about twenty photos, so depth quality matters more than speed, which makes FoundationStereo a better fit than ESS.
 
 ## Comparison with BundleSDF (model-free)
 
@@ -213,7 +213,7 @@ We started on merging a scan of the underside but stopped. The mouse's outline a
 | | Method | Mesh | Time | Licence |
 |---|---|---|---|---|
 | **With CAD** | The CAD as is, coloured by part | Most accurate, includes the underside | 0 s | — |
-| **No CAD (default)** | Printed ChArUco board + ~20 photos + height map | 100 × 66 mm (real 100 × 62) | 4.5 s | Commercially usable (with ESS or another commercial depth model) |
+| **No CAD (default)** | Printed ChArUco board + ~20 photos + height map | 100 × 66 mm (real 100 × 62) | 4.5 s | Commercially usable (with the commercial NGC FoundationStereo for depth) |
 | **Complex shapes** | BundleSDF model-free | Most exact width | 8.7 min | Research only |
 
 - **If you have CAD, CAD is best.** It includes the underside, and as in [the correction post](jetson-foundationpose-16gb.md), colouring it by part prevents front-back flips. The scanner is the fallback when there's no CAD.
