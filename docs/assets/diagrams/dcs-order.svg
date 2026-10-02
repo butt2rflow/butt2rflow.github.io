@@ -82,5 +82,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <line class="arg" x1="218" y1="214" x2="250" y2="214"/>
 <rect class="bxt" x="254" y="190" width="408" height="48" rx="8"/>
 <text class="nd" x="458.0" y="218.0" text-anchor="middle">중거리형: D435 (0.3~3m), D455 (0.6~6m)</text>
-<text class="sm" x="18" y="268" style="fill:var(--fg)">근거리형을 오버헤드에 달면 상한을 넘어서, 중거리형을 손목에 달면 하한 안쪽이라서 깊이가 빈다</text>
+<text class="sm" x="18" y="268" style="fill:var(--fg)">근거리형을 오버헤드에 달면 권장 상한을 넘어 오차가 커지고, 중거리형을 손목에 달면 하한 안쪽이라 깊이가 빈다</text>
 </svg>

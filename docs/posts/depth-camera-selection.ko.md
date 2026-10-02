@@ -19,7 +19,7 @@ description: "로봇에 달 3D 카메라는 스펙 표의 최대 거리가 아�
 
 - **장착 위치 → 물체까지 거리 → 그 거리가 권장 구간 안에 드는 카메라** 순서로 고릅니다. 해상도와 정밀도는 그다음입니다.
 - 스테레오 카메라는 **너무 가까우면 깊이가 없고, 멀어지면 오차가 거리의 제곱으로 커집니다.** 두 렌즈 사이가 좁은 카메라는 가까이에, 넓은 카메라는 멀리에 강합니다.
-- 컬러와 깊이를 **같은 센서**에서 얻는 카메라(D405, OAK-D SR)는 정렬 문제가 없습니다. 컬러 카메라가 따로 있으면 정렬 단계에서 어긋남이 생깁니다.
+- 컬러와 깊이를 **같은 센서**에서 얻는 카메라(D405, Gemini 305, OAK-D SR)는 정렬 문제가 없습니다. 컬러 카메라가 따로 있으면 정렬 단계에서 어긋남이 생깁니다.
 - 손목 근거리라면 **RealSense D405와 Orbbec Gemini 305**가 후보입니다. 305는 D405와 같은 자리의 카메라인데 근거리 설정에서 더 가까이(4~5cm) 보고 더 쌉니다.
 - 어떤 카메라를 사든 **그 카메라의 특성은 직접 확인**합니다. 같은 모델이라도 한 대 한 대가 다릅니다.
 
@@ -32,7 +32,7 @@ description: "로봇에 달 3D 카메라는 스펙 표의 최대 거리가 아�
 카메라가 물체를 보는 거리는 장착 위치가 정합니다.
 
 - **손목·그리퍼 카메라**는 팔과 함께 움직이며 물체에 다가갑니다. 파지 직전에는 물체까지 15~40cm 정도예요. 이 거리를 다 담는 근거리형(D405, Gemini 305, 권장 7~50cm)이 맞고, 파지할 부분을 크게 볼 수 있습니다.
-- **오버헤드 카메라**는 작업대 위 50cm~1m 이상에서 내려다봅니다. 근거리형을 여기에 달면 상한 50cm를 넘어 깊이가 잡히지 않아요. 시야가 넓은 중거리형(D435, D455)으로 작업 영역 전체를 한 장에 담습니다.
+- **오버헤드 카메라**는 작업대 위 50cm~1m 이상에서 내려다봅니다. 근거리형을 여기에 달면 권장 상한 50cm를 넘어 오차가 빠르게 커져요. 시야가 넓은 중거리형(D435, D455)으로 작업 영역 전체를 한 장에 담습니다.
 
 카메라 한 대로 두 역할을 모두 하기는 어렵습니다. 조작용 로봇 키트에 그리퍼 카메라와 외부 카메라가 함께 들어 있는 경우가 많은 것도 그래서예요. 컬러 영상만 쓰는 학습 정책이라면 어느 카메라든 괜찮지만, 깊이로 물체의 자세를 계산하는 파이프라인이라면 손목에는 근거리형이 필요합니다.
 
@@ -82,7 +82,7 @@ D405, Gemini 305, OAK-D SR, ZED는 스테레오 센서 중 하나가 컬러 영�
 3. **찍는 순간이 다릅니다.** 글로벌 셔터는 한 장을 한 번에, 롤링 셔터는 한 줄씩 찍어서 두 센서가 담는 순간이 조금 다릅니다. 팔에 달려 움직이는 카메라라면 컬러와 깊이가 서로 다른 순간을 보여 줍니다.
 4. **해상도와 크롭이 다릅니다.** 카메라가 컬러 영상을 보정할 때와 다르게 자르거나 줄이면 정렬이 틀어집니다.
 
-컬러 카메라가 따로 있는 모델을 써야 한다면 초점을 고정(또는 고정초점 모델을 주문)한 뒤 보정하고, 컬러 해상도를 보정할 때와 같게 두고, 로봇을 멈춘 상태에서 찍고, 마스크 가장자리를 몇 픽셀 줄인 뒤 깊이를 씁니다. 아예 흑백 영상으로 분할과 자세 계산을 하면 정렬 단계가 사라집니다.
+컬러 카메라가 따로 있는 모델을 써야 한다면 초점을 고정하거나 고정초점 모델을 주문해 보정하고, 컬러 해상도를 보정할 때와 같게 두고, 로봇을 멈춘 상태에서 찍고, 마스크 가장자리를 몇 픽셀 줄인 뒤 깊이를 씁니다. 아예 흑백 영상으로 분할과 자세 계산을 하면 정렬 단계가 사라집니다.
 
 ## 무늬 없는 면과 반짝이는 면
 
@@ -102,27 +102,27 @@ D405, Gemini 305, OAK-D SR, ZED는 스테레오 센서 중 하나가 컬러 영�
 
 | 모델 | 깊이 정확도 | 무게 | 전원·데이터 | 방진·방수 | 카메라 내 AI | 정가(USD) |
 |---|---|---|---|---|---|---|
-| RealSense D405 | 50cm에서 ±2% 이내 | 60g | USB-C | 등급 없음 | 없음 | 272 |
+| RealSense D405 | 50cm에서 ±2% 이내 | 60g | USB-C | 등급 없음 | 없음 | 325 |
 | Orbbec Gemini 305 | 50cm에서 ±1.8% 이내 | 68g | USB-C | IP54 | 없음 | 229 |
 | Orbbec Gemini 305g | 50cm에서 ±1.8% 이내 | 116g | GMSL2 동축(12V+데이터), USB-C | IP65 | 없음 | 279 |
 | Luxonis OAK-D SR | 공개 안 됨 | 72g | USB | 등급 없음 | 있음(1.4 TOPS) | 329 |
-| Luxonis OAK-D SR PoE | ToF 실내 1%, 실외 2% 미만 | 확인 못 함 | PoE(M12) | IP67 | 있음 | 479 |
+| Luxonis OAK-D SR PoE | ToF 실내 1%, 실외 2% 미만 | 297g(케이스 포함) | PoE(M12) | IP67 | 있음 | 479 |
 
 *가격은 2026년 9월 30일 제조사 스토어 정가입니다. 세금·배송은 별도이고 바뀔 수 있습니다.*
 
 고르는 기준은 이렇습니다.
 
-- **USB 케이블을 손목까지 끌어도 된다면:** Gemini 305나 D405. 크기와 베이스라인(18mm), 컬러와 깊이가 같은 센서라는 점까지 같습니다. 305는 정확도가 조금 낫고(±1.8% 대 ±2%), 방진(IP54, 전용 케이블을 나사로 고정했을 때)이 되며 더 쌉니다. 최소 거리는 설정에 따라 다릅니다. 기본 설정에서 1280×800은 9cm, 848×530은 6cm이고, 시차 탐색을 256으로 넓히는 근거리 설정에서는 5cm와 4cm까지 내려갑니다. 근거리 설정은 전력이 늘고(1.57W → 1.88W) 최고 동작 온도가 45°C에서 40°C로 낮아집니다. 305는 2026년 1월에 나온 신제품이라 ROS 2 드라이버(OrbbecSDK_ROS2)는 v2.7.2부터 지원합니다. NVIDIA Isaac ROS 예제는 대부분 RealSense 기준이라 예제를 손볼 각오는 해야 해요.
-- **팔이 움직일 때마다 케이블이 휘는 자리라면:** Gemini 305g. GMSL2는 차량과 로봇에 쓰는 가는 동축 케이블 규격으로, 휘어도 견디게 만들어졌고 전원과 데이터를 한 줄로 보냅니다. 호스트 쪽에 GMSL2 입력 보드가 있어야 하고, 책상 테스트는 USB-C로 합니다. 305g는 305 뒤에 모듈을 붙인 게 아니라 GMSL2 직렬화기를 넣은 별도 일체형 모델이에요(커넥터는 FAKRA와 SMB 두 가지). 광학과 깊이 성능은 305와 같고, 깊이가 23mm에서 40mm(FAKRA 커넥터까지 약 53mm)로 늘어납니다. USB-C는 평가·설정용이고, 운영은 12V GMSL2로 합니다. **호스트가 관문입니다.** Orbbec GMSL 드라이버의 지원 목록은 NVIDIA Jetson AGX Orin·Orin NX 개발 키트와 Thor 기반 일부 박스, 그리고 지정된 캡처 보드(MAX9296·MAX96712 계열)뿐입니다. Seeed reComputer 같은 서드파티 캐리어는 목록에 없어요. Seeed의 일반 캐리어에는 GMSL2 입력이 없고, 로보틱스 캐리어용 GMSL 보드가 기본 지원하는 Orbbec 카메라는 335Lg입니다. 그 보드의 드라이버 소스는 공개되지 않았습니다(Seeed 포럼, 2026년 8월, NDA를 이유로 거절). 이런 호스트라면 305g를 쓸 수 있다고 확인하기 어렵고, 짧고 휨에 강한 케이블을 쓴 USB 305가 현실적인 선택입니다. Orbbec도 케이블 길이·커넥터 고정·전원을 통제하고 검증하면 USB를 양산에 쓸 수 있다고 봅니다.
-- **먼지나 물이 튀는 현장이라면:** GMSL2를 지원하는 호스트라면 305g입니다. 호스트가 지원하지 않는데 물체까지 20~60cm라면 OAK-D SR PoE(IP67, PoE, ToF 포함)가 대안입니다. D405와 D435는 방진·방수 등급이 없고 USB 커넥터도 잠기지 않습니다. RealSense의 방진 모델은 D457(IP65, GMSL2)인데, D455와 같은 베이스라인 95mm라 최소 거리가 52cm(권장 0.6~6m)입니다. 오버헤드에는 맞지만 손목 근거리에는 맞지 않아요. D405에 하우징을 씌우는 방법도 있지만, 앞 창이 굴절과 반사를 더하니 창을 씌운 채로 다시 보정하고 확인해야 합니다. 고압 세척까지 견뎌야 한다면 IP67(OAK-D SR PoE, ZED X Mini)을 봅니다.
+- **USB 케이블을 손목까지 끌어도 된다면:** Gemini 305나 D405. 크기와 베이스라인(18mm), 컬러와 깊이가 같은 센서라는 점까지 같습니다. 305는 정확도가 조금 낫고(±1.8% 대 ±2%), 방진(IP54, 인증 케이블을 나사로 고정했을 때)이 되며 더 쌉니다. 최소 거리는 설정에 따라 다릅니다. 기본 설정에서 1280×800은 9cm, 848×530은 6cm이고, 시차 탐색을 256으로 넓히는 근거리 설정에서는 5cm와 4cm까지 내려갑니다. 근거리 설정은 전력이 늘고(1.57W → 1.88W) 최고 동작 온도가 45°C에서 40°C로 낮아집니다. 305는 2026년 1월에 나온 신제품이라 ROS 2 드라이버(OrbbecSDK_ROS2)는 v2.7.2부터 지원합니다. NVIDIA Isaac ROS 예제는 대부분 RealSense 기준이라 예제를 손볼 각오는 해야 해요.
+- **팔이 움직일 때마다 케이블이 휘는 자리라면:** Gemini 305g. USB가 집 안 연장선이라면 GMSL2는 자동차 배선에 가깝습니다. 차량·로봇용 카메라 연결 규격으로, 가는 동축 케이블 한 줄로 전원과 데이터를 함께 보내고, 휨 등급 케이블과 잠금 커넥터를 쓰면 움직이는 팔에도 버팁니다. 호스트 쪽에 GMSL2 입력 보드가 있어야 하고, 책상 테스트는 USB-C로 합니다. 305g는 305 뒤에 모듈을 붙인 게 아니라 GMSL2 직렬화기(영상 신호를 동축 케이블 한 줄로 보내는 칩)를 넣은 별도 일체형 모델이에요(커넥터는 FAKRA와 SMB 두 가지). 광학과 깊이 성능은 305와 같고, 깊이가 23mm에서 40mm(FAKRA 커넥터까지 약 53mm)로 늘어납니다. USB-C는 평가·설정용이고, 운영은 12V GMSL2로 합니다. **먼저 호스트를 확인하세요.** Orbbec GMSL 드라이버의 지원 목록은 NVIDIA Jetson AGX Orin·Orin NX 개발 키트와 Thor 기반 일부 박스, 그리고 지정된 캡처 보드(MAX9296·MAX96712 계열)뿐입니다. Seeed reComputer 같은 서드파티 캐리어는 목록에 없어요. Seeed의 일반 캐리어에는 GMSL2 입력이 없고, 로보틱스 캐리어용 GMSL 보드가 기본 지원하는 Orbbec 카메라는 335Lg입니다. 그 보드의 드라이버 소스는 공개되지 않았습니다(Seeed 포럼, 2026년 8월, NDA를 이유로 거절). 이런 호스트라면 305g를 쓸 수 있다고 확인하기 어렵고, 짧고 휨에 강한 케이블을 쓴 USB 305가 현실적인 선택입니다. Orbbec도 케이블 길이·커넥터 고정·전원을 통제하고 검증하면 USB를 양산에 쓸 수 있다고 봅니다.
+- **먼지나 물이 튀는 현장이라면:** GMSL2를 지원하는 호스트라면 305g입니다. 호스트가 지원하지 않는데 물체까지 20~60cm라면 OAK-D SR PoE(IP67, PoE, ToF 포함)가 대안입니다. D405와 D435는 방진·방수 등급이 없고 USB 커넥터도 잠기지 않습니다. RealSense의 방진 모델은 D457(IP65, GMSL2)인데, D455와 같은 베이스라인 95mm라 최소 거리가 52cm(권장 0.6~6m)입니다. 오버헤드에는 맞지만 손목 근거리에는 맞지 않아요. D405에 하우징을 씌우는 방법도 있지만, 앞 창이 굴절과 반사를 더하니 창을 씌운 채로 다시 보정하고 확인해야 합니다. 물에 잠길 수 있다면 IP67(OAK-D SR PoE, ZED X Mini)을 봅니다. 고압·고온 세척은 IP69K가 필요하니 별도 하우징을 검토합니다.
 - **호스트 GPU 없이 카메라 안에서 검출까지 해야 한다면:** OAK-D SR. 가까운 쪽 한계(약 20~30cm)보다 멀리 달아야 합니다.
 - **반짝이는 금속 부품이 많다면:** ToF를 주 깊이로 쓰지 않습니다(위의 다중 경로 문제). 패시브 모델은 무늬나 조명을 챙깁니다.
 
-Gemini 305와 305g 모두 IR 프로젝터가 없는 패시브 스테레오라, 데이터시트도 무늬가 있는 물체에서 깊이를 평가하라고 적어 둡니다. 무늬 없는 면에 대비한 조명 계획이 필요합니다. 살 때는 포장도 확인하세요. 정품 포장(Box)에는 1m USB-C 케이블과 안내서가 들어 있고, 벌크(Bulk)는 카메라만 들어 있습니다. 공급 쪽도 봐 둘 만합니다. RealSense는 2025년 7월 Intel에서 독립했고, 2026년 9월 Cognex가 인수하기로 발표했습니다. 제품 라인과 가격이 바뀔 수 있으니 여러 대를 살 계획이라면 대체 후보를 하나 정해 두세요.
+Gemini 305와 305g 모두 IR 프로젝터가 없는 패시브 스테레오라, 데이터시트도 무늬가 있는 물체에서 깊이를 평가하라고 적어 둡니다. 무늬 없는 면에 대비한 조명 계획이 필요합니다. 살 때는 포장도 확인하세요. 정품 포장(Box, 최소 30대)에는 1m USB-C–USB-A 케이블과 안내서가 들어 있고, 벌크(Bulk, 최소 200대)는 카메라만 들어 있습니다. 공급 쪽도 봐 둘 만합니다. RealSense는 2025년 7월 Intel에서 독립했고, 2026년 9월 Cognex가 인수하기로 발표했습니다. 제품 라인과 가격이 바뀔 수 있으니 여러 대를 살 계획이라면 대체 후보를 하나 정해 두세요.
 
 ## 큰 팔에서는
 
-카메라에서 물체까지 거리를 정하는 건 로봇 크기가 아니라 **툴 길이와 카메라 장착 위치**입니다. 가반하중 20kg급 대형 협동로봇(리치 약 1.7m)은 그리퍼가 크고 길어서 손목 카메라가 물체에서 더 멀어집니다. 순서는 똑같이 장착 위치, 거리, 카메라입니다.
+카메라에서 물체까지 거리를 정하는 건 로봇 크기가 아니라 **툴 길이와 카메라 장착 위치**입니다. 가반하중 10~20kg급 대형 협동로봇(리치 1.3~1.8m)은 그리퍼가 크고 길어서 손목 카메라가 물체에서 더 멀어집니다. 순서는 똑같이 장착 위치, 거리, 카메라입니다.
 
 **예시.** 그리퍼 길이 약 25cm, 카메라는 플랜지(툴을 붙이는 판) 뒤쪽, 파지 전 물체 위 20~40cm에서 멈춘다면 카메라에서 물체까지는 약 40~70cm입니다.
 
@@ -133,9 +133,9 @@ Gemini 305와 305g 모두 IR 프로젝터가 없는 패시브 스테레오라, �
 | Luxonis OAK-D Pro | 기본 약 0.8m부터 | 기본 설정으로는 너무 가깝습니다 |
 | Stereolabs ZED X Mini | 0.1~8m | 들어옵니다. 글로벌 셔터·IP67이지만 GMSL2 호스트가 맞아야 합니다 |
 
-OAK-D SR은 큰 팔에서 쓸모가 많습니다. 컬러와 깊이가 같은 센서라 정렬 단계가 없고, 고정초점이라 렌즈 값이 흔들리지 않으며, 글로벌 셔터라 빠르게 움직여도 번지지 않습니다. PoE 모델(OAK ToF)은 긴 케이블과 ToF 깊이를 더합니다. 다만 베이스라인이 20mm라 1m 근처에서는 오차가 cm 단위이니, 대략 위치를 찾는 데 쓰고 마지막은 접촉·힘 센서나 기구적 가이드로 마무리합니다.
+OAK-D SR은 큰 팔에서 쓸모가 많습니다. 컬러와 깊이가 같은 센서라 정렬 단계가 없고, 고정초점이라 렌즈 값이 흔들리지 않으며, 글로벌 셔터라 빠르게 움직여도 번지지 않습니다. PoE 모델(OAK ToF)은 긴 케이블과 ToF 깊이를 더합니다. 다만 베이스라인이 20mm라 1m 근처에서는 오차가 5mm~1cm 정도이니, 대략 위치를 찾는 데 쓰고 마지막은 접촉·힘 센서나 기구적 가이드로 마무리합니다.
 
-ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA GPU로 계산하고, GMSL2 캡처 카드 드라이버가 지원하는 캐리어 보드가 정해져 있어요. Seeed reComputer 캐리어는 지원 목록에 없고 카메라가 인식되지 않는다는 보고가 있습니다. NVIDIA 개발자 키트나 Stereolabs ZED Box에서는 동작합니다. 신경망 깊이 모드의 최소 거리는 0.3m로 안내되어 있으니, 렌즈별 0.1m 수치는 조심해서 봅니다.
+ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA GPU로 계산하고, GMSL2 캡처 카드 드라이버가 지원하는 캐리어 보드가 정해져 있어요. Seeed reComputer 캐리어는 지원 목록에 없고 카메라가 인식되지 않는다는 보고가 있습니다. NVIDIA 개발자 키트나 Stereolabs ZED Box에서는 동작합니다. 신경망 깊이 모드의 최소 거리는 0.3m로 안내되어 있으니(ZED X, 베이스라인 120mm 기준 값이라 Mini에서는 다를 수 있습니다), 렌즈별 0.1m 수치는 조심해서 봅니다.
 
 ## 사고 나서: 내 카메라부터 확인
 
@@ -156,7 +156,7 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 - **무늬 없는 부품이나 반짝이는 부품이 많으면** 프로젝터(D435, OAK-D Pro), ToF, 또는 mm 단위 정합이 필요한 경우 구조광 산업용 카메라(Zivid, Photoneo 등)를 봅니다.
 - **소프트웨어도 같이 고릅니다.** RealSense는 librealsense/realsense-ros, Orbbec은 OrbbecSDK_ROS2, Luxonis는 DepthAI/depthai-ros, Stereolabs는 ZED SDK(NVIDIA GPU 필요)입니다. 한 셀이나 한 강의실에서 섞으면 문제 해결 경로도 갈라집니다.
 - **카메라 내 AI**(Luxonis)는 호스트 PC가 없고 전력이 빠듯할 때 의미가 있습니다. GPU 호스트가 있으면 얻는 게 적습니다.
-- **산업 셀이라면** 방진·방수 등급부터 봅니다(손목 근거리는 305g IP65, 오버헤드는 D457 IP65, 세척 라인은 IP67). 케이블이 매 사이클 휘는 자리라면 잠기는 커넥터와 휨에 견디는 케이블(GMSL2, M12 PoE)이 낫고, USB 3는 약 3m를 넘으면 액티브나 광 연장 케이블이 필요합니다. 제품 수명 주기도 확인합니다. 여러 해 운영할 셀이라면 같은 모델을 계속 살 수 있는지가 중요해요.
+- **산업 셀이라면** 방진·방수 등급부터 봅니다(손목 근거리는 305g IP65, 오버헤드는 D457 IP65, 세척 라인은 IP67 이상, 고압 세척은 IP69K). 케이블이 매 사이클 휘는 자리라면 잠기는 커넥터와 휨에 견디는 케이블(GMSL2, M12 PoE)이 낫고, USB 3는 약 3m를 넘으면 액티브나 광 연장 케이블이 필요합니다. 제품 수명 주기도 확인합니다. 여러 해 운영할 셀이라면 같은 모델을 계속 살 수 있는지가 중요해요.
 
 ## 정리
 
@@ -177,7 +177,7 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 
 ### 출처와 표기
 
-수치는 각 제조사의 공개 사양과 문서를 기준으로 했습니다: [RealSense D400 데이터시트(2026-03)](https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf) · [RealSense 카메라 비교](https://www.realsenseai.com/stereo-depth/compare/) · [Orbbec Gemini 305](https://www.orbbec.com/gemini-305/) · [Gemini 305 데이터시트 V1.0(2026-01)](https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/8888/Orbbec_Gemini-305-Datasheet.pdf) · [Gemini 305 스토어](https://store.orbbec.com/products/gemini-305) · [Gemini 305g 스토어](https://store.orbbec.com/products/gemini-305g) · [Gemini 305g 데이터시트 V1.0](https://orbbec-debian-repos-aws.s3.amazonaws.com/product/Orbbec_Gemini%20305g%20Datasheet%20V1.0.pdf) · [orbbec_camera(ROS 2)](https://index.ros.org/p/orbbec_camera/) · [Luxonis OAK-D SR](https://docs.luxonis.com/hardware/products/OAK-D%20SR) · [OAK ToF(OAK-D SR PoE)](https://shop.luxonis.com/products/oak-d-sr-poe) · [OAK-D Pro](https://docs.luxonis.com/hardware/products/OAK-D%20Pro) · [Luxonis 초점 방식](https://docs.luxonis.com/hardware/platform/sensors/focus-type) · [Luxonis 스테레오 설정(disparity shift)](https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/) · [depthai-core #831](https://github.com/luxonis/depthai-core/issues/831) · [RealSense D457](https://realsenseai.com/products/d457-gmsl-fakra/) · [Orbbec GMSL 드라이버 지원 목록](https://github.com/orbbec/MIPI_Camera_Platform_Driver) · [Seeed 포럼: Robotics GMSL 보드 드라이버](https://forum.seeedstudio.com/t/jp7-2-l4t-r39-2-device-tree-overlay-v4l2-driver-for-recomputer-robotics-gmsl-board-max96712-sensing-sg-series/295703) · [Orbbec: USB·이더넷·GMSL2 선택 가이드](https://www.orbbec.com/blog/usb-ethernet-gmsl2-robot-vision-selection-guide/) · [Stereolabs ZED X](https://www.stereolabs.com/products/zed-x) · [ZED 드라이버](https://www.stereolabs.com/developers/drivers) · [ZED 깊이 모드](https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md) · [RealSense 분사(2025-07)](https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/) · [Cognex의 RealSense 인수 발표(2026-09)](https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense). 최소 거리와 오차 그래프는 Z = f·B/d로 계산한 대략값입니다. 가격과 사양은 바뀔 수 있으니 사기 전에 제조사에서 확인하세요. 특정 제품의 추천이 아닙니다. RealSense는 RealSense Inc., Orbbec·Gemini·Femto는 Orbbec Inc., Luxonis·OAK·DepthAI는 Luxonis, ZED는 Stereolabs, NVIDIA·Jetson·Isaac ROS는 NVIDIA Corporation의 상표이며 지칭 목적으로만 사용했습니다.
+수치는 각 제조사의 공개 사양과 문서를 기준으로 했습니다: [RealSense D400 데이터시트(2026-03)](https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf) · [RealSense 카메라 비교](https://www.realsenseai.com/stereo-depth/compare/) · [Orbbec Gemini 305](https://www.orbbec.com/gemini-305/) · [Gemini 305 데이터시트 V1.0(2026-01)](https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/8888/Orbbec_Gemini-305-Datasheet.pdf) · [Gemini 305 스토어](https://store.orbbec.com/products/gemini-305) · [Gemini 305g 스토어](https://store.orbbec.com/products/gemini-305g) · [Gemini 305g 데이터시트 V1.0](https://orbbec-debian-repos-aws.s3.amazonaws.com/product/Orbbec_Gemini%20305g%20Datasheet%20V1.0.pdf) · [orbbec_camera(ROS 2)](https://index.ros.org/p/orbbec_camera/) · [Luxonis OAK-D SR](https://docs.luxonis.com/hardware/products/OAK-D%20SR) · [OAK ToF(OAK-D SR PoE)](https://shop.luxonis.com/products/oak-d-sr-poe) · [OAK-D Pro](https://docs.luxonis.com/hardware/products/OAK-D%20Pro) · [Luxonis 초점 방식](https://docs.luxonis.com/hardware/platform/sensors/focus-type) · [Luxonis 스테레오 설정(disparity shift)](https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/) · [depthai-core #831](https://github.com/luxonis/depthai-core/issues/831) · [RealSense D457](https://realsenseai.com/products/d457-gmsl-fakra/) · [Orbbec GMSL 드라이버 지원 목록](https://github.com/orbbec/MIPI_Camera_Platform_Driver) · [Seeed 포럼: Robotics GMSL 보드 드라이버](https://forum.seeedstudio.com/t/jp7-2-l4t-r39-2-device-tree-overlay-v4l2-driver-for-recomputer-robotics-gmsl-board-max96712-sensing-sg-series/295703) · [Orbbec: USB·이더넷·GMSL2 선택 가이드](https://www.orbbec.com/blog/usb-ethernet-gmsl2-robot-vision-selection-guide/) · [Stereolabs ZED X](https://www.stereolabs.com/products/zed-x) · [ZED 드라이버](https://www.stereolabs.com/developers/drivers) · [ZED 깊이 모드](https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md) · [RealSense 분사(2025-07)](https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/) · [Cognex의 RealSense 인수 발표(2026-09)](https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense). 최소 거리와 오차 그래프는 Z = f·B/d로 계산한 대략값입니다. 가격과 사양은 바뀔 수 있으니 사기 전에 제조사에서 확인하세요. 특정 제품의 추천이 아닙니다. RealSense는 RealSense Inc., Orbbec·Gemini·Femto는 Orbbec Inc., Luxonis·OAK·DepthAI는 Luxonis, ZED는 Stereolabs, NVIDIA·Jetson·Isaac ROS·FoundationPose는 NVIDIA Corporation, Cognex는 Cognex Corporation, reComputer는 Seeed Studio의 상표이며 지칭 목적으로만 사용했습니다.
 
 ### 용어 설명
 
@@ -194,7 +194,7 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 - *IR 점 프로젝터*: 보이지 않는 적외선 점무늬를 뿌려 무늬 없는 면에도 무늬를 만들어 주는 장치
 - *ToF (Time of Flight)*: 빛을 쏘고 되돌아오는 시간으로 거리를 재는 방식
 - *다중 경로 오차*: 빛이 다른 면에 한 번 더 튕긴 뒤 돌아와 거리가 실제보다 멀게 읽히는 오차
-- *GMSL2*: 차량과 로봇에서 카메라 연결에 쓰는 동축 케이블 규격. 길고 휘는 배선에 강하다
+- *GMSL2*: 차량과 로봇에서 카메라 연결에 쓰는 직렬 연결 규격. 동축 케이블 한 줄로 전원과 데이터를 보낸다. 휨에 얼마나 견디는지는 고르는 케이블에 달렸다
 - *PoE*: 이더넷 케이블 한 줄로 전원과 데이터를 함께 보내는 방식
 - *IP54 / IP65 / IP67*: 먼지와 물에 견디는 정도를 나타내는 등급. 숫자가 클수록 강하다
 - *플랜지*: 로봇 팔 끝에서 그리퍼 같은 툴을 붙이는 판
