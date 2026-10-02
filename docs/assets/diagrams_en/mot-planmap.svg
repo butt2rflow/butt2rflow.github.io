@@ -1,10 +1,10 @@
-<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">먼 곳을 잘못 잰 깊이 하나가 가까운 보드를 지운다 (가설)</title>
-<desc id="de">3D 지도는 깊이 한 점을 받을 때마다 카메라에서 그 점까지 광선을 긋고, 광선이 지나간 칸은 비어 있다고 기록한다. 보드까지는 0.39 m인데 어떤 픽셀이 6.9 m라고 잘못 읽으면, 그 광선이 보드 칸을 지나가며 비어 있다고 표시한다. 그런 픽셀이 5% 있었고, 보드 가운데가 지도에서 사라졌다. 아직 확인하지 않은 가설이며, 깊이를 1.5 m에서 잘라 다시 시험할 계획이다.</desc>
+<svg width="100%" viewBox="0 0 680 305" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Goals the obstacle map blocks, and goals it allows</title>
+<desc id="de">Recorded depth built an nvblox map, cuMotion read it as obstacles, and several tool-down goal poses were sent. With the map off, everything planned, even a goal inside the mini PC. With the map on: inside the mini PC was rejected; 12 cm above the mouse was rejected (the wrist came within 8.9 cm of a surface); 20 cm passed; above the mini PC was rejected (a glass PC case 1.7–4.7 cm behind it); open space passed. 0.3–0.9 s per plan, including a ~50 ms map fetch.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
-text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 .bg{fill:var(--card);}
 .t{font-size:14px;font-weight:700}
 .lb{font-size:12.5px;font-weight:700}
@@ -53,18 +53,30 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="290" rx="12"/>
-<text class="t" x="18" y="26">광선이 지나간 칸은 '비어 있음'으로 기록된다</text>
-<rect class="bx" x="26" y="118" width="54" height="40" rx="6"/>
-<text class="nd" x="53" y="143" text-anchor="middle">카메라</text>
-<rect class="obs" x="230" y="60" width="16" height="160" rx="2"/>
-<text class="nd" x="238" y="52" text-anchor="middle">보드 0.39 m</text>
-<path class="art" d="M82 128 L228 96"/>
-<text class="sm" x="96" y="92" style="fill:var(--teal)">맞게 잰 깊이: 여기 표면</text>
-<path class="arr" d="M82 148 L600 176"/>
-<rect class="bxr" x="228" y="150" width="20" height="14" rx="2"/>
-<text class="sm" x="260" y="200" style="fill:var(--red)">잘못 읽은 6.9 m: 광선이 보드를 지나가며 '비어 있음'</text>
-<text class="nd" x="610" y="162" text-anchor="end" style="fill:var(--red)">6.9 m</text>
-<text class="st" x="18" y="246" style="fill:var(--fg)">이번 프레임: 유효 깊이 53%, 중앙값 0.41 m, 그런데 상위 5%가 6.9 m 너머 · IR 프로젝터 꺼짐</text>
-<text class="sm" x="18" y="268">확인 전 가설. 다음 시험: 깊이를 1.5 m에서 잘라 넣고, 조명을 켜고 다시</text>
+<rect class="bg" x="0" y="0" width="680" height="305" rx="12"/>
+<text class="t" x="18" y="26">Without the map it plans straight into objects</text>
+<text class="nd" x="410" y="60" text-anchor="middle">map off</text>
+<text class="nd" x="560" y="60" text-anchor="middle">map on</text>
+<rect class="bxg" x="16" y="70" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="90">inside the mini PC</text>
+<text class="nd" x="410" y="90" text-anchor="middle" style="fill:var(--amber)">plans</text>
+<text class="nd" x="560" y="90" text-anchor="middle" style="fill:var(--red)">rejected (2.6 cm)</text>
+<rect class="bxg" x="16" y="108" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="128">12 cm above the mouse</text>
+<text class="nd" x="410" y="128" text-anchor="middle" style="fill:var(--amber)">plans</text>
+<text class="nd" x="560" y="128" text-anchor="middle" style="fill:var(--red)">rejected (wrist margin)</text>
+<rect class="bxg" x="16" y="146" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="166">20 cm above the mouse</text>
+<text class="nd" x="410" y="166" text-anchor="middle" style="fill:var(--green)">plans</text>
+<text class="nd" x="560" y="166" text-anchor="middle" style="fill:var(--green)">plans</text>
+<rect class="bxg" x="16" y="184" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="204">15 / 25 cm above the mini PC</text>
+<text class="nd" x="410" y="204" text-anchor="middle" style="fill:var(--amber)">plans</text>
+<text class="nd" x="560" y="204" text-anchor="middle" style="fill:var(--red)">rejected (glass case behind)</text>
+<rect class="bxg" x="16" y="222" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="242">open space</text>
+<text class="nd" x="410" y="242" text-anchor="middle" style="fill:var(--green)">plans</text>
+<text class="nd" x="560" y="242" text-anchor="middle" style="fill:var(--green)">plans</text>
+<text class="st" x="18" y="274" style="fill:var(--fg)">A blocked goal comes back as 'NO_IK_SOLUTION': it may be a collision, not an IK failure</text>
+<text class="sm" x="18" y="294">0.3–0.9 s per plan (incl. ~50 ms map fetch). Orange: planned, but inside or too close to an object</text>
 </svg>

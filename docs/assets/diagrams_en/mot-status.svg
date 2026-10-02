@@ -1,6 +1,6 @@
-<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<svg width="100%" viewBox="0 0 680 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">From pose to motion: what was checked and what wasn't</title>
-<desc id="de">Four steps after the pose were tested on the same Orin NX 16GB. cuMotion planning works (about 186 ms). The nvblox obstacle map passed with synthetic depth but the first live-camera try failed. The UR ROS 2 driver loaded all 13 controllers on simulated hardware. Nothing moved a real robot or measured a real force.</desc>
+<desc id="de">The steps after the pose were tested on the same Orin NX 16GB. cuMotion planning works (about 186 ms). The nvblox obstacle map passed with both synthetic depth and the live camera (5 mm median on a flat scene), and cuMotion reading that map rejected goals inside obstacles. The UR ROS 2 driver loaded all 13 controllers on simulated hardware. Nothing moved a real robot or measured a real force.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -53,8 +53,8 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
-<text class="t" x="18" y="26">The four steps after the pose, and how they went</text>
+<rect class="bg" x="0" y="0" width="680" height="345" rx="12"/>
+<text class="t" x="18" y="26">The steps after the pose, and how they went</text>
 <rect class="bxgr" x="16" y="46" width="648" height="36" rx="8"/>
 <text class="lb" x="30" y="69">object pose</text>
 <text class="it" x="270" y="69">earlier posts (FoundationPose)</text>
@@ -70,14 +70,19 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="it" x="270" y="157">wall and box within one 2 cm cell</text>
 <text class="nd" x="650" y="157" text-anchor="end" style="fill:var(--green)">pass</text>
 <line class="arg" x1="140" y1="170" x2="140" y2="178"/>
-<rect class="bxr" x="16" y="178" width="648" height="36" rx="8"/>
+<rect class="bxgr" x="16" y="178" width="648" height="36" rx="8"/>
 <text class="lb" x="30" y="201">obstacle map · nvblox (live)</text>
-<text class="it" x="270" y="201">fast enough, but the board vanished</text>
-<text class="nd" x="650" y="201" text-anchor="end" style="fill:var(--red)">first try failed</text>
+<text class="it" x="270" y="201">flat scene 5 mm median, keeps up</text>
+<text class="nd" x="650" y="201" text-anchor="end" style="fill:var(--green)">pass</text>
 <line class="arg" x1="140" y1="214" x2="140" y2="222"/>
-<rect class="bxa" x="16" y="222" width="648" height="36" rx="8"/>
-<text class="lb" x="30" y="245">robot driver · UR ROS 2</text>
-<text class="it" x="270" y="245">simulated hardware, 13 controllers</text>
-<text class="nd" x="650" y="245" text-anchor="end" style="fill:var(--amber)">simulated only</text>
-<text class="st" x="18" y="286" style="fill:var(--fg)">No step has moved a real robot or measured a real force yet</text>
+<rect class="bxgr" x="16" y="222" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="245">map → planning</text>
+<text class="it" x="270" y="245">goals in obstacles rejected, open space plans</text>
+<text class="nd" x="650" y="245" text-anchor="end" style="fill:var(--green)">pass</text>
+<line class="arg" x1="140" y1="258" x2="140" y2="266"/>
+<rect class="bxa" x="16" y="266" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="289">robot driver · UR ROS 2</text>
+<text class="it" x="270" y="289">simulated hardware, 13 controllers</text>
+<text class="nd" x="650" y="289" text-anchor="end" style="fill:var(--amber)">simulated only</text>
+<text class="st" x="18" y="330" style="fill:var(--fg)">No step has moved a real robot or measured a real force yet</text>
 </svg>

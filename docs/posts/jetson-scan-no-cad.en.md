@@ -234,6 +234,6 @@ Jetson, Orin and Isaac ROS are trademarks of NVIDIA and OAK-D of Luxonis; other 
 
 </details>
 
-**Series** · [← Previous: Tuning — from 11 seconds to 4, and a chain you can ship](jetson-tuning-licensing.md) · [Next: Motion — After the Pose Comes Movement, and an Obstacle Map That Failed Its First Try →](jetson-pose-to-motion.md)
+**Series** · [← Previous: Tuning — from 11 seconds to 4, and a chain you can ship](jetson-tuning-licensing.md) · [Next: Motion — After the Pose Comes Movement, Planning Around an Obstacle Map →](jetson-pose-to-motion.md)
 
 *Related: [Which Depth Camera](depth-camera-selection.md) · [Frames & Transforms](frames-transforms.md) · [Inside the Three Models](inside-the-models.md) · [Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md)*

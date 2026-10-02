@@ -1,10 +1,10 @@
-<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">One false far reading erases the near board (working theory)</title>
-<desc id="de">For every depth reading, the 3D map casts a ray from the camera to that point and records the cells it passes through as empty. The board is 0.39 m away, but if a pixel wrongly reads 6.9 m, its ray passes through the board's cells and marks them empty. About 5% of pixels did this, and the middle of the board disappeared from the map. This is an unconfirmed theory; the retest clips depth at 1.5 m.</desc>
+<svg width="100%" viewBox="0 0 680 305" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">장애물 지도를 켜면 막히는 목표, 열리는 목표</title>
+<desc id="de">녹화한 깊이로 nvblox 지도를 만들고 cuMotion이 그 지도를 장애물로 읽게 한 뒤, 툴을 아래로 향한 목표 자세 몇 개를 보냈다. 지도를 끄면 미니 PC 안쪽 목표까지 전부 계획이 나왔다. 지도를 켜면 미니 PC 안쪽은 거부, 마우스 위 12 cm는 손목이 표면 8.9 cm 안에 들어와 거부, 20 cm는 통과, 미니 PC 위는 뒤쪽 유리 PC 케이스가 1.7~4.7 cm라 거부, 빈 공간은 통과했다. 계획 한 번 0.3~0.9초, 지도 가져오기 약 50 ms 포함.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
-text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
 .bg{fill:var(--card);}
 .t{font-size:14px;font-weight:700}
 .lb{font-size:12.5px;font-weight:700}
@@ -53,18 +53,30 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="290" rx="12"/>
-<text class="t" x="18" y="26">Cells a ray passes through are recorded as empty</text>
-<rect class="bx" x="26" y="118" width="54" height="40" rx="6"/>
-<text class="nd" x="53" y="143" text-anchor="middle">camera</text>
-<rect class="obs" x="230" y="60" width="16" height="160" rx="2"/>
-<text class="nd" x="238" y="52" text-anchor="middle">board 0.39 m</text>
-<path class="art" d="M82 128 L228 96"/>
-<text class="sm" x="96" y="92" style="fill:var(--teal)">correct reading: surface here</text>
-<path class="arr" d="M82 148 L600 176"/>
-<rect class="bxr" x="228" y="150" width="20" height="14" rx="2"/>
-<text class="sm" x="260" y="200" style="fill:var(--red)">false 6.9 m reading: its ray marks the board 'empty'</text>
-<text class="nd" x="610" y="162" text-anchor="end" style="fill:var(--red)">6.9 m</text>
-<text class="st" x="18" y="246" style="fill:var(--fg)">This frame: 53% valid depth, median 0.41 m, yet the top 5% beyond 6.9 m · IR projector off</text>
-<text class="sm" x="18" y="268">Unconfirmed. Next: clip depth at 1.5 m and rerun with the lights on</text>
+<rect class="bg" x="0" y="0" width="680" height="305" rx="12"/>
+<text class="t" x="18" y="26">지도 없이는 물체 속으로도 계획한다</text>
+<text class="nd" x="410" y="60" text-anchor="middle">지도 끔</text>
+<text class="nd" x="560" y="60" text-anchor="middle">지도 켬</text>
+<rect class="bxg" x="16" y="70" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="90">미니 PC 안쪽</text>
+<text class="nd" x="410" y="90" text-anchor="middle" style="fill:var(--amber)">계획 나옴</text>
+<text class="nd" x="560" y="90" text-anchor="middle" style="fill:var(--red)">거부 (표면 2.6 cm)</text>
+<rect class="bxg" x="16" y="108" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="128">마우스 위 12 cm</text>
+<text class="nd" x="410" y="128" text-anchor="middle" style="fill:var(--amber)">계획 나옴</text>
+<text class="nd" x="560" y="128" text-anchor="middle" style="fill:var(--red)">거부 (손목 여유)</text>
+<rect class="bxg" x="16" y="146" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="166">마우스 위 20 cm</text>
+<text class="nd" x="410" y="166" text-anchor="middle" style="fill:var(--green)">계획 나옴</text>
+<text class="nd" x="560" y="166" text-anchor="middle" style="fill:var(--green)">통과</text>
+<rect class="bxg" x="16" y="184" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="204">미니 PC 위 15·25 cm</text>
+<text class="nd" x="410" y="204" text-anchor="middle" style="fill:var(--amber)">계획 나옴</text>
+<text class="nd" x="560" y="204" text-anchor="middle" style="fill:var(--red)">거부 (뒤 유리 케이스)</text>
+<rect class="bxg" x="16" y="222" width="648" height="30" rx="6"/>
+<text class="it" x="30" y="242">빈 공간</text>
+<text class="nd" x="410" y="242" text-anchor="middle" style="fill:var(--green)">계획 나옴</text>
+<text class="nd" x="560" y="242" text-anchor="middle" style="fill:var(--green)">통과</text>
+<text class="st" x="18" y="274" style="fill:var(--fg)">막힌 목표는 'NO_IK_SOLUTION'으로 돌아온다. 역기구학 실패가 아니라 충돌 때문일 수 있다</text>
+<text class="sm" x="18" y="294">계획 한 번 0.3~0.9초 (지도 가져오기 약 50 ms 포함). 주황: 계획은 나왔지만 물체 속이거나 너무 가까움</text>
 </svg>
