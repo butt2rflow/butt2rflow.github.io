@@ -45,11 +45,7 @@ The results first: planning, the obstacle map and the link between them all work
 
 ## What the pose tells you first: even the hidden corner
 
-Before moving on to motion, here is what one pose already tells you. With the mini PC in front of the ChArUco board, FoundationPose found its pose; then the maker's CAD, placed at that pose, gave the distance from each corner to the board plane.
-
-![The mini PC's pose from FoundationPose and the outline of the CAD placed at it](../assets/demos/jetson-motion-pose-cad.jpg)
-
-*The green box is the outline of the CAD at this pose; the three lines are the object's axes.*
+Before moving on to motion, here is what one pose already tells you. With the mini PC in front of the ChArUco board, FoundationPose found its pose from FoundationStereo depth (its photo is in “Turning the pose into goals” below); then the maker's CAD, placed at that pose, gave the distance from each corner to the board plane.
 
 ![Perpendicular distance from each mini PC corner to the board plane; the dashed yellow line marks a corner hidden from the camera](../assets/demos/jetson-motion-clearance-rays.jpg)
 
@@ -189,16 +185,18 @@ One thing is confusing. cuMotion reports a goal blocked by obstacles as **`NO_IK
 
 So far the goals were placed by hand. This time they came from object poses found by the foundation models. On one frame of the recorded bag, Grounding DINO → SAM2 → FoundationPose found the poses of the mini PC and the mouse, and each object got a "pre-grasp" goal 20 cm above its top with the tool pointing down.
 
-![Poses of the mini PC and the mouse from the foundation models; blue is the CAD placed at each pose, yellow the SAM2 mask](../assets/demos/jetson-motion-pose-goal.jpg)
+![The mini PC's pose from FoundationStereo depth; the green box is the outline of the CAD placed at that pose](../assets/demos/jetson-motion-pose-cad.jpg)
 
-*Blue is the CAD drawn at each pose, the yellow line is the SAM2 mask, and the three arrows are the object axes. Look closely and neither matches the photo exactly. On the mini PC the left end is uncovered and the right side spills a little onto the board, so the pose is slightly shifted and rotated (overlap ratio IoU 0.88, 6 mm depth difference). The mouse is visibly off up and to the right (0.66, 11 mm), so it was flagged low-confidence.*
+*The mini PC's pose from FoundationStereo depth (September 30). The green box is the outline of the CAD at this pose, and the three lines are the object's axes. The box sits right on the mini PC's edges.*
+
+The goals in this test, though, didn't come from this photo. To use the same depth as the map, they came from poses found with **the depth computed on the camera chip**. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse, so the poses were rough. On the mini PC the CAD was slightly shifted and rotated (overlap ratio IoU 0.88, 6 mm depth difference); the mouse was visibly off (0.66, 11 mm) and flagged low-confidence. An actual grasp needs the pose from good depth such as FoundationStereo or ESS, as in the photo above.
 
 Two lessons came out of this:
 
 - **Measure the camera mount; don't assume it.** The previous section assumed a level camera. Finding the table plane in the depth showed the camera was 16.9 cm above the table, pitched 16° down. From here on, planning used the measured values.
 - **An overlap score alone doesn't catch a flipped pose.** At first the mouse pose came back upside down. The mouse mesh from the [scanning post](jetson-scan-no-cad.md) has a flat bottom, so its outline is almost the same either way up, and the overlap score (0.72) looked fine. Against the depth, though, it was 18–28 mm off. Keeping only poses that can rest on the table and choosing again stood it the right way up. The mini PC also came back tilted 13–16°, because its finned top gives almost no depth; snapping it to the table fixed that.
 
-The poses are this rough because this test used **the depth computed on the camera chip**, chosen to match the depth the map uses. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse. For reference, the live demo in [the correction post](jetson-foundationpose-16gb.md) used FoundationStereo depth: on the same mini PC, on a different day and from a different angle, IoU was 0.92, and four estimates in a row with the object left in place wobbled within 0.94 mm. That 0.94 mm is how stable the estimate is, not how far it is from the true position. A pre-grasp pose 20 cm above the object tolerates a few centimetres of error for the approach, but an actual grasp needs the pose redone with better depth or rechecked up close.
+Still, a pre-grasp pose sits 20 cm above the object, so a few centimetres of error doesn't matter for the approach.
 
 These goals went to cuMotion the same way as in the previous section. With the map on, both objects' pre-grasp poses planned (a little over 0.8 s), the goals deliberately placed 2 cm inside the objects were rejected, and open space planned. With the map off, everything planned, so the rejections came from the map.
 
