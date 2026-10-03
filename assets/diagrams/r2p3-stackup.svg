@@ -1,0 +1,82 @@
+<svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">작은 편차가 쌓이면</title>
+<desc id="de">지그와 테이블은 고정이어도 팔레트 위치 오차, 컨베이어 편차, 제품 자체의 조립 공차가 더해져 이번 사이클의 부품 위치가 된다. 각각은 작아도 합치면 티칭 점 하나로는 맞지 않는 편차가 된다. 인식이 이번 편차를 재서 보정하고, 예상한 누적 범위를 넘으면 뭔가 크게 잘못된 것이니 멈춘다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
+<text class="t" x="18" y="26">하나하나는 작아도 더하면 티칭 점을 벗어난다</text>
+<rect class="bx" x="40" y="64" width="96" height="34" rx="6"/>
+<text class="sm" x="88.0" y="118" text-anchor="middle">팔레트 위치 오차</text>
+<text class="lb" x="145" y="86" text-anchor="middle">+</text>
+<rect class="bx" x="154" y="64" width="70" height="34" rx="6"/>
+<text class="sm" x="189.0" y="118" text-anchor="middle">컨베이어 편차</text>
+<text class="lb" x="233" y="86" text-anchor="middle">+</text>
+<rect class="bx" x="242" y="64" width="120" height="34" rx="6"/>
+<text class="sm" x="302.0" y="118" text-anchor="middle">제품 조립 공차</text>
+<text class="lb" x="390" y="86" text-anchor="middle">=</text>
+<rect class="hi" x="404" y="64" width="170" height="34" rx="6"/>
+<text class="sm" x="489" y="118" text-anchor="middle" style="fill:var(--fg)">이번 사이클의 편차</text>
+<rect class="panel" x="16" y="140" width="646" height="108" rx="10"/>
+<line class="ln" x1="40" y1="200" x2="640" y2="200"/>
+<rect class="bxt" x="250" y="184" width="180" height="32" rx="4"/>
+<text class="sm" x="340" y="232" text-anchor="middle" style="fill:var(--teal)">예상 누적 범위 = 보정 허용</text>
+<rect class="bxr" x="150" y="184" width="100" height="32" rx="4"/>
+<rect class="bxr" x="430" y="184" width="100" height="32" rx="4"/>
+<text class="sm" x="120" y="232" text-anchor="middle" style="fill:var(--red)">범위 밖 → 멈춤</text>
+<text class="sm" x="560" y="232" text-anchor="middle" style="fill:var(--red)">범위 밖 → 멈춤</text>
+<circle class="dotr" cx="340" cy="200" r="5"/>
+<text class="sm" x="340" y="176" text-anchor="middle">티칭 점</text>
+<circle class="dota" cx="372" cy="200" r="5"/>
+<text class="sm" x="392" y="166" text-anchor="middle" style="fill:var(--amber)">이번 부품</text>
+<text class="sm" x="30" y="160" style="fill:var(--fg)">1단(지그+티칭)만으로는 부족 → 2·3단으로, 대신 범위를 정해 둔다</text>
+</svg>

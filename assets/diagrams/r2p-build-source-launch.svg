@@ -1,0 +1,56 @@
+<svg width="100%" viewBox="0 0 680 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">코드를 작성해서 실행하기까지 네 단계</title>
+<desc id="de">ROS 2에서 코드는 패키지로 작성하고, colcon으로 빌드하고, setup 파일을 source해서 터미널이 찾을 수 있게 한 뒤, launch 파일로 여러 노드를 한꺼번에 시작한다. 아래 줄에 티치 펜던트 작업으로 치면 무엇에 해당하는지 적었다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.st{font-size:11px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--blue)}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.hi{fill:var(--card);stroke:var(--amber);stroke-width:1.8}
+.fam{fill:var(--chip);stroke:none}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.mk{fill:var(--blue)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="232" rx="12"/>
+<text class="t" x="18" y="26">작성 → 빌드 → source → launch</text>
+<rect class="bx" x="18" y="46" width="140" height="74" rx="9"/>
+<text class="lb" x="88" y="70" text-anchor="middle">① 패키지 작성</text>
+<text class="code" x="88" y="90" text-anchor="middle">src/ 폴더</text>
+<text class="st" x="88" y="108" text-anchor="middle">한 가지 일 묶음</text>
+<line class="ar" x1="160" y1="83" x2="186" y2="83"/>
+<rect class="bx" x="190" y="46" width="140" height="74" rx="9"/>
+<text class="lb" x="260" y="70" text-anchor="middle">② 빌드</text>
+<text class="code" x="260" y="90" text-anchor="middle">colcon build</text>
+<text class="st" x="260" y="108" text-anchor="middle">실행할 수 있게 만든다</text>
+<line class="ar" x1="332" y1="83" x2="358" y2="83"/>
+<rect class="bx" x="362" y="46" width="140" height="74" rx="9"/>
+<text class="lb" x="432" y="70" text-anchor="middle">③ source</text>
+<text class="code" x="432" y="90" text-anchor="middle">install/setup.bash</text>
+<text class="st" x="432" y="108" text-anchor="middle">이 터미널에 등록</text>
+<line class="ar" x1="504" y1="83" x2="530" y2="83"/>
+<rect class="hi" x="534" y="46" width="128" height="74" rx="9"/>
+<text class="lb" x="598" y="70" text-anchor="middle">④ launch</text>
+<text class="code" x="598" y="90" text-anchor="middle">ros2 launch</text>
+<text class="st" x="598" y="108" text-anchor="middle">노드 여럿을 한 번에</text>
+<text class="st" x="18" y="146">티치 펜던트로 치면</text>
+<rect class="fam" x="18" y="156" width="140" height="56" rx="8"/>
+<text class="st" x="88" y="180" text-anchor="middle" style="fill:var(--fg)">프로그램 작성</text>
+<text class="st" x="88" y="197" text-anchor="middle">(펜던트나 PC 편집기)</text>
+<rect class="fam" x="190" y="156" width="140" height="56" rx="8"/>
+<text class="st" x="260" y="180" text-anchor="middle" style="fill:var(--fg)">컨트롤러에 올리기</text>
+<text class="st" x="260" y="197" text-anchor="middle">(PC에서 짰다면)</text>
+<rect class="fam" x="362" y="156" width="140" height="56" rx="8"/>
+<text class="st" x="432" y="180" text-anchor="middle" style="fill:var(--fg)">목록에 보이게 하기</text>
+<text class="st" x="432" y="197" text-anchor="middle">새 창마다 다시 해야 함</text>
+<rect class="fam" x="534" y="156" width="128" height="56" rx="8"/>
+<text class="st" x="598" y="180" text-anchor="middle" style="fill:var(--fg)">셀 전체 기동</text>
+<text class="st" x="598" y="197" text-anchor="middle">프로그램 선택 후 시작</text>
+</svg>

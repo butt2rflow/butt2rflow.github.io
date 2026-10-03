@@ -1,0 +1,66 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Hardware tiers — where "proof of concept" ends and "production" begins</title>
+<desc>The Orin NX 16GB is for proof — it can't build engines and runs slow. The AGX Orin 64GB ($1,999) is the pick: it clears the 16GB wall and runs the whole pipeline on one board. Jetson Thor is overkill for a seconds-per-pick task, and the desktop RTX 4090 is dev/validation only because its engines don't transfer to the Jetson.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.m{font-size:12px;font-weight:700;}
+.p{font-size:13px;font-weight:700;fill:#3d3d3a;}
+.s{font-size:10px;fill:#73726c;}
+.pill{font-size:10px;font-weight:700;}
+.tag{font-size:11px;font-weight:700;fill:#15803d;}
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">Hardware tiers — proof on 16GB, production on one 64GB board</text>
+
+<!-- Orin NX 16GB (ours) -->
+<rect x="40" y="78" width="135" height="164" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<rect x="40" y="78" width="135" height="32" rx="9" fill="#eef1f6"/>
+<rect x="40" y="94" width="135" height="16" fill="#eef1f6"/>
+<text class="m" x="52" y="99" style="fill:#3f4d66">Orin NX 16GB</text>
+<text class="p" x="52" y="134">$800–1,400</text>
+<text class="s" x="52" y="156">what we have</text>
+<text class="s" x="52" y="172">proof — it works</text>
+<text class="s" x="52" y="188">no engines · slow</text>
+<rect x="52" y="204" width="111" height="24" rx="12" fill="#eef1f6" stroke="#5b6b86" stroke-width="1"/>
+<text class="pill" x="107" y="220" text-anchor="middle" style="fill:#3f4d66">proof of concept</text>
+
+<!-- AGX Orin 64GB (the pick, raised) -->
+<text class="tag" x="262" y="66" text-anchor="middle">★ the pick</text>
+<rect x="195" y="72" width="135" height="170" rx="9" fill="#fff" stroke="#16a34a" stroke-width="1.8"/>
+<rect x="195" y="72" width="135" height="32" rx="9" fill="#e3f6ea"/>
+<rect x="195" y="88" width="135" height="16" fill="#e3f6ea"/>
+<text class="m" x="207" y="93" style="fill:#15803d">AGX Orin 64GB</text>
+<text class="p" x="207" y="130">$1,999</text>
+<text class="s" x="207" y="152">whole pipeline</text>
+<text class="s" x="207" y="168">clears the 16GB wall</text>
+<text class="s" x="207" y="184">engines build on board</text>
+<rect x="207" y="200" width="111" height="24" rx="12" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.1"/>
+<text class="pill" x="262" y="216" text-anchor="middle" style="fill:#15803d">one prod board</text>
+
+<!-- Jetson Thor -->
+<rect x="350" y="78" width="135" height="164" rx="9" fill="#fff" stroke="#c9c6bc" stroke-width="1.1"/>
+<rect x="350" y="78" width="135" height="32" rx="9" fill="#f2efe6"/>
+<rect x="350" y="94" width="135" height="16" fill="#f2efe6"/>
+<text class="m" x="362" y="99" style="fill:#6b6a63">Jetson Thor</text>
+<text class="p" x="362" y="134">$5,499</text>
+<text class="s" x="362" y="156">top-tier compute</text>
+<text class="s" x="362" y="172">for seconds-per-pick,</text>
+<text class="s" x="362" y="188">overkill</text>
+<rect x="362" y="204" width="111" height="24" rx="12" fill="#f2efe6" stroke="#c9c6bc" stroke-width="1"/>
+<text class="pill" x="417" y="220" text-anchor="middle" style="fill:#8a8980">overkill</text>
+
+<!-- RTX 4090 (dev only, dashed) -->
+<rect x="505" y="78" width="135" height="164" rx="9" fill="#fff" stroke="#c9c6bc" stroke-width="1.1" stroke-dasharray="6 3"/>
+<rect x="505" y="78" width="135" height="32" rx="9" fill="#f2efe6"/>
+<rect x="505" y="94" width="135" height="16" fill="#f2efe6"/>
+<text class="m" x="517" y="99" style="fill:#6b6a63">Desktop RTX 4090</text>
+<text class="p" x="517" y="134">~$2,800</text>
+<text class="s" x="517" y="156">dev · validation</text>
+<text class="s" x="517" y="172">engines don't</text>
+<text class="s" x="517" y="188">transfer to Jetson</text>
+<rect x="517" y="204" width="111" height="24" rx="12" fill="#f2efe6" stroke="#c9c6bc" stroke-width="1"/>
+<text class="pill" x="572" y="220" text-anchor="middle" style="fill:#8a8980">dev only</text>
+
+<text class="s" x="40" y="278" style="fill:#8a6d3b">Same Jetson software family — what you learn on 16GB carries to 64GB. Prove it cheap, step up one rung when you need to.</text>
+</svg>

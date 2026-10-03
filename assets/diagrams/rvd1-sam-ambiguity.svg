@@ -1,0 +1,44 @@
+<svg width="100%" viewBox="0 0 360 206" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">한 번의 클릭에 대한 세 가지 마스크 후보</title>
+<desc id="de">클릭 한 번에 SAM은 부분·부품 전체·부품+지그처럼 서로 다른 크기의 후보 마스크를 동시에 내고 각각 확신 점수를 붙인다. 시스템은 점수 최고를 자동 선택하고, 사람은 필요할 때만 다른 후보를 고른다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="206" rx="12"/>
+<text class="t" x="18" y="22">클릭 한 번 → 후보 세 장 + 점수</text>
+<circle class="hi2" cx="30" cy="40" r="4"/>
+<text class="st" x="42" y="44">클릭 지점</text>
+<rect class="bx" x="16" y="56" width="100" height="94" rx="9"/>
+<circle cx="66" cy="96" r="14" fill="var(--teal)" opacity=".85"/>
+<text class="st" x="66" y="126" text-anchor="middle">부분</text>
+<text class="lb" x="66" y="142" text-anchor="middle">점수 0.72</text>
+<rect x="16" y="56" width="100" height="94" rx="9" fill="none" stroke="var(--teal)" stroke-width="2.4"/>
+<rect class="bx" x="130" y="56" width="100" height="94" rx="9"/>
+<rect x="152" y="80" width="56" height="34" rx="6" fill="var(--teal)" opacity=".85"/>
+<text class="st" x="180" y="126" text-anchor="middle">부품 전체</text>
+<text class="lb" x="180" y="142" text-anchor="middle" style="fill:var(--teal)">점수 0.94 ✓</text>
+<rect class="bx" x="244" y="56" width="100" height="94" rx="9"/>
+<rect x="258" y="72" width="72" height="38" rx="6" fill="var(--teal)" opacity=".85"/>
+<rect x="258" y="72" width="72" height="38" rx="6" fill="none" stroke="var(--mut)" stroke-dasharray="3 2"/>
+<text class="st" x="294" y="126" text-anchor="middle">부품+지그</text>
+<text class="lb" x="294" y="142" text-anchor="middle">점수 0.55</text>
+<text class="lb" x="180" y="176" text-anchor="middle">시스템은 점수 최고를 자동 선택하고,</text>
+<text class="lb" x="180" y="192" text-anchor="middle">사람은 필요할 때만 다른 장을 고른다</text>
+</svg>

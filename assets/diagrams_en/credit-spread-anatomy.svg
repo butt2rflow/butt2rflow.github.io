@@ -1,0 +1,30 @@
+<svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Anatomy of a credit spread — an insurance premium on top of the Treasury yield</title>
+<desc>The US Treasury yield is the risk-free base. A high-yield corporate bond stacks a spread on top. The difference between the two yields is the spread, the premium for taking default risk. It is about 260bp now.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.lb { font-size:13px; font-weight:500; fill:#0F3D30; }
+.lo { font-size:13px; font-weight:500; fill:#7A2E12; }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+</style>
+<rect x="0" y="0" width="680" height="260" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="42">Corporate yield = Treasury yield + spread</text>
+
+<text class="s" x="150" y="93" text-anchor="end">US Treasury</text>
+<rect x="170" y="74" width="300" height="34" rx="5" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="lb" x="320" y="95" text-anchor="middle">risk-free base</text>
+
+<text class="s" x="150" y="149" text-anchor="end">High-yield bond</text>
+<rect x="170" y="130" width="300" height="34" rx="5" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="lb" x="320" y="151" text-anchor="middle">same as Treasury</text>
+<rect x="470" y="130" width="120" height="34" rx="5" fill="#F6D8C9" stroke="#D85A30" stroke-width="0.5"/>
+<text class="lo" x="530" y="151" text-anchor="middle">Spread</text>
+
+<path d="M470,176 L470,182 L590,182 L590,176" fill="none" stroke="#D85A30" stroke-width="1"/>
+<line x1="530" y1="182" x2="530" y2="190" stroke="#D85A30" stroke-width="1"/>
+<text class="th" x="530" y="210" text-anchor="middle">This gap = premium for default risk</text>
+<text class="s" x="530" y="230" text-anchor="middle">HY now ≈ 260bp (2.6pp)</text>
+</svg>

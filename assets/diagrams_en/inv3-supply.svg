@@ -1,0 +1,80 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Who supplies humanoid battery cells</title>
+<desc id="de">Cell supply relationships as reported. LG Energy Solution is reported to supply Tesla Optimus (2170 cylindrical cells), Boston Dynamics Atlas and Figure. Samsung SDI signed a robot-battery MoU with Hyundai and Kia and targets solid-state mass production in 2H 2027, likely first for humanoids. SK On is also reported to be entering robot batteries. Whether Tesla uses its own 4680 cells in the next Optimus is uncertain.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
+<text class="t" x="18" y="26">Korean cell makers moved first</text>
+<rect class="hi" x="16" y="58" width="190" height="44" rx="8"/>
+<text class="lb" x="111.0" y="84.0" text-anchor="middle">LG Energy Solution</text>
+<rect class="bxa" x="16" y="128" width="190" height="44" rx="8"/>
+<text class="lb" x="111.0" y="154.0" text-anchor="middle">Samsung SDI</text>
+<rect class="bxg" x="16" y="184" width="190" height="44" rx="8"/>
+<text class="lb" x="111.0" y="210.0" text-anchor="middle">SK On</text>
+<rect class="bx" x="370" y="44" width="292" height="34" rx="8"/>
+<text class="it" x="516.0" y="65.0" text-anchor="middle">Tesla Optimus (2170 cells)</text>
+<rect class="bx" x="370" y="86" width="292" height="34" rx="8"/>
+<text class="it" x="516.0" y="107.0" text-anchor="middle">Boston Dynamics Atlas</text>
+<rect class="bx" x="370" y="128" width="292" height="34" rx="8"/>
+<text class="it" x="516.0" y="149.0" text-anchor="middle">Figure</text>
+<rect class="bx" x="370" y="170" width="292" height="34" rx="8"/>
+<text class="it" x="516.0" y="191.0" text-anchor="middle">Hyundai, Kia robot-battery MoU</text>
+<rect class="bx" x="370" y="212" width="292" height="34" rx="8"/>
+<text class="it" x="516.0" y="233.0" text-anchor="middle">reported entry into robot batteries</text>
+<line class="ar" x1="208" y1="80" x2="366" y2="61"/>
+<line class="ar" x1="208" y1="80" x2="366" y2="103"/>
+<line class="ar" x1="208" y1="80" x2="366" y2="145"/>
+<line class="ar" x1="208" y1="150" x2="366" y2="187"/>
+<line class="ar" x1="208" y1="206" x2="366" y2="229"/>
+<text class="sm" x="18" y="262">Relationships as reported. Robots are still a small share of cell makers' sales; EV demand drives results</text>
+</svg>

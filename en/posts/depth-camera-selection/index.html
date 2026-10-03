@@ -1,0 +1,3471 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pick a robot's depth camera by where it's mounted and how far away the object is, not by the maximum range on the spec sheet. The two distance limits of stereo cameras, whether colour and depth come from the same sensor, plain and shiny surfaces, five close-range cameras side by side (D405, Gemini 305/305g, OAK-D SR), choosing for a larger arm, and what to check once the camera arrives.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/depth-camera-selection/">
+      
+      
+        <link rel="prev" href="../camera-placement/">
+      
+      
+        <link rel="next" href="../cobot-basics/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/depth-camera-selection/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Which Depth Camera — From Mount Position to Distance, From Distance to Camera - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#which-depth-camera-from-mount-position-to-distance-from-distance-to-camera" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Which Depth Camera — From Mount Position to Distance, From Distance to Camera
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/depth-camera-selection/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mount-position-distance-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mount position → distance → camera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-distance-limits-of-a-stereo-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two distance limits of a stereo camera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do-colour-and-depth-come-from-the-same-sensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do colour and depth come from the same sensor?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plain-and-shiny-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plain and shiny surfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#close-range-cameras-side-by-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Close-range cameras side by side
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-a-larger-arm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On a larger arm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#once-it-arrives-check-your-camera-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Once it arrives: check your camera first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-check-when-buying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to check when buying
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mount-position-distance-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mount position → distance → camera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-distance-limits-of-a-stereo-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two distance limits of a stereo camera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do-colour-and-depth-come-from-the-same-sensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do colour and depth come from the same sensor?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plain-and-shiny-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plain and shiny surfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#close-range-cameras-side-by-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Close-range cameras side by side
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-a-larger-arm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On a larger arm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#once-it-arrives-check-your-camera-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Once it arrives: check your camera first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-check-when-buying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to check when buying
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="which-depth-camera-from-mount-position-to-distance-from-distance-to-camera">Which Depth Camera — From Mount Position to Distance, From Distance to Camera<a class="headerlink" href="#which-depth-camera-from-mount-position-to-distance-from-distance-to-camera" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Robot Vision · design choices.</strong> <a href="../camera-placement/">How Many Cameras, and Where</a> settled how many cameras to use and where they go. This post picks <strong>which depth camera</strong> to put there.</p>
+</blockquote>
+<p>On a depth camera's spec sheet the eye goes first to numbers like "up to 10 m" and "1280×800". Pick a camera for a robot's wrist by those numbers and you'll often get it wrong. A wrist camera sees the object at roughly 15–40 cm, and the cameras that see farthest often give no depth at all at that distance. Turn the order around: decide where the camera goes and how far the object will be from there, then pick a camera that suits that distance.</p>
+<hr />
+<h2 id="30-second-summary">30-second summary<a class="headerlink" href="#30-second-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Choose in this order: <strong>mount position → distance to the object → a camera whose recommended range includes that distance.</strong> Resolution and precision come after.</li>
+<li>A stereo camera <strong>gives no depth when the object is too close, and its error grows with the square of distance as it moves away.</strong> Cameras with the two lenses close together are strong up close; widely spaced lenses are strong far away.</li>
+<li>Cameras that take colour and depth from the <strong>same sensor</strong> (D405, Gemini 305, OAK-D SR) have no alignment problem. A separate colour camera adds an alignment step, and that's where things drift.</li>
+<li>For close wrist work the candidates are the <strong>RealSense D405 and the Orbbec Gemini 305</strong>. The 305 fills the same slot as the D405, sees closer in its close-range preset (4–5 cm) and costs less.</li>
+<li>Whatever you buy, <strong>check that camera's characteristics yourself.</strong> Units of the same model differ.</li>
+</ul>
+<hr />
+<h2 id="mount-position-distance-camera">Mount position → distance → camera<a class="headerlink" href="#mount-position-distance-camera" title="Permanent link">&para;</a></h2>
+<p><img alt="Distance before resolution" src="../../../assets/diagrams_en/dcs-order.svg" /></p>
+<p>The mount position sets how far the camera is from the object.</p>
+<ul>
+<li>A <strong>wrist or gripper camera</strong> moves with the arm and approaches the object. Just before the grasp, the object is about 15–40 cm away. A short-range camera that holds that whole distance (D405, Gemini 305, 7–50 cm ideal) fits, and it sees the grasp area in detail.</li>
+<li>An <strong>overhead camera</strong> looks down from 50 cm to over 1 m above the table. Put a short-range camera there and it's past its 50 cm recommended limit, so error grows fast. Use a mid-range camera with a wide field of view (D435, D455) to see the whole work area in one image.</li>
+</ul>
+<p>One camera rarely does both jobs, which is why manipulation kits often ship with both a gripper camera and an external camera. A learned policy that uses only colour images works with either, but a pipeline that computes the object's pose from depth needs a short-range camera on the wrist.</p>
+<p><strong>Example: a wrist camera on a desktop arm.</strong> As the gripper approaches a block, the distance is 15–40 cm. The D405's recommended range of 7–50 cm holds all of it. The D435's recommended range starts at 30 cm, so depth quality drops in the 15–25 cm just before the grasp. Put a short-range camera like the D405 on the wrist and send the D435 overhead.</p>
+<h2 id="the-two-distance-limits-of-a-stereo-camera">The two distance limits of a stereo camera<a class="headerlink" href="#the-two-distance-limits-of-a-stereo-camera" title="Permanent link">&para;</a></h2>
+<p>Stereo cameras such as RealSense, OAK and ZED work like a pair of eyes. They find the same point in the left and right images, measure how many pixels it has shifted (the <strong>disparity</strong>), and turn that shift into distance. Hold a finger in front of your nose and close one eye, then the other: the finger jumps a lot, a distant hill barely moves. Near things have large disparity, far things small. Both limits come from this (<a href="../inside-the-models/">Inside the Three Models</a> covers the stereo principle in more depth).</p>
+<ul>
+<li><strong>The near limit.</strong> The camera chip searches disparity only up to a fixed maximum. If the object is so close that its disparity exceeds that, the depth is simply empty. This distance is the <strong>minimum distance (min-Z)</strong>.</li>
+<li><strong>The far limit.</strong> Farther away the disparity shrinks, so even a sub-pixel matching error becomes a large distance error. Double the distance and the depth error grows about four times.</li>
+</ul>
+<p>The distance between the two lenses is the <strong>baseline</strong>. A short baseline is precise up close and weak far away; a long one is the reverse.</p>
+<p><img alt="Short baseline up close, long baseline far away" src="../../../assets/diagrams_en/dcs-error.svg" /></p>
+<p>The blue line is the D405, with an 18 mm baseline. It gives depth from 7 cm, with about 0.4 mm error at 20 cm, but reaches about 1 cm at 1 m. The yellow line is the OAK-D Pro, with a 75 mm baseline. Its error is only about 1.2 mm even at 1 m, but at default settings it gives no depth inside about 80 cm. Lowering the resolution and widening the disparity search brings it to about 20 cm (dashed), at the cost of far range. A disparity shift, which moves the search window, works the same way. It lets a long-baseline camera work a little closer; it doesn't turn it into a short-range camera.</p>
+<details>
+<summary>The formulas</summary>
+
+Depth Z comes from the focal length f (pixels), the baseline B and the disparity d:
+
+Z = f·B / d
+
+- **Minimum distance:** min-Z = f·B / d_max. For the D405 (848×480, 18 mm baseline, d_max 126) this works out to about 7 cm, matching the datasheet.
+- **Far error:** ΔZ ≈ Z²·Δd / (f·B). With a sub-pixel matching precision Δd of 0.08 px, the D405 is about 0.4 mm off at 20 cm and about 1 cm at 1 m; the OAK-D Pro (800P) is about 1.2 mm at 1 m.
+
+Vendors quote a slightly more generous practical figure than the calculation. The chart and the figures above are approximate.
+
+</details>
+
+<p>So when you read a spec sheet, look at the <strong>recommended range, not the maximum</strong>. The datasheet's broad range (7 cm–1 m for the D405) is where depth "comes out"; the range accurate enough for manipulation is narrower.</p>
+<p><img alt="Only short-range cameras hold the whole 15–40 cm" src="../../../assets/diagrams_en/dcs-ranges.svg" /></p>
+<h2 id="do-colour-and-depth-come-from-the-same-sensor">Do colour and depth come from the same sensor?<a class="headerlink" href="#do-colour-and-depth-come-from-the-same-sensor" title="Permanent link">&para;</a></h2>
+<p>Depth alone rarely tells you which pixels are the part, so the usual approach is to find the object in the colour image and cut out its depth. For that, colour and depth have to point at the same pixels.</p>
+<p><img alt="If there's an alignment step, that's where the bugs live" src="../../../assets/diagrams_en/dcs-alignment.svg" /></p>
+<p>On the D405, Gemini 305, OAK-D SR and ZED, one of the stereo sensors also captures the colour image. Colour and depth share pixels from the start, so there's nothing to align. The OAK-D and OAK-D Pro have a separate colour camera between a mono stereo pair. Moving depth into the colour camera's view needs the factory-measured position of one sensor relative to the other (the extrinsics), and that step is where problems appear.</p>
+<ol>
+<li><strong>Edges don't line up.</strong> The mono and colour sensors sit a few centimetres apart, so object edges get depth holes or bleeding, worse up close. Cut depth with a segmentation mask and background depth leaks in at the mask boundary, skewing the pose.</li>
+<li><strong>Autofocus makes alignment drift.</strong> The colour camera's lens parameters used for alignment hold only at the focus position they were calibrated at. When autofocus moves the lens, the misalignment changes with distance.</li>
+<li><strong>The capture moments differ.</strong> A global shutter captures the frame at once, a rolling shutter line by line, so the two sensors capture slightly different instants. On a camera moving with the arm, colour and depth show different moments.</li>
+<li><strong>Resolution and cropping differ.</strong> If the camera crops or scales the colour image differently from how it was calibrated, alignment is off.</li>
+</ol>
+<p>If you must use a model with a separate colour camera: lock the focus or order the fixed-focus model before calibrating, keep the colour resolution the same as during calibration, capture with the robot stopped, and shrink mask edges by a few pixels before using their depth. Running segmentation and pose on the mono image removes the alignment step altogether.</p>
+<h2 id="plain-and-shiny-surfaces">Plain and shiny surfaces<a class="headerlink" href="#plain-and-shiny-surfaces" title="Permanent link">&para;</a></h2>
+<p>Stereo matches left and right points using surface texture. On single-colour parts or a white table there's nothing to match, so the <strong>depth has holes</strong>. Cameras that project their own light suffer less, but each kind of light has its own weak spot.</p>
+<p><img alt="Each depth type fails somewhere different" src="../../../assets/diagrams_en/dcs-surfaces.svg" /></p>
+<ul>
+<li><strong>Passive stereo</strong> (D405, Gemini 305, OAK-D SR over USB) projects nothing. Plain surfaces get holes; shiny surfaces get gaps or wrong depth.</li>
+<li><strong>Stereo with an IR dot projector</strong> (D435, D455, OAK-D Pro) sprays an invisible dot pattern that gives plain surfaces texture. Much better on plain surfaces, but on mirror-like reflections it can lock onto the wrong depth.</li>
+<li><strong>Time-of-flight (ToF)</strong> (OAK-D SR PoE, Orbbec Femto Bolt) sends infrared light and times its return at every pixel. No matching is needed, so plain surfaces get depth too. It struggles in strong sunlight, and on shiny metal the light bounces off a second surface before returning, so the part reads farther away than it is, with no sign that anything went wrong.</li>
+</ul>
+<p>With passive stereo, put texture stickers or a patterned mat on the parts and table, use low-angle light to bring out surface grain, or add an external pattern projector. Render-and-compare pose methods such as FoundationPose work with partial depth. Neural stereo can fill the holes, but the filled values are estimates. In the mirror-cup test in <a href="../jetson-tuning-licensing/">the tuning post</a>, neural stereo filled in the depth of the pattern reflected in the cup and was quietly wrong. Compare it with measured depth before trusting it for precise poses.</p>
+<h2 id="close-range-cameras-side-by-side">Close-range cameras side by side<a class="headerlink" href="#close-range-cameras-side-by-side" title="Permanent link">&para;</a></h2>
+<p>For a camera within half a metre of the part, the field narrows. The D405 and Gemini 305 see closest (7–50 cm ideal); the OAK-D SR starts at 20–30 cm but runs AI on the camera itself.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Depth accuracy</th>
+<th>Weight</th>
+<th>Power + data</th>
+<th>Sealing</th>
+<th>AI on camera</th>
+<th>List price (USD)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RealSense D405</td>
+<td>±2% at 50 cm</td>
+<td>60 g</td>
+<td>USB-C</td>
+<td>Not rated</td>
+<td>No</td>
+<td>325</td>
+</tr>
+<tr>
+<td>Orbbec Gemini 305</td>
+<td>±1.8% at 50 cm</td>
+<td>68 g</td>
+<td>USB-C</td>
+<td>IP54</td>
+<td>No</td>
+<td>229</td>
+</tr>
+<tr>
+<td>Orbbec Gemini 305g</td>
+<td>±1.8% at 50 cm</td>
+<td>116 g</td>
+<td>GMSL2 coax (12 V + data), USB-C</td>
+<td>IP65</td>
+<td>No</td>
+<td>279</td>
+</tr>
+<tr>
+<td>Luxonis OAK-D SR</td>
+<td>Not published</td>
+<td>72 g</td>
+<td>USB</td>
+<td>Not rated</td>
+<td>Yes (1.4 TOPS)</td>
+<td>329</td>
+</tr>
+<tr>
+<td>Luxonis OAK-D SR PoE</td>
+<td>ToF &lt;1% indoors, &lt;2% outdoors</td>
+<td>297 g (with enclosure)</td>
+<td>PoE (M12)</td>
+<td>IP67</td>
+<td>Yes</td>
+<td>479</td>
+</tr>
+</tbody>
+</table>
+<p><em>Prices are the vendors' store list prices on 30 September 2026, before tax and shipping, and may change.</em></p>
+<p>How to choose:</p>
+<ul>
+<li><strong>A USB cable to the wrist is fine:</strong> Gemini 305 or D405. Same size, same baseline (18 mm), and both take colour and depth from the same sensor. The 305 is slightly more accurate (±1.8% vs ±2%), is dust- and splash-rated (IP54, with its certified cable screwed in) and costs less. Its minimum distance depends on the setting: 9 cm at 1280×800 and 6 cm at 848×530 by default, down to 5 cm and 4 cm in the close-range preset that widens the disparity search to 256. That preset draws more power (1.57 W → 1.88 W) and lowers the maximum operating temperature from 45 °C to 40 °C. It's new (January 2026), and its ROS 2 driver (OrbbecSDK_ROS2) supports it from v2.7.2. Most NVIDIA Isaac ROS examples assume RealSense, so expect to adapt them.</li>
+<li><strong>The cable flexes every time the arm moves:</strong> Gemini 305g. If USB is a household extension cord, GMSL2 is car wiring: a camera-link standard for vehicles and robots that carries power and data on one thin coax cable, and with flex-rated cable and locking connectors it holds up on a moving arm. The host needs a GMSL2 input; bench-test over USB-C. The 305g isn't a 305 with a module bolted on; it's a separate one-piece model with a GMSL2 serializer (a chip that sends the video over one coax cable) built in (FAKRA and SMB connector versions). Optics and depth performance match the 305, and depth grows from 23 mm to 40 mm (datasheet figure; the cable connector adds to that). USB-C is for evaluation and setup; in operation it runs on 12 V over GMSL2. <strong>Check the host first.</strong> Orbbec's GMSL driver lists only NVIDIA Jetson AGX Orin and Orin NX developer kits, a few Thor-based boxes, and specific capture boards (MAX9296 and MAX96712 families). Third-party carriers such as Seeed reComputer aren't on the list. Seeed's standard carriers have no GMSL2 input, and the GMSL board for its Robotics carrier natively supports the Orbbec 335Lg; its driver source isn't public (Seeed forum, August 2026, declined under NDA). On a host like that you can't confirm the 305g will work, and a USB 305 with a short, flex-rated cable is the realistic choice. Orbbec itself says USB is fine for production when cable length, connector retention and power are controlled and validated.</li>
+<li><strong>Dust or splashing water on site:</strong> the 305g, if the host supports GMSL2. If it doesn't and the part is 20–60 cm away, the OAK-D SR PoE (IP67, PoE, with ToF) is the alternative. The D405 and D435 have no dust or water rating, and their USB connectors don't lock. RealSense's sealed model is the D457 (IP65, GMSL2), but it shares the D455's 95 mm baseline, so its minimum distance is 52 cm (0.6–6 m ideal): right for overhead, wrong for a close wrist. You can put a D405 in a housing, but the front window adds refraction and reflections, so recalibrate and check with the window in place. If it may be submerged, look at IP67 (OAK-D SR PoE, ZED X Mini). High-pressure, high-temperature washdown needs IP69K, so consider a separate housing.</li>
+<li><strong>Detection has to run on the camera, with no host GPU:</strong> OAK-D SR. Mount it beyond its near limit (about 20–30 cm).</li>
+<li><strong>Lots of shiny metal parts:</strong> don't use ToF as the main depth source (the multipath problem above). With passive models, plan texture or lighting.</li>
+</ul>
+<p>Both Gemini 305 models are passive stereo with no IR projector, and the datasheet itself says depth should be evaluated on textured objects, so plan lighting for plain surfaces. Check the packaging when buying: the boxed unit (minimum 30) includes a 1 m USB-C to USB-A cable and a guide; bulk (minimum 200) is the camera only. Supply is worth watching too: RealSense spun out of Intel in July 2025, and in September 2026 Cognex announced it would acquire the company. Product lines and prices may change, so if you're buying several, pick a fallback candidate.</p>
+<h2 id="on-a-larger-arm">On a larger arm<a class="headerlink" href="#on-a-larger-arm" title="Permanent link">&para;</a></h2>
+<p>The camera-to-object distance is set by <strong>tool length and where the camera is mounted</strong>, not by the robot's size. A 10–20 kg-payload collaborative arm (1.3–1.8 m reach) carries a larger, longer gripper, so the wrist camera ends up farther from the object. The order is the same: mount position, distance, camera.</p>
+<p><strong>Example.</strong> The gripper is about 25 cm long, the camera sits behind the flange (the plate the tool mounts to), and the arm pauses 20–40 cm above the part before grasping. Camera-to-part distance is then about 40–70 cm.</p>
+<table>
+<thead>
+<tr>
+<th>Camera</th>
+<th>Recommended range</th>
+<th>At 40–70 cm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RealSense D405</td>
+<td>7–50 cm</td>
+<td>Partly. The far end is past its range, and error rises fast beyond 60 cm</td>
+</tr>
+<tr>
+<td>Luxonis OAK-D SR</td>
+<td>0.3–1 m</td>
+<td>The whole range fits</td>
+</tr>
+<tr>
+<td>Luxonis OAK-D Pro</td>
+<td>~0.8 m+ by default</td>
+<td>Too close at default settings</td>
+</tr>
+<tr>
+<td>Stereolabs ZED X Mini</td>
+<td>0.1–8 m</td>
+<td>Fits; global shutter and IP67, but the GMSL2 host has to be supported</td>
+</tr>
+</tbody>
+</table>
+<p>The OAK-D SR has a lot going for it on a large arm. Colour and depth come from the same sensor, so there's no alignment step; fixed focus keeps the lens parameters steady; and a global shutter doesn't smear during fast moves. The PoE model (OAK ToF) adds long cable runs and ToF depth. With a 20 mm baseline, though, error near 1 m is about 5 mm to 1 cm, so use it to find the part roughly and finish with contact, force sensing or mechanical guides.</p>
+<p>For the ZED X family, check the host first. Depth is computed on the host's NVIDIA GPU, and the GMSL2 capture-card driver supports only specific carrier boards. Seeed reComputer carriers aren't on the list, and there are reports of the camera not being detected. It works on NVIDIA developer kits and Stereolabs' ZED Box. The documented minimum for the neural depth modes is 0.3 m (measured on a ZED X with a 120 mm baseline, so the Mini may differ), so treat the 0.1 m lens figure with care.</p>
+<h2 id="once-it-arrives-check-your-camera-first">Once it arrives: check your camera first<a class="headerlink" href="#once-it-arrives-check-your-camera-first" title="Permanent link">&para;</a></h2>
+<p>A spec sheet gives the model's typical values. The unit you actually receive behaves differently per resolution mode, per calibration state and per focus type. The camera in <a href="../jetson-scan-no-cad/">the scanning post</a> put every distance 5.6 % short because of the default lens parameters for its 1080p mode, had stereo rectification 1.9 px off vertically, and changed its focal length by 3.3 % up close because of autofocus. None of it produced an error message. When a new camera arrives, check three things before real work:</p>
+<ol>
+<li><strong>Lens parameters:</strong> in the resolution mode you'll use, put a board of known size at several distances and compare the distance computed from the lens parameters with the stereo distance. With fixed focus, the error should stay the same at every distance.</li>
+<li><strong>Stereo rectification:</strong> in the rectified left and right images, matching points should sit within 0.5 px vertically.</li>
+<li><strong>Focus:</strong> with an autofocus camera, find the distance where the factory values hold, and <strong>don't get closer than that.</strong> If you have to work closer, use a fixed-focus model.</li>
+</ol>
+<p>Write the result as one line, "this camera is within ○ % from ○ to ○ cm". That's the camera's real recommended range.</p>
+<h2 id="what-to-check-when-buying">What to check when buying<a class="headerlink" href="#what-to-check-when-buying" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Specify fixed focus.</strong> Autofocus moves the lens parameters (webcams, phones, autofocus OAK models). Luxonis sells fixed-focus versions to order.</li>
+<li><strong>Compare the working distance with the recommended range, not the maximum.</strong> If you shift the search window to see closer, account for the shorter far range.</li>
+<li><strong>On Luxonis, don't combine a disparity shift with on-camera alignment.</strong> depthai-core has an open known limitation that RGB-depth alignment doesn't work with a disparity shift enabled (issue #831). If you need both, check the alignment yourself.</li>
+<li><strong>If depth will be cut with a segmentation mask, choose a model with colour and depth on the same sensor</strong> (D405, Gemini 305, OAK-D SR, ZED).</li>
+<li><strong>For many plain or shiny parts,</strong> look at a projector (D435, OAK-D Pro), ToF, or, for millimetre-level matching, a structured-light industrial camera (Zivid, Photoneo and others).</li>
+<li><strong>Choose the software too.</strong> RealSense uses librealsense/realsense-ros, Orbbec uses OrbbecSDK_ROS2, Luxonis uses DepthAI/depthai-ros, Stereolabs uses the ZED SDK (needs an NVIDIA GPU). Mix them in one cell or one classroom and troubleshooting splits into several paths.</li>
+<li><strong>On-camera AI</strong> (Luxonis) matters when there's no host PC and power is tight. With a GPU host it adds little.</li>
+<li><strong>In an industrial cell,</strong> start with the dust and water rating (305g IP65 for a close wrist, D457 IP65 overhead, IP67 or better for washdown, IP69K for high-pressure washdown). Where the cable flexes every cycle, a locking connector and a flex-rated cable (GMSL2, M12 PoE) are better, and USB 3 beyond about 3 m needs an active or optical extension. Check the product lifecycle too: for a cell that will run for years, being able to keep buying the same model matters.</li>
+</ul>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Decide where the camera goes (wrist, overhead)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Measure the distance to the object from there</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Pick a camera whose <strong>recommended range</strong> includes it: short baseline for close, long for far</td>
+</tr>
+<tr>
+<td>4</td>
+<td>If a mask cuts the depth, check that colour and depth share a sensor</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Match the depth type to the part surfaces (plain, shiny)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Check the received camera's lens parameters, rectification and focus yourself</td>
+</tr>
+</tbody>
+</table>
+<p>The D405 is still the default for close wrist work, and the Gemini 305 is a candidate for the same slot that is slightly more accurate and costs less. Either way, trust the numbers you measure on the camera you received over the spec sheet.</p>
+<hr />
+<p><strong>Series</strong> · <a href="../camera-placement/">← How Many Cameras, and Where</a></p>
+<p><em>Related: <a href="../jetson-scan-no-cad/">Scanning post</a> · <a href="../jetson-tuning-licensing/">Tuning post</a> · <a href="../inside-the-models/">Inside the Three Models</a> · <a href="../stereo-to-grasp/">From Stereo to Grasp</a></em></p>
+<h3 id="sources-and-notices">Sources and notices<a class="headerlink" href="#sources-and-notices" title="Permanent link">&para;</a></h3>
+<p>Figures follow each vendor's public specs and documentation: <a href="https://www.realsenseai.com/wp-content/uploads/2026/03/RealSense-D400-Series-Datasheet-Mar-2026.pdf">RealSense D400 datasheet (Mar 2026)</a> · <a href="https://www.realsenseai.com/stereo-depth/compare/">RealSense camera comparison</a> · <a href="https://www.orbbec.com/gemini-305/">Orbbec Gemini 305</a> · <a href="https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/8888/Orbbec_Gemini-305-Datasheet.pdf">Gemini 305 datasheet V1.0 (Jan 2026)</a> · <a href="https://store.orbbec.com/products/gemini-305">Gemini 305 store</a> · <a href="https://store.orbbec.com/products/gemini-305g">Gemini 305g store</a> · <a href="https://orbbec-debian-repos-aws.s3.amazonaws.com/product/Orbbec_Gemini%20305g%20Datasheet%20V1.0.pdf">Gemini 305g datasheet V1.0</a> · <a href="https://index.ros.org/p/orbbec_camera/">orbbec_camera (ROS 2)</a> · <a href="https://docs.luxonis.com/hardware/products/OAK-D%20SR">Luxonis OAK-D SR</a> · <a href="https://shop.luxonis.com/products/oak-d-sr-poe">OAK ToF (OAK-D SR PoE)</a> · <a href="https://docs.luxonis.com/hardware/products/OAK-D%20Pro">OAK-D Pro</a> · <a href="https://docs.luxonis.com/hardware/platform/sensors/focus-type">Luxonis focus types</a> · <a href="https://docs.luxonis.com/projects/api/en/latest/tutorials/configuring-stereo-depth/">Luxonis stereo configuration (disparity shift)</a> · <a href="https://github.com/luxonis/depthai-core/issues/831">depthai-core #831</a> · <a href="https://realsenseai.com/products/d457-gmsl-fakra/">RealSense D457</a> · <a href="https://github.com/orbbec/MIPI_Camera_Platform_Driver">Orbbec GMSL driver support list</a> · <a href="https://wiki.seeedstudio.com/ai_robotics_recomputer_j501_robotics_getting_started/">Seeed wiki: Robotics GMSL board supported cameras</a> · <a href="https://forum.seeedstudio.com/t/jp7-2-l4t-r39-2-device-tree-overlay-v4l2-driver-for-recomputer-robotics-gmsl-board-max96712-sensing-sg-series/295703">Seeed forum: Robotics GMSL board driver</a> · <a href="https://www.orbbec.com/blog/usb-ethernet-gmsl2-robot-vision-selection-guide/">Orbbec: USB vs Ethernet vs GMSL2 guide</a> · <a href="https://www.stereolabs.com/products/zed-x">Stereolabs ZED X</a> · <a href="https://www.stereolabs.com/developers/drivers">ZED drivers</a> · <a href="https://docs.stereolabs.com/docs/depth-sensing/depth-modes.md">ZED depth modes</a> · <a href="https://www.realsenseai.com/news-insights/news/realsense-completes-spin-out-from-intel-raises-50-million-to-accelerate-ai-powered-vision-for-robotics-and-biometrics/">RealSense spin-out (Jul 2025)</a> · <a href="https://www.cognex.com/en/company/press-releases/cognex-to-acquire-realsense">Cognex to acquire RealSense (Sep 2026)</a>. The minimum-distance and error chart values are approximations from Z = f·B/d. Prices and specs change; confirm with the vendor before buying. This is not a product endorsement. RealSense is a trademark of RealSense Inc.; Orbbec, Gemini and Femto of Orbbec Inc.; Luxonis, OAK and DepthAI of Luxonis; ZED of Stereolabs; NVIDIA, Jetson, Isaac ROS and FoundationPose of NVIDIA Corporation; Cognex of Cognex Corporation; reComputer of Seeed Studio. They are used for identification only.</p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>Depth camera</em>: a camera that measures, for every pixel, the distance to that point</li>
+<li><em>Stereo camera</em>: a depth camera that computes distance from the shift between two lenses' images</li>
+<li><em>Disparity</em>: how many pixels the same point shifts between the left and right images; larger when closer</li>
+<li><em>Baseline</em>: the distance between a stereo camera's two lenses; short is strong up close, long is strong far away</li>
+<li><em>Minimum distance (min-Z)</em>: the distance closer than which no depth comes out</li>
+<li><em>Recommended range</em>: the distance span where depth is accurate enough for manipulation; narrower than the datasheet's maximum range</li>
+<li><em>Lens parameters (intrinsics, K)</em>: focal length and image centre, used to turn pixels into distance and direction</li>
+<li><em>Extrinsics</em>: the position and orientation of one sensor relative to another (or of the camera relative to the robot)</li>
+<li><em>Global shutter / rolling shutter</em>: capturing the whole frame at once / line by line; a global shutter is better on a moving camera</li>
+<li><em>Passive stereo</em>: stereo that projects no light and relies on surface texture alone</li>
+<li><em>IR dot projector</em>: a device that sprays an invisible infrared dot pattern to give plain surfaces texture</li>
+<li><em>Time-of-flight (ToF)</em>: measuring distance by timing light's round trip</li>
+<li><em>Multipath error</em>: light bouncing off a second surface before returning, so the distance reads farther than it is</li>
+<li><em>GMSL2</em>: a serial camera-link standard used in vehicles and robots, carrying power and data over one coax cable; how well it survives flexing depends on the cable you choose</li>
+<li><em>PoE</em>: power over Ethernet, power and data on one Ethernet cable</li>
+<li><em>IP54 / IP65 / IP67</em>: ratings for dust and water resistance; higher numbers resist more</li>
+<li><em>Flange</em>: the plate at the end of a robot arm where a tool such as a gripper mounts</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3349 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="휴머노이드 관절 하나를 뜯어보면 가치가 어디로 흐를지 보인다. 액추에이터의 구조, 감속비 높은 설계와 QDD의 대결, 공급망 지도, 옵티머스의 손 병목, 희토류 위험, 그리고 미국 상장 로봇 ETF 네 개의 성격과 중복. 「Physical AI에 투자한다면」의 후속편.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/physical-ai-investing-actuators/">
+      
+      
+        <link rel="prev" href="../cobot-investing/">
+      
+      
+        <link rel="next" href="../physical-ai-investing-power/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="ko">
+        
+          <link rel="alternate" href="../../en/posts/physical-ai-investing-actuators/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Physical AI에 투자한다면 (2) — 관절 하나로 보는 가치 이동: 감속기, 모터, 그리고 ETF - butterflow 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#physical-ai-2-etf" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 노트" class="md-header__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Physical AI에 투자한다면 (2) — 관절 하나로 보는 가치 이동: 감속기, 모터, 그리고 ETF
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/posts/physical-ai-investing-actuators/" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  투자 노트
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 노트" class="md-nav__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    투자 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    투자 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률, 복리, 그리고 로그차트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률의 기댓값
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파생상품의 레버리지 사용료
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    네마녀의 날이 돌아왔다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신용 스프레드를 지표로 읽기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    채권시장의 VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션의 기초
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    감마 너머
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시작하기
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI를 고르는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    학습 정책
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇 비전
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    로봇 비전
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스테레오 비전에서 목표물 잡기까지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    좌표계와 변환
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    세 모델의 안쪽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    모델 해부
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇은 왜 '가짜 세계'에서 먼저 배우나
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    카메라는 몇 대, 어디에
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    어떤 3D 카메라를
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    협동로봇
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇(cobot)이란
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs 화낙(FANUC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    펜던트에서 ROS 2로
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    펜던트에서 ROS 2로
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · ROS 2 노드와 그래프
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · URDF·TF2·ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4부 · Isaac ROS와 cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    현장 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    현장 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · JetPack부터 ROS 2까지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · Isaac ROS와 파운데이션 모델
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    정정편 · 16GB로도 된다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    튜닝편 · 속도와 라이선스
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스캔편 · CAD 없이 메시 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    모션편 · 경로 계획과 장애물 지도
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실물편 · 실제 로봇 첫 움직임
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    실습 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0부 · 실물 로봇 없이 배우기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI 투자
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI 투자
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · 가치는 이동한다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · 관절 하나로 보는 가치 이동
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · 관절 하나로 보는 가치 이동
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관절 하나를 뜯어보면
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계가 돈의 방향을 바꾼다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        누가 무엇을 만드나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        수요는 늘고 있지만, 병목은 손
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        희토류, 모터 쪽의 급소
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실제로 살 수 있는 ETF 네 개
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="실제로 살 수 있는 ETF 네 개">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        어디서, 어떤 계좌로 사나
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        무엇을 지켜보나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · 휴머노이드의 전력 문제
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관절 하나를 뜯어보면
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계가 돈의 방향을 바꾼다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        누가 무엇을 만드나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        수요는 늘고 있지만, 병목은 손
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        희토류, 모터 쪽의 급소
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실제로 살 수 있는 ETF 네 개
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="실제로 살 수 있는 ETF 네 개">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        어디서, 어떤 계좌로 사나
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        무엇을 지켜보나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="physical-ai-2-etf">Physical AI에 투자한다면 (2) — 관절 하나로 보는 가치 이동: 감속기, 모터, 그리고 ETF<a class="headerlink" href="#physical-ai-2-etf" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Physical AI 투자 · 2부.</strong> <a href="../cobot-investing/">1부「Physical AI에 투자한다면」</a>에서 "순수 플레이는 없고, 가치는 이동한다"고 했습니다. 이번에는 그 이동을 휴머노이드의 <strong>관절 하나</strong> 수준에서 들여다봅니다. 투자 권유가 아닌 정보 정리입니다.</p>
+</blockquote>
+<p>1부에서 감속기 회사를 "누가 이기든 관절은 다 여기서 나오니까" 진짜 곡괭이·삽이라고 불렀습니다. 절반만 맞는 말이었어요. 나머지 절반에는 조건이 붙습니다. 관절을 <strong>어떻게 설계하느냐</strong>에 따라 돈이 감속기로 갈 수도, 모터와 자석으로 옮겨 갈 수도 있거든요. 이 글은 그 조건을 그림으로 풀고, 실제로 살 수 있는 ETF가 그 논리를 얼마나 담고 있는지 확인합니다.</p>
+<hr />
+<h2 id="30">30초 요약<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
+<ul>
+<li>로봇 관절 하나를 움직이는 <strong>액추에이터</strong>는 모터, 감속기, 센서, 드라이버로 이뤄져 있습니다. 휴머노이드는 관절이 산업용 팔보다 몇 배 많아서, 대량 생산되면 액추에이터 수요가 크게 늘어난다는 게 기본 논리입니다.</li>
+<li>관건은 설계입니다. <strong>감속비</strong>(모터가 몇 바퀴 돌 때 관절이 한 바퀴 도는지)가 높은 전통 방식이면 가치가 정밀 감속기에 모이고, <strong>QDD</strong>(준직접구동)면 모터·희토류 자석·드라이버로 옮겨 갑니다. 한 업계 분석은 관절마다 다른 방식이 섞여 쓰인다고 봅니다.</li>
+<li>수요는 실제로 늘고 있지만 병목은 <strong>손</strong>과 <strong>공급망</strong>, 그리고 모터 쪽으로 갈수록 커지는 <strong>희토류</strong> 위험입니다.</li>
+<li>미국 상장 로봇 ETF 네 개(KOID, ROBO, BOTZ, BOTT)는 이름은 비슷해도 담긴 게 다릅니다.</li>
+</ul>
+<hr />
+<h2 id="_1">관절 하나를 뜯어보면<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="관절 하나 = 모터 + 감속기 + 센서 + 드라이버" src="../../assets/diagrams/inv2-actuator.svg" /></p>
+<p>네 부품 가운데 어디로 돈이 몰리느냐가 이 글의 질문입니다.</p>
+<p><img alt="휴머노이드 한 대 = 산업용 팔 여러 대분의 관절" src="../../assets/diagrams/inv2-joints.svg" /></p>
+<p>관절 하나에 액추에이터 하나이니, 휴머노이드가 팔리는 만큼 액추에이터가 팔립니다. 다만 테슬라(휴머노이드 '옵티머스')의 생산 목표는 과거 여러 차례 늦어졌다는 점도 함께 기억해야 합니다.</p>
+<h2 id="_2">설계가 돈의 방향을 바꾼다<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><img alt="설계가 바뀌면 돈이 흐르는 곳도 바뀐다" src="../../assets/diagrams/inv2-two-designs.svg" /></p>
+<p>이 대목에서 의견이 갈립니다. 한 국내 블로그 분석은 휴머노이드가 늘면 정밀 감속기 회사가 수혜라고 봅니다. 반면 한 유튜브 엔지니어 채널은 지금 휴머노이드가 정밀함보다 유연하고 민첩한 움직임을 원하기 때문에, 비싼 감속기 대신 강한 모터에 기대는 QDD가 유리하다고 봅니다. 두 주장이 정면으로 부딪히는 셈이에요.</p>
+<p>아직 승부는 나지 않았습니다. 산업용 팔과 정밀한 손목·손은 감속비 높은 방식이, 걷고 뛰고 충격을 받는 다리는 QDD나 선형 방식이 유리해서, 한 로봇 안에서도 섞여 쓰입니다. 투자자 입장에서 보면 이렇습니다. 감속기 회사는 산업용 로봇 회복만으로도 실적이 나오지만, 주가에 붙은 <strong>휴머노이드 프리미엄</strong>은 QDD 확산과 중국산 저가 공세에 취약합니다.</p>
+<p><img alt="관절마다 맞는 방식이 다르다" src="../../assets/diagrams/inv2-kinds.svg" /></p>
+<h2 id="_3">누가 무엇을 만드나<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><img alt="부품마다 강자가 다르다" src="../../assets/diagrams/inv2-supply.svg" /></p>
+<p>정밀 감속기는 일본 두 회사가 오래 과점해 왔습니다. 소형 파동 감속기는 하모닉 드라이브, 대형 사이클로이드(RV) 감속기는 나브테스코가 업계에서 흔히 점유율 1위로 꼽히죠. 두 회사의 주가에 기대가 반영된 정도는 꽤 다릅니다. 조사 시점(2026-09-28) 기준 향후 12개월 PER(주가가 앞으로 1년 이익의 몇 배인지)은 하모닉 드라이브가 70배대, 나브테스코가 20배 초반이었어요. 나브테스코는 선박·철도 등으로 사업이 분산돼 있어 휴머노이드 기대가 덜 반영된 쪽입니다. 두 회사 모두 미국 장외 시장 티커가 있지만 거래가 거의 없고, 실제 거래는 대부분 도쿄 증시에서 이뤄집니다.</p>
+<p>가장 큰 위험은 중국 리더드라이브 같은 업체의 저가 추격입니다. 엔화 강세는 일본 기업의 수출 경쟁력을, 고금리는 공장의 설비 투자를 누르는 부담이고요.</p>
+<p>QDD 쪽에서 가치가 옮겨 가는 곳은 모터와 자석입니다. 이 층의 미국 상장사도 감속기 쪽처럼 기대가 반영된 정도가 제각각이에요. 조사 시점(2026-09-29 종가) 기준입니다.</p>
+<ul>
+<li><strong>Allient (ALNT, 나스닥):</strong> 휴머노이드용 프레임리스·축방향 자속 모터를 내놓은 소형주(시가총액 약 19억 달러). 1년 새 주가가 약 2.5배가 되어 52주 고점 근처이고, 향후 PER은 30배 중반입니다. 회사가 작아 수주 하나의 영향이 큰 만큼, 기대도 이미 꽤 실렸습니다.</li>
+<li><strong>Regal Rexnord (RRX, NYSE):</strong> 자회사 콜모건이 로봇 관절용 프레임리스 서보 모터를 공급합니다. 향후 PER 13배 정도로 싸지만, 회사 전체에서 로봇 비중이 작아 휴머노이드 효과가 희석됩니다. 주가는 52주 고점 대비 약 -37%예요.</li>
+<li><strong>MP Materials (MP, NYSE):</strong> 서방에서 광산부터 자석까지 한 회사가 하는 유일한 곳입니다. 아직 적자라 PER로는 비교가 어렵고(향후 PER 100배 이상), 주가는 52주 고점 대비 약 -55%로 미·중 관계 뉴스에 크게 흔들립니다.</li>
+</ul>
+<p>QDD 관절로 잘 알려진 중국 Unitree는 2026년 8월 상하이 커촹반에 상장했지만(688836), 외국 개인 투자자가 직접 사기는 어렵습니다. 미국에서는 Agility Robotics가 SPAC 합병으로 연말 상장(티커 AGLT 예정)을 추진 중이고, 한국 시장에서는 로보티즈(DYNAMIXEL-Q)와 하이젠알앤엠(QDD 구동모듈 개발)이 QDD 쪽으로 거론됩니다.</p>
+<h2 id="_4">수요는 늘고 있지만, 병목은 손<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><img alt="수요는 늘고 있지만, 병목은 손과 공급망" src="../../assets/diagrams/inv2-hands.svg" /></p>
+<p>'휴머노이드는 아직 먼 이야기'라는 반론과 달리, 테슬라 옵티머스의 생산량은 실제로 늘고 있어요. 다만 손은 아직 사람이 조립하고, 모터와 정밀 기어는 상당 부분 중국 등 외부 공급사에 의존합니다. 부품 수요가 실제로 생기자, 대량 생산에서도 품질을 지킬 수 있는 공급사가 어디냐가 새 관심사로 떠올랐습니다.</p>
+<h2 id="_5">희토류, 모터 쪽의 급소<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p><img alt="모터로 가치가 옮겨 갈수록, 자석이 급소가 된다" src="../../assets/diagrams/inv2-rare-earth.svg" /></p>
+<p>QDD 논리에서는 "누가 모터를 만드나"와 함께 "중국 밖에서 누가 자석을 만드나"가 따라붙는 질문입니다. 그 대안으로 꼽히는 회사조차 중국의 수출 통제 명단에 올랐다는 점이, 이 공급망 위험이 얼마나 현실적인지 보여 줍니다.</p>
+<h2 id="etf">실제로 살 수 있는 ETF 네 개<a class="headerlink" href="#etf" title="Permanent link">&para;</a></h2>
+<p>부품주를 하나씩 담는 대신 여러 종목을 묶어 담는 방법이 ETF입니다. 다만 이름이 비슷해도 담긴 게 꽤 다릅니다.</p>
+<p><img alt="이름은 비슷해도 담긴 게 다르다" src="../../assets/diagrams/inv2-etfs.svg" /></p>
+<p>표에 없는 사실 두 가지가 있습니다. BOTT는 규모가 작고 올해 수익률이 +0.5%로 네 개 중 가장 낮았어요(2026-09-25 기준). 그리고 두 일본 감속기 회사를 함께 담은 KOID와 ROBO도 합계 비중이 3~4%라, 이 ETF로 감속기에 투자하는 효과는 작습니다.</p>
+<p><img alt="같이 사면 겹치는 조합, 서로 보완하는 조합" src="../../assets/diagrams/inv2-overlap.svg" /></p>
+<p>두 ETF를 함께 담으면 겹침에 따라 분산 효과가 달라집니다. ROBO와 BOTZ가 많이 겹치는 건 둘 다 화낙, 키엔스, 야스카와, ABB, 엔비디아 같은 대형 로봇·자동화 기업을 담기 때문이에요. BOTT는 절반 이상이 한국·중국 중소형 로봇주라 다른 ETF와 성격이 완전히 다르고, 그만큼 그 시장의 위험도 함께 따라옵니다.</p>
+<h3 id="_6">어디서, 어떤 계좌로 사나<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>2026년 9월 현행 제도 기준의 일반 정보입니다. 세금은 개인 상황에 따라 다르니 반드시 따로 확인하세요.</p>
+<ul>
+<li><strong>한국 투자자가 미국 ETF를 직접 살 때:</strong> 해외주식 계좌로 삽니다. 매매차익은 연 250만 원 공제 후 22% 양도소득세, 분배금은 미국에서 15% 원천징수(미리 떼는 세금)됩니다.</li>
+<li><strong>한국 상장 Physical AI ETF:</strong> ISA·연금계좌에 담을 수 있다는 장점이 있습니다. 다만 현대차 한 종목에 25% 안팎을 고정해 담는 상품이 많아, 한 종목 쏠림이 크다는 점을 확인해야 해요.</li>
+<li><strong>캐나다 투자자:</strong> 분배금의 미국 원천징수가 RRSP에서는 면제되고, TFSA에서는 면제되지 않습니다.</li>
+</ul>
+<h2 id="_7">무엇을 지켜보나<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p><img alt="기대는 주가에 먼저, 실적은 산업용 로봇 경기가" src="../../assets/diagrams/inv2-checks.svg" /></p>
+<p>휴머노이드 뉴스는 주가를 먼저 움직이지만, 부품 회사의 실적을 당장 좌우하는 건 여전히 자동차·전자 공장의 설비 투자입니다. 산업용 로봇 경기가 실적의 바탕이고 휴머노이드는 그 위에 얹히는 기대라는 게 업계의 일반적인 시각입니다.</p>
+<hr />
+<h2 id="_8">정리<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>질문</th>
+<th>답</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>왜 액추에이터인가</td>
+<td>관절 하나에 하나, 휴머노이드는 관절이 몇 배 많다</td>
+</tr>
+<tr>
+<td>가치는 어디로</td>
+<td>감속비 높은 설계면 감속기, QDD면 모터·자석·드라이버. 관절마다 섞여 쓰인다</td>
+</tr>
+<tr>
+<td>감속기 회사</td>
+<td>산업용 로봇 회복이 버팀목, 휴머노이드 프리미엄은 QDD·중국 저가에 취약</td>
+</tr>
+<tr>
+<td>QDD 쪽 종목</td>
+<td>ALNT(기대 반영), RRX(싸지만 희석), MP(적자·정치 변동). Unitree는 외국 개인이 사기 어렵다</td>
+</tr>
+<tr>
+<td>병목</td>
+<td>손 조립, 외부 공급 의존, 희토류</td>
+</tr>
+<tr>
+<td>ETF</td>
+<td>KOID(부품), ROBO(전반), BOTZ(대형), BOTT(로봇 전업·중소형). ROBO+BOTZ는 많이 겹침</td>
+</tr>
+<tr>
+<td>지켜볼 것</td>
+<td>수주 잔고, R&amp;D 비중, 제조업 PMI, 자동차 설비 투자</td>
+</tr>
+</tbody>
+</table>
+<p>1부의 결론이 "가치는 이동한다"였다면, 2부의 결론은 이렇습니다. <strong>그 이동의 방향은 관절 설계가 정한다.</strong> 어느 설계가 이길지 아직 모른다는 사실 자체가, 한쪽 설계에만 기대는 투자 논리의 위험입니다.</p>
+<hr />
+<p><strong>시리즈</strong> · <a href="../cobot-investing/">← 1부: Physical AI에 투자한다면</a> · <a href="../physical-ai-investing-power/">3부: 휴머노이드의 전력 문제 →</a></p>
+<p><em>관련: <a href="../cobot-ur-vs-fanuc/">UR vs 화낙(개방성)</a> · <a href="../choosing-physical-ai/">Physical AI를 고르는 법</a> · <a href="../learned-policy-track-b/">학습 정책</a></em></p>
+<h3 id="_9">출처와 표기<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>이 글은 네이버 블로그 '즐겁게 먹고 맛있게 투자하기'의 <a href="https://m.blog.naver.com/kjrmilk/224190206246">「일본과 유럽의 로봇 관절 액추에이터 기술 해자와 리스크」</a>(2026-03-03)와 유튜브 엔지니어TV의 <a href="https://www.youtube.com/watch?v=jdx4aJ1K_d4">「휴머노이드 핵심 부품 '액추에이터', 승자는 이런 기업!」</a>(2025-11-02)을 읽고 공부한 내용을 바탕으로, 공개 자료로 다시 확인해 정리했습니다. 원문의 표현을 옮기지 않고 요지만 정리했으며, 체크 지표는 원 블로그가 제시한 것을 참고했습니다. 옵티머스 생산과 손 병목은 Electrek(2026-09-25, The Information 인용), 테슬라의 액추에이터 수는 2025년 11월 바론 캐피털 콘퍼런스 대담, 감속기와 QDD의 가치 이동은 Corematter의 공개 분석(2026-09-08), 희토류는 공개 보도, 감속기 회사 PER은 Stockopedia, 모터·자석 회사의 주가와 PER은 StockAnalysis(2026-09-29 종가), Unitree 상장은 Caixin(2026-08-19), Agility 합병은 SEC 공시(Churchill Capital Corp XI, Form 425), ETF 구성과 보수는 각 운용사(KraneShares, ROBO Global, Global X, Themes ETFs)의 공식 페이지와 전체 보유 종목 자료(2026-09-24~28)를 근거로 했습니다. 모든 수치는 조사 시점 값이며 바뀝니다. 세금 설명은 일반 정보이며 개인 상황에 따라 다릅니다. 회사·펀드·제품명은 각 소유자의 상표이며 지칭 목적으로만 사용했습니다. <strong>본 글은 특정 종목이나 ETF의 매수·매도 권유나 투자 자문이 아니며, 저자는 어떤 투자 결과에 대해서도 책임지지 않습니다.</strong> 투자 판단과 그 결과는 전적으로 독자 본인의 몫입니다.</p>
+<h3 id="_10">용어 설명<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>액추에이터(actuator)</em>: 로봇 관절을 움직이는 모듈. 모터, 감속기, 센서, 드라이버로 구성</li>
+<li><em>감속기(reducer)</em>: 모터의 빠른 회전을 느리고 힘센 회전으로 바꾸는 정밀 부품</li>
+<li><em>감속비</em>: 모터가 몇 바퀴 돌 때 관절이 한 바퀴 도는지의 비율. 높을수록 힘이 세지고 느려진다</li>
+<li><em>파동(하모닉) · 사이클로이드(RV) · 유성 감속기</em>: 작고 유격 없는 방식 · 크고 튼튼한 방식 · 싸고 효율적인 방식</li>
+<li><em>QDD (준직접구동)</em>: 감속비를 낮추고 힘을 주로 강한 모터에서 얻는 관절 설계</li>
+<li><em>백래시(유격)</em>: 기어 사이의 틈. 크면 정밀하게 잡거나 멈추기 어렵다</li>
+<li><em>희토류 영구자석</em>: 강한 모터에 들어가는 자석. 생산이 중국에 몰려 있다</li>
+<li><em>프레임리스 모터</em>: 케이스와 축 없이 회전자·고정자만 공급해 관절 안에 바로 짜 넣는 모터. QDD 관절에 많이 쓰인다</li>
+<li><em>SPAC</em>: 상장만을 목적으로 만든 회사. 비상장 회사와 합병해 우회 상장시킨다</li>
+<li><em>PER(주가수익비율)</em>: 주가를 주당순이익으로 나눈 값. 높을수록 미래 기대가 크게 반영됐다는 뜻(단순화)</li>
+<li><em>장외 시장(OTC)</em>: 정규 거래소 밖에서 거래되는 시장. 거래량이 적은 경우가 많다</li>
+<li><em>총보수</em>: ETF를 보유하는 동안 해마다 떼는 비용 비율</li>
+<li><em>시가총액 가중</em>: 회사 규모가 클수록 비중을 크게 담는 방식</li>
+<li><em>편입 중복</em>: 두 ETF에 공통으로 들어 있는 종목의 비중. 클수록 함께 사도 분산 효과가 작다</li>
+<li><em>분배금 · 원천징수</em>: ETF가 투자자에게 나눠 주는 수익 · 지급할 때 미리 떼는 세금</li>
+<li><em>수주 잔고</em>: 이미 주문받았지만 아직 납품하지 않은 물량. 앞으로의 매출을 미리 보여 준다</li>
+<li><em>제조업 PMI</em>: 공장 구매 담당자 설문으로 만든 경기 지수. 50을 넘으면 확장</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/external-links.js"></script>
+      
+        <script src="../../assets/vix-history-player.js"></script>
+      
+        <script src="../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

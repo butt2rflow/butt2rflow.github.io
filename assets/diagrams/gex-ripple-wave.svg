@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 680 348" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>감마는 잔물결, 델타는 파도 — 숏 감마는 증폭, 롱 감마는 완충</title>
+<desc>파도(델타·대량 주문 흐름) 위에 잔물결(감마 헷지)이 얹힌다. 숏 감마 레짐에서는 딜러가 같은 방향으로 헷지해 파도를 키우고(증폭), 롱 감마 레짐에서는 역방향으로 헷지해 파도를 깎는다(완충). 감마는 방아쇠일 뿐 에너지의 원천은 델타다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:13.5px;font-weight:700;}
+.s{font-size:11px;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="348" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="38" style="fill:#3d3d3a">감마는 잔물결, 델타는 파도</text>
+
+<!-- left: short gamma amplify -->
+<rect x="40" y="62" width="290" height="212" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="t" x="60" y="90" style="fill:#d84a3a">숏 감마 · 증폭</text>
+<!-- delta base wave (grey) -->
+<path d="M55,190 Q87.5,150 120,190 Q152.5,230 185,190 Q217.5,150 250,190 Q282.5,230 315,190" fill="none" stroke="#c4c0b4" stroke-width="2"/>
+<!-- result wave (red, bigger) -->
+<path d="M55,190 Q87.5,122 120,190 Q152.5,258 185,190 Q217.5,122 250,190 Q282.5,258 315,190" fill="none" stroke="#d84a3a" stroke-width="2.6"/>
+<text class="s" x="60" y="262">델타 파도(회색)에 감마가 올라타 → 더 큰 파도</text>
+
+<!-- right: long gamma dampen -->
+<rect x="350" y="62" width="290" height="212" rx="10" fill="#fff" stroke="#d6d3c8" stroke-width="1"/>
+<text class="t" x="370" y="90" style="fill:#16a34a">롱 감마 · 완충</text>
+<path d="M365,190 Q397.5,150 430,190 Q462.5,230 495,190 Q527.5,150 560,190 Q592.5,230 625,190" fill="none" stroke="#c4c0b4" stroke-width="2"/>
+<path d="M365,190 Q397.5,172 430,190 Q462.5,208 495,190 Q527.5,172 560,190 Q592.5,208 625,190" fill="none" stroke="#16a34a" stroke-width="2.6"/>
+<text class="s" x="370" y="262">델타 파도를 감마가 깎아 → 잔잔</text>
+
+<text class="t" x="40" y="302" style="fill:#3d3d3a">파도 = 델타(대량 주문 흐름) · 잔물결 = 감마 헷지</text>
+<text class="s" x="40" y="326" style="fill:#8a6d3b">감마는 방아쇠지 연료가 아니다 — 에너지는 델타에 있다.</text>
+</svg>

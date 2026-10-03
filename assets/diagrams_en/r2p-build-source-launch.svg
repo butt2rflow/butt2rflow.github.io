@@ -1,0 +1,56 @@
+<svg width="100%" viewBox="0 0 680 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Four steps from code to running</title>
+<desc id="de">In ROS 2 you write code as packages, build with colcon, source the setup file so the terminal can find it, then start several nodes at once with a launch file. The bottom row shows the closest teach-pendant step.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.st{font-size:11px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--blue)}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.hi{fill:var(--card);stroke:var(--amber);stroke-width:1.8}
+.fam{fill:var(--chip);stroke:none}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.mk{fill:var(--blue)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="232" rx="12"/>
+<text class="t" x="18" y="26">Write → build → source → launch</text>
+<rect class="bx" x="18" y="46" width="140" height="74" rx="9"/>
+<text class="lb" x="88" y="70" text-anchor="middle">① write package</text>
+<text class="code" x="88" y="90" text-anchor="middle">src/ folder</text>
+<text class="st" x="88" y="108" text-anchor="middle">one job, bundled</text>
+<line class="ar" x1="160" y1="83" x2="186" y2="83"/>
+<rect class="bx" x="190" y="46" width="140" height="74" rx="9"/>
+<text class="lb" x="260" y="70" text-anchor="middle">② build</text>
+<text class="code" x="260" y="90" text-anchor="middle">colcon build</text>
+<text class="st" x="260" y="108" text-anchor="middle">makes it runnable</text>
+<line class="ar" x1="332" y1="83" x2="358" y2="83"/>
+<rect class="bx" x="362" y="46" width="140" height="74" rx="9"/>
+<text class="lb" x="432" y="70" text-anchor="middle">③ source</text>
+<text class="code" x="432" y="90" text-anchor="middle">install/setup.bash</text>
+<text class="st" x="432" y="108" text-anchor="middle">register in this terminal</text>
+<line class="ar" x1="504" y1="83" x2="530" y2="83"/>
+<rect class="hi" x="534" y="46" width="128" height="74" rx="9"/>
+<text class="lb" x="598" y="70" text-anchor="middle">④ launch</text>
+<text class="code" x="598" y="90" text-anchor="middle">ros2 launch</text>
+<text class="st" x="598" y="108" text-anchor="middle">many nodes at once</text>
+<text class="st" x="18" y="146">On a teach pendant, roughly</text>
+<rect class="fam" x="18" y="156" width="140" height="56" rx="8"/>
+<text class="st" x="88" y="180" text-anchor="middle" style="fill:var(--fg)">write the program</text>
+<text class="st" x="88" y="197" text-anchor="middle">(pendant or PC editor)</text>
+<rect class="fam" x="190" y="156" width="140" height="56" rx="8"/>
+<text class="st" x="260" y="180" text-anchor="middle" style="fill:var(--fg)">load onto controller</text>
+<text class="st" x="260" y="197" text-anchor="middle">(if written on a PC)</text>
+<rect class="fam" x="362" y="156" width="140" height="56" rx="8"/>
+<text class="st" x="432" y="180" text-anchor="middle" style="fill:var(--fg)">make it show in the list</text>
+<text class="st" x="432" y="197" text-anchor="middle">redo in every new window</text>
+<rect class="fam" x="534" y="156" width="128" height="56" rx="8"/>
+<text class="st" x="598" y="180" text-anchor="middle" style="fill:var(--fg)">start the whole cell</text>
+<text class="st" x="598" y="197" text-anchor="middle">select, press start</text>
+</svg>

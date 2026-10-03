@@ -1,0 +1,34 @@
+<svg width="100%" viewBox="0 0 680 288" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>The lens-parameter trap in 1080p mode</title>
+<desc>The default lens parameters assume the whole sensor was scaled to 1920 and give fx 1465.5, but the real 1080p mode crops the central 3840×2160 and halves it, so fx 1547.9 is right. With the default, the checkerboard comes out at 298.8 mm; with the right value it is 315.4 mm, matching the stereo measurement of 315.2 mm.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.sub{font-size:10.5px;fill:#73726c;}
+.m{font-size:11.5px;font-weight:700;fill:#3f4d66;}
+.s{font-size:9.5px;fill:#73726c;}
+.v{font-size:10.5px;font-weight:700;fill:#5f5e58;}
+.g{font-size:10.5px;font-weight:700;fill:#15803d;}
+.r{font-size:10.5px;font-weight:700;fill:#b91c1c;}
+.num{font-size:10px;font-weight:700;fill:#ffffff;}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#9a988f"/></marker></defs>
+<rect x="0" y="0" width="680" height="288" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="32">Get the 1080p lens parameters (K) wrong and every distance is about 5 % short</text>
+<text class="sub" x="40" y="50">Two ideas of how the same sensor (4056×3040) makes a 1080p image</text>
+<text class="m" x="40" y="78">Default's assumption: the whole sensor, scaled</text>
+<text class="s" x="40" y="93">4056 → 1920 (× 0.473)</text>
+<rect x="40" y="104" width="160" height="120" fill="#ece9e0" stroke="#9a988f"/>
+<rect x="40" y="119" width="160" height="90" fill="#fecaca" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text class="s" x="44" y="220">4056×3040</text>
+<text class="r" x="216" y="150" style="font-size:13px">fx 1465.5</text>
+<text class="r" x="40" y="244">checkerboard computed at 298.8 mm</text>
+<text class="m" x="350" y="78">Real 1080p mode: crop the centre, then halve</text>
+<text class="s" x="350" y="93">crop to 3840×2160, then × 0.5</text>
+<rect x="350" y="104" width="160" height="120" fill="#ece9e0" stroke="#9a988f"/>
+<rect x="354.3" y="121.4" width="151.5" height="85.3" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+<text class="s" x="354" y="220">4056×3040</text>
+<text class="g" x="526" y="150" style="font-size:13px">fx 1547.9</text>
+<text class="g" x="350" y="244">315.4 mm (matches stereo: 315.2 mm)</text>
+<text class="s" x="40" y="272">FoundationPose derives distance from K, so a wrong K puts every pose about 5 % too close</text>
+</svg>

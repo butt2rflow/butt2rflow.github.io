@@ -1,0 +1,115 @@
+<svg width="100%" viewBox="0 0 680 850" xmlns="http://www.w3.org/2000/svg" role="img"><title>네마녀의 날 캐리커처 — 세로형 모바일용</title><desc>밤하늘을 나는 네 마녀 캐리커처. 위쪽 세 마녀는 지수선물, 지수옵션, 개별주식옵션이고 한 마녀는 빗자루에서 미끄러지고 있다. 반짝이 궤적을 끌고 합류하는 앰버색 네 번째 마녀가 6년 만에 복귀한 개별주식선물이다.</desc>
+<style>
+.vt { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 27px; font-weight: 500; fill: #F2EDDC; }
+.vs { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 15px; font-weight: 400; fill: #A8A3B8; }
+.vl { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 16px; font-weight: 500; fill: #EDEAE0; }
+.vc { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 17px; font-weight: 500; fill: #F2C879; }
+.vb { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 16px; font-weight: 500; fill: #3A2E1E; }
+.vf { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 13px; font-weight: 400; fill: #8E8AA0; }
+</style>
+<rect x="0" y="0" width="680" height="850" rx="12" fill="#171829"/>
+<text class="vt" x="340" y="72" text-anchor="middle">네마녀의 날이 돌아왔다</text>
+<text class="vs" x="340" y="104" text-anchor="middle">개별주식선물, 6년 만의 부활</text>
+<circle cx="588" cy="184" r="36" fill="#F0EAD2"/>
+<circle cx="577" cy="173" r="6.5" fill="#DED7BC"/>
+<circle cx="599" cy="195" r="4.7" fill="#DED7BC"/>
+<circle cx="58" cy="164" r="1.6" fill="#EDEAE0" opacity="0.75"/>
+<circle cx="248" cy="146" r="1.8" fill="#EDEAE0" opacity="0.85"/>
+<circle cx="118" cy="212" r="1.2" fill="#EDEAE0" opacity="0.55"/>
+<circle cx="642" cy="288" r="1.5" fill="#EDEAE0" opacity="0.65"/>
+<circle cx="44" cy="386" r="1.4" fill="#EDEAE0" opacity="0.6"/>
+<circle cx="616" cy="512" r="1.6" fill="#EDEAE0" opacity="0.7"/>
+<circle cx="256" cy="504" r="1.2" fill="#EDEAE0" opacity="0.5"/>
+<circle cx="90" cy="600" r="1.5" fill="#EDEAE0" opacity="0.6"/>
+<circle cx="632" cy="700" r="1.3" fill="#EDEAE0" opacity="0.55"/>
+<circle cx="540" cy="792" r="1.5" fill="#EDEAE0" opacity="0.6"/>
+<g transform="translate(168,300) scale(1) rotate(-9)">
+<path d="M-78,10 L58,-12" stroke="#8A6642" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M-78,10 L-100,-1 M-78,10 L-102,9 M-78,10 L-99,19 M-78,10 L-95,25" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+<path d="M-10,-38 Q-44,-30 -66,-12 Q-38,-20 -14,-18 Z" fill="#378ADD" opacity="0.74"/>
+<path d="M-6,4 C-24,-4 -26,-30 -10,-40 L18,-34 C26,-16 20,0 8,6 Z" fill="#378ADD"/>
+<path d="M4,4 L24,-6" stroke="#378ADD" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M24,-6 L35,-10" stroke="#22252E" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M6,-30 L34,-18" stroke="#378ADD" stroke-width="5" stroke-linecap="round" fill="none"/>
+<path d="M-2,-42 Q-17,-32 -22,-19" stroke="#E8E4D4" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="6" cy="-46" r="8.5" fill="#EFD3AC"/>
+<circle cx="10" cy="-49" r="1.7" fill="#2A2440"/>
+<path d="M6,-54 Q11,-56 15,-53" stroke="#2A2440" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M13,-47 Q27,-43 13,-38 Z" fill="#EFD3AC"/>
+<circle cx="22" cy="-43.5" r="1.1" fill="#B98E63"/>
+<path d="M5,-41 Q10,-34 15,-40 Z" fill="#8C3A32"/>
+<ellipse cx="6" cy="-54" rx="18" ry="4.2" fill="#2A2440"/>
+<path d="M-4,-55 Q14,-68 -2,-94 Q26,-72 15,-55 Z" fill="#2A2440"/>
+</g>
+<g transform="translate(410,240) scale(1) rotate(7)">
+<path d="M-78,10 L58,-12" stroke="#8A6642" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M-78,10 L-100,-1 M-78,10 L-102,9 M-78,10 L-99,19 M-78,10 L-95,25" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+<path d="M-10,-38 Q-44,-30 -66,-12 Q-38,-20 -14,-18 Z" fill="#1D9E75" opacity="0.74"/>
+<path d="M-6,4 C-24,-4 -26,-30 -10,-40 L18,-34 C26,-16 20,0 8,6 Z" fill="#1D9E75"/>
+<path d="M4,4 L26,0" stroke="#1D9E75" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M26,0 L37,-2" stroke="#22252E" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M4,-32 L14,-56" stroke="#1D9E75" stroke-width="5" stroke-linecap="round" fill="none"/>
+<path d="M-2,-42 Q-17,-32 -22,-19" stroke="#E8E4D4" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="6" cy="-46" r="8.5" fill="#EFD3AC"/>
+<circle cx="10" cy="-49" r="1.7" fill="#2A2440"/>
+<path d="M6,-54 Q11,-56 15,-53" stroke="#2A2440" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M13,-47 Q27,-43 13,-38 Z" fill="#EFD3AC"/>
+<circle cx="22" cy="-43.5" r="1.1" fill="#B98E63"/>
+<path d="M5,-41 Q10,-34 15,-40 Z" fill="#8C3A32"/>
+<ellipse cx="6" cy="-54" rx="18" ry="4.2" fill="#2A2440"/>
+<path d="M-4,-55 Q14,-68 -2,-94 Q26,-72 15,-55 Z" fill="#2A2440"/>
+</g>
+<g transform="translate(528,420) scale(1) rotate(15)">
+<path d="M-78,10 L58,-12" stroke="#8A6642" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M-78,10 L-100,-1 M-78,10 L-102,9 M-78,10 L-99,19 M-78,10 L-95,25" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+<path d="M-10,-38 Q-46,-24 -68,-2 Q-38,-16 -14,-18 Z" fill="#7F77DD" opacity="0.74"/>
+<path d="M-6,4 C-24,-4 -26,-30 -10,-40 L18,-34 C26,-16 20,0 8,6 Z" fill="#7F77DD"/>
+<path d="M2,6 L18,20" stroke="#7F77DD" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M18,20 L29,24" stroke="#22252E" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M8,-30 L34,-40" stroke="#7F77DD" stroke-width="5" stroke-linecap="round" fill="none"/>
+<path d="M-2,-42 Q-18,-30 -24,-16" stroke="#E8E4D4" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="6" cy="-46" r="8.5" fill="#EFD3AC"/>
+<circle cx="10" cy="-49" r="1.7" fill="#2A2440"/>
+<path d="M6,-54 Q11,-56 15,-53" stroke="#2A2440" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M13,-47 Q27,-43 13,-38 Z" fill="#EFD3AC"/>
+<circle cx="22" cy="-43.5" r="1.1" fill="#B98E63"/>
+<ellipse cx="10" cy="-38" rx="4.5" ry="5" fill="#8C3A32"/>
+<ellipse cx="2" cy="-56" rx="18" ry="4.2" fill="#2A2440" transform="rotate(-18 2 -56)"/>
+<path d="M-10,-58 Q6,-74 -14,-98 Q16,-76 6,-56 Z" fill="#2A2440" transform="rotate(-18 -2 -58)"/>
+</g>
+<text class="vl" x="168" y="362" text-anchor="middle">지수선물</text>
+<text class="vl" x="410" y="302" text-anchor="middle">지수옵션</text>
+<text class="vl" x="528" y="482" text-anchor="middle">개별주식옵션</text>
+<path d="M44,818 Q116,796 186,772" stroke="#F2C879" stroke-width="2.2" opacity="0.34" fill="none" stroke-linecap="round"/>
+<path d="M58,790 Q126,770 190,748" stroke="#F2C879" stroke-width="1.6" opacity="0.24" fill="none" stroke-linecap="round"/>
+<path d="M36,842 Q108,820 176,798" stroke="#F2C879" stroke-width="1.6" opacity="0.18" fill="none" stroke-linecap="round"/>
+<circle cx="94" cy="796" r="2.6" fill="#F2C879" opacity="0.68"/>
+<circle cx="140" cy="818" r="1.9" fill="#F2C879" opacity="0.5"/>
+<circle cx="62" cy="758" r="1.7" fill="#F2C879" opacity="0.44"/>
+<circle cx="172" cy="762" r="2.2" fill="#F2C879" opacity="0.56"/>
+<g transform="translate(322,672) scale(1.35) rotate(-14)">
+<path d="M-78,10 L58,-12" stroke="#8A6642" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M-78,10 L-100,-1 M-78,10 L-102,9 M-78,10 L-99,19 M-78,10 L-95,25" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+<path d="M-10,-38 Q-46,-26 -70,-4 Q-40,-18 -14,-18 Z" fill="#EF9F27" opacity="0.74"/>
+<path d="M-6,4 C-24,-4 -26,-30 -10,-40 L18,-34 C26,-16 20,0 8,6 Z" fill="#EF9F27"/>
+<path d="M4,4 L24,-6" stroke="#EF9F27" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M24,-6 L35,-10" stroke="#22252E" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M2,-32 L10,-60" stroke="#EF9F27" stroke-width="5" stroke-linecap="round" fill="none"/>
+<path d="M10,-60 L4,-70" stroke="#EFD3AC" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+<path d="M-2,-42 Q-18,-31 -24,-17" stroke="#E8E4D4" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="6" cy="-46" r="8.5" fill="#EFD3AC"/>
+<circle cx="10" cy="-49" r="1.7" fill="#2A2440"/>
+<path d="M6,-54 Q11,-56 15,-53" stroke="#2A2440" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M13,-47 Q27,-43 13,-38 Z" fill="#EFD3AC"/>
+<circle cx="22" cy="-43.5" r="1.1" fill="#B98E63"/>
+<path d="M5,-41 Q10,-34 15,-40 Z" fill="#8C3A32"/>
+<ellipse cx="6" cy="-54" rx="18" ry="4.2" fill="#3A2E1E"/>
+<path d="M-4,-55 Q14,-68 -2,-94 Q26,-72 15,-55 Z" fill="#3A2E1E"/>
+<path d="M-3,-58 L14,-58" stroke="#EF9F27" stroke-width="3" stroke-linecap="round" fill="none"/>
+</g>
+<path d="M424,580 L628,580 Q640,580 640,592 L640,620 Q640,632 628,632 L424,632 Q412,632 412,620 L412,592 Q412,580 424,580 Z" fill="#F5EFDC"/>
+<path d="M412,596 L396,608 L412,618 Z" fill="#F5EFDC"/>
+<text class="vb" x="526.0" y="612.0" text-anchor="middle">6년 만에 복귀!</text>
+<text class="vc" x="322" y="750" text-anchor="middle">개별주식선물</text>
+<text class="vf" x="340" y="806" text-anchor="middle">2026년 9월 18일 — 6년 만에 네 마녀가 다시 모인다</text>
+</svg>

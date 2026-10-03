@@ -1,0 +1,80 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">배터리 공급망 단계별 중국 비중</title>
+<desc id="de">리튬은 캐는 곳이 흩어져 있어 중국의 채굴 비중은 약 21%(2025년, 1위는 호주)지만, 리튬 정제는 약 70%(2024년)가 중국이다. 코발트 정제 79%(2025년), 배터리급 흑연 95% 이상(2024년), 양극재 약 85%와 셀 생산 80% 이상(2025년)도 중국이다. 니켈 정제 1위는 인도네시아(절반 가까이)지만 상당 부분이 중국계 기업 소유다. 캐는 곳은 흩어져 있어도 가공은 중국에 몰려 있다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="320" rx="12"/>
+<text class="t" x="18" y="26">캐는 곳은 흩어져 있어도, 가공은 중국에 몰려 있다</text>
+<text class="it" x="18" y="67">리튬 채굴</text>
+<rect class="bxg" x="200" y="52" width="84.0" height="22" rx="4"/>
+<text class="nd" x="292.0" y="68">약 21% (2025)</text>
+<text class="it" x="18" y="101">리튬 정제</text>
+<rect class="bxr" x="200" y="86" width="280.0" height="22" rx="4"/>
+<text class="nd" x="488.0" y="102">약 70% (2024)</text>
+<text class="it" x="18" y="135">코발트 정제</text>
+<rect class="bxr" x="200" y="120" width="316.0" height="22" rx="4"/>
+<text class="nd" x="524.0" y="136">79% (2025)</text>
+<text class="it" x="18" y="169">배터리급 흑연 (음극)</text>
+<rect class="bxr" x="200" y="154" width="380.0" height="22" rx="4"/>
+<text class="nd" x="588.0" y="170">95%+ (2024)</text>
+<text class="it" x="18" y="203">양극재</text>
+<rect class="bxr" x="200" y="188" width="340.0" height="22" rx="4"/>
+<text class="nd" x="548.0" y="204">약 85% (2025)</text>
+<text class="it" x="18" y="237">셀 생산</text>
+<rect class="bxr" x="200" y="222" width="320.0" height="22" rx="4"/>
+<text class="nd" x="528.0" y="238">80%+ (2025)</text>
+<line x1="600" y1="46" x2="600" y2="258" style="stroke:var(--mut);stroke-width:1;stroke-dasharray:3 4"/>
+<text class="sm" x="600" y="272" text-anchor="middle">100%</text>
+<text class="sm" x="18" y="294" style="fill:var(--fg)">니켈 정제 1위는 인도네시아(절반 가까이)지만 상당 부분이 중국계 소유. 코발트 채굴 1위 콩고도 중국계 기업 비중이 크다</text>
+<text class="sm" x="18" y="312">출처: IEA 핵심광물 전망 2025, IEA 전기차 전망 2026, 코발트 협회, USGS. 기준연도가 항목마다 다르다</text>
+</svg>

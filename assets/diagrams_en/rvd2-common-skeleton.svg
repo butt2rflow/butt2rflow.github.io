@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">The shared 4-stage structure of the three models</title>
+<desc id="de">The three models share four stages: encoder, data structure, iterative refinement, and head. Emitting the result together with a confidence in the fourth stage is the key for robot systems.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="340" rx="12"/>
+<text class="t" x="18" y="22">Four stages — same in all three</text>
+<rect class="bx" x="16" y="34" width="328" height="62" rx="10"/>
+<text class="lb" x="30" y="53">① Encoder — observation into features</text>
+<text class="st" x="30" y="72">Pixels → features. Borrow a <tspan style="fill:var(--blue)">frozen pretrained model</tspan></text>
+<text class="st" x="30" y="88">— the shared strategy of all three.</text>
+<path class="arb" d="M180,96 L180,112"/>
+<rect class="bx" x="16" y="114" width="328" height="70" rx="10"/>
+<text class="lb" x="30" y="133">② Task-specific data structure — a vessel for hypotheses</text>
+<text class="st" x="30" y="152">Stereo: cost volume (a score per candidate disparity)</text>
+<text class="st" x="30" y="168">SAM: prompt tokens ↔ image tokens</text>
+<text class="st" x="30" y="180">Pose: hundreds of pose hypotheses</text>
+<path class="arb" d="M180,184 L180,200"/>
+<rect class="bx" x="16" y="202" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="221">③ Iterative refinement — not right in one shot</text>
+<text class="st" x="30" y="240">Emit a rough answer, then fix it repeatedly. All three</text>
+<text class="st" x="30" y="256">reuse the same block <tspan style="fill:var(--teal)">N times</tspan>.</text>
+<path class="arb" d="M180,268 L180,284"/>
+<rect class="bx" x="16" y="286" width="328" height="46" rx="10"/>
+<text class="lb" x="30" y="305">④ Head — answer + self-confidence</text>
+<text class="st" x="30" y="322">Emits the result together with "how trustworthy it is"</text>
+</svg>

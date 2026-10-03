@@ -1,0 +1,3339 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A controller already knows its robot; ROS has to be told. URDF as the robot's blueprint, TF2 as the home of UFRAME and UTOOL, ros2_control for swapping in only the robot-specific layer, and RViz for checking it all by eye. Part 2 of 4.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/ros2-robot-description/">
+      
+      
+        <link rel="prev" href="../ros2-for-robot-programmers/">
+      
+      
+        <link rel="next" href="../moveit2-goals-not-points/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/ros2-robot-description/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>From Teach Pendant to ROS 2 (2) — Describing the Robot to ROS: URDF, TF2, ros2_control, RViz - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#from-teach-pendant-to-ros-2-2-describing-the-robot-to-ros-urdf-tf2-ros2_control-rviz" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From Teach Pendant to ROS 2 (2) — Describing the Robot to ROS: URDF, TF2, ros2_control, RViz
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/ros2-robot-description/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#urdf-the-robots-blueprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URDF, the robot's blueprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-the-installed-cell-differs-from-the-cad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the installed cell differs from the CAD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-joint-angles-to-the-blueprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add joint angles to the blueprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tf2-where-uframe-and-utool-live-in-ros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TF2, where UFRAME and UTOOL live in ROS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ros2_control-swapping-in-only-the-robot-specific-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ros2_control, swapping in only the robot-specific layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rviz-where-mistakes-get-caught-before-the-robot-moves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RViz, where mistakes get caught before the robot moves
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#urdf-the-robots-blueprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URDF, the robot's blueprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-the-installed-cell-differs-from-the-cad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the installed cell differs from the CAD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-joint-angles-to-the-blueprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add joint angles to the blueprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tf2-where-uframe-and-utool-live-in-ros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TF2, where UFRAME and UTOOL live in ROS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ros2_control-swapping-in-only-the-robot-specific-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ros2_control, swapping in only the robot-specific layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rviz-where-mistakes-get-caught-before-the-robot-moves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RViz, where mistakes get caught before the robot moves
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="from-teach-pendant-to-ros-2-2-describing-the-robot-to-ros-urdf-tf2-ros2_control-rviz">From Teach Pendant to ROS 2 (2) — Describing the Robot to ROS: URDF, TF2, ros2_control, RViz<a class="headerlink" href="#from-teach-pendant-to-ros-2-2-describing-the-robot-to-ros-urdf-tf2-ros2_control-rviz" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>From Teach Pendant to ROS 2 · Part 2 of 4.</strong> <a href="../ros2-for-robot-programmers/">Part 1</a> showed ROS 2 as wiring made of nodes and messages. This part connects a robot to that wiring. <a href="../moveit2-goals-not-points/">Part 3</a> covers MoveIt 2, <a href="../isaac-ros-gpu/">Part 4</a> Isaac ROS and cuMotion.</p>
+</blockquote>
+<p>A FANUC controller already knows which robot it's attached to. Arm lengths, joint ranges and motor characteristics are loaded at the factory, and on the pendant you only set UFRAME and UTOOL.</p>
+<p>ROS is different. It's an ordinary program on a PC, so at first it knows nothing about the robot it's connected to. You have to tell it three things, and then check by eye that it understood.</p>
+<p><img alt="The controller already knows the robot. ROS has to be told" src="../../../assets/diagrams_en/r2p2-what-ros-needs.svg" /></p>
+<p>This post works through the four rows of that picture from the top.</p>
+<hr />
+<h2 id="the-30-second-version">The 30-second version<a class="headerlink" href="#the-30-second-version" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>URDF</strong> is the robot's blueprint file: the chain of links (rigid parts) and joints, joint ranges and 3D shapes. The arm comes from the maker; you attach the gripper and camera.</li>
+<li><strong>robot_state_publisher</strong> combines the blueprint with the live joint angles to work out where every part of the robot is.</li>
+<li><strong>TF2</strong> is the frame manager. It plays the role of UFRAME and UTOOL, but instead of picking a few by number, it connects all the frames into a tree. Converting a position the camera saw into robot coordinates is TF2's job too.</li>
+<li><strong>ros2_control</strong> splits motor control into layers. The controller that follows trajectories is the same for every robot; only the hardware interface at the bottom differs.</li>
+<li>For tables and fixtures, trust <strong>measurement</strong> over CAD: simple boxes with a margin for collision, positions from a 3-point touch, kept in a version-controlled config.</li>
+<li><strong>RViz</strong> shows all of this in 3D. It's where you catch mistakes before the robot moves.</li>
+</ul>
+<hr />
+<h2 id="urdf-the-robots-blueprint">URDF, the robot's blueprint<a class="headerlink" href="#urdf-the-robots-blueprint" title="Permanent link">&para;</a></h2>
+<p>URDF (Unified Robot Description Format) is a text file that writes a robot down as <strong>a chain of links and joints</strong>.</p>
+<p><img alt="A robot = a chain of links and joints" src="../../../assets/diagrams_en/r2p2-urdf-chain.svg" /></p>
+<p>The code on the right is one joint: "a revolute joint connecting the upper arm (upper_arm_link) and forearm (forearm_link), turning up to ±180° about this axis." It's the same information as the joint-range settings on your pendant, kept in a file. Each link is also tied to a 3D shape file, used to draw the robot on screen and to check for collisions.</p>
+<p>You rarely write one from scratch. Robot makers ship per-model blueprints as packages. Most are written in <strong>xacro</strong>, which you can think of as URDF with reusable pieces. Your job is to attach your own equipment. Keep in mind that a maker's blueprint holds that model's nominal dimensions. Every real robot has its own assembly tolerances, so UR stores each robot's measured dimensions in the controller and lets you pull them out with the driver's <code>ur_calibration</code> tool. On a real UR20, skipping it left the tool position 3.95 mm off; with it, 0.06 mm (<a href="../jetson-real-robot-first-move/">Field Notes real-robot post</a>).</p>
+<p><img alt="Maker's blueprint + what you added = your cell" src="../../../assets/diagrams_en/r2p2-urdf-compose.svg" /></p>
+<p>Adding the gripper and camera matters more than it seems. Leave them out and ROS believes there's nothing on the end of the arm, so when it plans a path it has no idea the gripper will catch on the fixture. The same goes for the table and fixed jigs.</p>
+<h2 id="when-the-installed-cell-differs-from-the-cad">When the installed cell differs from the CAD<a class="headerlink" href="#when-the-installed-cell-differs-from-the-cad" title="Permanent link">&para;</a></h2>
+<p>The gripper usually comes straight from its CAD file, but the table and fixtures don't have to be CAD at all. Commissioning (on-site installation and start-up) often ends with them installed at different dimensions and positions than the drawing, and then trusting the CAD is the risky choice.</p>
+<p><img alt="Simple collision shapes, positions from measurement" src="../../../assets/diagrams_en/r2p2-as-built.svg" /></p>
+<p>Each URDF link holds two shapes: the one you see on screen (<code>&lt;visual&gt;</code>) and the one used for collision checks (<code>&lt;collision&gt;</code>). The visual can be the CAD mesh (a 3D shape made of triangles), but for collision a <strong>simple box or cylinder</strong> sized from measurement, with a margin, is better. It's easy to update, fast to check, and doesn't lean on a drawing that no longer matches the floor.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;link</span><span class="w"> </span><span class="na">name=</span><span class="s">"fixture"</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;visual&gt;</span><span class="w">    </span><span class="nt">&lt;geometry&gt;&lt;mesh</span><span class="w"> </span><span class="na">filename=</span><span class="s">"package://my_cell/meshes/fixture.stl"</span><span class="nt">/&gt;&lt;/geometry&gt;&lt;/visual&gt;</span>
+<span class="w">  </span><span class="nt">&lt;collision&gt;</span><span class="w"> </span><span class="nt">&lt;geometry&gt;&lt;box</span><span class="w"> </span><span class="na">size=</span><span class="s">"0.42 0.30 0.18"</span><span class="nt">/&gt;&lt;/geometry&gt;&lt;/collision&gt;</span><span class="w">  </span><span class="cm">&lt;!-- measured + 1 cm margin --&gt;</span>
+<span class="nt">&lt;/link&gt;</span>
+<span class="nt">&lt;joint</span><span class="w"> </span><span class="na">name=</span><span class="s">"table_to_fixture"</span><span class="w"> </span><span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;parent</span><span class="w"> </span><span class="na">link=</span><span class="s">"table"</span><span class="nt">/&gt;</span><span class="w">  </span><span class="nt">&lt;child</span><span class="w"> </span><span class="na">link=</span><span class="s">"fixture"</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;origin</span><span class="w"> </span><span class="na">xyz=</span><span class="s">"${fx_x} ${fx_y} ${fx_z}"</span><span class="w"> </span><span class="na">rpy=</span><span class="s">"0 0 ${fx_yaw}"</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- values measured at commissioning --&gt;</span>
+<span class="nt">&lt;/joint&gt;</span>
+</code></pre></div>
+<p>Positions come from measurement, not the drawing. The 3-point touch in step ② is the same job as teaching a UFRAME with the 3-point method. Keeping the measured values in a version-controlled config file (values like <code>fx_x</code> above) leaves a record of who moved what, and when; if a fixture is moved or replaced, re-touch the three points and commit the new values. A camera can also build a live obstacle map, but in a cell that must give the same result every time, use that for checking only and plan against fixed, measured values.</p>
+<h2 id="add-joint-angles-to-the-blueprint">Add joint angles to the blueprint<a class="headerlink" href="#add-joint-angles-to-the-blueprint" title="Permanent link">&para;</a></h2>
+<p>The blueprint only describes shape; it doesn't know what pose the arm is in right now. That's in the joint angles the robot driver keeps sending (<code>/joint_states</code>, the channel from Part 1). The node that combines the two is <strong>robot_state_publisher</strong>.</p>
+<p><img alt="Blueprint + joint angles = where every part is" src="../../../assets/diagrams_en/r2p2-rsp.svg" /></p>
+<p>The result goes out on a channel called <code>/tf</code>. Where every link of the robot is and which way it faces flows out continuously, and RViz, MoveIt 2 and your own nodes all use it. It's the same calculation the pendant does to show the tool-tip position on the current-position screen; in ROS a separate node does it and broadcasts it to everyone.</p>
+<h2 id="tf2-where-uframe-and-utool-live-in-ros">TF2, where UFRAME and UTOOL live in ROS<a class="headerlink" href="#tf2-where-uframe-and-utool-live-in-ros" title="Permanent link">&para;</a></h2>
+<p>When you teach P[3] on a pendant, it's stored as "where the UTOOL 1 tip goes, relative to UFRAME 1," because the same point has different numbers depending on which frame you look from. If coordinate frames themselves are new to you, <a href="../frames-transforms/">Frames &amp; Transforms</a> explains them with pictures.</p>
+<p>In ROS, the library responsible for this is <strong>TF2</strong>.</p>
+<p><img alt="Same idea, different names and shape" src="../../../assets/diagrams_en/r2p2-uframe-utool.svg" /></p>
+<p>The difference is in the shape. A pendant keeps a few numbered UFRAMEs and UTOOLs and you pick one at a time. TF2 connects every frame into a <strong>tree (the TF tree)</strong>. Under a top-level <code>world</code> frame, from the robot base (<code>base_link</code>) it follows the joints to the flange (<code>tool0</code>), and from there branches go to the gripper tip and the camera. A table frame is another branch hanging off the base.</p>
+<ul>
+<li><strong>UTOOL</strong> corresponds to the <code>tool0 → gripper_tip</code> branch: how far the gripper tip is from the flange.</li>
+<li><strong>UFRAME</strong> corresponds to a frame attached to the base, like <code>base_link → table</code>.</li>
+<li><strong>The camera</strong> is a branch too. A camera on the arm hangs under <code>tool0</code>, and its position is measured at installation by hand-eye calibration (measuring precisely where the camera sits on the tool).</li>
+</ul>
+<p>Because the whole tree is connected, you can ask TF2 for the relationship between any two frames. Once you add a camera, this is the feature you'll use most.</p>
+<p><img alt="TF2: &quot;Where is this point, relative to the base?&quot;" src="../../../assets/diagrams_en/r2p2-tf-lookup.svg" /></p>
+<p>A camera reports the part position <strong>relative to the camera</strong>. To send the robot there, you need the position <strong>relative to the base</strong>. Ask TF2 to "restate this point relative to base_link" and it walks the tree for you. You can check the relationship between two frames from a terminal, too.</p>
+<div class="highlight"><pre><span></span><code>$ ros2 run tf2_ros tf2_echo base_link tool0
+At time 1790561234.512000000
+- Translation: [0.412, -0.133, 0.520]
+- Rotation: in Quaternion (xyzw) [1.000, 0.000, 0.000, 0.000]
+- Rotation: in RPY (degree) [180.000, 0.000, 0.000]
+</code></pre></div>
+<p>Position comes out in meters, and rotation comes out two ways. The quaternion writes an orientation as four numbers and is the format programs use with each other; the RPY (degree) line below it is the pendant's W, P, R. The RPY line is the one to read.</p>
+<p>The trap at the bottom of the picture is the most common bug in cells with a camera on the arm. If the arm moved between the moment the picture was taken and the moment you compute, a result based on the camera's position "now" points at the wrong place. TF2 keeps a short history, so you can ask for <strong>the transform at the time the picture was taken</strong>. Pass along the time attached to each message (its timestamp) and you're done.</p>
+<p>Cameras usually have two frames. There's <code>camera_link</code>, aligned with the camera body, and an optical frame (<code>..._optical_frame</code>) whose z axis points out of the lens. If you don't check which one a detection is relative to, you get answers with the axes rotated by 90°.</p>
+<p>Calibration isn't a one-time job, either. If the camera's focus moves, the lens characteristics change and distance calculations drift, so turn autofocus off and fix the focus manually <strong>at your actual working distance</strong> before calibrating. If an autofocus camera runs on its factory values, the key is not to get closer than the factory-calibration distance: the error grows quickly as you get closer (measured in <a href="../jetson-scan-no-cad/">the scanning post</a>). If the camera was bumped or its bracket re-tightened, redo the hand-eye calibration.</p>
+<h2 id="ros2_control-swapping-in-only-the-robot-specific-layer">ros2_control, swapping in only the robot-specific layer<a class="headerlink" href="#ros2_control-swapping-in-only-the-robot-specific-layer" title="Permanent link">&para;</a></h2>
+<p>Now for the part that actually moves the robot. <strong>ros2_control</strong> splits motor control into layers.</p>
+<p><img alt="Only the bottom layer differs by robot" src="../../../assets/diagrams_en/r2p2-ros2-control.svg" /></p>
+<ul>
+<li>The <strong>controller</strong> takes a trajectory and follows it. The most common one, <code>joint_trajectory_controller</code>, is the same code for any robot (the UR and FANUC drivers default to <code>scaled_joint_trajectory_controller</code>, which follows the pendant's speed slider). It's the controller that receives the "follow this trajectory" action from Part 1. "Controller" here means a software component inside ROS, not the robot controller cabinet next to the robot.</li>
+<li>The <strong>hardware interface</strong> translates those commands into this robot's language. It's the only part that differs between robots, and it's what people usually mean by a "ROS 2 driver."</li>
+</ul>
+<p>On a UR, the hardware interface reads state through UR's RTDE real-time data channel and sends a target position every 2 ms (e-Series; 8 ms on CB3) to the External Control program running on the controller. This is the command loop Part 1 said is timing-sensitive. FANUC has published an official ROS 2 driver (<code>fanuc_driver</code>), which also works as a ros2_control hardware interface. According to FANUC's documentation it needs an R-30iB Plus or R-50iA family controller with the J519 Stream Motion and R912 Remote Motion options, and Humble users take the <code>humble</code> branch. Check the latest documentation before you commit.</p>
+<p>To test without a robot, use the <strong>mock</strong> interface: fake hardware that simply answers "moved as commanded" with no robot attached. Like ROBOGUIDE or URSim, it lets you run the whole cell's software before the robot arrives. Moving to the real thing only means changing the hardware interface setting in software; the first moves on the real robot still go slow, inside a risk-assessed cell. One naming trap: the Humble UR driver (2.9) turns mock on with <code>use_fake_hardware:=true</code>, and silently ignores the newer docs' <code>use_mock_hardware</code> as an unknown argument (<a href="../jetson-pose-to-motion/">motion post</a>). What actually bit when moving to the real robot (factory calibration, matching driver and ros2_control versions, trajectory time stretched by the speed slider) is collected in the <a href="../jetson-real-robot-first-move/">real-robot post</a>.</p>
+<p>The natural partner to mock hardware is <strong>rosbag2</strong>. Record camera images and joint states on the floor with <code>ros2 bag record</code>, then feed them back with <code>ros2 bag play</code> in the office, and you can run perception and planning on the same input as many times as you like. That's also how you check that the same input gives the same result, and that a new version gives the same perception and planning results as the old one.</p>
+<p>Changing the controller changes how the robot behaves. You might switch from the trajectory-following controller to a force-control controller that pushes with a set force, if the robot supports that.</p>
+<h2 id="rviz-where-mistakes-get-caught-before-the-robot-moves">RViz, where mistakes get caught before the robot moves<a class="headerlink" href="#rviz-where-mistakes-get-caught-before-the-robot-moves" title="Permanent link">&para;</a></h2>
+<p><strong>RViz</strong> brings everything so far onto one screen.</p>
+<p><img alt="RViz shows the world as the software believes it is" src="../../../assets/diagrams_en/r2p2-rviz.svg" /></p>
+<p>You turn on what you want from the list on the left: the robot drawn from its blueprint, small axes for each frame, the points the camera sees, and the motion planning panel used in Part 3. The robot in RViz mirrors the real robot's joint states, like a live shadow. In the motion planning panel you can drag a goal into place with the mouse, watch the planned path as an animation, and then press execute. If a pose being planned hits an obstacle or the robot's own body, the colliding link turns red, so you can see where a collision check failed.</p>
+<p>RViz <strong>only displays data</strong>. If the camera frame points the wrong way, the part is sunk into the table, or the path skims the fixture, then it's the data that's wrong, not the robot. Catch it here, before the robot moves.</p>
+<p>If the view is empty, the picture shows where to look (the Fixed Frame is the frame everything is drawn in). The easy thing to confuse is that RViz isn't a simulator. To imitate physics or simulated cameras you need a simulator such as Isaac Sim.</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>What it does</th>
+<th>On the pendant, roughly</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URDF</strong></td>
+<td>Chain of links and joints, joint ranges, 3D shapes</td>
+<td>The controller's built-in robot model and joint ranges</td>
+</tr>
+<tr>
+<td><strong>xacro</strong></td>
+<td>URDF made reusable; assembles several pieces</td>
+<td>(none)</td>
+</tr>
+<tr>
+<td><strong>robot_state_publisher</strong></td>
+<td>Blueprint + joint angles → every link's position on <code>/tf</code></td>
+<td>The math behind the position screen</td>
+</tr>
+<tr>
+<td><strong>TF2 / TF tree</strong></td>
+<td>Connects frames into a tree; relates any two frames</td>
+<td>UFRAME, UTOOL</td>
+</tr>
+<tr>
+<td><strong>ros2_control</strong></td>
+<td>Shared controller + robot-specific hardware interface</td>
+<td>Motion engine + external motion-command port</td>
+</tr>
+<tr>
+<td><strong>visual / collision</strong></td>
+<td>Separate shapes for display and for collision checks</td>
+<td>(none)</td>
+</tr>
+<tr>
+<td><strong>mock</strong></td>
+<td>Fake hardware for testing without a robot</td>
+<td>ROBOGUIDE, URSim</td>
+</tr>
+<tr>
+<td><strong>rosbag2</strong></td>
+<td>Record floor data and play it back</td>
+<td>Replaying a trace log</td>
+</tr>
+<tr>
+<td><strong>RViz</strong></td>
+<td>Shows robot, frames, sensors and plans in 3D</td>
+<td>The pendant's 3D view</td>
+</tr>
+</tbody>
+</table>
+<p>With the robot now connected to the node graph from Part 1, <a href="../moveit2-goals-not-points/">the next part</a> finally sends it somewhere: MoveIt 2, which computes a path when you give it just a goal instead of teaching every point. You'll see what FANUC's CONFIG, interference zones and J and L moves become there.</p>
+<hr />
+<p><strong>Series</strong> · <a href="../ros2-for-robot-programmers/">← Previous: Part 1 — One Robot Program Becomes a Conversation Between Programs</a> · <a href="../moveit2-goals-not-points/">Next: Part 3 — MoveIt 2 →</a></p>
+<p><em>Related: <a href="../choosing-physical-ai/">Choosing a Physical AI Approach</a> · <a href="../ros2-for-robot-programmers/">Part 1 — One Robot Program Becomes a Conversation Between Programs</a> · <a href="../frames-transforms/">Frames &amp; Transforms — How a Robot Knows Where to Grab</a> · <a href="../robot-simulation/">Why Robots Learn in a 'Fake World' First</a> · <a href="../camera-placement/">How Many Cameras, and Where</a></em></p>
+<h3 id="sources-and-notices">Sources and notices<a class="headerlink" href="#sources-and-notices" title="Permanent link">&para;</a></h3>
+<p>The behavior of URDF, xacro, robot_state_publisher, TF2, ros2_control and RViz follows the official ROS 2 Humble and ros2_control documentation; the UR driver's hardware interface (RTDE, External Control, command rate) follows the Universal Robots ROS 2 driver documentation; the FANUC driver and its requirements refer to the <code>fanuc_driver</code> repository and documentation published by FANUC Corporation. Code and terminal output are illustrative; the numbers are not from a real cell. ROS is a trademark of Open Source Robotics Foundation (Open Robotics); MoveIt of PickNik Inc.; FANUC and ROBOGUIDE of FANUC Corporation; Universal Robots, UR, URSim and URCaps of Universal Robots A/S (a Teradyne company); NVIDIA, Isaac Sim, Isaac ROS and cuMotion of NVIDIA Corporation. They are used here only to refer to those products.</p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>URDF (Unified Robot Description Format)</em>: a blueprint file that writes a robot as a chain of links and joints</li>
+<li><em>Link · joint</em>: a rigid part of the robot · the joint connecting two links</li>
+<li><em>xacro</em>: a way of writing URDF with reusable pieces</li>
+<li><em>robot_state_publisher</em>: the node that computes every link's position from the blueprint and joint angles and publishes it on <code>/tf</code></li>
+<li><em>TF2 · TF tree</em>: the ROS library that manages relationships between frames · the tree those frames form</li>
+<li><em>base_link · tool0</em>: the conventional names for the robot base frame and the flange frame</li>
+<li><em>Hand-eye calibration</em>: measuring precisely where the camera sits on the tool (or in the cell)</li>
+<li><em>Quaternion</em>: a way of writing an orientation as four numbers, used instead of W, P, R</li>
+<li><em>Timestamp</em>: the time attached to each message, when its data was produced</li>
+<li><em>Optical frame</em>: a camera frame whose z axis points out of the lens</li>
+<li><em>ros2_control</em>: the framework that splits motor control into controllers (shared) and hardware interfaces (per robot)</li>
+<li><em>Hardware interface</em>: the part that turns shared commands into one robot's communication; what a "ROS 2 driver" really is</li>
+<li><em>Mock hardware</em>: fake hardware that answers "moved as commanded" with no robot attached</li>
+<li><em>RTDE</em>: UR's channel for exchanging data with the controller in real time</li>
+<li><em>visual / collision</em>: a URDF link's display shape / collision-check shape</li>
+<li><em>Point cloud</em>: the 3D set of points measured by a depth camera</li>
+<li><em>rosbag2</em>: a tool that records topics and plays them back exactly</li>
+<li><em>RViz</em>: ROS's 3D viewer; the Fixed Frame is the frame everything is drawn in</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>
