@@ -71,6 +71,8 @@ Open any of these and, as if by agreement, the same arm appears — the **Franka
 research arm. Papers, tutorials, and demos all use it, so each simulator ships a **Franka model for
 free by default**, which in turn cements "everyone uses Franka."
 
+Franka isn't the only free one, though. Universal Robots (UR) publishes its robot models (URDF and 3D shapes) for free in the `ur_description` package, MuJoCo's model collection (MuJoCo Menagerie) includes the UR5e and UR10e, Isaac Sim ships several UR models, and there's a simulation package for Gazebo. URSim, which runs the real UR controller software on a PC, is free too. Franka shows up in every example less because it's free than because, as a 7-axis arm with direct joint-torque control, it has long been the standard lab arm. If the arm you'll use on the floor is a UR, practicing on the UR model from the start makes the move easier ([Hands-on Notes, Part 0](learn-without-industrial-robot.md)).
+
 There's a welcome implication here for anyone learning. A **real Franka (FR3) is tens of thousands
 of dollars of research equipment** — not an easy buy. But its **digital twin is free inside every
 simulator.** So you can learn the concepts and most of the practice **on the simulated Franka**, do

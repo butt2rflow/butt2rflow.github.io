@@ -24,6 +24,7 @@ The [From Teach Pendant to ROS 2](ros2-for-robot-programmers.md) series covered 
 - **nvblox was accurate on a scene with a known answer.** Fed computed depth (a box at 0.6 m, a wall at 1.0 m), the map put them at 0.610 m and 1.000 m, within one 2 cm cell.
 - **The live camera was accurate too.** On a flat scene the map and the measured depth differ by a median of 5 mm. On day one the board seemed to vanish from the map, but the check script, which drew the map wrongly for the comparison, was at fault.
 - **With the map on, cuMotion avoids objects.** On a map built from a recorded stream, goals inside or too close to objects were rejected and open space planned. A blocked goal comes back as `NO_IK_SOLUTION`, so don't be misled.
+- **The map's holes come from the depth.** A map built from camera-chip depth covered only 67% of the board. Recomputing FoundationStereo or ESS depth from the same bag's stereo pair raised it to 96–97%. To the planner, anything missing from the map is free space.
 - **A foundation-model pose becomes the goal directly.** Measure the camera mount, and check poses against the table; an overlap score alone misses a flipped mouse. Poses from the camera chip's depth are fine for the approach but too rough for the grasp.
 - **The UR20 cuMotion config was built by hand.** Automatic sphere fitting failed, so the arm is wrapped in 71 spheres. Planning ran through to execution on simulated hardware; the real UR20 is in the next post.
 - **The UR driver comes up without a robot.** On simulated hardware all 13 controllers loaded, force mode included. On this version the argument is `use_fake_hardware`.
@@ -163,7 +164,19 @@ Replaying this bag into nvblox put all 425 depth frames into the map with no cam
 
 *On the right, bluer is nearer and redder is farther. Where the map exists it sits in the right place, but there are many holes: the lower left of the board and scattered white squares show through, and the mini PC's heat-sink fins are a black, empty band. At the glass case on the left and the wall edge on the right the depth is noisy, so the map is patchy there too.*
 
-This map was built from the stereo depth the camera chip computes itself. In the checkerboard test in [Field Notes, Part 2](jetson-isaac-foundation-models.md) that depth filled only about 78% of the board, and it is almost empty on the heat-sink fins (see 'Turning the pose into goals' below). Most of the map's holes look like they come from those depth holes, though this one picture doesn't prove the cause. It matters because a spot missing from the map is not an obstacle to the planner: by default nvblox treats unobserved space as free ([Part 4](isaac-ros-gpu.md), 'four things to watch'). In real use, feed denser depth such as FoundationStereo or ESS, or consider treating unobserved space as occupied.
+This map was built from the stereo depth the camera chip computes itself. To check whether that depth caused the holes, I recomputed depth from the left/right images recorded in the same bag; the camera didn't need to be switched on again. For 20 frames picked across the bag I ran FoundationStereo and ESS, moved the depth into the colour view, built one nvblox map per source with the same settings (2 cm voxels), and overlaid each on the same colour frame.
+
+![Same bag, same nvblox settings. Left: map from camera-chip depth. Right: map from FoundationStereo depth](../assets/demos/jetson-motion-map-dense.jpg)
+
+*The white outline is the board (found from its ArUco markers). On the right the map covers the board, the top of the mini PC's heat-sink fins and the mouse without gaps. The glass case on the left, though, goes into the map as one flat sheet, as seen in [Field Notes, Part 2](jetson-isaac-foundation-models.md).*
+
+| Depth | Pixels with depth (board / whole) | Board covered by the map | Time per frame |
+|---|---|---|---|
+| Camera chip (block matching) | 84% / 73% | **67%** | on the camera |
+| FoundationStereo | 100% / 96% | **97%** | about 2.2 s |
+| ESS | 100% / 95% | **96%** | about 0.13 s |
+
+The holes came from the depth. Where both exist, FoundationStereo and ESS depth differ from the chip depth by under 1 mm at the median, so the map wasn't shifted as a whole; what differed was the gaps. It matters because a spot missing from the map is not an obstacle to the planner: by default nvblox treats unobserved space as free ([Part 4](isaac-ros-gpu.md), 'Four things to watch'). So in real use, feed the map learned stereo depth instead of the chip's, and if speed matters ESS was enough (ESS is an NGC model cleared for commercial use, [tuning post](jetson-tuning-licensing.md)). Handle the remaining gaps by treating unobserved space as occupied. (One bag, fixed camera.)
 
 Now the same scene can be compared while only the settings change.
 
@@ -261,7 +274,7 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 | cuMotion planning | ~186 ms per plan; 16 s warm-up only the first time | Warm up at program start; write the cuMotion config for the UR model you'll use |
 | nvblox (known-answer scene) | Both surfaces within one 2 cm cell | — |
 | nvblox (live camera) | 5 mm median on a flat scene, 19 mm with glass; keeps up with the camera | — |
-| Map → cuMotion (recorded stream) | Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan. Built from camera-chip depth, so the map has many holes | Build the map from denser depth; decide how to treat unobserved space |
+| Map → cuMotion (recorded stream) | Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan. Camera-chip depth covers 67% of the board; FoundationStereo or ESS depth 96–97% | Decide how to treat unobserved space |
 | Pose → goal | Mini PC IoU 0.88 / 6 mm; mouse low-confidence (flip caught by depth) | On the real robot |
 | UR driver (simulated hardware) | All 13 controllers, force mode included | — |
 | Whole flow (simulated UR20) | 1.3 s plan; after execution 0.1–0.2 mm from goal | On a real UR20 in [The Real Robot](jetson-real-robot-first-move.md) |
@@ -279,7 +292,7 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 <details>
 <summary>Notes: where these results come from</summary>
 
-The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera from 30 September to 2 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the hidden-corner distance from one scene on 30 September, the live nvblox results from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. No real robot moved and no real force was measured.
+The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera from 30 September to 2 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the hidden-corner distance from one scene on 30 September, the live nvblox results from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. The map depth comparison (camera chip, FoundationStereo, ESS) was recomputed on 3 October from 20 stereo pairs in the same bag; the FoundationStereo depth used the NVLabs research-licence code. No real robot moved and no real force was measured.
 
 The learned gear-insertion example and the UR10e low-level torque interface are based on NVIDIA's technical blog post "Bridging the Sim-to-Real Gap for Industrial Robotic Assembly Applications Using NVIDIA Isaac Lab" and the Isaac ROS 4.0 announcement. Orin and JetPack 7.2 support in Isaac ROS 4.6.0 (18 August 2026) is from the Isaac ROS release notes. The `use_fake_hardware` (Humble) vs `use_mock_hardware` (Jazzy) difference is from the Universal Robots ROS 2 driver documentation (docs.ros.org).
 

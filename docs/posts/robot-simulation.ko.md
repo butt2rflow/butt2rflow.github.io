@@ -68,6 +68,8 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 **Franka Panda**죠. 논문·튜토리얼·데모가 모두 이 팔을 쓰다 보니, 시뮬레이터마다 **Franka
 모델을 기본으로 무료 제공**하게 됐고, 그게 다시 "다들 Franka를 쓰는" 흐름을 굳혔습니다.
 
+다만 무료인 건 Franka만이 아닙니다. Universal Robots(UR)도 로봇 모델(URDF와 3D 모양)을 `ur_description` 패키지로 무료 공개하고, MuJoCo 모델 모음(MuJoCo Menagerie)에는 UR5e·UR10e가, Isaac Sim에는 UR 여러 기종이 들어 있으며, Gazebo용 시뮬레이션 패키지도 있습니다. 실제 UR 컨트롤러 소프트웨어를 PC에서 실행하는 URSim도 무료예요. Franka가 예제마다 나오는 건 무료여서라기보다, 7축에 관절 토크를 직접 다룰 수 있어 오래전부터 연구실의 표준 팔이었기 때문입니다. 현장에서 쓸 팔이 UR이라면 처음부터 UR 모델로 연습하는 편이 옮겨 가기 쉽습니다([실습 노트 0부](learn-without-industrial-robot.md)).
+
 배우는 사람에게는 반가운 일이에요. **실물 Franka(FR3)는 수천만 원대의 연구 장비**라
 쉽게 못 삽니다. 하지만 그 **디지털 쌍둥이(디지털 트윈)는 모든 시뮬레이터에 공짜로** 들어
 있죠. 그래서 개념과 대부분의 연습은 **시뮬레이션의 Franka로** 익히고, 직접 만지는 실습은 **저가
