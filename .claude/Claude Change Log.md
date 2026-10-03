@@ -50,6 +50,7 @@
 - **코스도 같은 이름으로(사용자 요청):** physical-ai-course `358efd1` — course.md/course.en.md/work-status/curriculum README의 Track 0/A/B를 기하 방식/신경망 인식/학습 정책으로, 일반어 '트랙/track'은 '방식/approach'로. '이름의 뜻' 문단에 '공식 용어 아님' 명시, 블로그 제목 바뀐 링크 글자 맞춤. 코스 아티팩트 v25 재게시. 메모리: 블로그 `feedback-no-track-labels`(신규)·`physical-ai-source-decks`·`field-notes-tuning-scan`(모션편 3단계), 코스 `physical-ai-robotics-course`. 핸드오프 두 곳 갱신.
 - **네이버 패키지 정리(사용자 요청):** Track 개명 7개는 이미 갱신됨을 확인(그 뒤 바뀐 글 없음). 옛 이름 폴더 `naver/stereo`·`naver/frames`를 글 slug(`stereo-to-grasp`·`frames-transforms`)로 바꾸고 옛 꼬리말을 정본 링크로 바꿔 `naver_refresh.py`로 다시 만듦(둘 다 10-03 본문 수정을 반영 못 하고 있었음). 배너·태그 유지, 이미지 5장씩 다시 렌더. 모션편·3D 카메라·실물편은 패키지가 없어 만들지 않음.
 - **모션편 네이버 패키지 새로 만듦(사용자 요청):** `naver/jetson-pose-to-motion/` — 오늘 판 본문(같은 장면 칩 vs ESS 비교 사진 포함), 이미지 16장, 세로 배너(스캔편 틀: 경로 계획 186 ms · 장애물 지도 5 mm · 가상 UR20 0.1 mm), 태그 24개, UPLOAD.md. 발행 전.
+- **실물편 네이버 패키지 새로 만듦(사용자 요청):** `naver/jetson-real-robot-first-move/` — 그림 4장(r7-ladder/calib/gate/table), 세로 배너(공장 보정 3.95→0.06 mm · 첫 계획 움직임 0.1 mm · 계획과 실행 사이에 사람), 태그 22개, UPLOAD.md. IP·회사명 검사 통과. 발행 전.
 - **모션편 6부 보강:** 새 절 「자세를 목표로 바꾸기」(잰 카메라 위치 16.9 cm·16°, 뒤집힌 마우스를 깊이로 잡음, 사진 `jetson-motion-pose-goal.jpg`), 「가상 하드웨어로 끝까지, 그리고 UR20용 cuMotion 설정 만들기」(구 71개 vs UR10e 20개, 자동 맞추기 실패 이유). 다음 글 링크, 메뉴, 홈 목록.
 
 **검증:** 로컬 `mkdocs build --strict` 기존 경고 5개 외 없음, 새 그림 한/영 헤드리스 Chrome 렌더 확인.
