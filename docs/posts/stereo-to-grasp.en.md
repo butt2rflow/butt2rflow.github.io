@@ -9,7 +9,7 @@ description: "Two camera photos become a precise 3D grasp — the beginner's wal
 
 # From Stereo to Grasp — How a Robot Learns to See a Part
 
-> **Robot Vision · Part 1 of 2.** This one is about how the robot *sees*. Part 2, [Frames & Transforms](frames-transforms.md), is about how it turns that into *where to grab*.
+> **Robot Vision · basics, Part 1.** This one is about how the robot *sees*. Basics Part 2, [Frames & Transforms](frames-transforms.md), is about how it turns that into *where to grab*. The insides of the three models are in the [deep dive](inside-the-models.md), and running this pipeline on a real edge computer is in the [Field Notes](jetson-isaac-foundation-models.md).
 
 I learned this the hard way. I started where most of us do — photographing a part by hand and drawing a box around it, image after image, in a labelling tool. Then I spent weeks fighting the results: depth maps full of holes on the shiny metal, a model that worked under one set of lights and fell apart under the next, and — once — a gripper that drove straight into the part because a single bad depth reading told it to.
 
@@ -147,7 +147,7 @@ Notice what just happened: the **clean depth from Step 1** turns out to matter f
 
 <details>
 <summary>The numbers behind the motion</summary>
-<p>A common planner, <strong>RRT*</strong>, approximates the whole robot as a few hundred spheres and routes them around a collision map built from the Step-1 point cloud; NVIDIA's GPU planner <strong>cuMotion</strong> does the same job on the GPU. Perception runs in roughly <strong>2–6 seconds</strong> — but it happens <em>while the arm is placing the previous part</em>, so cycle time is limited by robot motion, not by vision. And all of it runs locally on the controller.</p>
+<p>A common planner, <strong>RRT*</strong>, approximates the whole robot as a few hundred spheres and routes them around a collision map built from the Step-1 point cloud; NVIDIA's GPU planner <strong>cuMotion</strong> does the same job on the GPU. Perception runs in roughly <strong>2–6 seconds</strong> — but it happens <em>while the arm is placing the previous part</em>, so cycle time is limited by robot motion, not by vision. And all of it runs locally on the computer next to the cell. Measured on an Orin NX 16 GB, the chain from a text prompt to a 6-DoF pose took 4.0 s per object, or 3.3 s with components cleared for commercial use (<a href="jetson-tuning-licensing.md">tuning post</a>).</p>
 </details>
 
 ---
@@ -180,6 +180,8 @@ You don't start at the frontier. You crawl, then walk, then run.
 - **Next — real-time on Isaac ROS.** Wrap the models as a live GPU graph on the edge computer, so the pipeline runs on the cell instead of in a notebook.
 - **Later — learned control on Isaac Lab.** Train manipulation policies in simulation and deploy them. This is the phase that needs bigger hardware.
 
+The [Field Notes](jetson-ros2-setup.md) are the record of actually walking the first two steps: Jetson setup, the full chain on 16 GB, motion planning, and moving a real UR20 for the first time. What learned control (Track B) costs you is in [Learned Policies](learned-policy-track-b.md).
+
 ---
 
 ## The whole story, one line per step
@@ -197,7 +199,9 @@ Next: the part's pose comes out in the *camera's* point of view, but the robot l
 
 ---
 
-*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Investing in Physical AI](cobot-investing.md) · [How Many Cameras, and Where](camera-placement.md)*
+**Series** · [Next: Frames & Transforms →](frames-transforms.md)
+
+*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Inside the Three Models (deep dive 1)](inside-the-models.md) · [How Many Cameras, and Where](camera-placement.md) · [Which Depth Camera](depth-camera-selection.md) · [Field Notes, Part 2: running it on the edge](jetson-isaac-foundation-models.md) · [Physical AI Investing, Part 1](cobot-investing.md)*
 
 ### Sources & trademarks
 

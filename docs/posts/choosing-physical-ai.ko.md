@@ -62,7 +62,7 @@ Track 0(ICP로 CAD를 점구름에 맞추기)은 결정론적이고 설명하기
 
 ![같은 상황, 세 가지 실패](../assets/diagrams/cpa-failure.svg)
 
-세 설계의 차이가 가장 크게 드러나는 건 팔이 닿지 않는 곳에 물체를 두었을 때입니다. Track 0과 A는 자세를 찾은 뒤 플래너가 "경로 없음"으로 실패를 알립니다. Track B는 조용합니다. 도달할 수 있는지 판단하는 장치 없이 시연 속 동작만 배웠기 때문이에요. 시연에 없던 자리에서는 그럴듯한 동작을 오류 신호 없이 이어 갈 수 있습니다. 단, Track A도 자세 자체가 틀리면 조용히 실패할 수 있어서 단계별 출력(마스크, 자세 점수)을 검사해야 합니다.
+세 설계의 차이가 가장 크게 드러나는 건 팔이 닿지 않는 곳에 물체를 두었을 때입니다. Track 0과 A는 자세를 찾은 뒤 플래너가 "경로 없음"으로 실패를 알립니다. Track B는 조용합니다. 도달할 수 있는지 판단하는 장치 없이 시연 속 동작만 배웠기 때문이에요. 시연에 없던 자리에서는 그럴듯한 동작을 오류 신호 없이 이어 갈 수 있습니다. 단, Track A도 자세 자체가 틀리면 조용히 실패할 수 있어서 단계별 출력(마스크, 자세 점수)을 검사해야 합니다. 실제로 [튜닝편](jetson-tuning-licensing.md)에서는 검출기가 천장의 난방기를 찾는 물체로 잘못 잡았고, 뒤 단계들은 오류 없이 5m 밖의 자세를 내놓았습니다. 체인 끝에 크기와 거리 검사를 두는 이유예요.
 
 그러니 선택 기준은 "비결정론적이냐"가 아니라 "**실패를 알아챌 수 있느냐**"입니다. 이 경향은 같은 팔에서 위치, 조명, 새 물체, 가림, 도달 불가로 조건을 바꿔 가며 직접 재 봐야 합니다.
 
@@ -92,11 +92,15 @@ Track 0(ICP로 CAD를 점구름에 맞추기)은 결정론적이고 설명하기
 |---|---|
 | Track A의 인식 단계 (깊이, 마스크, 자세) | [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [세 모델의 안쪽](inside-the-models.md) · [모델 해부](model-anatomy.md) |
 | 카메라 좌표를 로봇 좌표로 | [좌표계와 변환](frames-transforms.md) |
-| ROS 2, MoveIt 2, 결정론적 셀 설계 | [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [2부](ros2-robot-description.md) · [3부](moveit2-goals-not-points.md) · [4부](isaac-ros-gpu.md) |
-| 엣지 컴퓨터에서 실제로 실행하기 | [현장 노트 1부](jetson-ros2-setup.md) · [2부](jetson-isaac-foundation-models.md) · [정정편](jetson-foundationpose-16gb.md) |
-| 로봇 제조사별 차이 | [협동로봇이란](cobot-basics.md) · [UR vs 화낙](cobot-ur-vs-fanuc.md) |
 | 시뮬레이션과 sim-to-real | [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) |
+| 카메라를 몇 대, 어디에, 어떤 걸 | [카메라는 몇 대, 어디에](camera-placement.md) · [어떤 3D 카메라를](depth-camera-selection.md) |
+| 로봇 제조사별 차이 | [협동로봇이란](cobot-basics.md) · [UR vs 화낙](cobot-ur-vs-fanuc.md) |
+| ROS 2, MoveIt 2, 결정론적 셀 설계 | [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [2부](ros2-robot-description.md) · [3부](moveit2-goals-not-points.md) · [4부](isaac-ros-gpu.md) |
+| 엣지 컴퓨터에서 실제로 실행하기 | [현장 노트 1부](jetson-ros2-setup.md) · [2부](jetson-isaac-foundation-models.md) · [정정편](jetson-foundationpose-16gb.md) · [튜닝편](jetson-tuning-licensing.md) · [스캔편](jetson-scan-no-cad.md) |
+| 자세에서 움직임, 실제 로봇까지 | [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) |
 | Track B, 학습 정책 | [학습 정책(Track B)](learned-policy-track-b.md) |
+| 직접 해 보기 | [실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) |
+| 투자 관점 | [Physical AI 투자 1부](cobot-investing.md) · [2부](physical-ai-investing-actuators.md) · [3부](physical-ai-investing-power.md) |
 
 ---
 

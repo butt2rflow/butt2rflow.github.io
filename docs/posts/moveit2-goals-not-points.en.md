@@ -133,7 +133,7 @@ gripper.close()                                        #   gripper service (DO[1
 plan_and_run(above, straight_line=True)                #   straight up (L)
 ```
 
-When the last few millimeters involve pressing or inserting the part, force control often takes over from path planning. On a UR you can use force mode through the driver; on a FANUC, force control is built into the controller. Each robot does it differently, so follow the maker's documentation here.
+When the last few millimeters involve pressing or inserting the part, force control often takes over from path planning. On a UR, the driver's force-mode controller calls URScript's `force_mode()` (the [motion post](jetson-pose-to-motion.md) confirmed the controller comes up); on a FANUC, force control is built into the controller. Each robot does it differently, so follow the maker's documentation here.
 
 To follow a moving target or nudge the arm little by little, the way you'd jog it from the pendant, use **MoveIt Servo** instead of "plan, then execute." It keeps sending small motion commands in real time.
 
@@ -159,7 +159,7 @@ One concern remains. Step 1's perception has to run a neural network on every pi
 
 **Series** · [← Previous: Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [Next: Part 4 — Isaac ROS and cuMotion →](isaac-ros-gpu.md)
 
-*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
+*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Part 2 — Describing the Robot to ROS](ros2-robot-description.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [UR vs FANUC — openness](cobot-ur-vs-fanuc.md)*
 
 ### Sources and notices
 

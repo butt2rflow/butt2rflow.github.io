@@ -41,7 +41,7 @@ All three handle a new part through an "input," not through "training." So addin
 
 One point that's easy to miss. Of the three kinds of conditioning, the one **easiest to get hold of on a factory floor** is CAD. You need a drawing to manufacture a part in the first place. FoundationPose's choice to "use CAD as its condition" is, before it's an elegant technical decision, a practical one: **it uses, for free, an asset already lying around the shop.**
 
-> **💡 Why 'zero-shot' works — in one sentence.** None of the three memorized "this object"; they memorized "how objects in general get captured by a camera." How shading falls when a surface curves, how color breaks at an edge, what silhouette a 3D shape leaves when it projects onto 2D. This is **physics** that has nothing to do with a part number, and a simulator can churn that physics out endlessly.
+> **Why 'zero-shot' works — in one sentence.** None of the three memorized "this object"; they memorized "how objects in general get captured by a camera." How shading falls when a surface curves, how color breaks at an edge, what silhouette a 3D shape leaves when it projects onto 2D. This is **physics** that has nothing to do with a part number, and a simulator can churn that physics out endlessly.
 >
 > *Zero-shot means the property of just working on things the model never saw once during training.*
 
@@ -89,10 +89,12 @@ It means the depth error (ΔZ) from misreading the disparity by one pixel (Δd) 
 
 </details>
 
-> **⚠️ The shop-floor takeaway, in three lines.**
+> **The shop-floor takeaway, in three lines.**
 > **① Get the camera close to the part.** Halve the distance and the error drops to a quarter. Lowering a bracket 10 cm often beats days of algorithm tuning.
 > **② Sub-pixel is free precision.** Read the disparity down to a quarter of a pixel and the error drops to a quarter too. What a good stereo model is really selling is exactly this fineness.
 > **③ Don't validate a far-distance spec at a near distance.** Something that worked fine at 50 cm going nine times worse at 1.5 m isn't a malfunction — it's the formula.
+>
+> There is a floor to ①, though. Every camera has a minimum distance below which depth doesn't come out at all ([Which Depth Camera](depth-camera-selection.md)), and if the color camera autofocuses, its lens values drift once you go closer than the factory calibration distance (the camera in the [scanning post](jetson-scan-no-cad.md) was off by 3.3% at 17 cm). Get close, but inside that camera's recommended range.
 
 ### Why we 'rectify' first — turning a 2D search into a 1D one
 
@@ -110,7 +112,7 @@ Now you sweep along one horizontal row, scoring "is this the match?" This board 
 
 Where there's texture, the score dips distinctly at the correct position. But when the surface is uniform (shiny chrome, a plain painted face), every candidate looks about the same, so no valley forms. The result is a **depth map with a hole punched exactly where the part is.** That's what was really happening in the bolt-bin story from earlier.
 
-> **⚠️ Why swapping cameras doesn't fix it.** This failure is a failure of the **algorithm**, not the **sensor**. Whether RealSense or OAK-D, on-chip stereo mostly uses a classical method called SGM (Semi-Global Matching), and SGM can't produce an answer when the valley above is missing. So buy a pricier camera and you get the same hole in the same place. There's a workaround — spray an infrared pattern to paint on fake texture — but on a shiny surface the pattern scatters and the hole comes back.
+> **Why swapping cameras doesn't fix it.** This failure is a failure of the **algorithm**, not the **sensor**. Whether RealSense or OAK-D, on-chip stereo mostly uses a classical method called SGM (Semi-Global Matching), and SGM can't produce an answer when the valley above is missing. So buy a pricier camera and you get the same hole in the same place. There's a workaround — spray an infrared pattern to paint on fake texture — but on a shiny surface the pattern scatters and the hole comes back.
 
 ### What FoundationStereo added
 
@@ -137,7 +139,7 @@ Where the match is certain, matching wins; where it isn't, single-image intuitio
 
 | Situation | What happens | What to do |
 |---|---|---|
-| Mirror / transparent parts | It measures the depth of **the reflection**, not the surface | Polarizing filter, change lighting angle, object-aware correction |
+| Mirror / transparent parts | It measures the depth of **the reflection**, not the surface (measured example: the mirror cup in the [tuning post](jetson-tuning-licensing.md)) | Polarizing filter, change lighting angle, tidy up what the part reflects |
 | Rectification drift | A constant error is added to every disparity (a global bias) | Periodic recalibration, manage vibration and temperature |
 | Repeating texture (grids, threads) | Multiple spots match equally well, so it picks the **wrong valley** | Adjust the baseline, use a wider-context model |
 | Occlusion | A band seen by only one eye has, in principle, no answer | Add a viewpoint, mark that region as 'unknown' |
@@ -194,7 +196,7 @@ SAM grew its data to roughly 11 million photos through a **virtuous loop**: a pe
 
 </details>
 
-> **⚠️ What SAM doesn't do in bin picking.** When 40 of the same part are tangled in a bin, SAM **does not decide "which one to pick."** It's a cutting tool, not a choosing tool. That choice is usually handled by a separate rule: the topmost one (minimum depth), the most exposed one (maximum mask area), the one the gripper can reach. Another common failure: when the boundary between overlapping parts is ambiguous, the mask bites a little into the neighboring part — and that spreads straight into the next stage as pose error.
+> **What SAM doesn't do in bin picking.** When 40 of the same part are tangled in a bin, SAM **does not decide "which one to pick."** It's a cutting tool, not a choosing tool. That choice is usually handled by a separate rule: the topmost one (minimum depth), the most exposed one (maximum mask area), the one the gripper can reach. Another common failure: when the boundary between overlapping parts is ambiguous, the mask bites a little into the neighboring part — and that spreads straight into the next stage as pose error.
 
 ## 5. FoundationPose — Where, and How Turned
 
@@ -210,7 +212,7 @@ The state of a single rigid body sitting in space is fully fixed by six numbers.
 | Quaternion | 4 | Smooth, safe interpolation | a quaternion and its negation are the same rotation (sign ambiguity) |
 | Rotation matrix | 9 | Composition is simple multiplication | Numerical error breaks orthogonality |
 
-> **⚠️ The bug that actually blows up on the floor.** The pose itself is right, but you connect two systems with **different Euler-angle conventions** and the robot turns the wrong way — that happens far more often than any algorithm problem. At module boundaries, hand things off as quaternions or matrices where you can, and use Euler only on the screen a human reads.
+> **The bug that actually blows up on the floor.** The pose itself is right, but you connect two systems with **different Euler-angle conventions** and the robot turns the wrong way — that happens far more often than any algorithm problem. At module boundaries, hand things off as quaternions or matrices where you can, and use Euler only on the screen a human reads.
 
 ### With CAD and without
 
@@ -241,7 +243,7 @@ Run hundreds of hypotheses every frame and you don't get real time. So real oper
 
 ![Computation cost of the first frame versus later frames](../assets/diagrams_en/rvd1-pose-frame-cost.svg)
 
-Even if the full recognition takes 2 to 6 seconds, it has little effect on the actual takt time, because this recognition runs in parallel **while the arm is placing the previous part.** The bottleneck is usually not vision but the robot's physical travel.
+Even if the full recognition takes 2 to 6 seconds (measured on an Orin NX 16 GB: 3.3–4.0 s per object, [tuning post](jetson-tuning-licensing.md)), it has little effect on the actual takt time, because this recognition runs in parallel **while the arm is placing the previous part.** The bottleneck is usually not vision but the robot's physical travel.
 
 ### Symmetry, a difficulty in principle
 
@@ -249,9 +251,11 @@ A smooth cylinder, a square flange, a plain hex bolt. Parts like these **look co
 
 ![Pose ambiguity of a symmetric object](../assets/diagrams_en/rvd1-symmetry.svg)
 
+Near-symmetric objects fool it the same way. In the [correction post](jetson-foundationpose-16gb.md), a mini PC that looks almost the same front and back, loaded as an uncolored CAD, matched its outline (IoU 0.93) but came out flipped 180° every time; giving the CAD its port and connector colors fixed it.
+
 There are three responses. ① Declare the symmetry axis in the CAD so "this rotation isn't distinguished" is excluded from scoring; ② design the gripper to be indifferent to the symmetry; ③ set the camera angle so **an asymmetric feature is visible** — an engraving, a hole, a marking.
 
-> **💡 A little-known second use — look again while it's in hand.** The instant you grip a part, it **slips slightly** inside the gripper. A few millimeters, a few degrees. If you're only going to pick it, it doesn't matter, but if you have to **place it precisely** (insertion inspection, assembly, seating in a fixture), it's fatal. So after gripping, you bring the part in front of the camera, shoot it once more, and run FoundationPose again. Now you know **how you're holding the part**, and you can correct for exactly that when you place it. Pick accuracy and place accuracy are separate problems, and this re-shoot is the bridge between them.
+> **A little-known second use — look again while it's in hand.** The instant you grip a part, it **slips slightly** inside the gripper. A few millimeters, a few degrees. If you're only going to pick it, it doesn't matter, but if you have to **place it precisely** (insertion inspection, assembly, seating in a fixture), it's fatal. So after gripping, you bring the part in front of the camera, shoot it once more, and run FoundationPose again. Now you know **how you're holding the part**, and you can correct for exactly that when you place it. Pick accuracy and place accuracy are separate problems, and this re-shoot is the bridge between them.
 
 ## 6. Chain the Three — the Error Budget
 
@@ -261,7 +265,7 @@ Each model's paper performance is excellent. But on the floor what matters is **
 
 Even when each stage is "accurate enough," the sum can exceed the clearance. The example numbers are there to build intuition; the point is that **you have to compare the total against the clearance, not the individual performances.**
 
-> **💡 Where to work first.** Of the error terms, **only one grows as a square — depth.** The rest are mostly linear. So the improvement priority is almost always the same.
+> **Where to work first.** Of the error terms, **only one grows as a square — depth.** The rest are mostly linear. So the improvement priority is almost always the same.
 > **First — get the camera close to the part.** Nearly free, and it pays back as a square.
 > **Second — keep calibration current.** No model, however good, can erase a bias.
 > **Third — grow the gripper clearance.** Reshaping the finger pads is often faster than improving recognition by 1 mm.
@@ -278,13 +282,13 @@ A table for working backward from symptom to cause. It's the page you'll reach f
 | Inaccurate only when things are far | 1 · The distance² law | Lower the camera or widen the baseline |
 | It grabs the neighboring part too | 2 · Mask boundary | Add an exclude point, overlap rule, mask erosion |
 | It tries to pick a different part every frame | 2 · Unstable tracking numbers | Use SAM 2 memory, pin the selection rule |
-| The pose comes out flipped 180° | 3 · Symmetry ambiguity | Declare the symmetry axis, angle so an asymmetric feature shows |
+| The pose comes out flipped 180° | 3 · Symmetry ambiguity | Declare the symmetry axis, angle so an asymmetric feature shows, color the CAD |
 | The pose jitters frame to frame | 3 · Depth-noise propagation | Check stage-1 quality first, use tracking mode |
 | It picks fine but places wrong | 3 · Slip inside the gripper | In-hand re-estimation after gripping |
 | The pose is right but the robot turns the wrong way | 4 · Rotation-convention mismatch | Euler order, quaternion sign, frame direction |
 | It occasionally scrapes the bin wall | 4 · Missing obstacle map | Whether stage-1's hole went to the planner as 'empty space' |
 
-> **⚠️ The bottom row is the scariest.** Interpret a hole in the depth map as "no obstacle" and the planner sees that spot as **empty space it may pass through** — when in reality a part or a bin wall is there. So a 'measurement failure' must always be passed on marked **'unknown,'** and the planner must **treat unknown as an obstacle.** Erring toward safety is the lifeline here.
+> **The bottom row is the scariest.** Interpret a hole in the depth map as "no obstacle" and the planner sees that spot as **empty space it may pass through** — when in reality a part or a bin wall is there. So a 'measurement failure' must always be passed on marked **'unknown,'** and the planner must **treat unknown as an obstacle.** Erring toward safety is the lifeline here.
 
 ## 8. The Order to Try It Yourself
 
@@ -294,7 +298,7 @@ Try to stand the whole thing up at once and you'll never know where it went wron
 
 Stage 1 takes a day. And if depth doesn't fill in at stage 1, stages 2 and 3 are meaningless. Prove it first, then climb.
 
-> **📝 A feel for the hardware.** Of the three, **SAM 2 is the lightest** (pick a small size and it's comfortable even on an 8 GB-class edge board), FoundationStereo gets heavier in proportion to resolution and iteration count, and FoundationPose is heavy **only on the first frame.** For deployment you usually optimize with a runtime like TensorRT, and dropping the precision (FP16) speeds things up considerably. The important thing is that it all runs **locally.** A cell with no external network is the premise.
+> **A feel for the hardware.** Of the three, **SAM 2 is the lightest** (pick a small size and it's comfortable even on an 8 GB-class edge board), FoundationStereo gets heavier in proportion to resolution and iteration count, and FoundationPose is heavy **only on the first frame.** For deployment you usually optimize with a runtime like TensorRT, and dropping the precision (FP16) speeds things up considerably. The important thing is that it all runs **locally.** A cell with no external network is the premise.
 
 ## 9. All of It on One Page
 
@@ -315,6 +319,7 @@ Stage 1 takes a day. And if depth doesn't fill in at stage 1, stages 2 and 3 are
 
 - The follow-on [Deep dive Part 2 — Model Anatomy](model-anatomy.md): what shape the tensors flow in and what loss they train against, right up to the papers.
 - Same series: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames and Transforms](frames-transforms.md)
+- Measured: [Field Notes correction](jetson-foundationpose-16gb.md) (the full chain on 16 GB) · [Tuning](jetson-tuning-licensing.md) (speed, shiny parts, licensing) · [Scanning](jetson-scan-no-cad.md) (objects with no CAD, camera calibration traps)
 - **FoundationStereo** — "Zero-Shot Stereo Matching" (NVIDIA, CVPR 2025). nvlabs.github.io/FoundationStereo
 - **SAM 2** — "Segment Anything in Images and Videos" (Meta AI). github.com/facebookresearch/sam2
 - **FoundationPose** — "Unified 6D Pose Estimation and Tracking of Novel Objects" (NVIDIA, CVPR 2024 Highlight). nvlabs.github.io/FoundationPose
@@ -337,6 +342,8 @@ Stage 1 takes a day. And if depth doesn't fill in at stage 1, stages 2 and 3 are
 - **domain randomization** — the technique of heavily shaking lighting, material, and background per training image so the model can't lean on any particular condition.
 - **point cloud** — the cluster of 3D points reconstructed from depth. Used as the obstacle map for path planning.
 - **hand-eye calibration** — the procedure of solving, once, for the relationship between the camera frame and the robot frame.
+
+**Series** · [← Frames & Transforms](frames-transforms.md) · [Next: Model Anatomy (deep dive 2) →](model-anatomy.md)
 
 ---
 

@@ -224,4 +224,4 @@ Jetson, Orin, Isaac ROS, TensorRT and NGC are trademarks of NVIDIA; other produc
 
 **Series** · [← Previous: A Correction — reversing the "16 GB can't do it" verdict](jetson-foundationpose-16gb.md) · [Next: Scanning — no CAD? One printed board and twenty photos →](jetson-scan-no-cad.md)
 
-*Related: [Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion](isaac-ros-gpu.md)*
+*Related: [Field Notes, Part 2: Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md)*

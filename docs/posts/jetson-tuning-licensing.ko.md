@@ -148,7 +148,7 @@ YOLO-World는 조건이 또 다릅니다. GPL·AGPL 같은 카피레프트 라�
 | **체인 전체 (물체당)** | **3.26초** |
 | **이후 추적 (프레임당)** | **34ms** (추적 단계만 잰 값, NVLabs 연구 코드 추적의 약 2배 속도) |
 
-연구용 최적화 체인(4.0초)보다 오히려 빠릅니다. 깊이를 ESS로 바꾼 효과가 크고, Isaac ROS 노드는 처음부터 젯슨용으로 다듬어져 있어서 추적이 특히 빨라요. "상업용으로 바꾸면 느려진다"는 걱정은 적어도 이 조합에서는 해당되지 않았습니다.
+연구용 최적화 체인(4.0초)보다 오히려 빠릅니다. 깊이를 ESS로 바꾼 효과가 크고, Isaac ROS 노드는 처음부터 Jetson용으로 다듬어져 있어서 추적이 특히 빨라요. "상업용으로 바꾸면 느려진다"는 걱정은 적어도 이 조합에서는 해당되지 않았습니다.
 
 여기서 더 줄여 보려고, 노드가 처음에 검토하는 자세 후보 수를 줄여도 봤습니다. 첫 자세가 2.4초에서 1.0~1.8초로 빨라지긴 했는데, 23번 중 뒤집힌 자세가 2번에서 4~6번으로 늘었어요. 앞뒤가 비슷한 물체는 후보가 적으면 반대 방향을 고를 가능성이 커지기 때문입니다. 1초를 아끼자고 오답을 두세 배로 늘릴 수는 없어서 원래대로 뒀습니다.
 
@@ -224,4 +224,4 @@ Jetson·Orin·Isaac ROS·TensorRT·NGC는 NVIDIA의, 그 외 제품명은 각 �
 
 **시리즈** · [← 이전 글: 정정편 — 16GB로 안 된다던 그 결론, 뒤집었습니다](jetson-foundationpose-16gb.md) · [다음 글: 스캔편 — CAD가 없는 물체, 인쇄한 보드 한 장과 사진 스무 장으로 →](jetson-scan-no-cad.md)
 
-*관련: [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [티치 펜던트에서 ROS 2로 (4) — Isaac ROS와 cuMotion](isaac-ros-gpu.md)*
+*관련: [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md)*

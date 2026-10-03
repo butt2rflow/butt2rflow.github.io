@@ -287,4 +287,4 @@ NVIDIA, Jetson, Orin, JetPack, Isaac ROS, Isaac Sim, cuMotion, cuRobo, nvblox an
 
 **Series** · [← Previous: Scanning — No CAD? One Printed Board and Twenty Photos](jetson-scan-no-cad.md) · [Next: The Real Robot — an edge computer moves a real arm for the first time →](jetson-real-robot-first-move.md)
 
-*Related: [From Teach Pendant to ROS 2 (3) — MoveIt 2](moveit2-goals-not-points.md) · [From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion](isaac-ros-gpu.md) · [How Many Cameras, and Where](camera-placement.md) · [Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
+*Related: [Pendant to ROS 2, Part 3: MoveIt 2](moveit2-goals-not-points.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [How Many Cameras, and Where](camera-placement.md) · [Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*

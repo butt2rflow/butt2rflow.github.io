@@ -40,7 +40,7 @@ URDF (Unified Robot Description Format) is a text file that writes a robot down 
 
 The code on the right is one joint: "a revolute joint connecting the upper arm (upper_arm_link) and forearm (forearm_link), turning up to ±180° about this axis." It's the same information as the joint-range settings on your pendant, kept in a file. Each link is also tied to a 3D shape file, used to draw the robot on screen and to check for collisions.
 
-You rarely write one from scratch. Robot makers ship per-model blueprints as packages. Most are written in **xacro**, which you can think of as URDF with reusable pieces. Your job is to attach your own equipment.
+You rarely write one from scratch. Robot makers ship per-model blueprints as packages. Most are written in **xacro**, which you can think of as URDF with reusable pieces. Your job is to attach your own equipment. Keep in mind that a maker's blueprint holds that model's nominal dimensions. Every real robot has its own assembly tolerances, so UR stores each robot's measured dimensions in the controller and lets you pull them out with the driver's `ur_calibration` tool. On a real UR20, skipping it left the tool position 3.95 mm off; with it, 0.06 mm ([Field Notes real-robot post](jetson-real-robot-first-move.md)).
 
 ![Maker's blueprint + what you added = your cell](../assets/diagrams_en/r2p2-urdf-compose.svg)
 
@@ -122,7 +122,7 @@ Now for the part that actually moves the robot. **ros2_control** splits motor co
 
 On a UR, the hardware interface reads state through UR's RTDE real-time data channel and sends a target position every 2 ms (e-Series; 8 ms on CB3) to the External Control program running on the controller. This is the command loop Part 1 said is timing-sensitive. FANUC has published an official ROS 2 driver (`fanuc_driver`), which also works as a ros2_control hardware interface. According to FANUC's documentation it needs an R-30iB Plus or R-50iA family controller with the J519 Stream Motion and R912 Remote Motion options, and Humble users take the `humble` branch. Check the latest documentation before you commit.
 
-To test without a robot, use the **mock** interface: fake hardware that simply answers "moved as commanded" with no robot attached. Like ROBOGUIDE or URSim, it lets you run the whole cell's software before the robot arrives. Moving to the real thing only means changing the hardware interface setting in software; the first moves on the real robot still go slow, inside a risk-assessed cell.
+To test without a robot, use the **mock** interface: fake hardware that simply answers "moved as commanded" with no robot attached. Like ROBOGUIDE or URSim, it lets you run the whole cell's software before the robot arrives. Moving to the real thing only means changing the hardware interface setting in software; the first moves on the real robot still go slow, inside a risk-assessed cell. One naming trap: the Humble UR driver (2.9) turns mock on with `use_fake_hardware:=true`, and silently ignores the newer docs' `use_mock_hardware` as an unknown argument ([motion post](jetson-pose-to-motion.md)). What actually bit when moving to the real robot (factory calibration, matching driver and ros2_control versions, trajectory time stretched by the speed slider) is collected in the [real-robot post](jetson-real-robot-first-move.md).
 
 The natural partner to mock hardware is **rosbag2**. Record camera images and joint states on the floor with `ros2 bag record`, then feed them back with `ros2 bag play` in the office, and you can run perception and planning on the same input as many times as you like. That's also how you check that the same input gives the same result, and that a new version gives the same perception and planning results as the old one.
 
@@ -162,7 +162,7 @@ With the robot now connected to the node graph from Part 1, [the next part](move
 
 **Series** · [← Previous: Part 1 — One Robot Program Becomes a Conversation Between Programs](ros2-for-robot-programmers.md) · [Next: Part 3 — MoveIt 2 →](moveit2-goals-not-points.md)
 
-*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Part 1 — One Robot Program Becomes a Conversation Between Programs](ros2-for-robot-programmers.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [How Many Cameras, and Where](camera-placement.md)*
+*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Part 1 — One Robot Program Becomes a Conversation Between Programs](ros2-for-robot-programmers.md) · [Frames & Transforms — How a Robot Knows Where to Grab](frames-transforms.md) · [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [How Many Cameras, and Where](camera-placement.md)*
 
 ### Sources and notices
 

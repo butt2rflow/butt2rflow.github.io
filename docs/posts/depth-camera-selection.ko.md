@@ -173,7 +173,9 @@ ZED X 계열은 호스트부터 확인합니다. 깊이를 호스트의 NVIDIA G
 
 ---
 
-*관련: [카메라는 몇 대, 어디에](camera-placement.md) · [스캔편](jetson-scan-no-cad.md) · [튜닝편](jetson-tuning-licensing.md) · [세 모델의 안쪽](inside-the-models.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
+**시리즈** · [← 카메라는 몇 대, 어디에](camera-placement.md)
+
+*관련: [스캔편](jetson-scan-no-cad.md) · [튜닝편](jetson-tuning-licensing.md) · [세 모델의 안쪽](inside-the-models.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md)*
 
 ### 출처와 표기
 

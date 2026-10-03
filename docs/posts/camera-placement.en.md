@@ -30,7 +30,7 @@ A camera looking down on the whole cell feels reassuring. It sees the table, the
 
 If the camera re-measures the table and jig every time, the same table comes out a few mm thicker or thinner on each capture. That noise goes straight into the planner and the path shifts a little every cycle. Fixed things are faster and always identical when measured once and written into the design file. The values must be **measured from the actual installation**, not taken from CAD: in commissioning, jigs are often installed at dimensions and positions that differ from the CAD (the CAD vs as-built point from [Part 2](ros2-robot-description.md)).
 
-In cuMotion terms, fixed items go in as box or mesh obstacles, and camera depth goes through nvblox (a library that turns depth into voxels and a distance map) only where needed. Handing the whole cell to nvblox sends the fixed items to the planner along with the noise.
+In cuMotion terms, fixed items go in as box or mesh obstacles, and camera depth goes through nvblox (a library that turns depth into voxels and a distance map) only where needed. Handing the whole cell to nvblox sends the fixed items to the planner along with the noise. Measured on an Orin NX, the nvblox map matched real depth to a 5 mm median on a flat scene but wobbled to 19 mm in front of a glass case ([motion post](jetson-pose-to-motion.md)). The reverse also bites: write down no fixed items at all and a default writes one for you. On a real UR20, with an empty obstacle list cuMotion quietly inserted a floor plate at base height, and every plan failed for an arm working below its base ([real-robot post](jetson-real-robot-first-move.md)).
 
 ## One wrist camera vs wrist + overhead
 
@@ -85,7 +85,7 @@ Narrowing **what the camera has to see** makes a cell simpler and more predictab
 
 ---
 
-*Next: [Which Depth Camera](depth-camera-selection.md)*
+**Series** · [← Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [Next: Which Depth Camera →](depth-camera-selection.md)
 
 *Related: [Pendant to ROS 2, Part 2 — URDF and CAD vs as-built](ros2-robot-description.md) · [Part 4 — Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Try it: Hands-on Notes (0)](learn-without-industrial-robot.md)*
 

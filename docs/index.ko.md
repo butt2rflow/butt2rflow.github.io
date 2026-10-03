@@ -198,27 +198,49 @@ title: Home
 
 ### Physical AI
 
-- [**Physical AI를 고르는 법**](posts/choosing-physical-ai.md) — 시작하기: 결정론적 자동화에서 학습된 행동까지, Track 0·A·B
-- [**학습 정책 (Track B)**](posts/learned-policy-track-b.md) — 시작하기: 보여 준 대로 따라 하는 로봇과 그 한계
+**시작하기**
+
+- [**Physical AI를 고르는 법**](posts/choosing-physical-ai.md) — 결정론적 자동화에서 학습된 행동까지, Track 0·A·B
+- [**학습 정책 (Track B)**](posts/learned-policy-track-b.md) — 보여 준 대로 따라 하는 로봇과 그 한계
+
+**로봇 비전**
+
 - [**스테레오 비전에서 목표물 잡기까지**](posts/stereo-to-grasp.md) — 로봇은 목표한 사물을 어떻게 발견하는가
 - [**좌표계와 변환**](posts/frames-transforms.md) — 로봇은 어디를 잡을지 어떻게 아는가
 - [**세 모델의 안쪽**](posts/inside-the-models.md) — FoundationStereo · SAM 2 · FoundationPose를 뜯어보다 (심화)
 - [**모델 해부**](posts/model-anatomy.md) — 세 네트워크의 설계도를 펼치다 (심화)
 - [**로봇은 왜 '가짜 세계'에서 먼저 배우나**](posts/robot-simulation.md) — 시뮬레이션과 sim-to-real
+- [**카메라는 몇 대, 어디에**](posts/camera-placement.md) — 손목 하나로 충분할 때와 오버헤드가 필요할 때
+- [**어떤 3D 카메라를**](posts/depth-camera-selection.md) — 장착 위치에서 거리로, 거리에서 카메라로
+
+**코봇**
+
 - [**협동로봇(cobot)이란**](posts/cobot-basics.md) — 사람 옆에서 일하는 로봇의 기초
-- [**UR vs 화낙 — 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
-- [**Physical AI에 투자한다면**](posts/cobot-investing.md) — Physical AI 투자 (1): 가치는 어디로 이동하는가
-- [**Physical AI에 투자한다면 (2)**](posts/physical-ai-investing-actuators.md) — Physical AI 투자 (2): 관절 하나로 보는 가치 이동, 감속기·모터·ETF
-- [**Physical AI에 투자한다면 (3)**](posts/physical-ai-investing-power.md) — Physical AI 투자 (3): 휴머노이드의 전력 문제, 배터리·가동률·원자로
-- [**로봇의 뇌를 엣지에 — Jetson·ROS 2**](posts/jetson-ros2-setup.md) — 현장 노트 (1): Jetson Orin NX 셋업
-- [**로봇의 뇌를 엣지에 (2) — Isaac ROS·파운데이션 모델**](posts/jetson-isaac-foundation-models.md) — 현장 노트 (2): 엣지에서 실행해 보다
-- [**로봇의 뇌를 엣지에 — 정정편**](posts/jetson-foundationpose-16gb.md) — 현장 노트: 16GB로도 스택 전체가 동작한다
-- [**로봇의 뇌를 엣지에 — 튜닝편**](posts/jetson-tuning-licensing.md) — 현장 노트: 11초를 4초로, 상업용으로 쓸 수 있는 조합
-- [**로봇의 뇌를 엣지에 — 스캔편**](posts/jetson-scan-no-cad.md) — 현장 노트: CAD 없는 물체를 보드 한 장으로 스캔
-- [**로봇의 뇌를 엣지에 — 모션편**](posts/jetson-pose-to-motion.md) — 현장 노트: 경로 계획 186 ms, 장애물 지도를 피해 가는 경로까지
-- [**로봇의 뇌를 엣지에 — 실물편**](posts/jetson-real-robot-first-move.md) — 현장 노트: 엣지 컴퓨터가 실제 UR20을 처음 움직이다, 보정 3.95→0.06 mm, 목표에서 0.1 mm
-- [**티치 펜던트에서 ROS 2로 (1~4)**](posts/ros2-for-robot-programmers.md) — 펜던트 프로그래머를 위한 ROS 2 · [URDF·TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
-- [**실습 노트 (0) — 실물 산업용 로봇 없이 배우기**](posts/learn-without-industrial-robot.md) — SO-101과 URSim으로 연습장 고르기
+- [**UR vs 화낙: 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
+
+**펜던트에서 ROS 2로 (1~4부)**
+
+- [**1부 · ROS 2 노드와 그래프**](posts/ros2-for-robot-programmers.md) — 펜던트 프로그래머를 위한 ROS 2 · [2부 URDF·TF2](posts/ros2-robot-description.md) · [3부 MoveIt 2](posts/moveit2-goals-not-points.md) · [4부 Isaac ROS](posts/isaac-ros-gpu.md)
+
+**현장 노트: 로봇의 뇌를 엣지에**
+
+- [**1부 · Jetson과 ROS 2**](posts/jetson-ros2-setup.md) — Jetson Orin NX 셋업
+- [**2부 · Isaac ROS와 파운데이션 모델**](posts/jetson-isaac-foundation-models.md) — 엣지에서 실행해 보다
+- [**정정편**](posts/jetson-foundationpose-16gb.md) — 16GB로도 스택 전체가 동작한다
+- [**튜닝편**](posts/jetson-tuning-licensing.md) — 11초를 4초로, 상업용으로 쓸 수 있는 조합
+- [**스캔편**](posts/jetson-scan-no-cad.md) — CAD 없는 물체를 보드 한 장으로 스캔
+- [**모션편**](posts/jetson-pose-to-motion.md) — 경로 계획 186 ms, 장애물 지도를 피해 가는 경로까지
+- [**실물편**](posts/jetson-real-robot-first-move.md) — 엣지 컴퓨터가 실제 UR20을 처음 움직이다, 보정 3.95→0.06 mm, 목표에서 0.1 mm
+
+**실습 노트**
+
+- [**0부 · 실물 산업용 로봇 없이 배우기**](posts/learn-without-industrial-robot.md) — SO-101과 URSim으로 연습장 고르기
+
+**Physical AI 투자**
+
+- [**1부 · 가치는 이동한다**](posts/cobot-investing.md) — 순수 플레이는 없고, 가치는 어디로 이동하는가
+- [**2부 · 관절 하나로 보는 가치 이동**](posts/physical-ai-investing-actuators.md) — 감속기·모터·ETF
+- [**3부 · 휴머노이드의 전력 문제**](posts/physical-ai-investing-power.md) — 배터리·가동률·원자로
 
 ---
 

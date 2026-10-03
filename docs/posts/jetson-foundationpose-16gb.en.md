@@ -93,7 +93,7 @@ Once the engine bakes, the rest falls into place.
 
 - **The FoundationPose node runs live.** It takes camera input and puts out a never-before-seen object's 6-DoF pose frame by frame. With the engine prebuilt, the "memory blows up while baking" hump from Part 2 simply isn't there.
 - **Peak memory ~6.2 GB / 16 GB (with the detector front-end loaded too).** Over 9 GB to spare. In other words, **the 16 GB wall existed only at the "bake the engine" moment, never at run time.** That's the one-line takeaway — *can't build the engine ≠ can't run it.*
-- The **detector front-end** that tells the pipeline *where* the object is (whether a closed-set one or a language-promptable open-vocabulary one) also fits on the same board **alongside** FoundationPose, inside 16 GB — the three engines in the capture above are exactly that (~6.2 GB peak). Which detector you pick is a topic for a later post.
+- The **detector front-end** that tells the pipeline *where* the object is (whether a closed-set one or a language-promptable open-vocabulary one) also fits on the same board **alongside** FoundationPose, inside 16 GB — the three engines in the capture above are exactly that (~6.2 GB peak). Detector speed and licensing are covered in the [tuning post](jetson-tuning-licensing.md).
 
 **Speed is still "walking pace"** — heavy transformers, a few seconds per frame. But as Part 2 said, if a pick can take a few seconds, that's fine. What changed isn't "16 GB can't even do this"; it's "**16 GB runs it on the proper path (the engine), too.**"
 

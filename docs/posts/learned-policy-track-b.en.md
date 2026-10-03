@@ -65,7 +65,7 @@ Because a policy can produce plausible-looking commands of any kind outside what
 
 ![A policy streams commands dozens of times a second. Is there a port?](../assets/diagrams_en/tpb-interfaces.svg)
 
-A planned path from step 3 only needs a goal pose, so any arm can follow it, even through its own robot language. A learned policy sends new joint targets every instant, so the robot needs a port that accepts commands from outside in real time. UR has one built in; FANUC needs an option such as Stream Motion. [UR vs FANUC](cobot-ur-vs-fanuc.md) covers each maker's openness.
+A planned path from step 3 only needs a goal pose, so any arm can follow it, even through its own robot language. A learned policy sends new joint targets every instant, so the robot needs a port that accepts commands from outside in real time. UR has one built in (connecting an edge computer to a real UR20 through it is recorded in the [Field Notes real-robot post](jetson-real-robot-first-move.md)); FANUC needs an option such as Stream Motion. [UR vs FANUC](cobot-ur-vs-fanuc.md) covers each maker's openness.
 
 Switching arms isn't simple either. A policy trained on one arm generally can't just be loaded onto another. Large models trained on many different arms exist, but a new arm still usually needs its own demonstrations and additional training (fine-tuning). To collect demos on a large arm, a small leader arm modeled on the target arm gives cleaner data than dragging the big arm by hand.
 

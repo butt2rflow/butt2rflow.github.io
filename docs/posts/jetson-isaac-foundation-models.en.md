@@ -29,7 +29,7 @@ So I put it on one directly, the **Jetson Orin NX 16 GB** that was kicking aroun
 - **Four stages:** depth (FoundationStereo) → mask (SAM 2) → **6-DoF pose (FoundationPose)** → path (cuMotion). The real star of "new part, no training" is **one stage, FoundationPose** — it's the only one that takes a CAD.
 - **What we proved:** dense depth on an unseen scene; a clean mask of an electric drill (score 0.86); 6-DoF pose tracked across 300+ frames each on **two swapped CADs** (a bottle, an electric drill); a collision-free 7-axis path in 210 ms — all on our own Orin NX.
 - **Speed:** the light stereo model (ESS, 44 frames/sec) and the path planner (cuMotion, 210 ms) run at usable speed today. The two heavy models run at seconds per frame on this small edge computer — a walk, not a sprint — which is no flaw if a pick can take a few seconds.
-- **Hardware:** the concept is proven on this 16 GB edge computer. To run the whole pipeline **at full speed on one edge computer** in production, the next rung — the **AGX Orin 64 GB** ($1,999) — is the answer.
+- **Hardware:** the concept is proven on this 16 GB edge computer. To run the whole pipeline **at full speed on one edge computer** in production, the next rung — the **AGX Orin 64 GB** ($1,999) — is the answer. (This verdict was reversed in the [correction](jetson-foundationpose-16gb.md): 16 GB could build the engines and run the whole chain after all.)
 - *Heavy training on a desktop/cloud, inference on the edge — Part 1's big picture holds here too.*
 
 ---
@@ -188,6 +188,8 @@ It sounds tedious, but the point is one thing. **The difficulty of standing foun
 
 ## If this goes to production — which edge computer?
 
+> The verdict in this section ("production wants 64 GB") was corrected in the [correction post](jetson-foundationpose-16gb.md). It stays here as a record.
+
 Now that we've reached "the concept is proven on our 16 GB edge computer," the natural next question for production — *what do you buy to get full speed?*
 
 ![Hardware tiers — where 'proof of concept' ends and 'production' begins](../assets/diagrams_en/jetson-hw-tiers.svg)
@@ -230,7 +232,7 @@ The next things to check are clear now, too.
 
 **Series** · [← Previous: Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2](jetson-ros2-setup.md) · [Next: A Correction — reversing the "16 GB can't do it" verdict →](jetson-foundationpose-16gb.md)
 
-*Related: [From stereo vision to grasping the target](stereo-to-grasp.md) · [Inside the models — deep dive, part 1](inside-the-models.md) · [The robot's brain on the edge (1) — from JetPack to ROS 2](jetson-ros2-setup.md) · [If you're investing in Physical AI — the cobot angle](cobot-investing.md)*
+*Related: [From stereo vision to grasping the target](stereo-to-grasp.md) · [Inside the models — deep dive, part 1](inside-the-models.md) · [Field Notes, Part 1: from JetPack to ROS 2](jetson-ros2-setup.md) · [If you're investing in Physical AI — the cobot angle](cobot-investing.md)*
 
 ### Sources and notes
 

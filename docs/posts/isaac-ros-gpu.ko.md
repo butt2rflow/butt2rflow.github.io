@@ -69,13 +69,13 @@ Isaac ROS를 쓰기 시작하면 챙길 버전 번호가 많아집니다. 이 �
 
 ![같은 입력, 같은 출력, 플래너만 교체](../assets/diagrams/r2p4-cumotion-slot.svg)
 
-경로를 찾는 방법만 바뀝니다. 쓰려면 MoveIt 설정에 cuMotion 계획 파이프라인을 OMPL 옆에 추가하고, cuMotion 노드를 함께 실행합니다. OMPL이 후보를 하나씩 시험한다면, cuMotion은 GPU로 여러 후보를 동시에 시험하고 다듬습니다. nvblox와 함께 쓰면 카메라 깊이 정보를 계획용 장애물로 바꿔 쓸 수도 있습니다(자세한 건 아래 'cuMotion은 무엇을 피하나'에서). 제 [현장 노트](jetson-isaac-foundation-models.md)에서는 Orin NX 16GB에서 7축 팔의 경로 하나를 약 210 ms에 계산했습니다. 장면과 설정에 따라 달라지는 값이지만, 엣지 컴퓨터에서도 실전 속도가 난다는 감은 줍니다.
+경로를 찾는 방법만 바뀝니다. 쓰려면 MoveIt 설정에 cuMotion 계획 파이프라인을 OMPL 옆에 추가하고, cuMotion 노드를 함께 실행합니다. OMPL이 후보를 하나씩 시험한다면, cuMotion은 GPU로 여러 후보를 동시에 시험하고 다듬습니다. nvblox와 함께 쓰면 카메라 깊이 정보를 계획용 장애물로 바꿔 쓸 수도 있습니다(자세한 건 아래 'cuMotion은 무엇을 피하나'에서). 제 [현장 노트](jetson-isaac-foundation-models.md)에서는 Orin NX 16GB에서 7축 팔의 경로 하나를 약 210 ms에, 뒤의 [모션편](jetson-pose-to-motion.md)에서는 UR10e 설정으로 약 186 ms에 계산했습니다(처음 한 번은 GPU 준비에 16초). 장면과 설정에 따라 달라지는 값이지만, 엣지 컴퓨터에서도 실전 속도가 난다는 감은 줍니다.
 
 cuMotion을 쓰려면 로봇마다 파일이 하나 더 필요합니다.
 
 ![충돌 검사를 공 몇십 개로 단순화](../assets/diagrams/r2p4-xrdf.svg)
 
-**XRDF**는 URDF를 보완하는 파일로, 가장 큰 부분은 로봇의 각 링크를 공 여러 개로 근사한 충돌 모델입니다. 복잡한 3D 모양끼리의 충돌 검사는 느리지만, 공끼리의 거리는 아주 빨리 계산할 수 있거든요. 그 덕에 GPU가 수많은 후보를 빨리 걸러 냅니다. 서로 부딪혀도 되는 링크 쌍, 툴 좌표계, 관절의 가속도 한계와 저크(가속도가 얼마나 급하게 바뀌는지) 한계도 같이 적습니다. NVIDIA 문서에 UR10e 예시가 있고, 다른 로봇은 Isaac Sim의 로봇 설명 편집기로 만들 수 있어요. 모양이 비슷해 보여도 링크 치수가 다른 모델이라면 기존 파일을 그대로 쓰지 말고 공을 다시 맞춰야 합니다.
+**XRDF**는 URDF를 보완하는 파일로, 가장 큰 부분은 로봇의 각 링크를 공 여러 개로 근사한 충돌 모델입니다. 복잡한 3D 모양끼리의 충돌 검사는 느리지만, 공끼리의 거리는 아주 빨리 계산할 수 있거든요. 그 덕에 GPU가 수많은 후보를 빨리 걸러 냅니다. 서로 부딪혀도 되는 링크 쌍, 툴 좌표계, 관절의 가속도 한계와 저크(가속도가 얼마나 급하게 바뀌는지) 한계도 같이 적습니다. NVIDIA 문서에 UR10e 예시가 있고, 다른 로봇은 Isaac Sim의 로봇 설명 편집기로 만들 수 있어요. 모양이 비슷해 보여도 링크 치수가 다른 모델이라면 기존 파일을 그대로 쓰지 말고 공을 다시 맞춰야 합니다. [모션편](jetson-pose-to-motion.md)에서는 UR20용을 직접 만들었는데, 자동 맞추기가 실패해서 공 71개를 하나씩 더해 표면을 덮었습니다.
 
 ## cuMotion은 무엇을 피하나
 
@@ -134,7 +134,7 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 ![흔한 함정 여섯 가지와 확인법](../assets/diagrams/r2p4-traps.svg)
 
-처음 몇 주의 디버깅 시간은 대부분 이 여섯 칸에서 나옵니다. 앞의 네 칸은 [1부](ros2-for-robot-programmers.md)와 [2부](ros2-robot-description.md)에서 다뤘고, 좌표계 착각에는 2부의 시간 함정(사진 찍은 시각의 변환을 쓰지 않는 실수)도 포함됩니다. 포트 충돌은 이런 상황이에요. 카메라 제조사의 설정 프로그램을 켜 둔 채 ROS 카메라 드라이버를 실행하거나, 펜던트 쪽 도구와 ROS 드라이버가 같은 로봇 연결을 동시에 잡으려 하면, 둘 중 하나는 장치를 열지 못하고 알 수 없는 에러를 냅니다. 시뮬레이션의 접촉 힘은 근사치일 뿐이고, 실물 로봇에는 시뮬레이터가 모르는 캘리브레이션 오차가 있습니다. 그러니 실물은 느린 속도로(펜던트의 T1처럼), 비상정지 버튼을 손 닿는 곳에 두고 시작하세요.
+처음 몇 주의 디버깅 시간은 대부분 이 여섯 칸에서 나옵니다. 앞의 네 칸은 [1부](ros2-for-robot-programmers.md)와 [2부](ros2-robot-description.md)에서 다뤘고, 좌표계 착각에는 2부의 시간 함정(사진 찍은 시각의 변환을 쓰지 않는 실수)도 포함됩니다. 포트 충돌은 이런 상황이에요. 카메라 제조사의 설정 프로그램을 켜 둔 채 ROS 카메라 드라이버를 실행하거나, 펜던트 쪽 도구와 ROS 드라이버가 같은 로봇 연결을 동시에 잡으려 하면, 둘 중 하나는 장치를 열지 못하고 알 수 없는 에러를 냅니다. 시뮬레이션의 접촉 힘은 근사치일 뿐이고, 실물 로봇에는 시뮬레이터가 모르는 캘리브레이션 오차가 있습니다(실제 UR20에서 3.95 mm, [실물편](jetson-real-robot-first-move.md)). 그러니 실물은 느린 속도로(펜던트의 T1처럼), 비상정지 버튼을 손 닿는 곳에 두고 시작하세요.
 
 ---
 
@@ -176,7 +176,7 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 **시리즈** · [← 이전 글: 3부 — MoveIt 2](moveit2-goals-not-points.md)
 
-*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [3부 — MoveIt 2](moveit2-goals-not-points.md) · [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [3부: MoveIt 2](moveit2-goals-not-points.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

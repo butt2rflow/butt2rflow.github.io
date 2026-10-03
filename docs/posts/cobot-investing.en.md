@@ -162,7 +162,7 @@ So for investing:
 - **Why incumbents are defended** — Cognex and Keyence already **own the deterministic, certified layer,** and can bolt AI on top. The robot-guidance segment gets pressured, but the **inspection / metrology / reading core likely holds** — because they hold the fusion layer.
 - **NVIDIA is an enabler, not a replacer** — it supplies the AI layer, not the deterministic verdict. It doesn't kill the incumbents; it powers their fusion.
 
-In fact, Cognex and Keyence **each grew ~9%** through 2025–2026 — the very window this thesis predicts pain. The pressure is not "revenue collapse" but **margin/mix pressure at the 3D-guidance frontier.** That the frontier is real shows elsewhere — Intel's RealSense spun out as a standalone company in 2025 and **refocused on robotics,** and NVIDIA's FoundationStereo and FoundationPose now ship inside Isaac ROS. The erosion is coming — at the frontier, not the core.
+In fact, Cognex and Keyence **each grew ~9%** through 2025–2026 — the very window this thesis predicts pain. The pressure is not "revenue collapse" but **margin/mix pressure at the 3D-guidance frontier.** That the frontier is real shows elsewhere — Intel's RealSense spun out as a standalone company in 2025 and **refocused on robotics,** and NVIDIA's FoundationStereo and FoundationPose now ship inside Isaac ROS. The erosion is coming — at the frontier, not the core. And in September 2026 Cognex announced it would acquire that same RealSense ([Which Depth Camera](depth-camera-selection.md)): an incumbent that owns the deterministic, certified layer pulling the cheap-3D-camera side in-house, which points the same way as the fusion thesis above.
 
 ---
 
@@ -193,9 +193,9 @@ We have now covered what a cobot is (cobot Part 1), what divides the two makers 
 
 ---
 
-**Next** · [Investing in Physical AI (2) — Value Shifts Seen Through One Joint](physical-ai-investing-actuators.md) · [(3) — The Humanoid Power Problem](physical-ai-investing-power.md)
+**Series** · [Part 2: Value Shifts Seen Through One Joint →](physical-ai-investing-actuators.md) · [Part 3: The Humanoid Power Problem](physical-ai-investing-power.md)
 
-*Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [UR vs FANUC — Openness](cobot-ur-vs-fanuc.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Jetson + ROS 2 Setup — Field Notes (1)](jetson-ros2-setup.md)*
+*Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [UR vs FANUC — Openness](cobot-ur-vs-fanuc.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Field Notes, Part 1: Jetson + ROS 2 setup](jetson-ros2-setup.md)*
 
 ### Sources & trademarks
 

@@ -173,7 +173,9 @@ The D405 is still the default for close wrist work, and the Gemini 305 is a cand
 
 ---
 
-*Related: [How Many Cameras, and Where](camera-placement.md) · [Scanning post](jetson-scan-no-cad.md) · [Tuning post](jetson-tuning-licensing.md) · [Inside the Three Models](inside-the-models.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+**Series** · [← How Many Cameras, and Where](camera-placement.md)
+
+*Related: [Scanning post](jetson-scan-no-cad.md) · [Tuning post](jetson-tuning-licensing.md) · [Inside the Three Models](inside-the-models.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
 
 ### Sources and notices
 

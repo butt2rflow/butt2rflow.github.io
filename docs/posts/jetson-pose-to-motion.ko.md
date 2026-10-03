@@ -286,4 +286,4 @@ NVIDIA·Jetson·Orin·JetPack·Isaac ROS·Isaac Sim·cuMotion·cuRobo·nvblox·R
 
 **시리즈** · [← 이전 글: 스캔편 — CAD가 없는 물체, 인쇄한 보드 한 장과 사진 스무 장으로](jetson-scan-no-cad.md) · [다음 글: 실물편 — 엣지 컴퓨터가 실제 로봇을 처음 움직이다 →](jetson-real-robot-first-move.md)
 
-*관련: [티치 펜던트에서 ROS 2로 (3) — MoveIt 2](moveit2-goals-not-points.md) · [티치 펜던트에서 ROS 2로 (4) — Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*

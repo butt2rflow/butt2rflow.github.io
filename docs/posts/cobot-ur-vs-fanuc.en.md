@@ -62,7 +62,7 @@ The two companies' DNA is opposite.
 
 The interesting part is that **the two camps are converging on each other's weaknesses.** FANUC chases "ease" with CRX, and **UR's newest arms (UR20/UR30) pushed up payload (20–30 kg), reach, speed, rigidity, and sealing (IP65)** — moving into territory that used to force you into a caged industrial robot.
 
-One thing to state precisely, though. People say "UR is easy but less precise," but that's **not about repeatability** (returning to the same taught point) — there UR sat at ±0.03–0.05 mm on the e-Series, within about one class of industrial arms. In fact the big new UR20/UR30 are **±0.1 mm — slightly *looser* than the e-Series** (the normal trade-off for a bigger, faster, heavier arm). UR's real historical weakness was **speed, rigidity, and *absolute* accuracy** (hitting a commanded pose it was never taught — from CAD or a vision offset), which it addresses with per-arm kinematic calibration. And the software was re-architected from PolyScope 5.x to **PolyScope X** — but that's a UX/extensibility story, not a more precise arm (and it didn't ship in lockstep with UR20/UR30). In short, what UR narrowed was **payload, reach, and rigidity** — the things that used to force a caged robot — not the repeatability number itself. Either way, on paper the two are now close. But the real fork isn't here.
+One thing to state precisely, though. People say "UR is easy but less precise," but that's **not about repeatability** (returning to the same taught point) — there UR sat at ±0.03–0.05 mm on the e-Series, within about one class of industrial arms. In fact the big new UR20/UR30 are **±0.1 mm — slightly *looser* than the e-Series** (the normal trade-off for a bigger, faster, heavier arm). UR's real historical weakness was **speed, rigidity, and *absolute* accuracy** (hitting a commanded pose it was never taught — from CAD or a vision offset), which it addresses with per-arm kinematic calibration. Connecting an edge computer to a real UR20 showed it directly: the tool position computed from nominal dimensions was 3.95 mm off, and with that robot's factory calibration file it dropped to 0.06 mm ([Field Notes real-robot post](jetson-real-robot-first-move.md)). And the software was re-architected from PolyScope 5.x to **PolyScope X** — but that's a UX/extensibility story, not a more precise arm (and it didn't ship in lockstep with UR20/UR30). In short, what UR narrowed was **payload, reach, and rigidity** — the things that used to force a caged robot — not the repeatability number itself. Either way, on paper the two are now close. But the real fork isn't here.
 
 ---
 
@@ -166,7 +166,7 @@ So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible c
 
 **Series** · [← Part 1: What Is a Collaborative Robot?](cobot-basics.md) · Continues in: [Investing in Physical AI, Part 1 →](cobot-investing.md)
 
-*Related: [Part 1 — What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [Investing in Physical AI, Part 1](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+*Related: [Part 1: What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [Physical AI Investing, Part 1](cobot-investing.md) · [Learned Policies (Track B): the real-time port](learned-policy-track-b.md) · [Pendant to ROS 2, Part 2: RTDE and ros2_control](ros2-robot-description.md) · [Field Notes: The Real Robot](jetson-real-robot-first-move.md)*
 
 ### Sources & trademarks
 

@@ -42,7 +42,7 @@ Simulated hardware follows whatever you send. A real robot doesn't forgive like 
 
 ## Step 0: a read-only link
 
-The first connection was deliberately one that **can't send commands**. UR robots stream joint angles, tool position and safety state over a real-time data channel called RTDE, and subscribing only to its outputs writes nothing to the robot. That was enough to confirm the network and see what state the robot was in.
+The first connection was deliberately one that **can't send commands**. UR robots stream joint angles, tool position and safety state over a real-time data channel called RTDE (the channel [UR vs FANUC](cobot-ur-vs-fanuc.md) names as the heart of openness), and subscribing only to its outputs writes nothing to the robot. That was enough to confirm the network and see what state the robot was in.
 
 One thing to know: PolyScope X robots **don't have the Dashboard server (port 29999)** that older UR robots have. Program state and similar information come from the robot's REST API instead. If you're following older guides and can't reach the dashboard, that's why.
 
@@ -54,7 +54,7 @@ When ROS computes the arm's pose, it uses the standard dimensions in the URDF. B
 
 ![One factory calibration file removes the tool-position error](../assets/diagrams_en/r7-calib.svg)
 
-At the same joint angles, I compared the tool position the robot reports with the one computed from the ROS model. The standard model was **3.95 mm and 0.40°** off; with this robot's calibration file it dropped to **0.06 mm and 0.01°**. Four millimetres means that however precisely the camera finds an object, the arm misses by that much.
+At the same joint angles, I compared the tool position the robot reports with the one computed from the ROS model. The standard model was **3.95 mm and 0.40°** off; with this robot's calibration file it dropped to **0.06 mm and 0.01°**. Four millimetres means that however precisely the camera finds an object, the arm misses by that much. [UR vs FANUC](cobot-ur-vs-fanuc.md) said UR's weak spot is absolute accuracy rather than repeatability, made up for by per-arm calibration; this is that gap, measured. The advice in [Pendant to ROS 2, Part 2](ros2-robot-description.md) to build the model from measurements rather than CAD applies to the robot itself.
 
 The simulator (URSim) never shows this gap, because its robot is an ideal one with the standard dimensions. Skip the calibration when you move to the real robot and things that worked in simulation miss by a few millimetres. The calibration file has to go everywhere the driver and the model are built.
 
@@ -113,7 +113,7 @@ The most important part of this record is the procedure, more than the numbers.
 
 | Next step | Why it's needed |
 |---|---|
-| Camera-to-robot-base calibration (board on the flange, 10–15 poses) | To bring object poses and the obstacle map into robot coordinates |
+| Camera-to-robot-base calibration (board on the flange, 10–15 poses; the hand-eye calibration in [Frames & Transforms](frames-transforms.md)) | To bring object poses and the obstacle map into robot coordinates |
 | A foundation-model pose as the real robot's goal | The motion post's "pose → goal", on the real arm |
 | A cell model (pedestal, table, fence) | Right now only self-collision is checked |
 | Contact and force (zero the sensor first) | The last few millimetres: inserting, pressing |
@@ -148,7 +148,7 @@ Universal Robots, UR, UR20, PolyScope, URCap and URSim are trademarks of Univers
 
 **Series** · [← Previous: Motion — After the Pose Comes Movement, Planning Around an Obstacle Map](jetson-pose-to-motion.md)
 
-*Related: [From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion](isaac-ros-gpu.md) · [How Many Cameras, and Where](camera-placement.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
+*Related: [UR vs FANUC: openness](cobot-ur-vs-fanuc.md) · [Pendant to ROS 2, Part 2: URDF, ros2_control](ros2-robot-description.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Frames & Transforms](frames-transforms.md) · [How Many Cameras, and Where](camera-placement.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 
 ### Glossary
 

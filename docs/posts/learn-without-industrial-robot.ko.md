@@ -46,7 +46,7 @@ ROS 2, MoveIt 2, Isaac ROS를 글로 읽었다면, 다음은 로봇을 직접 �
 
 ![가상 UR 컨트롤러에 진짜 ROS 2 드라이버를 붙인다](../assets/diagrams/hon-ursim-setup.svg)
 
-e-Series URSim은 x86용이라 PC에서 실행하고, Jetson은 같은 네트워크로 붙이는 구성이 무난합니다. PolyScope X 시뮬레이터라면 arm64 이미지가 있어 Jetson 한 대로 모두 실행하는 것도 방법입니다(이때는 External Control URCapX를 씁니다).
+e-Series URSim은 x86용이라 PC에서 실행하고, Jetson은 같은 네트워크로 붙이는 구성이 무난합니다. PolyScope X 시뮬레이터는 arm64 이미지가 있지만, [모션편](jetson-pose-to-motion.md)에서 Orin에 직접 올려 보니 그 안에서 다시 띄우는 시뮬레이터 컨테이너가 x86 전용이라 실행되지 않았어요. 그래서 PolyScope X도 x86 PC에서 실행하고 Jetson을 네트워크로 붙이는 게 맞습니다(이때는 External Control URCapX를 씁니다).
 
 ## SO-101 연습장 구성
 
@@ -63,6 +63,8 @@ Track 0·A·B는 [고르는 법](choosing-physical-ai.md)의 세 가지 설계�
 ## 연습장의 한계
 
 ![연습장이 알려 주지 않는 것](../assets/diagrams/hon-limits.svg)
+
+가상 컨트롤러가 감추는 것도 있습니다. URSim의 로봇은 표준 치수 그대로라서, 실제 UR20으로 넘어가 보니 공장 보정 없이 툴 위치가 3.95 mm 어긋났어요([현장 노트 실물편](jetson-real-robot-first-move.md)). 연습장에서 익힌 코드는 그대로 옮겨 가도, 보정과 안전 절차는 실물에서 처음부터 다시 밟아야 합니다.
 
 SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했는지부터 가려야 합니다. 그래서 비교 실험(6부)에서는 같은 팔, 같은 블록, 같은 조건으로 20회씩 반복하고, 팔 자체의 반복 정밀도도 따로 재 둘 계획입니다.
 
@@ -88,7 +90,7 @@ SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했�
 
 **시리즈** · 다음: 실습 노트 1부, SO-101 조립과 시연 기록 (준비 중)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [로봇의 뇌를 엣지에 올리기 (1)](jetson-ros2-setup.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [현장 노트 1부](jetson-ros2-setup.md) · [실물편](jetson-real-robot-first-move.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

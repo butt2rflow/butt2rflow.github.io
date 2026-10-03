@@ -46,7 +46,7 @@ This is "one stack, many robots" from [Pendant to ROS 2, Part 4](isaac-ros-gpu.m
 
 ![A real ROS 2 driver on a virtual UR controller](../assets/diagrams_en/hon-ursim-setup.svg)
 
-The e-Series URSim is x86-only, so the straightforward setup runs it on a PC with the Jetson joining over the same network. The PolyScope X simulator ships an arm64 image, so running everything on one Jetson is also an option (that route uses the External Control URCapX).
+The e-Series URSim is x86-only, so the straightforward setup runs it on a PC with the Jetson joining over the same network. The PolyScope X simulator ships an arm64 image, but when the [motion post](jetson-pose-to-motion.md) tried it directly on an Orin, the simulator container it launches inside was x86-only and wouldn't run. So PolyScope X also belongs on an x86 PC with the Jetson joining over the network (that route uses the External Control URCapX).
 
 ## The SO-101 setup
 
@@ -63,6 +63,8 @@ If you've read Pendant Parts 1–3, start with URSim; if you've read the learned
 ## The limits of practice grounds
 
 ![What the practice grounds won't tell you](../assets/diagrams_en/hon-limits.svg)
+
+Virtual controllers hide things too. The robot in URSim has nominal dimensions, so on moving to a real UR20 the tool position was 3.95 mm off without the factory calibration ([Field Notes real-robot post](jetson-real-robot-first-move.md)). Code learned on a practice ground carries over, but calibration and the safety procedure start over on the real robot.
 
 When an SO-101 grasp fails, the first question is whether the vision was wrong or the arm was imprecise. So the comparison experiment (Part 6) will repeat the same arm, block and conditions 20 times each, and measure the arm's own repeatability separately.
 

@@ -178,7 +178,7 @@ PNG는 인쇄 배율이 프린터 설정에 따라 달라지기 쉬워서, 실�
 
 FoundationPose에는 CAD 없이 쓰는 **모델 프리 모드**가 따로 있습니다. 물체를 여러 방향에서 찍은 기준 사진 몇 장을 주면, BundleSDF라는 방법으로 물체의 모양을 신경망으로 학습해 메시를 만들어요. 신경망이 공간의 각 점이 표면에서 얼마나 떨어져 있는지를 배우는 방식이라, 높이 지도로는 표현할 수 없는 모양(손잡이 구멍, 아래로 파인 부분)도 이론상 담을 수 있습니다.
 
-같은 23장의 스캔 사진을 이 방식에 그대로 넣었습니다. 사진을 새로 찍을 필요는 없었어요. 젯슨에서 실행하려면 몇 가지 손을 봐야 했습니다(ARM용 빌드가 없는 라이브러리 하나를 빼고, 그 때문에 막히는 렌더링 경로 하나를 고치는 등). 그리고 학습된 모양이 보드 아래로 12mm쯤 가상의 형체를 지어내서, 보드 면에서 잘라 내야 했습니다.
+같은 23장의 스캔 사진을 이 방식에 그대로 넣었습니다. 사진을 새로 찍을 필요는 없었어요. Jetson에서 실행하려면 몇 가지 손을 봐야 했습니다(ARM용 빌드가 없는 라이브러리 하나를 빼고, 그 때문에 막히는 렌더링 경로 하나를 고치는 등). 그리고 학습된 모양이 보드 아래로 12mm쯤 가상의 형체를 지어내서, 보드 면에서 잘라 내야 했습니다.
 
 ![같은 마우스, 두 메시로 라이브 추적 — 왼쪽 높이 지도(4.5초), 오른쪽 BundleSDF(8.7분)](../assets/demos/jetson-scan-heightmap-vs-bundlesdf.jpg)
 
@@ -236,4 +236,4 @@ Jetson·Orin·Isaac ROS는 NVIDIA의, OAK-D는 Luxonis의, 그 외 제품명은 
 
 **시리즈** · [← 이전 글: 튜닝편 — 11초를 4초로, 그리고 상업용으로 쓸 수 있는 조합](jetson-tuning-licensing.md) · [다음 글: 모션편 — 자세 다음은 움직임, 장애물 지도를 피해 가는 경로까지 →](jetson-pose-to-motion.md)
 
-*관련: [어떤 3D 카메라를](depth-camera-selection.md) · [좌표계와 변환](frames-transforms.md) · [세 모델의 안쪽](inside-the-models.md) · [로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md)*
+*관련: [어떤 3D 카메라를](depth-camera-selection.md) · [좌표계와 변환](frames-transforms.md) · [세 모델의 안쪽](inside-the-models.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md)*

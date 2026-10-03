@@ -211,7 +211,7 @@ ROS 2 쪽에서 챙길 것도 두 가지 있습니다.
 
 **시리즈** · [다음 글: 2부 — 로봇을 ROS에 설명하기 →](ros2-robot-description.md)
 
-*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [좌표계와 변환 — 로봇은 어디를 잡을지 어떻게 아는가](frames-transforms.md) · [로봇의 뇌를 엣지에 올리기 (1) — JetPack부터 ROS 2까지](jetson-ros2-setup.md) · [UR vs 화낙 — 개방성](cobot-ur-vs-fanuc.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [좌표계와 변환](frames-transforms.md) · [현장 노트 1부: JetPack부터 ROS 2까지](jetson-ros2-setup.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 

@@ -62,7 +62,7 @@ Using step 4 rarely means handing the whole cell to a learned policy. Step 3's g
 
 ![Same situation, three kinds of failure](../assets/diagrams_en/cpa-failure.svg)
 
-The three designs differ most when the object sits out of the arm's reach. Track 0 and A find the pose, and then the planner reports "no path." Track B is quiet because it learned motions from demonstrations with no mechanism for judging reachability; somewhere the demos never covered, it can carry on with a plausible-looking motion and no failure signal. Track A can fail quietly too if the pose itself is wrong, which is why its per-stage outputs (the mask and the pose score) need checks.
+The three designs differ most when the object sits out of the arm's reach. Track 0 and A find the pose, and then the planner reports "no path." Track B is quiet because it learned motions from demonstrations with no mechanism for judging reachability; somewhere the demos never covered, it can carry on with a plausible-looking motion and no failure signal. Track A can fail quietly too if the pose itself is wrong, which is why its per-stage outputs (the mask and the pose score) need checks. In the [tuning post](jetson-tuning-licensing.md) the detector took a ceiling heater for the target object, and every later stage returned a pose 5 m away without a single error. That is why the chain ends with a size and distance check.
 
 So the criterion isn't "is it non-deterministic?" but "**can its failures be detected?**" Measure these tendencies on the same arm by varying position, lighting, a new object, occlusion and reachability.
 
@@ -92,11 +92,15 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 |---|---|
 | Track A's perception stages (depth, mask, pose) | [From Stereo to Grasp](stereo-to-grasp.md) · [Inside the Three Models](inside-the-models.md) · [Model Anatomy](model-anatomy.md) |
 | Turning camera coordinates into robot coordinates | [Frames & Transforms](frames-transforms.md) |
-| ROS 2, MoveIt 2, deterministic cell design | [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Part 2](ros2-robot-description.md) · [Part 3](moveit2-goals-not-points.md) · [Part 4](isaac-ros-gpu.md) |
-| Actually running it on an edge computer | [Field Notes, Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [correction](jetson-foundationpose-16gb.md) |
-| Differences between robot makers | [What Is a Collaborative Robot](cobot-basics.md) · [UR vs FANUC](cobot-ur-vs-fanuc.md) |
 | Simulation and sim-to-real | [Why Robots Learn in a 'Fake World' First](robot-simulation.md) |
+| How many cameras, where, and which one | [How Many Cameras, and Where](camera-placement.md) · [Which Depth Camera](depth-camera-selection.md) |
+| Differences between robot makers | [What Is a Collaborative Robot](cobot-basics.md) · [UR vs FANUC](cobot-ur-vs-fanuc.md) |
+| ROS 2, MoveIt 2, deterministic cell design | [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Part 2](ros2-robot-description.md) · [Part 3](moveit2-goals-not-points.md) · [Part 4](isaac-ros-gpu.md) |
+| Actually running it on an edge computer | [Field Notes, Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [Correction](jetson-foundationpose-16gb.md) · [Tuning](jetson-tuning-licensing.md) · [Scanning](jetson-scan-no-cad.md) |
+| From pose to motion, and a real robot | [Field Notes: Motion](jetson-pose-to-motion.md) · [The Real Robot](jetson-real-robot-first-move.md) |
 | Track B, learned policies | [Learned Policies (Track B)](learned-policy-track-b.md) |
+| Trying it yourself | [Hands-on Notes, Part 0: SO-101 and URSim](learn-without-industrial-robot.md) |
+| The investing angle | [Physical AI Investing, Part 1](cobot-investing.md) · [Part 2](physical-ai-investing-actuators.md) · [Part 3](physical-ai-investing-power.md) |
 
 ---
 

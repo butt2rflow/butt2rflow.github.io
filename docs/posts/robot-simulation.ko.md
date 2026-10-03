@@ -43,7 +43,7 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 > **이미 우리가 압니다.** 우리가 놓았으니까요. 사람이 사진을 보고 각도를 잴 필요가 없습니다.
 > 렌더 버튼을 누를 때마다 이미지와 정답표가 한 쌍씩 쏟아집니다.
 
-## 시뮬레이터 둘러보기 — 그리고 왜 다들 Franka인가
+## 시뮬레이터 둘러보기, 그리고 왜 다들 Franka인가
 
 로봇 시뮬레이터는 여러 가지이고, 성격이 조금씩 달라요.
 
@@ -80,7 +80,7 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 > 물리가 정확한 **MuJoCo**. "일단 팔 하나 띄워 개념만 빨리 보고 싶다" → 가벼운 **PyBullet**.
 > 같은 문제라도 **무엇을 보려느냐**가 도구를 정합니다.
 
-## 가짜와 진짜의 틈 — sim-to-real
+## 가짜와 진짜의 틈, sim-to-real
 
 여기까지만 들으면 시뮬레이션은 만능 같습니다. 그런데 함정이 있어요. **가짜 세계에서 완벽하던
 로봇이 진짜 세계에 나오면 자주 헤맵니다.** 이 틈을 **sim-to-real 간극**이라 부릅니다.
@@ -96,7 +96,7 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 
 ![시뮬레이션은 깨끗하고 현실은 지저분하다 — sim-to-real 간극](../assets/diagrams/rvd-sim2real-gap.svg)
 
-### 해법 — 일부러 어지럽히기 (도메인 랜덤화)
+### 해법: 일부러 어지럽히기(도메인 랜덤화)
 
 영리한 우회로가 있습니다. 바로 **도메인 랜덤화(domain randomization)**입니다. 어차피 완벽히
 똑같이 만들 수는 없으니, 시뮬레이션을 현실과 똑같이 만들려 애쓰는 대신 **거꾸로 시뮬레이션을
@@ -138,11 +138,17 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 
 ![현장 흐름 — 시뮬 학습 → 실물 검증 → 보정 → 배포](../assets/diagrams/rvd-sim-field-flow.svg)
 
+이 간극은 인식 모델에만 있는 게 아닙니다. [현장 노트 실물편](jetson-real-robot-first-move.md)에서 실제 UR20에 엣지 컴퓨터를 연결해 보니, 표준 치수로 계산한 툴 위치가 로봇이 보고하는 위치와 3.95 mm 어긋났어요. UR의 시뮬레이터(URSim) 속 로봇은 표준 치수 그대로인 이상적인 로봇이라 이 차이가 보이지 않습니다. 그 로봇의 공장 보정 파일을 넣자 0.06 mm가 됐죠. 3번, 남는 간극을 보정으로 메운다는 게 바로 이런 일입니다. 가짜 하드웨어, 시뮬레이터, 실물이 각각 무엇을 확인해 주는지는 [모션편](jetson-pose-to-motion.md)에 정리했습니다.
+
 가짜 세계에서 배운 능력이 진짜 세계에서 통하는 건 마법이 아닙니다. **넓게 배우고, 실물로
 검증하고, 남는 틈을 보정으로 메우는** 세 박자의 결과예요. sim-to-real 간극은 책으로만 읽지
 말고 언젠가 직접 겪어 보시길 권합니다. 그때 왜 이 순서인지 실감하게 될 거예요.
 
 ---
+
+**시리즈** · [← 모델 해부(심화 2부)](model-anatomy.md) · [다음: 카메라는 몇 대, 어디에 →](camera-placement.md)
+
+*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [펜던트에서 ROS 2로 2부: mock 하드웨어](ros2-robot-description.md) · [현장 노트 실물편](jetson-real-robot-first-move.md)*
 
 *NVIDIA Isaac Sim·Isaac Lab, MuJoCo(Google DeepMind), PyBullet, Gazebo(Open Robotics),
 Franka·Franka Panda는 각 소유자의 상표이며 식별 목적으로만 사용했습니다. 도표는 전부 직접

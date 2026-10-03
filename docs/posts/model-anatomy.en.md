@@ -52,7 +52,7 @@ The fix is **side-tuning**. You keep the original model **frozen** (its weights 
 
 The frozen body knows "what objects generally look like," and the side branch learns only "how to translate that knowledge into stereo matching." Because it trains few parameters, it stays stable on little data.
 
-> **💡 Why this is the real secret behind zero-shot.** No matter that the synthetic stereo data runs to a million images, it can't contain **every object in the world.** But the single-image model bolted alongside it (**Depth Anything V2**) is trained on internet-scale real photographs. So FoundationStereo effectively fuses two sources — **"geometry from the simulator, object common sense from real photos."** A good part of why it runs well on a part it has never seen lives right here.
+> **Why this is the real secret behind zero-shot.** No matter that the synthetic stereo data runs to a million images, it can't contain **every object in the world.** But the single-image model bolted alongside it (**Depth Anything V2**) is trained on internet-scale real photographs. So FoundationStereo effectively fuses two sources — **"geometry from the simulator, object common sense from real photos."** A good part of why it runs well on a part it has never seen lives right here.
 
 ### Three ways to build a cost volume
 
@@ -199,7 +199,7 @@ Make "it remembers the past" concrete and it looks like this. The bank holds thr
 
 Because it has ② (frames a human pointed to) and ③ (a summary of the object's identity), a part inside a bin can be fully hidden behind another part and reappear, and it's still carried through as the same object. With only ① (recent frames), it loses the object when the occlusion runs long.
 
-> **💡 The occlusion head — saying "not visible right now."** SAM 2 has a separate output that predicts **whether the object is in this frame at all.** Force out a mask when it isn't there and the model insists some random pixels are the object. For a robot, a clear **"not visible" signal** is far safer. It's the same principle as "treat not-knowing as an obstacle" from the end of Part 1.
+> **The occlusion head — saying "not visible right now."** SAM 2 has a separate output that predicts **whether the object is in this frame at all.** Force out a mask when it isn't there and the model insists some random pixels are the object. For a robot, a clear **"not visible" signal** is far safer. It's the same principle as "treat not-knowing as an obstacle" from section 7 of deep dive Part 1.
 
 ### How the losses are put together
 
@@ -257,7 +257,7 @@ Here's the concrete method behind "sprinkle hundreds of them." It's not haphazar
 
 Divide evenly by latitude and longitude and the points pile up at the poles. Subdivide an icosphere (a geodesic sphere) and they spread uniformly across the whole sphere. Whichever direction a part happens to lie in, it gets a fair starting point.
 
-> **💡 Why position isn't sprinkled.** Because position is **almost free to know.** The mask's center gives left-right and up-down position, and the median depth of that region gives fore-aft distance. So the hypotheses only need to sprinkle **rotation.** This is where it links back to the structure from Part 1. SAM's mask and Stereo's depth **shrink the search space from six dimensions to three.** If either one is bad, the initial position is off and refinement can't converge.
+> **Why position isn't sprinkled.** Because position is **almost free to know.** The mask's center gives left-right and up-down position, and the median depth of that region gives fore-aft distance. So the hypotheses only need to sprinkle **rotation.** This is where it links back to the structure from Part 1. SAM's mask and Stereo's depth **shrink the search space from six dimensions to three.** If either one is bad, the initial position is off and refinement can't converge.
 
 ### The Refiner — what it looks at and what it emits
 
@@ -325,7 +325,7 @@ But for a symmetric object, ADD comes out **unfairly.** A cylinder turned 180° 
 
 </details>
 
-> **📝 A unified benchmark.** There's a shared leaderboard called **BOP** that bundles several datasets and metrics. To compare different papers **under the same conditions,** BOP is far fairer than any single paper's own tables.
+> **A unified benchmark.** There's a shared leaderboard called **BOP** that bundles several datasets and metrics. To compare different papers **under the same conditions,** BOP is far fairer than any single paper's own tables.
 
 ## 5. Three design principles running through all three
 
@@ -370,6 +370,9 @@ The **ablation studies (item 2)** are the real treasure. The authors have measur
 
 - The previous piece, [Inside the Three Models](inside-the-models.md) — pin down the concepts and failure modes first and this one gets much easier.
 - Same series: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames and Transforms](frames-transforms.md)
+- How this design shows up in practice: the [tuning post](jetson-tuning-licensing.md) trades precision for speed by cutting FoundationPose refinement from 3 passes to 2, and the [scanning post](jetson-scan-no-cad.md) compares the model-free path (BundleSDF) with a height map
+
+**Series** · [← Inside the Three Models (deep dive 1)](inside-the-models.md) · [Next: Why Robots Learn in a 'Fake World' First →](robot-simulation.md)
 
 ### Extra terms
 

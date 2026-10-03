@@ -8,7 +8,7 @@ description: "The same spot has different numbers depending on who you ask — t
 
 # Frames & Transforms — How a Robot Knows Where to Grab
 
-> **Robot Vision · Part 2 of 2.** [Part 1](stereo-to-grasp.md) was about how the robot *sees* a part. This one is about how it turns "I see it there" into "…so my arm should move *here*."
+> **Robot Vision · basics, Part 2.** [Part 1](stereo-to-grasp.md) was about how the robot *sees* a part. This one is about how it turns "I see it there" into "…so my arm should move *here*."
 
 In [Part 1](stereo-to-grasp.md), the pipeline gave us the part's position and orientation — its **pose** — but in the *camera's* point of view. That's not where the robot lives. The robot moves in its *own* frame. So there's one more idea to cross, and it's the same geometry behind self-driving cars, AR filters, and every camera-guided arm — worked out long before any of them existed.
 
@@ -135,6 +135,8 @@ We can't just measure Camera → Wrist with a tape: the lens's optical center hi
 
 We put a **checkerboard** in the cell and hold it still. Then the robot photographs it from about **20 different arm positions**, each time recording the photo *and* the wrist reading. The board never moved, so all 20 observations have to agree on **one** Camera → Wrist transform. The math finds the only one that fits — something like "45 mm forward, 30 mm up, 5° pitch" — and saves it to a **calibration file.** You only ever redo it if someone unbolts the camera.
 
+If the camera is fixed to the cell instead of the wrist (eye-to-hand), the roles just swap: the board goes on the wrist (the flange), and the arm moves through poses in front of the fixed camera to solve for camera → base. That is exactly the calibration left as the next step in the [Field Notes real-robot post](jetson-real-robot-first-move.md), where a real UR20 was connected to an edge computer. That post first fixed the robot's own dimension error with its factory calibration file (3.95 mm → 0.06 mm), a reminder that the wrist → base link in this chain shouldn't be taken on faith either.
+
 <details>
 <summary>Why a checkerboard, and why 20 times</summary>
 <p>Picture yourself <strong>blindfolded</strong>, holding a flashlight at some unknown angle in your hand, asked to shine it on a target. Without knowing the flashlight-to-hand angle, you miss. So you shine it at a known landmark 20 times from different hand positions and work out the angle from the pattern of misses. That's hand-eye calibration — the camera is the "eye," the wrist is the "hand." (The name comes from robotics papers in the 1980s.)</p>
@@ -159,7 +161,11 @@ And that closes the loop from Part 1: the pipeline *sees* the part in the camera
 
 ---
 
-*Related: [From Stereo to Grasp — How a Robot Learns to See a Part](stereo-to-grasp.md) · [Investing in Physical AI](cobot-investing.md)*
+In ROS 2 this whole chain is managed by a library called TF2; how it maps onto the pendant's UFRAME and UTOOL is in [Pendant to ROS 2, Part 2](ros2-robot-description.md).
+
+**Series** · [← From Stereo to Grasp](stereo-to-grasp.md) · [Next: Inside the Three Models (deep dive 1) →](inside-the-models.md)
+
+*Related: [Pendant to ROS 2, Part 2: URDF, TF2](ros2-robot-description.md) · [Field Notes: The Real Robot](jetson-real-robot-first-move.md) · [Scanning: the lens-value (K) trap](jetson-scan-no-cad.md) · [Which Depth Camera](depth-camera-selection.md)*
 
 ### Go deeper
 

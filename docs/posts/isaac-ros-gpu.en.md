@@ -69,13 +69,13 @@ Part 3 said MoveIt 2's planner can be swapped. **cuMotion** is NVIDIA's GPU plan
 
 ![Same inputs, same outputs, only the planner changes](../assets/diagrams_en/r2p4-cumotion-slot.svg)
 
-Only the way the path is found changes. To use it, you add the cuMotion planning pipeline to the MoveIt config next to OMPL and run the cuMotion node alongside. Where OMPL tries candidates one at a time, cuMotion tries and refines many at once on the GPU. With nvblox it can also turn camera depth into obstacles for planning (more in 'What cuMotion avoids' below). In my [Field Notes](jetson-isaac-foundation-models.md), it planned one path for a 7-axis arm in about 210 ms on an Orin NX 16GB. The number depends on the scene and settings, but it gives a sense that even an edge computer reaches practical speed.
+Only the way the path is found changes. To use it, you add the cuMotion planning pipeline to the MoveIt config next to OMPL and run the cuMotion node alongside. Where OMPL tries candidates one at a time, cuMotion tries and refines many at once on the GPU. With nvblox it can also turn camera depth into obstacles for planning (more in 'What cuMotion avoids' below). In my [Field Notes](jetson-isaac-foundation-models.md), it planned one path for a 7-axis arm in about 210 ms on an Orin NX 16GB, and in the later [motion post](jetson-pose-to-motion.md) about 186 ms with the UR10e config (16 s of GPU warm-up the first time). The number depends on the scene and settings, but it gives a sense that even an edge computer reaches practical speed.
 
 To use cuMotion, each robot needs one more file.
 
 ![Collision checks simplified to a few dozen spheres](../assets/diagrams_en/r2p4-xrdf.svg)
 
-**XRDF** is a file that supplements the URDF, and its main part is a collision model that approximates each link of the robot with a set of spheres. Collision checks between complex 3D shapes are slow, but distances between spheres are very fast to compute, which is what lets the GPU filter so many candidates quickly. Link pairs allowed to touch, tool frames, and joint acceleration and jerk (how abruptly acceleration changes) limits go in the same file. NVIDIA's documentation includes a UR10e example, and other robots can be built with the robot description editor in Isaac Sim. If a model looks similar but its link dimensions differ, refit the spheres instead of reusing an existing file.
+**XRDF** is a file that supplements the URDF, and its main part is a collision model that approximates each link of the robot with a set of spheres. Collision checks between complex 3D shapes are slow, but distances between spheres are very fast to compute, which is what lets the GPU filter so many candidates quickly. Link pairs allowed to touch, tool frames, and joint acceleration and jerk (how abruptly acceleration changes) limits go in the same file. NVIDIA's documentation includes a UR10e example, and other robots can be built with the robot description editor in Isaac Sim. If a model looks similar but its link dimensions differ, refit the spheres instead of reusing an existing file. The [motion post](jetson-pose-to-motion.md) built one for a UR20; automatic fitting failed there, so 71 spheres were added one at a time to cover the surface.
 
 ## What cuMotion avoids
 
@@ -134,7 +134,7 @@ Finally, the traps from this series in one place, plus two you'll meet when you 
 
 ![Six common traps, and how to check](../assets/diagrams_en/r2p4-traps.svg)
 
-Most of the debugging time in the first few weeks goes into these six boxes. The first four came up in [Part 1](ros2-for-robot-programmers.md) and [Part 2](ros2-robot-description.md), and "wrong frame" includes Part 2's timing trap (not using the transform from the moment the picture was taken). A port conflict looks like this: leave the camera maker's setup tool open while starting the ROS camera driver, or have a pendant-side tool and the ROS driver try to hold the same robot connection at once, and one of them fails to open the device with an unhelpful error. Contact forces in simulation are only approximate, and real robots have calibration errors a simulator doesn't know about, so start real robots at low speed (as in T1 on a pendant) with the e-stop within reach.
+Most of the debugging time in the first few weeks goes into these six boxes. The first four came up in [Part 1](ros2-for-robot-programmers.md) and [Part 2](ros2-robot-description.md), and "wrong frame" includes Part 2's timing trap (not using the transform from the moment the picture was taken). A port conflict looks like this: leave the camera maker's setup tool open while starting the ROS camera driver, or have a pendant-side tool and the ROS driver try to hold the same robot connection at once, and one of them fails to open the device with an unhelpful error. Contact forces in simulation are only approximate, and real robots have calibration errors a simulator doesn't know about (3.95 mm on a real UR20, [real-robot post](jetson-real-robot-first-move.md)), so start real robots at low speed (as in T1 on a pendant) with the e-stop within reach.
 
 ---
 
@@ -176,7 +176,7 @@ Read them in this order; each builds on the one before. Pick the documentation f
 
 **Series** · [← Previous: Part 3 — MoveIt 2](moveit2-goals-not-points.md)
 
-*Related: [Choosing a Physical AI Approach — Track 0, A, B](choosing-physical-ai.md) · [Part 3 — MoveIt 2](moveit2-goals-not-points.md) · [Putting the Robot's Brain on the Edge (2) — Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md) · [How Many Cameras, and Where](camera-placement.md)*
+*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Part 3 — MoveIt 2](moveit2-goals-not-points.md) · [Field Notes, Part 2: Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md) · [How Many Cameras, and Where](camera-placement.md)*
 
 ### Sources and notices
 

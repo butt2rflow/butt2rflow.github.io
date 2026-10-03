@@ -141,10 +141,11 @@ nav:
     - "Cobots":
       - posts/cobot-basics.md
       - posts/cobot-ur-vs-fanuc.md
-    - "Physical AI Investing":
-      - posts/cobot-investing.md
-      - posts/physical-ai-investing-actuators.md
-      - posts/physical-ai-investing-power.md
+    - "Pendant to ROS 2":
+      - posts/ros2-for-robot-programmers.md
+      - posts/ros2-robot-description.md
+      - posts/moveit2-goals-not-points.md
+      - posts/isaac-ros-gpu.md
     - "Field Notes":
       - posts/jetson-ros2-setup.md
       - posts/jetson-isaac-foundation-models.md
@@ -153,12 +154,11 @@ nav:
       - posts/jetson-scan-no-cad.md
       - posts/jetson-pose-to-motion.md
       - posts/jetson-real-robot-first-move.md
-    - "Pendant to ROS 2":
-      - posts/ros2-for-robot-programmers.md
-      - posts/ros2-robot-description.md
-      - posts/moveit2-goals-not-points.md
-      - posts/isaac-ros-gpu.md
     - "Hands-on Notes":
       - posts/learn-without-industrial-robot.md
+    - "Physical AI Investing":
+      - posts/cobot-investing.md
+      - posts/physical-ai-investing-actuators.md
+      - posts/physical-ai-investing-power.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"

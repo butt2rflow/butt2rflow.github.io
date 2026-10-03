@@ -143,7 +143,7 @@ And one more: **"collaborative" is a property of the operation, not the robot.**
 
 **Series** · [Part 2: UR vs FANUC →](cobot-ur-vs-fanuc.md)
 
-*Related: [Part 2 — UR vs FANUC, openness](cobot-ur-vs-fanuc.md) · [Investing in Physical AI, Part 1](cobot-investing.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
+*Related: [Part 2: UR vs FANUC, openness](cobot-ur-vs-fanuc.md) · [Physical AI Investing, Part 1](cobot-investing.md) · [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Field Notes: The Real Robot, connecting a real UR20 and the safety procedure](jetson-real-robot-first-move.md)*
 
 ### Sources & trademarks
 

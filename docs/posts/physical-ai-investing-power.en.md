@@ -116,7 +116,7 @@ Part 3's conclusion: **the humanoid power problem is not about a bigger battery 
 
 **Series** · [← Part 2: Value Shifts Seen Through One Joint](physical-ai-investing-actuators.md) · [Part 1: Investing in Physical AI](cobot-investing.md)
 
-*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Putting the Robot's Brain on the Edge (1)](jetson-ros2-setup.md) · [UR vs FANUC (openness)](cobot-ur-vs-fanuc.md)*
+*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Field Notes, Part 1](jetson-ros2-setup.md) · [UR vs FANUC (openness)](cobot-ur-vs-fanuc.md)*
 
 ### Sources and notices
 

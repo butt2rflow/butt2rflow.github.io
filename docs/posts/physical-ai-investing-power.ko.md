@@ -9,7 +9,7 @@ description: "로봇 팔은 전원선에 묶여 있지만 휴머노이드는 에
 
 # Physical AI에 투자한다면 (3) — 휴머노이드의 전력 문제: 배터리, 가동률, 그리고 원자로가 답이 아닌 이유
 
-> **Physical AI 투자 · 3부.** [1부](cobot-investing.md)은 "가치는 이동한다", [2부](physical-ai-investing-actuators.md)은 "그 방향은 관절 설계가 정한다"였습니다. 이번에는 관절을 움직이는 에너지, 곧 **전력**을 봅니다. 투자 권유가 아닌 정보 정리입니다.
+> **Physical AI 투자 · 3부.** [1부](cobot-investing.md)는 "가치는 이동한다", [2부](physical-ai-investing-actuators.md)는 "그 방향은 관절 설계가 정한다"였습니다. 이번에는 관절을 움직이는 에너지, 곧 **전력**을 봅니다. 투자 권유가 아닌 정보 정리입니다.
 
 공장의 로봇 팔은 하루 종일 움직여도 전력 걱정이 없습니다. 바닥에 고정돼 있고 전원선이 꽂혀 있으니까요. 휴머노이드는 사정이 다릅니다.
 
@@ -116,7 +116,7 @@ Figure는 Figure 03 배터리 케이스를 몸통 구조물로 함께 써서 무
 
 **시리즈** · [← 2부: 관절 하나로 보는 가치 이동](physical-ai-investing-actuators.md) · [1부: Physical AI에 투자한다면](cobot-investing.md)
 
-*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [로봇의 뇌를 엣지에 올리기 (1)](jetson-ros2-setup.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [현장 노트 1부: 로봇의 뇌를 엣지에](jetson-ros2-setup.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md)*
 
 ### 출처와 표기
 

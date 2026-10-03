@@ -198,27 +198,49 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 ### Physical AI
 
-- [**Choosing a Physical AI Approach**](posts/choosing-physical-ai.md) — Start here: from deterministic automation to learned behavior, Tracks 0, A, B
-- [**Learned Policies (Track B)**](posts/learned-policy-track-b.md) — Start here: robots that copy what you show them, and where that breaks
+**Start Here**
+
+- [**Choosing a Physical AI Approach**](posts/choosing-physical-ai.md) — from deterministic automation to learned behavior, Tracks 0, A, B
+- [**Learned Policies (Track B)**](posts/learned-policy-track-b.md) — robots that copy what you show them, and where that breaks
+
+**Robot Vision**
+
 - [**From Stereo to Grasp**](posts/stereo-to-grasp.md) — How a robot learns to see a part
 - [**Frames & Transforms**](posts/frames-transforms.md) — How a robot knows where to grab
 - [**Inside the Three Models**](posts/inside-the-models.md) — FoundationStereo · SAM 2 · FoundationPose, opened up (deep dive)
 - [**Model Anatomy**](posts/model-anatomy.md) — Unfolding three networks' blueprints (deep dive)
 - [**Why Robots Learn in a 'Fake World' First**](posts/robot-simulation.md) — Simulation and sim-to-real
+- [**How Many Cameras, and Where**](posts/camera-placement.md) — when one wrist camera is enough and when you need an overhead
+- [**Which Depth Camera**](posts/depth-camera-selection.md) — from mounting position to distance, from distance to camera
+
+**Cobots**
+
 - [**What Is a Collaborative Robot?**](posts/cobot-basics.md) — The basics of robots that work beside people
-- [**UR vs FANUC — Openness**](posts/cobot-ur-vs-fanuc.md) — Comparing the two camps' openness and ecosystems
-- [**Investing in Physical AI**](posts/cobot-investing.md) — Physical AI Investing (1): where the value migrates
-- [**Investing in Physical AI (2)**](posts/physical-ai-investing-actuators.md) — Physical AI Investing (2): value shifts seen through one joint, reducers, motors and ETFs
-- [**Investing in Physical AI (3)**](posts/physical-ai-investing-power.md) — Physical AI Investing (3): the humanoid power problem, batteries, uptime and reactors
-- [**The Robot's Brain at the Edge — Jetson & ROS 2**](posts/jetson-ros2-setup.md) — Field Notes (1): setting up a Jetson Orin NX
-- [**The Robot's Brain at the Edge (2) — Isaac ROS & Foundation Models**](posts/jetson-isaac-foundation-models.md) — Field Notes (2): running it on the edge
-- [**The Robot's Brain at the Edge — A Correction**](posts/jetson-foundationpose-16gb.md) — Field Notes: the whole stack runs on 16 GB after all
-- [**The Robot's Brain at the Edge — Tuning**](posts/jetson-tuning-licensing.md) — Field Notes: 11 s to 4 s, and a chain you can ship
-- [**The Robot's Brain at the Edge — Scanning**](posts/jetson-scan-no-cad.md) — Field Notes: scanning an object with no CAD on one printed board
-- [**The Robot's Brain at the Edge — Motion**](posts/jetson-pose-to-motion.md) — Field Notes: 186 ms motion plans, and planning around a live obstacle map
-- [**The Robot's Brain at the Edge — The Real Robot**](posts/jetson-real-robot-first-move.md) — Field Notes: an edge computer moves a real UR20 for the first time; calibration 3.95→0.06 mm, 0.1 mm from goal
-- [**From Teach Pendant to ROS 2 (1–4)**](posts/ros2-for-robot-programmers.md) — ROS 2 for pendant programmers · [URDF, TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
-- [**Hands-on Notes (0) — Learning Without a Real Industrial Robot**](posts/learn-without-industrial-robot.md) — choosing practice grounds with SO-101 and URSim
+- [**UR vs FANUC: Openness**](posts/cobot-ur-vs-fanuc.md) — Comparing the two camps' openness and ecosystems
+
+**From Teach Pendant to ROS 2 (Parts 1–4)**
+
+- [**Part 1 · ROS 2 nodes and the graph**](posts/ros2-for-robot-programmers.md) — ROS 2 for pendant programmers · [Part 2 URDF, TF2](posts/ros2-robot-description.md) · [Part 3 MoveIt 2](posts/moveit2-goals-not-points.md) · [Part 4 Isaac ROS](posts/isaac-ros-gpu.md)
+
+**Field Notes: The Robot's Brain at the Edge**
+
+- [**Part 1 · Jetson & ROS 2**](posts/jetson-ros2-setup.md) — setting up a Jetson Orin NX
+- [**Part 2 · Isaac ROS & Foundation Models**](posts/jetson-isaac-foundation-models.md) — running it on the edge
+- [**A Correction**](posts/jetson-foundationpose-16gb.md) — the whole stack runs on 16 GB after all
+- [**Tuning**](posts/jetson-tuning-licensing.md) — 11 s to 4 s, and a chain you can ship
+- [**Scanning**](posts/jetson-scan-no-cad.md) — scanning an object with no CAD on one printed board
+- [**Motion**](posts/jetson-pose-to-motion.md) — 186 ms motion plans, and planning around a live obstacle map
+- [**The Real Robot**](posts/jetson-real-robot-first-move.md) — an edge computer moves a real UR20 for the first time; calibration 3.95→0.06 mm, 0.1 mm from goal
+
+**Hands-on Notes**
+
+- [**Part 0 · Learning Without a Real Industrial Robot**](posts/learn-without-industrial-robot.md) — choosing practice grounds with SO-101 and URSim
+
+**Physical AI Investing**
+
+- [**Part 1 · Value Migrates**](posts/cobot-investing.md) — no pure plays, and where the value moves
+- [**Part 2 · Value Shifts Through One Joint**](posts/physical-ai-investing-actuators.md) — reducers, motors and ETFs
+- [**Part 3 · The Humanoid Power Problem**](posts/physical-ai-investing-power.md) — batteries, uptime and reactors
 
 ---
 

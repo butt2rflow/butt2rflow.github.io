@@ -131,7 +131,7 @@ gripper.close()                                        #   그리퍼 서비스 (
 plan_and_run(above, straight_line=True)                #   곧게 올라옴 (L)
 ```
 
-부품을 누르거나 끼워 넣어야 하는 마지막 몇 밀리미터는 경로 계획보다 힘 제어가 맡는 경우가 많습니다. UR은 드라이버에서 힘 모드를 쓸 수 있고, 화낙은 힘 제어가 컨트롤러 안의 기능으로 들어 있어요. 로봇마다 방식이 다르니 이 부분은 제조사 문서를 따라야 합니다.
+부품을 누르거나 끼워 넣어야 하는 마지막 몇 밀리미터는 경로 계획보다 힘 제어가 맡는 경우가 많습니다. UR은 드라이버의 힘 모드 컨트롤러로 URScript의 `force_mode()`를 부를 수 있고([모션편](jetson-pose-to-motion.md)에서 이 컨트롤러가 뜨는 것까지 확인), 화낙은 힘 제어가 컨트롤러 안의 기능으로 들어 있어요. 로봇마다 방식이 다르니 이 부분은 제조사 문서를 따라야 합니다.
 
 움직이는 목표를 따라가거나 펜던트로 조그하듯 조금씩 움직이고 싶을 때는 "계획하고 실행" 대신 **MoveIt Servo**를 씁니다. 실시간으로 작은 움직임 명령을 계속 보내는 방식이에요.
 
@@ -157,7 +157,7 @@ plan_and_run(above, straight_line=True)                #   곧게 올라옴 (L)
 
 **시리즈** · [← 이전 글: 2부 — 로봇을 ROS에 설명하기](ros2-robot-description.md) · [다음 글: 4부 — Isaac ROS와 cuMotion →](isaac-ros-gpu.md)
 
-*관련: [Physical AI를 고르는 법 — Track 0·A·B](choosing-physical-ai.md) · [2부 — 로봇을 ROS에 설명하기](ros2-robot-description.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [UR vs 화낙 — 개방성](cobot-ur-vs-fanuc.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [2부: 로봇을 ROS에 설명하기](ros2-robot-description.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md) · [현장 노트 모션편: OMPL·cuMotion·Pilz 실측](jetson-pose-to-motion.md)*
 
 ### 출처와 표기
 

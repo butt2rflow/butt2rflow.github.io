@@ -146,12 +146,18 @@ Simulation is a **starting point**, not a destination. The realistic flow is:
 
 ![The field flow — sim learning → real validation → calibration → deploy](../assets/diagrams_en/rvd-sim-field-flow.svg)
 
+The gap isn't only in perception models. When a real UR20 was connected to an edge computer in the [Field Notes real-robot post](jetson-real-robot-first-move.md), the tool position computed from nominal dimensions was 3.95 mm off from what the robot reported. The robot inside UR's simulator (URSim) is an ideal robot with nominal dimensions, so the difference never shows up there. Loading that robot's factory calibration file brought it to 0.06 mm. Step 3, closing the remaining gap with calibration, looks exactly like this. What fake hardware, a simulator and the real thing each confirm is laid out in the [motion post](jetson-pose-to-motion.md).
+
 An ability learned in a fake world working in the real one isn't magic. It's the payoff of a
 three-beat rhythm — **learn broadly, validate on hardware, close the remaining gap with
 calibration.** Don't just read about the sim-to-real gap; live it once, and you'll feel in your
 hands why the three beats come in that order.
 
 ---
+
+**Series** · [← Model Anatomy (deep dive 2)](model-anatomy.md) · [Next: How Many Cameras, and Where →](camera-placement.md)
+
+*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Learned Policies (Track B)](learned-policy-track-b.md) · [Pendant to ROS 2, Part 2: mock hardware](ros2-robot-description.md) · [Field Notes: The Real Robot](jetson-real-robot-first-move.md)*
 
 *NVIDIA Isaac Sim · Isaac Lab, MuJoCo (Google DeepMind), PyBullet, Gazebo (Open Robotics), and
 Franka · Franka Panda are trademarks of their respective owners, used for identification only. All
