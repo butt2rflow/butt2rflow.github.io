@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Hands-on notes roadmap</title>
-<desc id="de">After Part 0 (this post, choosing practice grounds): Part 1 SO-101 assembly and calibration, recording demos with LeRobot. Part 2 the ROS 2 driver, URDF and ros2_control. Part 3 moving with MoveIt 2 (5-joint IK). Part 4 cameras and hand-eye calibration. Part 5 Isaac ROS on the Jetson (FoundationPose, cuMotion and XRDF). Part 6 Track 0/A/B compared, same arm, same block, 20 trials. URSim practice runs alongside Hands-on Parts 1–3.</desc>
+<desc id="de">After Part 0 (this post, choosing practice grounds): Part 1 SO-101 assembly and calibration, recording demos with LeRobot. Part 2 the ROS 2 driver, URDF and ros2_control. Part 3 moving with MoveIt 2 (5-joint IK). Part 4 cameras and hand-eye calibration. Part 5 Isaac ROS on the Jetson (FoundationPose, cuMotion and XRDF). Part 6 the three designs compared, same arm, same block, 20 trials. URSim practice runs alongside Hands-on Parts 1–3.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -81,7 +81,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <line class="ar" x1="572" y1="104" x2="578" y2="104"/>
 <rect class="bxt" x="580" y="56" width="84" height="96" rx="10"/>
 <text class="t" x="622" y="90" text-anchor="middle" style="font-size:24px">6</text>
-<text class="sm" x="622" y="130" text-anchor="middle" style="fill:var(--fg)">0/A/B, 20 trials</text>
+<text class="sm" x="622" y="130" text-anchor="middle" style="fill:var(--fg)">3 designs, 20×</text>
 <rect class="bx" x="110" y="170" width="280" height="30" rx="6" style="stroke-dasharray:5 4"/>
 <text class="sm" x="250" y="190" text-anchor="middle" style="fill:var(--blue)">URSim alongside (Hands-on 1–3)</text>
 <text class="st" x="18" y="232" style="fill:var(--fg)">Part 6's measurements will replace the expected tendencies in 'Choosing' with real numbers</text>

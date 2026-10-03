@@ -118,7 +118,7 @@ If Part 1's conclusion was "the value is moving," Part 2's is this: **joint desi
 
 **Series** · [← Part 1: Investing in Physical AI](cobot-investing.md) · [Part 3: The Humanoid Power Problem →](physical-ai-investing-power.md)
 
-*Related: [UR vs FANUC (openness)](cobot-ur-vs-fanuc.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Learned Policies (Track B)](learned-policy-track-b.md)*
+*Related: [UR vs FANUC (openness)](cobot-ur-vs-fanuc.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Learned Policies](learned-policy-track-b.md)*
 
 ### Sources and notices
 

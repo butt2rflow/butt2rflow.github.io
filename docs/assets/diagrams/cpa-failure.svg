@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">도달할 수 없는 곳에 둔 물체</title>
-<desc id="de">팔이 닿지 않는 곳에 물체를 두었을 때 예상되는 세 가지 반응. Track 0과 Track A는 자세를 찾은 뒤 플래너가 '경로 없음'으로 실패를 바로 알린다. Track 0은 자세 자체가 의심스러울 때 맞춤 오차로도 경고한다. Track B는 도달할 수 있는지 판단하는 장치가 없어, 그럴듯한 동작을 오류 신호 없이 계속할 수 있다.</desc>
+<desc id="de">팔이 닿지 않는 곳에 물체를 두었을 때 예상되는 세 가지 반응. 기하 방식과 신경망 인식은 자세를 찾은 뒤 플래너가 '경로 없음'으로 실패를 바로 알린다. 기하 방식은 자세 자체가 의심스러울 때 맞춤 오차로도 경고한다. 학습 정책은 도달할 수 있는지 판단하는 장치가 없어, 그럴듯한 동작을 오류 신호 없이 계속할 수 있다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -56,17 +56,17 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
 <text class="t" x="18" y="26">같은 상황, 세 가지 실패</text>
 <rect class="bxt" x="16" y="44" width="208" height="150" rx="10"/>
-<text class="lb" x="30" y="70">Track 0</text>
+<text class="lb" x="30" y="70">기하 방식</text>
 <text class="st" x="30" y="100" style="fill:var(--fg)">자세는 찾음 → 플래너: 경로 없음</text>
 <text class="st" x="30" y="122">자세가 의심스러우면 오차로도 경고</text>
 <text class="lb" x="30" y="176" style="fill:var(--teal)">실패를 알림</text>
 <rect class="bxt" x="234" y="44" width="208" height="150" rx="10"/>
-<text class="lb" x="248" y="70">Track A</text>
+<text class="lb" x="248" y="70">신경망 인식</text>
 <text class="st" x="248" y="100" style="fill:var(--fg)">자세는 찾음 → 플래너: 경로 없음</text>
 <text class="st" x="248" y="122">단, 자세가 틀리면 조용할 수 있다</text>
 <text class="lb" x="248" y="176" style="fill:var(--teal)">실패를 알림</text>
 <rect class="bxr" x="452" y="44" width="208" height="150" rx="10"/>
-<text class="lb" x="466" y="70">Track B</text>
+<text class="lb" x="466" y="70">학습 정책</text>
 <text class="st" x="466" y="100" style="fill:var(--fg)">도달 가능 여부를 판단 못 함</text>
 <text class="st" x="466" y="122">그럴듯한 동작을 신호 없이 계속</text>
 <text class="lb" x="466" y="176" style="fill:var(--red)">조용히 실패</text>

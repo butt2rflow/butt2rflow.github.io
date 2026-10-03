@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">Track 0 vs Track A: count the part types</title>
-<desc id="de">The horizontal axis is the number of part types, the vertical axis cumulative engineering hours. Track 0 has a smaller initial setup but needs retuning for every part, so its line is steep. Track A costs more to set up, but a new part only needs its CAD swapped, so its line is shallow. Where the lines cross is the break-even; with more part types than that, Track A wins. The numbers are illustrative.</desc>
+<title id="ti">Geometry vs neural perception: count the part types</title>
+<desc id="de">The horizontal axis is the number of part types, the vertical axis cumulative engineering hours. Geometry has a smaller initial setup but needs retuning for every part, so its line is steep. Neural perception costs more to set up, but a new part only needs its CAD swapped, so its line is shallow. Where the lines cross is the break-even; with more part types than that, neural perception wins. The numbers are illustrative.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -71,10 +71,10 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="sm" x="264.6" y="181.6" style="fill:var(--red)">break-even</text>
 <rect class="fam" x="492" y="60" width="170" height="170" rx="10"/>
 <text class="lb" x="506" y="84">Example assumptions</text>
-<text class="it" x="506" y="110" style="fill:var(--amber)">Track 0</text>
+<text class="it" x="506" y="110" style="fill:var(--amber)">Geometry</text>
 <text class="sm" x="506" y="129">setup 10 h</text>
 <text class="sm" x="506" y="148">8 h retune per part</text>
-<text class="it" x="506" y="167" style="fill:var(--blue)">Track A</text>
+<text class="it" x="506" y="167" style="fill:var(--blue)">Neural perception</text>
 <text class="sm" x="506" y="186">setup 40 h</text>
 <text class="sm" x="506" y="205">1.5 h per part</text>
 <text class="sm" x="18" y="282">If a commercial 3D vision product already does this job, check it first.</text>

@@ -50,9 +50,9 @@ e-Series URSim은 x86용이라 PC에서 실행하고, Jetson은 같은 네트워
 
 ## SO-101 연습장 구성
 
-![작은 실물 팔 하나로 Track A와 B를 모두](../assets/diagrams/hon-so101-setup.svg)
+![작은 실물 팔 하나로 신경망 인식과 학습 정책을 모두](../assets/diagrams/hon-so101-setup.svg)
 
-Track 0·A·B는 [고르는 법](choosing-physical-ai.md)의 세 가지 설계입니다. SO-101은 LeRobot이 기본으로 지원해서 시연 기록과 학습(Track B, 시연 학습)은 바로 시작할 수 있습니다. ROS 2 쪽(Track A, 인식 + 플래너)은 커뮤니티가 만든 패키지를 씁니다. URDF, 서보용 ros2_control 드라이버, MoveIt 2 설정이 들어 있는 저장소가 여럿 있으니, 실습 2부에서 어떤 것을 왜 골랐는지 적겠습니다.
+기하 방식·신경망 인식·학습 정책은 [고르는 법](choosing-physical-ai.md)의 세 가지 설계입니다. SO-101은 LeRobot이 기본으로 지원해서 시연 기록과 정책 학습은 바로 시작할 수 있습니다. ROS 2 쪽(신경망 인식 + 플래너)은 커뮤니티가 만든 패키지를 씁니다. URDF, 서보용 ros2_control 드라이버, MoveIt 2 설정이 들어 있는 저장소가 여럿 있으니, 실습 2부에서 어떤 것을 왜 골랐는지 적겠습니다.
 
 ## 연습장과 개념 글의 짝
 
@@ -90,7 +90,7 @@ SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했�
 
 **시리즈** · 다음: 실습 노트 1부, SO-101 조립과 시연 기록 (준비 중)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [현장 노트 1부](jetson-ros2-setup.md) · [실물편](jetson-real-robot-first-move.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책](learned-policy-track-b.md) · [현장 노트 1부](jetson-ros2-setup.md) · [실물편](jetson-real-robot-first-move.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 
@@ -106,7 +106,7 @@ URSim의 도커 이미지와 지원 아키텍처는 Universal Robots의 ROS 2 �
 - *External Control*: UR 컨트롤러가 외부 컴퓨터의 명령을 받도록 해 주는 확장 기능(URCap, PolyScope X에서는 URCapX)
 - *URDF*: 로봇의 링크와 관절, 모양을 적은 설계도 파일
 - *ros2_control*: ROS 2가 모터 드라이버와 명령을 주고받는 표준 틀. 실물과 mock을 갈아 끼울 수 있다
-- *Track 0·A·B*: 기하학 매칭(0, 신경망 없음), 인식 + 플래너(A), 시연 학습 정책(B)의 세 가지 설계
+- *기하 방식·신경망 인식·학습 정책*: 기하학 매칭(신경망 없음), 신경망 인식 + 플래너, 시연으로 배우는 정책. 이 블로그에서 쓰는 세 설계의 이름
 - *리더 팔 · 팔로워 팔*: 사람이 손으로 움직이는 팔 · 그 움직임을 따라 하는 팔
 - *핸드아이 캘리브레이션*: 카메라가 본 위치를 로봇 좌표로 바꾸는 관계를 재는 작업
 - *속도 조절 · 보호 정지*: 펜던트에서 속도를 낮추는 기능 · 충돌이나 한계 초과 시 로봇이 스스로 멈추는 상태

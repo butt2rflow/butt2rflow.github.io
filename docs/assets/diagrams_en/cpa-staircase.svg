@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Pick the step by asking in order</title>
-<desc id="de">If the part can be fixed: step 1, a jig and taught points. If not, ask whether only the in-plane position varies; if so, step 2, 2D vision. If not, ask whether the task can be described with geometry; if so, step 3, Track 0 or A. If not, ask whether a person can demonstrate it; if so, step 4, Track B, ideally as a hybrid. If not, it isn't an automation candidate yet.</desc>
+<desc id="de">If the part can be fixed: step 1, a jig and taught points. If not, ask whether only the in-plane position varies; if so, step 2, 2D vision. If not, ask whether the task can be described with geometry; if so, step 3, geometry or neural perception. If not, ask whether a person can demonstrate it; if so, step 4, learned policy, ideally as a hybrid. If not, it isn't an automation candidate yet.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -76,7 +76,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <line class="art" x1="380" y1="198" x2="430" y2="198"/>
 <text class="sm" x="405" y="192" text-anchor="middle" style="fill:var(--teal)">yes</text>
 <rect class="bx" x="436" y="178" width="226" height="40" rx="8"/>
-<text class="nd" x="549.0" y="202.0" text-anchor="middle">Step 3 · Track 0 or A</text>
+<text class="nd" x="549.0" y="202.0" text-anchor="middle">Step 3 · geometry or neural</text>
 <line class="arg" x1="198" y1="222" x2="198" y2="238"/>
 <text class="sm" x="210" y="234">no</text>
 <rect class="hi" x="18" y="240" width="360" height="44" rx="8"/>
@@ -84,7 +84,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <line class="art" x1="380" y1="262" x2="430" y2="262"/>
 <text class="sm" x="405" y="256" text-anchor="middle" style="fill:var(--teal)">yes</text>
 <rect class="bxa" x="436" y="242" width="226" height="40" rx="8"/>
-<text class="nd" x="549.0" y="266.0" text-anchor="middle">Step 4 · Track B, ideally hybrid</text>
+<text class="nd" x="549.0" y="266.0" text-anchor="middle">Step 4 · learned policy, hybrid</text>
 <line class="arg" x1="198" y1="286" x2="198" y2="306"/>
 <rect class="bxr" x="120" y="300" width="160" height="24" rx="8"/>
 <text class="sm" x="200.0" y="316.0" text-anchor="middle">not a candidate yet</text>

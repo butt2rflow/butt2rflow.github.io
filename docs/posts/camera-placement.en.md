@@ -42,7 +42,7 @@ A wrist camera (eye-in-hand) goes to a set **observation pose**, stops and captu
 
 ![Any yes: consider overhead. All no: one wrist camera](../assets/diagrams_en/cam-decision.svg)
 
-The fourth is a little different. Policies learned from demonstrations (ACT-style, [Track B](learned-policy-track-b.md); ACT is a model that learns motions from demonstration data) tend to learn better with both a wrist and an external view, and some SO-101 teaching kits (Advanced or Pro bundles, for example) include a gripper camera and an external camera.
+The fourth is a little different. Policies learned from demonstrations (ACT-style [learned policies](learned-policy-track-b.md); ACT is a model that learns motions from demonstration data) tend to learn better with both a wrist and an external view, and some SO-101 teaching kits (Advanced or Pro bundles, for example) include a gripper camera and an external camera.
 
 ## Seen on the cycle clock
 

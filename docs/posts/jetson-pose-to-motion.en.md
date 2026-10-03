@@ -25,7 +25,7 @@ The [From Teach Pendant to ROS 2](ros2-for-robot-programmers.md) series covered 
 - **The live camera was accurate too.** On a flat scene the map and the measured depth differ by a median of 5 mm. On day one the board seemed to vanish from the map, but the check script, which drew the map wrongly for the comparison, was at fault.
 - **With the map on, cuMotion avoids objects.** On a map built from a recorded stream, goals inside or too close to objects were rejected and open space planned. A blocked goal comes back as `NO_IK_SOLUTION`, so don't be misled.
 - **The map's holes come from the depth.** A map built from camera-chip depth covered only 67% of the board. Recomputing FoundationStereo or ESS depth from the same bag's stereo pair raised it to 96–97%. To the planner, anything missing from the map is free space.
-- **A foundation-model pose becomes the goal directly.** Measure the camera mount, and check poses against the table; an overlap score alone misses a flipped mouse. Poses from the camera chip's depth are fine for the approach but too rough for the grasp.
+- **A foundation-model pose becomes the goal directly.** Measure the camera mount, and check poses against the table; an overlap score alone misses a flipped mouse. The rough poses came from the depth: redone with ESS depth on the same frame, both objects fit.
 - **The UR20 cuMotion config was built by hand.** Automatic sphere fitting failed, so the arm is wrapped in 71 spheres. Planning ran through to execution on simulated hardware; the real UR20 is in the next post.
 - **The UR driver comes up without a robot.** On simulated hardware all 13 controllers loaded, force mode included. On this version the argument is `use_fake_hardware`.
 - **Force control on this stack means UR force mode.** NVIDIA's learned insertion example is an Isaac ROS 4.x feature; to try it on Orin you need at least Isaac ROS 4.6 and JetPack 7.2.
@@ -46,7 +46,11 @@ The results first: planning, the obstacle map and the link between them all work
 
 ## What the pose tells you first: even the hidden corner
 
-Before moving on to motion, here is what one pose already tells you. With the mini PC in front of the ChArUco board, FoundationPose found its pose from FoundationStereo depth (its photo is in “Turning the pose into goals” below); then the maker's CAD, placed at that pose, gave the distance from each corner to the board plane.
+Before moving on to motion, here is what one pose already tells you. With the mini PC in front of the ChArUco board, FoundationPose found its pose from FoundationStereo depth; then the maker's CAD, placed at that pose, gave the distance from each corner to the board plane.
+
+![The mini PC's pose from FoundationStereo depth and the outline of the CAD placed at it](../assets/demos/jetson-motion-pose-cad.jpg)
+
+*The green box is the outline of the CAD at this pose; the three lines are the object's axes. The box sits right on the mini PC's edges.*
 
 ![Perpendicular distance from each mini PC corner to the board plane; the dashed yellow line marks a corner hidden from the camera](../assets/demos/jetson-motion-clearance-rays.jpg)
 
@@ -200,20 +204,21 @@ One thing is confusing. cuMotion reports a goal blocked by obstacles as **`NO_IK
 
 So far the goals were placed by hand. This time they came from object poses found by the foundation models. On one frame of the recorded bag, Grounding DINO → SAM2 → FoundationPose found the poses of the mini PC and the mouse, and each object got a "pre-grasp" goal 20 cm above its top with the tool pointing down.
 
-![The mini PC's pose from FoundationStereo depth; the green box is the outline of the CAD placed at that pose](../assets/demos/jetson-motion-pose-cad.jpg)
+![The same frame with only the depth changed: camera-chip depth on the left, ESS depth on the right. Blue is the CAD placed at each pose, yellow the SAM2 mask](../assets/demos/jetson-motion-pose-depth-compare-en.jpg)
 
-*The mini PC's pose from FoundationStereo depth (September 30). The green box is the outline of the CAD at this pose, and the three lines are the object's axes. The box sits right on the mini PC's edges.*
+*The same frame of the same bag. Blue is the CAD drawn at each pose, the yellow line is the SAM2 mask, and the three arrows are the object axes. On the left (camera-chip depth) the mouse is off up and to the right, with an overlap ratio (IoU) of 0.66 and an 11 mm depth difference, so it was flagged low-confidence; the mini PC also had to be snapped to the table (0.88, 6 mm). On the right (ESS depth) the mini PC comes out at 0.92 / 6 mm and the mouse at 0.87 / 4 mm, and the CAD sits on both.*
 
-The goals in this test, though, didn't come from this photo. To use the same depth as the map, they came from poses found with **the depth computed on the camera chip**. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse, so the poses were rough. On the mini PC the CAD was slightly shifted and rotated (overlap ratio IoU 0.88, 6 mm depth difference); the mouse was visibly off (0.66, 11 mm) and flagged low-confidence. An actual grasp needs the pose from good depth such as FoundationStereo or ESS, as in the photo above.
+At first the poses came from **the depth computed on the camera chip**, to match the depth the map uses. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse. So FoundationStereo and ESS depth were recomputed from the left and right images recorded in the same bag, and only the depth was swapped; the pose code stayed the same. Depth from the stereo pair is in the left camera's view, so the camera's factory calibration was used to move it into the colour image's view.
 
-Two lessons came out of this:
+The result is the right side of the figure. FoundationStereo depth gave nearly the same (mini PC 0.92, mouse 0.84), and the mini PC poses from the two differed by only 1.2° and 2.9 mm. The bad poses came from the depth, not from FoundationPose. On this frame ESS took 0.05 s and FoundationStereo 2 s, so ESS became the depth for making goals.
+
+Three lessons came out of this:
 
 - **Measure the camera mount; don't assume it.** The previous section assumed a level camera. Finding the table plane in the depth showed the camera was 16.9 cm above the table, pitched 16° down. From here on, planning used the measured values.
-- **An overlap score alone doesn't catch a flipped pose.** At first the mouse pose came back upside down. The mouse mesh from the [scanning post](jetson-scan-no-cad.md) has a flat bottom, so its outline is almost the same either way up, and the overlap score (0.72) looked fine. Against the depth, though, it was 18–28 mm off. Keeping only poses that can rest on the table and choosing again stood it the right way up. The mini PC also came back tilted 13–16°, because its finned top gives almost no depth; snapping it to the table fixed that.
+- **An overlap score alone doesn't catch a flipped pose.** With the camera-chip depth, the mouse pose first came back upside down. The mouse mesh from the [scanning post](jetson-scan-no-cad.md) has a flat bottom, so its outline is almost the same either way up, and the overlap score (0.72) looked fine. Against the depth, though, it was 18–28 mm off. Keeping only poses that can rest on the table and choosing again stood it the right way up. The mini PC also came back tilted 13–16°, because its finned top gives almost no depth; snapping it to the table fixed that.
+- **Leave a good pose alone.** The "snap to the table and re-pick the heading" step, added because of the chip depth, turned a correct pose to a wrong heading once the depth was good. Now an upright pose from FoundationPose is replaced only if another candidate fits the depth at least 2 mm better.
 
-Still, a pre-grasp pose sits 20 cm above the object, so a few centimetres of error doesn't matter for the approach.
-
-These goals went to cuMotion the same way as in the previous section. With the map on, both objects' pre-grasp poses planned (a little over 0.8 s), the goals deliberately placed 2 cm inside the objects were rejected, and open space planned. With the map off, everything planned, so the rejections came from the map.
+The goals made from the camera-chip depth went to cuMotion the same way as in the previous section. With the map on, both objects' pre-grasp poses planned (a little over 0.8 s), the goals deliberately placed 2 cm inside the objects were rejected, and open space planned. With the map off, everything planned, so the rejections came from the map.
 
 ## Bringing up the UR driver without a robot
 
@@ -231,7 +236,7 @@ Add the ROS bag recorded above and you can run the whole flow **with no camera a
 
 ## All the way on simulated hardware, and building a UR20 cuMotion config
 
-Finally the driver was wired in too. The UR20 driver ran on simulated hardware, together with the measured camera mount, the nvblox map from the bag and cuMotion, and the goals above were planned and executed. Planning took around 1.3 s, execution 3–5 s, and the tool arrived 0.1–0.2 mm from each goal. The goal inside an object was rejected and never executed.
+Finally the driver was wired in too. The UR20 driver ran on simulated hardware, together with the measured camera mount, the nvblox map from the bag and cuMotion, and the goals above were planned and executed. Planning took around 1.3 s, execution 3–5 s, and the tool arrived 0.1–0.2 mm from each goal. The goal inside an object was rejected and never executed. On October 3 the same chain ran again with goals from the ESS-depth poses: the pre-grasps for both the mini PC and the mouse executed with the tool within 0.1 mm of each goal, and the goal inside an object was again rejected.
 
 The part that took work was the cuMotion configuration. Isaac ROS 3.2 ships configs for the UR5e and UR10e only, so the UR20 one had to be built. cuMotion checks collisions by wrapping the arm in spheres, and how those spheres are placed is the whole job.
 
@@ -275,7 +280,7 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 | nvblox (known-answer scene) | Both surfaces within one 2 cm cell | — |
 | nvblox (live camera) | 5 mm median on a flat scene, 19 mm with glass; keeps up with the camera | — |
 | Map → cuMotion (recorded stream) | Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan. Camera-chip depth covers 67% of the board; FoundationStereo or ESS depth 96–97% | Decide how to treat unobserved space |
-| Pose → goal | Mini PC IoU 0.88 / 6 mm; mouse low-confidence (flip caught by depth) | On the real robot |
+| Pose → goal | Camera-chip depth: mini PC IoU 0.88, mouse 0.66 (low confidence). ESS depth: 0.92, 0.87 | On the real robot |
 | UR driver (simulated hardware) | All 13 controllers, force mode included | — |
 | Whole flow (simulated UR20) | 1.3 s plan; after execution 0.1–0.2 mm from goal | On a real UR20 in [The Real Robot](jetson-real-robot-first-move.md) |
 | Force control | UR force mode works on this stack | Measure force on a real robot |
@@ -292,7 +297,7 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 <details>
 <summary>Notes: where these results come from</summary>
 
-The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera from 30 September to 2 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the hidden-corner distance from one scene on 30 September, the live nvblox results from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. The map depth comparison (camera chip, FoundationStereo, ESS) was recomputed on 3 October from 20 stereo pairs in the same bag; the FoundationStereo depth used the NVLabs research-licence code. No real robot moved and no real force was measured.
+The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera from 30 September to 3 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the hidden-corner distance from one scene on 30 September, the live nvblox results from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. The map depth comparison (camera chip, FoundationStereo, ESS) was recomputed on 3 October from 20 stereo pairs in the same bag, and the pose comparison on the same day from one frame of that bag; the FoundationStereo depth used the NVLabs research-licence code. No real robot moved and no real force was measured.
 
 The learned gear-insertion example and the UR10e low-level torque interface are based on NVIDIA's technical blog post "Bridging the Sim-to-Real Gap for Industrial Robotic Assembly Applications Using NVIDIA Isaac Lab" and the Isaac ROS 4.0 announcement. Orin and JetPack 7.2 support in Isaac ROS 4.6.0 (18 August 2026) is from the Isaac ROS release notes. The `use_fake_hardware` (Humble) vs `use_mock_hardware` (Jazzy) difference is from the Universal Robots ROS 2 driver documentation (docs.ros.org).
 

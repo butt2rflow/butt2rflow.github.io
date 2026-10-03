@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">같은 작업, 세 가지 설계</title>
-<desc id="de">같은 로봇 팔로 같은 블록을 집는 일을 세 가지로 푼다. Track 0은 CAD를 점구름에 맞추는 기하 계산(ICP)으로 자세와 맞춤 오차를 얻어 플래너로 움직인다. Track A는 이미지에서 물체를 오려 내고 신경망이 CAD로 6-DoF 자세를 추정한 뒤 좌표를 바꿔 MoveIt 2로 움직인다. Track B는 사람의 시연으로 학습한 정책이 카메라 영상을 바로 관절 명령으로 바꾼다.</desc>
+<desc id="de">같은 로봇 팔로 같은 블록을 집는 일을 세 가지로 푼다. 기하 방식은 CAD를 점구름에 맞추는 기하 계산(ICP)으로 자세와 맞춤 오차를 얻어 플래너로 움직인다. 신경망 인식은 이미지에서 물체를 오려 내고 신경망이 CAD로 6-DoF 자세를 추정한 뒤 좌표를 바꿔 MoveIt 2로 움직인다. 학습 정책은 사람의 시연으로 학습한 정책이 카메라 영상을 바로 관절 명령으로 바꾼다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -55,7 +55,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
 <text class="t" x="18" y="26">같은 팔, 같은 블록, 설계만 다르다</text>
-<text class="lb" x="18" y="56" style="fill:var(--blue)">Track 0 · 기하학</text>
+<text class="lb" x="18" y="56" style="fill:var(--blue)">기하 방식</text>
 <text class="sm" x="662" y="56" text-anchor="end">신경망 없음</text>
 <rect class="bx" x="18" y="66" width="146" height="40" rx="8"/>
 <text class="nd" x="91.0" y="90.0" text-anchor="middle">점구름</text>
@@ -68,7 +68,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <line class="ar" x1="494" y1="86" x2="508" y2="86"/>
 <rect class="bx" x="510" y="66" width="146" height="40" rx="8"/>
 <text class="nd" x="583.0" y="90.0" text-anchor="middle">플래너</text>
-<text class="lb" x="18" y="138" style="fill:var(--blue)">Track A · 신경망 인식 + 플래너</text>
+<text class="lb" x="18" y="138" style="fill:var(--blue)">신경망 인식 + 플래너</text>
 <text class="sm" x="662" y="138" text-anchor="end">인식만 신경망</text>
 <rect class="bx" x="18" y="148" width="146" height="40" rx="8"/>
 <text class="nd" x="91.0" y="172.0" text-anchor="middle">RGB-D</text>
@@ -81,7 +81,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <line class="ar" x1="494" y1="168" x2="508" y2="168"/>
 <rect class="bx" x="510" y="148" width="146" height="40" rx="8"/>
 <text class="nd" x="583.0" y="172.0" text-anchor="middle">TF → MoveIt 2</text>
-<text class="lb" x="18" y="220" style="fill:var(--amber)">Track B · 학습 정책</text>
+<text class="lb" x="18" y="220" style="fill:var(--amber)">학습 정책</text>
 <text class="sm" x="662" y="220" text-anchor="end">전부 신경망</text>
 <rect class="bxa" x="18" y="230" width="146" height="40" rx="8"/>
 <text class="nd" x="91.0" y="254.0" text-anchor="middle">사람 시연</text>

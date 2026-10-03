@@ -118,7 +118,7 @@ QDD 논리에서는 "누가 모터를 만드나"와 함께 "중국 밖에서 누
 
 **시리즈** · [← 1부: Physical AI에 투자한다면](cobot-investing.md) · [3부: 휴머노이드의 전력 문제 →](physical-ai-investing-power.md)
 
-*관련: [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책(Track B)](learned-policy-track-b.md)*
+*관련: [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책](learned-policy-track-b.md)*
 
 ### 출처와 표기
 

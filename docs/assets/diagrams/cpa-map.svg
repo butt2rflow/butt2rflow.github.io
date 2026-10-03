@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 352" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">이 블로그의 Physical AI 지도</title>
-<desc id="de">가운데 이 글이 있고, 각 개념을 자세히 다룬 글로 연결된다. 3단 Track A의 인식 단계는 로봇 비전 시리즈, 좌표 변환은 좌표계와 변환, ROS 2와 MoveIt 2와 결정론적 셀 설계는 펜던트에서 ROS 2로 시리즈, 카메라를 몇 대 어디에 어떤 것을 달지는 카메라 글 두 편, 4단 Track B는 학습 정책 글, 엣지 컴퓨터와 실제 로봇에서 실행한 기록은 현장 노트, 로봇 제조사별 차이는 코봇 시리즈, 시뮬레이션과 sim-to-real은 로봇 시뮬레이션 글. 직접 해 보기는 실습 노트, 투자 관점은 Physical AI 투자 1~3부.</desc>
+<desc id="de">가운데 이 글이 있고, 각 개념을 자세히 다룬 글로 연결된다. 3단 신경망 인식의 단계는 로봇 비전 시리즈, 좌표 변환은 좌표계와 변환, ROS 2와 MoveIt 2와 결정론적 셀 설계는 펜던트에서 ROS 2로 시리즈, 카메라를 몇 대 어디에 어떤 것을 달지는 카메라 글 두 편, 4단 학습 정책은 학습 정책 글, 엣지 컴퓨터와 실제 로봇에서 실행한 기록은 현장 노트, 로봇 제조사별 차이는 코봇 시리즈, 시뮬레이션과 sim-to-real은 로봇 시뮬레이션 글. 직접 해 보기는 실습 노트, 투자 관점은 Physical AI 투자 1~3부.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -57,10 +57,10 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="t" x="18" y="26">이 글은 지도, 자세한 이야기는 각 글에</text>
 <rect class="hi" x="250" y="138" width="180" height="54" rx="8"/>
 <text class="lb" x="340.0" y="162.0" text-anchor="middle">Physical AI 고르기</text>
-<text class="sm" x="340.0" y="177.0" text-anchor="middle">Track 0 · A · B</text>
+<text class="sm" x="340.0" y="177.0" text-anchor="middle">세 가지 설계</text>
 <rect class="bx" x="18" y="48" width="180" height="54" rx="8"/>
 <text class="nd" x="108.0" y="72.0" text-anchor="middle">로봇 비전 시리즈</text>
-<text class="sm" x="108.0" y="87.0" text-anchor="middle">Track A: 깊이·마스크·자세</text>
+<text class="sm" x="108.0" y="87.0" text-anchor="middle">신경망 인식: 깊이·마스크·자세</text>
 <rect class="bx" x="250" y="48" width="180" height="54" rx="8"/>
 <text class="nd" x="340.0" y="72.0" text-anchor="middle">좌표계와 변환</text>
 <text class="sm" x="340.0" y="87.0" text-anchor="middle">카메라 → 로봇 좌표</text>
@@ -81,7 +81,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="108.0" y="177.0" text-anchor="middle">몇 대, 어디에, 어떤 3D 카메라</text>
 <rect class="bx" x="482" y="138" width="180" height="54" rx="8"/>
 <text class="nd" x="572.0" y="162.0" text-anchor="middle">학습 정책</text>
-<text class="sm" x="572.0" y="177.0" text-anchor="middle">4단 Track B</text>
+<text class="sm" x="572.0" y="177.0" text-anchor="middle">4단 학습 정책</text>
 <line class="arg" x1="108" y1="102" x2="340" y2="138"/>
 <line class="arg" x1="340" y1="102" x2="340" y2="138"/>
 <line class="arg" x1="572" y1="102" x2="340" y2="138"/>

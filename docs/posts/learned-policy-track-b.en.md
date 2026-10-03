@@ -1,14 +1,14 @@
 ---
-title: "Learned Policies (Track B) — Robots That Copy What You Show Them, and Where That Breaks"
+title: "Learned Policies — Robots That Copy What You Show Them, and Where That Breaks"
 date: 2026-09-28
 tags: [physical-ai, imitation-learning, robotics, act, lerobot, deterministic]
 lang: en
 description: "Learned policies let a robot learn tasks a person can show but nobody can write as coordinates. Teaching vs demonstrating, how a policy learns and outputs action chunks, why the data is the quality, quiet failure outside what it learned, the fixed safety layer, real-time ports on industrial arms, and its use in a cell whose verdict must repeat."
 ---
 
-# Learned Policies (Track B) — Robots That Copy What You Show Them, and Where That Breaks
+# Learned Policies — Robots That Copy What You Show Them, and Where That Breaks
 
-> **Physical AI · Track B.** [Choosing a Physical AI Approach](choosing-physical-ai.md) put three designs on one axis. This post is about the far right end, step 4 of the staircase: learned policies. Step 3 below it is Track 0/A, where geometry or a neural network finds the part's pose and a planner computes the path.
+> **Physical AI · Learned policies.** [Choosing a Physical AI Approach](choosing-physical-ai.md) put three designs on one axis. This post is about the far right end, step 4 of the staircase: learned policies. Step 3 below it is geometry or neural perception, where geometry or a neural network finds the part's pose and a planner computes the path.
 
 Imagine writing a TP program that routes a cable into a fixture's groove. The cable bends a little differently every time, and you have to push it in by feel. A handful of points can't capture that. Yet ask a person to show it and anyone can do it in a few seconds.
 

@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Same task, three designs</title>
-<desc id="de">One arm picks the same block three ways. Track 0 fits the CAD to the point cloud with geometry (ICP), gets a pose and a fit error, and moves with a planner. Track A cuts the object out of the image, a neural network estimates its 6-DoF pose from the CAD, and after a frame conversion MoveIt 2 moves the arm. Track B uses a policy learned from human demonstrations that turns camera images straight into joint commands.</desc>
+<desc id="de">One arm picks the same block three ways. Geometry fits the CAD to the point cloud with geometry (ICP), gets a pose and a fit error, and moves with a planner. Neural perception cuts the object out of the image, a neural network estimates its 6-DoF pose from the CAD, and after a frame conversion MoveIt 2 moves the arm. A learned policy uses a policy learned from human demonstrations that turns camera images straight into joint commands.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -55,7 +55,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
 <text class="t" x="18" y="26">Same arm, same block, only the design differs</text>
-<text class="lb" x="18" y="56" style="fill:var(--blue)">Track 0 · geometry</text>
+<text class="lb" x="18" y="56" style="fill:var(--blue)">Geometry</text>
 <text class="sm" x="662" y="56" text-anchor="end">no neural nets</text>
 <rect class="bx" x="18" y="66" width="146" height="40" rx="8"/>
 <text class="nd" x="91.0" y="90.0" text-anchor="middle">point cloud</text>
@@ -68,7 +68,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <line class="ar" x1="494" y1="86" x2="508" y2="86"/>
 <rect class="bx" x="510" y="66" width="146" height="40" rx="8"/>
 <text class="nd" x="583.0" y="90.0" text-anchor="middle">planner</text>
-<text class="lb" x="18" y="138" style="fill:var(--blue)">Track A · neural perception + planner</text>
+<text class="lb" x="18" y="138" style="fill:var(--blue)">Neural perception + planner</text>
 <text class="sm" x="662" y="138" text-anchor="end">perception only</text>
 <rect class="bx" x="18" y="148" width="146" height="40" rx="8"/>
 <text class="nd" x="91.0" y="172.0" text-anchor="middle">RGB-D</text>
@@ -81,7 +81,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <line class="ar" x1="494" y1="168" x2="508" y2="168"/>
 <rect class="bx" x="510" y="148" width="146" height="40" rx="8"/>
 <text class="nd" x="583.0" y="172.0" text-anchor="middle">TF → MoveIt 2</text>
-<text class="lb" x="18" y="220" style="fill:var(--amber)">Track B · learned policy</text>
+<text class="lb" x="18" y="220" style="fill:var(--amber)">Learned policy</text>
 <text class="sm" x="662" y="220" text-anchor="end">all neural</text>
 <rect class="bxa" x="18" y="230" width="146" height="40" rx="8"/>
 <text class="nd" x="91.0" y="254.0" text-anchor="middle">human demos</text>

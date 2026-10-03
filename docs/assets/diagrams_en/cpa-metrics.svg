@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">What to measure</title>
-<desc id="de">Success rate is the surface; the time it takes to find the cause of one failure is the running cost. Track 0 and A, whose stages are visible, take minutes; Track B, where you dig back through the data, takes hours. Also measure setup time to first success, training data needed, time to add a second part, and time per frame.</desc>
+<desc id="de">Success rate is the surface; the time it takes to find the cause of one failure is the running cost. Geometry and neural perception, whose stages are visible, take minutes; learned policy, where you dig back through the data, takes hours. Also measure setup time to first success, training data needed, time to add a second part, and time per frame.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -57,10 +57,10 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="t" x="18" y="26">Success rate is the surface; time to root cause is the running cost</text>
 <rect class="bxt" x="16" y="44" width="316" height="120" rx="10"/>
 <text class="t" x="174" y="100" text-anchor="middle" style="font-size:34px;fill:var(--teal)">minutes</text>
-<text class="sm" x="174" y="134" text-anchor="middle">when each stage can be inspected (Track 0, A)</text>
+<text class="sm" x="174" y="134" text-anchor="middle">when each stage can be inspected (geometry, neural)</text>
 <rect class="bxa" x="348" y="44" width="314" height="120" rx="10"/>
 <text class="t" x="505" y="100" text-anchor="middle" style="font-size:34px;fill:var(--amber)">hours</text>
-<text class="sm" x="505" y="134" text-anchor="middle">when you dig back through data (Track B)</text>
+<text class="sm" x="505" y="134" text-anchor="middle">when you dig back through data (learned policy)</text>
 <text class="lb" x="18" y="190">Also measure</text>
 <rect class="bxg" x="18" y="204" width="124" height="36" rx="8"/>
 <text class="sm" x="80.0" y="226.0" text-anchor="middle">success rate (of N)</text>

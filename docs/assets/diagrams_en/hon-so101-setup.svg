@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">The SO-101 practice setup</title>
-<desc id="de">Connect the SO-101 leader and follower arms to the Jetson over USB and add a close-range depth camera. The Jetson runs two branches: Track B with LeRobot, recording demos and training and running a policy such as ACT; and Track A with community ROS 2 packages (URDF, a ros2_control servo driver, MoveIt 2) plus Isaac ROS perception.</desc>
+<desc id="de">Connect the SO-101 leader and follower arms to the Jetson over USB and add a close-range depth camera. The Jetson runs two branches: learned policy with LeRobot, recording demos and training and running a policy such as ACT; and neural perception with community ROS 2 packages (URDF, a ros2_control servo driver, MoveIt 2) plus Isaac ROS perception.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="280" rx="12"/>
-<text class="t" x="18" y="26">One small real arm for both Track A and B</text>
+<text class="t" x="18" y="26">One small real arm for both neural perception and a learned policy</text>
 <rect class="bxa" x="16" y="54" width="150" height="50" rx="8"/>
 <text class="nd" x="91.0" y="76.0" text-anchor="middle">SO-101 leader arm</text>
 <text class="sm" x="91.0" y="91.0" text-anchor="middle">moved by hand</text>
@@ -70,12 +70,12 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="panel" x="218" y="44" width="444" height="196" rx="10"/>
 <text class="lb" x="232" y="66">Jetson Orin NX</text>
 <rect class="bxa" x="232" y="78" width="206" height="150" rx="8"/>
-<text class="lb" x="246" y="100" style="fill:var(--amber)">Track B · LeRobot</text>
+<text class="lb" x="246" y="100" style="fill:var(--amber)">Learned policy · LeRobot</text>
 <text class="st" x="246" y="128">• record demos</text>
 <text class="st" x="246" y="152">• train, run ACT</text>
 <text class="st" x="246" y="176">• SO-101 supported natively</text>
 <rect class="bx" x="446" y="78" width="206" height="150" rx="8"/>
-<text class="lb" x="460" y="100" style="fill:var(--blue)">Track A · ROS 2</text>
+<text class="lb" x="460" y="100" style="fill:var(--blue)">Neural perception · ROS 2</text>
 <text class="st" x="460" y="128">• URDF, ros2_control</text>
 <text class="st" x="460" y="152">• MoveIt 2 (5-joint IK)</text>
 <text class="st" x="460" y="176">• Isaac ROS perception</text>

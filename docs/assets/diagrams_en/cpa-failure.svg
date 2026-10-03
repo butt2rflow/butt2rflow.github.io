@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">An object placed out of reach</title>
-<desc id="de">The three responses expected when the object sits out of reach. Track 0 and Track A find the pose, then the planner reports no path: a loud failure. Track 0's fit error also warns when the pose itself is doubtful. Track B has no mechanism for judging reachability, so it can keep executing a plausible-looking motion with no failure signal.</desc>
+<desc id="de">The three responses expected when the object sits out of reach. Geometry and neural perception find the pose, then the planner reports no path: a loud failure. Geometry's fit error also warns when the pose itself is doubtful. A learned policy has no mechanism for judging reachability, so it can keep executing a plausible-looking motion with no failure signal.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -56,17 +56,17 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
 <text class="t" x="18" y="26">Same situation, three kinds of failure</text>
 <rect class="bxt" x="16" y="44" width="208" height="150" rx="10"/>
-<text class="lb" x="30" y="70">Track 0</text>
+<text class="lb" x="30" y="70">Geometry</text>
 <text class="st" x="30" y="100" style="fill:var(--fg)">pose found → planner: no path</text>
 <text class="st" x="30" y="122">fit error warns on a doubtful pose</text>
 <text class="lb" x="30" y="176" style="fill:var(--teal)">fails loudly</text>
 <rect class="bxt" x="234" y="44" width="208" height="150" rx="10"/>
-<text class="lb" x="248" y="70">Track A</text>
+<text class="lb" x="248" y="70">Neural perception</text>
 <text class="st" x="248" y="100" style="fill:var(--fg)">pose found → planner: no path</text>
 <text class="st" x="248" y="122">but a wrong pose can be quiet</text>
 <text class="lb" x="248" y="176" style="fill:var(--teal)">fails loudly</text>
 <rect class="bxr" x="452" y="44" width="208" height="150" rx="10"/>
-<text class="lb" x="466" y="70">Track B</text>
+<text class="lb" x="466" y="70">Learned policy</text>
 <text class="st" x="466" y="100" style="fill:var(--fg)">can't judge reachability</text>
 <text class="st" x="466" y="122">carries on with no failure signal</text>
 <text class="lb" x="466" y="176" style="fill:var(--red)">fails quietly</text>

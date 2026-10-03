@@ -200,8 +200,8 @@ Math- and data-driven investment principles. In an age where AI dominates market
 
 **Start Here**
 
-- [**Choosing a Physical AI Approach**](posts/choosing-physical-ai.md) — from deterministic automation to learned behavior, Tracks 0, A, B
-- [**Learned Policies (Track B)**](posts/learned-policy-track-b.md) — robots that copy what you show them, and where that breaks
+- [**Choosing a Physical AI Approach**](posts/choosing-physical-ai.md) — from deterministic automation to learned behavior, three designs
+- [**Learned Policies**](posts/learned-policy-track-b.md) — robots that copy what you show them, and where that breaks
 
 **Robot Vision**
 

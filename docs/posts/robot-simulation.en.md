@@ -159,7 +159,7 @@ hands why the three beats come in that order.
 
 **Series** · [← Model Anatomy (deep dive 2)](model-anatomy.md) · [Next: How Many Cameras, and Where →](camera-placement.md)
 
-*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Learned Policies (Track B)](learned-policy-track-b.md) · [Pendant to ROS 2, Part 2: mock hardware](ros2-robot-description.md) · [Field Notes: The Real Robot](jetson-real-robot-first-move.md)*
+*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Learned Policies](learned-policy-track-b.md) · [Pendant to ROS 2, Part 2: mock hardware](ros2-robot-description.md) · [Field Notes: The Real Robot](jetson-real-robot-first-move.md)*
 
 *NVIDIA Isaac Sim · Isaac Lab, MuJoCo (Google DeepMind), PyBullet, Gazebo (Open Robotics), and
 Franka · Franka Panda are trademarks of their respective owners, used for identification only. All

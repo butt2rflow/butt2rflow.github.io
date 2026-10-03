@@ -180,7 +180,7 @@ You don't start at the frontier. You crawl, then walk, then run.
 - **Next — real-time on Isaac ROS.** Wrap the models as a live GPU graph on the edge computer, so the pipeline runs on the cell instead of in a notebook.
 - **Later — learned control on Isaac Lab.** Train manipulation policies in simulation and deploy them. This is the phase that needs bigger hardware.
 
-The [Field Notes](jetson-ros2-setup.md) are the record of actually walking the first two steps: Jetson setup, the full chain on 16 GB, motion planning, and moving a real UR20 for the first time. What learned control (Track B) costs you is in [Learned Policies](learned-policy-track-b.md).
+The [Field Notes](jetson-ros2-setup.md) are the record of actually walking the first two steps: Jetson setup, the full chain on 16 GB, motion planning, and moving a real UR20 for the first time. What learned control costs you is in [Learned Policies](learned-policy-track-b.md).
 
 ---
 

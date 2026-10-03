@@ -200,8 +200,8 @@ title: Home
 
 **시작하기**
 
-- [**Physical AI를 고르는 법**](posts/choosing-physical-ai.md) — 결정론적 자동화에서 학습된 행동까지, Track 0·A·B
-- [**학습 정책 (Track B)**](posts/learned-policy-track-b.md) — 보여 준 대로 따라 하는 로봇과 그 한계
+- [**Physical AI를 고르는 법**](posts/choosing-physical-ai.md) — 결정론적 자동화에서 학습된 행동까지, 세 가지 설계
+- [**학습 정책**](posts/learned-policy-track-b.md) — 보여 준 대로 따라 하는 로봇과 그 한계
 
 **로봇 비전**
 

@@ -63,7 +63,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="sm" x="248" y="114" style="fill:var(--fg)">depth vanishes, pose fails</text>
 <rect class="bxr" x="452" y="44" width="208" height="106" rx="10"/>
 <text class="lb" x="466" y="74">no CAD + many parts</text>
-<text class="sm" x="466" y="114" style="fill:var(--fg)">Track 0/A can't start</text>
+<text class="sm" x="466" y="114" style="fill:var(--fg)">Geometry/neural can't start</text>
 <rect class="bxa" x="16" y="160" width="208" height="106" rx="10"/>
 <text class="lb" x="30" y="190">lone policy on a critical step</text>
 <text class="sm" x="30" y="230" style="fill:var(--fg)">silent failure, statistical buy-off</text>

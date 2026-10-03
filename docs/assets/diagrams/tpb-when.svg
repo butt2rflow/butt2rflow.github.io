@@ -67,5 +67,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="it" x="364" y="130">• 품질·안전 판정</text>
 <text class="it" x="364" y="158">• 시연을 모으기 어려운 일</text>
 <text class="it" x="364" y="186">• 조건이 자주 바뀌는 라인</text>
-<text class="sm" x="18" y="258">좌표로 적을 수 있으면 3단(Track 0·A)이 더 싸고, 실패하면 바로 알린다.</text>
+<text class="sm" x="18" y="258">좌표로 적을 수 있으면 3단(기하 방식·신경망 인식)이 더 싸고, 실패하면 바로 알린다.</text>
 </svg>

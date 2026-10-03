@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">SO-101 연습장 구성</title>
-<desc id="de">SO-101 리더 팔과 팔로워 팔을 USB로 Jetson에 연결하고, 근거리 3D 카메라를 붙인다. Jetson에서는 두 갈래를 실행한다. 한쪽은 LeRobot으로 시연을 기록하고 ACT 같은 정책을 학습·실행하는 Track B, 다른 쪽은 커뮤니티 ROS 2 패키지(URDF, ros2_control 서보 드라이버, MoveIt 2)에 Isaac ROS 인식을 더한 Track A다.</desc>
+<desc id="de">SO-101 리더 팔과 팔로워 팔을 USB로 Jetson에 연결하고, 근거리 3D 카메라를 붙인다. Jetson에서는 두 갈래를 실행한다. 한쪽은 LeRobot으로 시연을 기록하고 ACT 같은 정책을 학습·실행하는 학습 정책, 다른 쪽은 커뮤니티 ROS 2 패키지(URDF, ros2_control 서보 드라이버, MoveIt 2)에 Isaac ROS 인식을 더한 신경망 인식 쪽이다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="280" rx="12"/>
-<text class="t" x="18" y="26">작은 실물 팔 하나로 Track A와 B를 모두</text>
+<text class="t" x="18" y="26">작은 실물 팔 하나로 신경망 인식과 학습 정책을 모두</text>
 <rect class="bxa" x="16" y="54" width="150" height="50" rx="8"/>
 <text class="nd" x="91.0" y="76.0" text-anchor="middle">SO-101 리더 팔</text>
 <text class="sm" x="91.0" y="91.0" text-anchor="middle">사람이 조종</text>
@@ -70,12 +70,12 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="panel" x="218" y="44" width="444" height="196" rx="10"/>
 <text class="lb" x="232" y="66">Jetson Orin NX</text>
 <rect class="bxa" x="232" y="78" width="206" height="150" rx="8"/>
-<text class="lb" x="246" y="100" style="fill:var(--amber)">Track B · LeRobot</text>
+<text class="lb" x="246" y="100" style="fill:var(--amber)">학습 정책 · LeRobot</text>
 <text class="st" x="246" y="128">• 시연 기록</text>
 <text class="st" x="246" y="152">• ACT 학습·실행</text>
 <text class="st" x="246" y="176">• SO-101 기본 지원</text>
 <rect class="bx" x="446" y="78" width="206" height="150" rx="8"/>
-<text class="lb" x="460" y="100" style="fill:var(--blue)">Track A · ROS 2</text>
+<text class="lb" x="460" y="100" style="fill:var(--blue)">신경망 인식 · ROS 2</text>
 <text class="st" x="460" y="128">• URDF, ros2_control</text>
 <text class="st" x="460" y="152">• MoveIt 2 (관절 5개 IK)</text>
 <text class="st" x="460" y="176">• Isaac ROS 인식</text>

@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">오버헤드가 필요한가 — 네 가지 질문</title>
-<desc id="de">네 가지 질문 중 하나라도 '예'면 오버헤드를 더할 이유가 있다. 탐색 범위가 관찰 자세의 손목 시야보다 넓은가, 로봇이 움직이는 동안 다음 부품을 찾아야 할 만큼 사이클 타임이 빡빡한가, 경로나 내려놓을 곳이 비었는지 확인해야 하는가, 여러 시점이 도움이 되는 학습 정책(Track B)을 쓰는가. 모두 '아니오'면 손목 카메라 하나로 충분하다.</desc>
+<desc id="de">네 가지 질문 중 하나라도 '예'면 오버헤드를 더할 이유가 있다. 탐색 범위가 관찰 자세의 손목 시야보다 넓은가, 로봇이 움직이는 동안 다음 부품을 찾아야 할 만큼 사이클 타임이 빡빡한가, 경로나 내려놓을 곳이 비었는지 확인하는 관문이 필요한가, 여러 시점이 도움이 되는 학습 학습 정책을 쓰는가. 모두 '아니오'면 손목 카메라 하나로 충분하다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -68,13 +68,13 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bxa" x="362" y="106" width="300" height="42" rx="8"/>
 <text class="nd" x="512.0" y="131.0" text-anchor="middle">움직이는 동안 다음 부품 탐색</text>
 <rect class="bx" x="16" y="162" width="300" height="42" rx="8"/>
-<text class="nd" x="166.0" y="187.0" text-anchor="middle">빈 공간 확인이 필요하다</text>
+<text class="nd" x="166.0" y="187.0" text-anchor="middle">빈 영역 확인 관문이 필요하다</text>
 <line class="ara" x1="318" y1="183" x2="358" y2="183"/>
 <text class="sm" x="338" y="177" text-anchor="middle" style="fill:var(--amber)">예</text>
 <rect class="bxa" x="362" y="162" width="300" height="42" rx="8"/>
 <text class="nd" x="512.0" y="187.0" text-anchor="middle">경로·내려놓을 곳 점검</text>
 <rect class="bx" x="16" y="218" width="300" height="42" rx="8"/>
-<text class="nd" x="166.0" y="243.0" text-anchor="middle">학습 정책(Track B)을 쓴다</text>
+<text class="nd" x="166.0" y="243.0" text-anchor="middle">학습 정책을 쓴다</text>
 <line class="ara" x1="318" y1="239" x2="358" y2="239"/>
 <text class="sm" x="338" y="233" text-anchor="middle" style="fill:var(--amber)">예</text>
 <rect class="bxa" x="362" y="218" width="300" height="42" rx="8"/>

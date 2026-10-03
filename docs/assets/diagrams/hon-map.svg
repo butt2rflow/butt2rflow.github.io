@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">연습장별로 배울 개념 글</title>
-<desc id="de">URSim 연습장은 펜던트에서 ROS 2로 1부(노드와 그래프), 2부(드라이버와 ros2_control), 3부(MoveIt 2)의 산업용 쪽을 맡는다. SO-101 연습장은 2부(URDF와 TF, 핸드아이), 3부(관절 5개 IK), 4부(Isaac ROS와 cuMotion, XRDF 직접 만들기), 그리고 Track 0·A·B 비교와 학습 정책을 맡는다.</desc>
+<desc id="de">URSim 연습장은 펜던트에서 ROS 2로 1부(노드와 그래프), 2부(드라이버와 ros2_control), 3부(MoveIt 2)의 산업용 쪽을 맡는다. SO-101 연습장은 2부(URDF와 TF, 핸드아이), 3부(관절 5개 IK), 4부(Isaac ROS와 cuMotion, XRDF 직접 만들기), 그리고 기하 방식·신경망 인식·학습 정책 비교와 학습 정책을 맡는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -76,10 +76,10 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="481.0" y="164.0" text-anchor="middle">펜던트 4부: Isaac ROS·cuMotion</text>
 <line class="ara" x1="188" y1="186" x2="298" y2="160"/>
 <rect class="bxg" x="300" y="180" width="362" height="28" rx="8"/>
-<text class="sm" x="481.0" y="198.0" text-anchor="middle">고르는 법: Track 0·A·B 비교</text>
+<text class="sm" x="481.0" y="198.0" text-anchor="middle">고르는 법: 기하 방식·신경망 인식·학습 정책 비교</text>
 <line class="ara" x1="188" y1="186" x2="298" y2="194"/>
 <rect class="bxg" x="300" y="214" width="362" height="28" rx="8"/>
-<text class="sm" x="481.0" y="232.0" text-anchor="middle">학습 정책 (Track B)</text>
+<text class="sm" x="481.0" y="232.0" text-anchor="middle">학습 정책</text>
 <line class="ara" x1="188" y1="186" x2="298" y2="228"/>
 <text class="sm" x="18" y="250">실습 노트 각 편 끝에 짝이 되는 개념 글 링크를, 개념 글 끝에 실습 링크를 달아 간다</text>
 </svg>

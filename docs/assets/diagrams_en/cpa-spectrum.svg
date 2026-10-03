@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">From deterministic to black box</title>
-<desc id="de">Moving left to right, more of the system is learned. Taught-point automation is fully deterministic because a fixture guarantees the position. Track 0 has no neural networks and is deterministic. Track A uses a network only for perception, so its stages stay visible. Track B is learned end to end and can't be looked inside. The bottom rows show what each needs and how its failures show up.</desc>
+<desc id="de">Moving left to right, more of the system is learned. Taught-point automation is fully deterministic because a fixture guarantees the position. Geometry has no neural networks and is deterministic. Neural perception uses a network only for perception, so its stages stay visible. A learned policy is learned end to end and can't be looked inside. The bottom rows show what each needs and how its failures show up.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -70,7 +70,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bxg" x="120" y="204" width="128" height="36" rx="6"/>
 <text class="sm" x="184" y="226" text-anchor="middle" style="fill:var(--fg)">obvious (sensor, crash)</text>
 <rect class="bxt" x="256" y="76" width="128" height="34" rx="8"/>
-<text class="lb" x="320.0" y="97.0" text-anchor="middle">Track 0</text>
+<text class="lb" x="320.0" y="97.0" text-anchor="middle">Geometry</text>
 <rect class="bxg" x="256" y="116" width="128" height="36" rx="6"/>
 <text class="sm" x="320" y="138" text-anchor="middle" style="fill:var(--fg)">CAD + calibration</text>
 <rect class="bxg" x="256" y="160" width="128" height="36" rx="6"/>
@@ -78,7 +78,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bxg" x="256" y="204" width="128" height="36" rx="6"/>
 <text class="sm" x="320" y="226" text-anchor="middle" style="fill:var(--fg)">fit error grows</text>
 <rect class="bx" x="392" y="76" width="128" height="34" rx="8"/>
-<text class="lb" x="456.0" y="97.0" text-anchor="middle">Track A</text>
+<text class="lb" x="456.0" y="97.0" text-anchor="middle">Neural perception</text>
 <rect class="bxg" x="392" y="116" width="128" height="36" rx="6"/>
 <text class="sm" x="456" y="138" text-anchor="middle" style="fill:var(--fg)">CAD + mask, no retrain</text>
 <rect class="bxg" x="392" y="160" width="128" height="36" rx="6"/>
@@ -86,7 +86,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bxg" x="392" y="204" width="128" height="36" rx="6"/>
 <text class="sm" x="456" y="226" text-anchor="middle" style="fill:var(--fg)">check stage by stage</text>
 <rect class="bxa" x="528" y="76" width="128" height="34" rx="8"/>
-<text class="lb" x="592.0" y="97.0" text-anchor="middle">Track B</text>
+<text class="lb" x="592.0" y="97.0" text-anchor="middle">Learned policy</text>
 <rect class="bxg" x="528" y="116" width="128" height="36" rx="6"/>
 <text class="sm" x="592" y="138" text-anchor="middle" style="fill:var(--fg)">50–100 demos per task</text>
 <rect class="bxg" x="528" y="160" width="128" height="36" rx="6"/>

@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">질문 순서대로 단을 고른다</title>
-<desc id="de">부품을 고정할 수 있으면 1단 지그와 티칭 점. 아니면 평면 위치만 바뀌는지 묻고, 그렇다면 2단 2D 비전. 아니면 작업을 기하로 적을 수 있는지 묻고, 그렇다면 3단 Track 0 또는 A. 아니면 사람이 시연할 수 있는지 묻고, 그렇다면 4단 Track B, 이상적으로는 하이브리드. 그것도 아니면 아직 자동화 대상이 아니다.</desc>
+<desc id="de">부품을 고정할 수 있으면 1단 지그와 티칭 점. 아니면 평면 위치만 바뀌는지 묻고, 그렇다면 2단 2D 비전. 아니면 작업을 기하로 적을 수 있는지 묻고, 그렇다면 3단 기하 방식 또는 신경망 인식. 아니면 사람이 시연할 수 있는지 묻고, 그렇다면 4단 학습 정책, 이상적으로는 하이브리드. 그것도 아니면 아직 자동화 대상이 아니다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -76,7 +76,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <line class="art" x1="380" y1="198" x2="430" y2="198"/>
 <text class="sm" x="405" y="192" text-anchor="middle" style="fill:var(--teal)">예</text>
 <rect class="bx" x="436" y="178" width="226" height="40" rx="8"/>
-<text class="nd" x="549.0" y="202.0" text-anchor="middle">3단 · Track 0 또는 A</text>
+<text class="nd" x="549.0" y="202.0" text-anchor="middle">3단 · 기하 방식 또는 신경망 인식</text>
 <line class="arg" x1="198" y1="222" x2="198" y2="238"/>
 <text class="sm" x="210" y="234">아니오</text>
 <rect class="hi" x="18" y="240" width="360" height="44" rx="8"/>
@@ -84,7 +84,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <line class="art" x1="380" y1="262" x2="430" y2="262"/>
 <text class="sm" x="405" y="256" text-anchor="middle" style="fill:var(--teal)">예</text>
 <rect class="bxa" x="436" y="242" width="226" height="40" rx="8"/>
-<text class="nd" x="549.0" y="266.0" text-anchor="middle">4단 · Track B, 가급적 하이브리드</text>
+<text class="nd" x="549.0" y="266.0" text-anchor="middle">4단 · 학습 정책, 가급적 하이브리드</text>
 <line class="arg" x1="198" y1="286" x2="198" y2="306"/>
 <rect class="bxr" x="120" y="300" width="160" height="24" rx="8"/>
 <text class="sm" x="200.0" y="316.0" text-anchor="middle">아직 자동화 대상 아님</text>

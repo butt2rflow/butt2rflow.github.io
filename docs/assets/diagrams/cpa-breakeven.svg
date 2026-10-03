@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">Track 0 vs Track A: 부품 종류를 센다</title>
-<desc id="de">가로축은 다뤄야 할 부품 종류 수, 세로축은 누적 엔지니어링 시간. Track 0은 처음 셋업이 적지만 부품마다 다시 튜닝해야 해서 기울기가 가파르다. Track A는 처음 셋업이 더 들지만 새 부품은 CAD만 바꾸면 되어 기울기가 완만하다. 두 선이 만나는 곳이 손익분기이고, 그보다 부품 종류가 많으면 Track A가 유리하다. 숫자는 설명용 예시.</desc>
+<title id="ti">기하 방식 vs 신경망 인식: 부품 종류를 센다</title>
+<desc id="de">가로축은 다뤄야 할 부품 종류 수, 세로축은 누적 엔지니어링 시간. 기하 방식은 처음 셋업이 적지만 부품마다 다시 튜닝해야 해서 기울기가 가파르다. 신경망 인식은 처음 셋업이 더 들지만 새 부품은 CAD만 바꾸면 되어 기울기가 완만하다. 두 선이 만나는 곳이 손익분기이고, 그보다 부품 종류가 많으면 신경망 인식이 유리하다. 숫자는 설명용 예시.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -71,10 +71,10 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="264.6" y="181.6" style="fill:var(--red)">손익분기</text>
 <rect class="fam" x="492" y="60" width="170" height="170" rx="10"/>
 <text class="lb" x="506" y="84">예시 가정</text>
-<text class="it" x="506" y="110" style="fill:var(--amber)">Track 0</text>
+<text class="it" x="506" y="110" style="fill:var(--amber)">기하 방식</text>
 <text class="sm" x="506" y="129">셋업 10시간</text>
 <text class="sm" x="506" y="148">부품당 튜닝 8시간</text>
-<text class="it" x="506" y="167" style="fill:var(--blue)">Track A</text>
+<text class="it" x="506" y="167" style="fill:var(--blue)">신경망 인식</text>
 <text class="sm" x="506" y="186">셋업 40시간</text>
 <text class="sm" x="506" y="205">부품당 1.5시간</text>
 <text class="sm" x="18" y="282">상용 3D 비전 제품이 이미 이 역할을 한다면 그것부터 검토한다.</text>

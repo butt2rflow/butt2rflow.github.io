@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">결정론에서 블랙박스까지</title>
-<desc id="de">왼쪽에서 오른쪽으로 갈수록 학습된 부분이 늘어난다. 티칭 기반 자동화는 지그가 위치를 보장해 완전히 결정론적이다. Track 0은 신경망이 없어 결정론적이다. Track A는 인식만 신경망이라 단계가 보인다. Track B는 전부 학습되어 속을 볼 수 없다. 아래 줄은 무엇이 필요한지와 실패할 때 어떻게 드러나는지.</desc>
+<desc id="de">왼쪽에서 오른쪽으로 갈수록 학습된 부분이 늘어난다. 티칭 기반 자동화는 지그가 위치를 보장해 완전히 결정론적이다. 기하 방식은 신경망이 없어 결정론적이다. 신경망 인식은 인식만 신경망이라 단계가 보인다. 학습 정책은 전부 학습되어 속을 볼 수 없다. 아래 줄은 무엇이 필요한지와 실패할 때 어떻게 드러나는지.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -70,7 +70,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bxg" x="120" y="204" width="128" height="36" rx="6"/>
 <text class="sm" x="184" y="226" text-anchor="middle" style="fill:var(--fg)">충돌·센서로 바로</text>
 <rect class="bxt" x="256" y="76" width="128" height="34" rx="8"/>
-<text class="lb" x="320.0" y="97.0" text-anchor="middle">Track 0</text>
+<text class="lb" x="320.0" y="97.0" text-anchor="middle">기하 방식</text>
 <rect class="bxg" x="256" y="116" width="128" height="36" rx="6"/>
 <text class="sm" x="320" y="138" text-anchor="middle" style="fill:var(--fg)">CAD + 캘리브레이션</text>
 <rect class="bxg" x="256" y="160" width="128" height="36" rx="6"/>
@@ -78,7 +78,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bxg" x="256" y="204" width="128" height="36" rx="6"/>
 <text class="sm" x="320" y="226" text-anchor="middle" style="fill:var(--fg)">맞춤 오차가 커진다</text>
 <rect class="bx" x="392" y="76" width="128" height="34" rx="8"/>
-<text class="lb" x="456.0" y="97.0" text-anchor="middle">Track A</text>
+<text class="lb" x="456.0" y="97.0" text-anchor="middle">신경망 인식</text>
 <rect class="bxg" x="392" y="116" width="128" height="36" rx="6"/>
 <text class="sm" x="456" y="138" text-anchor="middle" style="fill:var(--fg)">CAD+마스크, 물체별 학습 0</text>
 <rect class="bxg" x="392" y="160" width="128" height="36" rx="6"/>
@@ -86,7 +86,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bxg" x="392" y="204" width="128" height="36" rx="6"/>
 <text class="sm" x="456" y="226" text-anchor="middle" style="fill:var(--fg)">단계별로 확인 가능</text>
 <rect class="bxa" x="528" y="76" width="128" height="34" rx="8"/>
-<text class="lb" x="592.0" y="97.0" text-anchor="middle">Track B</text>
+<text class="lb" x="592.0" y="97.0" text-anchor="middle">학습 정책</text>
 <rect class="bxg" x="528" y="116" width="128" height="36" rx="6"/>
 <text class="sm" x="592" y="138" text-anchor="middle" style="fill:var(--fg)">작업당 시연 50~100회</text>
 <rect class="bxg" x="528" y="160" width="128" height="36" rx="6"/>

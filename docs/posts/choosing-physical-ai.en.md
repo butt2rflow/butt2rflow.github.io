@@ -1,12 +1,12 @@
 ---
-title: "Choosing a Physical AI Approach — From Deterministic Automation to Learned Behavior (Track 0, A, B)"
+title: "Choosing a Physical AI Approach — From Deterministic Automation to Learned Behavior"
 date: 2026-09-28
 tags: [physical-ai, robotics, automation, machine-vision, imitation-learning, deterministic]
 lang: en
 description: "Three designs that turn what a camera sees into robot motion (geometry, neural perception + planner, learned policy) on one axis: when to choose which, what changes from taught-point automation, and why being able to detect failure is the real criterion. A map that connects the Physical AI posts."
 ---
 
-# Choosing a Physical AI Approach — From Deterministic Automation to Learned Behavior (Track 0, A, B)
+# Choosing a Physical AI Approach — From Deterministic Automation to Learned Behavior
 
 > **Physical AI: start here.** Each robot post on this blog goes deep on one piece. This one sits above them and explains why you would choose one approach over another. At the end, the links to the posts that cover each concept in detail are collected in one place.
 
@@ -16,10 +16,10 @@ description: "Three designs that turn what a camera sees into robot motion (geom
 
 ## The 30-second version
 
-- There are three designs from camera to motion: **Track 0** (geometry, no neural networks), **Track A** (neural perception + planner) and **Track B** (a policy learned from demonstrations). Track 0 is the baseline that perceives without neural networks; A and B are the two paths that use them.
+- There are three designs from camera to motion: **geometry** (fitting CAD to the point cloud, no neural networks), **neural perception** (a network finds the pose, a planner computes the path) and **learned policy** (a policy learned from demonstrations). Geometry is the baseline that perceives without neural networks; the other two are the paths that use them. The three names are just this blog's labels, not industry terms.
 - The further right, the more is learned and the harder it is to look inside. Taught-point automation sits at the far left, step 1.
 - You choose by **asking questions in order**: can it be fixed, does it only shift in the plane, can it be described with geometry, can a person demonstrate it. Stop at the step where the answer is yes.
-- Track 0 vs A comes down to **engineer hours per new part**; real step 4 is a **hybrid**.
+- Geometry vs neural perception comes down to **engineer hours per new part**; real step 4 is a **hybrid**.
 - The real criterion isn't whether something is non-deterministic but **whether its failures can be detected**. That's why acceptance changes from "it repeats" to "X of N succeed, and it knows when it failed."
 
 ---
@@ -28,13 +28,13 @@ description: "Three designs that turn what a camera sees into robot motion (geom
 
 ![Same arm, same block, only the design differs](../assets/diagrams_en/cpa-three-designs.svg)
 
-A fair comparison uses the same arm and the same task; otherwise you can't tell whether a difference comes from the design or the hardware. An example of Track A is a pose estimation model such as FoundationPose; an example of Track B is an imitation-learning policy such as ACT. Only Track B starts without CAD, from demonstration data; it needs no camera-to-robot calibration, but the camera has to stay where it was during the demos.
+A fair comparison uses the same arm and the same task; otherwise you can't tell whether a difference comes from the design or the hardware. An example of neural perception is a pose estimation model such as FoundationPose; an example of a learned policy is an imitation-learning policy such as ACT. Only the learned policy starts without CAD, from demonstration data; it needs no camera-to-robot calibration, but the camera has to stay where it was during the demos.
 
 ## From deterministic to black box, on one axis
 
 ![The more is learned, the harder failure is to notice](../assets/diagrams_en/cpa-spectrum.svg)
 
-**Deterministic** means the same input always gives the same result, as in a cell built from fixtures and taught points, and in Track 0, which has no neural networks. Track A's perception results wobble a little with lighting, but every stage's output can be checked.
+**Deterministic** means the same input always gives the same result, as in a cell built from fixtures and taught points, and in the geometry approach, which has no neural networks. Neural perception's results wobble a little with lighting, but every stage's output can be checked.
 
 Cell design gets easier once you separate motion from the verdict. The robot's **motion** may differ every cycle, but the **verdict**, such as pass or fail, must be the same every time. Use perception and learning to adapt the motion to the variation, and keep the verdict with the existing sensors, gauges and PLC interlocks. [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) goes through how.
 
@@ -42,15 +42,15 @@ Cell design gets easier once you separate motion from the verdict. The robot's *
 
 ![Start at the bottom; climb only when forced](../assets/diagrams_en/cpa-staircase.svg)
 
-The rule is to use the lowest step that solves the problem. Using step 3 where step 1 or 2 would do only adds setup, calibration upkeep and lighting sensitivity. Steps 3 and 4 split on one question: if the task can be written as coordinates, it's Track 0 or A; if it can't be written down but a person can show it, it's Track B. Routing a cable is hard to write as coordinates, but anyone can show it by hand.
+The rule is to use the lowest step that solves the problem. Using step 3 where step 1 or 2 would do only adds setup, calibration upkeep and lighting sensitivity. Steps 3 and 4 split on one question: if the task can be written as coordinates, it's geometry or neural perception; if it can't be written down but a person can show it, it's a learned policy. Routing a cable is hard to write as coordinates, but anyone can show it by hand.
 
 What step 2 looks like in practice, a taught path shifted by an offset that vision measured, is covered by the automation ladder in [Pendant to ROS 2, Part 3](moveit2-goals-not-points.md).
 
-## Track 0 or A: count the part types
+## Geometry or neural perception: count the part types
 
 ![Choose by engineer hours per new part, not precision](../assets/diagrams_en/cpa-breakeven.svg)
 
-Track 0 (fitting CAD to the point cloud with ICP) is deterministic and easy to explain, but it only finds the nearest answer from its starting pose, so every new part means retuning the starting pose and thresholds. Track A needs no per-object training, so a new part mostly means swapping the CAD (plus pointing the mask or detector at the new part). With few, fixed part types, Track 0; with many or frequently changing ones, Track A. The numbers in the chart are illustrative; work out "hours to add one part × expected number of part types" for your own case.
+Geometry (fitting CAD to the point cloud with ICP) is deterministic and easy to explain, but it only finds the nearest answer from its starting pose, so every new part means retuning the starting pose and thresholds. neural perception needs no per-object training, so a new part mostly means swapping the CAD (plus pointing the mask or detector at the new part). With few, fixed part types, geometry; with many or frequently changing ones, neural perception. The numbers in the chart are illustrative; work out "hours to add one part × expected number of part types" for your own case.
 
 ## Real step 4 is a hybrid
 
@@ -62,7 +62,7 @@ Using step 4 rarely means handing the whole cell to a learned policy. Step 3's g
 
 ![Same situation, three kinds of failure](../assets/diagrams_en/cpa-failure.svg)
 
-The three designs differ most when the object sits out of the arm's reach. Track 0 and A find the pose, and then the planner reports "no path." Track B is quiet because it learned motions from demonstrations with no mechanism for judging reachability; somewhere the demos never covered, it can carry on with a plausible-looking motion and no failure signal. Track A can fail quietly too if the pose itself is wrong, which is why its per-stage outputs (the mask and the pose score) need checks. In the [tuning post](jetson-tuning-licensing.md) the detector took a ceiling heater for the target object, and every later stage returned a pose 5 m away without a single error. That is why the chain ends with a size and distance check.
+The three designs differ most when the object sits out of the arm's reach. Geometry and neural perception find the pose, and then the planner reports "no path." A learned policy is quiet because it learned motions from demonstrations with no mechanism for judging reachability; somewhere the demos never covered, it can carry on with a plausible-looking motion and no failure signal. Neural perception can fail quietly too if the pose itself is wrong, which is why its per-stage outputs (the mask and the pose score) need checks. In the [tuning post](jetson-tuning-licensing.md) the detector took a ceiling heater for the target object, and every later stage returned a pose 5 m away without a single error. That is why the chain ends with a size and distance check.
 
 So the criterion isn't "is it non-deterministic?" but "**can its failures be detected?**" Measure these tendencies on the same arm by varying position, lighting, a new object, occlusion and reachability.
 
@@ -90,7 +90,7 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 
 | What you want to know | Read |
 |---|---|
-| Track A's perception stages (depth, mask, pose) | [From Stereo to Grasp](stereo-to-grasp.md) · [Inside the Three Models](inside-the-models.md) · [Model Anatomy](model-anatomy.md) |
+| Neural perception's stages (depth, mask, pose) | [From Stereo to Grasp](stereo-to-grasp.md) · [Inside the Three Models](inside-the-models.md) · [Model Anatomy](model-anatomy.md) |
 | Turning camera coordinates into robot coordinates | [Frames & Transforms](frames-transforms.md) |
 | Simulation and sim-to-real | [Why Robots Learn in a 'Fake World' First](robot-simulation.md) |
 | How many cameras, where, and which one | [How Many Cameras, and Where](camera-placement.md) · [Which Depth Camera](depth-camera-selection.md) |
@@ -98,7 +98,7 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 | ROS 2, MoveIt 2, deterministic cell design | [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Part 2](ros2-robot-description.md) · [Part 3](moveit2-goals-not-points.md) · [Part 4](isaac-ros-gpu.md) |
 | Actually running it on an edge computer | [Field Notes, Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [Correction](jetson-foundationpose-16gb.md) · [Tuning](jetson-tuning-licensing.md) · [Scanning](jetson-scan-no-cad.md) |
 | From pose to motion, and a real robot | [Field Notes: Motion](jetson-pose-to-motion.md) · [The Real Robot](jetson-real-robot-first-move.md) |
-| Track B, learned policies | [Learned Policies (Track B)](learned-policy-track-b.md) |
+| Learned policies | [Learned Policies](learned-policy-track-b.md) |
 | Trying it yourself | [Hands-on Notes, Part 0: SO-101 and URSim](learn-without-industrial-robot.md) |
 | The investing angle | [Physical AI Investing, Part 1](cobot-investing.md) · [Part 2](physical-ai-investing-actuators.md) · [Part 3](physical-ai-investing-power.md) |
 
@@ -108,18 +108,18 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 
 | Concept | In one line |
 |---|---|
-| **Track 0** | Geometry that fits CAD to the point cloud (ICP). Deterministic; the fit error acts as confidence |
-| **Track A** | A neural network estimates pose from CAD and a planner moves. No per-object training; stages can be checked |
-| **Track B** | A policy learned from human demos turns images straight into joint commands. For what can't be written as coordinates |
+| **Geometry** | Geometry that fits CAD to the point cloud (ICP). Deterministic; the fit error acts as confidence |
+| **Neural perception** | A neural network estimates pose from CAD and a planner moves. No per-object training; stages can be checked |
+| **Learned policy** | A policy learned from human demos turns images straight into joint commands. For what can't be written as coordinates |
 | **Staircase** | Fixture → planar offset → geometry → demonstration. Stop at the first step that works |
-| **Break-even** | Track 0 vs A: engineer hours per new part × number of part types |
+| **Break-even** | Geometry vs neural perception: engineer hours per new part × number of part types |
 | **Hybrid** | Approach with geometry; learning only for the last few mm |
 | **The real criterion** | Not whether it's non-deterministic, but whether failure can be detected |
 | **Acceptance** | "It repeats" → "X of N succeed, and it knows when it failed" |
 
 ---
 
-**Series** · [Next: Learned Policies (Track B) →](learned-policy-track-b.md)
+**Series** · [Next: Learned Policies →](learned-policy-track-b.md)
 
 *Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Field Notes, Part 2](jetson-isaac-foundation-models.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md) · [How Many Cameras, and Where](camera-placement.md)*
 
@@ -131,7 +131,7 @@ The three-design split, the staircase and the failure comparison are a framework
 
 - *Physical AI*: robot technology that looks, decides and moves, rather than relying only on fixtures and taught points
 - *Deterministic · non-deterministic*: the same input always gives the same result · learned behavior whose results are statistical
-- *Track 0 · A · B*: 0 is the baseline that finds parts with a camera using geometry alone, no neural networks (not the same as a fixture-and-taught-points cell). A and B are the two paths that use neural networks: A for perception only, B for the whole motion
+- *Geometry · neural perception · learned policy*: this blog's names for the three designs (not industry terms). Geometry is the baseline that finds parts with a camera using geometry alone, no neural networks (not the same as a fixture-and-taught-points cell). The other two use neural networks: neural perception for perception only, a learned policy for the whole motion
 - *ICP (Iterative Closest Point)*: geometry that nudges and turns a CAD model until it fits the point cloud; the leftover distance (residual) acts as confidence, though symmetric parts or a bad starting pose can give a wrong answer with a small residual
 - *Point cloud*: thousands of surface points measured by a depth camera
 - *Calibration*: measuring the relationship between camera coordinates and robot coordinates

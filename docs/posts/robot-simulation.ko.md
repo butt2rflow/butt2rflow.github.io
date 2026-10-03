@@ -150,7 +150,7 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 
 **시리즈** · [← 모델 해부(심화 2부)](model-anatomy.md) · [다음: 카메라는 몇 대, 어디에 →](camera-placement.md)
 
-*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [학습 정책(Track B)](learned-policy-track-b.md) · [펜던트에서 ROS 2로 2부: mock 하드웨어](ros2-robot-description.md) · [현장 노트 실물편](jetson-real-robot-first-move.md)*
+*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [학습 정책](learned-policy-track-b.md) · [펜던트에서 ROS 2로 2부: mock 하드웨어](ros2-robot-description.md) · [현장 노트 실물편](jetson-real-robot-first-move.md)*
 
 *NVIDIA Isaac Sim·Isaac Lab, MuJoCo(Google DeepMind), PyBullet, Gazebo(Open Robotics),
 Franka·Franka Panda는 각 소유자의 상표이며 식별 목적으로만 사용했습니다. 도표는 전부 직접

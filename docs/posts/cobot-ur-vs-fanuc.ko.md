@@ -168,7 +168,7 @@ UR 쪽은 로봇 제어 스택 전체가 **엣지 컴퓨터 위 파이썬**으�
 
 **시리즈** · [← 1부: 협동로봇(cobot)이란](cobot-basics.md) · 이어지는 글: [Physical AI 투자 1부 →](cobot-investing.md)
 
-*관련: [1부: 협동로봇(cobot)이란](cobot-basics.md) · [Physical AI 투자 1부](cobot-investing.md) · [학습 정책(Track B): 실시간 창구](learned-policy-track-b.md) · [펜던트에서 ROS 2로 2부: RTDE와 ros2_control](ros2-robot-description.md) · [현장 노트 실물편](jetson-real-robot-first-move.md)*
+*관련: [1부: 협동로봇(cobot)이란](cobot-basics.md) · [Physical AI 투자 1부](cobot-investing.md) · [학습 정책: 실시간 창구](learned-policy-track-b.md) · [펜던트에서 ROS 2로 2부: RTDE와 ros2_control](ros2-robot-description.md) · [현장 노트 실물편](jetson-real-robot-first-move.md)*
 
 ### 출처와 표기
 

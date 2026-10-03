@@ -50,9 +50,9 @@ The e-Series URSim is x86-only, so the straightforward setup runs it on a PC wit
 
 ## The SO-101 setup
 
-![One small real arm for both Track A and B](../assets/diagrams_en/hon-so101-setup.svg)
+![One small real arm for both neural perception and a learned policy](../assets/diagrams_en/hon-so101-setup.svg)
 
-Tracks 0, A and B are the three designs from [Choosing a Physical AI Approach](choosing-physical-ai.md). LeRobot supports SO-101 natively, so recording demos and training (Track B, learning from demos) can start right away. The ROS 2 side (Track A, perception + planner) uses community-made packages; several repositories provide the URDF, a ros2_control driver for the servos and a MoveIt 2 configuration. Part 2 will note which one was chosen and why.
+Geometry, neural perception and learned policies are the three designs from [Choosing a Physical AI Approach](choosing-physical-ai.md). LeRobot supports SO-101 natively, so recording demos and training a policy can start right away. The ROS 2 side (neural perception + planner) uses community-made packages; several repositories provide the URDF, a ros2_control driver for the servos and a MoveIt 2 configuration. Part 2 will note which one was chosen and why.
 
 ## Pairing practice grounds with concept posts
 
@@ -90,7 +90,7 @@ My reasoning for the order: seeing an arm copy a demo first should give the stam
 
 **Series** · Next: Hands-on Notes, Part 1: Building the SO-101 and Recording Demos (in preparation)
 
-*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Learned Policies (Track B)](learned-policy-track-b.md) · [Putting the Robot's Brain on the Edge (1)](jetson-ros2-setup.md) · [How Many Cameras, and Where](camera-placement.md)*
+*Related: [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Learned Policies](learned-policy-track-b.md) · [Putting the Robot's Brain on the Edge (1)](jetson-ros2-setup.md) · [How Many Cameras, and Where](camera-placement.md)*
 
 ### Sources and notices
 
@@ -106,7 +106,7 @@ URSim's Docker images and supported architectures follow Universal Robots' ROS 2
 - *External Control*: the add-on (URCap; URCapX on PolyScope X) that lets a UR controller accept commands from an outside computer
 - *URDF*: the blueprint file describing a robot's links, joints and shapes
 - *ros2_control*: ROS 2's standard framework for exchanging commands with motor drivers; real hardware and mock can be swapped
-- *Tracks 0, A, B*: three designs: geometric matching (0, no neural net), perception + planner (A), a policy learned from demos (B)
+- *Geometry, neural perception, learned policy*: this blog's names for the three designs: geometric matching (no neural net), neural perception + planner, a policy learned from demos
 - *Leader arm · follower arm*: the arm you move by hand · the arm that copies it
 - *Hand-eye calibration*: measuring how camera positions map to robot coordinates
 - *Speed scaling · protective stop*: slowing the robot from the pendant · the state where the robot stops itself on a collision or limit breach

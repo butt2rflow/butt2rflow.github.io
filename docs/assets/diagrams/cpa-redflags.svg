@@ -63,7 +63,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="248" y="114" style="fill:var(--fg)">깊이가 사라져 3D 자세 실패</text>
 <rect class="bxr" x="452" y="44" width="208" height="106" rx="10"/>
 <text class="lb" x="466" y="74">CAD 없음 + 부품 다수</text>
-<text class="sm" x="466" y="114" style="fill:var(--fg)">Track 0·A 시작 불가</text>
+<text class="sm" x="466" y="114" style="fill:var(--fg)">기하 방식·신경망 인식 시작 불가</text>
 <rect class="bxa" x="16" y="160" width="208" height="106" rx="10"/>
 <text class="lb" x="30" y="190">중요 단계에 학습 정책 단독</text>
 <text class="sm" x="30" y="230" style="fill:var(--fg)">조용한 실패, 통계적 인수</text>
