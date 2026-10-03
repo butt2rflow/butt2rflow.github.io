@@ -160,7 +160,7 @@ So there are three cautions when reading these numbers:
 - **They are not measured against a ground-truth pose.** They are self-consistency checks: orientation features, silhouette and repeatability. Absolute accuracy has to be measured separately.
 - **The CAD has to be the right one.** A CAD of a similar model with a different size still produces a plausible-looking box (IoU 0.78, versus 0.92 for the correct CAD). That is hard to tell by eye, so check the CAD's dimensions against the real part first.
 
-Speed came down further too. With every model loaded once in a single process, the detector, SAM2 and FoundationPose's refinement and scoring steps moved to TensorRT engines, and two slow code paths fixed, one object now takes **4.0 s instead of 11.4 s**. The pose result is unchanged, and memory use is 7.2 of 16 GB. The slowest stage is now FoundationStereo (2.0 s), about half the total.
+Speed came down further too. With every model loaded once in a single process, the detector, SAM2 and FoundationPose's refinement and scoring steps moved to TensorRT engines, and two slow code paths fixed, one object now takes **4.0 s instead of 11.4 s**. The pose result is unchanged, and memory use peaks at 7.7 of 16 GB. The slowest stage is now FoundationStereo (2.0 s), about half the total.
 
 ![Same chain, same Orin NX: TensorRT and code fixes take it from 11.4 s to 4.0 s per object](../assets/demos/jetson-live-chain-speed.jpg)
 
