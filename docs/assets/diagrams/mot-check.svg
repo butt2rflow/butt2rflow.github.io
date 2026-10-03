@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">지도가 틀린 줄 알았는데, 틀린 건 검사였다</title>
-<desc id="de">지도가 맞는지 보려고 지도를 카메라 시점으로 다시 그려 실제 깊이와 비교했다. 처음 검사는 지도 메시의 꼭짓점만 한 픽셀씩 찍었다. 그런데 0.4 m 거리에서 2 cm 칸 하나는 화면에서 약 400 픽셀을 덮는다. 점만 찍으니 가까운 보드는 대부분 비어 보였고, 그 사이로 먼 점이 비쳐 보였다. 일치 14%. 메시의 면을 제대로 채워 그리자 중앙값 5 mm, 3 cm 안 81%로, 지도는 처음부터 맞았다.</desc>
+<desc id="de">지도가 맞는지 보려고 지도를 카메라 시점으로 다시 그려 실제 깊이와 비교했다. 처음 검사는 지도 메시의 꼭짓점만 한 픽셀씩 찍었다. 그런데 0.4 m 거리에서 2 cm 칸 하나는 화면에서 약 400 픽셀을 덮는다. 점만 찍으니 가까운 보드는 대부분 비어 보였고, 그 사이로 먼 점이 비쳐 보였다. 일치 14%. 메시의 삼각형 면까지 그려 비교하자 중앙값 5 mm, 3 cm 안 81%로, 지도는 처음부터 맞았다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -125,7 +125,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <circle cx="148" cy="186" r="2.6" style="fill:var(--amber)"/>
 <text class="nd" x="174" y="240" text-anchor="middle" style="fill:var(--red)">일치 14% → '보드가 사라졌다'</text>
 <rect class="bxgr" x="348" y="46" width="316" height="220" rx="10"/>
-<text class="lb" x="364" y="70">고친 검사: 면을 채워서</text>
+<text class="lb" x="364" y="70">고친 검사: 삼각형 면까지</text>
 <text class="st" x="364" y="90">칸 하나 ≈ 400픽셀 (0.4 m에서)</text>
 <rect x="406" y="104" width="200" height="110" rx="4" style="fill:var(--bg);stroke:var(--bd)"/>
 <rect x="436" y="122" width="140" height="74" rx="3" style="fill:var(--blue);opacity:0.55"/>

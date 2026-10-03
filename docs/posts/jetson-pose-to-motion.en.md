@@ -19,9 +19,10 @@ The [From Teach Pendant to ROS 2](ros2-for-robot-programmers.md) series covered 
 
 ## 30-second summary
 
+- **A pose plus CAD knows the hidden side.** The distance from a mini PC corner the camera couldn't see to the board behind it came out at 56 mm from the CAD; a ruler said 55 mm.
 - **cuMotion is fast on the edge too.** With the UR10e configuration, a median of about 186 ms per plan. The first plan needs a 16-second GPU warm-up, so do it when the program starts, not on the first pick.
 - **nvblox was accurate on a scene with a known answer.** Fed computed depth (a box at 0.6 m, a wall at 1.0 m), the map put them at 0.610 m and 1.000 m, within one 2 cm cell.
-- **The live camera was accurate too.** On a flat scene the map and the measured depth differ by a median of 5 mm. On day one the board seemed to vanish from the map, but the check script, which plotted only the map's points, was wrong.
+- **The live camera was accurate too.** On a flat scene the map and the measured depth differ by a median of 5 mm. On day one the board seemed to vanish from the map, but the check script, which drew the map wrongly for the comparison, was at fault.
 - **With the map on, cuMotion avoids objects.** On a map built from a recorded stream, goals inside or too close to objects were rejected and open space planned. A blocked goal comes back as `NO_IK_SOLUTION`, so don't be misled.
 - **The UR driver comes up without a robot.** On simulated hardware all 13 controllers loaded, force mode included. On this version the argument is `use_fake_hardware`.
 - **Force control on this stack means UR force mode.** NVIDIA's learned insertion example is an Isaac ROS 4.x feature; to try it on Orin you need at least Isaac ROS 4.6 and JetPack 7.2.
@@ -36,9 +37,25 @@ Knowing the object's pose doesn't let the robot go and pick it up yet. Three mor
 2. **An obstacle map:** where the things you must not hit are. What you know from CAD (table, jigs) goes into the planning scene; what you don't (a toolbox someone left, a sagging cable) has to be seen by the camera. Here, nvblox.
 3. **A robot driver:** the channel that hands the computed path to the real robot controller. Here, the Universal Robots (UR) ROS 2 driver.
 
-![The four steps after the pose: what was checked and what wasn't](../assets/diagrams_en/mot-status.svg)
+![The steps after the pose, and how they went](../assets/diagrams_en/mot-status.svg)
 
 The results first: planning, the obstacle map and the link between them all worked, and the driver was checked only in simulation. One at a time.
+
+## What the pose tells you first: even the hidden corner
+
+Before moving on to motion, here is what one pose already tells you. With the mini PC in front of the ChArUco board, FoundationPose found its pose; then the maker's CAD, placed at that pose, gave the distance from each corner to the board plane.
+
+![The mini PC's pose from FoundationPose and the outline of the CAD placed at it](../assets/demos/jetson-motion-pose-cad.jpg)
+
+*The green box is the outline of the CAD at this pose; the three lines are the object's axes.*
+
+![Perpendicular distance from each mini PC corner to the board plane; the dashed yellow line marks a corner hidden from the camera](../assets/demos/jetson-motion-clearance-rays.jpg)
+
+*CAD is the distance computed from the CAD; FS in brackets is the same point measured from FoundationStereo depth. The dashed yellow line is a corner the camera can't see.*
+
+The corner closest to the board was the back one, **hidden** from the camera. The CAD put it at 56 mm; a ruler said 55 mm, a 1.1 mm difference. Depth alone can't tell you about that corner, because depth only measures the faces the camera can see. The visible faces measured by FoundationStereo sat 67–251 mm from the board, and the depth computed on the camera chip was mostly empty over the mini PC's cooling fins.
+
+With a pose and a CAD you know where even the **hidden side** of an object is, so collision margins can be set precisely. Things without a CAD, a new object or clutter on the bench, have to be handled by an obstacle map built from depth. The rest of this post is about that map and the planning that uses it. (One scene, one position.)
 
 ## cuMotion: a long warm-up once, then short plans
 
@@ -100,11 +117,11 @@ Looking again the next day, the map wasn't wrong. **The check was.**
 
 ![Plot only points and near surfaces look empty](../assets/diagrams_en/mot-check.svg)
 
-The check plotted only the mesh vertices, one pixel each. But at 0.4 m one 2 cm cell covers about 400 pixels on screen. With only points drawn, most of the near board stayed blank, and far points showed through the gaps. Redrawing the mesh with its faces filled changed everything.
+The map nvblox produces is a **mesh of small triangle faces**, like a CAD model. But the check script drew only the triangles' corners, one pixel each, and left out the faces between them. At 0.4 m one 2 cm cell covers about 400 pixels (20×20) on screen, so most of the near board was left as blank, undrawn pixels, and far corners from behind the board landed in those pixels instead and scored as "doesn't match". Drawing the triangle faces as well changed everything. Nothing was invented to fill the gaps; the faces nvblox had built were simply no longer left out.
 
 ![Left: the depth the camera measured. Right: the nvblox map built from it, redrawn from the same viewpoint. They nearly match](../assets/demos/jetson-nvblox-live-compare.png)
 
-*Left is the camera's measured depth; right is the nvblox map redrawn from the same viewpoint with its faces filled (colour = distance, black = no value).*
+*Left is the camera's measured depth; right is the nvblox map's triangle faces redrawn from the same viewpoint (colour = distance, black = no value).*
 
 | Scene | Median error, near pixels | Within 3 cm | Map coverage |
 |---|---|---|---|
@@ -152,7 +169,7 @@ Now the same scene can be compared while only the settings change.
 
 ## Wiring the map into planning
 
-With the map confirmed, the next step was letting cuMotion read it as obstacles. The recorded depth built an nvblox map in the robot's base frame, with one transform placing the camera beside a UR10e base. Then I sent a few tool-down goal poses. Map off and map on, side by side:
+With the map confirmed, the next step was letting cuMotion read it as obstacles. The recorded depth built an nvblox map in the robot's base frame. The camera was assumed to sit at one spot beside a UR10e base (not measured). Then I sent a few tool-down goal poses. Map off and map on, side by side:
 
 ![Without the map it plans straight into objects](../assets/diagrams_en/mot-planmap.svg)
 
@@ -218,7 +235,8 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 | Force control | UR force mode works on this stack | Measure force on a real robot |
 
 - **Planning runs at working speed on the edge.** Just move the 16-second warm-up out of the cycle.
-- **Test an obstacle map on a scene with a known answer first.** Then, when it's wrong live, you can narrow the problem to the camera.
+- **A pose plus CAD tells you what depth can't see.** The hidden corner's distance came out within about 1 mm.
+- **Test an obstacle map on a scene with a known answer first.** When live numbers look bad, it narrows down what to suspect; this time it pointed at the check, not the tool.
 - **Check the measurement before blaming the tool.** Having passed the known-answer scene is what sent me back to the check when the live numbers looked bad.
 - **Record once and you can keep comparing on the same scene,** with no camera and no robot.
 - **Each kind of fake checks something different.** Simulated hardware checks the wiring, URSim checks controller behaviour, and a physics simulator or a real robot checks force and contact.
@@ -228,7 +246,7 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 <details>
 <summary>Notes: where these results come from</summary>
 
-The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera on 1–2 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the live nvblox results come from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. No real robot moved and no real force was measured.
+The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera from 30 September to 2 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the hidden-corner distance from one scene on 30 September, the live nvblox results from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. No real robot moved and no real force was measured.
 
 The learned gear-insertion example and the UR10e low-level torque interface are based on NVIDIA's technical blog post "Bridging the Sim-to-Real Gap for Industrial Robotic Assembly Applications Using NVIDIA Isaac Lab" and the Isaac ROS 4.0 announcement. Orin and JetPack 7.2 support in Isaac ROS 4.6.0 (18 August 2026) is from the Isaac ROS release notes. The `use_fake_hardware` (Humble) vs `use_mock_hardware` (Jazzy) difference is from the Universal Robots ROS 2 driver documentation (docs.ros.org).
 

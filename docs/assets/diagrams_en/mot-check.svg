@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">The map looked wrong, but the check was wrong</title>
-<desc id="de">To check the map, it was redrawn from the camera's viewpoint and compared with the measured depth. The first check plotted only the mesh vertices, one pixel each. But at 0.4 m one 2 cm cell covers about 400 pixels on screen, so the near board looked mostly empty and far points showed through the gaps: 14% agreement. Filling the mesh faces properly gave a 5 mm median and 81% within 3 cm. The map had been right all along.</desc>
+<desc id="de">To check the map, it was redrawn from the camera's viewpoint and compared with the measured depth. The first check plotted only the mesh vertices, one pixel each. But at 0.4 m one 2 cm cell covers about 400 pixels on screen, so the near board looked mostly empty and far points showed through the gaps: 14% agreement. Drawing the mesh's triangle faces too gave a 5 mm median and 81% within 3 cm. The map had been right all along.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -125,7 +125,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <circle cx="148" cy="186" r="2.6" style="fill:var(--amber)"/>
 <text class="nd" x="174" y="240" text-anchor="middle" style="fill:var(--red)">14% agree → 'the board vanished'</text>
 <rect class="bxgr" x="348" y="46" width="316" height="220" rx="10"/>
-<text class="lb" x="364" y="70">fixed check: faces filled</text>
+<text class="lb" x="364" y="70">fixed check: faces drawn too</text>
 <text class="st" x="364" y="90">one cell ≈ 400 px (at 0.4 m)</text>
 <rect x="406" y="104" width="200" height="110" rx="4" style="fill:var(--bg);stroke:var(--bd)"/>
 <rect x="436" y="122" width="140" height="74" rx="3" style="fill:var(--blue);opacity:0.55"/>

@@ -99,15 +99,15 @@ Here's what I watched run on the Jetson this session, stage by stage.
 
 **Depth — FoundationStereo.** It turned a desk scene it had never seen into a dense depth map, whole, with no training.
 
-![FoundationStereo depth — camera view on the left, estimated depth on the right](../assets/demos/jetson-depth-demo.jpg)
+![FoundationStereo depth — camera view on the left, estimated depth on the right](../assets/demos/jetson-live-fs-depth.jpg)
 
-*Left is what the camera saw; right is the depth FoundationStereo produced. Closer is red, farther is blue. On a scene it never trained on, the mug, keyboard, and tissue box still separate cleanly by distance.*
+*Left is what the camera saw; right is the depth FoundationStereo produced (35–75 cm range; closer is blue, farther is red). On a scene it never trained on, the mini PC's top and side, the board behind it and even the cables separate cleanly by distance. This photo is the same chain, re-shot later (30 September).*
 
-**Mask — SAM 2.** One box and one point as a hint, and it cut the object out of the background cleanly. Confidence 0.86, again with no training.
+**Mask — SAM 2.** One box around the object as a hint, and it cut the object out of the background cleanly, again with no training.
 
-![SAM 2 mask — a click hint alone separates the object from the background](../assets/demos/jetson-sam2-demo.jpg)
+![SAM 2 mask — one box hint separates the mini PC from the background](../assets/demos/jetson-live-sam2-mask.jpg)
 
-*The green region is what SAM 2 picked out (the electric drill). It has no pre-learned list of objects — point at something and it carves out that spot.*
+*The purple region is what SAM 2 picked out (the mini PC). It has no pre-learned list of objects — point at something and it carves out that spot. This photo was also re-shot on 30 September.*
 
 **Pose — FoundationPose.** This is the heart of "new part, no training." Swapping the CAD between them, it tracked the 6-DoF pose of two objects (a bottle, an electric drill) across 300+ frames each. Same code, just a different CAD file.
 
