@@ -161,7 +161,9 @@ Replaying this bag into nvblox put all 425 depth frames into the map with no cam
 
 ![Left: the recorded colour frame. Right: the nvblox map overlaid on it, coloured by distance](../assets/demos/jetson-motion-map-overlay.jpg)
 
-*On the right, bluer is nearer and redder is farther. The map sits right on the board, the mini PC, the table and the mouse. At the glass case on the left and the wall edge on the right the stereo depth itself is noisy, so the map is patchy there too.*
+*On the right, bluer is nearer and redder is farther. Where the map exists it sits in the right place, but there are many holes: the lower left of the board and scattered white squares show through, and the mini PC's heat-sink fins are a black, empty band. At the glass case on the left and the wall edge on the right the depth is noisy, so the map is patchy there too.*
+
+This map was built from the stereo depth the camera chip computes itself. In the checkerboard test in [Field Notes, Part 2](jetson-isaac-foundation-models.md) that depth filled only about 78% of the board, and it is almost empty on the heat-sink fins (see 'Turning the pose into goals' below). Most of the map's holes look like they come from those depth holes, though this one picture doesn't prove the cause. It matters because a spot missing from the map is not an obstacle to the planner: by default nvblox treats unobserved space as free ([Part 4](isaac-ros-gpu.md), 'four things to watch'). In real use, feed denser depth such as FoundationStereo or ESS, or consider treating unobserved space as occupied.
 
 Now the same scene can be compared while only the settings change.
 
@@ -259,7 +261,7 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 | cuMotion planning | ~186 ms per plan; 16 s warm-up only the first time | Warm up at program start; write the cuMotion config for the UR model you'll use |
 | nvblox (known-answer scene) | Both surfaces within one 2 cm cell | — |
 | nvblox (live camera) | 5 mm median on a flat scene, 19 mm with glass; keeps up with the camera | — |
-| Map → cuMotion (recorded stream) | Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan | Hand a foundation-model pose to the planner as the goal |
+| Map → cuMotion (recorded stream) | Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan. Built from camera-chip depth, so the map has many holes | Build the map from denser depth; decide how to treat unobserved space |
 | Pose → goal | Mini PC IoU 0.88 / 6 mm; mouse low-confidence (flip caught by depth) | On the real robot |
 | UR driver (simulated hardware) | All 13 controllers, force mode included | — |
 | Whole flow (simulated UR20) | 1.3 s plan; after execution 0.1–0.2 mm from goal | On a real UR20 in [The Real Robot](jetson-real-robot-first-move.md) |
