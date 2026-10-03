@@ -24,6 +24,8 @@ The [From Teach Pendant to ROS 2](ros2-for-robot-programmers.md) series covered 
 - **nvblox was accurate on a scene with a known answer.** Fed computed depth (a box at 0.6 m, a wall at 1.0 m), the map put them at 0.610 m and 1.000 m, within one 2 cm cell.
 - **The live camera was accurate too.** On a flat scene the map and the measured depth differ by a median of 5 mm. On day one the board seemed to vanish from the map, but the check script, which drew the map wrongly for the comparison, was at fault.
 - **With the map on, cuMotion avoids objects.** On a map built from a recorded stream, goals inside or too close to objects were rejected and open space planned. A blocked goal comes back as `NO_IK_SOLUTION`, so don't be misled.
+- **A foundation-model pose becomes the goal directly.** Measure the camera mount, and check poses against the table; an overlap score alone misses a flipped mouse.
+- **The UR20 cuMotion config was built by hand.** Automatic sphere fitting failed, so the arm is wrapped in 71 spheres. Planning ran through to execution on simulated hardware; the real UR20 is in the next post.
 - **The UR driver comes up without a robot.** On simulated hardware all 13 controllers loaded, force mode included. On this version the argument is `use_fake_hardware`.
 - **Force control on this stack means UR force mode.** NVIDIA's learned insertion example is an Isaac ROS 4.x feature; to try it on Orin you need at least Isaac ROS 4.6 and JetPack 7.2.
 
@@ -183,6 +185,21 @@ With the map off, even a goal inside the mini PC plans. cuMotion can't avoid an 
 
 One thing is confusing. cuMotion reports a goal blocked by obstacles as **`NO_IK_SOLUTION`**. The name suggests the arm can't reach that spot, but it may be a collision. Plan the same goal again with the map off and you'll know which.
 
+## Turning the pose into goals
+
+So far the goals were placed by hand. This time they came from object poses found by the foundation models. On one frame of the recorded bag, Grounding DINO → SAM2 → FoundationPose found the poses of the mini PC and the mouse, and each object got a "pre-grasp" goal 20 cm above its top with the tool pointing down.
+
+![Poses of the mini PC and the mouse from the foundation models; blue is the CAD placed at each pose, yellow the SAM2 mask](../assets/demos/jetson-motion-pose-goal.jpg)
+
+*Blue is the CAD drawn at each pose, the yellow line is the SAM2 mask, and the three arrows are the object axes. The mini PC matched with an overlap ratio (IoU) of 0.88 and a 6 mm depth difference; the mouse, at 0.66 and 11 mm, was flagged low-confidence.*
+
+Two lessons came out of this:
+
+- **Measure the camera mount; don't assume it.** The previous section assumed a level camera. Finding the table plane in the depth showed the camera was 16.9 cm above the table, pitched 16° down. From here on, planning used the measured values.
+- **An overlap score alone doesn't catch a flipped pose.** At first the mouse pose came back upside down. The mouse mesh from the [scanning post](jetson-scan-no-cad.md) has a flat bottom, so its outline is almost the same either way up, and the overlap score (0.72) looked fine. Against the depth, though, it was 18–28 mm off. Keeping only poses that can rest on the table and choosing again stood it the right way up. The mini PC also came back tilted 13–16°, because its finned top gives almost no depth; snapping it to the table fixed that.
+
+These goals went to cuMotion the same way as in the previous section. With the map on, both objects' pre-grasp poses planned (a little over 0.8 s), the goals deliberately placed 2 cm inside the objects were rejected, and open space planned. With the map off, everything planned, so the rejections came from the map.
+
 ## Bringing up the UR driver without a robot
 
 You can check everything up to the driver without a robot. The UR ROS 2 driver (2.9.0 on ROS 2 Humble here) has ros2_control's **simulated hardware**, which just echoes the commands it receives instead of moving a robot. That's enough to see whether the controllers come up and commands flow.
@@ -196,6 +213,18 @@ One thing caught me. Current docs give the simulated-hardware argument as `use_m
 Simulated hardware checks only the wiring. To move like a real UR controller you need UR's simulator, **URSim**, and it didn't run on the Orin. There is an arm64 build of the PolyScope X URSim image, but the simulator container it launches inside is x86-only. So URSim runs on an x86 PC on the same network, and the Orin connects to it over the network.
 
 Add the ROS bag recorded above and you can run the whole flow **with no camera and no robot**: the recording gives the pose, cuMotion plans, and the virtual UR in URSim moves. Neither of these simulates force or contact, though. That takes a physics simulator (Isaac Sim, with an RTX GPU) or a real robot.
+
+## All the way on simulated hardware, and building a UR20 cuMotion config
+
+Finally the driver was wired in too. The UR20 driver ran on simulated hardware, together with the measured camera mount, the nvblox map from the bag and cuMotion, and the goals above were planned and executed. Planning took around 1.3 s, execution 3–5 s, and the tool arrived 0.1–0.2 mm from each goal. The goal inside an object was rejected and never executed.
+
+The part that took work was the cuMotion configuration. Isaac ROS 3.2 ships configs for the UR5e and UR10e only, so the UR20 one had to be built. cuMotion checks collisions by wrapping the arm in spheres, and how those spheres are placed is the whole job.
+
+- **cuRobo's automatic sphere fitting failed.** Three of the six UR20 meshes aren't fully closed shapes, so it covered only 1–8 % of the surface.
+- **Slicing each link into thin slabs with one sphere per slab** covered everything but made the arm up to 110 mm fatter than it is, so it can't get that close to obstacles.
+- **Adding, one at a time, the sphere inside the link that covers the most still-uncovered surface** worked. 71 spheres (the UR10e config has 20) covered 99–100 % of the surface with at most 24 mm sticking out, and there was no self-collision at home and a few other poses.
+
+Planning the same goals with the UR20 config gave the same pattern as the UR10e (inside objects rejected, pre-grasps and open space planned). Simulated hardware only checks the wiring, though; it doesn't imitate a real UR's timing, limits or contact. That part was checked on a real UR20 in the next post, [The Real Robot](jetson-real-robot-first-move.md).
 
 ## How far force control goes now
 
@@ -231,7 +260,9 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 | nvblox (known-answer scene) | Both surfaces within one 2 cm cell | — |
 | nvblox (live camera) | 5 mm median on a flat scene, 19 mm with glass; keeps up with the camera | — |
 | Map → cuMotion (recorded stream) | Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan | Hand a foundation-model pose to the planner as the goal |
-| UR driver (simulated hardware) | All 13 controllers, force mode included | Whole flow with URSim and a ROS bag on an x86 PC |
+| Pose → goal | Mini PC IoU 0.88 / 6 mm; mouse low-confidence (flip caught by depth) | On the real robot |
+| UR driver (simulated hardware) | All 13 controllers, force mode included | — |
+| Whole flow (simulated UR20) | 1.3 s plan; after execution 0.1–0.2 mm from goal | On a real UR20 in [The Real Robot](jetson-real-robot-first-move.md) |
 | Force control | UR force mode works on this stack | Measure force on a real robot |
 
 - **Planning runs at working speed on the edge.** Just move the 16-second warm-up out of the cycle.
@@ -254,6 +285,6 @@ NVIDIA, Jetson, Orin, JetPack, Isaac ROS, Isaac Sim, cuMotion, cuRobo, nvblox an
 
 </details>
 
-**Series** · [← Previous: Scanning — No CAD? One Printed Board and Twenty Photos](jetson-scan-no-cad.md)
+**Series** · [← Previous: Scanning — No CAD? One Printed Board and Twenty Photos](jetson-scan-no-cad.md) · [Next: The Real Robot — an edge computer moves a real arm for the first time →](jetson-real-robot-first-move.md)
 
 *Related: [From Teach Pendant to ROS 2 (3) — MoveIt 2](moveit2-goals-not-points.md) · [From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion](isaac-ros-gpu.md) · [How Many Cameras, and Where](camera-placement.md) · [Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*

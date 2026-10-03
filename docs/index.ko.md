@@ -216,6 +216,7 @@ title: Home
 - [**로봇의 뇌를 엣지에 — 튜닝편**](posts/jetson-tuning-licensing.md) — 현장 노트: 11초를 4초로, 상업용으로 쓸 수 있는 조합
 - [**로봇의 뇌를 엣지에 — 스캔편**](posts/jetson-scan-no-cad.md) — 현장 노트: CAD 없는 물체를 보드 한 장으로 스캔
 - [**로봇의 뇌를 엣지에 — 모션편**](posts/jetson-pose-to-motion.md) — 현장 노트: 경로 계획 186 ms, 장애물 지도를 피해 가는 경로까지
+- [**로봇의 뇌를 엣지에 — 실물편**](posts/jetson-real-robot-first-move.md) — 현장 노트: 엣지 컴퓨터가 실제 UR20을 처음 움직이다, 보정 3.95→0.06 mm, 목표에서 0.1 mm
 - [**티치 펜던트에서 ROS 2로 (1~4)**](posts/ros2-for-robot-programmers.md) — 펜던트 프로그래머를 위한 ROS 2 · [URDF·TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
 - [**실습 노트 (0) — 실물 산업용 로봇 없이 배우기**](posts/learn-without-industrial-robot.md) — SO-101과 URSim으로 연습장 고르기
 

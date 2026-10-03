@@ -216,6 +216,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**The Robot's Brain at the Edge — Tuning**](posts/jetson-tuning-licensing.md) — Field Notes: 11 s to 4 s, and a chain you can ship
 - [**The Robot's Brain at the Edge — Scanning**](posts/jetson-scan-no-cad.md) — Field Notes: scanning an object with no CAD on one printed board
 - [**The Robot's Brain at the Edge — Motion**](posts/jetson-pose-to-motion.md) — Field Notes: 186 ms motion plans, and planning around a live obstacle map
+- [**The Robot's Brain at the Edge — The Real Robot**](posts/jetson-real-robot-first-move.md) — Field Notes: an edge computer moves a real UR20 for the first time; calibration 3.95→0.06 mm, 0.1 mm from goal
 - [**From Teach Pendant to ROS 2 (1–4)**](posts/ros2-for-robot-programmers.md) — ROS 2 for pendant programmers · [URDF, TF2](posts/ros2-robot-description.md) · [MoveIt 2](posts/moveit2-goals-not-points.md) · [Isaac ROS](posts/isaac-ros-gpu.md)
 - [**Hands-on Notes (0) — Learning Without a Real Industrial Robot**](posts/learn-without-industrial-robot.md) — choosing practice grounds with SO-101 and URSim
 
