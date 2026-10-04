@@ -123,6 +123,8 @@ The connection took longer than the demo. Written down so it takes less wanderin
 
 To watch on Windows without WSL, a read-only `foxglove_bridge` on the edge computer plus the free, open-source viewer Lichtblick also worked. It subscribes to each topic matching its publishers, so the robot's frames (`/tf`) arrive complete, without the Zenoh frame problem.
 
+Both were view-only, but the block sits in different places. RViz and PlotJuggler are ROS 2 programs that can publish too (RViz's goal-pose tools, PlotJuggler's re-publisher), so here the Zenoh bridge carried a "subscribe only" allow list to close the way back to the edge computer. On the Lichtblick side, `foxglove_bridge` was started with nothing to receive (no client publishing, services or parameters), so nothing pressed in the viewer has anywhere to go. To only watch next to a real robot, blocking at the bridge is the surer choice than trusting the viewer.
+
 ## Wrap-up
 
 | Checked | Result | Gotcha |
