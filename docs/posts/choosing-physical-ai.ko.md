@@ -99,7 +99,7 @@ description: "카메라가 본 것을 로봇 움직임으로 바꾸는 세 가�
 | 로봇 제조사별 차이 | [협동로봇이란](cobot-basics.md) · [UR vs 화낙](cobot-ur-vs-fanuc.md) |
 | ROS 2, MoveIt 2, 결정론적 셀 설계 | [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [2부](ros2-robot-description.md) · [3부](moveit2-goals-not-points.md) · [4부](isaac-ros-gpu.md) |
 | 엣지 컴퓨터에서 실제로 실행하기 | [현장 노트 1부](jetson-ros2-setup.md) · [2부](jetson-isaac-foundation-models.md) · [정정편](jetson-foundationpose-16gb.md) · [튜닝편](jetson-tuning-licensing.md) · [스캔편](jetson-scan-no-cad.md) |
-| 자세에서 움직임, 실제 로봇까지 | [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [시뮬레이터편](jetson-ursim-planners.md) |
+| 자세에서 움직임, 실제 로봇까지 | [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [시뮬레이터편](jetson-ursim-planners.md) · [Isaac Sim편](isaac-sim-pc-and-cloud.md) |
 | 학습 정책 | [학습 정책](learned-policy-track-b.md) |
 | 직접 해 보기 | [실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) |
 | 투자 관점 | [Physical AI 투자 1부](cobot-investing.md) · [2부](physical-ai-investing-actuators.md) · [3부](physical-ai-investing-power.md) |

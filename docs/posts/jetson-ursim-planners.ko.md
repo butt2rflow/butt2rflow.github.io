@@ -37,7 +37,7 @@ description: "실물편에서 실제 UR20을 움직인 스택을 그대로 URSim
 
 URSim은 겉모습만 흉내 내는 시뮬레이터가 아니라 **UR 컨트롤러 소프트웨어를 그대로** 실행합니다([실습 노트 0부](learn-without-industrial-robot.md)). 그래서 실제 로봇과 같은 드라이버, 같은 통신 방식으로 연결돼요. 대신 [실물편](jetson-real-robot-first-move.md)에서 본 공장 보정 차이나 실제 모터의 타이밍, 접촉은 없습니다. 무엇을 확인할 수 있고 무엇은 못 하는지는 [모션편](jetson-pose-to-motion.md)의 가상 하드웨어 비교 그림과 같아요.
 
-같은 시뮬레이터라도 NVIDIA의 **Isaac Sim**과는 하는 일이 다릅니다. URSim이 **로봇 컨트롤러**를 흉내 낸다면, Isaac Sim은 **주변 세계**를 흉내 내요. URSim에는 물리도, 물체도, 카메라도 없어서 부품을 집어도 아무 일이 일어나지 않습니다. 대신 진짜 UR 드라이버가 실제 로봇과 똑같이 연결되고, 모드와 보호 정지, 관절 한계까지 컨트롤러 그대로 동작합니다. Isaac Sim은 중력과 접촉, 카메라 영상과 깊이, 조명까지 계산하지만, 로봇은 일반 관절 컨트롤러로 움직여서 PolyScope나 UR 안전 기능은 들어 있지 않고, RTX GPU가 달린 PC나 클라우드가 필요합니다. 그래서 이 글에서 잡은 원격 제어 모드, 감긴 자세에서의 보호 정지, 바닥 문제는 URSim이라서 보인 것이고, 반짝이는 부품에서 깊이가 비는지나 집은 부품이 미끄러지는지는 Isaac Sim의 몫입니다([로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md)). 공장 보정 차이나 실제 접촉 힘은 둘 다 보여 주지 못하니, 마지막 확인은 늘 실제 로봇에서 합니다.
+같은 시뮬레이터라도 NVIDIA의 **Isaac Sim**과는 하는 일이 다릅니다. URSim이 **로봇 컨트롤러**를 흉내 낸다면, Isaac Sim은 **주변 세계**를 흉내 내요. URSim에는 물리도, 물체도, 카메라도 없어서 부품을 집어도 아무 일이 일어나지 않습니다. 대신 진짜 UR 드라이버가 실제 로봇과 똑같이 연결되고, 모드와 보호 정지, 관절 한계까지 컨트롤러 그대로 동작합니다. Isaac Sim은 중력과 접촉, 카메라 영상과 깊이, 조명까지 계산하지만, 로봇은 일반 관절 컨트롤러로 움직여서 PolyScope나 UR 안전 기능은 들어 있지 않고, RTX GPU가 달린 PC나 클라우드가 필요합니다. 그래서 이 글에서 잡은 원격 제어 모드, 감긴 자세에서의 보호 정지, 바닥 문제는 URSim이라서 보인 것이고, 반짝이는 부품에서 깊이가 비는지나 집은 부품이 미끄러지는지는 Isaac Sim의 몫입니다([로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md), 직접 올려 본 기록은 [Isaac Sim편](isaac-sim-pc-and-cloud.md)). 공장 보정 차이나 실제 접촉 힘은 둘 다 보여 주지 못하니, 마지막 확인은 늘 실제 로봇에서 합니다.
 
 ## 구성: 시뮬레이터는 PC에, 두뇌는 엣지 컴퓨터에
 
@@ -200,7 +200,7 @@ Universal Robots·UR·UR12e·UR20·PolyScope·URSim·URCap은 Universal Robots A
 
 </details>
 
-**시리즈** · [← 이전 글: 실물편 — 엣지 컴퓨터가 실제 로봇을 처음 움직이다](jetson-real-robot-first-move.md)
+**시리즈** · [← 이전 글: 실물편 — 엣지 컴퓨터가 실제 로봇을 처음 움직이다](jetson-real-robot-first-move.md) · [다음 글: Isaac Sim편 — 집 PC와 클라우드 GPU에 가상 작업 셀 →](isaac-sim-pc-and-cloud.md)
 
 *관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [모션편](jetson-pose-to-motion.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md)*
 

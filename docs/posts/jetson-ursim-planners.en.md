@@ -37,7 +37,7 @@ The order looks backwards, but there's a reason. The Real Robot asked "can the e
 
 URSim isn't a picture of a robot; it runs **UR's actual controller software** ([Hands-on Notes, Part 0](learn-without-industrial-robot.md)). So it connects with the same driver and the same protocol as a real robot. What it doesn't have is the factory-calibration gap seen in [The Real Robot](jetson-real-robot-first-move.md), real motor timing, or contact. What it can and can't check is the same as the simulated-hardware comparison figure in [Motion](jetson-pose-to-motion.md).
 
-It's a different kind of simulator from NVIDIA's **Isaac Sim**. URSim imitates the **robot controller**; Isaac Sim imitates the **world around it**. URSim has no physics, no objects and no cameras, so picking up a part does nothing. In exchange, the real UR driver connects exactly as to a real robot, and modes, protective stops and joint limits behave as in the controller. Isaac Sim computes gravity, contact, camera images, depth and lighting, but drives the robot with generic joint controllers, so there's no PolyScope or UR safety behaviour, and it needs a PC or cloud machine with an RTX GPU. That's why the Remote-control mode, the protective stops from wound-up poses and the floor problem in this post showed up in URSim, while whether depth drops out on a shiny part, or a grasped part slips, is Isaac Sim's job ([Why Robots Learn in a 'Fake World' First](robot-simulation.md)). Neither shows the factory-calibration gap or real contact forces, so the final check is always on the real robot.
+It's a different kind of simulator from NVIDIA's **Isaac Sim**. URSim imitates the **robot controller**; Isaac Sim imitates the **world around it**. URSim has no physics, no objects and no cameras, so picking up a part does nothing. In exchange, the real UR driver connects exactly as to a real robot, and modes, protective stops and joint limits behave as in the controller. Isaac Sim computes gravity, contact, camera images, depth and lighting, but drives the robot with generic joint controllers, so there's no PolyScope or UR safety behaviour, and it needs a PC or cloud machine with an RTX GPU. That's why the Remote-control mode, the protective stops from wound-up poses and the floor problem in this post showed up in URSim, while whether depth drops out on a shiny part, or a grasped part slips, is Isaac Sim's job ([Why Robots Learn in a 'Fake World' First](robot-simulation.md); a hands-on record is in [Isaac Sim](isaac-sim-pc-and-cloud.md)). Neither shows the factory-calibration gap or real contact forces, so the final check is always on the real robot.
 
 ## The setup: simulators on the PC, the brain on the edge computer
 
@@ -197,7 +197,7 @@ Universal Robots, UR, UR12e, UR20, PolyScope, URSim and URCap are trademarks of 
 
 </details>
 
-**Series** · [← Previous: The Real Robot — an edge computer moves a real arm for the first time](jetson-real-robot-first-move.md)
+**Series** · [← Previous: The Real Robot — an edge computer moves a real arm for the first time](jetson-real-robot-first-move.md) · [Next: Isaac Sim — a virtual work cell on a home PC and a cloud GPU →](isaac-sim-pc-and-cloud.md)
 
 *Related: [Pendant to ROS 2, Part 3: MoveIt 2](moveit2-goals-not-points.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Motion](jetson-pose-to-motion.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md) · [UR vs FANUC: openness](cobot-ur-vs-fanuc.md)*
 

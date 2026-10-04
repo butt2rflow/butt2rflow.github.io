@@ -155,6 +155,7 @@ nav:
       - posts/jetson-pose-to-motion.md
       - posts/jetson-real-robot-first-move.md
       - posts/jetson-ursim-planners.md
+      - posts/isaac-sim-pc-and-cloud.md
     - "Hands-on Notes":
       - posts/learn-without-industrial-robot.md
     - "Physical AI Investing":

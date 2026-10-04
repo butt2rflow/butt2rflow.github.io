@@ -232,6 +232,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**Motion**](posts/jetson-pose-to-motion.md) — 186 ms motion plans, and planning around a live obstacle map
 - [**The Real Robot**](posts/jetson-real-robot-first-move.md) — an edge computer moves a real UR20 for the first time; calibration 3.95→0.06 mm, 0.1 mm from goal
 - [**The Simulators**](posts/jetson-ursim-planners.md) — cuMotion, Pilz and OMPL on two URSims; a 510° wrist turn for 10 cm
+- [**Isaac Sim**](posts/isaac-sim-pc-and-cloud.md) — a virtual work cell on a home RTX 3090 and a cloud L4; a synthetic-data memory leak; the cloud wasn't faster
 
 **Hands-on Notes**
 
