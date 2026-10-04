@@ -16,7 +16,7 @@ description: "Three designs that turn what a camera sees into robot motion (geom
 
 ## The 30-second version
 
-- There are three designs from camera to motion: **geometry** (fitting CAD to the point cloud, no neural networks), **neural perception** (a network finds the pose, a planner computes the path) and **learned policy** (a policy learned from demonstrations). Geometry is the baseline that perceives without neural networks; the other two are the paths that use them. The three names are just this blog's labels, not industry terms.
+- There are three designs from camera to motion: **geometry** (fitting CAD to the point cloud, no neural networks), **neural perception** (a network finds the pose, a planner computes the path) and **learned policy** (a policy learned from demonstrations). Geometry is the baseline that perceives without neural networks; the other two are the paths that use them. In the field they're often called, in order, classical (model-based), a modular pipeline and end-to-end learning.
 - The further right, the more is learned and the harder it is to look inside. Taught-point automation sits at the far left, step 1.
 - You choose by **asking questions in order**: can it be fixed, does it only shift in the plane, can it be described with geometry, can a person demonstrate it. Stop at the step where the answer is yes.
 - Geometry vs neural perception comes down to **engineer hours per new part**; real step 4 is a **hybrid**.
@@ -131,7 +131,7 @@ The three-design split, the staircase and the failure comparison are a framework
 
 - *Physical AI*: robot technology that looks, decides and moves, rather than relying only on fixtures and taught points
 - *Deterministic · non-deterministic*: the same input always gives the same result · learned behavior whose results are statistical
-- *Geometry · neural perception · learned policy*: this blog's names for the three designs (not industry terms). Geometry is the baseline that finds parts with a camera using geometry alone, no neural networks (not the same as a fixture-and-taught-points cell). The other two use neural networks: neural perception for perception only, a learned policy for the whole motion
+- *Geometry · neural perception · learned policy*: the three designs; in the field often called classical (model-based), a modular pipeline and end-to-end learning. Geometry is the baseline that finds parts with a camera using geometry alone, no neural networks (not the same as a fixture-and-taught-points cell). The other two use neural networks: neural perception for perception only, a learned policy for the whole motion
 - *ICP (Iterative Closest Point)*: geometry that nudges and turns a CAD model until it fits the point cloud; the leftover distance (residual) acts as confidence, though symmetric parts or a bad starting pose can give a wrong answer with a small residual
 - *Point cloud*: thousands of surface points measured by a depth camera
 - *Calibration*: measuring the relationship between camera coordinates and robot coordinates

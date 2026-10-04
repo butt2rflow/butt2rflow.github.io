@@ -106,7 +106,7 @@ URSim's Docker images and supported architectures follow Universal Robots' ROS 2
 - *External Control*: the add-on (URCap; URCapX on PolyScope X) that lets a UR controller accept commands from an outside computer
 - *URDF*: the blueprint file describing a robot's links, joints and shapes
 - *ros2_control*: ROS 2's standard framework for exchanging commands with motor drivers; real hardware and mock can be swapped
-- *Geometry, neural perception, learned policy*: this blog's names for the three designs: geometric matching (no neural net), neural perception + planner, a policy learned from demos
+- *Geometry, neural perception, learned policy*: the three designs: geometric matching (no neural net), neural perception + planner, a policy learned from demos
 - *Leader arm · follower arm*: the arm you move by hand · the arm that copies it
 - *Hand-eye calibration*: measuring how camera positions map to robot coordinates
 - *Speed scaling · protective stop*: slowing the robot from the pendant · the state where the robot stops itself on a collision or limit breach
