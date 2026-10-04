@@ -12,6 +12,8 @@ description: "Three designs that turn what a camera sees into robot motion (geom
 
 "Can we put Physical AI on our line?" usually comes with technology names attached: foundation models, imitation learning, NVIDIA Isaac. What you actually have to decide first isn't a technology but **the kind of design**. There are three broad ways to turn what a camera sees into robot motion, and they aren't competing options so much as steps on a staircase.
 
+> **What this blog is about.** Depending on what the line needs (how many part types, the cycle time, how surely a failure must be caught), pick the lowest step that solves the problem, from no AI at all up to a learned policy. Motion may adapt to variation, but the pass/fail verdict always stays deterministic. Making that call takes building each approach and comparing how it works and how it fails. So alongside the concept posts, this blog carries records of actually building and measuring them ([Field Notes](jetson-ros2-setup.md), [Hands-on Notes](learn-without-industrial-robot.md)).
+
 ---
 
 ## The 30-second version
