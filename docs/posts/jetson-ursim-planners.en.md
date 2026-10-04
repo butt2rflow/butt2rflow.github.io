@@ -21,7 +21,8 @@ The short version: judged by the tool tip, all three planners reached the goal. 
 
 - **The real robot's stack, with simulators instead.** The UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) drove both a UR12e simulator on PolyScope 5 and a UR20 simulator on PolyScope X.
 - **The tool got there every time; the joints did not agree.** For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint **about 510°**. On a real arm, cables and hoses would wind up.
-- **With OMPL, the trouble comes after.** The next run started from a wound-up pose with a protective stop. The demo now returns home with a collision-checked Pilz PTP, and the UR20 dropped OMPL by default.
+- **With OMPL, the trouble comes after.** The next run started from a folded pose with a protective stop (C403). The cause is UR's wrist-clamping rule, which the ROS robot model doesn't include. Checking every plan and adding the rule to cuMotion's collision model took risky plans from 58 to 0.
+- **Soak test, interim (3.5 h):** 98.3 % success, 12 ms replies with no drift, cuMotion memory flat at 3.7 GB (not a leak). But a dropped link kills the driver, so it needs supervision, and about 6 % of box detours find no plan, so it needs retries and a fallback.
 - **cuMotion is smooth, but not identical every time.** It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).
 - **Put the floor in every request.** Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.
 - **Connect PC simulators with a reverse SSH tunnel.** Simulators in Docker inside WSL aren't visible from outside. One tunnel opened outward from the PC connected them, with no admin rights and no firewall change.
@@ -112,15 +113,21 @@ Charting the whole UR20 demo on one screen, each planner has its own speed shape
 
 Something similar happened once with cuMotion: after one cuMotion move, the second wrist joint sat at −270°. And the simulator's default start pose is right next to a wrist flip, so a 5 cm move from there swung joints about 150°. Start demos from a normal working pose.
 
-## The trouble after OMPL
+## The trouble after OMPL: UR's wrist-clamping rule (C403)
 
-OMPL wasn't only a problem while moving. When it finished, the arm was left **wound up**: wrist 2 at 250°, the shoulder near −177°, that kind of pose. Starting the next run's robot program from there protective-stopped the UR12e simulator, and even a URScript joint move home (`movej`) failed, so the container had to be restarted. Interpolating only joint values from a wound pose to home sweeps the arm through itself, and nothing collision-checks that move; that looks like the cause.
+OMPL wasn't only a problem while moving. When it finished, the arm was left **folded or wound up**, and starting the next run's robot program from there caused a protective stop. Even a URScript joint move home (`movej`) stopped again, so the container had to be restarted. It happened on both the UR12e and the UR20.
 
-So the demo gained **step 7, back home with Pilz PTP**. Going through MoveIt, it checks self-collision and the floor. On the UR20 it returned exactly home even from heavily wound poses such as shoulder −176° and wrist 1 −345°, with the safety state normal.
+The cause wasn't a simulator quirk but **a UR controller safety rule**. Protective stop C403 is **wrist-clamping (finger-pinch) protection**: a cylinder around the forearm and a sphere around the tool flange must stay at least 28 mm apart, and the rule can't be disabled. The radii live in the controller's configuration, which puts the limit from the forearm axis to the flange at 115.5 mm on the UR12e and 130.2 mm on the UR20. UR's robot description for ROS (the URDF) doesn't model this rule (issue #112 on UR's ROS 2 description package, still open), so MoveIt, OMPL and cuMotion can all plan into it, and once the arm is inside, every move trips it again until a person recovers it.
 
-On the UR20, OMPL is now off by default. Three times it sent the heavy UR20 into a folded pose that the simulator rejects even while standing still. Each time, starting a program protective-stopped at once, and neither a slow Pilz PTP nor a URScript `movej` got out; the container was restarted. The cause isn't confirmed yet (a self-collision margin stricter than MoveIt's, or a safety limit, are the candidates). The UR12e still runs OMPL for comparison.
+Three layers now block it:
 
-The lesson: **plan all the way to where you end up.** Where one move ends is where the next starts, so plan the move home with a collision-checking planner too.
+- **Check every plan.** Each planned trajectory is checked against UR's rule plus a margin (20 mm on the UR12e, 30 mm on the UR20) and rejected and replanned if it fails.
+- **Tell cuMotion.** cuMotion's collision spheres now sit along the real clamping axis (elbow to the first wrist joint), with a buffer around the flange; the stock spheres sat on a line 0.17 m away.
+- **A flange margin sphere** in MoveIt requests too.
+
+The check alone blocked 58 near-miss plans (one 2.7 mm inside the limit). With the corrected collision model there were 0 to block, and the closest approach was 40 mm outside the limit. The demo still ends with **step 7, back home with Pilz PTP**, and the UR20 still runs without OMPL by default.
+
+Two lessons: **plan all the way to where the move ends**, and **the robot controller has safety rules the ROS model doesn't know about**. On the pendant, the controller simply blocks such poses; when ROS plans the path, the rule has to go into the model.
 
 ## cuMotion doesn't always take the same route
 
@@ -132,7 +139,7 @@ So the uses split: **Pilz** for approach and retreat right next to parts, where 
 
 ![Without a floor, a planner goes below it](../assets/diagrams_en/r8-floor.svg)
 
-At first MoveIt's planning scene had no floor, and OMPL sent the UR20's tool **0.68 m below its base**. From that pose the simulator protective-stopped every time a program started, and only restarting the container cleared it. After a restart, PolyScope X was back in Local control, so the mode had to be switched again too.
+At first MoveIt's planning scene had no floor, and OMPL sent the UR20's tool **0.68 m below its base**. From that pose every program start protective-stopped (this too turned out to be the C403 wrist-clamping rule above), and only restarting the container cleared it. After a restart, PolyScope X was back in Local control, so the mode had to be switched again too.
 
 From then on, **every planning request carried a floor slab 2 cm below the base**, and OMPL stayed above it. It's the same story as "the floor cuMotion adds without asking" in [The Real Robot](jetson-real-robot-first-move.md): any obstacle in a request replaces cuMotion's default floor, so add the floor yourself. On a real cell, the floor, the stand and the fence always belong in the planning scene.
 
@@ -145,7 +152,16 @@ The connection took longer than the demo. Written down so it takes less wanderin
 - **The connection drops in the middle of a move.** The UR driver must answer the robot every 2 ms, and the Jetson's Linux isn't a real-time kernel. Two idle cuMotion planners (75–80 % of a CPU core each) plus FoundationPose containers were too much. During demos, only one robot's planner ran, and other heavy containers were stopped.
 - **The viewing bridge carried action servers too.** The bridge (Zenoh) set up to watch RViz on the PC passed everything, so the edge computer saw two cuMotion action servers. The bridge now passes only the three topics the views need. It also carried a single QoS setting per topic, so part of the robot's frames (`/tf`), which mixed settings, never crossed; the PC now rebuilds the frames from the joint values.
 - **Hours later, a new script can't find the frames.** Test scripts that exited hard without cleaning up left stale participants behind, and after a few hours new programs no longer received the robot's static frames (`/tf_static`). Every script now cleans up its node before exiting.
-- **Long-running planner containers go stale too.** After many client restarts, cuMotion planned goals whose "accepted" reply never arrived, and MoveIt stalled during a straight-line move. Before a demo, restart the robot's driver, planner and MoveIt containers. Here the likely cause was R&D-style use, hundreds of test scripts started and hard-killed over a few hours, but on a real cell that runs for days or weeks, restarting isn't the answer. Send goals from one long-lived app node, give every request a timeout and retries, and restart a container only at a safe point between cycles when replies slow down. Whether things degrade over time has to be checked with a soak test, repeating the cycle in simulation for a day or more. That test hasn't been run yet.
+- **Long-running planner containers go stale too.** After many client restarts, cuMotion planned goals whose "accepted" reply never arrived, and MoveIt stalled during a straight-line move. Before a demo, restart the robot's driver, planner and MoveIt containers. Here the likely cause was R&D-style use, hundreds of test scripts started and hard-killed over a few hours, but on a real cell that runs for days or weeks, restarting isn't the answer. Send goals from one long-lived app node, give every request a timeout and retries, and restart a container only at a safe point between cycles when replies slow down. Whether things degrade over time has to be checked with a soak test, so a 24-hour run in simulation is under way. Interim results:
+
+| | Result | Meaning |
+|---|---|---|
+| Run 1 | After 30 minutes the robot data link (RTDE) through the tunnel dropped; the UR control node died and never recovered | A real cell needs **supervision**. A watchdog was added and the test restarted |
+| Run 3, 3.5 h | 98.3 % success, "goal accepted" in 12 ms with no drift, 0 clamping rejects | No slowdown over time |
+| cuMotion memory | 2.4 → 3.7 GB in the first hour, then flat for hours | Not a leak but the GPU memory cache; budget about 4 GB on a 16 GB Orin |
+| No-plan rate | About 6 % of the 50 cm box detours find no path | Clean failures that don't grow, but a real cell needs retries and a fallback |
+
+The 24-hour result will be added here when the run ends. A run with perception and motion together, and a UR20 run, come next.
 
 
 ## Wrap-up
@@ -156,7 +172,8 @@ The connection took longer than the demo. Written down so it takes less wanderin
 | cuMotion | 50 cm over the box, ~199 mm clearance, 0.5–1.8 mm | the same request doesn't always take the same route |
 | Pilz LIN | 10 cm, within 0.1 mm of a line | doesn't avoid obstacles |
 | OMPL (defaults) | within 1 mm of the goal | 1–1.9 m tool detour, wrist 3 ~510° |
-| After OMPL | the next run protective-stops from a wound pose | Pilz PTP home (collision-checked); UR20 drops OMPL by default |
+| After OMPL | the next run protective-stops from a pose that trips the wrist-clamping rule (C403) | check every plan + clamp-aware collision model + Pilz PTP home; risky plans 58 → 0 |
+| Soak test (interim, 3.5 h) | 98.3 % success, 12 ms replies with no drift, memory flat at 3.7 GB | a dropped link kills the driver → supervision; ~6 % no-plan → retries and a fallback |
 | Floor | a floor slab in every request | without it, the tool went 0.68 m below the base |
 | Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel, restart containers before a demo |
 | Viewing | Lichtblick on Windows | read-only at the bridge |
@@ -172,9 +189,9 @@ The connection took longer than the demo. Written down so it takes less wanderin
 <details>
 <summary>Notes — basis for these results and disclaimer</summary>
 
-The numbers were **measured directly** on 3 October 2026 with a Jetson Orin NX 16GB and two URSims (a UR12e on PolyScope 5.26.1 and a UR20 on PolyScope X 10.12.1) running in WSL2 (Ubuntu 22.04) and Docker on a Windows PC (Isaac ROS 3.2, ROS 2 Humble, UR ROS 2 driver 2.14, MoveIt 2 with OMPL and Pilz). The UR12e's cuMotion collision model was the UR10e configuration shipped with Isaac ROS (the UR12e shares the UR10e's kinematics); the UR20 used the configuration built in [Motion](jetson-pose-to-motion.md). These are one or two runs on one PC, so read them as tendencies, not statistics. **All results are simulated**; a real robot's calibration gap, motor timing and contact are not reflected. Using this approach on a real arm must follow that robot's safety settings and risk assessment.
+The numbers were **measured directly** on 3–4 October 2026 with a Jetson Orin NX 16GB and two URSims (a UR12e on PolyScope 5.26.1 and a UR20 on PolyScope X 10.12.1) running in WSL2 (Ubuntu 22.04) and Docker on a Windows PC (Isaac ROS 3.2, ROS 2 Humble, UR ROS 2 driver 2.14, MoveIt 2 with OMPL and Pilz). The UR12e's cuMotion collision model was the UR10e configuration shipped with Isaac ROS (the UR12e shares the UR10e's kinematics); the UR20 used the configuration built in [Motion](jetson-pose-to-motion.md). These are one or two runs on one PC, so read them as tendencies, not statistics. **All results are simulated**; a real robot's calibration gap, motor timing and contact are not reflected. Using this approach on a real arm must follow that robot's safety settings and risk assessment.
 
-OMPL and Pilz behaviour is based on the MoveIt 2 documentation, the driver's Remote control and ports on the Universal Robots ROS 2 driver documentation, and cuMotion's default floor on the Isaac ROS cuMotion source.
+The wrist-clamping rule (C403) is based on UR staff answers on the UR forum, the radii in the controller configuration and issue #112 on UR's ROS 2 description package; OMPL and Pilz behaviour on the MoveIt 2 documentation, the driver's Remote control and ports on the Universal Robots ROS 2 driver documentation, and cuMotion's default floor on the Isaac ROS cuMotion source.
 
 Universal Robots, UR, UR12e, UR20, PolyScope, URSim and URCap are trademarks of Universal Robots A/S; NVIDIA, Jetson, Orin, Isaac ROS and cuMotion of NVIDIA Corporation; ROS of Open Robotics; MoveIt of PickNik Inc.; Windows of Microsoft Corporation; Docker of Docker, Inc. They are used for identification only. PlotJuggler, Lichtblick, Zenoh and foxglove_bridge are open-source software from their respective projects.
 
