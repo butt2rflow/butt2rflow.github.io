@@ -89,6 +89,7 @@
   - 1.5° vs 1.4°: 요약은 "1.5° 안"(상한), 본문은 기준 체인 1.4°라 모순이 아니어서 그대로 뒀다.
   - 3D 카메라 글: ZED X Mini 0.1~8m(2.2mm 렌즈)는 Stereolabs 스토어로, Seeed 로보틱스 GMSL 보드의 335Lg 지원은 Seeed 위키로 확인하고 출처에 위키를 추가했다. 305g "FAKRA 포함 약 53mm"는 데이터시트(42×42×40mm)에도 다른 곳에도 없어 지우고 "커넥터는 별도"로 고쳤다.
   - 스캔편 상업용 경로(`dc93ded`, 코스 `584a226`): 스캔 깊이의 대체재를 ESS가 아니라 NGC 상용판 FoundationStereo로 바꿨다. 사진 20장 처리라 속도보다 품질이 중요하기 때문이다. Isaac ROS 5.0 `isaac_ros_foundationstereo`(JetPack 7.2 필요, 현재 Orin NX는 JetPack 6)이고 상용판으로는 미실측이라고 적었다. Fast-FoundationStereo는 연구용이라 제외.
+  - nvblox 비교(글 수정 없음): 스캔과 nvblox는 둘 다 위치를 아는 여러 깊이 영상을 합치지만, nvblox는 cm 단위 셀 지도(TSDF→ESDF)용이고 스캔은 mm 단위 물체 메시용이다. 스캔편이 처음 시도했다가 실패한 TSDF 융합을 nvblox(Apache-2.0, `isaac_ros_nvblox`도 Apache-2.0)가 GPU로 할 수 있어 후속 실험 후보로 남겼다. 라이선스 표와 실험 후보는 로컬 메모리(`reference_vision_model_licenses`, `project_object_scan_followups`)와 핸드오프에 기록했다.
   - 네이버 패키지 3개(스캔편·튜닝편·ROS 2 4부) 재생성. `tools/naver_refresh.py`의 ROOT를 다른 PC 경로에서 스크립트 기준 상대 경로로 바꿨다(로컬 전용 파일).
 - **검증:** 로컬 `mkdocs build --strict`는 기존 CI 생성 PNG 경고 5개 외에 없음. 볼드 짝 확인. 바뀐 그림 3개(`r2p4-obstacles` KO/EN, `dcs-order` KO/EN)는 헤드리스 Chrome으로 렌더링해 글자 넘침 없음 확인.
 
