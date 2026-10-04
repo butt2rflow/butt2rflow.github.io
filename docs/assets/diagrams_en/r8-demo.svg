@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">The six-step demo</title>
-<desc id="de">The same demo ran on both robots. 1 a joint move to home. 2 cuMotion, 50 cm over a box. 3 Pilz LIN, 10 cm straight down. 4 10 cm back up. 5 cuMotion back over the box. 6 the same 10 cm with OMPL, for comparison.</desc>
+<title id="ti">The seven-step demo</title>
+<desc id="de">The same demo ran on both robots. 1 a joint move to home. 2 cuMotion, 50 cm over a box. 3 Pilz LIN, 10 cm straight down. 4 10 cm back up. 5 cuMotion back over the box. 6 the same 10 cm with OMPL, for comparison. 7 back home with Pilz PTP to a joint goal (collision-checked).</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -55,29 +55,33 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="230" rx="12"/>
 <text class="t" x="18" y="26">The same moves with three planners</text>
-<rect class="bx" x="16" y="56" width="100" height="70" rx="8"/>
-<text class="lb" x="66.0" y="88.0" text-anchor="middle">1 home</text>
-<text class="st" x="66.0" y="103.0" text-anchor="middle">joint move</text>
-<line class="ar" x1="117" y1="91" x2="124" y2="91"/>
-<rect class="bxgr" x="125" y="56" width="100" height="70" rx="8"/>
-<text class="lb" x="175.0" y="88.0" text-anchor="middle">2 cuMotion</text>
-<text class="st" x="175.0" y="103.0" text-anchor="middle">50 cm over a box</text>
-<line class="ar" x1="226" y1="91" x2="233" y2="91"/>
-<rect class="bxa" x="234" y="56" width="100" height="70" rx="8"/>
-<text class="lb" x="284.0" y="88.0" text-anchor="middle">3 Pilz LIN</text>
-<text class="st" x="284.0" y="103.0" text-anchor="middle">10 cm down</text>
-<line class="ar" x1="335" y1="91" x2="342" y2="91"/>
-<rect class="bxa" x="343" y="56" width="100" height="70" rx="8"/>
-<text class="lb" x="393.0" y="88.0" text-anchor="middle">4 Pilz LIN</text>
-<text class="st" x="393.0" y="103.0" text-anchor="middle">10 cm up</text>
-<line class="ar" x1="444" y1="91" x2="451" y2="91"/>
-<rect class="bxgr" x="452" y="56" width="100" height="70" rx="8"/>
-<text class="lb" x="502.0" y="88.0" text-anchor="middle">5 cuMotion</text>
-<text class="st" x="502.0" y="103.0" text-anchor="middle">back over box</text>
-<line class="ar" x1="553" y1="91" x2="560" y2="91"/>
-<rect class="bxr" x="561" y="56" width="100" height="70" rx="8"/>
-<text class="lb" x="611.0" y="88.0" text-anchor="middle">6 OMPL</text>
-<text class="st" x="611.0" y="103.0" text-anchor="middle">the same 10 cm</text>
+<rect class="bx" x="16" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="59.0" y="88.0" text-anchor="middle">1 home</text>
+<text class="st" x="59.0" y="103.0" text-anchor="middle">joint move</text>
+<line class="ar" x1="103" y1="91" x2="108" y2="91"/>
+<rect class="bxgr" x="109" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="152.0" y="88.0" text-anchor="middle">2 cuMotion</text>
+<text class="st" x="152.0" y="103.0" text-anchor="middle">50 cm over</text>
+<line class="ar" x1="196" y1="91" x2="201" y2="91"/>
+<rect class="bxa" x="202" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="245.0" y="88.0" text-anchor="middle">3 Pilz LIN</text>
+<text class="st" x="245.0" y="103.0" text-anchor="middle">10 cm down</text>
+<line class="ar" x1="289" y1="91" x2="294" y2="91"/>
+<rect class="bxa" x="295" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="338.0" y="88.0" text-anchor="middle">4 Pilz LIN</text>
+<text class="st" x="338.0" y="103.0" text-anchor="middle">10 cm up</text>
+<line class="ar" x1="382" y1="91" x2="387" y2="91"/>
+<rect class="bxgr" x="388" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="431.0" y="88.0" text-anchor="middle">5 cuMotion</text>
+<text class="st" x="431.0" y="103.0" text-anchor="middle">back over box</text>
+<line class="ar" x1="475" y1="91" x2="480" y2="91"/>
+<rect class="bxr" x="481" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="524.0" y="88.0" text-anchor="middle">6 OMPL</text>
+<text class="st" x="524.0" y="103.0" text-anchor="middle">same 10 cm</text>
+<line class="ar" x1="568" y1="91" x2="573" y2="91"/>
+<rect class="bxa" x="574" y="56" width="86" height="70" rx="8"/>
+<text class="lb" x="617.0" y="88.0" text-anchor="middle">7 Pilz PTP</text>
+<text class="st" x="617.0" y="103.0" text-anchor="middle">back home</text>
 <text class="sm" x="18" y="160">green cuMotion · amber Pilz · red OMPL. The box is 30 × 10 × 40 cm, placed across the straight path</text>
-<text class="sm" x="18" y="190">Every planning request carried a floor slab (see the floor section)</text>
+<text class="sm" x="18" y="190">Every planning request carried a floor slab. The UR20 later dropped OMPL by default (see below)</text>
 </svg>

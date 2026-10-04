@@ -21,9 +21,11 @@ The short version: judged by the tool tip, all three planners reached the goal. 
 
 - **The real robot's stack, with simulators instead.** The UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) drove both a UR12e simulator on PolyScope 5 and a UR20 simulator on PolyScope X.
 - **The tool got there every time; the joints did not agree.** For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint **about 510°**. On a real arm, cables and hoses would wind up.
+- **With OMPL, the trouble comes after.** The next run started from a wound-up pose with a protective stop. The demo now returns home with a collision-checked Pilz PTP, and the UR20 dropped OMPL by default.
 - **cuMotion is smooth, but not identical every time.** It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).
 - **Put the floor in every request.** Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.
 - **Connect PC simulators with a reverse SSH tunnel.** Simulators in Docker inside WSL aren't visible from outside. One tunnel opened outward from the PC connected them, with no admin rights and no firewall change.
+- **To only watch, Lichtblick on Windows.** No WSL, 3D and charts in one window. Make it read-only at the bridge, not in the viewer.
 - **The edge computer isn't a real-time OS.** The UR driver must answer every 2 ms, and with heavy containers running alongside, the connection dropped in the middle of a move.
 
 ---
@@ -48,11 +50,21 @@ Three parts of the connection took work.
 
 One thing differed on the PolyScope X simulator. To switch power and brakes on from outside, the pendant has to be in **Automatic mode with Remote control**; otherwise the request is refused with "must be in remote mode". In Remote control the driver connected without an External Control program on the pendant. The Real Robot deliberately used manual mode with a person starting the pendant program; running a real arm under Remote control needs more safety procedure to match.
 
-## The six-step demo
+### To only watch, Lichtblick on Windows
 
-![The six-step demo](../assets/diagrams_en/r8-demo.svg)
+![Lichtblick during the UR20 demo. Left, the robot and box in a 3D view; top right, joint angles; bottom right, joint speeds](../assets/demos/jetson-ursim-lichtblick.jpg)
 
-The same demo ran on both robots: start at home, go 50 cm over the box with cuMotion, go 10 cm down and back up with Pilz LIN, return with cuMotion, and finally do the same 10 cm with OMPL.
+*Lichtblick during the UR20 demo. Left, the robot and the box in 3D; top right, joint angles; bottom right, joint speeds. The large bell shapes in the speed chart are cuMotion; the small pulse at the right end is Pilz LIN. The charts are in radians (this version ignores the degree conversion).*
+
+The views first ran as RViz and PlotJuggler inside WSL, but just to watch, the free, open-source Windows viewer **Lichtblick** was lighter and easier. It installs straight on Windows, and the 3D view and the joint charts fit in one window. Run a read-only `foxglove_bridge` on the edge computer and connect through the tunnel. It subscribes to each topic matching its publishers, so the robot's frames (`/tf`) arrive complete too (no Zenoh frame problem, see "What got in the way of the connection" below). The installer isn't code-signed, so check it against the SHA-256 published with the release before installing.
+
+Both were view-only, but the block sits in different places. RViz and PlotJuggler are ROS 2 programs that can publish too (RViz's goal-pose tools, PlotJuggler's re-publisher), so here the Zenoh bridge carried a "subscribe only" allow list to close the way back to the edge computer. On the Lichtblick side, `foxglove_bridge` was started with nothing to receive (no client publishing, services or parameters), so nothing pressed in the viewer has anywhere to go. To only watch next to a real robot, blocking at the bridge is the surer choice than trusting the viewer.
+
+## The seven-step demo
+
+![The seven-step demo](../assets/diagrams_en/r8-demo.svg)
+
+The same demo ran on both robots: start at home, go 50 cm over the box with cuMotion, go 10 cm down and back up with Pilz LIN, return with cuMotion, do the same 10 cm with OMPL, and finally go back home with Pilz PTP.
 
 | Step | UR12e | UR20 |
 |---|---|---|
@@ -62,8 +74,9 @@ The same demo ran on both robots: start at home, go 50 cm over the box with cuMo
 | 4 Pilz LIN 10 cm up | 0.0 mm, 0.1 mm off straight | 0.0 mm |
 | 5 cuMotion, back over the box | plan 1.2 s, 0.0 mm, 129 mm clearance | plan 1.56 s, 0.3 mm |
 | 6 OMPL, the same 10 cm | 0.96 mm, 1.0 m tool detour, **wrist 3 ~510°** | 0.83 mm, 1.1–1.9 m tool detour |
+| 7 Pilz PTP, home (joint goal) | exactly home | exactly home |
 
-The mm figure is the distance between where the tool stopped and the goal; clearance is the tool path's closest approach to the box. Judged by the table alone, the last row is a success too: within 1 mm.
+The mm figure is the distance between where the tool stopped and the goal; clearance is the tool path's closest approach to the box. Judged by the table alone, the OMPL row is a success too: within 1 mm. The UR20's OMPL numbers come from runs before OMPL was dropped by default (below).
 
 ## The same distance, three planners
 
@@ -97,6 +110,16 @@ Charting the whole UR20 demo on one screen, each planner has its own speed shape
 
 Something similar happened once with cuMotion: after one cuMotion move, the second wrist joint sat at −270°. And the simulator's default start pose is right next to a wrist flip, so a 5 cm move from there swung joints about 150°. Start demos from a normal working pose.
 
+## The trouble after OMPL
+
+OMPL wasn't only a problem while moving. When it finished, the arm was left **wound up**: wrist 2 at 250°, the shoulder near −177°, that kind of pose. Starting the next run's robot program from there protective-stopped the UR12e simulator, and even a URScript joint move home (`movej`) failed, so the container had to be restarted. Interpolating only joint values from a wound pose to home sweeps the arm through itself, and nothing collision-checks that move; that looks like the cause.
+
+So the demo gained **step 7, back home with Pilz PTP**. Going through MoveIt, it checks self-collision and the floor. On the UR20 it returned exactly home even from heavily wound poses such as shoulder −176° and wrist 1 −345°, with the safety state normal.
+
+On the UR20, OMPL is now off by default. Three times it sent the heavy UR20 into a folded pose that the simulator rejects even while standing still. Each time, starting a program protective-stopped at once, and neither a slow Pilz PTP nor a URScript `movej` got out; the container was restarted. The cause isn't confirmed yet (a self-collision margin stricter than MoveIt's, or a safety limit, are the candidates). The UR12e still runs OMPL for comparison.
+
+The lesson: **plan all the way to where you end up.** Where one move ends is where the next starts, so plan the move home with a collision-checking planner too.
+
 ## cuMotion doesn't always take the same route
 
 cuMotion's paths were smooth and cleared the box comfortably. But **the same request went over the box once and around it another time**. Both are valid, with 93–199 mm clearance. That's natural for a planner that searches between obstacles, but a cell that expects the same path every time needs to know it.
@@ -120,10 +143,8 @@ The connection took longer than the demo. Written down so it takes less wanderin
 - **The connection drops in the middle of a move.** The UR driver must answer the robot every 2 ms, and the Jetson's Linux isn't a real-time kernel. Two idle cuMotion planners (75–80 % of a CPU core each) plus FoundationPose containers were too much. During demos, only one robot's planner ran, and other heavy containers were stopped.
 - **The viewing bridge carried action servers too.** The bridge (Zenoh) set up to watch RViz on the PC passed everything, so the edge computer saw two cuMotion action servers. The bridge now passes only the three topics the views need. It also carried a single QoS setting per topic, so part of the robot's frames (`/tf`), which mixed settings, never crossed; the PC now rebuilds the frames from the joint values.
 - **Hours later, a new script can't find the frames.** Test scripts that exited hard without cleaning up left stale participants behind, and after a few hours new programs no longer received the robot's static frames (`/tf_static`). Every script now cleans up its node before exiting.
+- **Long-running planner containers go stale too.** After many client restarts, cuMotion planned goals whose "accepted" reply never arrived, and MoveIt stalled during a straight-line move. Before a demo, restart the robot's driver, planner and MoveIt containers.
 
-To watch on Windows without WSL, a read-only `foxglove_bridge` on the edge computer plus the free, open-source viewer Lichtblick also worked. It subscribes to each topic matching its publishers, so the robot's frames (`/tf`) arrive complete, without the Zenoh frame problem.
-
-Both were view-only, but the block sits in different places. RViz and PlotJuggler are ROS 2 programs that can publish too (RViz's goal-pose tools, PlotJuggler's re-publisher), so here the Zenoh bridge carried a "subscribe only" allow list to close the way back to the edge computer. On the Lichtblick side, `foxglove_bridge` was started with nothing to receive (no client publishing, services or parameters), so nothing pressed in the viewer has anywhere to go. To only watch next to a real robot, blocking at the bridge is the surer choice than trusting the viewer.
 
 ## Wrap-up
 
@@ -133,11 +154,14 @@ Both were view-only, but the block sits in different places. RViz and PlotJuggle
 | cuMotion | 50 cm over the box, ~199 mm clearance, 0.5–1.8 mm | the same request doesn't always take the same route |
 | Pilz LIN | 10 cm, within 0.1 mm of a line | doesn't avoid obstacles |
 | OMPL (defaults) | within 1 mm of the goal | 1–1.9 m tool detour, wrist 3 ~510° |
+| After OMPL | the next run protective-stops from a wound pose | Pilz PTP home (collision-checked); UR20 drops OMPL by default |
 | Floor | a floor slab in every request | without it, the tool went 0.68 m below the base |
-| Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel |
+| Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel, restart containers before a demo |
+| Viewing | Lichtblick on Windows | read-only at the bridge |
 
 - **Look at the joint chart, not just the tool-tip number.** A path that arrives within 1 mm can turn a wrist one and a half times.
 - **Choose the planner by its job.** Pilz near parts, cuMotion around obstacles, OMPL only after checking.
+- **Plan all the way to where you end up.** Plan the move home with a collision-checking planner too.
 - **Add the floor yourself.** In every request, not trusting a default.
 - **Simulator first, then the real robot in steps.** Look at big moves in simulation; climb on a real arm in small steps, as in [The Real Robot](jetson-real-robot-first-move.md).
 
@@ -172,3 +196,4 @@ Universal Robots, UR, UR12e, UR20, PolyScope, URSim and URCap are trademarks of 
 - *Reverse SSH tunnel*: an inside computer opens an SSH connection to an outside one and lets the outside use inside ports through it
 - *Real-time kernel*: an OS kernel built to guarantee responses within a set time
 - *RViz · PlotJuggler*: ROS's 3D view tool and time-series chart tool
+- *Lichtblick*: a free, open-source robot data viewer that shows ROS topics as 3D views and charts
