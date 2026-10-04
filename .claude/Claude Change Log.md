@@ -59,6 +59,7 @@
 - **정리(10-04):** 메모리 `field-notes-tuning-scan`(8부 10-04 보강, 장시간 시험 대기), 새 피드백 메모리 `production-implications-of-workarounds`(R&D 임시 처방엔 실제 셀 관점 한 줄), 핸드오프(8부 보강, soak 결과 대기 항목).
 - **시뮬레이터편 한국어 다듬기(사용자 지적: 문맥이 어색한 곳이 많음):** 본문 전체를 다시 씀. 구성 절에서 x86 문장 삽입으로 끊긴 'UR12e와 … UR20이에요' 흐름 복구, '툴 끝' 반복 → '도착 오차'·'툴을 목표에 정확히', 데모 소개의 섞인 나열 정리, OMPL 절의 긴 문장(감긴 자세 원인, 접힌 자세 세 번) 풀어 씀, 마지막 연결 함정 항목을 짧게 하고 production 주의는 뒤 문단으로 분리, 정리 표·마무리 문장 자연스럽게. 그림 문구(r8-planners 제목·'어떤 모양이든', r8-setup 제목)와 description도 맞춤. 숫자와 링크는 전후 비교로 동일 확인. 영어판은 그대로.
 - **Lichtblick 노트(블로그 밖, 10-04):** 사용자 요청으로 fos-physical-ai 세션에 메시지 대신 `fos-physical-AI/docs/lichtblick_camera_view_note.md`에 노트를 남김(커밋 안 함): 카메라 토픽 보기(카메라를 로봇에 단 뒤 시험), C# 앱 연동 3안(실행 / WebView2 / 프로토콜만, MPL-2.0, C# 앱은 아직 ROS 미지원이라 나중), 공존 구성(Jetson Isaac ROS + 윈도 C# 테스터)에서 디버깅 도구로서의 역할. fos 변경 로그에 안내 한 줄. 메모리 `lichtblick-debug-viewer` 신규, 핸드오프에 대기 항목과 soak 1차 중단·2차 진행 기록.
+- **펜던트 → ROS 번역 노트(블로그 밖, 10-04):** `fos-physical-AI/docs/pendant_to_ros_translation_note.md`(커밋 안 함). 펜던트 방식을 유지하는 세 길(오프셋만 / External Control로 섞기 / ROS로 다시 쓰기: 프로그램 하나 + 컨트롤러 설정 체크리스트), Claude 번역 대응표와 기계적이지 않은 부분(블렌딩, CONFIG, 속도 배율, 고유 기능, 안전 검토), URSim·ROBOGUIDE에서 원본 대 번역본 자동 비교, 시범 제안. 일반화하면 블로그 글감(회사 프로그램 제외).
 - **모션편 6부 보강:** 새 절 「자세를 목표로 바꾸기」(잰 카메라 위치 16.9 cm·16°, 뒤집힌 마우스를 깊이로 잡음, 사진 `jetson-motion-pose-goal.jpg`), 「가상 하드웨어로 끝까지, 그리고 UR20용 cuMotion 설정 만들기」(구 71개 vs UR10e 20개, 자동 맞추기 실패 이유). 다음 글 링크, 메뉴, 홈 목록.
 
 **검증:** 로컬 `mkdocs build --strict` 기존 경고 5개 외 없음, 새 그림 한/영 헤드리스 Chrome 렌더 확인.
