@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 356" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">합성 데이터 스크립트의 GPU 메모리</title>
-<desc id="de">가로축은 촬영 횟수(0~500), 세로축은 GPU 메모리(0~24 GB). 촬영마다 렌더 갱신을 껐다 켜는 방식(NVIDIA 예제의 패턴)에서는 메모리가 60번에 2.2 GB에서 9.9 GB로 한 번에 약 130 MB씩 늘었고, 그대로 가면 24 GB를 170~190번째에 다 쓴다. 실제로 RTX 3090은 188번째에 메모리 부족으로, 클라우드 L4는 169번째에 GPU 오류로 멈췄다. 껐다 켜기를 빼자 메모리는 약 3.0 GB에서 평평하게 유지됐고 500번을 모두 마쳤다.</desc>
+<desc id="de">가로축은 촬영 횟수(0~500), 세로축은 GPU 메모리(0~24 GB). 촬영마다 렌더 갱신을 껐다 켜는 방식(NVIDIA 예제의 패턴)에서는 메모리가 60번에 2.2 GB에서 9.9 GB로 한 번에 약 130 MB씩 늘었고, 그대로 가면 24 GB를 170~190번째에 다 쓴다. 실제로 RTX 3090은 188번째에 메모리 부족으로, 클라우드 L4는 169번째에 GPU 오류로 멈췄다. 껐다 켜기를 빼자 메모리는 약 3.0 GB에서 더 늘지 않았고 500번을 모두 마쳤다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -75,9 +75,9 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <path d="M261.0 51.0 L271.0 61.0 M261.0 61.0 L271.0 51.0" style="stroke:var(--red);stroke-width:2.2"/>
 <path d="M283.1 51.0 L293.1 61.0 M283.1 61.0 L293.1 51.0" style="stroke:var(--red);stroke-width:2.2"/>
 <text class="nd" x="298.08000000000004" y="72.0" style="fill:var(--red)">멈춤: L4 169번째, 3090 188번째</text>
-<text class="sm" x="147.6" y="209.52499999999998">렌더 껐다 켜기: 측정 60번</text>
+<text class="sm" x="147.6" y="209.52499999999998">렌더 업데이트 껐다 켜기: 60장 측정</text>
 <text class="sm" x="147.6" y="223.52499999999998">점선은 같은 기울기로 이은 것</text>
 <path d="M70.0 268.1 L128.0 261.4 L186.0 261.4 L244.0 261.4 L302.0 261.2 L360.0 261.1 L418.0 261.1 L476.0 261.1 L534.0 261.1 L592.0 261.1 L650.0 261.1" style="stroke:var(--green);stroke-width:2;fill:none"/>
-<text class="nd" x="650.0" y="250.75" text-anchor="end" style="fill:var(--green)">껐다 켜기 뺌: 약 3.0 GB, 500/500</text>
-<text class="sm" x="18" y="348">RTX 3090 측정. 클라우드 L4도 같은 모양(수정 후 약 2.4 GB에서 평평, 500/500)</text>
+<text class="nd" x="650.0" y="250.75" text-anchor="end" style="fill:var(--green)">그 코드를 뺌: 약 3.0 GB, 500/500</text>
+<text class="sm" x="18" y="348">RTX 3090 측정. 클라우드 L4도 같은 모양(수정 후 약 2.4 GB에서 유지, 500/500)</text>
 </svg>

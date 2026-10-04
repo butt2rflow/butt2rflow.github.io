@@ -72,7 +72,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="484" y="122">FoundationStereo 등</text>
 <text class="it" x="484" y="162">경로 계획</text>
 <text class="sm" x="484" y="180">cuMotion</text>
-<text class="it" x="484" y="220">가짜 하드웨어 연결</text>
+<text class="it" x="484" y="220">토픽 기반 하드웨어</text>
 <text class="sm" x="484" y="238">topic_based_ros2_control</text>
 <line class="art" x1="288" y1="96" x2="466" y2="96"/>
 <text class="sm" x="377" y="90" text-anchor="middle">/oak/left·right 흑백 640×400</text>
@@ -82,6 +82,6 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="377" y="164" text-anchor="middle">joint_states · clock · 약 56 Hz</text>
 <line class="ara" x1="466" y1="222" x2="288" y2="222"/>
 <text class="sm" x="377" y="216" text-anchor="middle">/isaac_joint_commands</text>
-<text class="sm" x="18" y="306">왼쪽·오른쪽·카메라 정보 네 토픽이 같은 시각 도장을 받는다(224/224). 명령 시험: +0.300 rad 그대로 도착</text>
-<text class="sm" x="18" y="326">화살표는 실제 네트워크가 아니라 토픽 방향. 사진 한 장 2.7 MB라 UDP 버퍼를 16 MB로 키웠다</text>
+<text class="sm" x="18" y="306">스테레오 네 토픽의 타임스탬프가 모두 같다(224/224). 명령 시험: +0.300 rad 그대로 반영</text>
+<text class="sm" x="18" y="326">화살표는 토픽이 흐르는 방향. 컬러 한 프레임이 2.7 MB라 UDP 버퍼를 16 MB로 키웠다</text>
 </svg>

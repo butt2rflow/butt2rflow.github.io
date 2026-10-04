@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">약한 모터가 아니라 바닥이었다</title>
-<desc id="de">왼쪽: 모든 관절 0의 자세에서 UR20의 팔은 어깨 높이에서 수평으로 뻗고, 시험용 사인파 움직임은 이 자세를 중심으로 위아래로 흔들어 팔을 바닥과 상자 더미 속으로 밀었다. 어깨 모터는 중력에 필요한 328 Nm의 두 배가 넘는 700 Nm 이상을 냈지만 바닥에 막혀 움직이지 않았고, 추종 오차가 크게 나왔다. 오른쪽: 팔을 든 준비 자세를 중심으로 흔들자 모든 관절의 오차가 약 0.01 rad로 줄었다. 모터 질량과 토크, 속도 한계는 실제 UR20과 같았다.</desc>
+<title id="ti">모델 문제가 아니라 바닥이었다</title>
+<desc id="de">왼쪽: 모든 관절 0의 자세에서 UR20의 팔은 어깨 높이에서 수평으로 뻗고, 시험용 사인파 움직임은 이 자세를 중심으로 팔을 위아래로 움직여 팔을 바닥과 상자 더미 속으로 밀었다. 어깨 모터는 중력에 필요한 328 Nm의 두 배가 넘는 700 Nm 이상을 냈지만 바닥에 막혀 움직이지 않았고, 추종 오차가 크게 나왔다. 오른쪽: 팔을 든 준비 자세를 중심으로 움직이자 모든 관절의 오차가 약 0.01 rad로 줄었다. 모터 질량과 토크, 속도 한계는 실제 UR20과 같았다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -56,21 +56,21 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bg" x="0" y="0" width="680" height="260" rx="12"/>
 <text class="t" x="18" y="26">시험이 팔을 바닥에 눌렀다</text>
 <rect class="bxr" x="16" y="46" width="316" height="176" rx="10"/>
-<text class="lb" x="30" y="70">관절 0 자세 중심으로 흔들기</text>
+<text class="lb" x="30" y="70">관절 0 자세 기준으로 움직임</text>
 <line x1="36" y1="180" x2="312" y2="180" style="stroke:var(--mut);stroke-width:2"/>
 <rect x="72" y="144" width="28" height="36" rx="3" style="fill:var(--mut)"/>
 <path class="lnb" d="M86 140 L176 140 L236 176 L262 178"/>
 <circle cx="262" cy="178" r="6" style="fill:var(--red)"/>
-<text class="nd" x="174" y="104" text-anchor="middle" style="fill:var(--red)">어깨 700 Nm 이상 · 꿈쩍 않음</text>
+<text class="nd" x="174" y="104" text-anchor="middle" style="fill:var(--red)">어깨 700 Nm 넘게 힘 · 꿈쩍 않음</text>
 <text class="sm" x="174" y="206" text-anchor="middle">손목 오차 0.615 rad</text>
 <rect class="bxgr" x="348" y="46" width="316" height="176" rx="10"/>
-<text class="lb" x="362" y="70">준비 자세 중심으로 흔들기</text>
+<text class="lb" x="362" y="70">팔을 든 자세 기준으로 움직임</text>
 <line x1="368" y1="180" x2="644" y2="180" style="stroke:var(--mut);stroke-width:2"/>
 <rect x="404" y="144" width="28" height="36" rx="3" style="fill:var(--mut)"/>
 <path class="lnb" d="M418 140 L418 90 L508 90 L508 126"/>
 <circle cx="508" cy="130" r="6" style="fill:var(--green)"/>
 <text class="nd" x="584" y="120" text-anchor="middle" style="fill:var(--green)">오차 약 0.01 rad</text>
-<text class="sm" x="584" y="138" text-anchor="middle">60 Hz 한 칸 정도</text>
+<text class="sm" x="584" y="138" text-anchor="middle">1/60초 정도 지연</text>
 <text class="sm" x="506" y="206" text-anchor="middle">질량·토크·속도 한계는 실제 UR20과 같음</text>
 <text class="sm" x="18" y="246">시뮬레이터편의 '바닥은 모든 요청에'와 같은 교훈: 시작 자세가 바닥에서 떨어져 있는지 먼저 본다</text>
 </svg>
