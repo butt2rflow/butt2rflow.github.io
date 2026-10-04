@@ -146,7 +146,7 @@ Universal Robots, UR, UR20, PolyScope, URCap and URSim are trademarks of Univers
 
 </details>
 
-**Series** · [← Previous: Motion — After the Pose Comes Movement, Planning Around an Obstacle Map](jetson-pose-to-motion.md)
+**Series** · [← Previous: Motion — After the Pose Comes Movement, Planning Around an Obstacle Map](jetson-pose-to-motion.md) · [Next: The Simulators — three planners on two URSims →](jetson-ursim-planners.md)
 
 *Related: [UR vs FANUC: openness](cobot-ur-vs-fanuc.md) · [Pendant to ROS 2, Part 2: URDF, ros2_control](ros2-robot-description.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Frames & Transforms](frames-transforms.md) · [How Many Cameras, and Where](camera-placement.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 

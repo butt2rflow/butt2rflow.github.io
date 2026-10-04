@@ -231,6 +231,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**Scanning**](posts/jetson-scan-no-cad.md) — scanning an object with no CAD on one printed board
 - [**Motion**](posts/jetson-pose-to-motion.md) — 186 ms motion plans, and planning around a live obstacle map
 - [**The Real Robot**](posts/jetson-real-robot-first-move.md) — an edge computer moves a real UR20 for the first time; calibration 3.95→0.06 mm, 0.1 mm from goal
+- [**The Simulators**](posts/jetson-ursim-planners.md) — cuMotion, Pilz and OMPL on two URSims; a 510° wrist turn for 10 cm
 
 **Hands-on Notes**
 

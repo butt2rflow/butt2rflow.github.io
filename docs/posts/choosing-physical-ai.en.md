@@ -97,7 +97,7 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 | Differences between robot makers | [What Is a Collaborative Robot](cobot-basics.md) · [UR vs FANUC](cobot-ur-vs-fanuc.md) |
 | ROS 2, MoveIt 2, deterministic cell design | [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Part 2](ros2-robot-description.md) · [Part 3](moveit2-goals-not-points.md) · [Part 4](isaac-ros-gpu.md) |
 | Actually running it on an edge computer | [Field Notes, Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [Correction](jetson-foundationpose-16gb.md) · [Tuning](jetson-tuning-licensing.md) · [Scanning](jetson-scan-no-cad.md) |
-| From pose to motion, and a real robot | [Field Notes: Motion](jetson-pose-to-motion.md) · [The Real Robot](jetson-real-robot-first-move.md) |
+| From pose to motion, and a real robot | [Field Notes: Motion](jetson-pose-to-motion.md) · [The Real Robot](jetson-real-robot-first-move.md) · [The Simulators](jetson-ursim-planners.md) |
 | Learned policies | [Learned Policies](learned-policy-track-b.md) |
 | Trying it yourself | [Hands-on Notes, Part 0: SO-101 and URSim](learn-without-industrial-robot.md) |
 | The investing angle | [Physical AI Investing, Part 1](cobot-investing.md) · [Part 2](physical-ai-investing-actuators.md) · [Part 3](physical-ai-investing-power.md) |

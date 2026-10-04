@@ -146,7 +146,7 @@ Universal Robots·UR·UR20·PolyScope·URCap·URSim은 Universal Robots A/S의, 
 
 </details>
 
-**시리즈** · [← 이전 글: 모션편 — 자세 다음은 움직임, 장애물 지도를 피해 가는 경로까지](jetson-pose-to-motion.md)
+**시리즈** · [← 이전 글: 모션편 — 자세 다음은 움직임, 장애물 지도를 피해 가는 경로까지](jetson-pose-to-motion.md) · [다음 글: 시뮬레이터편 — URSim 두 대로 본 세 플래너 →](jetson-ursim-planners.md)
 
 *관련: [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md) · [펜던트에서 ROS 2로 2부: URDF·ros2_control](ros2-robot-description.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [좌표계와 변환](frames-transforms.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
 

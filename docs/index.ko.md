@@ -231,6 +231,7 @@ title: Home
 - [**스캔편**](posts/jetson-scan-no-cad.md) — CAD 없는 물체를 보드 한 장으로 스캔
 - [**모션편**](posts/jetson-pose-to-motion.md) — 경로 계획 186 ms, 장애물 지도를 피해 가는 경로까지
 - [**실물편**](posts/jetson-real-robot-first-move.md) — 엣지 컴퓨터가 실제 UR20을 처음 움직이다, 보정 3.95→0.06 mm, 목표에서 0.1 mm
+- [**시뮬레이터편**](posts/jetson-ursim-planners.md) — URSim 두 대로 본 cuMotion·Pilz·OMPL, 10 cm에 손목 510°
 
 **실습 노트**
 

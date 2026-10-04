@@ -98,6 +98,8 @@ Part 1 said motion may differ every cycle, but it should still be predictable. A
 | OMPL (default setup) | No (random) | Setup, getting around obstacles |
 | cuMotion | May vary slightly (random starts) | Crowded scenes, fast planning ([Part 4](isaac-ros-gpu.md)) |
 
+A measured comparison of the three planners, on the same robot and the same 10 cm, is in [Field Notes: The Simulators](jetson-ursim-planners.md). All three got the tool there, but OMPL with default settings turned a wrist about 510°.
+
 The start pose matters too. IK usually picks the answer closest to the current joint state, so starting every cycle from the same home position keeps the arm's shape on the same side.
 
 ## Five steps from camera to grasp
