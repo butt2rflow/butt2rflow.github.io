@@ -55,7 +55,7 @@
 - **URSim 'x86' 표현 바로잡기(사용자 질문):** x86은 CPU 종류이고 URSim은 리눅스용이라 윈도 PC에선 WSL2·가상 머신 위에서 실행. 실습 노트 0부(한/영)에 한 줄 보충 + 시뮬레이터편 링크, 시뮬레이터편 구성 절에 'WSL2를 쓴 이유'(리눅스용, PolyScope X는 Docker 이미지뿐, 같은 Ubuntu에 ROS 2·RViz·PlotJuggler).
 - **시뮬레이터편: '보기만'의 차이 한 문단(사용자 요청):** RViz·PlotJuggler는 발행도 되는 ROS 2 프로그램이라 Zenoh 브리지 '구독만' 허용 목록으로 막았고, Lichtblick은 foxglove_bridge를 받는 기능 없이 띄워 원천 차단. 실제 로봇 옆에선 브리지에서 막는 쪽이 확실. Lichtblick 캡처는 아직 없음(요청 메시지는 이미 끝난 fos-physical-ai 세션에 감).
 - **시뮬레이터편 보강 4가지(10-04, fos-physical-ai 10-03 밤 결과 반영, 사용자 승인):** ① Lichtblick 캡처 `jetson-ursim-lichtblick.jpg`(UR20 cuMotion 장면, 제목줄 잘라 냄)와 함께 Lichtblick 문단을 구성 절의 '보기만 한다면 윈도에서는 Lichtblick'으로 올림(SHA-256 확인, 라디안 주의) ② 새 절 'OMPL 다음이 더 문제였다': 감긴 자세에서 다음 실행 보호 정지, URScript movej 홈도 실패, Pilz PTP 홈(충돌 검사)으로 해결, UR20은 OMPL 기본 제외(원인 미확인) ③ 데모 7단계(그림 `r8-demo`·표·본문), UR20 OMPL 숫자는 기본 제외 전 결과라고 명시 ④ 연결 함정에 '데모 전 드라이버·플래너·MoveIt 컨테이너 재시작'. 30초 요약 2줄, 정리 표 2줄, 용어 Lichtblick.
-- **시뮬레이터편 production 주의 한 줄(사용자 질문 '며칠·몇 주 돌면 문제 아닌가'):** 낡음은 R&D식 강제 종료 반복이 원인으로 보이나, 실제 셀은 재시작이 답이 아님: 오래 사는 앱 노드, 시간 제한·재시도, 안전한 시점에만 재시작, 장시간 시험(soak, 미실시)으로 확인. fos-physical-ai에 URSim 장시간 시험 요청 메시지.
+- **시뮬레이터편 production 주의 한 줄(사용자 질문 '며칠·몇 주 돌면 문제 아닌가'):** 낡음은 R&D식 강제 종료 반복이 원인으로 보이나, 실제 셀은 재시작이 답이 아님: 오래 사는 앱 노드, 시간 제한·재시도, 안전한 시점에만 재시작, 장시간 시험(soak, 미실시)으로 확인. fos-physical-ai에 URSim 장시간 시험 요청 메시지(→ 이미 다른 PC 세션에서 진행 중이라 취소 메시지 보냄).
 - **정리(10-04):** 메모리 `field-notes-tuning-scan`(8부 10-04 보강, 장시간 시험 대기), 새 피드백 메모리 `production-implications-of-workarounds`(R&D 임시 처방엔 실제 셀 관점 한 줄), 핸드오프(8부 보강, soak 결과 대기 항목).
 - **모션편 6부 보강:** 새 절 「자세를 목표로 바꾸기」(잰 카메라 위치 16.9 cm·16°, 뒤집힌 마우스를 깊이로 잡음, 사진 `jetson-motion-pose-goal.jpg`), 「가상 하드웨어로 끝까지, 그리고 UR20용 cuMotion 설정 만들기」(구 71개 vs UR10e 20개, 자동 맞추기 실패 이유). 다음 글 링크, 메뉴, 홈 목록.
 
