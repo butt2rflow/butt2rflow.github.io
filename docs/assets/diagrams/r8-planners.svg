@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">툴 끝은 셋 다 도착했다. 관절이 다르다</title>
-<desc id="de">같은 로봇, 같은 10 cm 안팎의 이동을 세 플래너로 비교했다. cuMotion은 장애물을 피해 부드러운 종 모양 속도로 움직이고, 같은 요청에도 경로가 매번 조금씩 다르다. Pilz LIN은 직선에서 0.1 mm 안으로 벗어나지 않는 짧고 깨끗한 움직임이다. OMPL은 목표 1 mm 안에 도착했지만 툴이 1~1.9 m를 돌아갔고, UR12e에서는 손목 마지막 관절이 약 510° 돌았다. 툴 끝 오차만 보면 셋 다 성공이다.</desc>
+<title id="ti">툴은 셋 다 도착, 관절은 딴판</title>
+<desc id="de">같은 로봇, 같은 10 cm 안팎의 이동을 세 플래너로 비교했다. cuMotion은 장애물을 피해 부드러운 종 모양 속도로 움직이고, 같은 요청에도 경로가 매번 조금씩 다르다. Pilz LIN은 직선에서 0.1 mm 안으로 벗어나지 않는 짧고 깨끗한 움직임이다. OMPL은 목표 1 mm 안에 도착했지만 툴이 1~1.9 m를 돌아갔고, UR12e에서는 손목 마지막 관절이 약 510° 돌았다. 도착 오차만 보면 셋 다 성공이다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
-<text class="t" x="18" y="26">툴 끝 오차만 보면 셋 다 성공</text>
+<text class="t" x="18" y="26">도착 오차만 보면 셋 다 성공</text>
 <rect class="bxgr" x="16" y="46" width="208" height="230" rx="10"/>
 <text class="lb" x="120" y="74" text-anchor="middle">cuMotion</text>
 <text class="it" x="30" y="112">장애물을 피해 돌아감</text>
@@ -69,7 +69,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="it" x="250" y="238">장애물은 피하지 않음</text>
 <rect class="bxr" x="456" y="46" width="208" height="230" rx="10"/>
 <text class="lb" x="560" y="74" text-anchor="middle">OMPL (기본 설정)</text>
-<text class="it" x="470" y="112">아무 모양이나</text>
+<text class="it" x="470" y="112">어떤 모양이든</text>
 <text class="it" x="470" y="154">목표 1 mm, 툴 1~1.9 m 우회</text>
 <text class="it" x="470" y="196">손목 3 약 510° 회전 (UR12e)</text>
 <text class="it" x="470" y="238">케이블·호스가 감긴다</text>
