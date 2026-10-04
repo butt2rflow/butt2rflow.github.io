@@ -1,17 +1,17 @@
 ---
-title: "Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on a Home PC and a Cloud GPU"
-nav_title: "Isaac Sim · home PC and cloud"
+title: "Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on an RTX 3090 PC and a Cloud GPU"
+nav_title: "Isaac Sim · a 3090 PC and the cloud"
 date: 2026-10-04
 tags: [physical-ai, isaac-sim, simulation, synthetic-data, ros2, universal-robots, cloud-gpu, field-notes]
 lang: en
-description: "URSim in The Simulators imitates the robot controller. This time NVIDIA Isaac Sim, which imitates the world around the robot, went onto a home PC (RTX 3090) and a cloud GPU (L4). The 3090 sits below the official minimum, yet it simulated a UR20, 40 boxes and a virtual stereo camera at the real camera's resolution at 19 frames per second, and the 'weak drives' turned out to be the test pressing the arm into the floor. The virtual camera went out as ROS 2 topics, and a synthetic-data script leaking 130 MB of GPU memory per capture was caught. The cloud L4 was not faster than the 3090, and the whole validation cost about two dollars. Field Notes: Isaac Sim."
+description: "URSim in The Simulators imitates the robot controller. This time NVIDIA Isaac Sim, which imitates the world around the robot, went onto an idle RTX 3090 PC and a cloud GPU (L4). The 3090 sits below the official minimum, yet it simulated a UR20, 40 boxes and a virtual stereo camera at the real camera's resolution at 19 frames per second, and the 'weak drives' turned out to be the test pressing the arm into the floor. The virtual camera went out as ROS 2 topics, and a synthetic-data script leaking 130 MB of GPU memory per capture was caught. The cloud L4 was not faster than the 3090, and the whole validation cost about two dollars. Field Notes: Isaac Sim."
 ---
 
-# Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on a Home PC and a Cloud GPU
+# Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on an RTX 3090 PC and a Cloud GPU
 
-> **Field Notes · Isaac Sim.** URSim in [The Simulators](jetson-ursim-planners.md) imitates the **robot controller**. The driver and protective stops behave like the real thing, but there's no physics, no objects and no camera. That post ended by saying that whether depth drops out on a shiny part, or a gripped part slips, "is Isaac Sim's job". This time I put Isaac Sim on a home PC and on a cloud GPU.
+> **Field Notes · Isaac Sim.** URSim in [The Simulators](jetson-ursim-planners.md) imitates the **robot controller**. The driver and protective stops behave like the real thing, but there's no physics, no objects and no camera. That post ended by saying that whether depth drops out on a shiny part, or a gripped part slips, "is Isaac Sim's job". This time I put Isaac Sim on an RTX 3090 PC that was sitting idle, and on a cloud GPU.
 
-The short version: the home gaming PC was enough. The cloud GPU wasn't faster; its value was keeping the PC free and running several machines at once. This post collects the numbers measured along the way and the traps hit.
+The short version: the 3090 PC was enough. The cloud GPU wasn't faster; its value was keeping the PC free and running several machines at once. This post collects the numbers measured along the way and the traps hit.
 
 *(An R&D record done on a PC and in the cloud only, without the edge computer (Jetson). Every robot here is **Isaac Sim's own UR20 model**; no real arm moved.)*
 
@@ -38,9 +38,9 @@ So the work is split. Isaac Sim moves its own UR20 model under physics and cover
 
 There are four jobs for Isaac Sim: making **synthetic training data**; running depth models at full resolution on a big GPU to measure what the edge computer's reduced resolution costs; checking path plans before a real robot; and **software-in-the-loop (SIL)**, feeding virtual camera images to the edge computer. This post lays the groundwork for those.
 
-## The home PC is below the minimum spec. Is that OK?
+## A 3090 is below the minimum spec. Is that OK?
 
-Isaac Sim 6.1's official requirements list a GeForce RTX 4080 as the minimum GPU, at least 16 GB of GPU memory, and 32 GB of RAM (64 GB recommended). The home PC has an RTX 3090 with 24 GB and 32 GB of RAM, so the GPU sits below the minimum tier. Before buying a new disk or memory, I installed it on Windows and measured.
+Isaac Sim 6.1's official requirements list a GeForce RTX 4080 as the minimum GPU, at least 16 GB of GPU memory, and 32 GB of RAM (64 GB recommended). This PC has an RTX 3090 with 24 GB and 32 GB of RAM, so the GPU sits below the minimum tier. Before buying a new disk or memory, I installed it on Windows and measured.
 
 The test scene imitates the work cell I actually plan to use. A UR20 model moves its six joints in sine waves, 40 boxes drop into a pile on the floor, and two virtual stereo cameras 75 mm apart plus a colour camera stand in for the real camera (an OAK-D). Every frame, images and depth from all three cameras are copied back to the CPU, the same copy a ROS 2 publisher makes. Physics ran at 60 Hz, headless (no window), over 600 frames.
 
@@ -107,25 +107,25 @@ On the RTX 3090, 500 images took 0.79 seconds each, about six and a half minutes
 
 ![GPU memory in the synthetic-data script](../assets/diagrams_en/r9-leak.svg)
 
-The first version of the script died at 97 images in the cloud, and at 169 after a driver change. The GPU threw a fault (Xid 31) and the renderer stopped responding. I suspected the cloud driver at first, but the same script run for 500 images on the home 3090 died at 188 with **out of GPU memory**. Not the driver, the script.
+The first version of the script died at 97 images in the cloud, and at 169 after a driver change. The GPU threw a fault (Xid 31) and the renderer stopped responding. I suspected the cloud driver at first, but the same script run for 500 images on the 3090 died at 188 with **out of GPU memory**. Not the driver, the script.
 
 To find the cause, I removed the suspects one at a time and compared 60-image runs. Without the colour changes, and without the physics wait, memory still grew the same way, from 2.2 GB to 9.9 GB over 60 images, about 130 MB each. But removing **the line that toggles render updates off and on** stopped memory at about 3 GB.
 
-That line is the pattern NVIDIA's synthetic-data examples use: turn render updates off while physics settles so nothing renders, and turn them back on only to capture. In Isaac Sim 6.1, repeating that every capture leaks a little GPU memory each time and uses up 24 GB at 170–190 images. Removing it cost nothing. This script already steps physics in a way that doesn't render, so there was never a reason to toggle. After the fix, all 500 images finished at home and in the cloud, with flat memory (about 3.0 GB on the 3090, 2.4 GB on the L4). The script now logs GPU memory every 10 images.
+That line is the pattern NVIDIA's synthetic-data examples use: turn render updates off while physics settles so nothing renders, and turn them back on only to capture. In Isaac Sim 6.1, repeating that every capture leaks a little GPU memory each time and uses up 24 GB at 170–190 images. Removing it cost nothing. This script already steps physics in a way that doesn't render, so there was never a reason to toggle. After the fix, all 500 images finished on the 3090 and in the cloud, with flat memory (about 3.0 GB on the 3090, 2.4 GB on the L4). The script now logs GPU memory every 10 images.
 
 The lesson: **some problems only show up in a long run.** The first 10-image test was fine. Synthetic data means tens of thousands of images, so a few-hundred-image test with a memory log is worth it.
 
 ## The cloud GPU: not faster
 
-There's one home PC, and while it makes synthetic data it's hard to use for anything else. So I ran the same work on a cloud GPU.
+There's only one 3090 PC, and while it makes synthetic data it's hard to use for anything else. So I ran the same work on a cloud GPU.
 
 The GPU choice is constrained first. Isaac Sim needs **RT cores** for rendering, so the A100 and H100, famous for AI training, are not supported (the official requirements say so). It has to be a GPU with graphics hardware: L4, L40S, A10G and the like. On prices checked on 4 October 2026, Google Cloud's L4 spot instance (`g2-standard-8`) was the cheapest at about US$0.51 an hour. Spot means the cloud rents spare capacity cheaply but can take it back at any time. Isaac Sim ran from NVIDIA's published Docker image.
 
-![Home RTX 3090 vs cloud L4: frames per second](../assets/diagrams_en/r9-fps.svg)
+![RTX 3090 PC vs cloud L4: frames per second](../assets/diagrams_en/r9-fps.svg)
 
-On the same test scene the L4 ran at 49–83% of the 3090's speed. The telling part is that the L4 stalls around 16–20 frames per second whatever the camera resolution. If raising the resolution doesn't slow it down, the GPU isn't the limit: **the CPU (8 virtual cores at 2.2 GHz) is the bottleneck.** The home PC's CPU was simply faster per core. Synthetic data was a little slower too, 0.91 seconds per image against the 3090's 0.79. Joint tracking error matched to three decimal places, so physics came out the same wherever it ran.
+On the same test scene the L4 ran at 49–83% of the 3090's speed. The telling part is that the L4 stalls around 16–20 frames per second whatever the camera resolution. If raising the resolution doesn't slow it down, the GPU isn't the limit: **the CPU (8 virtual cores at 2.2 GHz) is the bottleneck.** The 3090 PC's CPU was simply faster per core. Synthetic data was a little slower too, 0.91 seconds per image against the 3090's 0.79. Joint tracking error matched to three decimal places, so physics came out the same wherever it ran.
 
-So the cloud's value isn't speed. It's for running **several machines at once** to split synthetic-data jobs, or for keeping the home PC free. If you need one faster machine, you have to step up to an L40S-class GPU.
+So the cloud's value isn't speed. It's for running **several machines at once** to split synthetic-data jobs, or for keeping the 3090 PC free. If you need one faster machine, you have to step up to an L40S-class GPU.
 
 | Item | Cost |
 |---|---|
@@ -146,18 +146,18 @@ Isaac Sim didn't work on the cloud image as-is. Three things needed fixing:
 
 The image's 580-series driver did work, but I moved to the 595 series to match Isaac Sim 6.1's requirements (595.58.03 or later on Linux). The first render on a new driver spends about 10 minutes compiling shaders, so saving the compiled cache makes later starts much quicker.
 
-![Isaac Sim running on the cloud L4, viewed from the home PC with the streaming client. The UR20 model and the box pile in the middle, the scene tree on the right](../assets/demos/isaac-cloud-stream.jpg)
+![Isaac Sim running on the cloud L4, viewed from a local PC with the streaming client. The UR20 model and the box pile in the middle, the scene tree on the right](../assets/demos/isaac-cloud-stream.jpg)
 
-*Isaac Sim in the cloud, viewed from the home PC through NVIDIA's WebRTC streaming client. The arm moved live on screen.*
+*Isaac Sim in the cloud, viewed from a local PC through NVIDIA's WebRTC streaming client. The arm moved live on screen.*
 
-Even on a cloud server with no screen, you can watch the whole Isaac Sim interface as a video stream. Rather than open the streaming ports to the internet, I installed WireGuard on the server myself and made a private tunnel between it and the home PC, then connected through that. One trap: the streaming server must be told **the address the client will connect to**. If it differs, the connection succeeds but the picture can come up black.
+Even on a cloud server with no screen, you can watch the whole Isaac Sim interface as a video stream. Rather than open the streaming ports to the internet, I installed WireGuard on the server myself and made a private tunnel between it and the local PC, then connected through that. One trap: the streaming server must be told **the address the client will connect to**. If it differs, the connection succeeds but the picture can come up black.
 
 ## Wrap-up
 
 | Checked | Result | Snags |
 |---|---|---|
 | Splitting the work | world in Isaac Sim, controller in URSim, both on the real robot | mirroring URSim turns the Isaac robot into a ghost |
-| Home PC (RTX 3090, below minimum) | 19 fps at the real camera's resolution, under 5 GB | 32 GB of RAM is tight |
+| RTX 3090 PC (below minimum) | 19 fps at the real camera's resolution, under 5 GB | 32 GB of RAM is tight |
 | UR20 model | mass, torque, speed limits match the real arm; ~0.01 rad error | the all-zero pose presses the arm into the floor |
 | ROS 2 topics | cameras ~28 Hz, joints ~56 Hz, 0.93× real time | Jazzy/Zenoh defaults; 16 MB buffers for 2.7 MB frames |
 | Synthetic data | 500 images, 0.79 s each (L4 0.91 s) | the render toggle leaked 130 MB per image |
@@ -166,7 +166,7 @@ Even on a cloud server with no screen, you can watch the whole Isaac Sim interfa
 - **Measure with what you have before buying anything.** Below the minimum spec can still be enough for the real job.
 - **When numbers look wrong, suspect the test before the model.** This time the start pose was inside the floor.
 - **Run synthetic data long, with a memory log.** The 10-image test showed no leak.
-- **The cloud is for parallel runs, not speed.** Machine for machine, the home gaming PC was faster.
+- **The cloud is for parallel runs, not speed.** Machine for machine, the 3090 PC was faster.
 - **Keep the edge-computer link on the same LAN.** Tens of MB of images per second don't belong on the internet.
 
 Next is the edge computer's side: putting the real camera's calibration into the virtual camera, and having the Jetson's depth and pose models take Isaac Sim's images and move the virtual UR20 through cuMotion.

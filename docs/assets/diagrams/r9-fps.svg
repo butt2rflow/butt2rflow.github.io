@@ -1,5 +1,5 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">집의 RTX 3090 vs 클라우드 L4: 초당 프레임</title>
+<title id="ti">RTX 3090 PC vs 클라우드 L4: 초당 프레임</title>
 <desc id="de">같은 장면(UR20, 상자 40개, 가상 카메라)을 카메라 해상도 네 단계로 600프레임씩 실행한 초당 프레임. RTX 3090: 62.5, 30.6, 27.1, 18.9. 클라우드 L4(드라이버 595): 30.4, 16.7, 16.1, 15.7. L4는 해상도와 상관없이 16~20 근처에서 멈춰, GPU가 아니라 CPU(2.2 GHz 가상 코어 8개)가 병목이다. 가장 무거운 설정에서만 둘이 비슷하다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
@@ -56,7 +56,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
 <text class="t" x="18" y="26">클라우드가 더 빠르지 않았다</text>
 <rect x="420" y="40" width="12" height="12" rx="2" style="fill:var(--blue)"/>
-<text class="st" x="438" y="50">RTX 3090 (집)</text>
+<text class="st" x="438" y="50">RTX 3090 PC</text>
 <rect x="540" y="40" width="12" height="12" rx="2" style="fill:var(--amber)"/>
 <text class="st" x="558" y="50">L4 (클라우드)</text>
 <line x1="200.0" y1="64" x2="200.0" y2="282" style="stroke:var(--bd);stroke-width:1"/>

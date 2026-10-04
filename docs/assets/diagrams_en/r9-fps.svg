@@ -1,5 +1,5 @@
 <svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">Home RTX 3090 vs cloud L4: frames per second</title>
+<title id="ti">RTX 3090 PC vs cloud L4: frames per second</title>
 <desc id="de">The same scene (UR20, 40 boxes, virtual cameras) at four camera settings, 600 frames each, in frames per second. RTX 3090: 62.5, 30.6, 27.1, 18.9. Cloud L4 (driver 595): 30.4, 16.7, 16.1, 15.7. The L4 stalls around 16–20 regardless of resolution, so the bottleneck is the CPU (8 virtual cores at 2.2 GHz), not the GPU. Only at the heaviest setting are the two close.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
@@ -56,7 +56,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
 <text class="t" x="18" y="26">The cloud was not faster</text>
 <rect x="420" y="40" width="12" height="12" rx="2" style="fill:var(--blue)"/>
-<text class="st" x="438" y="50">RTX 3090 (home)</text>
+<text class="st" x="438" y="50">RTX 3090 PC</text>
 <rect x="540" y="40" width="12" height="12" rx="2" style="fill:var(--amber)"/>
 <text class="st" x="558" y="50">L4 (cloud)</text>
 <line x1="200.0" y1="64" x2="200.0" y2="282" style="stroke:var(--bd);stroke-width:1"/>

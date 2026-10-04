@@ -200,7 +200,7 @@ Universal Robots·UR·UR12e·UR20·PolyScope·URSim·URCap은 Universal Robots A
 
 </details>
 
-**시리즈** · [← 이전 글: 실물편 — 엣지 컴퓨터가 실제 로봇을 처음 움직이다](jetson-real-robot-first-move.md) · [다음 글: Isaac Sim편 — 집 PC와 클라우드 GPU에 가상 작업 셀 →](isaac-sim-pc-and-cloud.md)
+**시리즈** · [← 이전 글: 실물편 — 엣지 컴퓨터가 실제 로봇을 처음 움직이다](jetson-real-robot-first-move.md) · [다음 글: Isaac Sim편 — RTX 3090 PC와 클라우드 GPU에 가상 작업 셀 →](isaac-sim-pc-and-cloud.md)
 
 *관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [모션편](jetson-pose-to-motion.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md)*
 

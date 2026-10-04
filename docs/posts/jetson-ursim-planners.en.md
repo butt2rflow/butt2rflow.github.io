@@ -197,7 +197,7 @@ Universal Robots, UR, UR12e, UR20, PolyScope, URSim and URCap are trademarks of 
 
 </details>
 
-**Series** · [← Previous: The Real Robot — an edge computer moves a real arm for the first time](jetson-real-robot-first-move.md) · [Next: Isaac Sim — a virtual work cell on a home PC and a cloud GPU →](isaac-sim-pc-and-cloud.md)
+**Series** · [← Previous: The Real Robot — an edge computer moves a real arm for the first time](jetson-real-robot-first-move.md) · [Next: Isaac Sim — a virtual work cell on an RTX 3090 PC and a cloud GPU →](isaac-sim-pc-and-cloud.md)
 
 *Related: [Pendant to ROS 2, Part 3: MoveIt 2](moveit2-goals-not-points.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Motion](jetson-pose-to-motion.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md) · [UR vs FANUC: openness](cobot-ur-vs-fanuc.md)*
 
