@@ -38,7 +38,7 @@ URSim은 그림만 흉내 내는 시뮬레이터가 아니라 **UR 컨트롤러 
 
 ![시뮬레이터는 PC에, 두뇌는 엣지 컴퓨터에](../assets/diagrams/r8-setup.svg)
 
-윈도 PC의 WSL2 안에 Docker로 시뮬레이터 두 대를 띄웠습니다. PolyScope 5로 동작하는 **UR12e**와, 실물편의 로봇과 같은 PolyScope X의 **UR20**이에요. 엣지 컴퓨터에서는 로봇마다 UR 드라이버를 하나씩, 그리고 cuMotion과 MoveIt 2를 실행했습니다. MoveIt 2는 OMPL과 Pilz를 한 번에 올려서 요청마다 고를 수 있게 했어요. 화면(RViz, PlotJuggler)은 PC에서 봤습니다.
+윈도 PC의 WSL2 안에 Docker로 시뮬레이터 두 대를 띄웠습니다. URSim은 x86 PC용이지만 **리눅스용**이라 윈도에서 바로 실행되지 않고, PolyScope X 시뮬레이터는 Docker 이미지로만 나옵니다. 그래서 윈도 안의 리눅스(WSL2)에 Docker를 설치했고, 같은 Ubuntu에 ROS 2와 RViz, PlotJuggler도 함께 올려 엣지 컴퓨터와 같은 ROS 버전으로 화면을 봤어요. PolyScope 5로 동작하는 **UR12e**와, 실물편의 로봇과 같은 PolyScope X의 **UR20**이에요. 엣지 컴퓨터에서는 로봇마다 UR 드라이버를 하나씩, 그리고 cuMotion과 MoveIt 2를 실행했습니다. MoveIt 2는 OMPL과 Pilz를 한 번에 올려서 요청마다 고를 수 있게 했어요. 화면(RViz, PlotJuggler)은 PC에서 봤습니다.
 
 연결에서 손이 간 곳은 셋입니다.
 

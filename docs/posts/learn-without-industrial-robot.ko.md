@@ -46,7 +46,7 @@ ROS 2, MoveIt 2, Isaac ROS를 글로 읽었다면, 다음은 로봇을 직접 �
 
 ![가상 UR 컨트롤러에 진짜 ROS 2 드라이버를 붙인다](../assets/diagrams/hon-ursim-setup.svg)
 
-e-Series URSim은 x86용이라 PC에서 실행하고, Jetson은 같은 네트워크로 붙이는 구성이 무난합니다. PolyScope X 시뮬레이터는 arm64 이미지가 있지만, [모션편](jetson-pose-to-motion.md)에서 Orin에 직접 올려 보니 그 안에서 다시 띄우는 시뮬레이터 컨테이너가 x86 전용이라 실행되지 않았어요. 그래서 PolyScope X도 x86 PC에서 실행하고 Jetson을 네트워크로 붙이는 게 맞습니다(이때는 External Control URCapX를 씁니다).
+e-Series URSim은 x86(Intel·AMD) PC용이라 PC에서 실행하고, Jetson은 같은 네트워크로 붙이는 구성이 무난합니다. 여기서 x86은 CPU 종류이고, URSim 자체는 **리눅스용**(Docker 이미지 등)입니다. 윈도 PC라면 WSL2나 가상 머신 위에 리눅스를 올려 실행해요([시뮬레이터편](jetson-ursim-planners.md)은 WSL2를 썼습니다). PolyScope X 시뮬레이터는 arm64 이미지가 있지만, [모션편](jetson-pose-to-motion.md)에서 Orin에 직접 올려 보니 그 안에서 다시 띄우는 시뮬레이터 컨테이너가 x86 전용이라 실행되지 않았어요. 그래서 PolyScope X도 x86 PC에서 실행하고 Jetson을 네트워크로 붙이는 게 맞습니다(이때는 External Control URCapX를 씁니다).
 
 ## SO-101 연습장 구성
 

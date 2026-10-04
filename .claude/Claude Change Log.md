@@ -52,6 +52,7 @@
 - **모션편 네이버 패키지 새로 만듦(사용자 요청):** `naver/jetson-pose-to-motion/` — 오늘 판 본문(같은 장면 칩 vs ESS 비교 사진 포함), 이미지 16장, 세로 배너(스캔편 틀: 경로 계획 186 ms · 장애물 지도 5 mm · 가상 UR20 0.1 mm), 태그 24개, UPLOAD.md. 발행 전.
 - **실물편 네이버 패키지 새로 만듦(사용자 요청):** `naver/jetson-real-robot-first-move/` — 그림 4장(r7-ladder/calib/gate/table), 세로 배너(공장 보정 3.95→0.06 mm · 첫 계획 움직임 0.1 mm · 계획과 실행 사이에 사람), 태그 22개, UPLOAD.md. IP·회사명 검사 통과. 발행 전.
 - **새 글 현장 노트 8부 시뮬레이터편 `jetson-ursim-planners`(한/영, 사용자 요청):** fos-physical-ai 세션의 10-03 저녁 URSim 작업이 바탕. 윈도 PC WSL2·Docker의 URSim 두 대(PolyScope 5 UR12e, PolyScope X UR20)를 Jetson의 같은 스택(UR 드라이버 2.14, cuMotion, MoveIt 2 OMPL+Pilz)으로 구동, 역방향 SSH 터널. 6단계 데모 표, 같은 카메라 RViz 3장(cuMotion·Pilz·OMPL), OMPL 관절 그래프(손목 3 약 510°), UR20 속도 그래프(구간 표시), cuMotion 비결정성(간격 93~199 mm), 바닥 함정(툴 받침면 0.68 m 아래 → 보호 정지), 연결 함정 5개(--ipc host, 프로그램 재전송+3초, 실시간 아님, 브리지 허용 목록·QoS, 강제 종료 참가자), Lichtblick. 그림 `r8-setup/demo/planners/floor`(`figs_r8.py`), 사진 `jetson-ursim-*`(RViz 제목줄 경로·PC 이름·IP 없음). 연결: 메뉴, 홈 목록, 실물편 다음 글, 허브 지도, 펜던트 3부 플래너 표 아래 실측 링크.
+- **URSim 'x86' 표현 바로잡기(사용자 질문):** x86은 CPU 종류이고 URSim은 리눅스용이라 윈도 PC에선 WSL2·가상 머신 위에서 실행. 실습 노트 0부(한/영)에 한 줄 보충 + 시뮬레이터편 링크, 시뮬레이터편 구성 절에 'WSL2를 쓴 이유'(리눅스용, PolyScope X는 Docker 이미지뿐, 같은 Ubuntu에 ROS 2·RViz·PlotJuggler).
 - **모션편 6부 보강:** 새 절 「자세를 목표로 바꾸기」(잰 카메라 위치 16.9 cm·16°, 뒤집힌 마우스를 깊이로 잡음, 사진 `jetson-motion-pose-goal.jpg`), 「가상 하드웨어로 끝까지, 그리고 UR20용 cuMotion 설정 만들기」(구 71개 vs UR10e 20개, 자동 맞추기 실패 이유). 다음 글 링크, 메뉴, 홈 목록.
 
 **검증:** 로컬 `mkdocs build --strict` 기존 경고 5개 외 없음, 새 그림 한/영 헤드리스 Chrome 렌더 확인.

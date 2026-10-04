@@ -46,7 +46,7 @@ This is "one stack, many robots" from [Pendant to ROS 2, Part 4](isaac-ros-gpu.m
 
 ![A real ROS 2 driver on a virtual UR controller](../assets/diagrams_en/hon-ursim-setup.svg)
 
-The e-Series URSim is x86-only, so the straightforward setup runs it on a PC with the Jetson joining over the same network. The PolyScope X simulator ships an arm64 image, but when the [motion post](jetson-pose-to-motion.md) tried it directly on an Orin, the simulator container it launches inside was x86-only and wouldn't run. So PolyScope X also belongs on an x86 PC with the Jetson joining over the network (that route uses the External Control URCapX).
+The e-Series URSim is for x86 (Intel/AMD) PCs, so the straightforward setup runs it on a PC with the Jetson joining over the same network. x86 here is the CPU type; URSim itself is **Linux software** (Docker images and the like). On a Windows PC, run it on Linux inside WSL2 or a virtual machine ([The Simulators](jetson-ursim-planners.md) used WSL2). The PolyScope X simulator ships an arm64 image, but when the [motion post](jetson-pose-to-motion.md) tried it directly on an Orin, the simulator container it launches inside was x86-only and wouldn't run. So PolyScope X also belongs on an x86 PC with the Jetson joining over the network (that route uses the External Control URCapX).
 
 ## The SO-101 setup
 

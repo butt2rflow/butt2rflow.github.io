@@ -38,7 +38,7 @@ URSim isn't a picture of a robot; it runs **UR's actual controller software** ([
 
 ![Simulators on the PC, the brain on the edge computer](../assets/diagrams_en/r8-setup.svg)
 
-Two simulators ran in Docker inside WSL2 on a Windows PC: a **UR12e** on PolyScope 5, and a **UR20** on PolyScope X, the same as the real robot in The Real Robot. On the edge computer, one UR driver ran per robot, plus cuMotion and MoveIt 2, with OMPL and Pilz loaded together so each request could pick one. The views (RViz, PlotJuggler) were on the PC.
+URSim targets x86 PCs but is **Linux software**, so it doesn't run on Windows directly, and the PolyScope X simulator ships only as a Docker image. So Docker was installed in Linux inside Windows (WSL2), with ROS 2, RViz and PlotJuggler in the same Ubuntu, so the views ran the same ROS version as the edge computer. Two simulators ran in Docker inside WSL2 on a Windows PC: a **UR12e** on PolyScope 5, and a **UR20** on PolyScope X, the same as the real robot in The Real Robot. On the edge computer, one UR driver ran per robot, plus cuMotion and MoveIt 2, with OMPL and Pilz loaded together so each request could pick one. The views (RViz, PlotJuggler) were on the PC.
 
 Three parts of the connection took work.
 
