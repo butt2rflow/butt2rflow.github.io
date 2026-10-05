@@ -22,7 +22,8 @@ The short version: judged by the tool tip, all three planners reached the goal. 
 - **The real robot's stack, with simulators instead.** The UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) drove both a UR12e simulator on PolyScope 5 and a UR20 simulator on PolyScope X.
 - **The tool got there every time; the joints did not agree.** For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint **about 510°**. On a real arm, cables and hoses would wind up.
 - **With OMPL, the trouble comes after.** The next run started from a folded pose with a protective stop (C403). The cause is UR's wrist-clamping rule, which the ROS robot model doesn't include. Checking every plan and adding the rule to cuMotion's collision model took risky plans from 58 to 0.
-- **Soak test, interim (3.5 h):** 98.3 % success, 12 ms replies with no drift, cuMotion memory flat at 3.7 GB (not a leak). But a dropped link kills the driver, so it needs supervision, and about 6 % of box detours find no plan, so it needs retries and a fallback.
+- **Soak test:** motion alone ran 7.6 h at 98.2 % success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But a dropped link kills the driver, so it needs supervision, and about 6 % of box detours find no plan, so it needs retries and a fallback.
+- **Add perception on the same 16 GB and memory runs out.** With continuous object tracking it hit the memory floor after 26 minutes, and after 1 h 10 min even with leaner settings. FoundationPose, not cuMotion, pushed it over. A run that takes one pose per cycle has been holding for 7.5 hours (as of October 5).
 - **cuMotion is smooth, but not identical every time.** It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).
 - **Put the floor in every request.** Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.
 - **Connect PC simulators with a reverse SSH tunnel.** Simulators in Docker inside WSL aren't visible from outside. One tunnel opened outward from the PC connected them, with no admin rights and no firewall change.
@@ -152,16 +153,32 @@ The connection took longer than the demo. Written down so it takes less wanderin
 - **The connection drops in the middle of a move.** The UR driver must answer the robot every 2 ms, and the Jetson's Linux isn't a real-time kernel. Two idle cuMotion planners (75–80 % of a CPU core each) plus FoundationPose containers were too much. During demos, only one robot's planner ran, and other heavy containers were stopped.
 - **The viewing bridge carried action servers too.** The bridge (Zenoh) set up to watch RViz on the PC passed everything, so the edge computer saw two cuMotion action servers. The bridge now passes only the three topics the views need. It also carried a single QoS setting per topic, so part of the robot's frames (`/tf`), which mixed settings, never crossed; the PC now rebuilds the frames from the joint values.
 - **Hours later, a new script can't find the frames.** Test scripts that exited hard without cleaning up left stale participants behind, and after a few hours new programs no longer received the robot's static frames (`/tf_static`). Every script now cleans up its node before exiting.
-- **Long-running planner containers go stale too.** After many client restarts, cuMotion planned goals whose "accepted" reply never arrived, and MoveIt stalled during a straight-line move. Before a demo, restart the robot's driver, planner and MoveIt containers. Here the likely cause was R&D-style use, hundreds of test scripts started and hard-killed over a few hours, but on a real cell that runs for days or weeks, restarting isn't the answer. Send goals from one long-lived app node, give every request a timeout and retries, and restart a container only at a safe point between cycles when replies slow down. Whether things degrade over time has to be checked with a soak test, so a 24-hour run in simulation is under way. Interim results:
+- **Long-running planner containers go stale too.** After many client restarts, cuMotion planned goals whose "accepted" reply never arrived, and MoveIt stalled during a straight-line move. Before a demo, restart the robot's driver, planner and MoveIt containers. Here the likely cause was R&D-style use, hundreds of test scripts started and hard-killed over a few hours, but on a real cell that runs for days or weeks, restarting isn't the answer. Send goals from one long-lived app node, give every request a timeout and retries, and restart a container only at a safe point between cycles when replies slow down. Whether things degrade over time has to be checked with a soak test, so we ran long tests in simulation. Results:
 
 | | Result | Meaning |
 |---|---|---|
 | Run 1 | After 30 minutes the robot data link (RTDE) through the tunnel dropped; the UR control node died and never recovered | A real cell needs **supervision**. A watchdog was added and the test restarted |
-| Run 3, 3.5 h | 98.3 % success, "goal accepted" in 12 ms with no drift, 0 clamping rejects | No slowdown over time |
-| cuMotion memory | 2.4 → 3.7 GB in the first hour, then flat for hours | Not a leak but the GPU memory cache; budget about 4 GB on a 16 GB Orin |
+| Run 3, 7.6 h | 98.2 % of 3,961 steps succeeded, "goal accepted" in 12 ms with no drift, 0 clamping rejects | No slowdown over time |
+| cuMotion memory | 2.4 → 3.8 GB in the first hour, then flat; it doesn't shrink while idle either | Not a leak but the GPU memory cache, freed only by restarting the process; budget about 4 GB on a 16 GB Orin |
 | No-plan rate | About 6 % of the 50 cm box detours find no path | Clean failures that don't grow, but a real cell needs retries and a fallback |
 
-The 24-hour result will be added here when the run ends. A run with perception and motion together, and a UR20 run, come next.
+Run 3 was stopped at 7.6 hours. The numbers had stopped changing, so we moved on to running perception alongside.
+
+### Perception on the same box
+
+A real cell gets the part pose from the camera and moves to it. So on the same 16 GB Orin NX we left the perception chain from the earlier posts running (Grounding DINO → SAM2 → depth → FoundationPose tracking an object) and repeated the motion test. The watchdog stopped the test when available memory fell below 1 GB: GPU memory can't be swapped out, so hitting the limit can freeze the whole Jetson.
+
+| Run | Result | Meaning |
+|---|---|---|
+| Continuous tracking, dark office | 1.4 GB free after 20 minutes, stopped at **26 min**. Tracking 6.8 → 4.5 fps, cuMotion planning 1.3 → 2.0 s | Default settings don't fit in 16 GB |
+| Continuous tracking, leaner settings | Desktop off, ESS light, fewer cuMotion seeds, PyTorch cache cleanup. cuMotion flat at 2.33 GB (1.3 GB saved), planning 1.4 s. Still stopped at **1 h 10 min** | Delays the crossing, doesn't prevent it. All 8 CPU cores saturated for the hour, 26 % no-plan over the box, 31 driver link drops per hour |
+| One pose per cycle, lit room, default settings | **Still running at 7.5 h** (as of October 5). 757 of 758 poses succeeded, median 4.0 s, about 1.5 GB free. Motion steps 94 % OK (17 % no-plan over the box), 2 driver restarts | A realistic setup for a cell that needs the part pose once per cycle |
+
+- **FoundationPose, not cuMotion, crossed the line.** When it loses an object and finds it again, it scores many pose hypotheses at once, and the container's memory swung by about 1.3 GB each time. On a nearly full box, one swing is enough. In the dark office it lost the object often and spent about 30 % of the time re-acquiring. So the first remedy is to re-acquire less and track longer.
+- **The cuMotion settings paid off.** Fewer seeds plus PyTorch cache cleanup held its memory at 2.33 GB instead of climbing to 3.8 GB. The price is more no-plans, which makes retries and a fallback path more important.
+- **nvblox (live mapping) wasn't running in these tests.** A cell that maps live needs more memory.
+
+The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions. A real cell would split perception and motion across two Jetsons, use an AGX Orin 32/64 GB, or slim perception down (a trained detector, fewer re-acquisitions). Either way, give the UR driver a real-time kernel and dedicated CPU cores. These three runs differ in both lighting and mode, so the difference can't be pinned on one factor. The one-pose-per-cycle result will be added when its 24 hours end. A UR20 run comes after that.
 
 
 ## Wrap-up
@@ -173,7 +190,8 @@ The 24-hour result will be added here when the run ends. A run with perception a
 | Pilz LIN | 10 cm, within 0.1 mm of a line | doesn't avoid obstacles |
 | OMPL (defaults) | within 1 mm of the goal | 1–1.9 m tool detour, wrist 3 ~510° |
 | After OMPL | the next run protective-stops from a pose that trips the wrist-clamping rule (C403) | check every plan + clamp-aware collision model + Pilz PTP home; risky plans 58 → 0 |
-| Soak test (interim, 3.5 h) | 98.3 % success, 12 ms replies with no drift, memory flat at 3.7 GB | a dropped link kills the driver → supervision; ~6 % no-plan → retries and a fallback |
+| Soak test (motion only, 7.6 h) | 98.2 % success, 12 ms replies with no drift, memory flat at 3.8 GB | a dropped link kills the driver → supervision; ~6 % no-plan → retries and a fallback |
+| Perception on the same box | continuous tracking hit the memory floor at 26 min (1 h 10 min with leaner settings); one pose per cycle still running at 7.5 h | a real cell: two Jetsons, AGX Orin 32/64 GB, or lighter perception |
 | Floor | a floor slab in every request | without it, the tool went 0.68 m below the base |
 | Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel, restart containers before a demo |
 | Viewing | Lichtblick on Windows | read-only at the bridge |
