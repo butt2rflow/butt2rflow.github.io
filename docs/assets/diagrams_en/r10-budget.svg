@@ -121,5 +121,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="nd" x="588.7159685863874" y="276" text-anchor="middle" style="fill:#ffffff">1.2</text>
 <rect x="607.5" y="254" width="48.5" height="34" rx="2" style="fill:var(--green)"/>
 <text class="nd" x="631.7657068062827" y="276" text-anchor="middle" style="fill:#ffffff">1.6</text>
-<text class="sm" x="18" y="346">Per-container usage logged every minute; free is what the OS reports as available</text>
+<text class="sm" x="18" y="346">Per-container values per Docker (inflated for FoundationPose on a Jetson); free is what the OS reports as available</text>
 </svg>

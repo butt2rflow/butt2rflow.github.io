@@ -233,7 +233,7 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**The Real Robot**](posts/jetson-real-robot-first-move.md) — an edge computer moves a real UR20 for the first time; calibration 3.95→0.06 mm, 0.1 mm from goal
 - [**The Simulators**](posts/jetson-ursim-planners.md) — cuMotion, Pilz and OMPL on two URSims; a 510° wrist turn for 10 cm
 - [**Isaac Sim**](posts/isaac-sim-pc-and-cloud.md) — a virtual work cell on an RTX 3090 PC and a cloud L4; a synthetic-data memory leak; the cloud wasn't faster
-- [**The Memory Budget**](posts/jetson-memory-budget.md) — perception and motion on one 16 GB Jetson: continuous tracking lasts about an hour, and FoundationPose is the culprit
+- [**The Memory Budget**](posts/jetson-memory-budget.md) — perception and motion on one 16 GB Jetson: continuous tracking lasts about an hour, and perception, not cuMotion, fills the memory
 
 **Hands-on Notes**
 

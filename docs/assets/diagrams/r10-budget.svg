@@ -121,5 +121,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="nd" x="588.7159685863874" y="276" text-anchor="middle" style="fill:#ffffff">1.2</text>
 <rect x="607.5" y="254" width="48.5" height="34" rx="2" style="fill:var(--green)"/>
 <text class="nd" x="631.7657068062827" y="276" text-anchor="middle" style="fill:#ffffff">1.6</text>
-<text class="sm" x="18" y="346">Docker 컨테이너별 사용량을 1분마다 기록한 값. 남은 메모리는 운영체제가 보고한 값</text>
+<text class="sm" x="18" y="346">컨테이너별 값은 Docker 기준(Jetson에서는 FoundationPose 쪽이 부풀려 보임). 남은 메모리는 운영체제가 보고한 값</text>
 </svg>

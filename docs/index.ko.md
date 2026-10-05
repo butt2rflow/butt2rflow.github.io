@@ -233,7 +233,7 @@ title: Home
 - [**실물편**](posts/jetson-real-robot-first-move.md) — 엣지 컴퓨터가 실제 UR20을 처음 움직이다, 보정 3.95→0.06 mm, 목표에서 0.1 mm
 - [**시뮬레이터편**](posts/jetson-ursim-planners.md) — URSim 두 대로 본 cuMotion·Pilz·OMPL, 10 cm에 손목 510°
 - [**Isaac Sim편**](posts/isaac-sim-pc-and-cloud.md) — RTX 3090 PC와 클라우드 L4에 가상 작업 셀, 합성 데이터 메모리 누수, 클라우드는 더 빠르지 않았다
-- [**메모리편**](posts/jetson-memory-budget.md) — 인식과 모션을 16 GB Jetson 한 대에: 계속 추적은 한 시간 남짓, 범인은 FoundationPose
+- [**메모리편**](posts/jetson-memory-budget.md) — 인식과 모션을 16 GB Jetson 한 대에: 계속 추적은 한 시간 남짓, 메모리를 채운 건 cuMotion이 아니라 인식
 
 **실습 노트**
 
