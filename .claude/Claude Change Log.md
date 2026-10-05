@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-10-05 (밤) — 메모리편·시뮬레이터편 바로잡기
+
+- 사용자 질문으로 재검토: 'cuMotion에서 아낀 1.3 GB를 FoundationPose가 먹었다'는 틀림. 인식과 함께 실행하면 기본 설정 cuMotion도 2.0~2.55 GB(26분·7.7시간 시험 모두), 멈춘 순간 2.51 vs 2.42 GB로 같았다. 이 해석은 spatial-vision-AI README/체인지로그에서 확인 없이 옮긴 것.
+- 같은 날 19:28 spatial-vision-AI `bbcd673`(사이클마다 한 번 시험 8.4시간 중간 결과): FoundationPose GPU 할당(nvmap) 4.08 GB로 평평, Docker 숫자는 통합 메모리에서 믿기 어렵다. 직접 대조해 보니 Docker fp-run과 남은 메모리 상관 −0.86, Docker +1 GB당 남은 메모리 약 −0.5 GB → 압박은 실제지만 부풀려짐. 무엇이 오르내리는지·등록 탓인지는 미확인으로 적음.
+- `f261cfc` 한/영: 메모리편 상단에 고침 안내, 30초 요약·표·'멈춘 건 cuMotion 때문이 아니었다' 절 재작성, nvmap 용어, 'Docker 숫자만 믿지 않는다' 교훈. '경로 없음' 최종값으로(모션만 8.4%, 설정 줄임 24%). 사이클마다 한 번 8.4시간 시점 문단(남은 최저 약 1.2 GB, 드라이버 3번째 사망). 시뮬레이터편 같은 주장·6%→8% 정정. 그림 r10-swing·r10-budget 라벨/주석. 홈 한 줄. strict 빌드 깨끗, CI green, 라이브 확인.
+- fos-physical-AI: 10-05 17:22 `b0acdec` 이후 새 커밋 없음. 체인지로그 신규분은 소크 장애 2건, URSim을 .170으로 이전, 감시 하한 적응형(800 MB), Jetson headless, 회사 내부 일정(블로그 대상 아님).
+
 ## 2026-10-05 — 시뮬레이터편: 장시간 시험 최종 + 인식까지 한 대에 올린 결과
 
 - fos-physical-AI(`isaac_sim_pipeline_plan.md` 10-04~05)와 spatial-vision-AI(`ursim/README.md` 소크 절, Jetson `soak_*` 리포트)의 새 결과를 확인함.
