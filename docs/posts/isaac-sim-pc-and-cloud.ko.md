@@ -184,7 +184,7 @@ NVIDIA·Isaac Sim·Omniverse·Jetson·cuMotion·RTX·GeForce는 NVIDIA Corporati
 
 </details>
 
-**시리즈** · [← 이전 글: 시뮬레이터편 — URSim 두 대로 본 세 플래너](jetson-ursim-planners.md)
+**시리즈** · [← 이전 글: 시뮬레이터편 — URSim 두 대로 본 세 플래너](jetson-ursim-planners.md) · [다음 글: 메모리편 — 인식과 모션을 16 GB Jetson 한 대에 →](jetson-memory-budget.md)
 
 *관련: [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [실물편](jetson-real-robot-first-move.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [어떤 3D 카메라를](depth-camera-selection.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
 

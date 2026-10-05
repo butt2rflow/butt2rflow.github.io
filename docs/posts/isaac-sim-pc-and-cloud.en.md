@@ -184,7 +184,7 @@ NVIDIA, Isaac Sim, Omniverse, Jetson, cuMotion, RTX and GeForce are trademarks o
 
 </details>
 
-**Series** · [← Previous: The Simulators — three planners on two URSims](jetson-ursim-planners.md)
+**Series** · [← Previous: The Simulators — three planners on two URSims](jetson-ursim-planners.md) · [Next: The Memory Budget — perception and motion on one 16 GB Jetson →](jetson-memory-budget.md)
 
 *Related: [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [The Real Robot](jetson-real-robot-first-move.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Which 3D camera](depth-camera-selection.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
 

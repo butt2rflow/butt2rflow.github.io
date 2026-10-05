@@ -178,7 +178,7 @@ A real cell gets the part pose from the camera and moves to it. So on the same 1
 - **The cuMotion settings paid off.** Fewer seeds plus PyTorch cache cleanup held its memory at 2.33 GB instead of climbing to 3.8 GB. The price is more no-plans, which makes retries and a fallback path more important.
 - **nvblox (live mapping) wasn't running in these tests.** A cell that maps live needs more memory.
 
-The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions. A real cell would split perception and motion across two Jetsons, use an AGX Orin 32/64 GB, or slim perception down (a trained detector, fewer re-acquisitions). Either way, give the UR driver a real-time kernel and dedicated CPU cores. These three runs differ in both lighting and mode, so the difference can't be pinned on one factor. The one-pose-per-cycle result will be added when its 24 hours end. A UR20 run comes after that.
+The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions. A real cell would split perception and motion across two Jetsons, use an AGX Orin 32/64 GB, or slim perception down (a trained detector, fewer re-acquisitions). Either way, give the UR driver a real-time kernel and dedicated CPU cores. These three runs differ in both lighting and mode, so the difference can't be pinned on one factor. Who uses how much memory, and how a real cell would split the work, is covered in [The Memory Budget](jetson-memory-budget.md). A UR20 run comes after that.
 
 
 ## Wrap-up
