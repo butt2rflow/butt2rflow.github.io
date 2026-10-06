@@ -1,6 +1,6 @@
-<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">How long each run lasted</title>
-<desc id="de">Hours across (0 to 8). The motion-only run kept going for 7.6 hours and was ended by choice. With continuous tracking alongside, it stopped at the memory floor after 26 minutes in a dark office, and after 1 h 10 min even with leaner settings. The lit run that takes one pose per cycle was still going at 7.7 hours on the night of October 5.</desc>
+<desc id="de">Hours across (0 to 24). The motion-only run kept going for 7.6 hours and was ended by choice. With continuous tracking alongside, it stopped at the memory floor after 26 minutes in a dark office, and after 1 h 10 min even with leaner settings. The run that takes one pose per cycle lasted the full 24 hours: lit for the first 8.5 hours, then 15.5 hours in a dark office after the lights went off.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -53,30 +53,37 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
-<text class="t" x="18" y="26">Continuous tracking: about an hour; one pose per cycle: hours and counting</text>
-<line x1="230" y1="46" x2="230" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="230" y="268" text-anchor="middle">0 h</text>
-<line x1="334" y1="46" x2="334" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="334" y="268" text-anchor="middle">2 h</text>
-<line x1="438" y1="46" x2="438" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="438" y="268" text-anchor="middle">4 h</text>
-<line x1="542" y1="46" x2="542" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="542" y="268" text-anchor="middle">6 h</text>
-<line x1="646" y1="46" x2="646" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="646" y="268" text-anchor="middle">8 h</text>
+<rect class="bg" x="0" y="0" width="680" height="320" rx="12"/>
+<text class="t" x="18" y="26">Continuous tracking: about an hour; one pose per cycle: 24 hours</text>
+<line x1="230.0" y1="46" x2="230.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="230.0" y="268" text-anchor="middle">0 h</text>
+<line x1="300.0" y1="46" x2="300.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="300.0" y="268" text-anchor="middle">4 h</text>
+<line x1="370.0" y1="46" x2="370.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="370.0" y="268" text-anchor="middle">8 h</text>
+<line x1="440.0" y1="46" x2="440.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="440.0" y="268" text-anchor="middle">12 h</text>
+<line x1="510.0" y1="46" x2="510.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="510.0" y="268" text-anchor="middle">16 h</text>
+<line x1="580.0" y1="46" x2="580.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="580.0" y="268" text-anchor="middle">20 h</text>
+<line x1="650.0" y1="46" x2="650.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="650.0" y="268" text-anchor="middle">24 h</text>
 <text class="it" x="220" y="74" text-anchor="end">Motion only</text>
-<rect x="230" y="56" width="395.2" height="26" rx="3" style="fill:var(--blue)"/>
-<text class="nd" x="617.2" y="74" text-anchor="end" style="fill:#ffffff">to the end (stopped by choice at 7.6 h)</text>
+<rect x="230" y="56" width="133.0" height="26" rx="3" style="fill:var(--blue)"/>
+<text class="nd" x="371.0" y="74">stopped by choice at 7.6 h</text>
 <text class="it" x="220" y="124" text-anchor="end">Continuous tracking, dark</text>
-<rect x="230" y="106" width="22.5" height="26" rx="3" style="fill:var(--red)"/>
-<text class="nd" x="260.5333333333333" y="124">26 min, memory floor</text>
+<rect x="230" y="106" width="7.6" height="26" rx="3" style="fill:var(--red)"/>
+<text class="nd" x="245.58333333333334" y="124">26 min, memory floor</text>
 <text class="it" x="220" y="174" text-anchor="end">Continuous, leaner, dark</text>
-<rect x="230" y="156" width="60.7" height="26" rx="3" style="fill:var(--red)"/>
-<text class="nd" x="298.6666666666667" y="174">1 h 10 min, memory floor</text>
-<text class="it" x="220" y="224" text-anchor="end">One pose per cycle, lit</text>
-<rect x="230" y="206" width="400.4" height="26" rx="3" style="fill:var(--green)"/>
-<path d="M630.4 219 l12 0" class="art"/>
-<text class="nd" x="622.4000000000001" y="224" text-anchor="end" style="fill:#ffffff">still running at 7.7 h</text>
-<text class="sm" x="18" y="292">Robot: URSim (UR12e sim); camera and perception: real. Lighting and mode both differ, so no single cause</text>
+<rect x="230" y="156" width="20.4" height="26" rx="3" style="fill:var(--red)"/>
+<text class="nd" x="258.41666666666663" y="174">1 h 10 min, memory floor</text>
+<text class="it" x="220" y="224" text-anchor="end">One pose per cycle</text>
+<rect x="230" y="206" width="148.8" height="26" rx="3" style="fill:var(--green)"/>
+<rect x="378.8" y="206" width="271.2" height="26" rx="3" style="fill:var(--green);opacity:0.6"/>
+<text class="nd" x="304.375" y="224" text-anchor="middle" style="fill:#ffffff">lit</text>
+<text class="nd" x="514.375" y="224" text-anchor="middle" style="fill:#ffffff">dark (15.5 h overnight)</text>
+<text class="sm" x="650.0" y="248" text-anchor="end" style="fill:var(--green)">the full 24 h</text>
+<text class="sm" x="18" y="292">Robot: URSim (UR12e sim); camera and perception: real</text>
+<text class="sm" x="18" y="310">One pose per cycle held through the dark night too, so lighting alone doesn't explain it</text>
 </svg>

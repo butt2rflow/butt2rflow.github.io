@@ -1,6 +1,6 @@
-<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">네 시험이 버틴 시간</title>
-<desc id="de">가로축은 시간(0~8시간). 모션만 실행한 시험은 7.6시간 동안 문제없이 계속되다 판단해 끝냈다. 인식을 계속 추적하며 함께 실행하자 어두운 사무실에서 26분 만에 메모리 한계로 멈췄고, 설정을 줄여도 1시간 10분에 멈췄다. 밝은 곳에서 사이클마다 자세를 한 번만 구하는 시험은 10월 5일 밤 기준 7.7시간째 진행 중이다.</desc>
+<desc id="de">가로축은 시간(0~24시간). 모션만 실행한 시험은 7.6시간 동안 문제없이 계속되다 판단해 끝냈다. 인식을 계속 추적하며 함께 실행하자 어두운 사무실에서 26분 만에 메모리 한계로 멈췄고, 설정을 줄여도 1시간 10분에 멈췄다. 사이클마다 자세를 한 번만 구하는 시험은 24시간을 끝까지 버텼다. 처음 8.5시간은 밝았고, 나머지 15.5시간은 불이 꺼진 어두운 사무실이었다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -53,30 +53,37 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
-<rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
-<text class="t" x="18" y="26">계속 추적하면 한 시간 남짓, 한 번씩 구하면 몇 시간째</text>
-<line x1="230" y1="46" x2="230" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="230" y="268" text-anchor="middle">0시간</text>
-<line x1="334" y1="46" x2="334" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="334" y="268" text-anchor="middle">2시간</text>
-<line x1="438" y1="46" x2="438" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="438" y="268" text-anchor="middle">4시간</text>
-<line x1="542" y1="46" x2="542" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="542" y="268" text-anchor="middle">6시간</text>
-<line x1="646" y1="46" x2="646" y2="252" style="stroke:var(--bd);stroke-width:1"/>
-<text class="sm" x="646" y="268" text-anchor="middle">8시간</text>
+<rect class="bg" x="0" y="0" width="680" height="320" rx="12"/>
+<text class="t" x="18" y="26">계속 추적하면 한 시간 남짓, 한 번씩 구하면 24시간</text>
+<line x1="230.0" y1="46" x2="230.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="230.0" y="268" text-anchor="middle">0시간</text>
+<line x1="300.0" y1="46" x2="300.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="300.0" y="268" text-anchor="middle">4시간</text>
+<line x1="370.0" y1="46" x2="370.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="370.0" y="268" text-anchor="middle">8시간</text>
+<line x1="440.0" y1="46" x2="440.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="440.0" y="268" text-anchor="middle">12시간</text>
+<line x1="510.0" y1="46" x2="510.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="510.0" y="268" text-anchor="middle">16시간</text>
+<line x1="580.0" y1="46" x2="580.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="580.0" y="268" text-anchor="middle">20시간</text>
+<line x1="650.0" y1="46" x2="650.0" y2="252" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="650.0" y="268" text-anchor="middle">24시간</text>
 <text class="it" x="220" y="74" text-anchor="end">모션만</text>
-<rect x="230" y="56" width="395.2" height="26" rx="3" style="fill:var(--blue)"/>
-<text class="nd" x="617.2" y="74" text-anchor="end" style="fill:#ffffff">끝까지 (7.6시간에 판단해 종료)</text>
+<rect x="230" y="56" width="133.0" height="26" rx="3" style="fill:var(--blue)"/>
+<text class="nd" x="371.0" y="74">7.6시간에 판단해 종료</text>
 <text class="it" x="220" y="124" text-anchor="end">계속 추적, 어두움</text>
-<rect x="230" y="106" width="22.5" height="26" rx="3" style="fill:var(--red)"/>
-<text class="nd" x="260.5333333333333" y="124">26분, 메모리 한계</text>
+<rect x="230" y="106" width="7.6" height="26" rx="3" style="fill:var(--red)"/>
+<text class="nd" x="245.58333333333334" y="124">26분, 메모리 한계</text>
 <text class="it" x="220" y="174" text-anchor="end">계속 추적, 설정 줄임, 어두움</text>
-<rect x="230" y="156" width="60.7" height="26" rx="3" style="fill:var(--red)"/>
-<text class="nd" x="298.6666666666667" y="174">1시간 10분, 메모리 한계</text>
-<text class="it" x="220" y="224" text-anchor="end">사이클마다 자세 한 번, 밝음</text>
-<rect x="230" y="206" width="400.4" height="26" rx="3" style="fill:var(--green)"/>
-<path d="M630.4 219 l12 0" class="art"/>
-<text class="nd" x="622.4000000000001" y="224" text-anchor="end" style="fill:#ffffff">7.7시간째 진행 중</text>
-<text class="sm" x="18" y="292">로봇은 URSim(UR12e 시뮬레이터), 카메라와 인식은 실물. 조명과 방식이 함께 달라 원인을 하나로 가를 수는 없음</text>
+<rect x="230" y="156" width="20.4" height="26" rx="3" style="fill:var(--red)"/>
+<text class="nd" x="258.41666666666663" y="174">1시간 10분, 메모리 한계</text>
+<text class="it" x="220" y="224" text-anchor="end">사이클마다 자세 한 번</text>
+<rect x="230" y="206" width="148.8" height="26" rx="3" style="fill:var(--green)"/>
+<rect x="378.8" y="206" width="271.2" height="26" rx="3" style="fill:var(--green);opacity:0.6"/>
+<text class="nd" x="304.375" y="224" text-anchor="middle" style="fill:#ffffff">밝음</text>
+<text class="nd" x="514.375" y="224" text-anchor="middle" style="fill:#ffffff">어두움 (밤새 15.5시간)</text>
+<text class="sm" x="650.0" y="248" text-anchor="end" style="fill:var(--green)">24시간 끝까지</text>
+<text class="sm" x="18" y="292">로봇은 URSim(UR12e 시뮬레이터), 카메라와 인식은 실물</text>
+<text class="sm" x="18" y="310">어두운 밤에도 한 번씩 구하는 쪽은 버텼다. 조명만의 차이는 아니다</text>
 </svg>

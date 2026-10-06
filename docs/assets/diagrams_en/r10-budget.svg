@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Who uses how much of the 16 GB</title>
-<desc id="de">Memory split for four runs, in GB. Motion only: cuMotion 3.75, driver, MoveIt and test client 0.33, the rest is the OS and free memory. Continuous tracking in the dark, at the 26-minute stop: FoundationPose 6.70, camera, detector, segmentation and depth 3.16, cuMotion 2.51, small parts 0.30, OS and other about 1.7, free 0.93. Leaner settings, at the 1 h 10 min stop: 6.74, 3.24, 2.42, 0.32, about 1.7, free 0.86. One pose per cycle (median): 6.40, 3.33, 2.41, 0.28, about 1.3, free 1.61. The biggest block is FoundationPose.</desc>
+<desc id="de">Memory split for four runs, in GB. Motion only: cuMotion 3.75, driver, MoveIt and test client 0.33, the rest is the OS and free memory. Continuous tracking in the dark, at the 26-minute stop: FoundationPose 6.70, camera, detector, segmentation and depth 3.16, cuMotion 2.51, small parts 0.30, OS and other about 1.7, free 0.93. Leaner settings, at the 1 h 10 min stop: 6.74, 3.24, 2.42, 0.32, about 1.7, free 0.86. One pose per cycle (the moment with the least free memory in 24 hours, 03:14 on October 6): 6.61, 3.35, 2.44, 0.34, about 1.4, free 1.18. The biggest block is FoundationPose.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -109,17 +109,17 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="nd" x="604.5209424083769" y="222" text-anchor="middle" style="fill:#ffffff">1.7</text>
 <rect x="630.1" y="200" width="25.9" height="34" rx="2" style="fill:var(--green)"/>
 <text class="it" x="186" y="268" text-anchor="end">One pose per cycle</text>
-<text class="sm" x="186" y="284" text-anchor="end">lit, median</text>
-<rect x="196.0" y="254" width="192.7" height="34" rx="2" style="fill:var(--red)"/>
-<text class="nd" x="292.3350785340314" y="276" text-anchor="middle" style="fill:#ffffff">6.4</text>
-<rect x="388.7" y="254" width="100.2" height="34" rx="2" style="fill:var(--amber)"/>
-<text class="nd" x="438.7945026178011" y="276" text-anchor="middle" style="fill:#ffffff">3.3</text>
-<rect x="488.9" y="254" width="72.6" height="34" rx="2" style="fill:var(--blue)"/>
-<text class="nd" x="525.1950261780105" y="276" text-anchor="middle" style="fill:#ffffff">2.4</text>
-<rect x="561.5" y="254" width="8.4" height="34" rx="2" style="fill:var(--teal)"/>
-<rect x="569.9" y="254" width="37.6" height="34" rx="2" style="fill:var(--mut)"/>
-<text class="nd" x="588.7159685863874" y="276" text-anchor="middle" style="fill:#ffffff">1.2</text>
-<rect x="607.5" y="254" width="48.5" height="34" rx="2" style="fill:var(--green)"/>
-<text class="nd" x="631.7657068062827" y="276" text-anchor="middle" style="fill:#ffffff">1.6</text>
+<text class="sm" x="186" y="284" text-anchor="end">tightest moment in 24 h</text>
+<rect x="196.0" y="254" width="199.0" height="34" rx="2" style="fill:var(--red)"/>
+<text class="nd" x="295.49607329842934" y="276" text-anchor="middle" style="fill:#ffffff">6.6</text>
+<rect x="395.0" y="254" width="100.9" height="34" rx="2" style="fill:var(--amber)"/>
+<text class="nd" x="445.41753926701574" y="276" text-anchor="middle" style="fill:#ffffff">3.4</text>
+<rect x="495.8" y="254" width="73.5" height="34" rx="2" style="fill:var(--blue)"/>
+<text class="nd" x="532.5706806282723" y="276" text-anchor="middle" style="fill:#ffffff">2.4</text>
+<rect x="569.3" y="254" width="10.2" height="34" rx="2" style="fill:var(--teal)"/>
+<rect x="579.5" y="254" width="40.9" height="34" rx="2" style="fill:var(--mut)"/>
+<text class="nd" x="600.0052356020942" y="276" text-anchor="middle" style="fill:#ffffff">1.4</text>
+<rect x="620.5" y="254" width="35.5" height="34" rx="2" style="fill:var(--green)"/>
+<text class="nd" x="638.2382198952878" y="276" text-anchor="middle" style="fill:#ffffff">1.2</text>
 <text class="sm" x="18" y="346">Per-container values per Docker (inflated for FoundationPose on a Jetson); free is what the OS reports as available</text>
 </svg>

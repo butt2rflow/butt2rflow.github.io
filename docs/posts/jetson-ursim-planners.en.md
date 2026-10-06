@@ -23,7 +23,7 @@ The short version: judged by the tool tip, all three planners reached the goal. 
 - **The tool got there every time; the joints did not agree.** For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint **about 510°**. On a real arm, cables and hoses would wind up.
 - **With OMPL, the trouble comes after.** The next run started from a folded pose with a protective stop (C403). The cause is UR's wrist-clamping rule, which the ROS robot model doesn't include. Checking every plan and adding the rule to cuMotion's collision model took risky plans from 58 to 0.
 - **Soak test:** motion alone ran 7.6 h at 98.2 % success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But a dropped link kills the driver, so it needs supervision, and about 8 % of box detours find no plan, so it needs retries and a fallback.
-- **Add perception on the same 16 GB and memory runs out.** With continuous object tracking it hit the memory floor after 26 minutes, and after 1 h 10 min even with leaner settings. Perception, not cuMotion, filled the memory. A run that takes one pose per cycle has been holding for 7.5 hours (as of October 5).
+- **Add perception on the same 16 GB and memory runs out.** With continuous object tracking it hit the memory floor after 26 minutes, and after 1 h 10 min even with leaner settings. Perception, not cuMotion, filled the memory. A run that takes one pose per cycle held for 24 hours, a dark night included.
 - **cuMotion is smooth, but not identical every time.** It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).
 - **Put the floor in every request.** Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.
 - **Connect PC simulators with a reverse SSH tunnel.** Simulators in Docker inside WSL aren't visible from outside. One tunnel opened outward from the PC connected them, with no admin rights and no firewall change.
@@ -172,13 +172,13 @@ A real cell gets the part pose from the camera and moves to it. So on the same 1
 |---|---|---|
 | Continuous tracking, dark office | 1.4 GB free after 20 minutes, stopped at **26 min**. Tracking 6.8 → 4.5 fps, cuMotion planning 1.3 → 2.0 s | Default settings don't fit in 16 GB |
 | Continuous tracking, leaner settings | Desktop off, ESS light, fewer cuMotion seeds, PyTorch cache cleanup. cuMotion flat at 2.33 GB, planning 1.4 s. Still stopped at **1 h 10 min** | Delays the crossing, doesn't prevent it. All 8 CPU cores saturated for the hour, 24 % no-plan over the box, 31 driver link drops per hour |
-| One pose per cycle, lit room, default settings | **Still running at 7.5 h** (as of October 5). 757 of 758 poses succeeded, median 4.0 s, about 1.5 GB free. Motion steps 94 % OK (17 % no-plan over the box), 2 driver restarts | A realistic setup for a cell that needs the part pose once per cycle |
+| One pose per cycle, default settings (lit for 8.5 h, then dark for 15.5 h) | **The full 24 h.** 2,398 of 2,399 poses succeeded, median 3.9 s, lowest free memory 1.18 GB. Motion steps 95.8 % OK (16 % no-plan over the box), 4 driver restarts, 0 wrist-clamping stops | A realistic setup for a cell that needs the part pose once per cycle, though the margin to the stop line was under 0.2 GB |
 
 - **Perception, not cuMotion, filled the memory.** Alongside perception, cuMotion sat near 2.5 GB even with default settings; what pulled free memory down was perception (about 10 GB). The FoundationPose container's memory in particular swung up and down, but its GPU allocation stayed flat, so exactly what moves is still unknown.
 - **The cuMotion settings pay off with motion alone.** Memory that climbed to 3.8 GB stops at 2.33 GB. Alongside perception it already sits near 2.5 GB, so they made little difference there, apart from more no-plans.
 - **nvblox (live mapping) wasn't running in these tests.** A cell that maps live needs more memory.
 
-The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions. A real cell would split perception and motion across two Jetsons, use an AGX Orin 32/64 GB, or slim perception down (a trained detector, fewer re-acquisitions). Either way, give the UR driver a real-time kernel and dedicated CPU cores. These three runs differ in both lighting and mode, so the difference can't be pinned on one factor. Who uses how much memory, and how a real cell would split the work, is covered in [The Memory Budget](jetson-memory-budget.md). A UR20 run comes after that.
+The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions. A real cell would split perception and motion across two Jetsons, use an AGX Orin 32/64 GB, or slim perception down (a trained detector, fewer re-acquisitions). Either way, give the UR driver a real-time kernel and dedicated CPU cores. The one-pose-per-cycle run held through the same kind of dark night that broke continuous tracking, so lighting alone isn't the difference, though other conditions weren't held fixed. Who uses how much memory, and how a real cell would split the work, is covered in [The Memory Budget](jetson-memory-budget.md). A UR20 run comes after that.
 
 
 ## Wrap-up
@@ -191,7 +191,7 @@ The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't surviv
 | OMPL (defaults) | within 1 mm of the goal | 1–1.9 m tool detour, wrist 3 ~510° |
 | After OMPL | the next run protective-stops from a pose that trips the wrist-clamping rule (C403) | check every plan + clamp-aware collision model + Pilz PTP home; risky plans 58 → 0 |
 | Soak test (motion only, 7.6 h) | 98.2 % success, 12 ms replies with no drift, memory flat at 3.8 GB | a dropped link kills the driver → supervision; ~8 % no-plan → retries and a fallback |
-| Perception on the same box | continuous tracking hit the memory floor at 26 min (1 h 10 min with leaner settings); one pose per cycle still running at 7.5 h | a real cell: two Jetsons, AGX Orin 32/64 GB, or lighter perception |
+| Perception on the same box | continuous tracking hit the memory floor at 26 min (1 h 10 min with leaner settings); one pose per cycle held for 24 h (under 0.2 GB margin) | a real cell: two Jetsons, AGX Orin 32/64 GB, or lighter perception |
 | Floor | a floor slab in every request | without it, the tool went 0.68 m below the base |
 | Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel, restart containers before a demo |
 | Viewing | Lichtblick on Windows | read-only at the bridge |
