@@ -3,7 +3,7 @@
 > **세션 시작 시 이 문서를 먼저 읽으세요.** (또는 `/start-session` 스킬)
 > 이 문서는 "지금 어디까지 됐고, 어떻게 발행하며, 무엇을 조심하나"를 담은 **살아있는 핸드오프**입니다.
 > 세션 끝에 `/end-session` 스킬이 이 문서의 *현재 상태*와 체인지로그를 갱신합니다.
-> **마지막 갱신:** 2026-10-03
+> **마지막 갱신:** 2026-10-06
 
 ---
 
@@ -71,7 +71,7 @@
 - **모션편 3단계 갱신(2026-10-03, `63f783e`):** 「자세를 목표로 바꾸기」가 같은 장면의 카메라 칩 깊이 vs ESS 깊이 비교 사진(`jetson-motion-pose-depth-compare-{ko,en}.jpg`)으로 바뀜. 미니 PC 0.88→0.92, 마우스 0.66→0.87, ESS 목표로 가상 UR20 재실행(0.1 mm 안). 9월 30일 FS 사진은 앞 절로 복귀. 그 전 커밋 `d9668e5`(FS 사진 임시 교체)는 이것으로 대체됨.
 - **현장 노트 8부 시뮬레이터편(2026-10-03, `08c8273`, 라이브):** `jetson-ursim-planners` — URSim 두 대(UR12e PS5, UR20 PSX)로 cuMotion·Pilz·OMPL 비교, OMPL 손목 510°, 바닥 함정, 연결 함정. 네이버 패키지 없음(요청 시). **10-04 보강:** Lichtblick 절(캡처 포함)·'보기만'은 브리지에서, 'OMPL 다음이 더 문제였다'(Pilz PTP 홈, UR20 OMPL 기본 제외), 데모 7단계, production 주의(재시작은 R&D용, 장시간 시험 미실시). 실습 노트 0부 'URSim은 x86 리눅스용' 보충. 한국어 전면 다듬기(`8874865`), URSim vs Isaac Sim 단락(`140ef3c`).
 - **현장 노트 Isaac Sim편(2026-10-04, `16efb72`, 라이브):** `isaac-sim-pc-and-cloud` — 시뮬레이터편 다음. 집 RTX 3090 vs 클라우드 L4, UR20 바닥 함정, SIL 토픽, 합성 데이터 누수. 그림 `r9-*`(`figs_r9.py`), 사진 `isaac-sdg-quad.jpg`·`isaac-cloud-stream.jpg`. 원자료 `~/Documents/issac-sim`. 네이버 패키지 없음. 다음 글 후보: Jetson 쪽 SIL(실제 보정값, 토픽 연결, cuMotion으로 가상 UR20).
-- **현장 노트 메모리편(2026-10-05, `d2de00c`, 라이브):** `jetson-memory-budget` — Isaac Sim편 다음. 인식+모션을 16 GB Orin NX 한 대에: 모션만 7.6시간, 계속 추적 26분·설정 줄여 1시간 10분(범인은 FoundationPose 재탐색 출렁임), 사이클마다 자세 한 번은 진행 중. 그림 `r10-*`(`figs_r10.py`). 시뮬레이터편 장시간 시험 절도 최종값으로 갱신(`5aee1cc`). **대기:** 사이클마다 한 번 24시간 시험 종료(10-06 약 15:00) 후 숫자 갱신.
+- **현장 노트 메모리편(2026-10-05, `d2de00c`, 라이브):** `jetson-memory-budget` — Isaac Sim편 다음. 인식+모션을 16 GB Orin NX 한 대에: 모션만 7.6시간, 계속 추적 26분·설정 줄여 1시간 10분(메모리를 채운 건 cuMotion이 아니라 인식 쪽), 사이클마다 자세 한 번은 진행 중(8.4시간 중간값 반영). 그림 `r10-*`(`figs_r10.py`). 시뮬레이터편 장시간 시험 절도 최종값으로 갱신(`5aee1cc`). **10-05 밤 정정(`f261cfc`):** 'cuMotion이 아낀 1.3 GB를 FoundationPose가 먹었다'는 틀림(인식과 함께면 cuMotion 기본 설정도 2.0~2.55 GB). Docker 컨테이너 숫자는 Jetson에서 부풀려짐(FoundationPose nvmap 4.08 GB 평평, 그래도 Docker +1 GB당 남은 메모리 약 −0.5 GB). 글 상단에 고침 안내. '경로 없음' 최종값: 모션만 8.4%, 설정 줄임 24%.
 - **Physical AI 로봇 코스:** 별도 폴더 `~/Documents/physical-ai-course`로 분리(§8). butterflow엔 Unit 2 dual-use 발행본 `robot-simulation`만 남음.
 - **Physical AI › Pendant to ROS 2 (4부작 완결, 2026-09-28 라이브):** `ros2-for-robot-programmers`(1 — ROS 2 그래프) · `ros2-robot-description`(2 — URDF·TF2·ros2_control·RViz) · `moveit2-goals-not-points`(3 — MoveIt 2) · `isaac-ros-gpu`(4 — Isaac ROS·cuMotion). TP/URScript 프로그래머 대상, 한/영, 편당 그림 9개. 첫 발행 `07b400f`, 결정론 개정 `cc896aa`. 개정 내용: 움직임은 공차 누적에 맞추고, 판정은 기존 결정론적 하드웨어가 맡는다. 자동화 사다리, 관문, CAD vs 실측도 추가. 5게이트 + 최종편집 통과. 그림 생성기 `Blog/tools/r2pgen/`. 메모리 `pendant-to-ros2-series`. **네이버 미발행.**
 - **Physical AI › Start Here (2026-09-28 라이브):** `choosing-physical-ai`(한/영, 그림 10개 `cpa-*`, 생성기 `tools/r2pgen/figs_cpa.py`). 개념 다리 글. Track 0·A·B를 한 축에 놓고 계단, 손익분기, 하이브리드, 조용한 실패, 인수 기준을 다룬다. 끝에 기존 글 지도 표가 있다. 커밋 `217831d`. 시리즈 4편과 stereo-to-grasp에 역링크를 달았다. Track B 전용 글은 '예정'으로 표시. 2026-09-28 `9f8f0fe`: 30초 요약·용어에 Track 0·A·B 이름 뜻 추가(0=인식은 하되 신경망 없는 기준선, A·B=신경망을 쓰는 두 갈래).
@@ -150,7 +150,8 @@
 - **ROS 2 1부 한/영 `**` 홀수:** 10-03 편집 전부터 있던 것, 라이브는 정상. 원인 찾아 고칠지는 선택.
 - **영어판 문체:** 10-03 교차 편집은 영어에 구조·링크·사실만 반영했다. 영어 문체 리뷰는 안 함.
 - **모션편 후속(선택):** nvblox `unobserved_esdf_policy`를 막힌 곳으로 둔 지도 비교, ESS 깊이 지도로 cuMotion 거부/통과 다시 재기. (자세 → 목표의 ESS 재실행은 10-03 완료.)
-- **URSim 장시간 시험 — 10-05 최종 결과 반영 대기:** 10-04 `3a18264`로 중간 결과(3차 3.5시간: 98.3%, 12 ms, 메모리 3.7 GB 정체, 약 6% 경로 없음)와 C403 원인을 시뮬레이터편에 넣음. 24시간 결과가 나오면 KO/EN 장시간 시험 표·30초 요약·정리 표의 '중간, 3.5시간'을 최종값으로 교체하고 '24시간 결과는 … 덧붙이겠습니다' 문장 삭제. (이전 기록:) 다른 PC의 세션에서 24시간 시험 진행 중(사용자, 10-04). 1차(08:03)는 08:34 터널 경로의 RTDE가 끊기며 UR 제어 노드가 죽고 복구되지 않아 중단(production에 감시 필요라는 근거), 감시 스크립트 추가 후 2차 09:17 시작. 이 세션이 보낸 중복 요청은 취소 메시지를 보냄. 결과가 오면 시뮬레이터편의 '아직 해 보지 않은 시험' 문장을 실측으로 교체.
+- **메모리편·시뮬레이터편 — 사이클마다 자세 한 번 24시간 시험 최종값 반영 대기:** 시험 `soak_20261005_1101`은 10-06 현지 시각 약 11:00에 끝남(soak.log 시각은 UTC라 15:00으로 보임). 끝나면 메모리편 한/영 본문('7.7시간째 진행 중' 표·30초 요약·8.4시간 문단·정리 표), 그림 `r10-runs`·`r10-budget`(`tools/r2pgen/figs_r10.py`), 시뮬레이터편 '인식까지 한 대에' 표·정리 행을 최종값으로. 원자료: Jetson `~/nvblox_val/ursim/soak_20261005_1101/`(SSH `fos@192.168.1.183`, 10-05 밤엔 연결 시간 초과) 또는 spatial-vision-AI `scripts/experiments/nvblox_cumotion/ursim/README.md`. 다른 저장소의 해석은 CSV로 확인 후 쓸 것(메모리 `verify-cross-repo-claims`). (모션만 장시간 시험 최종 반영은 10-05 `5aee1cc`로 완료.)
+- **spatial-vision-AI README의 'outran the ~1.3 GB cuMotion saving' 표현(회사 저장소, 이 세션은 안 고침):** 블로그에서 틀린 것으로 정정한 해석. 그쪽 세션/사용자가 고칠지 결정.
 - **Lichtblick 카메라 토픽 시험:** 카메라를 로봇에 실제로 단 뒤에(사용자). fos-physical-AI `docs/lichtblick_camera_view_note.md`에 노트(브리지 허용 목록·압축·카메라 점유, 확인 항목, C# 앱 연동 3안, 공존 구성에서의 역할). fos 세션에 메시지 보내지 말 것. 결과가 좋으면 시뮬레이터편/모션편에 한 단락.
 - **글감 후보: 펜던트 프로그램을 ROS로 번역하고 시뮬레이터로 검증(10-04 논의):** 노트는 fos-physical-AI `docs/pendant_to_ros_translation_note.md`. 회사에서 실제 프로그램 하나로 시범을 하면, 회사 프로그램을 뺀 일반화 버전을 펜던트에서 ROS 2로 시리즈나 현장 노트 글로.
 - **코스 3단계·영업 자료(블로그 밖, 2026-10-04):** physical-ai-course `tiers/`, 브로셔 PDF, 피치 덱 EN/KO(비공개, 공유 완료). 상태와 미결 결정은 코스 저장소 `.claude/SESSION-HANDOFF.md` §7과 코스 메모리 `course-tiers-and-school-channel`.
