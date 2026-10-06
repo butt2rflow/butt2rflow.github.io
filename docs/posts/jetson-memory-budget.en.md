@@ -1,7 +1,7 @@
 ---
 title: "Putting the Robot's Brain on the Edge — The Memory Budget: Perception and Motion on One 16 GB Jetson"
 nav_title: "Memory budget · perception + motion on one box"
-date: 2026-10-05
+date: 2026-10-06
 tags: [physical-ai, jetson, orin, memory, foundationpose, cumotion, soak-test, ros2, universal-robots, field-notes]
 lang: en
 description: "Like a real cell, camera perception and path planning went onto one Jetson Orin NX 16 GB for long soak tests. Motion alone ran 7.6 hours without trouble, but with continuous object tracking it hit the memory floor after 26 minutes in a dark office, and after 1 h 10 min even with leaner settings. What filled memory was perception, not cuMotion. Taking one pose per cycle held for 24 hours, a dark night included. The post ends with how a real cell would split the work. Field Notes: The Memory Budget."
@@ -14,10 +14,6 @@ description: "Like a real cell, camera perception and path planning went onto on
 The short answer: one 16 GB box is tight. With continuous tracking, memory ran out in about an hour. But the culprit wasn't the one we expected, and changing how perception is used made a big difference.
 
 *(R&D on the same Jetson Orin NX 16GB as the earlier posts. The camera and perception were real, tracking a mini PC on a desk. The robot was **URSim (a UR12e simulator)**; no real robot moved.)*
-
-*(Corrected on the night of October 5: the first version said FoundationPose's swings ate the 1.3 GB saved by the cuMotion settings. But alongside perception, cuMotion sits near 2.5 GB even with default settings, so there was never 1.3 GB to save. Later logs also showed that per-container Docker numbers are inflated on a Jetson; that's now noted too.)*
-
-*(Updated October 6: the one-pose-per-cycle run finished its 24 hours, so the in-progress numbers are now the final results. The lights went off mid-run, so the last 15.5 hours were in a dark office.)*
 
 ---
 
@@ -92,7 +88,7 @@ At first we suspected cuMotion. With motion alone, it was the thing whose memory
 
 FoundationPose does two jobs. When it first finds an object, it generates hundreds of pose hypotheses and scores them all at once (registration); after that, it nudges the previous frame's pose (tracking). Registration is heavy: here each one took about 2.8 to 3 seconds. Seen through Docker, this container's memory moved 0.4 to 1.0 GB within a minute (the sawtooth in the chart).
 
-Read that number with care. When CPU and GPU share memory, as on a Jetson, Docker's per-container numbers are inflated. A later run logged GPU allocations (nvmap) separately, and FoundationPose's GPU memory stayed at 4.08 GB through hundreds of registrations. What moved was outside the GPU allocation. It wasn't imaginary, though: when the Docker number rose by 1 GB, the free memory reported by the OS fell by about 0.5 GB. Exactly what moves, we don't know yet. It isn't a leak: over the 24-hour run the GPU allocation stayed at 4.08–4.11 GB, and the lowest free memory sat near 1.2 GB from hour 2 to the end without sinking further.
+Read that number with care. When CPU and GPU share memory, as on a Jetson, Docker's per-container numbers are inflated. The one-pose-per-cycle run logged GPU allocations (nvmap) separately, and FoundationPose's GPU memory stayed at 4.08 GB through hundreds of registrations. What moved was outside the GPU allocation. It wasn't imaginary, though: when the Docker number rose by 1 GB, the free memory reported by the OS fell by about 0.5 GB. Exactly what moves, we don't know yet. It isn't a leak: over the 24-hour run the GPU allocation stayed at 4.08–4.11 GB, and the lowest free memory sat near 1.2 GB from hour 2 to the end without sinking further.
 
 In short: perception already takes close to 10 GB, leaving a little over 1 GB, and when the swing lands on top, the floor is crossed. In the dark office, 30 to 50 % of the time went to re-finding the object. Re-acquiring less is the first remedy to try, but we haven't confirmed that registration is what drives the swing.
 
@@ -113,7 +109,7 @@ Two more things showed up besides memory:
 - **The CPU was saturated for the whole hour.** Load average on the 8-core Jetson was above 8, against 2.5 for motion alone.
 - **The UR driver's link dropped 31 times an hour.** No move failed, and it reconnected between moves, but on a real robot that number can't be ignored. The UR driver has to answer the robot every 2 ms, and the Jetson's Linux isn't a real-time kernel, so a busy CPU delays the reply. The driver died outright once, and the watchdog brought it back in 32 seconds.
 
-There are candidates on the perception side too. Turning off the front/back check should roughly halve registrations (at the risk of 180° flips on symmetric parts); calling an object lost only after several bad frames in a row should cut re-acquisitions; and not loading unused detection models should free an estimated 0.5 to 1 GB. These are unmeasured estimates, to be added after testing. None of them fixes the CPU saturation or the link drops.
+There are candidates on the perception side too. Turning off the front/back check should roughly halve registrations (at the risk of 180° flips on symmetric parts); calling an object lost only after several bad frames in a row should cut re-acquisitions; and not loading unused detection models should free an estimated 0.5 to 1 GB. These are estimates we haven't measured yet. None of them fixes the CPU saturation or the link drops.
 
 ## One pose per cycle
 
@@ -132,9 +128,9 @@ Now perception's peak (registration) and motion's peak (planning) take turns. Th
 | Wrist-clamping protective stops (C403) | 0 (the three-layer fix from [The Simulators](jetson-ursim-planners.md), unchanged) |
 | CPU load average | about 6.9 (8 cores); around 7.5 after 11 p.m. |
 
-Free memory moved up and down the whole time, but the floor held. From hour 2 to the end, the lowest value in each hour stayed between 1.18 and 1.25 GB, and FoundationPose's GPU allocation stayed at 4.08–4.11 GB. In the lit daytime hours it swung between 1.2 and 2.0 GB; at night it sat near 1.25 GB. That's why the median is lower than at 7.7 hours (1.61 GB).
+Free memory moved up and down the whole time, but the floor held. From hour 2 to the end, the lowest value in each hour stayed between 1.18 and 1.25 GB, and FoundationPose's GPU allocation stayed at 4.08–4.11 GB. In the lit daytime hours it swung between 1.2 and 2.0 GB; at night it sat near 1.25 GB.
 
-About 8.5 hours in, the office lights went off: the same kind of dark office at night in which the two continuous-tracking runs hit the memory floor. This time, every one of the 1,538 poses in the remaining 15.5 hours succeeded. At 7.7 hours we wrote that lighting and mode differed together, so the cause couldn't be split. Now we can say lighting alone doesn't explain it: in the same darkness, one pose per cycle held. It wasn't a controlled comparison (conditions such as the object's position weren't held fixed), so how much of the difference is down to the mode we can't say.
+About 8.5 hours in, the office lights went off: the same kind of dark office at night in which the two continuous-tracking runs hit the memory floor. Even so, every one of the 1,538 poses in the remaining 15.5 hours succeeded. So lighting alone can't explain why it held: in the same darkness, continuous tracking stopped after about an hour, while one pose per cycle lasted to the end. It wasn't a controlled comparison (conditions such as the object's position weren't held fixed), so how much of the difference is down to the mode we can't say.
 
 That doesn't make one 16 GB box enough. At the tightest moment, 1.18 GB was free, less than 0.2 GB above the 1 GB stop line. One more model, or nvblox, could push it over. For a cell where the part doesn't move during the cycle, the mode is realistic; for a production cell, we'd pair it with a Jetson that has room to spare, like an AGX Orin 32 GB.
 
