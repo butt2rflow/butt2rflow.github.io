@@ -55,7 +55,7 @@ The perception side is the chain built up to [Tuning](jetson-tuning-licensing.md
 
 | Block | Memory | Note |
 |---|---|---|
-| FoundationPose container | 5.5 → 6.7–7.0 GB (per Docker) | moves 0.4–1.0 GB within a minute; its GPU allocation stays flat at 4.08 GB |
+| FoundationPose container | 5.5 → 6.7–7.0 GB (per Docker) | drops 0.5–1.0 GB within a minute, then climbs back over 2–3 minutes; its GPU allocation stays flat at 4.08 GB |
 | Camera, detection, segmentation, depth | about 3.2–3.4 GB | nearly constant |
 | cuMotion | motion only: 2.4 → 3.8 GB; with perception: 2.0–2.6 GB | a cache, not a leak; grows less alongside perception |
 | Driver, MoveIt, test client | about 0.3 GB | nearly constant |
@@ -86,7 +86,7 @@ The dark office wasn't planned. The tests ran into the night, the lights went of
 
 At first we suspected cuMotion. With motion alone, it was the thing whose memory grew the most. But in the runs with perception, cuMotion was at 2.51 GB (26 min) and 2.42 GB (1 h 10 min) when they stopped. What pulled free memory down to the floor was perception, and its biggest piece is the FoundationPose container.
 
-FoundationPose does two jobs. When it first finds an object, it generates hundreds of pose hypotheses and scores them all at once (registration); after that, it nudges the previous frame's pose (tracking). Registration is heavy: here each one took about 2.8 to 3 seconds. Seen through Docker, this container's memory moved 0.4 to 1.0 GB within a minute (the sawtooth in the chart).
+FoundationPose does two jobs. When it first finds an object, it generates hundreds of pose hypotheses and scores them all at once (registration); after that, it nudges the previous frame's pose (tracking). Registration is heavy: here each one took about 2.8 to 3 seconds. Seen through Docker, this container's memory kept dropping 0.5 to 1.0 GB within a minute and climbing back over 2 to 3 minutes (the sawtooth in the chart).
 
 Read that number with care. When CPU and GPU share memory, as on a Jetson, Docker's per-container numbers are inflated. The one-pose-per-cycle run logged GPU allocations (nvmap) separately, and FoundationPose's GPU memory stayed at 4.08 GB through hundreds of registrations. What moved was outside the GPU allocation. It wasn't imaginary, though: when the Docker number rose by 1 GB, the free memory reported by the OS fell by about 0.5 GB. Exactly what moves, we don't know yet. It isn't a leak: over the 24-hour run the GPU allocation stayed at 4.08–4.11 GB, and the lowest free memory sat near 1.2 GB from hour 2 to the end without sinking further.
 
