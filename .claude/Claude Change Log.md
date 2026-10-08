@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-10-07 — 메모리편·시뮬레이터편: CPU 정리 결과와 드라이버 사망 원인
+
+- **Trigger:** 사용자 'updated fos-physical-ai and issac-sim'. fos-physical-ai `2c32de4`·`5a43d8e`(계획서 두 줄)만으로는 근거가 얇아 원본 확인: spatial-vision-ai(`C:\Users\butte\Documents\spatial-vision-ai`, `8ed5db8`·`87285cb`) `scripts/experiments/nvblox_cumotion/ursim/README.md`. Jetson SSH(192.168.1.183)는 이 PC에서 시간 초과, GitHub 저장소는 butt2rflow 계정에 404. issac-sim(SO-101/LeIsaac)은 기존 글과 무관 — 새 글 후보로만 둠.
+- **반영(`6966c38`, 한/영):** 메모리편 새 절 「CPU를 잡아먹던 건 할 일 없는 스레드였다」(1시간 A/B: 부하 5.5~7.6→1.9, '경로 없음' 16→6.1%, p95 8.7→4.5초, 모션 96.2→98.8%; 12시간 밤 8시간 '경로 없음' 8.5%·자세 816/816; README대로 '가능성 높음, 같은 조건 A/B 미실시'; 12시간 남은 메모리 최저 0.87 GB, FoundationPose GPU 바깥 메모리 밤새 시간당 약 70 MB) + 「UR 드라이버는 왜 죽었나」(Humble `rclcpp_action` 'no ready event', 10-05~07 재시작 7번 모두, 반쯤 켜진 재시작 1시간 45분, 감시 v3). 24시간 시험 멈춤선은 0.8 GB였음 → '멈춤 기준(1 GB)'을 '1 GB 경고선'으로. '누수 아님'을 'GPU 할당은 새지 않음'으로 좁힘. 시뮬레이터편 요약·1차 시험·정리 표의 사망 원인, '경로 없음' 원인 한 줄. '등록 약 2.8~3초'는 README 약 2.9초로 확인(10-06 대기 항목 닫음).
+- **사용자 지적:** '쉬는 스레드가 태우던 CPU를 돌려주자' — 'burn CPU' 직역. 다섯 군데 고침, 메모리 `feedback-korean-series-and-terms`에 추가.
+- **Verification:** strict 빌드 exit 0.
+
 ## 2026-10-06 (3) — 메모리편: FoundationPose 톱니 표현 바로잡기
 
 - **Trigger:** 사용자 질문 '이 부분 맞는거야?'('멈춘 건 cuMotion 때문이 아니었다' 절 87~89줄).
