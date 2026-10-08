@@ -25,7 +25,7 @@ The short answer: one 16 GB box is tight. With continuous tracking, memory ran o
 - **Leaner settings bought 1 h 10 min.** The cuMotion settings save 1.3 GB with motion alone, but alongside perception cuMotion already sits near 2.5 GB, so they made little difference. All 8 CPU cores were saturated for the hour.
 - **Taking one pose per cycle held for 24 hours.** 2,398 of 2,399 poses succeeded, about 4 s each, including 15.5 hours after the lights went off. Perception and motion peaks take turns instead of overlapping. But the lowest free memory was 1.18 GB, less than 0.2 GB above the 1 GB warning line.
 - **Idle threads were burning the CPU.** Putting spinning threads to sleep and feeding cuMotion joint states at 50 Hz took the load average from about 7 to 2–3 and no-plan over the box from 16 % to 6–9 %. Memory didn't shrink.
-- **The UR driver didn't die from link drops.** It was a ROS 2 Humble action-handling crash. The watchdog is still a must.
+- **The UR driver didn't die from link drops.** It was a ROS 2 Humble action-handling crash. Resending fewer motion goals made it rarer, but the watchdog is still a must.
 - **A real cell wouldn't put it all on one 16 GB box.** Split it across two Jetsons, use a bigger Jetson (AGX Orin 32/64 GB), slim perception down, or design for one pose per cycle.
 
 ---
@@ -158,6 +158,8 @@ So two things changed. The front end lets OpenMP threads sleep while waiting (`O
 
 An hour is short, so the same setup ran another 12 hours (evening of October 6 to the next morning). Over 8 dark overnight hours with the viewer bridge off, no-plan was 8.5 %, moving between 4 and 12 % by hour with no upward trend. Motion steps were 98.5 % OK, and all 816 poses in the dark succeeded. That is clearly below the 24-hour run's 16 % and close to motion alone (8 %).
 
+A further 14-hour run held no-plan steady at about 7 %. By hour it swung from 0 to 14 %, but statistically that is chance, and failures didn't bunch together (3 back-to-back failures vs 6.7 expected by chance). Restarting cuMotion alone changed nothing (5.4 % → 5.1 %). Every cycle asks the same question and the planner occasionally finds no answer, so a real cell has to catch that with retries and a fallback path. With about 100 plans an hour, a single hour at 12–13 % is noise. Heat wasn't the cause either: 53–57 °C against a 99 °C trip, and the CPU clock never dropped.
+
 Other things differed between the two runs, though. During the 24-hour run the simulator moved to another PC, and viewer bridges were on for part of it. We haven't yet run the fixed and stock settings back to back under the same conditions. So the most we'll say is that the CPU was the likely cause of the extra no-plan failures.
 
 Memory didn't shrink. Saving CPU doesn't create memory. In fact the 12-hour run's lowest free memory was 0.87 GB, lower than the 24-hour run's 1.18 GB. A freshly started stack fell to about 0.95 GB free within its first two hours: the OS file cache was evicted from 2.0 to 0.6 GB, and the FoundationPose container's memory outside the GPU allocation rose from 5.4 to 6.5 GB. It never reached the 0.8 GB stop line, but the case for 32 GB in a real cell only got stronger.
@@ -174,6 +176,8 @@ That is a crash in ROS 2 Humble's action handling (`rclcpp_action`). The driver 
 
 Restarting turned out to be tricky too. In the 12-hour run a restarted driver came up with only some of its controllers and stalled: the process was alive, but no joint states came out. Every cycle failed for 1 h 45 min. So the watchdog no longer checks only the process. It checks that fresh joint states actually arrive and that every expected controller is active. For the remaining 11 hours of the run the driver never died.
 
+We also found a way to make the crash itself rarer. The test client used to resend the robot program after every planning failure, and each resend reconnected the control link and toggled the controllers. Now a planning failure just ends the cycle, and the program is resent only after a failed move. Over about 14 hours the driver then died only twice, where the old rate of one every 3 to 4 hours would have meant 3 to 5. One more run is needed to confirm it, but stirring the goals less looks like the right direction. The watchdog now also waits up to 60 seconds for every controller of a restarted driver to come up, and the last crash was fully recovered in 28 seconds. In this run cycles were 92–94 % OK, motion steps about 98.5 %, and poses 100 %.
+
 ## In a real cell
 
 ![How a real cell would split it](../assets/diagrams_en/r10-options.svg)
@@ -182,7 +186,7 @@ The conclusion from these tests: **motion plus continuous tracking on one 16 GB 
 
 1. **Two Jetsons.** One for perception, one for motion. They stop stealing each other's memory and CPU; the pose goes over the network.
 2. **A bigger Jetson.** Put the same stack on an AGX Orin 32 GB or 64 GB. Price and power go up.
-3. **Lighter perception.** A detector trained on the part instead of Grounding DINO, load only the models in use, fewer re-acquisitions, better lighting. This ties back to the "lowest step that solves it" principle in [Start Here](choosing-physical-ai.md).
+3. **Lighter perception.** A detector trained on the part instead of Grounding DINO, load only the models in use, fewer re-acquisitions, better lighting. This ties back to the "lowest step that solves it" principle in [Start Here](choosing-physical-ai.md). Swapping the detector alone should save about 0.5 GB: on the same Jetson, NVIDIA's RT-DETR-family detector (SyntheticaDETR) took about 0.6 GB, and Grounding DINO's engine alone is four times larger. Combined with one pose per cycle, that would widen the 16 GB box's margin from 0.2 GB to around 0.7 GB, enough to make a one-box setup worth considering. It isn't a measured side-by-side yet, so it needs a multi-day test.
 4. **One pose per cycle.** The cheapest fix for cells where the part sits still, and it held for 24 hours, through a dark night. The cycle gets longer by the pose time (about 4 s), and nothing that changes during the motion is seen. On 16 GB the margin is under 0.2 GB, so it's safer combined with option 2.
 
 Whichever you pick, a few things come with it:
@@ -193,7 +197,7 @@ Whichever you pick, a few things come with it:
 - **Retries and a fallback path for no-plan.**
 - **A multi-day test under the worst conditions.** Here too, the problem showed up in the dark at night, not in daylight. A few demos won't show it.
 
-Also, nvblox (the live obstacle map) wasn't running in these tests. A cell that maps live needs more memory.
+Also, nvblox (the live obstacle map) wasn't running in these tests. cuMotion doesn't strictly need it. If everything in the cell stays in the same place, obstacles entered up front (boxes, meshes) are enough, and these tests used just a floor slab and a box. A cell that must avoid a person's hand or objects that change every time does need nvblox. Measured on its own, a desk-sized scene at 2 cm cells added 0.3–0.5 GB, nearly all of what the detector swap saves. The bigger cost is that depth has to keep running while the arm moves, which removes the point of one pose per cycle: perception and motion peaks no longer take turns. For such a cell, an AGX Orin 32 GB or two Jetsons is the right call.
 
 ## What others have found
 
