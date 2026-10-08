@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-10-08 — 메모리편 최종: 14시간 시험, nvblox·검출기 메모리
+
+- **근거:** spatial-vision-ai `480063a`(10-08 00:03) URSim README 'Churn-cut run soak_20261007_0956 FINAL'. fos-physical-ai 계획서에는 아직 없음. 두 저장소 모두 이 PC에서 pull 불가(416Automation 원격, butt2rflow 계정 권한 없음) — 로컬 커밋 기준.
+- **메모리편 한/영:** 30초 요약 드라이버 줄(목표 재전송 줄이자 덜 죽음). CPU 절에 14시간 '경로 없음' 약 7% 일정(χ² 우연 수준, 연속 실패 3 vs 6.7, cuMotion만 재시작 5.4→5.1%, 발열 무관 53~57°C). 드라이버 절에 재전송 줄이기(약 14시간 2번 vs 3~5번 예상, 한 번 더 확인 필요), 감시 v3.2 28초 복구, 사이클 92~94%·단계 약 98.5%·자세 100%. 실제 셀 3번에 검출기 교체 약 0.5 GB 추정(SyntheticaDETR 약 0.6 GB 측정 대비 Grounding DINO 엔진 4배; 미측정 명시), 여유 0.2→약 0.7 GB. nvblox 문단: cuMotion에 필수 아님, 실측 +0.3~0.5 GB(책상 크기, 2 cm), 깊이를 계속 돌려야 하는 비용 → 그런 셀은 AGX Orin 32 GB나 두 대.
+- **다른 저장소:** fos-physical-AI vault `03 - Hardware/cuMotion Obstacles and Sim Host - Notes.md` §5 메모리 예산 + Index 한 줄(`cbe04ac`), '블로그 글' 줄 삭제(`1a6bd54`, 사용자 요청: 회사 저장소에 블로그·코스 언급 금지 → 메모리 `feedback-no-blog-refs-in-work-repos`). spatial-vision-ai `docs/synthetic_detector_cloud_plan.md` §0(버클 CAD 오면 실행) + `sync_vault_docs.py` 등록 — 커밋 안 함. 기존 v9/v10 모델은 그대로 두기로(법무 언급 삭제).
+- **Verification:** strict 빌드 exit 0.
+
 ## 2026-10-07 — 메모리편·시뮬레이터편: CPU 정리 결과와 드라이버 사망 원인
 
 - **Trigger:** 사용자 'updated fos-physical-ai and issac-sim'. fos-physical-ai `2c32de4`·`5a43d8e`(계획서 두 줄)만으로는 근거가 얇아 원본 확인: spatial-vision-ai(`C:\Users\butte\Documents\spatial-vision-ai`, `8ed5db8`·`87285cb`) `scripts/experiments/nvblox_cumotion/ursim/README.md`. Jetson SSH(192.168.1.183)는 이 PC에서 시간 초과, GitHub 저장소는 butt2rflow 계정에 404. issac-sim(SO-101/LeIsaac)은 기존 글과 무관 — 새 글 후보로만 둠.
