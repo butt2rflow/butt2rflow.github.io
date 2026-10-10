@@ -24,9 +24,9 @@ The short answer: one 16 GB box is tight. With continuous tracking, memory ran o
 - **With perception added and continuous tracking, it stopped after 26 minutes.** In a dark office, 0.93 GB was left. The biggest block was the FoundationPose container (6.7 GB per Docker).
 - **Leaner settings bought 1 h 10 min.** The cuMotion settings save 1.3 GB with motion alone, but alongside perception cuMotion already sits near 2.5 GB, so they made little difference. All 8 CPU cores were saturated for the hour.
 - **Taking one pose per cycle held for 24 hours.** 2,398 of 2,399 poses succeeded, about 4 s each, including 15.5 hours after the lights went off. Perception and motion peaks take turns instead of overlapping. But the lowest free memory was 1.18 GB, less than 0.2 GB above the 1 GB warning line. Run again the same way after the Jetson had been up for 9 days, it reached the stop line in 3 hours.
-- **Idle threads were burning the CPU.** Putting spinning threads to sleep and feeding cuMotion joint states at 50 Hz took the load average from about 7 to 2–3 and no-plan over the box from 16 % to 6–9 %. A back-to-back comparison, 4 hours each under the same conditions, gave 12.9 % against 6.2 %. Memory didn't shrink.
+- **Idle threads were burning the CPU.** Putting spinning threads to sleep and feeding cuMotion joint states at 50 Hz took the load average from about 7 to 2–3 and no-plan over the box from 16 % to 6–9 %. A back-to-back comparison, 4 hours each under the same conditions, gave 12.9 % against 6.2 %. With retries added, the failures that remained fell to 0.7 % of cycles. Memory didn't shrink.
 - **The UR driver didn't die from link drops.** It was a ROS 2 Humble action-handling crash. Resending fewer motion goals made it rarer, but the watchdog is still a must. Restarts that hung were fixed by moving the driver to UDP.
-- **A real cell wouldn't put it all on one 16 GB box.** Split it across two Jetsons, use a bigger Jetson (AGX Orin 32/64 GB), slim perception down, or design for one pose per cycle.
+- **A real cell wouldn't put it all on one 16 GB box.** Split it across two Jetsons, use a bigger Jetson (AGX Orin 32/64 GB), slim perception down, or design for one pose per cycle. Loading cuMotion only for fault recovery leaves about 7.5 GB free on one 16 GB box in normal running.
 
 ---
 
@@ -172,13 +172,15 @@ The failures halved, and the difference is hard to put down to chance (p = 0.002
 
 The same night showed what the remaining 6 % is. cuMotion fails in its last trajectory-optimization step (`FINETUNE_TRAJOPT_FAIL`); it isn't running into the planning time limit. With a 5 s limit the failed plans took 10–12 s, and with the limit raised to 10 s they ended sooner, in 5–7 s. cuMotion doesn't stop at the limit in this step, and how long a failure takes follows how free the CPU is. More time won't fix it; asking again after a failure will.
 
+So the test client now asks again, up to three times, when a plan fails. Over 1.5 hours and 144 cycles there were 8 planning failures, and every one was solved by a retry. One cycle failed (0.7 %), and that one was a failed move right after start-up, not a planning failure. Before the retries, about 7 % of cycles failed.
+
 Memory didn't shrink. Saving CPU doesn't create memory. In fact the 12-hour run's lowest free memory was 0.87 GB, lower than the 24-hour run's 1.18 GB. A freshly started stack fell to about 0.95 GB free within its first two hours: the OS file cache was evicted from 2.0 to 0.6 GB, and the FoundationPose container's memory outside the GPU allocation rose from 5.4 to 6.5 GB. It never reached the 0.8 GB stop line, but the case for 32 GB in a real cell only got stronger.
 
 Later runs did reach the stop line. On the night of October 8, two runs in the same mode fell below 0.8 GB and stopped after 3.0 and 2.6 hours, on the same setup that had held for 24 hours. The logs show free memory dropping to 0.7–0.9 GB for a few seconds and then coming back, something the 24-hour run never did. It isn't a leak (it recovers in seconds), and the GPU allocation at those moments was the same as usual.
 
-What had changed was the state of the Jetson. It had been up for 9 days, the perception process had been running for 5 days and was about 0.3 GB bigger than at the start, and it had been in use all day before the runs. After a reboot, two one-hour runs never went below 1.78 GB free. We also suspected the short-lived check processes the watchdog starts every 30 seconds, but runs with them on and off were identical. The cause isn't known yet. What we can say is that the deep dips appear only after a long uptime.
+What had changed was the state of the Jetson. It had been up for 9 days, the perception process had been running for 5 days and was about 0.3 GB bigger than at the start, and it had been in use all day before the runs. After a reboot, two one-hour runs never went below 1.78 GB free. We also suspected the short-lived check processes the watchdog starts every 30 seconds, but runs with them on and off were identical. The cause isn't known yet. What we can say is that the deep dips appear only after a long uptime. A further 10 hours (two 5-hour runs) on a Jetson that had been rebooted 3.5 hours earlier bottomed out at 1.11 GB and 1.25 GB free and never went below 1 GB. Per-process memory didn't grow either.
 
-So the 24-hour result shouldn't be read as "fine to leave on for days". On a single 16 GB box, the plan should include restarting the perception process (or the Jetson) before a long run or a shift.
+So the 24-hour result shouldn't be read as "fine to leave on for days". On a single 16 GB box, the plan should include restarting the perception process (or the Jetson) before a long run or a shift. Restarting perception alone took 69 seconds, and it now happens automatically once a day in the early morning (skipped while a test or a move is running).
 
 ## Why the UR driver died
 
@@ -188,24 +190,25 @@ In the 24-hour run the UR driver died 4 times. At first it looked like the robot
 Taking data from action server but no ready event
 ```
 
-That is a crash in ROS 2 Humble's action handling (`rclcpp_action`). The driver process aborted within seconds of receiving a new motion goal, and the link drop was the result. The candidate fixes are fewer goal sends and cancels, or an rclcpp or driver build with the bug fixed. Until then the watchdog is a must.
+That is a crash in ROS 2 Humble's action handling (`rclcpp_action`). The driver process aborted within seconds of receiving a new motion goal, and the link drop was the result. The candidate fixes are fewer goal sends and cancels, or an rclcpp or driver build with the bug fixed. Until then the watchdog is a must. Counted over two days of driver logs, it happened 8 times in 16,192 motion goals, about once per 2,000. The failing code is not in the UR driver itself but inside ROS 2's multi-threaded executor.
 
 Restarting turned out to be tricky too. In the 12-hour run a restarted driver came up with only some of its controllers and stalled: the process was alive, but no joint states came out. Every cycle failed for 1 h 45 min. So the watchdog no longer checks only the process. It checks that fresh joint states actually arrive and that every expected controller is active. For the remaining 11 hours of the run the driver never died.
 
 We also found a way to make the crash itself rarer. The test client used to resend the robot program after every planning failure, and each resend reconnected the control link and toggled the controllers. Now a planning failure just ends the cycle, and the program is resent only after a failed move. Over about 14 hours the driver then died only twice, where the old rate of one every 3 to 4 hours would have meant 3 to 5. One more run is needed to confirm it, but stirring the goals less looks like the right direction. The watchdog now also waits up to 60 seconds for every controller of a restarted driver to come up, and the last crash was fully recovered in 28 seconds. In this run cycles were 92–94 % OK, motion steps about 98.5 %, and poses 100 %.
 
-Waiting 60 seconds still didn't cover every case. When we killed the driver on purpose while the test client was sending requests, about one restart in three or four came up with controllers missing. The process that starts the controllers was stuck creating its shared-memory connection in the ROS 2 middleware (FastDDS), while another process started at the same instant finished in under a second. With only the driver container switched from shared memory to UDP, 8 kills out of 8 under the same load recovered with nothing to repair (5 of 8 before the change). The count is small, so it isn't settled. The driver didn't crash once in the 5.6-hour run that followed, so whether it holds for a real crash has to wait for a longer run.
+Waiting 60 seconds still didn't cover every case. When we killed the driver on purpose while the test client was sending requests, about one restart in three or four came up with controllers missing. The process that starts the controllers was stuck creating its shared-memory connection in the ROS 2 middleware (FastDDS), while another process started at the same instant finished in under a second. With only the driver container switched from shared memory to UDP, 8 kills out of 8 under the same load recovered with nothing to repair (5 of 8 before the change). In the 10-hour run that followed, the driver crashed for real 3 times, and each time it was back with every controller in about 30 seconds. Not one restart came up incomplete.
 
 ## In a real cell
 
 ![How a real cell would split it](../assets/diagrams_en/r10-options.svg)
 
-The conclusion from these tests: **motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions.** Settings delayed it but didn't prevent it. Designing a real cell, pick from four options:
+The conclusion from these tests: **motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions.** Settings delayed it but didn't prevent it. Designing a real cell, pick from five options:
 
 1. **Two Jetsons.** One for perception, one for motion. They stop stealing each other's memory and CPU; the pose goes over the network.
 2. **A bigger Jetson.** Put the same stack on an AGX Orin 32 GB or 64 GB. Price and power go up.
 3. **Lighter perception.** A detector trained on the part instead of Grounding DINO, load only the models in use, fewer re-acquisitions, better lighting. This ties back to the "lowest step that solves it" principle in [Start Here](choosing-physical-ai.md). Swapping the detector alone should save about 0.5 GB: on the same Jetson, NVIDIA's RT-DETR-family detector (SyntheticaDETR) took about 0.6 GB, and Grounding DINO's engine alone is four times larger. Combined with one pose per cycle, that would widen the 16 GB box's margin from 0.2 GB to around 0.7 GB, enough to make a one-box setup worth considering. It isn't a measured side-by-side yet, so it needs a multi-day test.
 4. **One pose per cycle.** The cheapest fix for cells where the part sits still, and it held for 24 hours, through a dark night. The cycle gets longer by the pose time (about 4 s), and nothing that changes during the motion is seen. On 16 GB the margin is under 0.2 GB, so it's safer combined with option 2.
+5. **cuMotion only after a fault.** The normal cycle runs on fixed paths (Pilz joint and straight-line moves) with cuMotion unloaded, which leaves about 7.5 GB free. Only when the arm stops in an unexpected pose is perception unloaded and cuMotion loaded to plan the way home. In the simulator, from 6 random fault poses, fault to home took 38–40 s (about 20 s of it is cuMotion starting up), and all 6 planned on the first try. Free memory during recovery was 10.6–11.2 GB. For a cell whose obstacles don't change from cycle to cycle, that gives one 16 GB box plenty of room. It has only been checked in the simulator, not yet on a real robot.
 
 Whichever you pick, a few things come with it:
 
@@ -216,6 +219,8 @@ Whichever you pick, a few things come with it:
 - **A multi-day test under the worst conditions.** Here too, the problem showed up in the dark at night, not in daylight. A few demos won't show it.
 
 Also, nvblox (the live obstacle map) wasn't running in these tests. cuMotion doesn't strictly need it. If everything in the cell stays in the same place, obstacles entered up front (boxes, meshes) are enough, and these tests used just a floor slab and a box. A cell that must avoid a person's hand or objects that change every time does need nvblox. Measured on its own, a desk-sized scene at 2 cm cells added 0.3–0.5 GB, nearly all of what the detector swap saves. The bigger cost is that depth has to keep running while the arm moves, which removes the point of one pose per cycle: perception and motion peaks no longer take turns. For such a cell, an AGX Orin 32 GB or two Jetsons is the right call.
+
+Later we ran nvblox only during the fault recovery of option 5. A real object (a mini PC) was placed in the middle of the recovery path and seen by the real camera. The plan made without the map went straight through where the object stood (computed clearance 7 mm); the plan made with the map went around it at 145 mm. Fault to home took about 60 s. With a map and an object, though, planning often didn't succeed in one request: 10 of 20 with default settings and 14 of 20 with a wider search, so retries are needed here too. Fixtures that are always in the same place are better entered up front as boxes than left to the map (doing so took the clearance to a fixture from 0 to 136 mm). And in a 1-hour run with a lighter detector plus nvblox, median free memory was 2.0 GB, close to the original stack's 2.1 GB. The estimate that nvblox spends what the detector swap saves held up.
 
 ## What others have found
 
@@ -231,8 +236,8 @@ The closest is a 2026 paper from UC Berkeley and Microsoft, "Offload or Overload
 | Continuous tracking, dark | memory floor at 26 min | perception about 10 GB, the FoundationPose container swinging; cuMotion 2.5 GB |
 | Leaner settings | 1 h 10 min; alongside perception the cuMotion saving is a little over 0.1 GB | CPU saturated, 24 % no-plan, 31 link drops per hour |
 | One pose per cycle | 24 h, poses 2,398/2,399, about 4 s; held through a dark night | lowest free 1.18 GB (under 0.2 GB margin); after 9 days of uptime, the stop line in about 3 h. 16 % no-plan, 4 driver restarts |
-| CPU cleanup | load average about 7 → 2–3, no-plan 16 % → 6–9 % (same-conditions comparison 12.9 % → 6.2 %), motion steps 98.5–98.8 % | memory unchanged (12 h low 0.87 GB); the remaining 6 % is a cuMotion optimization failure and needs retries |
-| A real cell | two Jetsons, AGX Orin 32/64 GB, lighter perception, one pose per cycle | driver watchdog, idle-thread cleanup, real-time kernel, retries, long tests in bad conditions |
+| CPU cleanup | load average about 7 → 2–3, no-plan 16 % → 6–9 % (same-conditions comparison 12.9 % → 6.2 %), motion steps 98.5–98.8 % | memory unchanged (12 h low 0.87 GB); the remaining 6 % is a cuMotion optimization failure; with retries, 0.7 % of cycles failed |
+| A real cell | two Jetsons, AGX Orin 32/64 GB, lighter perception, one pose per cycle, cuMotion only after a fault (about 7.5 GB free in normal running) | driver watchdog, idle-thread cleanup, real-time kernel, retries, long tests in bad conditions |
 
 - **A working demo isn't a working cell.** This stack had no trouble in a few-minute demo either.
 - **Budget memory for the peak, not the average.** What overflowed was the top of the swing, not the average.
