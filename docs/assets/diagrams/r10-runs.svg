@@ -1,5 +1,5 @@
 <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
-<title id="ti">네 시험이 버틴 시간</title>
+<title id="ti">네 가지 시험이 버틴 시간</title>
 <desc id="de">가로축은 시간(0~24시간). 모션만 실행한 시험은 7.6시간 동안 문제없이 계속되다 판단해 끝냈다. 인식을 계속 추적하며 함께 실행하자 어두운 사무실에서 26분 만에 메모리 한계로 멈췄고, 설정을 줄여도 1시간 10분에 멈췄다. 사이클마다 자세를 한 번만 구하는 시험은 24시간을 끝까지 버텼다. 처음 8.5시간은 밝았고, 나머지 15.5시간은 불이 꺼진 어두운 사무실이었다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
