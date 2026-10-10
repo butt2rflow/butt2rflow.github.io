@@ -1,0 +1,75 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">실제 로봇은 작은 계단으로 올라간다</title>
+<desc id="de">엣지 컴퓨터를 실제 UR 협동로봇에 연결하는 과정을 네 계단으로 나눴다. 0단계는 명령을 보낼 수 없는 읽기 전용 연결로 관절·툴 위치와 안전 상태만 읽는다. 1단계는 이 로봇의 공장 보정 파일을 받아 모델과 실제 툴 위치를 맞춘다(3.95 mm → 0.06 mm). 2단계는 관절 하나만 ±5° 움직인다. 3단계에서야 cuMotion이 계획한 움직임(툴 5 cm 위로)을 사람이 확인한 뒤 실행한다. 각 계단은 앞 계단이 통과해야 오른다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="320" rx="12"/>
+<text class="t" x="18" y="26">명령은 맨 마지막 계단에서야</text>
+<rect class="bxg" x="16" y="182" width="150" height="92" rx="8"/>
+<text class="lb" x="91" y="206" text-anchor="middle">0. 읽기만</text>
+<text class="sm" x="91" y="228" text-anchor="middle">관절·툴·안전 상태 읽기</text>
+<text class="nd" x="91" y="258" text-anchor="middle">명령 불가</text>
+<rect class="bx" x="180" y="142" width="150" height="92" rx="8"/>
+<text class="lb" x="255" y="166" text-anchor="middle">1. 보정</text>
+<text class="sm" x="255" y="188" text-anchor="middle">공장 보정 파일 적용</text>
+<text class="nd" x="255" y="218" text-anchor="middle">3.95 → 0.06 mm</text>
+<rect class="bxa" x="344" y="102" width="150" height="92" rx="8"/>
+<text class="lb" x="419" y="126" text-anchor="middle">2. 관절 하나</text>
+<text class="sm" x="419" y="148" text-anchor="middle">손목 관절만 ±5°</text>
+<text class="nd" x="419" y="178" text-anchor="middle">정확히 도착</text>
+<rect class="bxgr" x="508" y="62" width="150" height="92" rx="8"/>
+<text class="lb" x="583" y="86" text-anchor="middle">3. 계획한 움직임</text>
+<text class="sm" x="583" y="108" text-anchor="middle">계획 → 확인 → 실행</text>
+<text class="nd" x="583" y="138" text-anchor="middle">목표에서 0.1 mm</text>
+<text class="sm" x="18" y="306" style="fill:var(--fg)">모든 움직이는 단계에는 셀 옆에 사람이 서서 3단 인에이블 스위치를 쥐고 있었다</text>
+</svg>

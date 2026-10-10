@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 360 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">sim-to-real 간극 — 가짜는 너무 깨끗하다</title>
+<desc id="de">시뮬레이션은 잡음 없이 깨끗하지만 현실은 센서 잡음·모션 블러·반사·제각각 조명으로 지저분하다. 그 차이가 sim-to-real 간극이다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:10px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.gap{stroke:var(--red);stroke-width:1.6;stroke-dasharray:5 3;fill:none;marker-start:url(#dot);marker-end:url(#dot)}
+</style>
+<defs>
+<marker id="dot" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5"><circle cx="3" cy="3" r="2.5" fill="var(--red)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="210" rx="12"/>
+<text class="t" x="18" y="22">시뮬레이션(깨끗) vs 현실(지저분)</text>
+<!-- sim panel -->
+<rect class="panel" x="16" y="34" width="150" height="120" rx="10"/>
+<text class="lb" x="30" y="54" style="fill:var(--teal)">시뮬레이션</text>
+<circle cx="91" cy="92" r="26" style="fill:var(--teal);opacity:.55"/>
+<text class="st" x="30" y="128">· 잡음 없음  · 조명 균일</text>
+<text class="st" x="30" y="143">· 질감 단순  · 반사 이상화</text>
+<!-- real panel -->
+<rect class="panel" x="194" y="34" width="150" height="120" rx="10"/>
+<text class="lb" x="208" y="54" style="fill:var(--red)">현실</text>
+<circle cx="269" cy="92" r="26" style="fill:var(--red);opacity:.4"/>
+<circle cx="258" cy="80" r="2" class="st" style="fill:var(--mut)"/><circle cx="280" cy="86" r="2" style="fill:var(--mut)"/><circle cx="264" cy="102" r="2" style="fill:var(--mut)"/><circle cx="278" cy="100" r="2" style="fill:var(--mut)"/>
+<line x1="248" y1="70" x2="292" y2="112" stroke="var(--mut)" stroke-width="1" opacity=".5"/>
+<text class="st" x="208" y="128">· 센서 잡음 · 모션 블러</text>
+<text class="st" x="208" y="143">· 반사·그림자 · 제각각 조명</text>
+<!-- gap arrow -->
+<line class="gap" x1="120" y1="170" x2="240" y2="170"/>
+<text class="st" x="180" y="164" text-anchor="middle" style="fill:var(--red)">간극(gap)</text>
+<text class="st" x="180" y="196" text-anchor="middle" style="fill:var(--mut)">시뮬만 배운 모델은 "깨끗한 세계"에만 익숙 → 현실에서 헤맨다</text>
+</svg>

@@ -1,0 +1,3621 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="URSim in The Simulators imitates the robot controller. This time NVIDIA Isaac Sim, which imitates the world around the robot, went onto an idle RTX 3090 PC and a cloud GPU (L4). The 3090 sits below the official minimum, yet it simulated a UR20, 40 boxes and a virtual stereo camera at the real camera's resolution at 19 frames per second, and the 'weak drives' turned out to be the test pressing the arm into the floor. The virtual camera went out as ROS 2 topics, and a synthetic-data script leaking 130 MB of GPU memory per capture was caught. The cloud L4 was not faster than the 3090, and the whole validation cost about two dollars. Field Notes: Isaac Sim.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/isaac-sim-pc-and-cloud/">
+      
+      
+        <link rel="prev" href="../jetson-ursim-planners/">
+      
+      
+        <link rel="next" href="../jetson-memory-budget/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/isaac-sim-pc-and-cloud/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on an RTX 3090 PC and a Cloud GPU - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#putting-the-robots-brain-on-the-edge-isaac-sim-a-virtual-work-cell-on-an-rtx-3090-pc-and-a-cloud-gpu" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on an RTX 3090 PC and a Cloud GPU
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/isaac-sim-pc-and-cloud/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-isaac-sim-splitting-the-work-with-ursim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Isaac Sim: splitting the work with URSim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-3090-is-below-the-minimum-spec-is-that-ok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A 3090 is below the minimum spec. Is that OK?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-weak-drives-the-floor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not weak drives: the floor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-virtual-camera-and-arm-as-ros-2-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A virtual camera and arm as ROS 2 topics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthetic-data-079-seconds-per-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthetic data: 0.79 seconds per image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-leaking-130-mb-per-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory leaking 130 MB per capture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cloud-gpu-not-faster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cloud GPU: not faster
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The cloud GPU: not faster">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-got-in-the-way-in-the-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What got in the way in the cloud
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#an-rtx-4090-on-runpod-one-command-five-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An RTX 4090 on Runpod: one command, five minutes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrap-up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Wrap-up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory budget · perception + motion on one box
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-isaac-sim-splitting-the-work-with-ursim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Isaac Sim: splitting the work with URSim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-3090-is-below-the-minimum-spec-is-that-ok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A 3090 is below the minimum spec. Is that OK?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-weak-drives-the-floor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not weak drives: the floor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-virtual-camera-and-arm-as-ros-2-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A virtual camera and arm as ROS 2 topics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthetic-data-079-seconds-per-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthetic data: 0.79 seconds per image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-leaking-130-mb-per-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory leaking 130 MB per capture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cloud-gpu-not-faster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cloud GPU: not faster
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The cloud GPU: not faster">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-got-in-the-way-in-the-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What got in the way in the cloud
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#an-rtx-4090-on-runpod-one-command-five-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An RTX 4090 on Runpod: one command, five minutes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrap-up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Wrap-up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="putting-the-robots-brain-on-the-edge-isaac-sim-a-virtual-work-cell-on-an-rtx-3090-pc-and-a-cloud-gpu">Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on an RTX 3090 PC and a Cloud GPU<a class="headerlink" href="#putting-the-robots-brain-on-the-edge-isaac-sim-a-virtual-work-cell-on-an-rtx-3090-pc-and-a-cloud-gpu" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Field Notes · Isaac Sim.</strong> URSim in <a href="../jetson-ursim-planners/">The Simulators</a> imitates the <strong>robot controller</strong>. The driver and protective stops behave like the real thing, but there's no physics, no objects and no camera. That post ended by saying that whether depth drops out on a shiny part, or a gripped part slips, "is Isaac Sim's job". This time I put Isaac Sim on an RTX 3090 PC that was sitting idle, and on a cloud GPU.</p>
+</blockquote>
+<p>The short version: the 3090 PC was enough. The cloud GPU wasn't faster; its value was keeping the PC free and running several machines at once. This post collects the numbers measured along the way and the traps hit.</p>
+<p><em>(An R&amp;D record done on a PC and in the cloud only, without the edge computer (Jetson). Every robot here is </em><em>Isaac Sim's own UR20 model</em><em>; no real arm moved.)</em></p>
+<hr />
+<h2 id="the-30-second-version">The 30-second version<a class="headerlink" href="#the-30-second-version" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>URSim and Isaac Sim stay apart and split the work.</strong> URSim checks the controller path, Isaac Sim checks physics, cameras and synthetic data, and anything that needs both happens on the real robot.</li>
+<li><strong>An RTX 3090, below the official minimum, was enough.</strong> A UR20, 40 boxes and a virtual stereo camera at the real camera's full resolution ran at 19 frames per second, using under 5 GB of the 24 GB of GPU memory.</li>
+<li><strong>The 'weak drives' were a test mistake.</strong> Swinging the arm around the all-zero joint pose pressed it into the floor. Starting from a ready pose, the error was about 0.01 rad. The model's mass, torque and speed limits match the real UR20.</li>
+<li><strong>The virtual camera and arm went out as ROS 2 topics.</strong> To the edge computer they look like a real camera and a real robot. The Windows build's defaults (Jazzy, Zenoh) had to become Humble and Fast DDS, and the UDP buffers had to grow to 16 MB.</li>
+<li><strong>500 synthetic images at 0.79 seconds each.</strong> But following NVIDIA's examples and toggling rendering off and on per capture leaked about 130 MB of GPU memory per image, and the run died at 170–190 images. Without the toggle, memory stayed flat.</li>
+<li><strong>The cloud L4 was not faster than the 3090.</strong> On the same test it ran at between half and four-fifths of the 3090's speed, and the bottleneck was the CPU, not the GPU. The cloud is for running in parallel and keeping the PC free, not for speed. The whole validation cost about US$1.45.</li>
+<li><strong>An RTX 4090 on Runpod took one command, 5 minutes and about US$0.07.</strong> The same test ran at 34.8 frames per second, a little faster than the 3090 (30.6). But there is no screen to watch, and results come back only as text logs.</li>
+</ul>
+<hr />
+<h2 id="why-isaac-sim-splitting-the-work-with-ursim">Why Isaac Sim: splitting the work with URSim<a class="headerlink" href="#why-isaac-sim-splitting-the-work-with-ursim" title="Permanent link">&para;</a></h2>
+<p><img alt="Two simulators and one real robot: what gets checked where" src="../../../assets/diagrams_en/r9-split.svg" /></p>
+<p>My first idea was to join the two. Mirror the joint angles URSim computes onto the robot in Isaac Sim, and you'd get the real controller and a realistic view in one go. But that turns Isaac Sim's robot into a <strong>ghost</strong> that just traces the angles it's given. Physics is off, so it passes straight through the boxes, and URSim has no way to know what it hit.</p>
+<p>So the work is split. Isaac Sim moves its own UR20 model under physics and covers <strong>the world</strong>: gravity, contact, camera images and depth. URSim, together with the edge computer, covers <strong>the controller path</strong>: the driver, protective stops, speed limits. Anything that needs both, meaning the moment a real controller touches a real object, happens on the real robot, as in <a href="../jetson-real-robot-first-move/">The Real Robot</a>.</p>
+<p>There are four jobs for Isaac Sim: making <strong>synthetic training data</strong>; running depth models at full resolution on a big GPU to measure what the edge computer's reduced resolution costs; checking path plans before a real robot; and <strong>software-in-the-loop (SIL)</strong>, feeding virtual camera images to the edge computer. This post lays the groundwork for those.</p>
+<h2 id="a-3090-is-below-the-minimum-spec-is-that-ok">A 3090 is below the minimum spec. Is that OK?<a class="headerlink" href="#a-3090-is-below-the-minimum-spec-is-that-ok" title="Permanent link">&para;</a></h2>
+<p>Isaac Sim 6.1's official requirements list a GeForce RTX 4080 as the minimum GPU, at least 16 GB of GPU memory, and 32 GB of RAM (64 GB recommended). This PC has an RTX 3090 with 24 GB and 32 GB of RAM, so the GPU sits below the minimum tier. Before buying a new disk or memory, I installed it on Windows and measured.</p>
+<p>The test scene imitates the work cell I actually plan to use. A UR20 model moves its six joints in sine waves, 40 boxes drop into a pile on the floor, and two virtual stereo cameras 75 mm apart plus a colour camera stand in for the real camera (an OAK-D). Every frame, images and depth from all three cameras are copied back to the CPU, the same copy a ROS 2 publisher makes. Physics ran at 60 Hz, headless (no window), over 600 frames.</p>
+<table>
+<thead>
+<tr>
+<th>Camera setting</th>
+<th>Frames per second</th>
+<th>Peak GPU memory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No cameras (physics only)</td>
+<td>62.5</td>
+<td>3.1 GB</td>
+</tr>
+<tr>
+<td>Stereo 480×288 (the resolution the Jetson's depth model runs at)</td>
+<td>30.6</td>
+<td>3.5 GB</td>
+</tr>
+<tr>
+<td>Stereo 640×400 + 720p colour</td>
+<td>27.1</td>
+<td>3.6 GB</td>
+</tr>
+<tr>
+<td>Stereo 1280×800 + 1080p colour (the real camera's maximum)</td>
+<td>18.9</td>
+<td>4.3 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Even the heaviest setting ran at 19 frames per second on under 5 GB of the 24 GB. The below-minimum worry didn't matter for this work. In real use the cameras don't need a frame every physics step, since the depth model on the Jetson runs far slower than 30 times a second. In the SIL section below, physics at 60 Hz and cameras at 30 Hz brought the sim up to 0.93× real time.</p>
+<h2 id="not-weak-drives-the-floor">Not weak drives: the floor<a class="headerlink" href="#not-weak-drives-the-floor" title="Permanent link">&para;</a></h2>
+<p><img alt="Not weak drives: the floor" src="../../../assets/diagrams_en/r9-floor.svg" /></p>
+<p>The first measurement gave odd numbers. The joints weren't following their commands well. The shoulder was off by 0.126 rad and one wrist by 0.615 rad (about 35°), and in a test that moved every joint by 0.3 rad, the shoulder and elbow didn't move at all. It looked as if Isaac Sim's UR20 model had weak drives.</p>
+<p>Checking the model piece by piece, the drives were fine. The link masses matched UR's published values exactly, and the joint torque limits (shoulder 730 Nm vs 738 Nm on the real arm) and speed limits (shoulder 120 °/s) were nearly identical to a real UR20. The problem was the starting pose. With every joint at zero, a UR20's arm sticks out <strong>horizontally</strong> at shoulder height, and turning the shoulder and elbow in the + direction moves it <strong>down</strong>. The sine test swung around exactly that pose, so it was pushing the arm into the floor and the box pile. Holding the arm against gravity takes 328 Nm at the shoulder; the drive was pushing over 700 Nm, because the floor was in the way.</p>
+<p>Swinging around a raised ready pose cut the error on every joint to 0.006–0.014 rad, about one 60 Hz step of lag. The same 0.3 rad step finished in about half a second with no error. It's the same lesson as "a floor in every request" in <a href="../jetson-ursim-planners/">The Simulators</a>: when a simulator's numbers look wrong, check <strong>whether the start pose is clear of the floor</strong> before blaming the model.</p>
+<p>One more small trap from the same day. The array Isaac Sim's joint-position reader returns isn't a copy; it's a <strong>window onto the simulator's buffer</strong>. The value I saved as the 'start pose' had turned into the 'end pose' by the time the move finished. Anything you want to keep needs a <code>.copy()</code>.</p>
+<h2 id="a-virtual-camera-and-arm-as-ros-2-topics">A virtual camera and arm as ROS 2 topics<a class="headerlink" href="#a-virtual-camera-and-arm-as-ros-2-topics" title="Permanent link">&para;</a></h2>
+<p><img alt="A virtual camera and arm as ROS 2 topics" src="../../../assets/diagrams_en/r9-sil.svg" /></p>
+<p>Next is the PC side of SIL. The goal is for Isaac Sim to publish <strong>data shaped exactly like</strong> what the edge computer now gets from the real camera and robot. Then the edge computer's depth models and path planning see the virtual world without any code changes. On the robot side, <code>topic_based_ros2_control</code> makes the joint state and command topics look like ordinary ros2_control hardware, so cuMotion sends trajectories just as it would to a real arm.</p>
+<p>This time only the PC side was built, without the edge computer, and checked with a separate topic checker.</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Content</th>
+<th>Actual rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/clock</code></td>
+<td>simulation clock</td>
+<td>~56 Hz (0.93× real time)</td>
+</tr>
+<tr>
+<td><code>/isaac_joint_states</code></td>
+<td>joint states</td>
+<td>~56 Hz</td>
+</tr>
+<tr>
+<td><code>/isaac_joint_commands</code></td>
+<td>joint commands (subscribed)</td>
+<td>a +0.300 rad command arrived exactly; no drift on other joints</td>
+</tr>
+<tr>
+<td><code>/oak/left</code>, <code>/oak/right</code></td>
+<td>stereo mono 640×400</td>
+<td>~28 Hz</td>
+</tr>
+<tr>
+<td><code>/oak/rgb</code></td>
+<td>colour 1280×720</td>
+<td>~28 Hz</td>
+</tr>
+<tr>
+<td>three camera_info topics</td>
+<td>lens values; the right camera gives a 75.0 mm baseline</td>
+<td>~28 Hz</td>
+</tr>
+</tbody>
+</table>
+<p>All four stereo topics (left and right images and their camera infos) carried identical timestamps on 224 of 224 frames. A depth model assumes left and right were taken at the same instant; if they drift apart, depth goes wrong.</p>
+<p>Here's what got in the way:</p>
+<ul>
+<li><strong>Isaac Sim 6.1 on Windows defaults to Jazzy and Zenoh for ROS 2.</strong> The edge computer runs Humble on Fast DDS, so out of the box they can't see each other. I set the bundled Humble and <code>rmw_fastrtps_cpp</code> explicitly. Also watch out: the bundled setup script only adds its library paths when <code>ROS_DISTRO</code> is unset.</li>
+<li><strong>One frame is 2.7 MB.</strong> A single 1280×720 colour frame is 2.7 MB, and with Fast DDS's default buffers a best-effort subscriber lost about 75% of them. A profile with 16 MB UDP send and receive buffers fixed it. Linux caps <code>net.core.rmem_max</code> below that, so the edge computer needs that value raised as well. On the cloud's Linux, with the cap left alone, colour arrived at only 5.7 Hz.</li>
+<li><strong>The mono stereo pair is built by hand.</strong> Isaac Sim's camera helper only publishes colour. The real camera's stereo pair is mono, so the colour image is converted to brightness and published as mono from Python.</li>
+<li><strong>The joint-state node must point at the robot's root joint.</strong> Point it at the whole robot and it logs "no matching articulation" every frame and publishes nothing.</li>
+</ul>
+<p>The edge computer's side (using sim time, matching topic names, a direct Ethernet link) is the next step. The images run at 50–80 MB per second, so this link belongs on the same LAN, never to a cloud machine across the internet.</p>
+<h2 id="synthetic-data-079-seconds-per-image">Synthetic data: 0.79 seconds per image<a class="headerlink" href="#synthetic-data-079-seconds-per-image" title="Permanent link">&para;</a></h2>
+<p><img alt="One synthetic capture seen four ways. Top left the colour image, top right depth (brighter is closer), bottom left colour by class (floor, robot, boxes), bottom right 2D boxes (amber for boxes, green for the robot)" src="../../../assets/demos/isaac-sdg-quad.jpg" /></p>
+<p><em>The four outputs of one capture: colour image, depth (brighter is closer), colour by class, and 2D boxes. The boxes were drawn onto the image for this post from the output data.</em></p>
+<p>This was <strong>domain randomization</strong>, from <a href="../robot-simulation/">Why Robots Learn in a 'Fake World' First</a>, done for real. Every capture re-drops the boxes and changes their colours, the UR20's pose, the light level and the camera position a little. Then it waits for physics to settle and renders one image. Each capture yields a colour image, depth, a colour-by-class mask (box, robot, floor) and 2D boxes together. Nobody has to draw outlines around 30 boxes by hand; that's the whole point of synthetic data.</p>
+<p>On the RTX 3090, 500 images took 0.79 seconds each, about six and a half minutes. But on the way there was a memory leak.</p>
+<h2 id="memory-leaking-130-mb-per-capture">Memory leaking 130 MB per capture<a class="headerlink" href="#memory-leaking-130-mb-per-capture" title="Permanent link">&para;</a></h2>
+<p><img alt="GPU memory in the synthetic-data script" src="../../../assets/diagrams_en/r9-leak.svg" /></p>
+<p>The first version of the script died at 97 images in the cloud, and at 169 after a driver change. The GPU threw a fault (Xid 31) and the renderer stopped responding. I suspected the cloud driver at first, but the same script run for 500 images on the 3090 died at 188 with <strong>out of GPU memory</strong>. Not the driver, the script.</p>
+<p>To find the cause, I removed the suspects one at a time and compared 60-image runs. Without the colour changes, and without the physics wait, memory still grew the same way, from 2.2 GB to 9.9 GB over 60 images, about 130 MB each. But removing <strong>the line that toggles render updates off and on</strong> stopped memory at about 3 GB.</p>
+<p>That line is the pattern NVIDIA's synthetic-data examples use: turn render updates off while physics settles so nothing renders, and turn them back on only to capture. In Isaac Sim 6.1, repeating that every capture leaks a little GPU memory each time and uses up 24 GB at 170–190 images. Removing it cost nothing. This script already steps physics in a way that doesn't render, so there was never a reason to toggle. After the fix, all 500 images finished on the 3090 and in the cloud, with flat memory (about 3.0 GB on the 3090, 2.4 GB on the L4). The script now logs GPU memory every 10 images.</p>
+<p>The lesson: <strong>some problems only show up in a long run.</strong> The first 10-image test was fine. Synthetic data means tens of thousands of images, so a few-hundred-image test with a memory log is worth it.</p>
+<h2 id="the-cloud-gpu-not-faster">The cloud GPU: not faster<a class="headerlink" href="#the-cloud-gpu-not-faster" title="Permanent link">&para;</a></h2>
+<p>There's only one 3090 PC, and while it makes synthetic data it's hard to use for anything else. So I ran the same work on a cloud GPU.</p>
+<p>The GPU choice is constrained first. Isaac Sim needs <strong>RT cores</strong> for rendering, so the A100 and H100, famous for AI training, are not supported (the official requirements say so). It has to be a GPU with graphics hardware: L4, L40S, A10G and the like. On prices checked on 4 October 2026, Google Cloud's L4 spot instance (<code>g2-standard-8</code>) was the cheapest at about US$0.51 an hour. Spot means the cloud rents spare capacity cheaply but can take it back at any time. Isaac Sim ran from NVIDIA's published Docker image.</p>
+<p><img alt="RTX 3090 PC vs cloud L4: frames per second" src="../../../assets/diagrams_en/r9-fps.svg" /></p>
+<p>On the same test scene the L4 ran at 49–83% of the 3090's speed. The telling part is that the L4 stalls around 16–20 frames per second whatever the camera resolution. If raising the resolution doesn't slow it down, the GPU isn't the limit: <strong>the CPU (8 virtual cores at 2.2 GHz) is the bottleneck.</strong> The 3090 PC's CPU was simply faster per core. Synthetic data was a little slower too, 0.91 seconds per image against the 3090's 0.79. Joint tracking error matched to three decimal places, so physics came out the same wherever it ran.</p>
+<p>So the cloud's value isn't speed. It's for running <strong>several machines at once</strong> to split synthetic-data jobs, or for keeping the 3090 PC free. If you need one faster machine, you have to step up to an L40S-class GPU.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L4 spot instance, ~2.5 hours</td>
+<td>~US$1.30</td>
+</tr>
+<tr>
+<td>150 GB disk, 2.5 hours</td>
+<td>~US$0.05</td>
+</tr>
+<tr>
+<td>Data download (under 1 GB)</td>
+<td>~US$0.10</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>~US$1.45 (~CAD $2)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>After validation the instance and disk were deleted, so the ongoing cost is zero. Only a budget alert stays.</p>
+<h3 id="what-got-in-the-way-in-the-cloud">What got in the way in the cloud<a class="headerlink" href="#what-got-in-the-way-in-the-cloud" title="Permanent link">&para;</a></h3>
+<p>Isaac Sim didn't work on the cloud image as-is. Three things needed fixing:</p>
+<ul>
+<li><strong>Cameras rendered blank.</strong> Google Cloud's GPU image ships a driver for compute only, with no graphics libraries (Vulkan). You have to install the graphics libraries matching the driver version.</li>
+<li><strong>Installed, but still invisible inside the container.</strong> Docker's usual GPU flag (<code>--gpus all</code>) passes only the compute libraries. Register the NVIDIA runtime and pass <code>--runtime=nvidia</code> with all driver capabilities (<code>NVIDIA_DRIVER_CAPABILITIES=all</code>) to get graphics through.</li>
+<li><strong>The remote-view server wouldn't start.</strong> Streaming the screen as video needs the GPU's video encoder library, which also wasn't in the image.</li>
+</ul>
+<p>The image's 580-series driver did work, but I moved to the 595 series to match Isaac Sim 6.1's requirements (595.58.03 or later on Linux). The first render on a new driver spends about 10 minutes compiling shaders, so saving the compiled cache makes later starts much quicker.</p>
+<p><img alt="Isaac Sim running on the cloud L4, viewed from a local PC with the streaming client. The UR20 model and the box pile in the middle, the scene tree on the right" src="../../../assets/demos/isaac-cloud-stream.jpg" /></p>
+<p><em>Isaac Sim in the cloud, viewed from a local PC through NVIDIA's WebRTC streaming client. The arm moved live on screen.</em></p>
+<p>Even on a cloud server with no screen, you can watch the whole Isaac Sim interface as a video stream. Rather than open the streaming ports to the internet, I installed WireGuard on the server myself and made a private tunnel between it and the local PC, then connected through that. One trap: the streaming server must be told <strong>the address the client will connect to</strong>. If it differs, the connection succeeds but the picture can come up black.</p>
+<h2 id="an-rtx-4090-on-runpod-one-command-five-minutes">An RTX 4090 on Runpod: one command, five minutes<a class="headerlink" href="#an-rtx-4090-on-runpod-one-command-five-minutes" title="Permanent link">&para;</a></h2>
+<p><em>(Section added on 10 October 2026.)</em></p>
+<p>Google Cloud gives you the screen, but there is a lot to prepare: create the server, match the driver and libraries, open the tunnel. That is too much when all you want to know is whether a code change still runs in the cloud. So I built a lighter path on Runpod, which rents GPUs by the second. One command rents the GPU, runs the speed test and the path-planning demo once each, writes down the results, and deletes the rented GPU.</p>
+<p>Runpod is built differently. On Google Cloud I rented a server and ran the Isaac Sim container inside it with Docker; a Runpod pod <strong>is the container</strong>. So NVIDIA's published Isaac Sim 6.1 image was started directly as the pod, with nothing installed on top.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Result (10 October 2026, one run)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU</td>
+<td>RTX 4090 24 GB, driver 595.91, US$0.89 per hour</td>
+</tr>
+<tr>
+<td>Rent → container running</td>
+<td>12 s (the image was already on the host)</td>
+</tr>
+<tr>
+<td>Speed test (stereo 480×288, 600 frames)</td>
+<td><strong>34.8 frames per second</strong>; the 3090 gave 30.6, the L4 16.7</td>
+</tr>
+<tr>
+<td>Joint tracking error</td>
+<td>0.006–0.014 rad (same as the 3090)</td>
+</tr>
+<tr>
+<td>Path-planning demo (cuMotion over the box + 10 cm straight-line moves)</td>
+<td>all 8 steps planned, cuMotion plans in 0.18–0.21 s</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>4 min 30 s, about US$0.07</td>
+</tr>
+</tbody>
+</table>
+<p>The 4090 was about 14% faster than the 3090. Given that the L4 was held back by its CPU, this test can't say whether the gain comes from the GPU or from that host's CPU, and it is a single run. The hourly price is higher than the L4 spot instance (US$0.51), but there is no setup time and billing is per second, so a short test comes out cheaper. Including the first Isaac Sim start, it took under five minutes.</p>
+<p>What it can't do is clear.</p>
+<ul>
+<li><strong>No screen.</strong> Runpod pods have no UDP, so WebRTC streaming doesn't work. It is for headless runs where only the results matter. When someone needs to see the arm move, Google Cloud is the path.</li>
+<li><strong>Moving files is awkward.</strong> The image has no SSH server. The scripts and robot model files went in compressed inside environment variables (a request over 100 KB is rejected), and the results came back as text lines in the pod log. Large outputs such as synthetic-data images would need network storage attached, which I haven't tried.</li>
+<li><strong>The cheaper tier wasn't usable.</strong> Runpod has a cheaper tier of servers offered by individual hosts (a 4090 for about US$0.34 per hour), but that day it had no 4090 with the 595-series driver Isaac Sim 6.1 requires. So I used the data-centre tier. The driver version has to be set as a condition before renting.</li>
+</ul>
+<p>Things that got in the way while writing the script:</p>
+<ul>
+<li><strong>The API rejects Python's defaults.</strong> A request with the Python standard library's default User-Agent comes back as a 403 (error 1010). Setting your own User-Agent fixes it.</li>
+<li><strong>There is no <code>python3</code> in the image.</strong> Scripts run through Isaac Sim's own <code>python.sh</code>, and there is no root access.</li>
+<li><strong>The last log line can arrive late.</strong> When streaming the log, the final line is sometimes held back, so "finished" is decided by an end marker the script prints on purpose, not by the last line. Filtering with <code>grep</code> on the way also needs line-by-line output (<code>--line-buffered</code>).</li>
+<li><strong>Always delete at the end.</strong> A pod is billed for as long as it exists. The script deletes it on exit, and a separate command finds and removes any leftovers by name.</li>
+</ul>
+<p>So there are now two clouds: the L4 on Google Cloud for watching the screen or running for hours, and the 4090 on Runpod for a check that takes minutes.</p>
+<h2 id="wrap-up">Wrap-up<a class="headerlink" href="#wrap-up" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Checked</th>
+<th>Result</th>
+<th>Snags</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splitting the work</td>
+<td>world in Isaac Sim, controller in URSim, both on the real robot</td>
+<td>mirroring URSim turns the Isaac robot into a ghost</td>
+</tr>
+<tr>
+<td>RTX 3090 PC (below minimum)</td>
+<td>19 fps at the real camera's resolution, under 5 GB</td>
+<td>32 GB of RAM is tight</td>
+</tr>
+<tr>
+<td>UR20 model</td>
+<td>mass, torque, speed limits match the real arm; ~0.01 rad error</td>
+<td>the all-zero pose presses the arm into the floor</td>
+</tr>
+<tr>
+<td>ROS 2 topics</td>
+<td>cameras ~28 Hz, joints ~56 Hz, 0.93× real time</td>
+<td>Jazzy/Zenoh defaults; 16 MB buffers for 2.7 MB frames</td>
+</tr>
+<tr>
+<td>Synthetic data</td>
+<td>500 images, 0.79 s each (L4 0.91 s)</td>
+<td>the render toggle leaked 130 MB per image</td>
+</tr>
+<tr>
+<td>Cloud L4</td>
+<td>49–83% of the 3090, CPU-bound, ~US$1.45</td>
+<td>graphics and encoder libraries, NVIDIA runtime</td>
+</tr>
+<tr>
+<td>Runpod RTX 4090</td>
+<td>one command, 4 min 30 s, ~US$0.07; 34.8 frames per second</td>
+<td>no screen (no UDP), 100 KB request limit, 595-series driver condition</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Measure with what you have before buying anything.</strong> Below the minimum spec can still be enough for the real job.</li>
+<li><strong>When numbers look wrong, suspect the test before the model.</strong> This time the start pose was inside the floor.</li>
+<li><strong>Run synthetic data long, with a memory log.</strong> The 10-image test showed no leak.</li>
+<li><strong>The cloud is for parallel runs, not speed.</strong> Against one L4, the 3090 PC was faster. The 4090 was a little faster, but not by enough to rent it for speed.</li>
+<li><strong>Keep the edge-computer link on the same LAN.</strong> Tens of MB of images per second don't belong on the internet.</li>
+</ul>
+<p>Next is the edge computer's side: putting the real camera's calibration into the virtual camera, and having the Jetson's depth and pose models take Isaac Sim's images and move the virtual UR20 through cuMotion.</p>
+<hr />
+<details>
+<summary>Notes — sources for these results, and disclaimers</summary>
+
+Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time. The Runpod section's figures are from **a single run** on 10 October 2026 on an RTX 4090 24 GB pod (driver 595.91, the official Isaac Sim 6.1.0 container image), with that day's price.
+
+GPU, RAM and driver requirements and the lack of support for GPUs without RT cores (A100, H100) are from Isaac Sim's official requirements page; the UR20's mass, torque and speed limits from Universal Robots' published specifications; the render-toggle pattern from NVIDIA Isaac Sim's synthetic-data examples; the ROS 2 setup from Isaac Sim's ROS 2 installation docs. The memory leak was reproduced with this script on Isaac Sim 6.1 and may differ in other versions.
+
+NVIDIA, Isaac Sim, Omniverse, Jetson, cuMotion, RTX and GeForce are trademarks of NVIDIA Corporation; Universal Robots, UR, UR20, URSim and PolyScope of Universal Robots A/S; OAK-D of Luxonis; Google Cloud of Google LLC; Windows of Microsoft Corporation; Docker of Docker, Inc.; WireGuard of Jason A. Donenfeld; Runpod of Runpod, Inc.; ROS of Open Robotics. They are used here for identification only. Fast DDS (eProsima) and Zenoh (Eclipse Foundation) are open-source software.
+
+</details>
+
+<p><strong>Series</strong> · <a href="../jetson-ursim-planners/">← Previous: The Simulators — three planners on two URSims</a> · <a href="../jetson-memory-budget/">Next: The Memory Budget — perception and motion on one 16 GB Jetson →</a></p>
+<p><em>Related: <a href="../robot-simulation/">Why Robots Learn in a 'Fake World' First</a> · <a href="../jetson-real-robot-first-move/">The Real Robot</a> · <a href="../isaac-ros-gpu/">Pendant to ROS 2, Part 4: Isaac ROS and cuMotion</a> · <a href="../depth-camera-selection/">Which 3D camera</a> · <a href="../learn-without-industrial-robot/">Try it: Hands-on Notes (0) — SO-101 and URSim</a></em></p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>Isaac Sim</em>: NVIDIA's robot simulator; computes physics and near-photographic camera images on the GPU</li>
+<li><em>URSim</em>: UR's free virtual controller; it runs the real controller software on a PC</li>
+<li><em>Synthetic data</em>: training images and their answers (depth, class masks, boxes) rendered in a simulator</li>
+<li><em>Domain randomization</em>: changing colours, lighting, positions and so on for every capture so a model doesn't latch onto one look of the fake world</li>
+<li><em>SIL (software-in-the-loop)</em>: testing the real software unchanged by connecting a simulator in place of real sensors and robots</li>
+<li><em>Topic</em>: a named channel that data flows through in ROS 2</li>
+<li><em>Fast DDS · Zenoh</em>: communication layers ROS 2 can use; both ends must match to see each other</li>
+<li><em>Headless</em>: running without a window on screen</li>
+<li><em>RT cores</em>: dedicated GPU circuits that trace light paths; Isaac Sim's rendering needs them</li>
+<li><em>Spot instance</em>: a cloud server rented cheaply from spare capacity that can be reclaimed at any time</li>
+<li><em>Pod</em>: the unit Runpod rents out; one container with a GPU attached</li>
+<li><em>Shader cache</em>: rendering programs compiled ahead of time for the GPU; having it makes startup faster</li>
+<li><em>WireGuard</em>: VPN software that builds an encrypted private tunnel between two computers</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

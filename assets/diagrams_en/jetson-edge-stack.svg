@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>The edge stack — from the ground up to perception</title>
+<desc>The Jetson edge stack, bottom to top: hardware (Orin NX 16GB + NVMe SSD), JetPack 6.2.2 (L4T R36.5, Ubuntu 22.04), CUDA 12.6, then ROS 2 Humble and PyTorch (from the Jetson-specific index), and the perception pipeline on top. The next step, Isaac ROS, is a GPU-accelerated perception layer that sits on ROS 2 — the subject of Part 2.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:12.5px;font-weight:700;fill:#3d3d3a;}
+.s{font-size:10px;fill:#73726c;}
+.next{font-size:11px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="360" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">The edge stack — from the ground up to perception</text>
+
+<rect x="60" y="66" width="400" height="42" rx="8" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<text class="t" x="80" y="86" style="fill:#15803d">Perception pipeline</text>
+<text class="s" x="80" y="101">stereo depth · segmentation · 6-DoF pose</text>
+
+<rect x="60" y="118" width="196" height="42" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="80" y="138">ROS 2 Humble</text>
+<text class="s" x="80" y="153">robot middleware (lingua franca)</text>
+<rect x="264" y="118" width="196" height="42" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="284" y="138">PyTorch</text>
+<text class="s" x="284" y="153">built from the Jetson index</text>
+
+<rect x="60" y="170" width="400" height="38" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="80" y="193">CUDA 12.6</text>
+
+<rect x="60" y="218" width="400" height="38" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="80" y="241">JetPack 6.2.2  ·  L4T R36.5  ·  Ubuntu 22.04</text>
+
+<rect x="60" y="266" width="400" height="42" rx="8" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.2"/>
+<text class="t" x="80" y="286" style="fill:#3f4d66">Hardware</text>
+<text class="s" x="80" y="301">Jetson Orin NX 16GB  ·  NVMe SSD</text>
+
+<rect x="486" y="118" width="150" height="42" rx="8" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.3" stroke-dasharray="5 3"/>
+<text class="next" x="561" y="136" text-anchor="middle" style="fill:#a9791f">Next: Isaac ROS</text>
+<text class="s" x="561" y="151" text-anchor="middle">GPU-accel perception (Pt 2)</text>
+<line x1="486" y1="139" x2="462" y2="139" stroke="#c9a24a" stroke-width="1.6" stroke-dasharray="4 3"/>
+<path d="M470,134 L462,139 L470,144" fill="none" stroke="#c9a24a" stroke-width="1.6"/>
+
+<text class="s" x="40" y="336" style="fill:#8a6d3b">Each layer holds up the one above — versions interlock, so one wrong tier and nothing above stands.</text>
+</svg>

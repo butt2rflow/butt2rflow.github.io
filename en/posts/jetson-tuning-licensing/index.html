@@ -1,0 +1,3636 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="On the same Orin NX 16GB, the foundation-model chain went from 11.4 to 4.0 seconds per object. Which stages got faster, how we checked the answers stayed the same, why swapping the depth model gets it to 2.1 seconds, and the licence map that splits research code from models you can put in a product. Field Notes, tuning.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/jetson-tuning-licensing/">
+      
+      
+        <link rel="prev" href="../jetson-foundationpose-16gb/">
+      
+      
+        <link rel="next" href="../jetson-scan-no-cad/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/jetson-tuning-licensing/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Putting the Robot's Brain on the Edge — Tuning: From 11 Seconds to 4, and a Chain You Can Ship - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#putting-the-robots-brain-on-the-edge-tuning-from-11-seconds-to-4-and-a-chain-you-can-ship" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Putting the Robot's Brain on the Edge — Tuning: From 11 Seconds to 4, and a Chain You Can Ship
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/jetson-tuning-licensing/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-decision-measure-in-one-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First decision: measure in one process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-time-came-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the time came from
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faster-but-the-same-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faster, but the same answer?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-swap-to-go-further" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to swap to go further
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What to swap to go further">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shiny-parts-change-the-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shiny parts change the picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing-same-four-stages-different-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing: same four stages, different terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-fast-is-the-commercial-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How fast is the commercial chain?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#covered-and-moving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Covered and moving
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-safety-check-we-kept-while-speeding-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The safety check we kept while speeding up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory budget · perception + motion on one box
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-decision-measure-in-one-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First decision: measure in one process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-time-came-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the time came from
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faster-but-the-same-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faster, but the same answer?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-swap-to-go-further" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to swap to go further
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What to swap to go further">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shiny-parts-change-the-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shiny parts change the picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing-same-four-stages-different-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing: same four stages, different terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-fast-is-the-commercial-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How fast is the commercial chain?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#covered-and-moving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Covered and moving
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-safety-check-we-kept-while-speeding-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The safety check we kept while speeding up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="putting-the-robots-brain-on-the-edge-tuning-from-11-seconds-to-4-and-a-chain-you-can-ship">Putting the Robot's Brain on the Edge — Tuning: From 11 Seconds to 4, and a Chain You Can Ship<a class="headerlink" href="#putting-the-robots-brain-on-the-edge-tuning-from-11-seconds-to-4-and-a-chain-you-can-ship" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Field Notes · Tuning.</strong> In <a href="../jetson-foundationpose-16gb/">the correction post</a>, one Orin NX 16GB ran the whole chain: text prompt → detection → mask → depth → 6-DoF pose. This post takes the next two questions: <strong>how much faster can it go</strong>, and <strong>can you put it in a product</strong>.</p>
+</blockquote>
+<p>A chain that runs and a chain you can use on a line are separated by two thresholds. The first is speed. Eleven seconds per object is fine for a demo but slow next to a production line. The second is licensing. Many of the best models in this field are released first as lab code, and several of them come with a "research and evaluation only" condition. However fast and accurate they are, that condition keeps them out of equipment you sell.</p>
+<p><em>(As with the earlier posts, this is general edge R&amp;D with objects on a workbench, not a specific site deployment.)</em></p>
+<hr />
+<h2 id="30-second-summary">30-second summary<a class="headerlink" href="#30-second-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Same chain, same Orin NX 16GB: 11.4 s → 4.0 s per object (2.8×).</strong> Every network moved to a TensorRT engine and two slow pieces of code were fixed. The pose stayed within 1.5° and 3.4 mm of the verified orientation.</li>
+<li><strong>FoundationPose shrank the most (6.3 s → 1.25 s).</strong> The bottleneck now is the depth model, FoundationStereo (2.0 s), about half of the total.</li>
+<li><strong>After each speed-up we checked the answers stayed the same.</strong> Masks overlap 99.95 %+, detection boxes 0.99+, pose-model outputs within 0.3 %. That check also caught a bug in the conversion tool.</li>
+<li><strong>Swap the depth model for ESS, NVIDIA's real-time stereo model, and the chain takes 2.1 s.</strong> Depth drops from 2.0 s to 61 ms; pose error grows a little, to 2.0° and 4.9 mm. On shiny parts, though, the two models fail differently, so control the background first.</li>
+<li><strong>Licensing splits the chain in two.</strong> The NVLabs FoundationPose code is for research and evaluation only, and the FoundationStereo code for research only. For commercial use you take the Isaac ROS node and the weights published on NGC. That commercial chain ran at <strong>3.3 s per object</strong> and tracked at <strong>34 ms per frame</strong>.</li>
+</ul>
+<hr />
+<h2 id="first-decision-measure-in-one-process">First decision: measure in one process<a class="headerlink" href="#first-decision-measure-in-one-process" title="Permanent link">&para;</a></h2>
+<p>The per-stage times in the correction post were measured one stage at a time. In real use, the four models are <strong>loaded once</strong> into one program and every frame passes through them in turn. So this time we measured under exactly that condition: all models resident in one process, four real camera frames, averaged.</p>
+<p>Measured this way, model loading drops out and only the time to process one object remains. The baseline before tuning was <strong>11.42 s</strong>.</p>
+<h2 id="where-the-time-came-from">Where the time came from<a class="headerlink" href="#where-the-time-came-from" title="Permanent link">&para;</a></h2>
+<p><img alt="11.4 s to 4.0 s per object — where each stage got faster" src="../../../assets/diagrams_en/jetson-tuning-stages.svg" /></p>
+<p>Each stage needed something different.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Before</th>
+<th>After</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FoundationPose (pose)</td>
+<td>6.33 s</td>
+<td><strong>1.25 s</strong></td>
+<td>Refine and score networks as TensorRT engines, a slow crop step fixed, 3 → 2 iterations</td>
+</tr>
+<tr>
+<td>FoundationStereo (depth)</td>
+<td>2.01 s</td>
+<td>1.99 s</td>
+<td>Already TensorRT</td>
+</tr>
+<tr>
+<td>Grounding DINO (detect)</td>
+<td>1.94 s</td>
+<td><strong>0.58 s</strong></td>
+<td>TensorRT engine, input fixed at 540×960</td>
+</tr>
+<tr>
+<td>Depth re-projection</td>
+<td>0.62 s</td>
+<td><strong>0.02 s</strong></td>
+<td>Moved from CPU to GPU</td>
+</tr>
+<tr>
+<td>SAM2 (mask)</td>
+<td>0.44 s</td>
+<td><strong>0.10 s</strong></td>
+<td>Image encoder and mask decoder as TensorRT engines</td>
+</tr>
+<tr>
+<td>Undistort</td>
+<td>0.10 s</td>
+<td>0.09 s</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>11.42 s</strong></td>
+<td><strong>4.03 s</strong></td>
+<td>Memory 7.7 GB / 15.6 GB</td>
+</tr>
+</tbody>
+</table>
+<p>TensorRT is NVIDIA's tool for "baking" a model ahead of time for a specific GPU. The baked engine runs the same model several times faster than the general-purpose PyTorch path, and most of the saving in the table comes from that conversion.</p>
+<p>The row that stands out, though, is <strong>depth re-projection</strong>. It's a plain coordinate calculation that moves the depth map into the colour camera's viewpoint, but the CPU was handling millions of pixels one at a time and taking 0.62 s. On the GPU it takes 0.02 s. Tuning that only looks at the models misses code like this. Until each stage was timed, nobody knew it was slow.</p>
+<p>Read the FoundationPose row with care. The drop from 6.33 s to 1.25 s includes the engines and the code fix, but also <strong>cutting refinement from three iterations to two</strong>. With three, the whole chain takes 4.41 s and position error drops a little, to 1.7 mm. That gives you one dial to trade speed against precision.</p>
+<h2 id="faster-but-the-same-answer">Faster, but the same answer?<a class="headerlink" href="#faster-but-the-same-answer" title="Permanent link">&para;</a></h2>
+<p>Converting a model to an engine changes the order and precision of the arithmetic. If results drift slightly in exchange for speed, it rarely shows on the surface. So for each stage we <strong>fed the same input and compared the results before and after</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Compared</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAM2</td>
+<td>PyTorch mask vs engine mask overlap (IoU)</td>
+<td>≥ 0.9995 (encoder), ≥ 0.9997 (encoder + decoder)</td>
+</tr>
+<tr>
+<td>Grounding DINO</td>
+<td>540×960 engine vs full-resolution PyTorch box overlap</td>
+<td>0.990–0.995, scores equal or higher</td>
+</tr>
+<tr>
+<td>FoundationPose refine</td>
+<td>Output difference</td>
+<td>0.2–0.3 %</td>
+</tr>
+<tr>
+<td>FoundationPose score</td>
+<td>Per-candidate score difference, top candidate</td>
+<td>~0.2 %, same winner for 1–252 candidates, identical final pose</td>
+</tr>
+<tr>
+<td>Depth re-projection (GPU)</td>
+<td>Pixel-level match</td>
+<td>99.99 %</td>
+</tr>
+</tbody>
+</table>
+<p>IoU measures how much two regions overlap, from 0 to 1, where 1 means identical. An IoU of 0.9995 means about five pixels in ten thousand differ.</p>
+<p>Without this comparison, two problems would have slipped through.</p>
+<ul>
+<li><strong>A bug in the conversion tool.</strong> The SAM2 mask decoder engine produced wrong masks. The cause appears to be a bug in this TensorRT version (10.3): an optimization that fuses the decoder's small network layers into one got the arithmetic wrong. Exposing five intermediate results as extra outputs blocks that fusion, and the masks match the original again. Looking only at speed, we would have written "faster" and moved on.</li>
+<li><strong>A fast but wrong detector.</strong> An engine built earlier from a different Grounding DINO checkpoint (a trained weights file) that NVIDIA distributes ran at 166 ms, much faster, but drew boxes in the wrong places. TensorRT wasn't at fault; the checkpoint was. Rebuilt from the public Hugging Face weights, it detects correctly.</li>
+</ul>
+<p>Every speed number should come with a note that says "same input, same answer". Only then can you rely on that speed.</p>
+<h2 id="what-to-swap-to-go-further">What to swap to go further<a class="headerlink" href="#what-to-swap-to-go-further" title="Permanent link">&para;</a></h2>
+<p>Half of the 4.0 s is FoundationStereo, so going further means changing the model itself. We swapped one stage at a time in the same chain.</p>
+<p><img alt="Time per object and pose error by chain variant" src="../../../assets/diagrams_en/jetson-tuning-alternatives.svg" /></p>
+<ul>
+<li><strong>Depth → ESS.</strong> ESS is NVIDIA's real-time stereo depth model built for Isaac ROS. It does in <strong>61 ms</strong> what took FoundationStereo 2.0 s, using about 3 GB of memory. The whole chain halved to <strong>2.11 s</strong>. Pose error grew a little, from 1.4°/3.4 mm to 2.0°/4.9 mm, because FoundationStereo's depth is denser and smoother.</li>
+<li><strong>Detector → YOLO-World.</strong> An open-vocabulary detector (you can prompt it with any words, not a fixed list), returning boxes in 15 ms (32 ms inside the chain). Its boxes overlapped Grounding DINO's by 0.86–0.96, and the chain came down to <strong>1.66 s</strong>. Because of its licence, covered below, we kept it for research only.</li>
+<li><strong>No detector at all.</strong> If the object always arrives near a known spot, a fixed region of interest (a box) can replace detection. <strong>1.52 s</strong>, with the same error as the ESS chain. In a cell where a jig or pallet roughly fixes the position, this is the simplest answer.</li>
+</ul>
+<p>Swapping the depth model made the biggest difference; the detector choices were worth about half a second. The order of tuning came down to one rule: <strong>measure where the bottleneck is, then change that</strong>.</p>
+<h3 id="shiny-parts-change-the-picture">Shiny parts change the picture<a class="headerlink" href="#shiny-parts-change-the-picture" title="Permanent link">&para;</a></h3>
+<p>ESS is faster, but the two depth models fail in different ways. So we compared them again on shiny parts: a glossy plastic mouse and a mirror-smooth black cup.</p>
+<p><img alt="Same cup, same camera: on a checkerboard, FoundationStereo reads half the cup as the board; on a plain black table it reads the whole cup" src="../../../assets/demos/jetson-mirror-cup.jpg" /></p>
+<p><em>From left: camera image, FoundationStereo depth, ESS depth. The white line is the cup's outline. In the top row, the lower left of the FoundationStereo depth is missing from the outline: the depth there came out at the height of the surface behind, not the cup.</em></p>
+<table>
+<thead>
+<tr>
+<th>Part and background</th>
+<th>FoundationStereo</th>
+<th>ESS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Glossy mouse: surface noise (how many mm a flat face wobbles on average, RMS)</td>
+<td><strong>3.3 mm</strong></td>
+<td>6.0 mm</td>
+</tr>
+<tr>
+<td>Mirror-like cup on a checkerboard: "see-through"</td>
+<td><strong>48 %</strong></td>
+<td>12 %</td>
+</tr>
+<tr>
+<td>Same cup on a plain <strong>black</strong> table</td>
+<td><strong>1.6 %</strong></td>
+<td>6.3 %</td>
+</tr>
+<tr>
+<td>Cup with the lid off, on plain <strong>white</strong> paper</td>
+<td>~11 %</td>
+<td>~11 %</td>
+</tr>
+</tbody>
+</table>
+<p>"See-through" is the share of the part whose depth came out at the height of the surface below instead of the part. When stereo matches a pattern reflected in a shiny surface, it places the depth where that pattern really is, behind the surface.</p>
+<ul>
+<li><strong>Normally FoundationStereo is cleaner.</strong> Its surface noise on the mouse is about half of ESS's.</li>
+<li><strong>But it is more easily fooled by reflections.</strong> On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for a similar 93–95 % of the cup, so coverage alone hides the problem completely.</li>
+<li><strong>The background decides.</strong> The problem grew from a plain black surface to plain white to a patterned one. With shiny parts, controlling <strong>what the part reflects</strong> works better than changing models.</li>
+</ul>
+<p>So "swap to ESS and halve the time" holds for matte parts. In a cell with many glossy parts, clean up the background first, then compare both models on those parts before choosing. (One cup and one mouse show a tendency, not a statistic.)</p>
+<h2 id="licensing-same-four-stages-different-terms">Licensing: same four stages, different terms<a class="headerlink" href="#licensing-same-four-stages-different-terms" title="Permanent link">&para;</a></h2>
+<p>Here a problem appears that has nothing to do with speed. The FoundationPose and FoundationStereo code used so far is what NVIDIA's research lab (NVLabs) published on GitHub, and the licence says:</p>
+<blockquote>
+<p>The Work and any derivative works thereof only may be used or intended for use non-commercially … "non-commercially" means for research or evaluation purposes only.</p>
+</blockquote>
+<p>(That is the FoundationPose licence. The FoundationStereo licence says "for research purposes only", without "evaluation".)</p>
+<p>So checking performance for research is within the terms, but selling equipment that contains it is outside the terms. Fortunately NVIDIA also ships the same technology through a commercial path. Depending on which implementation and weights you pick at each stage, the chain splits in two.</p>
+<p><img alt="Licences in the research chain and the commercial chain" src="../../../assets/diagrams_en/jetson-license-lanes.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Research chain</th>
+<th>Commercial chain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detect</td>
+<td>Grounding DINO (Apache-2.0)</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Mask</td>
+<td>SAM2 (Apache-2.0)</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Depth</td>
+<td>FoundationStereo, NVLabs code (non-commercial)</td>
+<td><strong>ESS</strong> or <strong>NGC FoundationStereo</strong> (NVIDIA marks them ready for commercial use)</td>
+</tr>
+<tr>
+<td>Pose</td>
+<td>FoundationPose, NVLabs code (non-commercial)</td>
+<td><strong>Isaac ROS FoundationPose node + NGC weights</strong> (ready for commercial use)</td>
+</tr>
+<tr>
+<td>Fast detector</td>
+<td>YOLO-World (GPL-3.0 upstream, AGPL-3.0 in Ultralytics)</td>
+<td>Not used</td>
+</tr>
+</tbody>
+</table>
+<p>NGC is NVIDIA's catalogue for models and containers. The ESS and NGC FoundationStereo model cards there say "ready for commercial use", and the FoundationPose card says it "does not require additional training for commercial applications". ESS and FoundationPose fall under NVIDIA's model EULA, FoundationStereo under the NVIDIA Open Model License. The EULA limits use to systems with NVIDIA GPUs and puts conditions on redistribution. Apache-2.0 is an open-source licence that broadly allows commercial use.</p>
+<p>This is my reading, not legal advice. Check each licence's original text before shipping a product.</p>
+<p>YOLO-World sits under different terms again. Copyleft licences like GPL and AGPL don't forbid commercial use, but they require you to publish the source of any program you distribute combined with the code, under the same terms (for AGPL, serving a modified version over a network also triggers it; Ultralytics also sells a paid commercial licence). Unless you plan to open the whole equipment software, it's safer to leave it out. That's why the good 1.66 s number carries a "research only" label.</p>
+<h2 id="how-fast-is-the-commercial-chain">How fast is the commercial chain?<a class="headerlink" href="#how-fast-is-the-commercial-chain" title="Permanent link">&para;</a></h2>
+<p>So we rebuilt the chain from commercial parts and measured it: Grounding DINO → SAM2 → ESS → Isaac ROS FoundationPose node (NGC weights).</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First pose (2 refinement iterations)</td>
+<td>2.4 s</td>
+</tr>
+<tr>
+<td>First pose (3 iterations)</td>
+<td>3.4 s, 0.67°</td>
+</tr>
+<tr>
+<td><strong>Whole chain (per object)</strong></td>
+<td><strong>3.26 s</strong></td>
+</tr>
+<tr>
+<td><strong>Tracking afterwards (per frame)</strong></td>
+<td><strong>34 ms</strong> (tracking stage alone, about 2× the NVLabs research tracker)</td>
+</tr>
+</tbody>
+</table>
+<p>It's actually faster than the tuned research chain (4.0 s). Swapping in ESS does most of that, and the Isaac ROS node was tuned for Jetson from the start, so tracking is especially quick. At least for this combination, the worry that going commercial means going slower didn't hold.</p>
+<p>To go further, we also cut the number of pose candidates the node checks at the start. The first pose got faster, 1.0–1.8 s instead of 2.4 s, but flipped poses rose from 2 to 4–6 out of 23. With a near-symmetric object, fewer candidates make it likelier to pick the opposite orientation. Saving a second isn't worth two to three times as many wrong answers, so we left it as it was.</p>
+<p><img alt="Live tracking of the mini PC with the commercial chain — the top line shows the chain and per-stage times" src="../../../assets/demos/jetson-tuning-live-track.jpg" /></p>
+<p><em>The top line shows the chain (gdino &gt; SAM2 &gt; ess &gt; isaac) and per-stage times. The green dots are CAD model points drawn at the estimated pose; the red, green and blue arrows are the object's X, Y and Z axes. It sits about 42 cm from the camera. The on-screen pose_track 54 ms is measured in the live loop, where depth (ESS) also runs every frame; the 34 ms in the table is the tracking stage measured on its own.</em></p>
+<h2 id="covered-and-moving">Covered and moving<a class="headerlink" href="#covered-and-moving" title="Permanent link">&para;</a></h2>
+<p>On a real line, objects don't sit still, and hands or grippers get in the way. We checked how well tracking holds up.</p>
+<p>First, a flat, hand-coloured rectangle was pasted over the image to hide part of the object (a synthetic cover, not a real hand).</p>
+<p><img alt="Tracking with a synthetic cover over 0 %, 50 % and 90 % of the object, then removed" src="../../../assets/demos/jetson-tuning-occlusion.jpg" /></p>
+<p><em>The numbers under the photos are from the same test with the NVLabs research tracker. The table below is the commercial Isaac ROS tracker. Both hold up to half covered and drift badly from 90 %.</em></p>
+<table>
+<thead>
+<tr>
+<th>Covered</th>
+<th>Pose error (commercial Isaac ROS tracker)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–50 %</td>
+<td>within 1.4° / 4.4 mm, about the same as uncovered</td>
+</tr>
+<tr>
+<td>75 %</td>
+<td>3.3–4.0° / 8.5–14.6 mm</td>
+</tr>
+<tr>
+<td>90 %</td>
+<td>3.2–4.6° / 25–31 mm, position well off</td>
+</tr>
+<tr>
+<td>100 %</td>
+<td>8.6–10.2° / 30–36 mm, effectively lost</td>
+</tr>
+<tr>
+<td>Uncovered again</td>
+<td>back to 0.9° / 2.7 mm within a frame or two</td>
+</tr>
+</tbody>
+</table>
+<p>Up to half covered, it barely moves; once most of the object is hidden, the position drifts by a few centimetres. When the cover comes off, it snaps back.</p>
+<p>We also tried a real hand: a 98-second test of picking up the mini PC, moving it, half covering it with a hand, and shaking it fast.</p>
+<ul>
+<li>Tracked <strong>86 %</strong> of the time; the longest unbroken track was <strong>58.6 s</strong></li>
+<li><strong>100 %</strong> tracked while a hand covered half of it</li>
+<li>Followed motion up to about 300 mm/s and 130°/s</li>
+<li>When lost, found again in <strong>3.4 s</strong></li>
+</ul>
+<h2 id="the-safety-check-we-kept-while-speeding-up">The safety check we kept while speeding up<a class="headerlink" href="#the-safety-check-we-kept-while-speeding-up" title="Permanent link">&para;</a></h2>
+<p>When you're tuning, it's tempting to drop checks because they're slow. This test made clear that one check has to stay.</p>
+<p><img alt="Grounding DINO took a ceiling-hung heater for a 'black mini computer', and the pose landed 5 m away" src="../../../assets/demos/jetson-tuning-size-check.jpg" /></p>
+<p>When the camera tipped towards the ceiling, the detector picked a ceiling-hung heater as "a black mini computer with cooling fins". The later stages trusted that box and dutifully computed a pose, 5 m from the camera. The object we wanted was on the workbench, 40 cm away.</p>
+<p>This kind of failure is silent. Every stage returns normal values, so there's no error message. That's why the chain ends with a <strong>size and distance check</strong>: if the measured size doesn't match the CAD dimensions, or the distance is outside the work area, the result is thrown away. It takes a few milliseconds, so it costs almost nothing in speed.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Before tuning</th>
+<th>After tuning (research)</th>
+<th>Commercial chain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts</td>
+<td>GDINO + SAM2 + FoundationStereo + FoundationPose (mostly PyTorch)</td>
+<td>Same parts, all TensorRT</td>
+<td>GDINO + SAM2 + <strong>ESS</strong> + <strong>Isaac ROS FoundationPose</strong></td>
+</tr>
+<tr>
+<td>Per object</td>
+<td>11.42 s</td>
+<td>4.03 s</td>
+<td><strong>3.26 s</strong></td>
+</tr>
+<tr>
+<td>Tracking</td>
+<td>~70 ms</td>
+<td>~70 ms</td>
+<td><strong>34 ms</strong></td>
+</tr>
+<tr>
+<td>Can ship in a product</td>
+<td>✗ (non-commercial code)</td>
+<td>✗ (non-commercial code)</td>
+<td>✓ (subject to each model's terms)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Time each stage in one process first.</strong> Bottlenecks hide outside the models too (depth re-projection).</li>
+<li><strong>When something gets faster, check the answer right away.</strong> That's how a conversion-tool bug and a bad checkpoint surfaced here.</li>
+<li><strong>Change the bottleneck.</strong> Here it was the depth model; with ESS the chain halved.</li>
+<li><strong>Check licences at the start.</strong> Prove performance with research code, then look for the commercial path to the same technology and measure again with it.</li>
+</ul>
+<p>What about objects with no CAD file? We also tried putting the object on a printed board and taking about twenty photos to build a mesh. That got <a href="../jetson-scan-no-cad/">its own post</a>.</p>
+<hr />
+<details>
+<summary>Notes — sources and disclaimers</summary>
+
+The times, errors and memory figures were **measured directly** on a Jetson Orin NX 16GB (MAXN power mode) with an OAK-D stereo camera. They come from one scene and one object (Seeed reComputer Industrial, using the maker's public CAD), so other objects or lighting may differ. Pose error is the difference from a reference pose checked by orientation features and repeatability, not absolute accuracy against separate measuring equipment. The detector engines are fixed to one input size (540×960) and were checked only on large, near objects. The occlusion photos use a synthetic flat cover; the real-hand test is one session (98 s).
+
+Licence details were checked on 2026-09-29 against the LICENSE files of the NVLabs FoundationPose and FoundationStereo repositories, the NGC model cards for ESS, FoundationPose and FoundationStereo, the Grounding DINO and SAM2 repositories (Apache-2.0), and the YOLO-World repository (GPL-3.0). **This is not legal advice**; check each model's current terms before putting it in a product.
+
+Jetson, Orin, Isaac ROS, TensorRT and NGC are trademarks of NVIDIA; other product names belong to their owners and are used for identification only.
+
+</details>
+
+<p><strong>Series</strong> · <a href="../jetson-foundationpose-16gb/">← Previous: A Correction — reversing the "16 GB can't do it" verdict</a> · <a href="../jetson-scan-no-cad/">Next: Scanning — no CAD? One printed board and twenty photos →</a></p>
+<p><em>Related: <a href="../jetson-isaac-foundation-models/">Field Notes, Part 2: Isaac ROS, Foundation Models</a> · <a href="../inside-the-models/">Inside the Three Models</a> · <a href="../isaac-ros-gpu/">Pendant to ROS 2, Part 4: Isaac ROS and cuMotion</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

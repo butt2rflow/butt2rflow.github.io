@@ -1,0 +1,88 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">China's battery-material export controls and Korea's dependence</title>
+<desc id="de">China put graphite exports under licensing in December 2023 (still in force) and restricted exports of cathode and lithium-refining technology in July 2025. In October 2025 it announced controls on high-performance lithium-ion cells, cathode materials, precursors, synthetic graphite anodes and production equipment, but after the November US–China deal it suspended them until November 10, 2026. After the September 2026 summit the US said the deal runs to January 10, 2027, but whether the battery-material suspension is included is unconfirmed. As of September 2023, China supplied 96.6% of Korea's precursor imports, 93.7% of its synthetic graphite and 80.4% of its lithium hydroxide.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
+<text class="t" x="18" y="26">Controls switch on and off; the dependence stays</text>
+<rect class="bxr" x="16" y="48" width="155" height="104" rx="10"/>
+<text class="lb" x="94" y="72" text-anchor="middle">Dec 2023</text>
+<text class="sm" x="94" y="102" text-anchor="middle" style="fill:var(--fg)">graphite export licensing</text>
+<text class="sm" x="94" y="130" text-anchor="middle">still in force</text>
+<line class="ar" x1="172" y1="100" x2="178" y2="100"/>
+<rect class="bxa" x="179" y="48" width="155" height="104" rx="10"/>
+<text class="lb" x="257" y="72" text-anchor="middle">Jul 2025</text>
+<text class="sm" x="257" y="102" text-anchor="middle" style="fill:var(--fg)">LFP cathode, Li-refining tech</text>
+<text class="sm" x="257" y="130" text-anchor="middle">tech exports restricted</text>
+<line class="ar" x1="335" y1="100" x2="341" y2="100"/>
+<rect class="bxr" x="342" y="48" width="155" height="104" rx="10"/>
+<text class="lb" x="420" y="72" text-anchor="middle">Oct 2025</text>
+<text class="sm" x="420" y="102" text-anchor="middle" style="fill:var(--fg)">cells, cathodes, anodes, gear</text>
+<text class="sm" x="420" y="130" text-anchor="middle">controls announced</text>
+<line class="ar" x1="498" y1="100" x2="504" y2="100"/>
+<rect class="bx" x="505" y="48" width="155" height="104" rx="10"/>
+<text class="lb" x="583" y="72" text-anchor="middle">Nov 2025</text>
+<text class="sm" x="583" y="102" text-anchor="middle" style="fill:var(--fg)">suspended after a deal</text>
+<text class="sm" x="583" y="130" text-anchor="middle">until Nov 10, 2026</text>
+<text class="lb" x="18" y="182">China's share of Korea's battery-material imports (Sep 2023)</text>
+<text class="it" x="18" y="211">precursors</text>
+<rect class="bxr" x="170" y="198" width="386.4" height="18" rx="4"/>
+<text class="nd" x="564.4" y="212">96.6%</text>
+<text class="it" x="18" y="237">synthetic graphite</text>
+<rect class="bxr" x="170" y="224" width="374.8" height="18" rx="4"/>
+<text class="nd" x="552.8" y="238">93.7%</text>
+<text class="it" x="18" y="263">lithium hydroxide</text>
+<rect class="bxr" x="170" y="250" width="321.6" height="18" rx="4"/>
+<text class="nd" x="499.6" y="264">80.4%</text>
+<text class="sm" x="18" y="292">Deal extended to Jan 10, 2027; battery materials unconfirmed. Dependence: EIRP data cited by KEI</text>
+</svg>

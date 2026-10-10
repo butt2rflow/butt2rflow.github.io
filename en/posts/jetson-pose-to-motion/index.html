@@ -1,0 +1,3716 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Once you know the object's pose, the arm has to move. On the same Orin NX 16GB: cuMotion planning (about 186 ms per plan, with a 16-second warm-up only the first time), the nvblox obstacle map (5 mm median error on the live camera; it looked wrong at first, but the check was wrong), wiring the map into planning from a recorded camera stream (goals inside objects get rejected), bringing up the UR ROS 2 driver without a robot, and how far force control goes on this stack. Field Notes, motion.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/jetson-pose-to-motion/">
+      
+      
+        <link rel="prev" href="../jetson-scan-no-cad/">
+      
+      
+        <link rel="next" href="../jetson-real-robot-first-move/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/jetson-pose-to-motion/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Putting the Robot's Brain on the Edge — Motion: After the Pose Comes Movement, Planning Around an Obstacle Map - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#putting-the-robots-brain-on-the-edge-motion-after-the-pose-comes-movement-planning-around-an-obstacle-map" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Putting the Robot's Brain on the Edge — Motion: After the Pose Comes Movement, Planning Around an Obstacle Map
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/jetson-pose-to-motion/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-things-you-need-after-the-pose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three things you need after the pose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-pose-tells-you-first-even-the-hidden-corner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the pose tells you first: even the hidden corner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumotion-a-long-warm-up-once-then-short-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuMotion: a long warm-up once, then short plans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-obstacle-map-on-a-scene-with-a-known-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start the obstacle map on a scene with a known answer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-live-camera-i-thought-the-map-was-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The live camera: I thought the map was wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#record-once-replay-without-the-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Record once, replay without the camera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring-the-map-into-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring the map into planning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turning-the-pose-into-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turning the pose into goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bringing-up-the-ur-driver-without-a-robot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bringing up the UR driver without a robot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-the-way-on-simulated-hardware-and-building-a-ur20-cumotion-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All the way on simulated hardware, and building a UR20 cuMotion config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-far-force-control-goes-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How far force control goes now
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-few-rows-missing-from-part-4s-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A few rows missing from Part 4's table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory budget · perception + motion on one box
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-things-you-need-after-the-pose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three things you need after the pose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-pose-tells-you-first-even-the-hidden-corner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the pose tells you first: even the hidden corner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumotion-a-long-warm-up-once-then-short-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuMotion: a long warm-up once, then short plans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-obstacle-map-on-a-scene-with-a-known-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start the obstacle map on a scene with a known answer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-live-camera-i-thought-the-map-was-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The live camera: I thought the map was wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#record-once-replay-without-the-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Record once, replay without the camera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring-the-map-into-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring the map into planning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turning-the-pose-into-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turning the pose into goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bringing-up-the-ur-driver-without-a-robot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bringing up the UR driver without a robot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-the-way-on-simulated-hardware-and-building-a-ur20-cumotion-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All the way on simulated hardware, and building a UR20 cuMotion config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-far-force-control-goes-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How far force control goes now
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-few-rows-missing-from-part-4s-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A few rows missing from Part 4's table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="putting-the-robots-brain-on-the-edge-motion-after-the-pose-comes-movement-planning-around-an-obstacle-map">Putting the Robot's Brain on the Edge — Motion: After the Pose Comes Movement, Planning Around an Obstacle Map<a class="headerlink" href="#putting-the-robots-brain-on-the-edge-motion-after-the-pose-comes-movement-planning-around-an-obstacle-map" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Field Notes · Motion.</strong> From <a href="../jetson-foundationpose-16gb/">the correction post</a> to <a href="../jetson-scan-no-cad/">the scanning post</a>, everything was on the camera side: give an instruction in words, find the object, and output its 6-DoF pose (position and orientation). But a pose is just numbers, and the robot hasn't moved an inch. This post records tests of <strong>the side that turns a pose into motion</strong>, on the same edge computer.</p>
+</blockquote>
+<p>The <a href="../ros2-for-robot-programmers/">From Teach Pendant to ROS 2</a> series covered the concepts: MoveIt 2 and planners in <a href="../moveit2-goals-not-points/">Part 3</a>, the GPU planner cuMotion and the nvblox obstacle map in <a href="../isaac-ros-gpu/">Part 4</a>. This time I ran them on the Orin NX 16GB and checked them <strong>with numbers</strong>. For one day I thought the obstacle map was wrong; the next day it turned out the check was wrong. That detour is here too.</p>
+<p><em>(This is a general R&amp;D record on the same Jetson Orin NX 16GB and OAK-D 3D camera as the earlier posts, on an office desk. No real robot moved, and no real force was measured.)</em></p>
+<hr />
+<h2 id="30-second-summary">30-second summary<a class="headerlink" href="#30-second-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>A pose plus CAD knows the hidden side.</strong> The distance from a mini PC corner the camera couldn't see to the board behind it came out at 56 mm from the CAD; a ruler said 55 mm.</li>
+<li><strong>cuMotion is fast on the edge too.</strong> With the UR10e configuration, a median of about 186 ms per plan. The first plan needs a 16-second GPU warm-up, so do it when the program starts, not on the first pick.</li>
+<li><strong>nvblox was accurate on a scene with a known answer.</strong> Fed computed depth (a box at 0.6 m, a wall at 1.0 m), the map put them at 0.610 m and 1.000 m, within one 2 cm cell.</li>
+<li><strong>The live camera was accurate too.</strong> On a flat scene the map and the measured depth differ by a median of 5 mm. On day one the board seemed to vanish from the map, but the check script, which drew the map wrongly for the comparison, was at fault.</li>
+<li><strong>With the map on, cuMotion avoids objects.</strong> On a map built from a recorded stream, goals inside or too close to objects were rejected and open space planned. A blocked goal comes back as <code>NO_IK_SOLUTION</code>, so don't be misled.</li>
+<li><strong>The map's holes come from the depth.</strong> A map built from camera-chip depth covered only 67% of the board. Recomputing FoundationStereo or ESS depth from the same bag's stereo pair raised it to 96–97%. To the planner, anything missing from the map is free space.</li>
+<li><strong>A foundation-model pose becomes the goal directly.</strong> Measure the camera mount, and check poses against the table; an overlap score alone misses a flipped mouse. The rough poses came from the depth: redone with ESS depth on the same frame, both objects fit.</li>
+<li><strong>The UR20 cuMotion config was built by hand.</strong> Automatic sphere fitting failed, so the arm is wrapped in 71 spheres. Planning ran through to execution on simulated hardware; the real UR20 is in the next post.</li>
+<li><strong>The UR driver comes up without a robot.</strong> On simulated hardware all 13 controllers loaded, force mode included. On this version the argument is <code>use_fake_hardware</code>.</li>
+<li><strong>Force control on this stack means UR force mode.</strong> NVIDIA's learned insertion example is an Isaac ROS 4.x feature; to try it on Orin you need at least Isaac ROS 4.6 and JetPack 7.2.</li>
+</ul>
+<hr />
+<h2 id="three-things-you-need-after-the-pose">Three things you need after the pose<a class="headerlink" href="#three-things-you-need-after-the-pose" title="Permanent link">&para;</a></h2>
+<p>Knowing the object's pose doesn't let the robot go and pick it up yet. Three more pieces are needed.</p>
+<ol>
+<li><strong>Motion planning:</strong> a collision-free path from the arm's current pose to the front of the object. Here, cuMotion.</li>
+<li><strong>An obstacle map:</strong> where the things you must not hit are. What you know from CAD (table, jigs) goes into the planning scene; what you don't (a toolbox someone left, a sagging cable) has to be seen by the camera. Here, nvblox.</li>
+<li><strong>A robot driver:</strong> the channel that hands the computed path to the real robot controller. Here, the Universal Robots (UR) ROS 2 driver.</li>
+</ol>
+<p><img alt="The steps after the pose, and how they went" src="../../../assets/diagrams_en/mot-status.svg" /></p>
+<p>The results first: planning, the obstacle map and the link between them all worked, and the driver was checked only in simulation. One at a time.</p>
+<h2 id="what-the-pose-tells-you-first-even-the-hidden-corner">What the pose tells you first: even the hidden corner<a class="headerlink" href="#what-the-pose-tells-you-first-even-the-hidden-corner" title="Permanent link">&para;</a></h2>
+<p>Before moving on to motion, here is what one pose already tells you. With the mini PC in front of the ChArUco board, FoundationPose found its pose from FoundationStereo depth; then the maker's CAD, placed at that pose, gave the distance from each corner to the board plane.</p>
+<p><img alt="The mini PC's pose from FoundationStereo depth and the outline of the CAD placed at it" src="../../../assets/demos/jetson-motion-pose-cad.jpg" /></p>
+<p><em>The green box is the outline of the CAD at this pose; the three lines are the object's axes. The box sits right on the mini PC's edges.</em></p>
+<p><img alt="Perpendicular distance from each mini PC corner to the board plane; the dashed yellow line marks a corner hidden from the camera" src="../../../assets/demos/jetson-motion-clearance-rays.jpg" /></p>
+<p><em>CAD is the distance computed from the CAD; FS in brackets is the same point measured from FoundationStereo depth. The dashed yellow line is a corner the camera can't see.</em></p>
+<p>The corner closest to the board was the back one, <strong>hidden</strong> from the camera. The CAD put it at 56 mm; a ruler said 55 mm, a 1.1 mm difference. Depth alone can't tell you about that corner, because depth only measures the faces the camera can see. The visible faces measured by FoundationStereo sat 67–251 mm from the board, and the depth computed on the camera chip was mostly empty over the mini PC's cooling fins.</p>
+<p>With a pose and a CAD you know where even the <strong>hidden side</strong> of an object is, so collision margins can be set precisely. Things without a CAD, a new object or clutter on the bench, have to be handled by an obstacle map built from depth. The rest of this post is about that map and the planning that uses it. (One scene, one position.)</p>
+<h2 id="cumotion-a-long-warm-up-once-then-short-plans">cuMotion: a long warm-up once, then short plans<a class="headerlink" href="#cumotion-a-long-warm-up-once-then-short-plans" title="Permanent link">&para;</a></h2>
+<p>cuMotion is the plugin that puts NVIDIA's GPU motion-planning library, cuRobo, into MoveIt 2. I tested it with the UR10e configuration file that ships with cuRobo, planning five times from different start poses.</p>
+<p><img alt="A 16.4-second GPU warm-up once, then about 0.19 s per plan" src="../../../assets/diagrams_en/mot-warmup.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU warm-up, first time only</td>
+<td>16.4 s</td>
+</tr>
+<tr>
+<td>One plan</td>
+<td>median ~186 ms (61–190 ms)</td>
+</tr>
+<tr>
+<td>Success</td>
+<td>4 of 5</td>
+</tr>
+<tr>
+<td>GPU memory</td>
+<td>+0.2 GB peak</td>
+</tr>
+</tbody>
+</table>
+<p>The one failure was a start pose I offset by a large amount on purpose. When planning fails, cuMotion answers "no path found" and the arm doesn't move. It stops rather than handing back a strange path, which is the behaviour you want. Your program can take that answer and retry from another standby pose, or call a person.</p>
+<p>The number to use in practice is the <strong>16 seconds</strong>. cuRobo spends a long time preparing its GPU work on the first plan and is fast after that. Plan for the first time when the first part arrives, and only that first cycle is 16 seconds longer. Run any plan once when the program starts and the problem goes away.</p>
+<p>I won't put this next to the 210 ms from <a href="../jetson-isaac-foundation-models/">Part 2 of the field notes</a> (a 7-axis arm, the demo Franka configuration) and call it faster. The arm and the scene are different. What I can say is that both land around 0.2 s on the same edge computer. If you use a different UR model, you need a cuMotion configuration for it (joint limits, collision spheres). UR's MoveIt configuration covers several models, but the cuMotion configuration is separate.</p>
+<p><a href="../moveit2-goals-not-points/">Part 3</a> covered how to choose a planner, so briefly:</p>
+<table>
+<thead>
+<tr>
+<th>Planner</th>
+<th>What it does</th>
+<th>Where to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OMPL (RRT family)</td>
+<td>Grows a random tree until it reaches the goal. Finds a path almost anywhere, but it differs each run and can wander</td>
+<td>Setup, detours through open space</td>
+</tr>
+<tr>
+<td>cuMotion</td>
+<td>Refines many candidate paths in parallel on the GPU. Smooth and short</td>
+<td>Travel through cluttered scenes</td>
+</tr>
+<tr>
+<td>Pilz</td>
+<td>Exact shapes (joint move, straight line, arc)</td>
+<td>The last few centimetres before the part</td>
+</tr>
+</tbody>
+</table>
+<p>A common split is <strong>travel with cuMotion or OMPL, final approach with a Pilz straight line</strong>. The Isaac ROS 3.2 environment I installed already had OMPL, Pilz, CHOMP and the cuMotion plugin.</p>
+<h2 id="start-the-obstacle-map-on-a-scene-with-a-known-answer">Start the obstacle map on a scene with a known answer<a class="headerlink" href="#start-the-obstacle-map-on-a-scene-with-a-known-answer" title="Permanent link">&para;</a></h2>
+<p>nvblox takes depth images, divides space into small cubes (voxels), and writes "distance to the nearest surface" into each one (see "What does cuMotion avoid?" in <a href="../isaac-ros-gpu/">Part 4</a>). I wanted to plug the camera straight in, but tested <strong>a scene with a known answer</strong> first. If the live map looks wrong, you can't tell whether the camera or the setup is at fault.</p>
+<p>So I computed a depth image: a box 0.6 m in front of the camera and a wall at 1.0 m. I fed it to nvblox and measured where the two surfaces landed in the map.</p>
+<p><img alt="On a computed scene with a known answer, the map landed in place" src="../../../assets/diagrams_en/mot-synth.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Box face (truth 0.6 m)</td>
+<td>0.610 m</td>
+</tr>
+<tr>
+<td>Wall (truth 1.0 m)</td>
+<td>1.000 m</td>
+</tr>
+<tr>
+<td>Map cell size</td>
+<td>2 cm</td>
+</tr>
+<tr>
+<td>Time to add one depth frame</td>
+<td>~0.6 ms</td>
+</tr>
+<tr>
+<td>Map output</td>
+<td>~11 Hz</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>+0.4 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Both surfaces fell within one cell (2 cm), so it <strong>passed</strong>. That confirms the nvblox settings, the coordinate transform (the robot base frame <code>base_link</code>) and the topic wiring. The only variable left is the camera.</p>
+<h2 id="the-live-camera-i-thought-the-map-was-wrong">The live camera: I thought the map was wrong<a class="headerlink" href="#the-live-camera-i-thought-the-map-was-wrong" title="Permanent link">&para;</a></h2>
+<p>Now the real camera. The OAK-D's stereo depth went out as a ROS 2 topic, and nvblox built a map from it. A checkerboard stood 0.39 m in front of the camera.</p>
+<p>Speed was fine from the start. The camera sent 13.5 frames a second, adding one depth frame to the map took 4–7 ms, and memory grew by 0.3–0.5 GB.</p>
+<p>To check the map, I redrew it from the camera's viewpoint and compared it, pixel by pixel, with the depth the camera measured. Day one looked bad: only <strong>14 %</strong> of points agreed within 3 cm, and the board right in front seemed to be missing from the map. I even had a plausible story: false far depth readings had erased the board.</p>
+<p>Looking again the next day, the map wasn't wrong. <strong>The check was.</strong></p>
+<p><img alt="Plot only points and near surfaces look empty" src="../../../assets/diagrams_en/mot-check.svg" /></p>
+<p>The map nvblox produces is a <strong>mesh of small triangle faces</strong>, like a CAD model. But the check script drew only the triangles' corners, one pixel each, and left out the faces between them. At 0.4 m one 2 cm cell covers about 400 pixels (20×20) on screen, so most of the near board was left as blank, undrawn pixels, and far corners from behind the board landed in those pixels instead and scored as "doesn't match". Drawing the triangle faces as well changed everything. Nothing was invented to fill the gaps; the faces nvblox had built were simply no longer left out.</p>
+<p><img alt="Left: the depth the camera measured. Right: the nvblox map built from it, redrawn from the same viewpoint. They nearly match" src="../../../assets/demos/jetson-nvblox-live-compare.png" /></p>
+<p><em>Left is the camera's measured depth; right is the nvblox map's triangle faces redrawn from the same viewpoint (colour = distance, black = no value).</em></p>
+<table>
+<thead>
+<tr>
+<th>Scene</th>
+<th>Median error, near pixels</th>
+<th>Within 3 cm</th>
+<th>Map coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flat checkerboard, dim office</td>
+<td><strong>5 mm</strong></td>
+<td>81 %</td>
+<td>95 %</td>
+</tr>
+<tr>
+<td>PC case with a glass side panel, lights on</td>
+<td>19 mm</td>
+<td>63 %</td>
+<td>95 %</td>
+</tr>
+<tr>
+<td>Same scene, depth clipped at 1.5 m</td>
+<td>15 mm</td>
+<td>70 %</td>
+<td>56 %</td>
+</tr>
+</tbody>
+</table>
+<p>A 5 mm median on a flat scene is far smaller than one map cell (2 cm). The dim lighting wasn't a problem either. Reflective surfaces like glass make stereo depth itself noisy, so the error grows to 19 mm, but that's still about one cell.</p>
+<p><img alt="The same glass-case scene with depth clipped at 1.5 m: a little less error, but a much smaller map" src="../../../assets/demos/jetson-nvblox-clamp-compare.png" /></p>
+<p>Clipping depth at 1.5 m drops far-away noise and trims the error a little (19 → 15 mm), but map coverage falls from 95 % to 56 %. Useful for a cell where only the work area matters; otherwise there's no need to clip.</p>
+<p>What to take from this is the <strong>order</strong> more than the numbers. Had I trusted day one's 14 %, I'd have started blaming nvblox and changing its settings. Having already passed the known-answer scene is what pointed me back at the check. Check the measurement before blaming the tool. And as <a href="../isaac-ros-gpu/">Part 4</a> said, nvblox is not a device for protecting people. Human safety belongs to the robot controller's safety functions and safety sensors.</p>
+<details>
+<summary>Things that tripped me up while wiring it</summary>
+
+- nvblox doesn't build a map without a `base_link` transform (TF). The depth topic (`/camera_0/depth/image`) and the camera-info topic (`/camera_0/depth/camera_info`) also had to have exactly these names.
+- The camera program (DepthAI) and nvblox lived in different Docker containers, so I set both to the same `ROS_DOMAIN_ID` so they could see each other's topics.
+- Only one program can hold a USB camera. If the pose-estimation demo has it, stop that first.
+
+</details>
+
+<h2 id="record-once-replay-without-the-camera">Record once, replay without the camera<a class="headerlink" href="#record-once-replay-without-the-camera" title="Permanent link">&para;</a></h2>
+<p>If every test means turning the camera on and placing things again, you can't tell whether a change came from the scene or the settings. So I saved the camera stream as a <strong>ROS bag</strong> (a file that records topics as they are). With the mini PC and a wireless mouse in front of the checkerboard, I moved the mouse by hand for 44 seconds. Colour, depth aligned to colour, the left and right images, lens information and transforms all went in, time-synced (1.3 GB, 434 frames per stream).</p>
+<p><img alt="The recorded scene: a mini PC, a wireless mouse and a ChArUco board standing behind them" src="../../../assets/demos/jetson-motion-scene.jpg" /></p>
+<p><em>One colour frame from the bag. The glass-panel PC case is at the back left.</em></p>
+<p>Two things mattered while recording:</p>
+<ul>
+<li><strong>The colour camera's focus was locked at its factory-calibration position.</strong> The <a href="../jetson-scan-no-cad/">scanning post</a> measured that this camera's factory lens parameters hold at only one focus position. Locked there for the whole recording, the lens parameters stay right for anything later computed from this bag.</li>
+<li><strong>One way of building image messages in ROS 2 Python made a 10× speed difference.</strong> At first only 2.2 frames a second came out, while the camera was sending 10.4 synced sets a second and the Python work took 2.6 ms. The culprit was assigning a raw byte string to <code>Image.data</code>. Filling an <code>array("B")</code> instead let all 10 frames a second through.</li>
+</ul>
+<p>Replaying this bag into nvblox put all 425 depth frames into the map with no camera attached (about 1.8 ms each). Here is the resulting map laid over the same colour frame:</p>
+<p><img alt="Left: the recorded colour frame. Right: the nvblox map overlaid on it, coloured by distance" src="../../../assets/demos/jetson-motion-map-overlay.jpg" /></p>
+<p><em>On the right, bluer is nearer and redder is farther. Where the map exists it sits in the right place, but there are many holes: the lower left of the board and scattered white squares show through, and the mini PC's heat-sink fins are a black, empty band. At the glass case on the left and the wall edge on the right the depth is noisy, so the map is patchy there too.</em></p>
+<p>This map was built from the stereo depth the camera chip computes itself. To check whether that depth caused the holes, I recomputed depth from the left/right images recorded in the same bag; the camera didn't need to be switched on again. For 20 frames picked across the bag I ran FoundationStereo and ESS, moved the depth into the colour view, built one nvblox map per source with the same settings (2 cm voxels), and overlaid each on the same colour frame.</p>
+<p><img alt="Same bag, same nvblox settings. Left: map from camera-chip depth. Right: map from FoundationStereo depth" src="../../../assets/demos/jetson-motion-map-dense.jpg" /></p>
+<p><em>The white outline is the board (found from its ArUco markers). On the right the map covers the board, the top of the mini PC's heat-sink fins and the mouse without gaps. The glass case on the left, though, goes into the map as one flat sheet, as seen in <a href="../jetson-isaac-foundation-models/">Field Notes, Part 2</a>.</em></p>
+<table>
+<thead>
+<tr>
+<th>Depth</th>
+<th>Pixels with depth (board / whole)</th>
+<th>Board covered by the map</th>
+<th>Time per frame</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Camera chip (block matching)</td>
+<td>84% / 73%</td>
+<td><strong>67%</strong></td>
+<td>on the camera</td>
+</tr>
+<tr>
+<td>FoundationStereo</td>
+<td>100% / 96%</td>
+<td><strong>97%</strong></td>
+<td>about 2.2 s</td>
+</tr>
+<tr>
+<td>ESS</td>
+<td>100% / 95%</td>
+<td><strong>96%</strong></td>
+<td>about 0.13 s</td>
+</tr>
+</tbody>
+</table>
+<p>The holes came from the depth. Where both exist, FoundationStereo and ESS depth differ from the chip depth by under 1 mm at the median, so the map wasn't shifted as a whole; what differed was the gaps. It matters because a spot missing from the map is not an obstacle to the planner: by default nvblox treats unobserved space as free (<a href="../isaac-ros-gpu/">Part 4</a>, 'Four things to watch'). So in real use, feed the map learned stereo depth instead of the chip's, and if speed matters ESS was enough (ESS is an NGC model cleared for commercial use, <a href="../jetson-tuning-licensing/">tuning post</a>). Handle the remaining gaps by treating unobserved space as occupied. (One bag, fixed camera.)</p>
+<p>Now the same scene can be compared while only the settings change.</p>
+<h2 id="wiring-the-map-into-planning">Wiring the map into planning<a class="headerlink" href="#wiring-the-map-into-planning" title="Permanent link">&para;</a></h2>
+<p>With the map confirmed, the next step was letting cuMotion read it as obstacles. The recorded depth built an nvblox map in the robot's base frame. The camera was assumed to sit at one spot beside a UR10e base (not measured). Then I sent a few tool-down goal poses. Map off and map on, side by side:</p>
+<p><img alt="Without the map it plans straight into objects" src="../../../assets/diagrams_en/mot-planmap.svg" /></p>
+<p>Marking the same goals on the recorded photo shows where each one was aimed:</p>
+<p><img alt="Map-on results marked on the photo; dashed lines show the height from an object's surface to each goal" src="../../../assets/demos/jetson-motion-goals.jpg" /></p>
+<p><em>Numbers follow the rows of the figure above: 1 inside the mini PC, 2 12 cm above the mouse, 3 20 cm above the mouse, 4 15 cm above the mini PC (25 cm is off the top of the frame). The open-space goal (5) is out of frame too. White dots are the object surfaces, dashed lines the height above them. Green goals planned, red ones were rejected. The camera mount in this test was assumed (level), not measured, so 'above' here differs a little from true vertical; measuring the table plane later showed the camera pitched about 16° down.</em></p>
+<p>With the map off, even a goal inside the mini PC plans. cuMotion can't avoid an object it doesn't know about. With the map on, goals inside objects are rejected and open-space goals still plan. The goal 12 cm above the mouse was blocked not by the tool tip but by the <strong>wrist</strong> coming too close to a surface (8.9 cm). Goals above the mini PC were blocked by the glass PC case right behind it (1.7–4.7 cm). Each plan took 0.3–0.9 s, about 50 ms of it fetching the map.</p>
+<p>One thing is confusing. cuMotion reports a goal blocked by obstacles as <strong><code>NO_IK_SOLUTION</code></strong>. The name suggests the arm can't reach that spot, but it may be a collision. Plan the same goal again with the map off and you'll know which.</p>
+<h2 id="turning-the-pose-into-goals">Turning the pose into goals<a class="headerlink" href="#turning-the-pose-into-goals" title="Permanent link">&para;</a></h2>
+<p>So far the goals were placed by hand. This time they came from object poses found by the foundation models. On one frame of the recorded bag, Grounding DINO → SAM2 → FoundationPose found the poses of the mini PC and the mouse, and each object got a "pre-grasp" goal 20 cm above its top with the tool pointing down.</p>
+<p><img alt="The same frame with only the depth changed: camera-chip depth on the left, ESS depth on the right. Blue is the CAD placed at each pose, yellow the SAM2 mask" src="../../../assets/demos/jetson-motion-pose-depth-compare-en.jpg" /></p>
+<p><em>The same frame of the same bag. Blue is the CAD drawn at each pose, the yellow line is the SAM2 mask, and the three arrows are the object axes. On the left (camera-chip depth) the mouse is off up and to the right, with an overlap ratio (IoU) of 0.66 and an 11 mm depth difference, so it was flagged low-confidence; the mini PC also had to be snapped to the table (0.88, 6 mm). On the right (ESS depth) the mini PC comes out at 0.92 / 6 mm and the mouse at 0.87 / 4 mm, and the CAD sits on both.</em></p>
+<p>At first the poses came from <strong>the depth computed on the camera chip</strong>, to match the depth the map uses. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse. So FoundationStereo and ESS depth were recomputed from the left and right images recorded in the same bag, and only the depth was swapped; the pose code stayed the same. Depth from the stereo pair is in the left camera's view, so the camera's factory calibration was used to move it into the colour image's view.</p>
+<p>The result is the right side of the figure. FoundationStereo depth gave nearly the same (mini PC 0.92, mouse 0.84), and the mini PC poses from the two differed by only 1.2° and 2.9 mm. The bad poses came from the depth, not from FoundationPose. On this frame ESS took 0.05 s and FoundationStereo 2 s, so ESS became the depth for making goals.</p>
+<p>Three lessons came out of this:</p>
+<ul>
+<li><strong>Measure the camera mount; don't assume it.</strong> The previous section assumed a level camera. Finding the table plane in the depth showed the camera was 16.9 cm above the table, pitched 16° down. From here on, planning used the measured values.</li>
+<li><strong>An overlap score alone doesn't catch a flipped pose.</strong> With the camera-chip depth, the mouse pose first came back upside down. The mouse mesh from the <a href="../jetson-scan-no-cad/">scanning post</a> has a flat bottom, so its outline is almost the same either way up, and the overlap score (0.72) looked fine. Against the depth, though, it was 18–28 mm off. Keeping only poses that can rest on the table and choosing again stood it the right way up. The mini PC also came back tilted 13–16°, because its finned top gives almost no depth; snapping it to the table fixed that.</li>
+<li><strong>Leave a good pose alone.</strong> The "snap to the table and re-pick the heading" step, added because of the chip depth, turned a correct pose to a wrong heading once the depth was good. Now an upright pose from FoundationPose is replaced only if another candidate fits the depth at least 2 mm better.</li>
+</ul>
+<p>The goals made from the camera-chip depth went to cuMotion the same way as in the previous section. With the map on, both objects' pre-grasp poses planned (a little over 0.8 s), the goals deliberately placed 2 cm inside the objects were rejected, and open space planned. With the map off, everything planned, so the rejections came from the map.</p>
+<h2 id="bringing-up-the-ur-driver-without-a-robot">Bringing up the UR driver without a robot<a class="headerlink" href="#bringing-up-the-ur-driver-without-a-robot" title="Permanent link">&para;</a></h2>
+<p>You can check everything up to the driver without a robot. The UR ROS 2 driver (2.9.0 on ROS 2 Humble here) has ros2_control's <strong>simulated hardware</strong>, which just echoes the commands it receives instead of moving a robot. That's enough to see whether the controllers come up and commands flow.</p>
+<p>All <strong>13 controllers</strong> loaded: the joint trajectory controller, plus force mode, freedrive (moving the arm by hand) and tool-contact detection.</p>
+<p>One thing caught me. Current docs give the simulated-hardware argument as <code>use_mock_hardware:=true</code>, but <strong>the Humble 2.9.0 driver doesn't know that name</strong>. You have to write <code>use_fake_hardware:=true</code>. The unknown argument is ignored without an error, and the driver starts with its real-robot setup. If you think you launched on simulated hardware but get robot-connection errors, check this first. From the ROS 2 Jazzy driver onward, the name is <code>use_mock_hardware</code>.</p>
+<p><img alt="What simulated hardware, URSim and a physics simulator each check" src="../../../assets/diagrams_en/mot-where.svg" /></p>
+<p>Simulated hardware checks only the wiring. To move like a real UR controller you need UR's simulator, <strong>URSim</strong>, and it didn't run on the Orin. There is an arm64 build of the PolyScope X URSim image, but the simulator container it launches inside is x86-only. So URSim runs on an x86 PC on the same network, and the Orin connects to it over the network.</p>
+<p>Add the ROS bag recorded above and you can run the whole flow <strong>with no camera and no robot</strong>: the recording gives the pose, cuMotion plans, and the virtual UR in URSim moves. Neither of these simulates force or contact, though. That takes a physics simulator (Isaac Sim, with an RTX GPU) or a real robot.</p>
+<h2 id="all-the-way-on-simulated-hardware-and-building-a-ur20-cumotion-config">All the way on simulated hardware, and building a UR20 cuMotion config<a class="headerlink" href="#all-the-way-on-simulated-hardware-and-building-a-ur20-cumotion-config" title="Permanent link">&para;</a></h2>
+<p>Finally the driver was wired in too. The UR20 driver ran on simulated hardware, together with the measured camera mount, the nvblox map from the bag and cuMotion, and the goals above were planned and executed. Planning took around 1.3 s, execution 3–5 s, and the tool arrived 0.1–0.2 mm from each goal. The goal inside an object was rejected and never executed. On October 3 the same chain ran again with goals from the ESS-depth poses: the pre-grasps for both the mini PC and the mouse executed with the tool within 0.1 mm of each goal, and the goal inside an object was again rejected.</p>
+<p>The part that took work was the cuMotion configuration. Isaac ROS 3.2 ships configs for the UR5e and UR10e only, so the UR20 one had to be built. cuMotion checks collisions by wrapping the arm in spheres, and how those spheres are placed is the whole job.</p>
+<ul>
+<li><strong>cuRobo's automatic sphere fitting failed.</strong> Three of the six UR20 meshes aren't fully closed shapes, so it covered only 1–8 % of the surface.</li>
+<li><strong>Slicing each link into thin slabs with one sphere per slab</strong> covered everything but made the arm up to 110 mm fatter than it is, so it can't get that close to obstacles.</li>
+<li><strong>Adding, one at a time, the sphere inside the link that covers the most still-uncovered surface</strong> worked. 71 spheres (the UR10e config has 20) covered 99–100 % of the surface with at most 24 mm sticking out, and there was no self-collision at home and a few other poses.</li>
+</ul>
+<p>Planning the same goals with the UR20 config gave the same pattern as the UR10e (inside objects rejected, pre-grasps and open space planned). Simulated hardware only checks the wiring, though; it doesn't imitate a real UR's timing, limits or contact. That part was checked on a real UR20 in the next post, <a href="../jetson-real-robot-first-move/">The Real Robot</a>.</p>
+<h2 id="how-far-force-control-goes-now">How far force control goes now<a class="headerlink" href="#how-far-force-control-goes-now" title="Permanent link">&para;</a></h2>
+<p>The last few millimetres, where a part is pressed or inserted, are usually handled by force control rather than path planning (<a href="../moveit2-goals-not-points/">Part 3</a>). On this stack, what's available is the UR controller's own force mode.</p>
+<p><img alt="UR force mode compared with NVIDIA's learned insertion" src="../../../assets/diagrams_en/mot-force.svg" /></p>
+<p>Through the ROS 2 driver's force-mode controller you pass a reference frame, the axes that should comply (move with the force), a target force and speed limits; the force control itself runs inside the UR controller. It amounts to calling URScript's <code>force_mode()</code> from ROS 2. This time I only checked that the controller loads.</p>
+<p>From Isaac ROS 4.0, NVIDIA has shipped a <strong>learned gear-insertion</strong> example: a policy trained with reinforcement learning in simulation drives the arm directly through the UR10e's low-level torque interface. It isn't in Isaac ROS 3.2, which I used. Isaac ROS 4.x only started supporting Orin with 4.6 in August 2026, so trying it on Orin means moving the whole stack to at least Isaac ROS 4.6 and JetPack 7.2 (Ubuntu 24.04, ROS 2 Jazzy). I haven't checked whether the example then works on Orin as is. Following <a href="../isaac-ros-gpu/">Part 4</a>'s rule of changing versions as one set, I saw no reason to rush while the current chain works end to end.</p>
+<h2 id="a-few-rows-missing-from-part-4s-table">A few rows missing from Part 4's table<a class="headerlink" href="#a-few-rows-missing-from-part-4s-table" title="Permanent link">&para;</a></h2>
+<p>The "whole series on one page" table in <a href="../isaac-ros-gpu/">Part 4</a> mapped J, L and C moves, teaching and interference zones to ROS 2. Looking into the driver this time filled in a few rows it didn't have. There's no automatic converter from pendant programs to ROS 2, so you port by hand with a table like this.</p>
+<table>
+<thead>
+<tr>
+<th>Pendant / URScript</th>
+<th>ROS 2 side</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blending (<code>movel</code> radius), FANUC <code>CNT</code></td>
+<td>Pilz motion sequence (several moves chained into one request)</td>
+</tr>
+<tr>
+<td>Digital outputs (<code>set_digital_out</code>, <code>DO[]</code>)</td>
+<td>The UR driver's IO controller service</td>
+</tr>
+<tr>
+<td><code>force_mode()</code>, FANUC force control</td>
+<td>The force-mode controller</td>
+</tr>
+<tr>
+<td>Stop on contact (FANUC <code>SKIP</code>)</td>
+<td>The tool-contact controller</td>
+</tr>
+<tr>
+<td>Taught points (Euler angles, UR rotation vector)</td>
+<td>Convert to quaternions, or re-teach</td>
+</tr>
+</tbody>
+</table>
+<p>The last row takes more work than it looks. FANUC writes orientation as W·P·R Euler angles and UR as a rotation vector (axis and angle), while ROS uses quaternions. The conversion formulas are fixed, but get one angle order or reference frame wrong and the tool points somewhere else. Check ported points on simulated hardware or URSim first.</p>
+<p>In the bigger picture, "taught point + vision offset" becomes <strong>"object pose from the foundation model + a pre-grasp approach offset"</strong>, with cuMotion planning the path in between around obstacles from the nvblox map. But as the automation ladder in <a href="../moveit2-goals-not-points/">Part 3</a> showed, when the variation is small, a taught path with an offset is still simpler and more predictable.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Result</th>
+<th>Next</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cuMotion planning</td>
+<td>~186 ms per plan; 16 s warm-up only the first time</td>
+<td>Warm up at program start; write the cuMotion config for the UR model you'll use</td>
+</tr>
+<tr>
+<td>nvblox (known-answer scene)</td>
+<td>Both surfaces within one 2 cm cell</td>
+<td>—</td>
+</tr>
+<tr>
+<td>nvblox (live camera)</td>
+<td>5 mm median on a flat scene, 19 mm with glass; keeps up with the camera</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Map → cuMotion (recorded stream)</td>
+<td>Goals inside or too close to objects rejected, open space plans; 0.3–0.9 s per plan. Camera-chip depth covers 67% of the board; FoundationStereo or ESS depth 96–97%</td>
+<td>Decide how to treat unobserved space</td>
+</tr>
+<tr>
+<td>Pose → goal</td>
+<td>Camera-chip depth: mini PC IoU 0.88, mouse 0.66 (low confidence). ESS depth: 0.92, 0.87</td>
+<td>On the real robot</td>
+</tr>
+<tr>
+<td>UR driver (simulated hardware)</td>
+<td>All 13 controllers, force mode included</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Whole flow (simulated UR20)</td>
+<td>1.3 s plan; after execution 0.1–0.2 mm from goal</td>
+<td>On a real UR20 in <a href="../jetson-real-robot-first-move/">The Real Robot</a></td>
+</tr>
+<tr>
+<td>Force control</td>
+<td>UR force mode works on this stack</td>
+<td>Measure force on a real robot</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Planning runs at working speed on the edge.</strong> Just move the 16-second warm-up out of the cycle.</li>
+<li><strong>A pose plus CAD tells you what depth can't see.</strong> The hidden corner's distance came out within about 1 mm.</li>
+<li><strong>Test an obstacle map on a scene with a known answer first.</strong> When live numbers look bad, it narrows down what to suspect; this time it pointed at the check, not the tool.</li>
+<li><strong>Check the measurement before blaming the tool.</strong> Having passed the known-answer scene is what sent me back to the check when the live numbers looked bad.</li>
+<li><strong>Record once and you can keep comparing on the same scene,</strong> with no camera and no robot.</li>
+<li><strong>Each kind of fake checks something different.</strong> Simulated hardware checks the wiring, URSim checks controller behaviour, and a physics simulator or a real robot checks force and contact.</li>
+</ul>
+<hr />
+<details>
+<summary>Notes: where these results come from</summary>
+
+The numbers were **measured directly** on a Jetson Orin NX 16GB with an OAK-D 3D camera from 30 September to 3 October 2026 (Isaac ROS 3.2, ROS 2 Humble, JetPack 6). cuMotion was timed over five plans with cuRobo's UR10e configuration file; the hidden-corner distance from one scene on 30 September, the live nvblox results from two scenes and the map-to-planner link from one recorded scene, so read them as tendencies, not statistics. The first version of this post (2 October, morning) called the live map a failure because of a bug in the check script; it was corrected the same day. The map depth comparison (camera chip, FoundationStereo, ESS) was recomputed on 3 October from 20 stereo pairs in the same bag, and the pose comparison on the same day from one frame of that bag; the FoundationStereo depth used the NVLabs research-licence code. No real robot moved and no real force was measured.
+
+The learned gear-insertion example and the UR10e low-level torque interface are based on NVIDIA's technical blog post "Bridging the Sim-to-Real Gap for Industrial Robotic Assembly Applications Using NVIDIA Isaac Lab" and the Isaac ROS 4.0 announcement. Orin and JetPack 7.2 support in Isaac ROS 4.6.0 (18 August 2026) is from the Isaac ROS release notes. The `use_fake_hardware` (Humble) vs `use_mock_hardware` (Jazzy) difference is from the Universal Robots ROS 2 driver documentation (docs.ros.org).
+
+NVIDIA, Jetson, Orin, JetPack, Isaac ROS, Isaac Sim, cuMotion, cuRobo, nvblox and RTX are trademarks of NVIDIA Corporation; OAK-D and DepthAI of Luxonis; Universal Robots, UR, UR10e, URSim and PolyScope of Universal Robots A/S; FANUC of FANUC Corporation; MoveIt of PickNik Inc.; ROS of Open Robotics; Pilz of Pilz GmbH & Co. KG; Docker of Docker, Inc. They are used for identification only.
+
+</details>
+
+<p><strong>Series</strong> · <a href="../jetson-scan-no-cad/">← Previous: Scanning — No CAD? One Printed Board and Twenty Photos</a> · <a href="../jetson-real-robot-first-move/">Next: The Real Robot — an edge computer moves a real arm for the first time →</a></p>
+<p><em>Related: <a href="../moveit2-goals-not-points/">Pendant to ROS 2, Part 3: MoveIt 2</a> · <a href="../isaac-ros-gpu/">Pendant to ROS 2, Part 4: Isaac ROS and cuMotion</a> · <a href="../camera-placement/">How Many Cameras, and Where</a> · <a href="../learn-without-industrial-robot/">Hands-on Notes (0) — SO-101 and URSim</a></em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

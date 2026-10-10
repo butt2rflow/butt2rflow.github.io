@@ -1,0 +1,3469 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="경로 계획이 정말 필요한지부터(자동화 사다리, 누적 공차, VOFFSET), 그리고 목표만 주면 경로를 계산하는 MoveIt 2. move_group, IK와 화낙 CONFIG, 플래닝 씬과 안전의 경계, J·L 이동과 Pilz, 그리고 카메라에서 집기까지 다섯 단계. 4부작 중 3부.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/moveit2-goals-not-points/">
+      
+      
+        <link rel="prev" href="../ros2-robot-description/">
+      
+      
+        <link rel="next" href="../isaac-ros-gpu/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="ko">
+        
+          <link rel="alternate" href="../../en/posts/moveit2-goals-not-points/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>티치 펜던트에서 ROS 2로 (3) — MoveIt 2: 점을 가르치는 대신 목표를 준다 - butterflow 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ros-2-3-moveit-2" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 노트" class="md-header__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              티치 펜던트에서 ROS 2로 (3) — MoveIt 2: 점을 가르치는 대신 목표를 준다
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/posts/moveit2-goals-not-points/" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  투자 노트
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 노트" class="md-nav__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    투자 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    투자 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률, 복리, 그리고 로그차트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률의 기댓값
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파생상품의 레버리지 사용료
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    네마녀의 날이 돌아왔다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신용 스프레드를 지표로 읽기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    채권시장의 VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션의 기초
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    감마 너머
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시작하기
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI를 고르는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    학습 정책
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇 비전
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    로봇 비전
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스테레오 비전에서 목표물 잡기까지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    좌표계와 변환
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    세 모델의 안쪽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    모델 해부
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇은 왜 '가짜 세계'에서 먼저 배우나
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    카메라는 몇 대, 어디에
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    어떤 3D 카메라를
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    협동로봇
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇(cobot)이란
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs 화낙(FANUC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    펜던트에서 ROS 2로
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    펜던트에서 ROS 2로
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · ROS 2 노드와 그래프
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · URDF·TF2·ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        먼저, 정말 경로 계획이 필요한가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#moveit-2-move_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MoveIt 2의 중심, move_group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        툴 자세 하나에 관절 답은 여럿
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        플래닝 씬, 그리고 안전은 어디서 맡나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관절 이동과 직선 이동은 펜던트와 같다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        움직임을 예측할 수 있게
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        카메라에서 집기까지 다섯 단계
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4부 · Isaac ROS와 cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    현장 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    현장 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · JetPack부터 ROS 2까지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · Isaac ROS와 파운데이션 모델
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    정정편 · 16GB로도 된다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    튜닝편 · 속도와 라이선스
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스캔편 · CAD 없이 메시 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    모션편 · 경로 계획과 장애물 지도
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실물편 · 실제 로봇 첫 움직임
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시뮬레이터편 · URSim과 세 플래너
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim편 · 3090 PC와 클라우드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    메모리편 · 인식과 모션을 한 대에
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    실습 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0부 · 실물 로봇 없이 배우기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI 투자
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI 투자
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · 가치는 이동한다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · 관절 하나로 보는 가치 이동
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · 휴머노이드의 전력 문제
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        먼저, 정말 경로 계획이 필요한가
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#moveit-2-move_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MoveIt 2의 중심, move_group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        툴 자세 하나에 관절 답은 여럿
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        플래닝 씬, 그리고 안전은 어디서 맡나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관절 이동과 직선 이동은 펜던트와 같다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        움직임을 예측할 수 있게
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        카메라에서 집기까지 다섯 단계
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ros-2-3-moveit-2">티치 펜던트에서 ROS 2로 (3) — MoveIt 2: 점을 가르치는 대신 목표를 준다<a class="headerlink" href="#ros-2-3-moveit-2" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>티치 펜던트에서 ROS 2로 · 4부작 중 3부.</strong> <a href="../ros2-for-robot-programmers/">1부</a>는 ROS 2의 배선, <a href="../ros2-robot-description/">2부</a>는 로봇을 ROS에 설명하는 법이었습니다. 이번에는 로봇을 목표로 보내는 MoveIt 2입니다. <a href="../isaac-ros-gpu/">4부</a>는 Isaac ROS와 cuMotion입니다.</p>
+</blockquote>
+<p>지그를 피해서 부품 위로 가는 TP 프로그램을 짜 본 사람은 경유점을 몇 개씩 넣어 본 적이 있을 겁니다. P[2]는 지그 왼쪽 위, P[3]는 지그 바로 위, P[4]는 오른쪽 위. 어느 쪽으로 비켜 갈지 사람이 머릿속으로 정하고, 그 점들을 하나하나 가르치죠.</p>
+<p>부품이 매번 같은 자리에 온다면 이 방식이 가장 확실합니다. 카메라가 부품을 매번 다른 자리에서 찾아낸다면 이야기가 달라져요. 사이클마다 경유점을 다시 가르칠 수는 없으니까요.</p>
+<p><img alt="같은 지그, 두 가지 방식" src="../../assets/diagrams/r2p3-teach-vs-goal.svg" /></p>
+<p><strong>MoveIt 2</strong>는 오른쪽 방식입니다. 목표만 주면 지그를 어떻게 비켜 갈지는 MoveIt 2가 계산합니다.</p>
+<hr />
+<h2 id="30">30초 요약<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
+<ul>
+<li>MoveIt 2의 중심 노드 <strong>move_group</strong>은 지금 관절 상태, 목표 자세, 장애물 정보를 받아 <strong>부딪히지 않는 궤적</strong>을 만들고, 액션으로 ros2_control의 컨트롤러에 넘깁니다.</li>
+<li>툴 자세를 관절 각도로 바꾸는 계산이 <strong>IK(역기구학)</strong>입니다. 답이 여럿일 수 있고, 화낙의 CONFIG가 그 선택을 적어 두는 표시예요.</li>
+<li>MoveIt 2는 <strong>플래닝 씬</strong>에 알려 준 물체만 피합니다. 사람과 설비를 지키는 안전은 여전히 로봇 컨트롤러의 안전 설정 몫이에요.</li>
+<li>이동 방식은 펜던트와 같습니다. <strong>관절 이동(J, movej)</strong>, <strong>직선 이동(L, movel)</strong>, <strong>원호(C, movec)</strong>. MoveIt 2의 Pilz 플래너가 각각 PTP, LIN, CIRC로 해 줍니다.</li>
+<li>경로 계획이 늘 답은 아닙니다. 부품이 늘 같은 자리면 티칭 점, 평면 편차면 티칭 경로 + 오프셋(VOFFSET), 높이·기울기까지 바뀔 때 MoveIt 2. 같은 요청에 같은 경로가 필요하면 Pilz나 저장된 궤적을 씁니다.</li>
+<li>카메라에서 집기까지는 <strong>찾기 → 좌표 바꾸기 → 잡을 자리 → 계획 → 실행</strong> 다섯 단계입니다.</li>
+</ul>
+<hr />
+<h2 id="_1">먼저, 정말 경로 계획이 필요한가<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="필요할 때만 한 단씩 올라간다" src="../../assets/diagrams/r2p3-ladder.svg" /></p>
+<p>원칙은 문제를 풀 수 있는 가장 낮은 단을 쓰는 겁니다. 부품이 늘 같은 자리에 온다면 1단(지그 + 티칭 점)이 가장 확실하고 매번 같아요. 문제는 작은 편차가 쌓일 때입니다.</p>
+<p><img alt="하나하나는 작아도 더하면 티칭 점을 벗어난다" src="../../assets/diagrams/r2p3-stackup.svg" /></p>
+<p>지그는 고정이어도 팔레트, 컨베이어, 제품 자체의 공차(허용되는 치수 오차)가 더해지면 티칭 점 하나로는 맞지 않습니다. 이 편차들을 더한 예상 범위를 <strong>누적 공차</strong>라고 합니다. 이 범위를 미리 정해 두면, 벗어난 결과는 <a href="../isaac-ros-gpu/">4부</a>의 관문에서 걸러 멈출 수 있어요. 이런 편차에 TP 프로그래머가 익숙하게 쓰는 해법이 2단입니다. 비전이 이번 편차를 재고, 티칭한 경로 전체를 그만큼 옮기는 방식(화낙의 VOFFSET이나 PR 오프셋)입니다. 경로 모양은 매번 같고 위치만 옮기니, 편차에 적응하면서도 동작을 예측할 수 있어요. 높이와 기울기까지 바뀌거나 옮긴 경로가 주변 설비와 부딪힐 수 있을 때 3단, 이 글의 MoveIt 2로 올라갑니다.</p>
+<p>어느 단이든 합격/불합격 판정은 <a href="../ros2-for-robot-programmers/">1부</a>에서 말한 대로 기존 측정 하드웨어(센서·게이지·PLC 인터록)에 둡니다. 4단 학습 정책(시연 데이터로 학습한 AI가 동작을 정하는 방식)은 좌표로 적을 수 없는 일(케이블 배선처럼)에 씁니다. 다만 실패해도 스스로 알리지 않고 동작을 이어 가기 때문에 검사 셀에는 맞지 않아, 이 시리즈에서는 다루지 않습니다.</p>
+<h2 id="moveit-2-move_group">MoveIt 2의 중심, move_group<a class="headerlink" href="#moveit-2-move_group" title="Permanent link">&para;</a></h2>
+<p>MoveIt 2의 중심에는 <code>move_group</code>이라는 노드가 있습니다. 1부의 <code>ros2 node list</code>에 나왔던 그 노드예요.</p>
+<p><img alt="세 가지를 받아 궤적 하나를 내놓는다" src="../../assets/diagrams/r2p3-move-group.svg" /></p>
+<p>그림의 세 입력과 세 단계가 전부입니다. 지금 관절 상태는 1부에서 본 <code>/joint_states</code>에서 오고, 결과 궤적은 1부에서 본 액션으로 2부의 컨트롤러에 넘어갑니다.</p>
+<p>move_group이 동작하려면 로봇마다 <strong>MoveIt 설정 패키지</strong>가 하나씩 있어야 합니다. 어떤 관절들을 한 팔로 묶어 계획할지(플래닝 그룹), 서로 붙어 있어 충돌 검사를 건너뛸 링크 쌍, 기본으로 쓸 플래너가 들어 있어요. 제조사가 주는 경우가 많고, 없으면 MoveIt Setup Assistant라는 도구로 설계도에서 만듭니다.</p>
+<p>써 보는 방법은 둘입니다. RViz의 모션 플래닝 패널에서 목표를 마우스로 끌어다 놓고 "계획"과 "실행"을 누르는 방법, 그리고 코드에서 부르는 방법이에요. C++에서는 <code>MoveGroupInterface</code>를 쓰고, 파이썬 API(MoveItPy, Humble에서도 <code>ros-humble-moveit-py</code>로 설치 가능)도 있습니다. 다만 Humble용 예제가 적고 이후 배포판에서 API가 바뀌어서, 처음에는 RViz 패널로 감을 잡는 게 편합니다.</p>
+<h2 id="_2">툴 자세 하나에 관절 답은 여럿<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>툴 끝을 특정 자세(위치와 방향)에 두려면 관절 여섯 개가 각각 몇 도여야 할까요? 이 계산이 <strong>역기구학(IK, inverse kinematics)</strong>입니다. 관절 각도로 툴 자세를 구하는 쪽(순기구학)은 답이 하나지만, 거꾸로 가는 IK는 답이 여럿일 수 있어요.</p>
+<p><img alt="IK: 툴 위치 하나에 관절 답이 여럿" src="../../assets/diagrams/r2p3-ik.svg" /></p>
+<p>화낙 프로그래머에게는 익숙한 이야기입니다. 위치 데이터에 붙는 CONFIG(N U T, 0, 0, 0 같은 표시)가 이 여러 답 중 어느 것인지를 적어 둔 거예요. CONFIG가 다르면 툴은 같은 자리에 있어도 팔 모양이 전혀 달라집니다. MoveIt 2는 보통 지금 관절 상태에서 가장 가까운 답을 고르고, 필요하면 특정 관절의 범위를 제한해서 원하는 쪽으로 유도할 수 있습니다.</p>
+<p>답이 아예 없을 때도 있습니다. 팔이 닿지 않는 곳이거나 관절 범위를 넘어서는 목표일 때요. 관절이 다섯 개뿐인 소형 교육용 팔은 위치와 방향을 동시에 맞출 자유도가 부족해서, 방향은 대충 맞추고 위치만 정확히 맞추도록 설정하는 경우가 많습니다.</p>
+<h2 id="_3">플래닝 씬, 그리고 안전은 어디서 맡나<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>MoveIt 2가 피해 가는 장애물 목록을 <strong>플래닝 씬(planning scene)</strong>이라고 합니다. 로봇 자신(2부의 설계도)에, 테이블·지그·부품처럼 내가 알려 준 물체가 더해진 세상이에요.</p>
+<p><img alt="MoveIt 2는 알려 준 것만 피한다" src="../../assets/diagrams/r2p3-scene.svg" /></p>
+<p>누가 테이블 위에 상자를 올려 두고 플래닝 씬에 넣지 않았다면, MoveIt 2는 그 상자를 뚫고 지나가는 경로를 태연히 만듭니다. 그래서 고정 설비는 설계도나 씬 파일에 넣어 두고, 움직이는 물체는 카메라로 보고 씬에 채워 넣는 방식을 씁니다(계획용이지 사람 감지가 아닙니다). 결과가 매번 같아야 하는 셀이라면 고정 설비는 <a href="../ros2-robot-description/">2부</a>처럼 실측 값으로 두고, 카메라 지도는 확인용으로 쓰세요.</p>
+<p>그리고 플래닝 씬은 <strong>경로를 계획하기 위한 것</strong>이지 안전 장치가 아닙니다. 화낙 DCS나 UR 안전 설정에서 하던 속도 제한, 작업 영역 제한, 사람 감지와 정지는 ROS를 쓰더라도 그대로 로봇 컨트롤러와 안전 설비의 몫이에요. 간섭 영역을 MoveIt 2에 옮겨 적었다고 로봇 컨트롤러 쪽 안전 설정을 지우면 안 됩니다.</p>
+<h2 id="_4">관절 이동과 직선 이동은 펜던트와 같다<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><img alt="툴 끝이 그리는 선이 다르다" src="../../assets/diagrams/r2p3-joint-vs-line.svg" /></p>
+<p>MoveIt 2는 경로를 찾는 방법(플래너)을 골라 끼워 쓸 수 있습니다. 기본으로 많이 쓰는 <strong>OMPL</strong>은 부딪히지 않는 경로라면 아무 모양이든 찾아내는 쪽이라, 넓은 공간을 우회할 때 좋습니다. 대신 무작위로 후보를 뽑아 찾는 방식이라, 기본 설정에서는 같은 요청에도 매번 다른 경로가 나옵니다. 산업용 로봇처럼 정해진 모양으로 움직이게 하고 싶다면 <strong>Pilz</strong> 플래너가 그림의 PTP·LIN·CIRC를 그대로 해 줍니다. 둘 다 충돌 검사는 하지만, 장애물을 돌아가는 건 OMPL뿐입니다. Pilz는 정해진 모양을 계산한 뒤 부딪히면 계획 전체를 거절합니다.</p>
+<p>직선 이동은 곧은 선 위의 모든 점에서 IK 답이 있어야 가능해요. 선이 관절 한계나 특이점(팔이 쭉 펴지는 등 어떤 방향으로는 움직일 수 없게 되는 자세)을 지나면 중간에 끊깁니다. MoveIt 2는 직선 경로를 계산할 때 선의 몇 퍼센트까지 만들었는지 알려 주는데, 100%가 아니면 어딘가 도달할 수 없는 구간이 있다는 뜻이에요. TP에서 L 이동이 특이점 근처에서 알람을 내는 것과 같은 현상입니다.</p>
+<h2 id="_5">움직임을 예측할 수 있게<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>1부에서 움직임은 매번 달라도 된다고 했지만, 예측할 수는 있어야 합니다. 사이클 타임이 들쭉날쭉하거나, 오늘은 왼쪽으로 돌고 내일은 오른쪽으로 도는 로봇은 현장에서 쓰기 어렵거든요. 방식마다 같은 요청에 같은 경로가 나오는지가 다릅니다.</p>
+<table>
+<thead>
+<tr>
+<th>방식</th>
+<th>같은 요청에 같은 경로?</th>
+<th>쓸 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>티칭 경로 + 오프셋 (2단)</td>
+<td>모양은 같고 위치만 옮겨짐</td>
+<td>편차가 평면 안에 있을 때</td>
+</tr>
+<tr>
+<td>Pilz PTP · LIN · CIRC</td>
+<td>같음 (정해진 모양)</td>
+<td>부품 근처 접근과 후퇴</td>
+</tr>
+<tr>
+<td>한 번 계획해 검증한 뒤 저장한 궤적</td>
+<td>같음</td>
+<td>매번 반복되는 긴 이동</td>
+</tr>
+<tr>
+<td>OMPL (기본 설정)</td>
+<td>매번 다름 (무작위)</td>
+<td>셋업, 장애물 우회</td>
+</tr>
+<tr>
+<td>cuMotion</td>
+<td>조금씩 다를 수 있음 (무작위 시작점)</td>
+<td>복잡한 장면, 빠른 계획 (<a href="../isaac-ros-gpu/">4부</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>세 플래너를 같은 로봇, 같은 10 cm로 실제로 비교한 결과는 <a href="../jetson-ursim-planners/">현장 노트 시뮬레이터편</a>에 있습니다. 툴 끝은 셋 다 도착했지만, 기본 설정의 OMPL은 손목을 약 510° 돌렸어요.</p>
+<p>시작 자세도 중요합니다. IK는 보통 지금 관절 상태에서 가까운 답을 고르니, 매 사이클을 같은 대기 위치에서 시작하면 팔 모양도 같은 쪽으로 정해집니다.</p>
+<h2 id="_6">카메라에서 집기까지 다섯 단계<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>지금까지의 조각을 모으면 비전 집기 한 사이클이 됩니다.</p>
+<p><img alt="&quot;보인다&quot;에서 &quot;잡았다&quot;까지" src="../../assets/diagrams/r2p3-loop.svg" /></p>
+<ol>
+<li><strong>찾기.</strong> 비전이 부품을 찾습니다. 결과는 카메라 기준 위치예요.</li>
+<li><strong>좌표 바꾸기.</strong> TF2가 베이스 기준으로 바꿉니다. 2부에서 본 대로 사진이 찍힌 시각의 변환을 씁니다.</li>
+<li><strong>잡을 자리.</strong> 부품 위치에 "부품의 어디를 어떤 방향으로 잡을지"를 더합니다. TP의 UTOOL처럼, 이건 코드 한가운데 숫자로 박지 말고 좌표계나 설정값으로 두세요. 그리퍼를 바꿔도 나머지를 건드리지 않게요.</li>
+<li><strong>계획.</strong> 부품 위로 가서, 곧게 내려가 잡고, 곧게 올라옵니다.</li>
+<li><strong>실행.</strong> 궤적이 ros2_control을 거쳐 로봇 컨트롤러로 갑니다.</li>
+</ol>
+<p>그리퍼가 몇 cm씩 빗나간다면 로봇을 의심하기 전에 그림 아래 적은 1·2단계부터 확인하세요.</p>
+<p>4단계를 옆에서 보면 TP의 집기 프로그램과 거의 같습니다.</p>
+<p><img alt="위에서는 빠르게, 가까이서는 곧게" src="../../assets/diagrams/r2p3-approach.svg" /></p>
+<p>다른 점은 P[2]와 P[3]를 가르치지 않고 매번 계산한다는 것 하나예요. 코드로 쓰면 이렇습니다. (실제 API 이름이 아니라 흐름을 보여 주는 개념 코드입니다.)</p>
+<div class="highlight"><pre><span></span><code><span class="n">part</span> <span class="o">=</span> <span class="n">wait_for_message</span><span class="p">(</span><span class="s2">"/part_pose"</span><span class="p">)</span>                  <span class="c1"># 1 찾기 (카메라 기준)</span>
+<span class="n">part_in_base</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="s2">"base_link"</span><span class="p">,</span>
+                            <span class="n">at</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span><span class="p">)</span>      <span class="c1"># 2 사진 찍은 시각 기준으로 변환</span>
+<span class="n">grasp</span> <span class="o">=</span> <span class="n">part_in_base</span> <span class="o">*</span> <span class="n">grasp_offset</span>                    <span class="c1"># 3 잡을 자리 (UTOOL처럼 설정값)</span>
+<span class="n">above</span> <span class="o">=</span> <span class="n">offset_z</span><span class="p">(</span><span class="n">grasp</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">)</span>                          <span class="c1">#   위 10cm = TP의 P[2]</span>
+
+<span class="n">plan_and_run</span><span class="p">(</span><span class="n">above</span><span class="p">)</span>                                    <span class="c1"># 4 관절 이동 (J)</span>
+<span class="n">plan_and_run</span><span class="p">(</span><span class="n">grasp</span><span class="p">,</span> <span class="n">straight_line</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>                <span class="c1">#   곧게 내려감 (L)</span>
+<span class="n">gripper</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                                        <span class="c1">#   그리퍼 서비스 (DO[1]=ON)</span>
+<span class="n">plan_and_run</span><span class="p">(</span><span class="n">above</span><span class="p">,</span> <span class="n">straight_line</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>                <span class="c1">#   곧게 올라옴 (L)</span>
+</code></pre></div>
+<p>부품을 누르거나 끼워 넣어야 하는 마지막 몇 밀리미터는 경로 계획보다 힘 제어가 맡는 경우가 많습니다. UR은 드라이버의 힘 모드 컨트롤러로 URScript의 <code>force_mode()</code>를 부를 수 있고(<a href="../jetson-pose-to-motion/">모션편</a>에서 이 컨트롤러가 뜨는 것까지 확인), 화낙은 힘 제어가 컨트롤러 안의 기능으로 들어 있어요. 로봇마다 방식이 다르니 이 부분은 제조사 문서를 따라야 합니다.</p>
+<p>움직이는 목표를 따라가거나 펜던트로 조그하듯 조금씩 움직이고 싶을 때는 "계획하고 실행" 대신 <strong>MoveIt Servo</strong>를 씁니다. 실시간으로 작은 움직임 명령을 계속 보내는 방식이에요.</p>
+<hr />
+<h2 id="_7">정리<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>개념</th>
+<th>하는 일</th>
+<th>펜던트로 치면</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>자동화 사다리</strong></td>
+<td>가장 낮은 단부터: 지그 → 2D 오프셋 → 3D 자세</td>
+<td>티칭 → VOFFSET → (새로움)</td>
+</tr>
+<tr>
+<td><strong>move_group</strong></td>
+<td>지금 관절 상태 + 목표 + 장애물 → 궤적</td>
+<td>사람이 머릿속으로 짜던 경로</td>
+</tr>
+<tr>
+<td><strong>IK</strong></td>
+<td>툴 위치 → 관절 각도. 답이 여럿일 수 있음</td>
+<td>화낙 CONFIG의 선택</td>
+</tr>
+<tr>
+<td><strong>플래닝 씬</strong></td>
+<td>경로 계획이 피해 가는 물체 목록</td>
+<td>간섭 영역 (단, 안전 기능은 아님)</td>
+</tr>
+<tr>
+<td><strong>OMPL</strong></td>
+<td>부딪히지 않는 경로를 아무 모양으로</td>
+<td>(없음)</td>
+</tr>
+<tr>
+<td><strong>Pilz PTP · LIN · CIRC</strong></td>
+<td>정해진 모양의 이동</td>
+<td>J · L · C, movej · movel · movec</td>
+</tr>
+<tr>
+<td><strong>다섯 단계</strong></td>
+<td>찾기 → 바꾸기 → 잡을 자리 → 계획 → 실행</td>
+<td>비전 보정 + 집기 프로그램</td>
+</tr>
+<tr>
+<td><strong>MoveIt Servo</strong></td>
+<td>실시간으로 조금씩 움직이기</td>
+<td>조그</td>
+</tr>
+<tr>
+<td><strong>저장된 궤적</strong></td>
+<td>한 번 검증한 경로를 매번 재사용</td>
+<td>티칭한 경로</td>
+</tr>
+</tbody>
+</table>
+<p>남은 문제는 속도입니다. 1단계의 인식은 사진 한 장마다 신경망을 실행해야 해서 느리고, 복잡한 셀에서는 경로 계획도 시간이 걸립니다. <a href="../isaac-ros-gpu/">마지막 편</a>에서는 이 느린 부분을 GPU로 옮기는 NVIDIA의 Isaac ROS와 cuMotion을 봅니다.</p>
+<hr />
+<p><strong>시리즈</strong> · <a href="../ros2-robot-description/">← 이전 글: 2부 — 로봇을 ROS에 설명하기</a> · <a href="../isaac-ros-gpu/">다음 글: 4부 — Isaac ROS와 cuMotion →</a></p>
+<p><em>관련: <a href="../choosing-physical-ai/">Physical AI를 고르는 법</a> · <a href="../ros2-robot-description/">2부: 로봇을 ROS에 설명하기</a> · <a href="../stereo-to-grasp/">스테레오 비전에서 목표물 잡기까지</a> · <a href="../cobot-ur-vs-fanuc/">UR vs 화낙: 개방성</a> · <a href="../jetson-pose-to-motion/">현장 노트 모션편: OMPL·cuMotion·Pilz 실측</a></em></p>
+<h3 id="_8">출처와 표기<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>move_group, 플래닝 씬, OMPL, Pilz 산업용 모션 플래너(PTP·LIN·CIRC), 직선 경로의 달성 비율, MoveItPy, MoveIt Servo의 동작은 MoveIt 2 공식 문서(moveit.picknik.ai)를 근거로 했습니다. 화낙의 CONFIG와 DCS, UR의 안전 설정과 힘 모드는 각 제조사의 공개 자료를 참고했습니다. 코드는 흐름을 보여 주는 개념 코드이며 실제 API가 아닙니다. ROS는 Open Source Robotics Foundation(Open Robotics)의, MoveIt은 PickNik Inc.의, Pilz는 Pilz GmbH &amp; Co. KG의, NVIDIA·Isaac ROS·cuMotion은 NVIDIA Corporation의, FANUC은 FANUC Corporation의, Universal Robots·UR은 Universal Robots A/S(Teradyne 계열)의 상표이며, 지칭 목적으로만 사용했습니다.</p>
+<h3 id="_9">용어 설명<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>MoveIt 2</em>: ROS 2의 모션 플래닝 프레임워크. 목표를 주면 부딪히지 않는 궤적을 계산한다</li>
+<li><em>move_group</em>: MoveIt 2의 중심 노드</li>
+<li><em>IK (역기구학)</em>: 툴의 위치·방향을 관절 각도로 바꾸는 계산. 답이 여럿이거나 없을 수 있다</li>
+<li><em>순기구학</em>: 관절 각도로 툴 위치를 구하는 계산. 답은 하나</li>
+<li><em>CONFIG</em>: 화낙 위치 데이터에 붙는, 여러 IK 답 중 어느 것인지 적은 표시</li>
+<li><em>플래닝 씬(planning scene)</em>: MoveIt 2가 경로를 짤 때 피하는 물체 목록</li>
+<li><em>플래너</em>: 경로를 찾는 방법. OMPL(모양 자유), Pilz(PTP·LIN·CIRC) 등을 골라 끼운다</li>
+<li><em>특이점(singularity)</em>: 팔이 쭉 펴지는 등 어떤 방향으로 움직일 수 없게 되는 자세</li>
+<li><em>MoveIt Servo</em>: 계획 없이 실시간으로 작은 움직임 명령을 보내는 기능</li>
+<li><em>자동화 사다리</em>: 지그 → 2D 비전 + 오프셋 → CAD로 3D 자세 → 학습 정책. 문제를 풀 수 있는 가장 낮은 단을 쓴다</li>
+<li><em>공차 · 누적 공차</em>: 허용되는 치수 오차 · 여러 공차를 더한 예상 편차 범위</li>
+<li><em>VOFFSET · PR 오프셋</em>: 화낙에서 비전이 잰 편차만큼 티칭 경로를 옮기는 기능</li>
+<li><em>저장된 궤적</em>: 한 번 계획해 검증한 경로를 저장해 매번 재사용하는 방식</li>
+<li><em>힘 제어(힘 모드)</em>: 위치 대신 정해진 힘으로 누르도록 움직이는 제어</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/external-links.js"></script>
+      
+        <script src="../../assets/vix-history-player.js"></script>
+      
+        <script src="../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

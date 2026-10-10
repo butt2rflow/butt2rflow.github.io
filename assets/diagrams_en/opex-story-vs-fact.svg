@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>The OPEX narrative — how much is true</title>
+<desc>The JPM (Kolanovic) story of an upward drift before OPEX and a window of weakness after it, sorted into evidence and story. Dealer gamma's intraday effect (Barbon-Buraschi 2021) and single-stock expiration pinning (Ni-Pearson-Poteshman 2005) are proven; a systematic upward OPEX drift and a post-OPEX window of weakness have no solid primary source and are unverified. And 0DTE is now about 59 percent of SPX option volume (2025), redistributing the monthly effect, while Cboe finds dealer net gamma is only 0.04 to 0.17 percent of daily liquidity.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+.h{font-size:15px;font-weight:700;}
+.claim{font-size:12.5px;font-weight:700;}
+.s{font-size:10.5px;fill:#5c5b55;}
+.bt{font-size:11px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="292" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34" style="fill:#3d3d3a">The OPEX narrative — how much is true</text>
+
+<rect x="40" y="50" width="600" height="52" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<rect x="40" y="50" width="7" height="52" rx="3" fill="#16a34a"/>
+<text class="claim" x="62" y="72" style="fill:#15803d">Dealer gamma's intraday effect</text>
+<text class="s" x="62" y="90">Barbon-Buraschi 2021 — an amplify/dampen channel, not an "OPEX rally"</text>
+<rect x="558" y="63" width="66" height="24" rx="12" fill="#16a34a"/>
+<text class="bt" x="591" y="79" text-anchor="middle" style="fill:#ffffff">Proven</text>
+
+<rect x="40" y="110" width="600" height="52" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<rect x="40" y="110" width="7" height="52" rx="3" fill="#16a34a"/>
+<text class="claim" x="62" y="132" style="fill:#15803d">Single-stock expiration pinning</text>
+<text class="s" x="62" y="150">Ni-Pearson-Poteshman 2005 — single stocks only (not the index)</text>
+<rect x="558" y="123" width="66" height="24" rx="12" fill="#16a34a"/>
+<text class="bt" x="591" y="139" text-anchor="middle" style="fill:#ffffff">Proven</text>
+
+<rect x="40" y="170" width="600" height="52" rx="9" fill="#f7dcd6" stroke="#d84a3a" stroke-width="1.2"/>
+<rect x="40" y="170" width="7" height="52" rx="3" fill="#d84a3a"/>
+<text class="claim" x="62" y="192" style="fill:#b23a2c">Upward OPEX drift + post-OPEX "window of weakness"</text>
+<text class="s" x="62" y="210">No solid primary source found — plausible but unverified</text>
+<rect x="540" y="183" width="84" height="24" rx="12" fill="#d84a3a"/>
+<text class="bt" x="582" y="199" text-anchor="middle" style="fill:#ffffff">Unverified</text>
+
+<rect x="40" y="232" width="600" height="44" rx="9" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.2"/>
+<text class="s" x="62" y="251" style="fill:#8a6d3b">And 0DTE ~59% (2025) redistributed the monthly effect to every day —</text>
+<text class="s" x="62" y="267" style="fill:#8a6d3b">Cboe: dealer net gamma = just 0.04–0.17% of daily S&amp;P futures liquidity</text>
+</svg>

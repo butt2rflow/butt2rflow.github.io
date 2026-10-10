@@ -1,0 +1,41 @@
+<svg width="100%" viewBox="0 0 360 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">SAM 데이터 엔진 3단계</title>
+<desc id="de">사람 전량 → 모델 초안+사람 수정 → 완전 자동의 세 단계로 데이터 생성을 가속한다. 최종 규모는 사진 약 1,100만 장·마스크 약 11억 개.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="292" rx="12"/>
+<text class="t" x="18" y="22">세 단계로 속도를 올린다</text>
+<rect class="bx" x="16" y="34" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="53">1단계 · 사람이 전부 그린다</text>
+<text class="st" x="30" y="72">모델은 아직 약함. 순수 수작업.</text>
+<text class="lb" x="30" y="90" style="fill:var(--red)">마스크 1장당 수십 초</text>
+<path class="arb" d="M180,100 L180,116"/>
+<rect class="bx" x="16" y="118" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="137">2단계 · 모델이 초안, 사람은 수정</text>
+<text class="st" x="30" y="156">확실한 건 모델이 잡고, 사람은 놓친 것만 추가.</text>
+<text class="lb" x="30" y="174" style="fill:var(--amber)">수 배 빨라짐 · 다양성도 증가</text>
+<path class="arb" d="M180,184 L180,200"/>
+<rect class="bx" x="16" y="202" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="221">3단계 · 완전 자동</text>
+<text class="st" x="30" y="240">격자로 점을 뿌려 모델이 알아서 전부 분할.</text>
+<text class="lb" x="30" y="258" style="fill:var(--teal)">사람 개입 0 · 여기서 물량이 폭발</text>
+<text class="lb" x="180" y="286" text-anchor="middle">최종 규모 : 사진 약 1,100만 장 · 마스크 약 11억 개</text>
+</svg>

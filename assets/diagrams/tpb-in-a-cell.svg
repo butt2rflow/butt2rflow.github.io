@@ -1,0 +1,78 @@
+<svg width="100%" viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">결과가 매번 같아야 하는 셀에서의 자리</title>
+<desc id="de">셀 전체에서 학습 정책이 맡는 건 좁은 구간 하나다. 앞쪽의 이동과 정렬은 티칭 경로나 3단의 자세와 플래너가 맡고, 정책은 끼우기나 케이블 배선 같은 마지막 접촉만 맡는다. 합격과 불합격은 정책이 아니라 기존 센서와 게이지가 판정하고, 정책이 실패하면 분명한 복귀 지점으로 돌아간다. 인수는 조건별 N회 시험의 통계로 한다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="272" rx="12"/>
+<text class="t" x="18" y="26">정책은 좁은 구간만, 판정은 센서가</text>
+<rect class="bxt" x="16" y="56" width="190" height="64" rx="8"/>
+<text class="lb" x="111.0" y="85.0" text-anchor="middle">이동·정렬</text>
+<text class="sm" x="111.0" y="100.0" text-anchor="middle">티칭 경로 / 3단</text>
+<line class="ar" x1="208" y1="88" x2="220" y2="88"/>
+<rect class="bxa" x="222" y="56" width="150" height="64" rx="8"/>
+<text class="lb" x="297.0" y="85.0" text-anchor="middle">마지막 접촉</text>
+<text class="sm" x="297.0" y="100.0" text-anchor="middle">학습 정책 (4단)</text>
+<line class="ar" x1="374" y1="88" x2="386" y2="88"/>
+<rect class="bxt" x="388" y="56" width="150" height="64" rx="8"/>
+<text class="lb" x="463.0" y="85.0" text-anchor="middle">판정</text>
+<text class="sm" x="463.0" y="100.0" text-anchor="middle">센서·게이지·PLC</text>
+<line class="ar" x1="540" y1="88" x2="552" y2="88"/>
+<rect class="bxt" x="554" y="56" width="110" height="64" rx="8"/>
+<text class="lb" x="609.0" y="85.0" text-anchor="middle">배출</text>
+<text class="sm" x="609.0" y="100.0" text-anchor="middle">티칭 경로</text>
+<path class="arr" d="M 297 122 L 297 156 L 110 156 L 110 124"/>
+<text class="sm" x="204" y="174" text-anchor="middle" style="fill:var(--red)">실패 → 복귀 지점</text>
+<rect class="fam" x="16" y="192" width="646" height="62" rx="10"/>
+<text class="st" x="30" y="214">인수: 조건별(위치, 조명, 부품 변형) N회 중 성공 횟수 + 실패를 감지해 멈추는지</text>
+<text class="st" x="30" y="236">정책의 범위가 좁을수록 시험하기 쉽고, 판정은 늘 결정론적으로 남는다</text>
+</svg>

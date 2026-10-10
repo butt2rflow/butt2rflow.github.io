@@ -1,0 +1,3669 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The stack that moved a real UR20 in The Real Robot was attached, unchanged, to two URSims (a UR12e on PolyScope 5 and a UR20 on PolyScope X). Running the same demo with cuMotion, Pilz and OMPL, all three got the tool to its goal, but the joint chart showed OMPL turning a wrist about 510° to travel 10 cm. cuMotion didn't always take the same route either, and OMPL without a floor sent the tool 0.68 m below the robot's base. Plus how to connect PC simulators to the edge computer and the traps along the way. Field Notes: The Simulators.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/jetson-ursim-planners/">
+      
+      
+        <link rel="prev" href="../jetson-real-robot-first-move/">
+      
+      
+        <link rel="next" href="../isaac-sim-pc-and-cloud/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/jetson-ursim-planners/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Putting the Robot's Brain on the Edge — The Simulators: Three Planners on Two URSims, and What the Joint Charts Say - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#putting-the-robots-brain-on-the-edge-the-simulators-three-planners-on-two-ursims-and-what-the-joint-charts-say" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Putting the Robot's Brain on the Edge — The Simulators: Three Planners on Two URSims, and What the Joint Charts Say
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/jetson-ursim-planners/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-simulators-after-the-real-robot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why simulators after the real robot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup-simulators-on-the-pc-the-brain-on-the-edge-computer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup: simulators on the PC, the brain on the edge computer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The setup: simulators on the PC, the brain on the edge computer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#to-only-watch-lichtblick-on-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        To only watch, Lichtblick on Windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-seven-step-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The seven-step demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-same-distance-three-planners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same distance, three planners
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-tool-tip-number-hides-the-joint-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the tool-tip number hides: the joint chart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-trouble-after-ompl-urs-wrist-clamping-rule-c403" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trouble after OMPL: UR's wrist-clamping rule (C403)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumotion-doesnt-always-take-the-same-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuMotion doesn't always take the same route
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#put-the-floor-in-every-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Put the floor in every request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-got-in-the-way-of-the-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What got in the way of the connection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What got in the way of the connection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perception-on-the-same-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perception on the same box
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrap-up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Wrap-up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory budget · perception + motion on one box
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30-second-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30-second summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-simulators-after-the-real-robot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why simulators after the real robot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup-simulators-on-the-pc-the-brain-on-the-edge-computer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup: simulators on the PC, the brain on the edge computer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The setup: simulators on the PC, the brain on the edge computer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#to-only-watch-lichtblick-on-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        To only watch, Lichtblick on Windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-seven-step-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The seven-step demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-same-distance-three-planners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same distance, three planners
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-tool-tip-number-hides-the-joint-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the tool-tip number hides: the joint chart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-trouble-after-ompl-urs-wrist-clamping-rule-c403" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trouble after OMPL: UR's wrist-clamping rule (C403)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumotion-doesnt-always-take-the-same-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuMotion doesn't always take the same route
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#put-the-floor-in-every-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Put the floor in every request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-got-in-the-way-of-the-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What got in the way of the connection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What got in the way of the connection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perception-on-the-same-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perception on the same box
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrap-up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Wrap-up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="putting-the-robots-brain-on-the-edge-the-simulators-three-planners-on-two-ursims-and-what-the-joint-charts-say">Putting the Robot's Brain on the Edge — The Simulators: Three Planners on Two URSims, and What the Joint Charts Say<a class="headerlink" href="#putting-the-robots-brain-on-the-edge-the-simulators-three-planners-on-two-ursims-and-what-the-joint-charts-say" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Field Notes · The Simulators.</strong> In <a href="../jetson-real-robot-first-move/">The Real Robot</a> the edge computer moved a real UR20 for the first time, but only by lifting the tool 5 cm and lowering it again, a move kept deliberately tiny. Large detours around obstacles, or comparing planners against each other, are risky to try first on a real arm. So the same stack was attached to two of UR's virtual controllers, <strong>URSim</strong>, to try big moves and planner comparisons in simulation first.</p>
+</blockquote>
+<p>The short version: judged by the tool tip, all three planners reached the goal. The difference showed up in the <strong>joint charts</strong>. This post is about those charts, and about what it took to connect simulators running on a PC to the edge computer.</p>
+<p><em>(An R&amp;D record on the same Jetson Orin NX 16GB as the earlier posts. Every robot in this post is a </em><em>simulator</em><em>; none of these scripts was used on a real arm.)</em></p>
+<hr />
+<h2 id="30-second-summary">30-second summary<a class="headerlink" href="#30-second-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The real robot's stack, with simulators instead.</strong> The UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) drove both a UR12e simulator on PolyScope 5 and a UR20 simulator on PolyScope X.</li>
+<li><strong>The tool got there every time; the joints did not agree.</strong> For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint <strong>about 510°</strong>. On a real arm, cables and hoses would wind up.</li>
+<li><strong>With OMPL, the trouble comes after.</strong> The next run started from a folded pose with a protective stop (C403). The cause is UR's wrist-clamping rule, which the ROS robot model doesn't include. Checking every plan and adding the rule to cuMotion's collision model took risky plans from 58 to 0.</li>
+<li><strong>Soak test:</strong> motion alone ran 7.6 h at 98.2 % success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But the driver occasionally dies (a ROS 2 Humble action-handling crash), so it needs supervision, and about 8 % of box detours find no plan, so it needs retries and a fallback.</li>
+<li><strong>Add perception on the same 16 GB and memory runs out.</strong> With continuous object tracking it hit the memory floor after 26 minutes, and after 1 h 10 min even with leaner settings. Perception, not cuMotion, filled the memory. A run that takes one pose per cycle held for 24 hours, a dark night included.</li>
+<li><strong>cuMotion is smooth, but not identical every time.</strong> It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).</li>
+<li><strong>Put the floor in every request.</strong> Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.</li>
+<li><strong>Connect PC simulators with a reverse SSH tunnel.</strong> Simulators in Docker inside WSL aren't visible from outside. One tunnel opened outward from the PC connected them, with no admin rights and no firewall change.</li>
+<li><strong>To only watch, Lichtblick on Windows.</strong> No WSL, 3D and charts in one window. Make it read-only at the bridge, not in the viewer.</li>
+<li><strong>The edge computer isn't a real-time OS.</strong> The UR driver must answer every 2 ms, and with heavy containers running alongside, the connection dropped in the middle of a move.</li>
+</ul>
+<hr />
+<h2 id="why-simulators-after-the-real-robot">Why simulators after the real robot<a class="headerlink" href="#why-simulators-after-the-real-robot" title="Permanent link">&para;</a></h2>
+<p>The order looks backwards, but there's a reason. The Real Robot asked "can the edge computer move a real robot at all?", so its moves were kept tiny on purpose. This time the question is <strong>what path each planner produces for a large move</strong>: 50 cm over a box, and the same distance with three planners. That's something to look at in simulation before a real arm.</p>
+<p>URSim isn't a picture of a robot; it runs <strong>UR's actual controller software</strong> (<a href="../learn-without-industrial-robot/">Hands-on Notes, Part 0</a>). So it connects with the same driver and the same protocol as a real robot. What it doesn't have is the factory-calibration gap seen in <a href="../jetson-real-robot-first-move/">The Real Robot</a>, real motor timing, or contact. What it can and can't check is the same as the simulated-hardware comparison figure in <a href="../jetson-pose-to-motion/">Motion</a>.</p>
+<p>It's a different kind of simulator from NVIDIA's <strong>Isaac Sim</strong>. URSim imitates the <strong>robot controller</strong>; Isaac Sim imitates the <strong>world around it</strong>. URSim has no physics, no objects and no cameras, so picking up a part does nothing. In exchange, the real UR driver connects exactly as to a real robot, and modes, protective stops and joint limits behave as in the controller. Isaac Sim computes gravity, contact, camera images, depth and lighting, but drives the robot with generic joint controllers, so there's no PolyScope or UR safety behaviour, and it needs a PC or cloud machine with an RTX GPU. That's why the Remote-control mode, the protective stops from wound-up poses and the floor problem in this post showed up in URSim, while whether depth drops out on a shiny part, or a grasped part slips, is Isaac Sim's job (<a href="../robot-simulation/">Why Robots Learn in a 'Fake World' First</a>; a hands-on record is in <a href="../isaac-sim-pc-and-cloud/">Isaac Sim</a>). Neither shows the factory-calibration gap or real contact forces, so the final check is always on the real robot.</p>
+<h2 id="the-setup-simulators-on-the-pc-the-brain-on-the-edge-computer">The setup: simulators on the PC, the brain on the edge computer<a class="headerlink" href="#the-setup-simulators-on-the-pc-the-brain-on-the-edge-computer" title="Permanent link">&para;</a></h2>
+<p><img alt="Simulators on the PC, the brain on the edge computer" src="../../../assets/diagrams_en/r8-setup.svg" /></p>
+<p>URSim targets x86 PCs but is <strong>Linux software</strong>, so it doesn't run on Windows directly, and the PolyScope X simulator ships only as a Docker image. So Docker was installed in Linux inside Windows (WSL2), with ROS 2, RViz and PlotJuggler in the same Ubuntu, so the views ran the same ROS version as the edge computer. Two simulators ran in Docker inside WSL2 on a Windows PC: a <strong>UR12e</strong> on PolyScope 5, and a <strong>UR20</strong> on PolyScope X, the same as the real robot in The Real Robot. On the edge computer, one UR driver ran per robot, plus cuMotion and MoveIt 2, with OMPL and Pilz loaded together so each request could pick one. The views (RViz, PlotJuggler) were on the PC.</p>
+<p>Three parts of the connection took work.</p>
+<ul>
+<li><strong>A reverse SSH tunnel.</strong> Docker containers inside WSL can't be seen from outside the PC, so the PC opened an SSH tunnel to the edge computer and carried the simulators' ports over. Because the connection goes outward, it needed no Windows admin rights and no firewall change.</li>
+<li><strong>One address per robot.</strong> The UR driver uses fixed port numbers. To use two simulators from one edge computer, each robot needs its own address, so the tunnel's end was republished on two different local addresses on the edge computer.</li>
+<li><strong>The other direction as is.</strong> The connection a robot opens back to the driver comes straight from the simulator to the edge computer; each robot just needs its own ports.</li>
+</ul>
+<p>One thing differed on the PolyScope X simulator. To switch power and brakes on from outside, the pendant has to be in <strong>Automatic mode with Remote control</strong>; otherwise the request is refused with "must be in remote mode". In Remote control the driver connected without an External Control program on the pendant. The Real Robot deliberately used manual mode with a person starting the pendant program; running a real arm under Remote control needs more safety procedure to match.</p>
+<h3 id="to-only-watch-lichtblick-on-windows">To only watch, Lichtblick on Windows<a class="headerlink" href="#to-only-watch-lichtblick-on-windows" title="Permanent link">&para;</a></h3>
+<p><img alt="Lichtblick during the UR20 demo. Left, the robot and box in a 3D view; top right, joint angles; bottom right, joint speeds" src="../../../assets/demos/jetson-ursim-lichtblick.jpg" /></p>
+<p><em>Lichtblick during the UR20 demo. Left, the robot and the box in 3D; top right, joint angles; bottom right, joint speeds. The large bell shapes in the speed chart are cuMotion; the small pulse at the right end is Pilz LIN. The charts are in radians (this version ignores the degree conversion).</em></p>
+<p>The views first ran as RViz and PlotJuggler inside WSL, but just to watch, the free, open-source Windows viewer <strong>Lichtblick</strong> was lighter and easier. It installs straight on Windows, and the 3D view and the joint charts fit in one window. Run a read-only <code>foxglove_bridge</code> on the edge computer and connect through the tunnel. It subscribes to each topic matching its publishers, so the robot's frames (<code>/tf</code>) arrive complete too (no Zenoh frame problem, see "What got in the way of the connection" below). The installer isn't code-signed, so check it against the SHA-256 published with the release before installing.</p>
+<p>Both were view-only, but the block sits in different places. RViz and PlotJuggler are ROS 2 programs that can publish too (RViz's goal-pose tools, PlotJuggler's re-publisher), so here the Zenoh bridge carried a "subscribe only" allow list to close the way back to the edge computer. On the Lichtblick side, <code>foxglove_bridge</code> was started with nothing to receive (no client publishing, services or parameters), so nothing pressed in the viewer has anywhere to go. To only watch next to a real robot, blocking at the bridge is the surer choice than trusting the viewer.</p>
+<h2 id="the-seven-step-demo">The seven-step demo<a class="headerlink" href="#the-seven-step-demo" title="Permanent link">&para;</a></h2>
+<p><img alt="The seven-step demo" src="../../../assets/diagrams_en/r8-demo.svg" /></p>
+<p>The same demo ran on both robots: start at home, go 50 cm over the box with cuMotion, go 10 cm down and back up with Pilz LIN, return with cuMotion, do the same 10 cm with OMPL, and finally go back home with Pilz PTP.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>UR12e</th>
+<th>UR20</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 home (joint move)</td>
+<td>reached</td>
+<td>reached</td>
+</tr>
+<tr>
+<td>2 cuMotion, 50 cm over the box</td>
+<td>plan 0.67 s, 0.5 mm, 199 mm clearance</td>
+<td>plan 1.84 s, 1.8 mm, 198 mm clearance</td>
+</tr>
+<tr>
+<td>3 Pilz LIN 10 cm down</td>
+<td>0.0 mm, 0.1 mm off straight</td>
+<td>0.0 mm, 0.0 mm off straight</td>
+</tr>
+<tr>
+<td>4 Pilz LIN 10 cm up</td>
+<td>0.0 mm, 0.1 mm off straight</td>
+<td>0.0 mm</td>
+</tr>
+<tr>
+<td>5 cuMotion, back over the box</td>
+<td>plan 1.2 s, 0.0 mm, 129 mm clearance</td>
+<td>plan 1.56 s, 0.3 mm</td>
+</tr>
+<tr>
+<td>6 OMPL, the same 10 cm</td>
+<td>0.96 mm, 1.0 m tool detour, <strong>wrist 3 ~510°</strong></td>
+<td>0.83 mm, 1.1–1.9 m tool detour</td>
+</tr>
+<tr>
+<td>7 Pilz PTP, home (joint goal)</td>
+<td>exactly home</td>
+<td>exactly home</td>
+</tr>
+</tbody>
+</table>
+<p>The mm figure is the distance between where the tool stopped and the goal; clearance is the tool path's closest approach to the box. Judged by the table alone, the OMPL row is a success too: within 1 mm. The UR20's OMPL numbers come from runs before OMPL was dropped by default (below).</p>
+<h2 id="the-same-distance-three-planners">The same distance, three planners<a class="headerlink" href="#the-same-distance-three-planners" title="Permanent link">&para;</a></h2>
+<p><img alt="Three planners from the same camera. Left, cuMotion makes a large arc over the box; middle, Pilz LIN is a 10 cm straight line and barely shows; right, OMPL does the same 10 cm as a loop" src="../../../assets/demos/jetson-ursim-planners-en.jpg" /></p>
+<p><em>UR12e, RViz from the same camera angle. The red box is the obstacle and the green line is the executed tool path.</em></p>
+<p>Draw the tool path in RViz and each planner's character shows at once. cuMotion makes a large, smooth arc over the box; Pilz LIN is a 10 cm line, which looks almost like a dot at this distance; OMPL does the same 10 cm as a loop. This measures what <a href="../moveit2-goals-not-points/">Pendant to ROS 2, Part 3</a> stated: "Pilz keeps a fixed shape, OMPL with default settings takes a different shape each time".</p>
+<p><img alt="All three got the tool there. The joints differ" src="../../../assets/diagrams_en/r8-planners.svg" /></p>
+<h2 id="what-the-tool-tip-number-hides-the-joint-chart">What the tool-tip number hides: the joint chart<a class="headerlink" href="#what-the-tool-tip-number-hides-the-joint-chart" title="Permanent link">&para;</a></h2>
+<p>"The tool arrived within 1 mm" doesn't show this difference. So PlotJuggler charted all six joints' angles and speeds.</p>
+<p><img alt="Joint angles and speeds as OMPL moves 10 cm on the UR12e. Wrist 3 (light blue) turns from −330° to +180°, about 510°" src="../../../assets/demos/jetson-ursim-ompl-joints.jpg" /></p>
+<p><em>Top, joint angles; bottom, joint speeds. Light blue is the last wrist joint (wrist_3).</em></p>
+<p>To move 10 cm with OMPL, <strong>the last wrist joint turned from −330° to +180°, about 510°</strong>, and the base joint turned 150°. The tool stopped within 1 mm of the goal, so by the tool-tip number it's a success. But with a cable or air hose wrapped around a real wrist, that's a turn and a half to travel 10 cm. This kind of wind-up only shows in a joint chart.</p>
+<p>Charting the whole UR20 demo on one screen, each planner has its own speed shape.</p>
+<p><img alt="Joint speeds in the UR20 demo. Pilz shows two short pulses, cuMotion smooth bell shapes, OMPL flat-topped bars with several joints moving for a long time" src="../../../assets/demos/jetson-ursim-ur20-speeds-en.jpg" /></p>
+<p><em>UR20, joint speeds (°/s) for demo steps 3–6. The coloured labels on top name each segment's planner.</em></p>
+<ul>
+<li><strong>Pilz</strong>: short, clean pulses. A 10 cm line briefly moves mainly two joints.</li>
+<li><strong>cuMotion</strong>: every joint speeds up and slows down in a smooth bell shape (the fastest at about 20 °/s).</li>
+<li><strong>OMPL</strong>: flat-topped bars. Several joints move far at a constant speed for nearly 15 seconds, when the tool only needed to go 10 cm.</li>
+</ul>
+<p>Something similar happened once with cuMotion: after one cuMotion move, the second wrist joint sat at −270°. And the simulator's default start pose is right next to a wrist flip, so a 5 cm move from there swung joints about 150°. Start demos from a normal working pose.</p>
+<h2 id="the-trouble-after-ompl-urs-wrist-clamping-rule-c403">The trouble after OMPL: UR's wrist-clamping rule (C403)<a class="headerlink" href="#the-trouble-after-ompl-urs-wrist-clamping-rule-c403" title="Permanent link">&para;</a></h2>
+<p>OMPL wasn't only a problem while moving. When it finished, the arm was left <strong>folded or wound up</strong>, and starting the next run's robot program from there caused a protective stop. Even a URScript joint move home (<code>movej</code>) stopped again, so the container had to be restarted. It happened on both the UR12e and the UR20.</p>
+<p>The cause wasn't a simulator quirk but <strong>a UR controller safety rule</strong>. Protective stop C403 is <strong>wrist-clamping (finger-pinch) protection</strong>: a cylinder around the forearm and a sphere around the tool flange must stay at least 28 mm apart, and the rule can't be disabled. The radii live in the controller's configuration, which puts the limit from the forearm axis to the flange at 115.5 mm on the UR12e and 130.2 mm on the UR20. UR's robot description for ROS (the URDF) doesn't model this rule (issue #112 on UR's ROS 2 description package, still open), so MoveIt, OMPL and cuMotion can all plan into it, and once the arm is inside, every move trips it again until a person recovers it.</p>
+<p>Three layers now block it:</p>
+<ul>
+<li><strong>Check every plan.</strong> Each planned trajectory is checked against UR's rule plus a margin (20 mm on the UR12e, 30 mm on the UR20) and rejected and replanned if it fails.</li>
+<li><strong>Tell cuMotion.</strong> cuMotion's collision spheres now sit along the real clamping axis (elbow to the first wrist joint), with a buffer around the flange; the stock spheres sat on a line 0.17 m away.</li>
+<li><strong>A flange margin sphere</strong> in MoveIt requests too.</li>
+</ul>
+<p>The check alone blocked 58 near-miss plans (one 2.7 mm inside the limit). With the corrected collision model there were 0 to block, and the closest approach was 40 mm outside the limit. The demo still ends with <strong>step 7, back home with Pilz PTP</strong>, and the UR20 still runs without OMPL by default.</p>
+<p>Two lessons: <strong>plan all the way to where the move ends</strong>, and <strong>the robot controller has safety rules the ROS model doesn't know about</strong>. On the pendant, the controller simply blocks such poses; when ROS plans the path, the rule has to go into the model.</p>
+<h2 id="cumotion-doesnt-always-take-the-same-route">cuMotion doesn't always take the same route<a class="headerlink" href="#cumotion-doesnt-always-take-the-same-route" title="Permanent link">&para;</a></h2>
+<p>cuMotion's paths were smooth and cleared the box comfortably. But <strong>the same request went over the box once and around it another time</strong>. Both are valid, with 93–199 mm clearance. That's natural for a planner that searches between obstacles, but a cell that expects the same path every time needs to know it.</p>
+<p>So the uses split: <strong>Pilz</strong> for approach and retreat right next to parts, where the shape should be the same every time; <strong>cuMotion</strong> for large moves around obstacles; and OMPL not with default settings, only after checking its result. Whatever the planner, the principle from <a href="../ros2-for-robot-programmers/">Pendant to ROS 2, Part 1</a> stands: keep the verdict deterministic.</p>
+<h2 id="put-the-floor-in-every-request">Put the floor in every request<a class="headerlink" href="#put-the-floor-in-every-request" title="Permanent link">&para;</a></h2>
+<p><img alt="Without a floor, a planner goes below it" src="../../../assets/diagrams_en/r8-floor.svg" /></p>
+<p>At first MoveIt's planning scene had no floor, and OMPL sent the UR20's tool <strong>0.68 m below its base</strong>. From that pose every program start protective-stopped (this too turned out to be the C403 wrist-clamping rule above), and only restarting the container cleared it. After a restart, PolyScope X was back in Local control, so the mode had to be switched again too.</p>
+<p>From then on, <strong>every planning request carried a floor slab 2 cm below the base</strong>, and OMPL stayed above it. It's the same story as "the floor cuMotion adds without asking" in <a href="../jetson-real-robot-first-move/">The Real Robot</a>: any obstacle in a request replaces cuMotion's default floor, so add the floor yourself. On a real cell, the floor, the stand and the fence always belong in the planning scene.</p>
+<h2 id="what-got-in-the-way-of-the-connection">What got in the way of the connection<a class="headerlink" href="#what-got-in-the-way-of-the-connection" title="Permanent link">&para;</a></h2>
+<p>The connection took longer than the demo. Written down so it takes less wandering next time.</p>
+<ul>
+<li><strong>Containers see each other but no data arrives.</strong> ROS 2's default transport (FastDDS) uses shared memory within one computer, so every container needs <code>--ipc host</code>.</li>
+<li><strong>Goals refused with "controller is not running".</strong> Touching the pendant, reopening the tunnel or a protective stop halts the robot-side driver program. The demo script resends the program and <strong>waits 3 s</strong> before sending a goal; a goal sent while the controllers are coming back is cancelled and can lead to a protective stop.</li>
+<li><strong>The connection drops in the middle of a move.</strong> The UR driver must answer the robot every 2 ms, and the Jetson's Linux isn't a real-time kernel. Two idle cuMotion planners (75–80 % of a CPU core each) plus FoundationPose containers were too much. During demos, only one robot's planner ran, and other heavy containers were stopped.</li>
+<li><strong>The viewing bridge carried action servers too.</strong> The bridge (Zenoh) set up to watch RViz on the PC passed everything, so the edge computer saw two cuMotion action servers. The bridge now passes only the three topics the views need. It also carried a single QoS setting per topic, so part of the robot's frames (<code>/tf</code>), which mixed settings, never crossed; the PC now rebuilds the frames from the joint values.</li>
+<li><strong>Hours later, a new script can't find the frames.</strong> Test scripts that exited hard without cleaning up left stale participants behind, and after a few hours new programs no longer received the robot's static frames (<code>/tf_static</code>). Every script now cleans up its node before exiting.</li>
+<li><strong>Long-running planner containers go stale too.</strong> After many client restarts, cuMotion planned goals whose "accepted" reply never arrived, and MoveIt stalled during a straight-line move. Before a demo, restart the robot's driver, planner and MoveIt containers. Here the likely cause was R&amp;D-style use, hundreds of test scripts started and hard-killed over a few hours, but on a real cell that runs for days or weeks, restarting isn't the answer. Send goals from one long-lived app node, give every request a timeout and retries, and restart a container only at a safe point between cycles when replies slow down. Whether things degrade over time has to be checked with a soak test, so we ran long tests in simulation. Results:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run 1</td>
+<td>After 30 minutes the UR control node died and never recovered. The robot data link (RTDE) dropped with it, but the driver log shows the cause was a ROS 2 Humble action-handling crash; the drop was the result</td>
+<td>A real cell needs <strong>supervision</strong>. A watchdog was added and the test restarted</td>
+</tr>
+<tr>
+<td>Run 3, 7.6 h</td>
+<td>98.2 % of 3,961 steps succeeded, "goal accepted" in 12 ms with no drift, 0 clamping rejects</td>
+<td>No slowdown over time</td>
+</tr>
+<tr>
+<td>cuMotion memory</td>
+<td>2.4 → 3.8 GB in the first hour, then flat; it doesn't shrink while idle either</td>
+<td>Not a leak but the GPU memory cache, freed only by restarting the process; budget about 4 GB on a 16 GB Orin</td>
+</tr>
+<tr>
+<td>No-plan rate</td>
+<td>About 8 % of the 50 cm box detours find no path</td>
+<td>Clean failures that don't grow, but a real cell needs retries and a fallback</td>
+</tr>
+</tbody>
+</table>
+<p>Run 3 was stopped at 7.6 hours. The numbers had stopped changing, so we moved on to running perception alongside.</p>
+<h3 id="perception-on-the-same-box">Perception on the same box<a class="headerlink" href="#perception-on-the-same-box" title="Permanent link">&para;</a></h3>
+<p>A real cell gets the part pose from the camera and moves to it. So on the same 16 GB Orin NX we left the perception chain from the earlier posts running (Grounding DINO → SAM2 → depth → FoundationPose tracking an object) and repeated the motion test. The watchdog stopped the test when available memory fell below 1 GB: GPU memory can't be swapped out, so hitting the limit can freeze the whole Jetson.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Continuous tracking, dark office</td>
+<td>1.4 GB free after 20 minutes, stopped at <strong>26 min</strong>. Tracking 6.8 → 4.5 fps, cuMotion planning 1.3 → 2.0 s</td>
+<td>Default settings don't fit in 16 GB</td>
+</tr>
+<tr>
+<td>Continuous tracking, leaner settings</td>
+<td>Desktop off, ESS light, fewer cuMotion seeds, PyTorch cache cleanup. cuMotion flat at 2.33 GB, planning 1.4 s. Still stopped at <strong>1 h 10 min</strong></td>
+<td>Delays the crossing, doesn't prevent it. All 8 CPU cores saturated for the hour, 24 % no-plan over the box, 31 driver link drops per hour</td>
+</tr>
+<tr>
+<td>One pose per cycle, default settings (lit for 8.5 h, then dark for 15.5 h)</td>
+<td><strong>The full 24 h.</strong> 2,398 of 2,399 poses succeeded, median 3.9 s, lowest free memory 1.18 GB. Motion steps 95.8 % OK (16 % no-plan over the box), 4 driver restarts, 0 wrist-clamping stops</td>
+<td>A realistic setup for a cell that needs the part pose once per cycle, though the margin to the 1 GB warning line was under 0.2 GB</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Perception, not cuMotion, filled the memory.</strong> Alongside perception, cuMotion sat near 2.5 GB even with default settings; what pulled free memory down was perception (about 10 GB). The FoundationPose container's memory in particular swung up and down, but its GPU allocation stayed flat, so exactly what moves is still unknown.</li>
+<li><strong>The cuMotion settings pay off with motion alone.</strong> Memory that climbed to 3.8 GB stops at 2.33 GB. Alongside perception it already sits near 2.5 GB, so they made little difference there, apart from more no-plans.</li>
+<li><strong>About half of the 16 % no-plan was CPU load.</strong> Once idle threads stopped burning it, the load average fell from about 7 to 2–3 and no-plan to 6–9 %, close to motion alone. A back-to-back comparison, 4 hours each under the same conditions, gave 12.9 % against 6.2 %. The failures that remain come from cuMotion's last optimization step and need retries.</li>
+<li><strong>nvblox (live mapping) wasn't running in these tests.</strong> A cell that maps live needs more memory.</li>
+</ul>
+<p>The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't survive bad conditions. A real cell would split perception and motion across two Jetsons, use an AGX Orin 32/64 GB, or slim perception down (a trained detector, fewer re-acquisitions). Either way, give the UR driver a real-time kernel and dedicated CPU cores. The one-pose-per-cycle run held through the same kind of dark night that broke continuous tracking, so lighting alone isn't the difference, though other conditions weren't held fixed. Who uses how much memory, and how a real cell would split the work, is covered in <a href="../jetson-memory-budget/">The Memory Budget</a>. A UR20 run comes after that.</p>
+<h2 id="wrap-up">Wrap-up<a class="headerlink" href="#wrap-up" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Checked</th>
+<th>Result</th>
+<th>Gotcha</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Two simulators, same stack</td>
+<td>PolyScope 5 UR12e and PolyScope X UR20 both connected and ran</td>
+<td>PolyScope X needs Automatic + Remote control to power on from outside</td>
+</tr>
+<tr>
+<td>cuMotion</td>
+<td>50 cm over the box, ~199 mm clearance, 0.5–1.8 mm</td>
+<td>the same request doesn't always take the same route</td>
+</tr>
+<tr>
+<td>Pilz LIN</td>
+<td>10 cm, within 0.1 mm of a line</td>
+<td>doesn't avoid obstacles</td>
+</tr>
+<tr>
+<td>OMPL (defaults)</td>
+<td>within 1 mm of the goal</td>
+<td>1–1.9 m tool detour, wrist 3 ~510°</td>
+</tr>
+<tr>
+<td>After OMPL</td>
+<td>the next run protective-stops from a pose that trips the wrist-clamping rule (C403)</td>
+<td>check every plan + clamp-aware collision model + Pilz PTP home; risky plans 58 → 0</td>
+</tr>
+<tr>
+<td>Soak test (motion only, 7.6 h)</td>
+<td>98.2 % success, 12 ms replies with no drift, memory flat at 3.8 GB</td>
+<td>the driver occasionally dies (ROS 2 action crash) → supervision; ~8 % no-plan → retries and a fallback</td>
+</tr>
+<tr>
+<td>Perception on the same box</td>
+<td>continuous tracking hit the memory floor at 26 min (1 h 10 min with leaner settings); one pose per cycle held for 24 h (under 0.2 GB margin)</td>
+<td>a real cell: two Jetsons, AGX Orin 32/64 GB, or lighter perception</td>
+</tr>
+<tr>
+<td>Floor</td>
+<td>a floor slab in every request</td>
+<td>without it, the tool went 0.68 m below the base</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>one reverse SSH tunnel</td>
+<td><code>--ipc host</code>, resend the program, a non-real-time kernel, restart containers before a demo</td>
+</tr>
+<tr>
+<td>Viewing</td>
+<td>Lichtblick on Windows</td>
+<td>read-only at the bridge</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Look at the joint chart, not just the tool-tip number.</strong> A path that arrives within 1 mm can turn a wrist one and a half times.</li>
+<li><strong>Choose the planner by its job.</strong> Pilz near parts, cuMotion around obstacles, OMPL only after checking.</li>
+<li><strong>Plan all the way to where you end up.</strong> Plan the move home with a collision-checking planner too.</li>
+<li><strong>Add the floor yourself.</strong> In every request, not trusting a default.</li>
+<li><strong>Simulator first, then the real robot in steps.</strong> Look at big moves in simulation; climb on a real arm in small steps, as in <a href="../jetson-real-robot-first-move/">The Real Robot</a>.</li>
+</ul>
+<hr />
+<details>
+<summary>Notes — basis for these results and disclaimer</summary>
+
+The numbers were **measured directly** on 3–4 October 2026 with a Jetson Orin NX 16GB and two URSims (a UR12e on PolyScope 5.26.1 and a UR20 on PolyScope X 10.12.1) running in WSL2 (Ubuntu 22.04) and Docker on a Windows PC (Isaac ROS 3.2, ROS 2 Humble, UR ROS 2 driver 2.14, MoveIt 2 with OMPL and Pilz). The UR12e's cuMotion collision model was the UR10e configuration shipped with Isaac ROS (the UR12e shares the UR10e's kinematics); the UR20 used the configuration built in [Motion](jetson-pose-to-motion.md). These are one or two runs on one PC, so read them as tendencies, not statistics. **All results are simulated**; a real robot's calibration gap, motor timing and contact are not reflected. Using this approach on a real arm must follow that robot's safety settings and risk assessment.
+
+The wrist-clamping rule (C403) is based on UR staff answers on the UR forum, the radii in the controller configuration and issue #112 on UR's ROS 2 description package; OMPL and Pilz behaviour on the MoveIt 2 documentation, the driver's Remote control and ports on the Universal Robots ROS 2 driver documentation, and cuMotion's default floor on the Isaac ROS cuMotion source.
+
+Universal Robots, UR, UR12e, UR20, PolyScope, URSim and URCap are trademarks of Universal Robots A/S; NVIDIA, Jetson, Orin, Isaac ROS and cuMotion of NVIDIA Corporation; ROS of Open Robotics; MoveIt of PickNik Inc.; Windows of Microsoft Corporation; Docker of Docker, Inc. They are used for identification only. PlotJuggler, Lichtblick, Zenoh and foxglove_bridge are open-source software from their respective projects.
+
+</details>
+
+<p><strong>Series</strong> · <a href="../jetson-real-robot-first-move/">← Previous: The Real Robot — an edge computer moves a real arm for the first time</a> · <a href="../isaac-sim-pc-and-cloud/">Next: Isaac Sim — a virtual work cell on an RTX 3090 PC and a cloud GPU →</a></p>
+<p><em>Related: <a href="../moveit2-goals-not-points/">Pendant to ROS 2, Part 3: MoveIt 2</a> · <a href="../isaac-ros-gpu/">Pendant to ROS 2, Part 4: Isaac ROS and cuMotion</a> · <a href="../jetson-pose-to-motion/">Motion</a> · <a href="../learn-without-industrial-robot/">Try it: Hands-on Notes (0) — SO-101 and URSim</a> · <a href="../cobot-ur-vs-fanuc/">UR vs FANUC: openness</a></em></p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>URSim</em>: UR's free virtual controller; it runs the real controller software on a PC</li>
+<li><em>PolyScope 5 · PolyScope X</em>: the previous and current generations of UR's controller software</li>
+<li><em>Planner</em>: software that computes a collision-free path to a goal</li>
+<li><em>cuMotion</em>: NVIDIA's GPU path planner, producing smooth obstacle-avoiding paths</li>
+<li><em>Pilz</em>: MoveIt 2's industrial planner; moves in fixed shapes like a pendant's joint, linear and circular moves (PTP, LIN, CIRC)</li>
+<li><em>OMPL</em>: MoveIt 2's default set of planners; finds any collision-free path, whatever its shape</li>
+<li><em>Planning scene</em>: the world the planner knows about; the floor, stand and obstacles go here</li>
+<li><em>Protective stop</em>: the robot stopping itself because it judges something unsafe</li>
+<li><em>WSL2</em>: a Windows feature for running Linux inside Windows</li>
+<li><em>Reverse SSH tunnel</em>: an inside computer opens an SSH connection to an outside one and lets the outside use inside ports through it</li>
+<li><em>Real-time kernel</em>: an OS kernel built to guarantee responses within a set time</li>
+<li><em>RViz · PlotJuggler</em>: ROS's 3D view tool and time-series chart tool</li>
+<li><em>Lichtblick</em>: a free, open-source robot data viewer that shows ROS topics as 3D views and charts</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

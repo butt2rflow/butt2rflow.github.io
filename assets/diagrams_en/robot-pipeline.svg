@@ -1,0 +1,58 @@
+<svg width="100%" viewBox="0 0 680 452" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>The robot-vision pipeline — four questions passed box to box</title>
+<desc>A vertical pipeline of four stages. Each stage takes the previous one's output. 1: FoundationStereo turns a left and right image into a depth map. 2: SAM 2 turns the image plus one click into a mask of the part. 3: FoundationPose turns depth, mask and CAD into a 6-DoF pose. 4: a motion planner turns the pose and point cloud into a collision-free path.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.n{font-size:15px;font-weight:700;}
+.q{font-size:12px;fill:var(--ts);}
+.io{font-size:11px;fill:var(--ts);}
+.cap{font-size:11px;font-style:italic;fill:var(--ts);}
+.bdg{font-size:14px;font-weight:700;fill:#fff;}
+</style>
+<rect x="0" y="0" width="680" height="452" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">The pipeline — four questions, box to box</text>
+
+<!-- Step 1 -->
+<rect x="60" y="52" width="560" height="72" rx="10" fill="#e7effe" stroke="#2f6fed" stroke-width="0.6"/>
+<rect x="60" y="52" width="4" height="72" rx="2" fill="#2f6fed"/>
+<circle cx="96" cy="88" r="14" fill="#2f6fed"/><text class="bdg" x="96" y="93" text-anchor="middle">1</text>
+<text class="n" x="122" y="83" fill="#2f6fed">FoundationStereo</text>
+<text class="q" x="122" y="103">How far away is everything?</text>
+<text class="io" x="600" y="83" text-anchor="end">in: left + right images</text>
+<text class="io" x="600" y="103" text-anchor="end">out: depth map</text>
+
+<text class="cap" x="340" y="142" text-anchor="middle">↓  a clean depth map</text>
+
+<!-- Step 2 -->
+<rect x="60" y="152" width="560" height="72" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.6"/>
+<rect x="60" y="152" width="4" height="72" rx="2" fill="#9333ea"/>
+<circle cx="96" cy="188" r="14" fill="#9333ea"/><text class="bdg" x="96" y="193" text-anchor="middle">2</text>
+<text class="n" x="122" y="183" fill="#9333ea">Segment Anything (SAM 2)</text>
+<text class="q" x="122" y="203">Which pixels are the part?</text>
+<text class="io" x="600" y="183" text-anchor="end">in: image + one click</text>
+<text class="io" x="600" y="203" text-anchor="end">out: a mask</text>
+
+<text class="cap" x="340" y="242" text-anchor="middle">↓  depth + the part's mask</text>
+
+<!-- Step 3 -->
+<rect x="60" y="252" width="560" height="72" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="0.6"/>
+<rect x="60" y="252" width="4" height="72" rx="2" fill="#16a34a"/>
+<circle cx="96" cy="288" r="14" fill="#16a34a"/><text class="bdg" x="96" y="293" text-anchor="middle">3</text>
+<text class="n" x="122" y="283" fill="#16a34a">FoundationPose</text>
+<text class="q" x="122" y="303">Where is it, and how is it turned?</text>
+<text class="io" x="600" y="283" text-anchor="end">in: depth + mask + CAD</text>
+<text class="io" x="600" y="303" text-anchor="end">out: 6-DoF pose</text>
+
+<text class="cap" x="340" y="342" text-anchor="middle">↓  the exact pose</text>
+
+<!-- Step 4 -->
+<rect x="60" y="352" width="560" height="72" rx="10" fill="#fdf0dc" stroke="#d97a0b" stroke-width="0.6"/>
+<rect x="60" y="352" width="4" height="72" rx="2" fill="#d97a0b"/>
+<circle cx="96" cy="388" r="14" fill="#d97a0b"/><text class="bdg" x="96" y="393" text-anchor="middle">4</text>
+<text class="n" x="122" y="383" fill="#d97a0b">The robot acts</text>
+<text class="q" x="122" y="403">How do I reach it, safely?</text>
+<text class="io" x="600" y="383" text-anchor="end">in: pose + point cloud</text>
+<text class="io" x="600" y="403" text-anchor="end">out: a collision-free path</text>
+</svg>

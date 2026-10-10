@@ -1,0 +1,39 @@
+<svg width="100%" viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Three links, three different sources — Part to Camera to Wrist to Base</title>
+<desc>Four frames in a row: Part, Camera, Wrist, Base. The Part-to-Camera link comes from the AI vision pipeline (PnP); the Camera-to-Wrist link is fixed, measured once by hand-eye calibration; the Wrist-to-Base link is live, read from the robot's own sensors. Chaining the three gives the part's pose in the base frame.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.n{font-size:13px;font-weight:700;}
+.src{font-size:11px;fill:var(--ts);}
+.cap{font-size:12px;font-weight:600;fill:#16a34a;}
+</style>
+<rect x="0" y="0" width="680" height="220" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">Part → Camera → Wrist → Base</text>
+
+<!-- nodes -->
+<rect x="40" y="66" width="120" height="50" rx="10" fill="#fdf0dc" stroke="#d97a0b" stroke-width="0.8"/>
+<text class="n" x="100" y="96" text-anchor="middle" fill="#d97a0b">Part</text>
+<rect x="204" y="66" width="120" height="50" rx="10" fill="#e7effe" stroke="#2f6fed" stroke-width="0.8"/>
+<text class="n" x="264" y="96" text-anchor="middle" fill="#2f6fed">Camera</text>
+<rect x="368" y="66" width="120" height="50" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.8"/>
+<text class="n" x="428" y="96" text-anchor="middle" fill="#9333ea">Wrist</text>
+<rect x="532" y="66" width="120" height="50" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="0.8"/>
+<text class="n" x="592" y="96" text-anchor="middle" fill="#16a34a">Base</text>
+
+<!-- arrows -->
+<text class="n" x="182" y="97" text-anchor="middle" fill="var(--ts)">→</text>
+<text class="n" x="346" y="97" text-anchor="middle" fill="var(--ts)">→</text>
+<text class="n" x="510" y="97" text-anchor="middle" fill="var(--ts)">→</text>
+
+<!-- source tags under each link -->
+<text class="src" x="182" y="146" text-anchor="middle">from AI</text>
+<text class="src" x="182" y="162" text-anchor="middle">(PnP)</text>
+<text class="src" x="346" y="146" text-anchor="middle">fixed</text>
+<text class="src" x="346" y="162" text-anchor="middle">(calibration)</text>
+<text class="src" x="510" y="146" text-anchor="middle">live</text>
+<text class="src" x="510" y="162" text-anchor="middle">(robot sensors)</text>
+
+<text class="cap" x="340" y="200" text-anchor="middle">chain the three → the part's pose in the base frame</text>
+</svg>

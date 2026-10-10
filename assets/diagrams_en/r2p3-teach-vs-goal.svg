@@ -1,0 +1,85 @@
+<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Teaching points vs giving only a goal</title>
+<desc id="de">Left: a path where a person taught every via point, P[2], P[3], P[4], to get around a fixture. Right: with the same fixture, give MoveIt 2 only the start and the goal and it computes a path around it. If the part moves, the left needs re-teaching; the right just needs a new goal.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="290" rx="12"/>
+<text class="t" x="18" y="26">Same fixture, two approaches</text>
+<rect class="panel" x="16" y="42" width="316" height="232" rx="10"/>
+<text class="lb" x="30" y="64" style="fill:var(--amber)">TP: a person teaches every via point</text>
+<rect class="obs" x="134" y="130" width="80" height="90" rx="4"/>
+<text class="st" x="174" y="180" text-anchor="middle">fixture</text>
+<circle class="dott" cx="56" cy="210" r="7"/>
+<text class="sm" x="56" y="236" text-anchor="middle">start</text>
+<circle class="dotr" cx="294" cy="210" r="7"/>
+<text class="sm" x="294" y="236" text-anchor="middle">goal</text>
+<rect class="panel" x="348" y="42" width="316" height="232" rx="10"/>
+<text class="lb" x="362" y="64" style="fill:var(--blue)">MoveIt 2: give only the goal</text>
+<rect class="obs" x="466" y="130" width="80" height="90" rx="4"/>
+<text class="st" x="506" y="180" text-anchor="middle">fixture</text>
+<circle class="dott" cx="388" cy="210" r="7"/>
+<text class="sm" x="388" y="236" text-anchor="middle">start</text>
+<circle class="dotr" cx="626" cy="210" r="7"/>
+<text class="sm" x="626" y="236" text-anchor="middle">goal</text>
+<path class="ara" d="M 56 210 L 86 118 L 174 96 L 262 118 L 294 210"/>
+<circle class="dota" cx="86" cy="118" r="5"/>
+<text class="code" x="86" y="108" text-anchor="middle">P[2]</text>
+<circle class="dota" cx="174" cy="96" r="5"/>
+<text class="code" x="174" y="86" text-anchor="middle">P[3]</text>
+<circle class="dota" cx="262" cy="118" r="5"/>
+<text class="code" x="262" y="108" text-anchor="middle">P[4]</text>
+<text class="sm" x="30" y="262">part moves → teach again</text>
+<path class="ar" d="M 388 210 C 400 120, 470 92, 510 100 C 560 108, 610 130, 626 210"/>
+<text class="sm" x="506" y="88" text-anchor="middle">computed by MoveIt 2</text>
+<text class="sm" x="362" y="262">part moves → just change the goal</text>
+</svg>

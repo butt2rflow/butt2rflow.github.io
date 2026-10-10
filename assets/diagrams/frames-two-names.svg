@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>한 점을, 두 좌표계에서 본다</title>
+<desc>좌표계 A의 축이 왼쪽 아래 원점에서 올라간다. 좌표계 B의 축은 A 안 (5,3)에 놓여 30도 돌아가 있다. 점 하나가 좌표계 B의 x축을 따라 2만큼 나가 있다. 같은 물리적 점이 좌표계 B에서는 (2,0), 좌표계 A에서는 (6.732, 4.000)이다 — 바꾸려면 돌리고, 그다음 미끄러뜨린다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.s{font-size:12px;fill:var(--ts);}
+.la{font-size:12px;font-weight:700;fill:#2f6fed;}
+.lb{font-size:12px;font-weight:700;fill:#9333ea;}
+.ans{font-size:12px;font-weight:700;fill:#0d9488;}
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">한 점을, 두 좌표계에서 본다</text>
+
+<line x1="90" y1="250" x2="90" y2="70" stroke="#9aa0a8" stroke-width="1.5"/>
+<line x1="90" y1="250" x2="470" y2="250" stroke="#9aa0a8" stroke-width="1.5"/>
+<text class="la" x="70" y="86">A</text>
+<text class="s" x="70" y="266">A 원점</text>
+
+<g stroke="#9333ea" stroke-width="2">
+<line x1="240" y1="160" x2="330" y2="108"/>
+<line x1="240" y1="160" x2="188" y2="70"/>
+</g>
+<circle cx="240" cy="160" r="4" fill="#9333ea"/>
+<text class="s" x="240" y="182" text-anchor="middle">좌표계 B (30° 돌아감)</text>
+
+<circle cx="285" cy="134" r="7" fill="#0d9488"/>
+<line x1="285" y1="134" x2="360" y2="86" stroke="#9aa0a8" stroke-width="1" stroke-dasharray="3 3"/>
+<text class="s" x="366" y="82">그 점 — 같은 자리, 두 이름</text>
+
+<rect x="486" y="96" width="164" height="120" rx="10" fill="#fff" stroke="var(--br)" stroke-width="1"/>
+<text class="s" x="502" y="122">좌표계 B:</text>
+<text class="lb" x="502" y="142">(2, 0)</text>
+<text class="s" x="502" y="170">좌표계 A:</text>
+<text class="ans" x="502" y="190">(6.732, 4.000)</text>
+<text class="s" x="502" y="208" style="font-style:italic">돌리고, 그다음 미끄러뜨림</text>
+</svg>

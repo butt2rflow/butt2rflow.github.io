@@ -1,0 +1,125 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Who uses how much of the 16 GB</title>
+<desc id="de">Memory split for four runs, in GB. Motion only: cuMotion 3.75, driver, MoveIt and test client 0.33, the rest is the OS and free memory. Continuous tracking in the dark, at the 26-minute stop: FoundationPose 6.70, camera, detector, segmentation and depth 3.16, cuMotion 2.51, small parts 0.30, OS and other about 1.7, free 0.93. Leaner settings, at the 1 h 10 min stop: 6.74, 3.24, 2.42, 0.32, about 1.7, free 0.86. One pose per cycle (the moment with the least free memory in 24 hours, 03:14 on October 6): 6.61, 3.35, 2.44, 0.34, about 1.4, free 1.18. The biggest block is FoundationPose.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="360" rx="12"/>
+<text class="t" x="18" y="26">The biggest block is FoundationPose</text>
+<rect x="18" y="44" width="11" height="11" rx="2" style="fill:var(--red)"/>
+<text class="sm" x="34" y="54">FoundationPose</text>
+<rect x="132" y="44" width="11" height="11" rx="2" style="fill:var(--amber)"/>
+<text class="sm" x="148" y="54">camera, detect, mask, depth</text>
+<rect x="300" y="44" width="11" height="11" rx="2" style="fill:var(--blue)"/>
+<text class="sm" x="316" y="54">cuMotion</text>
+<rect x="384" y="44" width="11" height="11" rx="2" style="fill:var(--teal)"/>
+<text class="sm" x="400" y="54">driver, MoveIt, client</text>
+<rect x="18" y="62" width="11" height="11" rx="2" style="fill:var(--mut)"/>
+<text class="sm" x="34" y="72">OS and other</text>
+<rect x="132" y="62" width="11" height="11" rx="2" style="fill:var(--green)"/>
+<text class="sm" x="148" y="72">free</text>
+<line x1="196.0" y1="84" x2="196.0" y2="306" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="196.0" y="322" text-anchor="middle">0 GB</text>
+<line x1="316.4" y1="84" x2="316.4" y2="306" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="316.4188481675393" y="322" text-anchor="middle">4 GB</text>
+<line x1="436.8" y1="84" x2="436.8" y2="306" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="436.83769633507853" y="322" text-anchor="middle">8 GB</text>
+<line x1="557.3" y1="84" x2="557.3" y2="306" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="557.2565445026178" y="322" text-anchor="middle">12 GB</text>
+<line x1="656.0" y1="84" x2="656.0" y2="306" style="stroke:var(--red);stroke-width:1.3;stroke-dasharray:4 3"/>
+<text class="sm" x="656.0" y="322" text-anchor="middle" style="fill:var(--red)">15.3</text>
+<text class="it" x="186" y="106" text-anchor="end">Motion only</text>
+<text class="sm" x="186" y="122" text-anchor="end">7.6 h, to the end</text>
+<rect x="196.0" y="92" width="112.9" height="34" rx="2" style="fill:var(--blue)"/>
+<text class="nd" x="252.44633507853405" y="114" text-anchor="middle" style="fill:#ffffff">3.8</text>
+<rect x="308.9" y="92" width="9.9" height="34" rx="2" style="fill:var(--teal)"/>
+<rect x="318.8" y="92" width="337.2" height="34" rx="2" style="fill:var(--chip);stroke:var(--bd);stroke-dasharray:4 3"/>
+<text class="sm" x="487.4136125654451" y="114" text-anchor="middle">OS + free</text>
+<text class="it" x="186" y="160" text-anchor="end">Continuous tracking, dark</text>
+<text class="sm" x="186" y="176" text-anchor="end">at the 26 min stop</text>
+<rect x="196.0" y="146" width="201.7" height="34" rx="2" style="fill:var(--red)"/>
+<text class="nd" x="296.85078534031413" y="168" text-anchor="middle" style="fill:#ffffff">6.7</text>
+<rect x="397.7" y="146" width="95.1" height="34" rx="2" style="fill:var(--amber)"/>
+<text class="nd" x="445.26701570680626" y="168" text-anchor="middle" style="fill:#ffffff">3.2</text>
+<rect x="492.8" y="146" width="75.6" height="34" rx="2" style="fill:var(--blue)"/>
+<text class="nd" x="530.6138743455497" y="168" text-anchor="middle" style="fill:#ffffff">2.5</text>
+<rect x="568.4" y="146" width="9.0" height="34" rx="2" style="fill:var(--teal)"/>
+<rect x="577.4" y="146" width="50.6" height="34" rx="2" style="fill:var(--mut)"/>
+<text class="nd" x="602.7146596858638" y="168" text-anchor="middle" style="fill:#ffffff">1.7</text>
+<rect x="628.0" y="146" width="28.0" height="34" rx="2" style="fill:var(--green)"/>
+<text class="it" x="186" y="214" text-anchor="end">Leaner settings, dark</text>
+<text class="sm" x="186" y="230" text-anchor="end">at the 1 h 10 min stop</text>
+<rect x="196.0" y="200" width="202.9" height="34" rx="2" style="fill:var(--red)"/>
+<text class="nd" x="297.4528795811518" y="222" text-anchor="middle" style="fill:#ffffff">6.7</text>
+<rect x="398.9" y="200" width="97.5" height="34" rx="2" style="fill:var(--amber)"/>
+<text class="nd" x="447.67539267015707" y="222" text-anchor="middle" style="fill:#ffffff">3.2</text>
+<rect x="496.4" y="200" width="72.9" height="34" rx="2" style="fill:var(--blue)"/>
+<text class="nd" x="532.8717277486911" y="222" text-anchor="middle" style="fill:#ffffff">2.4</text>
+<rect x="569.3" y="200" width="9.6" height="34" rx="2" style="fill:var(--teal)"/>
+<rect x="578.9" y="200" width="51.2" height="34" rx="2" style="fill:var(--mut)"/>
+<text class="nd" x="604.5209424083769" y="222" text-anchor="middle" style="fill:#ffffff">1.7</text>
+<rect x="630.1" y="200" width="25.9" height="34" rx="2" style="fill:var(--green)"/>
+<text class="it" x="186" y="268" text-anchor="end">One pose per cycle</text>
+<text class="sm" x="186" y="284" text-anchor="end">tightest moment in 24 h</text>
+<rect x="196.0" y="254" width="199.0" height="34" rx="2" style="fill:var(--red)"/>
+<text class="nd" x="295.49607329842934" y="276" text-anchor="middle" style="fill:#ffffff">6.6</text>
+<rect x="395.0" y="254" width="100.9" height="34" rx="2" style="fill:var(--amber)"/>
+<text class="nd" x="445.41753926701574" y="276" text-anchor="middle" style="fill:#ffffff">3.4</text>
+<rect x="495.8" y="254" width="73.5" height="34" rx="2" style="fill:var(--blue)"/>
+<text class="nd" x="532.5706806282723" y="276" text-anchor="middle" style="fill:#ffffff">2.4</text>
+<rect x="569.3" y="254" width="10.2" height="34" rx="2" style="fill:var(--teal)"/>
+<rect x="579.5" y="254" width="40.9" height="34" rx="2" style="fill:var(--mut)"/>
+<text class="nd" x="600.0052356020942" y="276" text-anchor="middle" style="fill:#ffffff">1.4</text>
+<rect x="620.5" y="254" width="35.5" height="34" rx="2" style="fill:var(--green)"/>
+<text class="nd" x="638.2382198952878" y="276" text-anchor="middle" style="fill:#ffffff">1.2</text>
+<text class="sm" x="18" y="346">Per-container values per Docker (inflated for FoundationPose on a Jetson); free is what the OS reports as available</text>
+</svg>

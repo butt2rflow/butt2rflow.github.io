@@ -1,0 +1,3598 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Perception that runs a neural network on every frame and planning in a crowded cell are slow on a CPU. Isaac ROS moves only the heavy nodes of the same ROS 2 graph to the GPU, NITROS removes the copies, cuMotion plugs into MoveIt 2's planner slot, versions go together as a set, perception results pass a gate, and one stack serves many robots. Part 4 of 4 (final).">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/isaac-ros-gpu/">
+      
+      
+        <link rel="prev" href="../moveit2-goals-not-points/">
+      
+      
+        <link rel="next" href="../jetson-ros2-setup/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/isaac-ros-gpu/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion: Moving the Slow Parts to the GPU - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#from-teach-pendant-to-ros-2-4-isaac-ros-and-cumotion-moving-the-slow-parts-to-the-gpu" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion: Moving the Slow Parts to the GPU
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/isaac-ros-gpu/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#same-graph-heavy-nodes-on-the-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Same graph, heavy nodes on the GPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nitros-keeping-images-on-the-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NITROS, keeping images on the GPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versions-go-together-as-a-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versions go together as a set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumotion-a-gpu-planner-for-moveit-2s-planner-slot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuMotion, a GPU planner for MoveIt 2's planner slot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-cumotion-avoids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What cuMotion avoids
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What cuMotion avoids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-about-objects-foundationpose-doesnt-know" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What about objects FoundationPose doesn't know?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-things-to-watch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four things to watch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perception-results-pass-through-a-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perception results pass through a gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-stack-many-robots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One stack, many robots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#six-traps-almost-every-newcomer-hits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Six traps almost every newcomer hits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-whole-series-on-one-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The whole series on one page
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The whole series on one page">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-read-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to read next
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory budget · perception + motion on one box
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-30-second-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 30-second version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#same-graph-heavy-nodes-on-the-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Same graph, heavy nodes on the GPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nitros-keeping-images-on-the-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NITROS, keeping images on the GPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versions-go-together-as-a-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versions go together as a set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumotion-a-gpu-planner-for-moveit-2s-planner-slot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuMotion, a GPU planner for MoveIt 2's planner slot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-cumotion-avoids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What cuMotion avoids
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What cuMotion avoids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-about-objects-foundationpose-doesnt-know" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What about objects FoundationPose doesn't know?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-things-to-watch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four things to watch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perception-results-pass-through-a-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perception results pass through a gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-stack-many-robots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One stack, many robots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#six-traps-almost-every-newcomer-hits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Six traps almost every newcomer hits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-whole-series-on-one-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The whole series on one page
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The whole series on one page">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-read-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to read next
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="from-teach-pendant-to-ros-2-4-isaac-ros-and-cumotion-moving-the-slow-parts-to-the-gpu">From Teach Pendant to ROS 2 (4) — Isaac ROS and cuMotion: Moving the Slow Parts to the GPU<a class="headerlink" href="#from-teach-pendant-to-ros-2-4-isaac-ros-and-cumotion-moving-the-slow-parts-to-the-gpu" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>From Teach Pendant to ROS 2 · Part 4 of 4 (final).</strong> After <a href="../ros2-for-robot-programmers/">Part 1</a> on ROS 2's wiring, <a href="../ros2-robot-description/">Part 2</a> on describing the robot and <a href="../moveit2-goals-not-points/">Part 3</a> on MoveIt 2, this last part looks at NVIDIA's Isaac ROS, which moves the slow parts to the GPU.</p>
+</blockquote>
+<p>Two of the five steps from Part 3 take a long time. Step 1, perception, has to run a neural network (an AI model trained to judge pictures) every time a camera picture comes in, and step 4, planning, has more path candidates to try the more crowded the cell gets. Both repeat the same kind of calculation an enormous number of times, which is exactly what a graphics card (GPU) is good at.</p>
+<p><strong>Isaac ROS</strong> is a set of ROS 2 packages that do this heavy work on the GPU. It isn't a new robot operating system; it's nodes that slot into the graph from Part 1.</p>
+<hr />
+<h2 id="the-30-second-version">The 30-second version<a class="headerlink" href="#the-30-second-version" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Isaac ROS nodes are <strong>ordinary ROS 2 nodes</strong>. They join the graph with the same topics and message types and just do the heavy math on the GPU.</li>
+<li><strong>NITROS</strong> passes images between GPU nodes while keeping them in GPU memory. From Isaac ROS 5.0 the same capability is built into ROS 2 itself.</li>
+<li><strong>cuMotion</strong> is a GPU planner that plugs into MoveIt 2's planner slot. Keep your code, add the cuMotion pipeline to the MoveIt config and pick it instead of OMPL. Each robot needs a companion file called <strong>XRDF</strong>.</li>
+<li>cuMotion avoids the merge of <strong>what the camera sees</strong> (nvblox), <strong>what you know</strong> (the planning scene) and <strong>the robot itself</strong> (XRDF). With nvblox on, it avoids objects FoundationPose doesn't know too, but it is not a way to protect people.</li>
+<li>JetPack, ROS 2 and Isaac ROS go together <strong>as a set</strong> and are upgraded together.</li>
+<li>Perception results feed corrections only after passing a <strong>gate</strong> (confidence, stack-up range); outside it, the cell stops and reports. They never feed the verdict.</li>
+<li>Change robots and <strong>the upper layers stay put</strong>. You swap three things: the blueprint, the driver and the MoveIt configuration.</li>
+</ul>
+<hr />
+<h2 id="same-graph-heavy-nodes-on-the-gpu">Same graph, heavy nodes on the GPU<a class="headerlink" href="#same-graph-heavy-nodes-on-the-gpu" title="Permanent link">&para;</a></h2>
+<p>Look at Part 1's pick-cell graph again and the heavy spots are clear.</p>
+<p><img alt="Isaac ROS = ROS 2 nodes that use the GPU" src="../../../assets/diagrams_en/r2p4-gpu-nodes.svg" /></p>
+<p>Depth from two cameras (ESS, FoundationStereo), segmentation that cuts the part out of the picture (SAM 2), pose estimation that finds the part's position and orientation from its CAD model (FoundationPose), and path planning (cuMotion); the FoundationStereo and SAM 2 packages arrived in Isaac ROS 4.0. Only these four become Isaac ROS nodes; the rest, like the task node and the robot driver, stays as it is. What each model does and how is covered separately in <a href="../stereo-to-grasp/">From Stereo to Grasp</a> and <a href="../inside-the-models/">Inside the Three Models</a>.</p>
+<p>Isaac ROS has no dedicated screen of its own. Its nodes are ordinary ROS 2 nodes, so you view them with the same tools: <code>rqt_graph</code> from Part 1, RViz from Part 2, or a web-based ROS tool such as Foxglove. A graphical editor where you connect blocks with lines does exist, on the simulator side: Isaac Sim's Action Graph (OmniGraph) wires virtual cameras and robots to ROS 2 topics with blocks and lines. That lives inside the simulator, though; in a real cell, nodes are still connected in launch files.</p>
+<p>Running neural networks fast on the GPU uses NVIDIA's TensorRT. A model has to be converted for that GPU once in advance (an engine build), and on an edge computer with little memory that step is often the first wall. The <a href="../jetson-foundationpose-16gb/">Field Notes</a> describe getting past it on an Orin NX 16GB.</p>
+<h2 id="nitros-keeping-images-on-the-gpu">NITROS, keeping images on the GPU<a class="headerlink" href="#nitros-keeping-images-on-the-gpu" title="Permanent link">&para;</a></h2>
+<p>Simply chaining GPU nodes together sometimes isn't as fast as you'd hope. The reason is copying.</p>
+<p><img alt="The slow part is often the copying, not the math" src="../../../assets/diagrams_en/r2p4-nitros.svg" /></p>
+<p>Ordinary ROS 2 messages live in CPU memory. So the depth node copies its GPU result out to the CPU to send it, and the segmentation node that receives it copies it back up to the GPU. With camera images flowing at dozens per second, the copying alone takes real time.</p>
+<p><strong>NITROS</strong> is how Isaac ROS nodes pass images to each other while keeping them in GPU memory. The effect is most reliable when the nodes share one process (ROS 2 composable nodes). An ordinary ROS node can still listen to the same topic; it receives a normal message, converted once. A mixed graph still works; the speed-up only applies where GPU nodes sit together.</p>
+<p>One naming note: from Isaac ROS 5.0 the NITROS packages are gone, and the same keep-it-on-the-GPU idea is built into ROS 2 Lyrical itself (<code>rosidl::Buffer</code>), so GPU nodes exchange standard ROS messages. On 3.x and 4.x it's still called NITROS.</p>
+<h2 id="versions-go-together-as-a-set">Versions go together as a set<a class="headerlink" href="#versions-go-together-as-a-set" title="Permanent link">&para;</a></h2>
+<p>Once you start with Isaac ROS, version numbers multiply. Treat them as one set rather than upgrading pieces separately.</p>
+<p><img alt="Upgrade as a set, not one piece at a time" src="../../../assets/diagrams_en/r2p4-versions.svg" /></p>
+<p><strong>JetPack</strong> is NVIDIA's operating-system bundle for Jetson boards (Linux, GPU drivers, CUDA and so on). ROS 2 sits on top of it and Isaac ROS on top of that, and the three versions have to match. NVIDIA ships containers (Docker development environments) with this combination preinstalled, so pulling one is usually the fastest way to start. It also means everyone on the team works in the same environment.</p>
+<p>This series and the Field Notes used JetPack 6 + ROS 2 Humble + Isaac ROS 3.2. Later generations are moving on: Isaac ROS 4.x moved to ROS 2 Jazzy and JetPack 7 (adding the Thor generation), and Isaac ROS 5.0, released in September 2026, moved to Lyrical, the newest ROS 2 long-term support release. The concepts are the same; commands and package names shift a little. If you're starting fresh, pick the newest set available, and upgrade all three together.</p>
+<h2 id="cumotion-a-gpu-planner-for-moveit-2s-planner-slot">cuMotion, a GPU planner for MoveIt 2's planner slot<a class="headerlink" href="#cumotion-a-gpu-planner-for-moveit-2s-planner-slot" title="Permanent link">&para;</a></h2>
+<p>Part 3 said MoveIt 2's planner can be swapped. <strong>cuMotion</strong> is NVIDIA's GPU planner for that slot.</p>
+<p><img alt="Same inputs, same outputs, only the planner changes" src="../../../assets/diagrams_en/r2p4-cumotion-slot.svg" /></p>
+<p>Only the way the path is found changes. To use it, you add the cuMotion planning pipeline to the MoveIt config next to OMPL and run the cuMotion node alongside. Where OMPL tries candidates one at a time, cuMotion tries and refines many at once on the GPU. With nvblox it can also turn camera depth into obstacles for planning (more in 'What cuMotion avoids' below). In my <a href="../jetson-isaac-foundation-models/">Field Notes</a>, it planned one path for a 7-axis arm in about 210 ms on an Orin NX 16GB, and in the later <a href="../jetson-pose-to-motion/">motion post</a> about 186 ms with the UR10e config (16 s of GPU warm-up the first time). The number depends on the scene and settings, but it gives a sense that even an edge computer reaches practical speed.</p>
+<p>To use cuMotion, each robot needs one more file.</p>
+<p><img alt="Collision checks simplified to a few dozen spheres" src="../../../assets/diagrams_en/r2p4-xrdf.svg" /></p>
+<p><strong>XRDF</strong> is a file that supplements the URDF, and its main part is a collision model that approximates each link of the robot with a set of spheres. Collision checks between complex 3D shapes are slow, but distances between spheres are very fast to compute, which is what lets the GPU filter so many candidates quickly. Link pairs allowed to touch, tool frames, and joint acceleration and jerk (how abruptly acceleration changes) limits go in the same file. NVIDIA's documentation includes a UR10e example, and other robots can be built with the robot description editor in Isaac Sim. If a model looks similar but its link dimensions differ, refit the spheres instead of reusing an existing file. The <a href="../jetson-pose-to-motion/">motion post</a> built one for a UR20; automatic fitting failed there, so 71 spheres were added one at a time to cover the surface.</p>
+<h2 id="what-cumotion-avoids">What cuMotion avoids<a class="headerlink" href="#what-cumotion-avoids" title="Permanent link">&para;</a></h2>
+<p>The XRDF settles the robot's own shape. How does cuMotion learn about everything around it? Obstacles come in three ways.</p>
+<p><img alt="What the camera sees, what you know, the robot itself" src="../../../assets/diagrams_en/r2p4-obstacles.svg" /></p>
+<p>The first is <strong>what the camera sees</strong>. nvblox takes the depth images from a depth camera, divides the cell into small cubes (voxels), and builds a map that records, for each cube, how far it is from the nearest object. Think of Part 3's interference zones stretched over the whole cell, with every cube labeled 'this many mm to the nearest wall'. One step comes before that. The camera also sees the robot arm, and left alone, the robot would treat its own arm as an obstacle and try to avoid it. So the robot segmentation node (<code>isaac_ros_cumotion_robot_segmenter</code>) computes the robot's shape from the current joint angles and erases it from the depth images first (with a 5 cm margin).</p>
+<p>The second is <strong>what you already know</strong>. Fixtures whose shape and position you know, such as jigs and tables, go into Part 3's planning scene as boxes or meshes. A part whose pose FoundationPose has found can go in as its CAD mesh too. Anything entered this way doesn't need to be seen again and carries no depth noise. How to split the work between fixtures and cameras is covered in <a href="../camera-placement/">How many cameras, and where</a>.</p>
+<p>The third is <strong>the robot itself</strong>: the XRDF spheres, and after a grasp, the held part approximated with spheres and attached to the robot's body (the object attachment package). That is what gives you a path where the part you're carrying doesn't hit the jig either. The moment the part is attached, its spot is cleared from the distance map, so the held part isn't counted twice as an obstacle.</p>
+<p>cuMotion merges all three and checks them together.</p>
+<h3 id="what-about-objects-foundationpose-doesnt-know">What about objects FoundationPose doesn't know?<a class="headerlink" href="#what-about-objects-foundationpose-doesnt-know" title="Permanent link">&para;</a></h3>
+<p>If nvblox is connected, they still get avoided, because the two tools answer different questions.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>FoundationPose</th>
+<th>nvblox</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Question it answers</td>
+<td>Which part is this, and how is it posed?</td>
+<td>Is something here or not?</td>
+</tr>
+<tr>
+<td>Covers</td>
+<td>Only parts whose CAD you registered</td>
+<td>Everything the camera sees</td>
+</tr>
+<tr>
+<td>Used for</td>
+<td>Choosing where to grasp</td>
+<td>Avoiding collisions</td>
+</tr>
+</tbody>
+</table>
+<p>A toolbox someone left in the cell, or a sagging cable, doesn't exist as far as FoundationPose is concerned. In the nvblox map, though, it shows up as "something here." To avoid an object you don't need to know what it is.</p>
+<h3 id="four-things-to-watch">Four things to watch<a class="headerlink" href="#four-things-to-watch" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The part you want to pick becomes an obstacle too.</strong> nvblox puts the target part on the map like everything else. Left alone, the planner steers around it and the gripper can't get close. After the grasp, object attachment clears that spot from the map, but the approach has to be handled separately, for example by clearing the area around the part FoundationPose found and handling the part as an exact mesh.</li>
+<li><strong>What the camera hasn't seen isn't on the map.</strong> A hidden spot, like the back of a shelf, may be indistinguishable from empty space. By default nvblox does not count unseen space as an obstacle; if needed, set <code>unobserved_esdf_policy</code> to occupied (<code>kOccupied</code>) and check camera placement too.</li>
+<li><strong>Wrong depth means a wrong map.</strong> Shiny metal, transparent parts and black parts produce missing or noisy depth, so obstacles drop out or obstacles that aren't there appear (ghost obstacles). A small error in hand-eye calibration also puts obstacles in the wrong place.</li>
+<li><strong>It only helps with planning.</strong> cuMotion is a planner that computes a path and hands it off. It is not meant to dodge a hand that suddenly enters during motion. As Part 3 covered, protecting people stays with the robot controller's safety functions and the safety devices.</li>
+</ul>
+<h2 id="perception-results-pass-through-a-gate">Perception results pass through a gate<a class="headerlink" href="#perception-results-pass-through-a-gate" title="Permanent link">&para;</a></h2>
+<p><a href="../ros2-for-robot-programmers/">Part 1</a> said the verdict stays with deterministic hardware and perception is used only to adapt the motion. This gate is where the two meet.</p>
+<p><img alt="Pass: apply the correction. Fail: stop loudly" src="../../../assets/diagrams_en/r2p4-gate.svg" /></p>
+<p>Neural-network perception wobbles a little with lighting and reflections, so don't take its result at face value; check two things. Is the model's confidence, or its fit error (the distance left over after fitting the CAD), within the threshold? And is the result inside the tolerance stack-up range from <a href="../moveit2-goals-not-points/">Part 3</a>? If it's outside, either perception is wrong or the part really is somewhere odd, so stop and report instead of carrying on quietly. A quiet failure is more dangerous than a loud one.</p>
+<p>Results can wobble in two more places. Even with the same model, rebuilding the TensorRT engine can change its internal choices and shift results very slightly, so pin the engine files as part of the version set and, when you change them, compare against old results using the rosbag2 recordings from <a href="../ros2-robot-description/">Part 2</a>. cuMotion also optimizes from several random starting points, so the same request can give slightly different paths. When you need the same shape every time, use Pilz or a stored trajectory from Part 3.</p>
+<h2 id="one-stack-many-robots">One stack, many robots<a class="headerlink" href="#one-stack-many-robots" title="Permanent link">&para;</a></h2>
+<p>Does practice on mock hardware or a desktop teaching arm (like the five-joint kind mentioned in Part 3) carry over to a factory robot?</p>
+<p><img alt="Change robots and the upper layers stay put" src="../../../assets/diagrams_en/r2p4-one-stack.svg" /></p>
+<p>It does. Most of the code you write, such as the task sequence, vision, frames, goal poses and grasp points, stays the same when the robot changes. What you swap is Part 2's blueprint (URDF) and driver (ros2_control hardware interface), and Part 3's MoveIt configuration. UR provides the three as the <code>ur_description</code>, <code>ur_robot_driver</code> and <code>ur_moveit_config</code> packages, with the External Control URCap installed on the controller (URCap on PolyScope 5, URCapX on PolyScope X). FANUC publishes official ROS 2 description, driver and MoveIt configuration packages as well (<code>fanuc_description</code>, <code>fanuc_driver</code>, <code>fanuc_moveit_config</code>). To keep the swap this small, don't hard-code robot names or joint numbers into your own code.</p>
+<h2 id="six-traps-almost-every-newcomer-hits">Six traps almost every newcomer hits<a class="headerlink" href="#six-traps-almost-every-newcomer-hits" title="Permanent link">&para;</a></h2>
+<p>Finally, the traps from this series in one place, plus two you'll meet when you move to real hardware.</p>
+<p><img alt="Six common traps, and how to check" src="../../../assets/diagrams_en/r2p4-traps.svg" /></p>
+<p>Most of the debugging time in the first few weeks goes into these six boxes. The first four came up in <a href="../ros2-for-robot-programmers/">Part 1</a> and <a href="../ros2-robot-description/">Part 2</a>, and "wrong frame" includes Part 2's timing trap (not using the transform from the moment the picture was taken). A port conflict looks like this: leave the camera maker's setup tool open while starting the ROS camera driver, or have a pendant-side tool and the ROS driver try to hold the same robot connection at once, and one of them fails to open the device with an unhelpful error. Contact forces in simulation are only approximate, and real robots have calibration errors a simulator doesn't know about (3.95 mm on a real UR20, <a href="../jetson-real-robot-first-move/">real-robot post</a>), so start real robots at low speed (as in T1 on a pendant) with the e-stop within reach.</p>
+<hr />
+<h2 id="the-whole-series-on-one-page">The whole series on one page<a class="headerlink" href="#the-whole-series-on-one-page" title="Permanent link">&para;</a></h2>
+<p><img alt="From camera to controller: what each part covered" src="../../../assets/diagrams_en/r2p4-series-map.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>What you did on the pendant</th>
+<th>In ROS 2</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One program</td>
+<td>A graph of nodes</td>
+<td>Part 1</td>
+</tr>
+<tr>
+<td>Signals, registers, <code>CALL</code></td>
+<td>Topics, services, actions</td>
+<td>Part 1</td>
+</tr>
+<tr>
+<td>The controller's built-in robot model</td>
+<td>URDF</td>
+<td>Part 2</td>
+</tr>
+<tr>
+<td>UFRAME · UTOOL</td>
+<td>TF2 / the TF tree</td>
+<td>Part 2</td>
+</tr>
+<tr>
+<td>Motion engine + external command port</td>
+<td>ros2_control (controller + hardware interface)</td>
+<td>Part 2</td>
+</tr>
+<tr>
+<td>ROBOGUIDE · URSim</td>
+<td>Mock hardware</td>
+<td>Part 2</td>
+</tr>
+<tr>
+<td>The pendant's 3D view</td>
+<td>RViz</td>
+<td>Part 2</td>
+</tr>
+<tr>
+<td>Teaching via points</td>
+<td>Giving move_group a goal</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>CONFIG</td>
+<td>Choosing the IK answer</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>J · L · C</td>
+<td>Pilz PTP · LIN · CIRC</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>Jogging</td>
+<td>MoveIt Servo</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>Interference zones</td>
+<td>The planning scene (safety stays on the controller)</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>Vision offset (VOFFSET)</td>
+<td>Taught path + offset (still valid, ladder rung 2)</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>Pass/fail verdict</td>
+<td>Unchanged: sensors, gauges, PLC interlocks (perception only adapts motion, through a gate)</td>
+<td>Parts 1, 4</td>
+</tr>
+<tr>
+<td>(Perception and planning, slow on a CPU)</td>
+<td>Isaac ROS · NITROS · cuMotion</td>
+<td>Part 4</td>
+</tr>
+</tbody>
+</table>
+<p>Leave "moving safely" on the robot controller where it was, and let programs from many companies talk to each other to compute only the "where and how" a person used to teach: that's what all four parts were about. Experience with a teach pendant stays useful. People who already understand frames and tools, motion types and safety pick up ROS much faster.</p>
+<h3 id="where-to-read-next">Where to read next<a class="headerlink" href="#where-to-read-next" title="Permanent link">&para;</a></h3>
+<p>Read them in this order; each builds on the one before. Pick the documentation for the version you use (e.g. Humble).</p>
+<ol>
+<li><strong>ROS 2 tutorials</strong> (docs.ros.org): nodes, topics, launch, TF2</li>
+<li><strong>MoveIt 2 tutorials</strong> (moveit.picknik.ai): planning, the planning scene, Pilz</li>
+<li><strong>Universal Robots ROS 2 driver documentation</strong> (docs.universal-robots.com): URSim, External Control, force mode</li>
+<li><strong>FANUC ROS 2 driver</strong> (FANUC-CORPORATION/fanuc_driver): connecting a FANUC</li>
+<li><strong>Isaac ROS documentation</strong> (nvidia-isaac-ros.github.io): GPU packages, NITROS, cuMotion, XRDF</li>
+</ol>
+<hr />
+<p><strong>Series</strong> · <a href="../moveit2-goals-not-points/">← Previous: Part 3 — MoveIt 2</a></p>
+<p><em>Related: <a href="../choosing-physical-ai/">Choosing a Physical AI Approach</a> · <a href="../moveit2-goals-not-points/">Part 3 — MoveIt 2</a> · <a href="../jetson-isaac-foundation-models/">Field Notes, Part 2: Isaac ROS and Foundation Models</a> · <a href="../inside-the-models/">Inside the Three Models</a> · <a href="../learn-without-industrial-robot/">Try it: Hands-on Notes (0) — SO-101 and URSim</a> · <a href="../camera-placement/">How Many Cameras, and Where</a></em></p>
+<h3 id="sources-and-notices">Sources and notices<a class="headerlink" href="#sources-and-notices" title="Permanent link">&para;</a></h3>
+<p>Isaac ROS's structure, NITROS, cuMotion and its MoveIt 2 plugin, the contents of XRDF, obstacle representations (boxes, meshes, nvblox distance maps) and the robot segmentation and object attachment packages, and the versions each release targets (3.2 Humble / JetPack 6, 4.x Jazzy / JetPack 7, 5.0 ROS 2 Lyrical with NITROS folded into ROS 2) follow NVIDIA's official Isaac ROS documentation and release notes. The 210 ms figure was measured first-hand in the <a href="../jetson-isaac-foundation-models/">Field Notes</a> and varies with scene, settings and version. The UR packages and External Control (URCap/URCapX) follow the Universal Robots ROS 2 driver documentation; the FANUC driver refers to FANUC Corporation's <code>fanuc_driver</code> repository. ROS is a trademark of Open Source Robotics Foundation (Open Robotics); MoveIt of PickNik Inc.; NVIDIA, Isaac ROS, Isaac Sim, Jetson, Orin, Thor, JetPack, TensorRT, CUDA, cuMotion and nvblox of NVIDIA Corporation; Docker of Docker, Inc.; Linux of Linus Torvalds; Pilz of Pilz GmbH &amp; Co. KG; SAM of Meta; FANUC and ROBOGUIDE of FANUC Corporation; Universal Robots, UR, URSim, URCaps and PolyScope of Universal Robots A/S (a Teradyne company). They are used here only to refer to those products.</p>
+<h3 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>Isaac ROS</em>: NVIDIA's set of ROS 2 packages that do heavy computation on the GPU</li>
+<li><em>GPU</em>: a graphics processor that handles huge numbers of identical calculations at once</li>
+<li><em>TensorRT · engine build</em>: NVIDIA's tool for running neural networks fast on a GPU · converting a model for that GPU in advance</li>
+<li><em>NITROS</em>: in Isaac ROS 3.x and 4.x, how nodes pass data while it stays in GPU memory; from 5.0 replaced by a built-in ROS 2 Lyrical feature</li>
+<li><em>Composable node</em>: the ROS 2 way of running several nodes inside one process</li>
+<li><em>JetPack</em>: NVIDIA's operating-system bundle for Jetson boards (Linux, GPU drivers, CUDA and more)</li>
+<li><em>Container</em>: a way of packaging a whole software environment so it runs identically on any computer (Docker)</li>
+<li><em>cuMotion</em>: NVIDIA's GPU motion planner that plugs into MoveIt 2's planner slot</li>
+<li><em>XRDF</em>: a file supplementing the URDF for cuMotion: collision spheres, self-collision rules, tool frames, acceleration and jerk limits</li>
+<li><em>nvblox</em>: an NVIDIA library that turns depth images into voxels and a distance map for the planner</li>
+<li><em>Voxel</em>: one small cube of space; a pixel carried into three dimensions</li>
+<li><em>Robot segmenter</em>: the node that erases the robot itself from depth images</li>
+<li><em>Object attachment</em>: attaching a held object to the robot's body so it is included in collision checks</li>
+<li><em>URCap · URCapX</em>: add-ons installed on the UR pendant (PolyScope 5 · PolyScope X)</li>
+<li><em>Gate</em>: the step that checks a perception result's confidence and stack-up range before it is used for motion</li>
+<li><em>Confidence · fit error</em>: the model's own certainty score · the distance left after fitting the CAD</li>
+<li><em>frame_id</em>: the name attached to a ROS message saying which frame it is relative to</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

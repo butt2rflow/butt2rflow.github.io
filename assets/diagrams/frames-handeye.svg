@@ -1,0 +1,39 @@
+<svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>핸드-아이 캘리브레이션 — 고정된 판, 여러 시점</title>
+<desc>기하가 완벽하게 알려진 체커보드가 위에 고정돼 있다. 아래의 세 로봇 팔 자세가 각각 카메라를 들어 같은 판을 점선 시선으로 바라본다. 약 20개 자세가 매번 사진과 손목 값을 기록해, 하나의 카메라→손목 변환으로 수렴한다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.s{font-size:12px;fill:var(--ts);}
+</style>
+<rect x="0" y="0" width="680" height="250" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">핸드-아이 캘리브레이션 — 고정된 판, 여러 시점</text>
+
+<g>
+<rect x="292" y="54" width="96" height="60" fill="#fff" stroke="var(--br)"/>
+<g fill="#3d3d3a">
+<rect x="292" y="54" width="16" height="15"/><rect x="324" y="54" width="16" height="15"/><rect x="356" y="54" width="16" height="15"/>
+<rect x="308" y="69" width="16" height="15"/><rect x="340" y="69" width="16" height="15"/><rect x="372" y="69" width="16" height="15"/>
+<rect x="292" y="84" width="16" height="15"/><rect x="324" y="84" width="16" height="15"/><rect x="356" y="84" width="16" height="15"/>
+<rect x="308" y="99" width="16" height="15"/><rect x="340" y="99" width="16" height="15"/><rect x="372" y="99" width="16" height="15"/>
+</g>
+</g>
+<text class="s" x="340" y="132" text-anchor="middle">체커보드 — 고정, 기하 알려짐</text>
+
+<g opacity="0.4">
+<line x1="120" y1="220" x2="150" y2="176" stroke="#9333ea" stroke-width="4" stroke-linecap="round"/>
+<circle cx="150" cy="176" r="10" fill="#2f6fed"/>
+<line x1="156" y1="170" x2="300" y2="106" stroke="#73726c" stroke-width="1" stroke-dasharray="4 3"/>
+</g>
+<line x1="330" y1="224" x2="330" y2="178" stroke="#9333ea" stroke-width="5" stroke-linecap="round"/>
+<circle cx="330" cy="176" r="11" fill="#2f6fed"/>
+<line x1="330" y1="164" x2="335" y2="118" stroke="#73726c" stroke-width="1" stroke-dasharray="4 3"/>
+<g opacity="0.4">
+<line x1="560" y1="220" x2="520" y2="176" stroke="#9333ea" stroke-width="4" stroke-linecap="round"/>
+<circle cx="520" cy="176" r="10" fill="#2f6fed"/>
+<line x1="514" y1="170" x2="378" y2="106" stroke="#73726c" stroke-width="1" stroke-dasharray="4 3"/>
+</g>
+
+<text class="s" x="340" y="242" text-anchor="middle">약 20개 팔 자세, 매번: 사진 + 손목 값 → 하나의 카메라→손목 변환</text>
+</svg>
