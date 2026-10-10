@@ -25,6 +25,7 @@ The short version: the 3090 PC was enough. The cloud GPU wasn't faster; its valu
 - **The virtual camera and arm went out as ROS 2 topics.** To the edge computer they look like a real camera and a real robot. The Windows build's defaults (Jazzy, Zenoh) had to become Humble and Fast DDS, and the UDP buffers had to grow to 16 MB.
 - **500 synthetic images at 0.79 seconds each.** But following NVIDIA's examples and toggling rendering off and on per capture leaked about 130 MB of GPU memory per image, and the run died at 170–190 images. Without the toggle, memory stayed flat.
 - **The cloud L4 was not faster than the 3090.** On the same test it ran at between half and four-fifths of the 3090's speed, and the bottleneck was the CPU, not the GPU. The cloud is for running in parallel and keeping the PC free, not for speed. The whole validation cost about US$1.45.
+- **An RTX 4090 on Runpod took one command, 5 minutes and about US$0.07.** The same test ran at 34.8 frames per second, a little faster than the 3090 (30.6). But there is no screen to watch, and results come back only as text logs.
 
 ---
 
@@ -152,6 +153,40 @@ The image's 580-series driver did work, but I moved to the 595 series to match I
 
 Even on a cloud server with no screen, you can watch the whole Isaac Sim interface as a video stream. Rather than open the streaming ports to the internet, I installed WireGuard on the server myself and made a private tunnel between it and the local PC, then connected through that. One trap: the streaming server must be told **the address the client will connect to**. If it differs, the connection succeeds but the picture can come up black.
 
+## An RTX 4090 on Runpod: one command, five minutes
+
+*(Section added on 10 October 2026.)*
+
+Google Cloud gives you the screen, but there is a lot to prepare: create the server, match the driver and libraries, open the tunnel. That is too much when all you want to know is whether a code change still runs in the cloud. So I built a lighter path on Runpod, which rents GPUs by the second. One command rents the GPU, runs the speed test and the path-planning demo once each, writes down the results, and deletes the rented GPU.
+
+Runpod is built differently. On Google Cloud I rented a server and ran the Isaac Sim container inside it with Docker; a Runpod pod **is the container**. So NVIDIA's published Isaac Sim 6.1 image was started directly as the pod, with nothing installed on top.
+
+| Item | Result (10 October 2026, one run) |
+|---|---|
+| GPU | RTX 4090 24 GB, driver 595.91, US$0.89 per hour |
+| Rent → container running | 12 s (the image was already on the host) |
+| Speed test (stereo 480×288, 600 frames) | **34.8 frames per second**; the 3090 gave 30.6, the L4 16.7 |
+| Joint tracking error | 0.006–0.014 rad (same as the 3090) |
+| Path-planning demo (cuMotion over the box + 10 cm straight-line moves) | all 8 steps planned, cuMotion plans in 0.18–0.21 s |
+| Total | 4 min 30 s, about US$0.07 |
+
+The 4090 was about 14% faster than the 3090. Given that the L4 was held back by its CPU, this test can't say whether the gain comes from the GPU or from that host's CPU, and it is a single run. The hourly price is higher than the L4 spot instance (US$0.51), but there is no setup time and billing is per second, so a short test comes out cheaper. Including the first Isaac Sim start, it took under five minutes.
+
+What it can't do is clear.
+
+- **No screen.** Runpod pods have no UDP, so WebRTC streaming doesn't work. It is for headless runs where only the results matter. When someone needs to see the arm move, Google Cloud is the path.
+- **Moving files is awkward.** The image has no SSH server. The scripts and robot model files went in compressed inside environment variables (a request over 100 KB is rejected), and the results came back as text lines in the pod log. Large outputs such as synthetic-data images would need network storage attached, which I haven't tried.
+- **The cheaper tier wasn't usable.** Runpod has a cheaper tier of servers offered by individual hosts (a 4090 for about US$0.34 per hour), but that day it had no 4090 with the 595-series driver Isaac Sim 6.1 requires. So I used the data-centre tier. The driver version has to be set as a condition before renting.
+
+Things that got in the way while writing the script:
+
+- **The API rejects Python's defaults.** A request with the Python standard library's default User-Agent comes back as a 403 (error 1010). Setting your own User-Agent fixes it.
+- **There is no `python3` in the image.** Scripts run through Isaac Sim's own `python.sh`, and there is no root access.
+- **The last log line can arrive late.** When streaming the log, the final line is sometimes held back, so "finished" is decided by an end marker the script prints on purpose, not by the last line. Filtering with `grep` on the way also needs line-by-line output (`--line-buffered`).
+- **Always delete at the end.** A pod is billed for as long as it exists. The script deletes it on exit, and a separate command finds and removes any leftovers by name.
+
+So there are now two clouds: the L4 on Google Cloud for watching the screen or running for hours, and the 4090 on Runpod for a check that takes minutes.
+
 ## Wrap-up
 
 | Checked | Result | Snags |
@@ -162,11 +197,12 @@ Even on a cloud server with no screen, you can watch the whole Isaac Sim interfa
 | ROS 2 topics | cameras ~28 Hz, joints ~56 Hz, 0.93× real time | Jazzy/Zenoh defaults; 16 MB buffers for 2.7 MB frames |
 | Synthetic data | 500 images, 0.79 s each (L4 0.91 s) | the render toggle leaked 130 MB per image |
 | Cloud L4 | 49–83% of the 3090, CPU-bound, ~US$1.45 | graphics and encoder libraries, NVIDIA runtime |
+| Runpod RTX 4090 | one command, 4 min 30 s, ~US$0.07; 34.8 frames per second | no screen (no UDP), 100 KB request limit, 595-series driver condition |
 
 - **Measure with what you have before buying anything.** Below the minimum spec can still be enough for the real job.
 - **When numbers look wrong, suspect the test before the model.** This time the start pose was inside the floor.
 - **Run synthetic data long, with a memory log.** The 10-image test showed no leak.
-- **The cloud is for parallel runs, not speed.** Machine for machine, the 3090 PC was faster.
+- **The cloud is for parallel runs, not speed.** Against one L4, the 3090 PC was faster. The 4090 was a little faster, but not by enough to rent it for speed.
 - **Keep the edge-computer link on the same LAN.** Tens of MB of images per second don't belong on the internet.
 
 Next is the edge computer's side: putting the real camera's calibration into the virtual camera, and having the Jetson's depth and pose models take Isaac Sim's images and move the virtual UR20 through cuMotion.
@@ -176,11 +212,11 @@ Next is the edge computer's side: putting the real camera's calibration into the
 <details>
 <summary>Notes — sources for these results, and disclaimers</summary>
 
-Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time.
+Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time. The Runpod section's figures are from **a single run** on 10 October 2026 on an RTX 4090 24 GB pod (driver 595.91, the official Isaac Sim 6.1.0 container image), with that day's price.
 
 GPU, RAM and driver requirements and the lack of support for GPUs without RT cores (A100, H100) are from Isaac Sim's official requirements page; the UR20's mass, torque and speed limits from Universal Robots' published specifications; the render-toggle pattern from NVIDIA Isaac Sim's synthetic-data examples; the ROS 2 setup from Isaac Sim's ROS 2 installation docs. The memory leak was reproduced with this script on Isaac Sim 6.1 and may differ in other versions.
 
-NVIDIA, Isaac Sim, Omniverse, Jetson, cuMotion, RTX and GeForce are trademarks of NVIDIA Corporation; Universal Robots, UR, UR20, URSim and PolyScope of Universal Robots A/S; OAK-D of Luxonis; Google Cloud of Google LLC; Windows of Microsoft Corporation; Docker of Docker, Inc.; WireGuard of Jason A. Donenfeld; ROS of Open Robotics. They are used here for identification only. Fast DDS (eProsima) and Zenoh (Eclipse Foundation) are open-source software.
+NVIDIA, Isaac Sim, Omniverse, Jetson, cuMotion, RTX and GeForce are trademarks of NVIDIA Corporation; Universal Robots, UR, UR20, URSim and PolyScope of Universal Robots A/S; OAK-D of Luxonis; Google Cloud of Google LLC; Windows of Microsoft Corporation; Docker of Docker, Inc.; WireGuard of Jason A. Donenfeld; Runpod of Runpod, Inc.; ROS of Open Robotics. They are used here for identification only. Fast DDS (eProsima) and Zenoh (Eclipse Foundation) are open-source software.
 
 </details>
 
@@ -200,5 +236,6 @@ NVIDIA, Isaac Sim, Omniverse, Jetson, cuMotion, RTX and GeForce are trademarks o
 - *Headless*: running without a window on screen
 - *RT cores*: dedicated GPU circuits that trace light paths; Isaac Sim's rendering needs them
 - *Spot instance*: a cloud server rented cheaply from spare capacity that can be reclaimed at any time
+- *Pod*: the unit Runpod rents out; one container with a GPU attached
 - *Shader cache*: rendering programs compiled ahead of time for the GPU; having it makes startup faster
 - *WireGuard*: VPN software that builds an encrypted private tunnel between two computers
