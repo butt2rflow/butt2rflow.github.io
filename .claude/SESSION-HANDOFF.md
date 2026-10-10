@@ -60,6 +60,21 @@
 - **시각·예시 중심(2026-09-18 확정):** 글·코스 모듈은 **개념마다 그림 1 + 워크드 예시 1**을 기본으로 — 텍스트 벽 지양. 메모리 `prefer-visual-heavy`.
 - **🔒 기밀:** Physical AI 글은 고객 업무와 얽힌 vault에서 재료를 끌어옴 — **고객사명·고객 응용(라인/제품)·고객 제공 장비 등 특정 식별 정보는 절대 미발행**. 일반적 하드웨어·버전·명령·함정만 사용. 세부 경계는 로컬 메모리 `physical-ai-vault-confidentiality` 참고.
 
+## 5a. 원자료 폴더에서 글 갱신하기 (2026-10-10 정리)
+
+현장 노트 글의 숫자는 업무 쪽 폴더에서 온다. 사용자가 "check fos-physical-ai updated"처럼 물으면 동기화 상태만 보고하지 말고, 바뀐 내용이 라이브 글에 미치는 영향을 찾아 바로 반영한다(메모리 `feedback-source-check-then-update-blog`).
+
+| 폴더 (`~/Documents/` 아래) | 볼 파일 | 관련 글 |
+|---|---|---|
+| `spatial-vision-ai` | `scripts/experiments/nvblox_cumotion/ursim/README.md` (맨 위 Current state + 끝의 날짜별 단락). **인용 근거는 이 파일** | 메모리편, 시뮬레이터편 |
+| `fos-physical-ai` | `docs/isaac_sim_pipeline_plan.md`(요약). `docs/physical_ai_roadmap.md`는 **내부용 — 글에 쓰지 않음** | 같음 |
+| `issac-sim` | `PLAYBOOK.md`, `ISAAC_SIM_SETUP_PLAN.md`, `cloud/runpod_runs/`, `.claude/Claude Change Log.md` | Isaac Sim편 |
+
+- **이 폴더들은 `.git`까지 PC 사이에 동기화된다**(conflicted copy, `SyncTrash/`). `git status`·`fetch`는 `.git/index`를 고쳐 써서 충돌 사본을 만든다. 파일 읽기(`.git/refs/heads/…`, `.git/logs/HEAD`)와 읽기 전용 `git log`·`git diff A B`만 쓴다.
+- 이 PC의 gh 계정(butt2rflow, cin2party)은 416Automation 조직을 못 본다. push 여부는 여기서 확인할 수 없다(회사 PC에서 `git status -sb`).
+- 글에 넣지 않는 것: 고객·프로젝트 이름, 로드맵의 트랙·장비 요청, 아직 게시하지 않은 업스트림 이슈·패치, 시험 물건의 제품명. 한 번 실행한 값은 그렇다고 밝힌다.
+- 메모리 `reference-blog-source-folders`.
+
 ## 6. 현재 상태 (published, live)
 
 - **🖥️ 홈 대시보드 2존 재편 완료(2026-09-09):** "돗데기 시장" → **오늘의 결정 / 시장 신호 한눈에** 2존 + 지표 **8종**(+ **GEX 딜러 감마 레짐** 타일, Yahoo SPY 옵션 라이브 계산) 반응형 그리드 + 차트 접이식(한/영). `update_dashboard.py`(deploy 시 CI 재생성) + `custom.css`. 상세·crumb 함정은 메모리 `home-dashboard-layout`.
@@ -154,6 +169,7 @@
 - ~~**spatial-vision-AI README의 'outran the ~1.3 GB cuMotion saving' 표현**~~ — 10-08 확인: README에서 그 표현이 사라짐(닫음).
 - **메모리편 후속:** ~~CPU 정리 같은 조건 A/B~~ → 10-09 `2482ede`로 반영(12.9% → 6.2%, '경로 없음' 원인, 오래 켠 뒤의 메모리 꺼짐, UDP 드라이버). 남은 것: 목표 재전송 줄이기 반복 시험, 재부팅 뒤 8~12시간 시험(깊은 꺼짐이 언제 생기는지), UDP 드라이버가 실제 크래시에서 통하는지, 검출기 메모리 비교와 72시간 시험.
 - **복구 모드 + nvblox 장애물:** 10-10 메모리편 '실제 셀이라면' 5번과 nvblox 단락에 글로 반영(그림 없음). 남은 것: 지도 + 궤적 그림, 실제 로봇에서의 복구 시험 결과가 나오면 갱신, 드라이버 크래시 우회 패치 24시간 시험 결과(업스트림 게시는 사용자 승인 뒤, 게시 전에는 글에 쓰지 않음). 업무 쪽 로드맵 문서는 내부용이라 근거로 쓰지 않음(README 숫자만).
+- **fos-physical-ai push 미확인(블로그 아님, 2026-10-10):** 브랜치 `phase2-scaffolding`이 `9e3c71b`(로드맵 3커밋 포함)인데 이 PC의 원격 참조는 `77b1cdf`(10-07) 그대로다. 9 앞섬·1 뒤짐으로 보인다. 회사 PC에서 확인하고, 당길 때 `CLAUDE.md` 충돌 가능.
 - **회사 저장소 쪽 미완료(블로그 아님):** fos-physical-AI vault 커밋 `cbe04ac`·`1a6bd54` push 안 함. spatial-vision-ai `docs/synthetic_detector_cloud_plan.md` §0 + `scripts/sync_vault_docs.py` 커밋 안 함. 두 저장소에는 블로그·코스 언급 금지(메모리 `feedback-no-blog-refs-in-work-repos`).
 - **글감 후보: SO-101 / LeIsaac(issac-sim 10-05~06):** 실물 리더 팔 → 클라우드 L4 시뮬, 작업대 집기 과제 + 도메인 랜덤화, CPU 물리로 30 Hz, 카메라 보정 도구. 사용자가 원하면 새 글.
 - **Lichtblick 카메라 토픽 시험:** 카메라를 로봇에 실제로 단 뒤에(사용자). fos-physical-AI `docs/lichtblick_camera_view_note.md`에 노트(브리지 허용 목록·압축·카메라 점유, 확인 항목, C# 앱 연동 3안, 공존 구성에서의 역할). fos 세션에 메시지 보내지 말 것. 결과가 좋으면 시뮬레이터편/모션편에 한 단락.

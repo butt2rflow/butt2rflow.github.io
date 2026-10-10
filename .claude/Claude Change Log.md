@@ -6,6 +6,20 @@
 
 ---
 
+## 2026-10-10 (3) — 세션 정리: 원자료 확인 절차, 메모리, 핸드오프
+
+- **이번 세션(10-09 밤 ~ 10-10)에 한 일 요약:**
+  - `2482ede` 메모리편·시뮬레이터편: 같은 조건 비교(12.9% → 6.2%), '경로 없음' 원인, 오래 켠 뒤의 메모리 꺼짐, UDP 드라이버.
+  - `3c7b586` Isaac Sim편: Runpod RTX 4090 절.
+  - `a1864f7` 메모리편: 재시도 0.7%, 10시간 시험, cuMotion은 고장 때만, nvblox 장애물.
+  - 세 번 모두 Deploy MkDocs green, 한/영 라이브에서 새 문구 확인.
+- **원자료 폴더 확인에서 알게 된 것:**
+  - `fos-physical-ai`·`spatial-vision-ai`·`issac-sim`은 `.git`까지 PC 사이에 동기화된다. 10-09 23:11에 `git status`/`fetch`를 돌리자 `.git/index`가 `SyncTrash`로 밀려났다(저장소는 멀쩡). 이후 파일 읽기와 읽기 전용 `git log`/`git diff`만 사용.
+  - 이 PC의 gh 계정 둘 다 416Automation을 못 봐서 fetch 불가. 다른 PC 세션의 문서 정리 커밋 `a8ffdc9`와 로드맵 커밋 3개(`9e3c71b`까지)는 동기화로 도착했지만, 원격 참조는 `77b1cdf` 그대로라 push 여부는 여기서 확인 못 함.
+- **문서:** 핸드오프에 §5a 「원자료 폴더에서 글 갱신하기」 추가(폴더·파일 표, 동기화된 `.git` 주의, 글에 넣지 않는 것), 대기 항목에 fos-physical-ai push 미확인 추가.
+- **메모리(신규 2개):** `reference-blog-source-folders`(근거 파일 위치와 안전한 확인 방법), `feedback-source-check-then-update-blog`("check … updated"는 글 갱신까지).
+- **다음에 볼 것:** 리뷰 게이트 없이 나간 세 번의 수정(한국어는 사용자 확인), Runpod·복구 모드 그림, 드라이버 크래시 패치 24시간 시험 결과, 실제 로봇 복구 시험.
+
 ## 2026-10-10 (2) — 메모리편: 재시도 결과, 10시간 시험, 고장 때만 cuMotion, nvblox 장애물
 
 - **계기:** spatial-vision-ai URSim README에 10-10 결과가 추가됨(마지막 세 단락). 업무 쪽 로드맵 문서는 내부용이라 근거로 쓰지 않고 README 숫자만 씀.
