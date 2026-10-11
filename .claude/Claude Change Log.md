@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-10-11 (3) — Isaac Sim편: Ubuntu 멈칫 프레임의 원인(스레드 16개), 드라이버 크래시 원인은 보류
+
+- **계기:** 사용자 'check fos-physical-ai updated and if any blog article need to be updated'(저녁 7시). 세 폴더 읽기 전용 확인.
+- **Isaac Sim편(한/영, `0ff59fa`, push함):** 오전에 넣은 Ubuntu 절을 고침. 오전 글은 '물리만 계산하면 29% 느림, 원인 미확인'이었는데 issac-sim `PLAYBOOK.md` 5.2·5.3이 바뀜. 프레임의 약 14%가 60 ms 늦는 것은 Isaac Sim 기본 스레드 16개(5800X) 탓, TBB 풀을 8개로 줄이면 600프레임 중 0(12개는 2%). 표에 '스레드 8개' 열 추가(74.4/42.3/41.1/25.1, 윈도 대비 19~52% 빠름), SIL 시계 54 → 79 Hz·카메라 27 → 39 Hz, 합성 데이터 약 0.5초/장. 윈도에서는 스레드 수를 줄여 보지 않았다고 밝힘. 30초 요약·정리 표·근거 단락도 고침. 로컬 strict 빌드 통과.
+- **글에 넣지 않은 것(사용자 결정 대기):** 드라이버 크래시의 진짜 원인. spatial-vision-ai README 'ROOT CAUSE FOUND'(10-11 저녁)와 `rclcpp_action_patch/upstream/`. NVIDIA Isaac ROS 3.2 Humble 이미지가 rclcpp 16.0.15에 ros2/rclcpp#2109를 넣어 다시 빌드한 것이 원인이고, 태그에서 빌드한 16.0.15·16.0.21은 60분에 중단 0(이미지 것은 6). 그러면 라이브 글의 'ROS 2 Humble의 액션 처리 오류'라는 설명은 원인을 잘못 짚은 것이 된다(메모리편 한/영의 30초 요약과 「UR 드라이버는 왜 죽었나」, 시뮬레이터편 한/영의 30초 요약과 정리 표). NVIDIA 이슈 초안은 'NOT POSTED - Jae approves text and account first'라 규칙대로 보류.
+- **글과 무관:** fos-physical-ai `ca438f0`(로드맵, 내부용. `isaac_sim_pipeline_plan.md`는 같은 원인을 한 줄 반영). issac-sim의 MicroDuck 학습, 원격 접속 확인.
+
 ## 2026-10-11 (2) — Isaac Sim편: 같은 3090 PC의 Ubuntu 수치, 합성 데이터 1만 장 시험
 
 - **계기:** 사용자 'check fos physical ai updated'(오전 10:30). 세 원자료 폴더를 읽기 전용으로 확인.
