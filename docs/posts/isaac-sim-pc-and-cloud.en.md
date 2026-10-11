@@ -25,7 +25,7 @@ The short version: the 3090 PC was enough. The cloud GPU wasn't faster; its valu
 - **The virtual camera and arm went out as ROS 2 topics.** To the edge computer they look like a real camera and a real robot. The Windows build's defaults (Jazzy, Zenoh) had to become Humble and Fast DDS, and the UDP buffers had to grow to 16 MB.
 - **500 synthetic images at 0.79 seconds each.** But following NVIDIA's examples and toggling rendering off and on per capture leaked about 130 MB of GPU memory per image, and the run died at 170–190 images. Without the toggle, memory stayed flat.
 - **The cloud L4 was not faster than the 3090.** On the same test it ran at between half and four-fifths of the 3090's speed, and the bottleneck was the CPU, not the GPU. The cloud is for running in parallel and keeping the PC free, not for speed. The whole validation cost about US$1.45.
-- **Ubuntu on the same PC made the camera settings 7–24% faster.** Physics alone was 29% slower. A single run of 10,000 synthetic images left GPU memory almost where it started, 2.80 GB to 2.88 GB.
+- **Ubuntu on the same PC ran the same tests 19–52% faster.** At first, physics alone was slower than on Windows. Isaac Sim was using 16 threads, and about 14% of frames ran 60 ms late. Lowering it to 8 removed them. A single run of 10,000 synthetic images left GPU memory almost where it started, 2.80 GB to 2.88 GB.
 - **An RTX 4090 on Runpod took one command, 5 minutes and about US$0.07.** The same test ran at 34.8 frames per second, a little faster than the 3090 (30.6). But there is no screen to watch, and results come back only as text logs.
 
 ---
@@ -192,18 +192,24 @@ So there are now two clouds: the L4 on Google Cloud for watching the screen or r
 
 Every 3090 number so far came from Windows. Six days later I installed Ubuntu 24.04 on a second disk in the same PC and ran the same tests again with the same Isaac Sim 6.1.0.
 
-| Camera setting | Windows (frames per second) | Ubuntu (frames per second) |
-|---|---|---|
-| No cameras (physics only) | 62.5 | 44.3 |
-| Stereo 480×288 | 30.6 | 32.7 |
-| Stereo 640×400 + 720p colour | 27.1 | 30.3 |
-| Stereo 1280×800 + 1080p colour | 18.9 | 23.4 |
+| Camera setting | Windows | Ubuntu, default | Ubuntu, 8 threads |
+|---|---|---|---|
+| No cameras (physics only) | 62.5 | 44.3 | **74.4** |
+| Stereo 480×288 | 30.6 | 32.7 | **42.3** |
+| Stereo 640×400 + 720p colour | 27.1 | 30.3 | **41.1** |
+| Stereo 1280×800 + 1080p colour | 18.9 | 23.4 | **25.1** |
 
-The three settings with cameras were 7–24% faster on Ubuntu, and the gap grew with resolution. Physics alone went the other way, 29% slower. About one frame in 20 stalled for roughly 75 ms, which never happened on Windows, and I haven't found the cause. Real work always has the cameras on, so on this PC Ubuntu comes out ahead. The operating system isn't the only thing that changed, though. The driver version differs too, so I can't say which one made the difference.
+*All values are frames per second.*
 
-The driver was a 580-series one (580.178). That is below Isaac Sim 6.1's stated requirement (595.58.03 or later), and it was deliberate. Isaac Sim 5.1, which this PC also runs, crashed on a 595-series driver as soon as a camera was enabled. Isaac Sim 6.1 didn't care: measured again on 595.99, the three camera settings came out within one frame per second of the 580 numbers. If one PC has to run both versions, a 580-series driver is the safer choice.
+The first measurement (middle column) wasn't what I expected. The settings with cameras were 7–24% faster than Windows, but physics alone was 29% slower. The per-frame times showed why: a normal frame took 13.5 ms, and about 14% of frames took roughly 60 ms longer. The slow frames came at random, and Windows had none.
 
-I made the synthetic data again as well. 500 images took 0.61 seconds each, against 0.79 on Windows, and GPU memory stayed at 3.4 GB. Then came the long run I had put off: **10,000 images** in a single Isaac Sim process.
+The cause was the thread count. By default Isaac Sim uses up to 16 worker threads, and this PC's CPU (a Ryzen 7 5800X, 8 cores and 16 threads) gives it all 16. With 8 threads, not one of 600 frames was slow. With 12, 2% still were. Of Isaac Sim's several thread pools the TBB pool was the one responsible, so the single launch setting `--/plugins/omni.tbb.globalcontrol/maxThreadCount=8` gave the same result. In a script, pass `limit_cpu_threads` of 8 when creating `SimulationApp`. Vsync, power settings and the driver version made no difference.
+
+The right-hand column is with 8 threads. All four settings were 19–52% faster than Windows. The scene that publishes ROS 2 topics went up too, from 54 Hz to 79 Hz on the simulation clock and from 27 Hz to 39 Hz on the cameras. I didn't try a lower thread count on Windows, though, and the driver version differs as well as the operating system. So I can't say where the difference comes from.
+
+The driver was a 580-series one (580.178). That is below Isaac Sim 6.1's stated requirement (595.58.03 or later), and it was deliberate. Isaac Sim 5.1, which this PC also runs, crashed on a 595-series driver as soon as a camera was enabled. Isaac Sim 6.1 didn't care: measured again on 595.99 with the default thread count, the three camera settings came out within one frame per second of the 580 numbers. If one PC has to run both versions, a 580-series driver is the safer choice.
+
+I made the synthetic data again as well. Both runs below were done before the thread count was lowered. 500 images took 0.61 seconds each, against 0.79 on Windows, and GPU memory stayed at 3.4 GB. Then came the long run I had put off: **10,000 images** in a single Isaac Sim process.
 
 | Item | Result (10,000 images, 97 minutes) |
 |---|---|
@@ -213,7 +219,7 @@ I made the synthetic data again as well. 500 images took 0.61 seconds each, agai
 | System RAM | flat at 12.4–12.7 GB |
 | GPU faults (Xid) | none |
 
-GPU memory grew by 0.08 GB over 10,000 images. Next to a leak of 130 MB per image, that counts as no leak. The output came to about 40 GB, so for tens of thousands of images the thing to plan for is disk, not memory. This was a single run.
+GPU memory grew by 0.08 GB over 10,000 images. Next to a leak of 130 MB per image, that counts as no leak. The output came to about 40 GB, so for tens of thousands of images the thing to plan for is disk, not memory. This was a single run. With 8 threads a capture dropped to about 0.5 seconds, and GPU memory stayed flat over 300 images.
 
 ## Wrap-up
 
@@ -224,7 +230,7 @@ GPU memory grew by 0.08 GB over 10,000 images. Next to a leak of 130 MB per imag
 | UR20 model | mass, torque, speed limits match the real arm; ~0.01 rad error | the all-zero pose presses the arm into the floor |
 | ROS 2 topics | cameras ~28 Hz, joints ~56 Hz, 0.93× real time | Jazzy/Zenoh defaults; 16 MB buffers for 2.7 MB frames |
 | Synthetic data | 500 images, 0.79 s each (L4 0.91 s) | the render toggle leaked 130 MB per image |
-| Ubuntu on the same PC | camera settings at 23–33 fps (Windows 19–31); GPU memory flat over 10,000 synthetic images | physics alone slower than Windows (44 vs 63); Isaac Sim 5.1 crashes on 595-series drivers |
+| Ubuntu on the same PC | 25–74 fps with 8 threads (Windows 19–63); GPU memory flat over 10,000 synthetic images | with the default 16 threads, about 14% of frames ran 60 ms late; Isaac Sim 5.1 crashes on 595-series drivers |
 | Cloud L4 | 49–83% of the 3090, CPU-bound, ~US$1.45 | graphics and encoder libraries, NVIDIA runtime |
 | Runpod RTX 4090 | one command, 4 min 30 s, ~US$0.07; 34.8 frames per second | no screen (no UDP), 100 KB request limit, 595-series driver condition |
 
@@ -241,7 +247,7 @@ Next is the edge computer's side: putting the real camera's calibration into the
 <details>
 <summary>Notes — sources for these results, and disclaimers</summary>
 
-Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time. The Runpod section's figures are from **a single run** on 10 October 2026 on an RTX 4090 24 GB pod (driver 595.91, the official Isaac Sim 6.1.0 container image), with that day's price. The Ubuntu section's figures are from 10–11 October 2026 on the same PC under Ubuntu 24.04 (drivers 580.178 and 595.99, Isaac Sim 6.1.0 from the zip package). The speed test and the 500-image run were run once each, and so was the 10,000-image run.
+Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time. The Runpod section's figures are from **a single run** on 10 October 2026 on an RTX 4090 24 GB pod (driver 595.91, the official Isaac Sim 6.1.0 container image), with that day's price. The Ubuntu section's figures are from 10–11 October 2026 on the same PC under Ubuntu 24.04 (drivers 580.178 and 595.99, Isaac Sim 6.1.0 from the zip package). The speed test and the 500-image run were run once each, and so was the 10,000-image run. The thread-count comparison used 600 frames per setting and was not repeated on Windows.
 
 GPU, RAM and driver requirements and the lack of support for GPUs without RT cores (A100, H100) are from Isaac Sim's official requirements page; the UR20's mass, torque and speed limits from Universal Robots' published specifications; the render-toggle pattern from NVIDIA Isaac Sim's synthetic-data examples; the ROS 2 setup from Isaac Sim's ROS 2 installation docs. The memory leak was reproduced with this script on Isaac Sim 6.1 and may differ in other versions.
 
