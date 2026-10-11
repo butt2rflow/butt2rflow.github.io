@@ -6,6 +6,31 @@
 
 ---
 
+## 2026-10-11 — 메모리편: 인식 쪽 메모리 시간당 약 0.45 GB 감소, 재시작 간격 6시간 → 2시간
+
+- **계기:** 사용자 'check fos-physical-ai updated'. fos-physical-ai의 새 커밋은 `ee1c575`(10-11 00:24, 로드맵 '도구' 절) 하나뿐이고 로드맵은 내부용이라 글에 쓰지 않는다. `docs/isaac_sim_pipeline_plan.md`는 `a8ffdc9`(10-09) 이후 그대로. 대신 spatial-vision-ai URSim README에 커밋하지 않은 단락 두 개가 있었다(파일 저장 10-10 20:17).
+- **메모리편(한/영, `8dc0c06`, push함):** 새 단락 하나. 30~40초마다 자세를 구하는 조건에서 인식을 다시 띄운 뒤 75분 동안 남은 메모리 1.64 → 1.07 GB(시간당 약 0.45 GB), 다시 띄우자 2.16 GB 회복(1.28 → 3.44 GB), 가장 적었던 때 MoveIt이 요청을 받는 데 20초 넘게 걸려 홈 이동 한 번 실패. 한 번 실행한 값이고 원인은 시험 뒤에 찾을 예정이라고 밝힘. 긴 시험 중 재시작 간격 '6시간마다' → '2시간마다'(처음 6시간이었다는 문장 추가). 30초 요약과 정리 표는 '주기적으로 다시 띄우기'라 그대로.
+- **쓰지 않은 것:** 우회 패치를 넣은 드라이버에서 경합이 잡힌 기록(10-11 00:05 UTC, 24시간 시험 11시간 40분째). 아직 게시하지 않은 업스트림 이슈·패치라 제외.
+- **글에 남은 차이:** 앞 시험의 '시간당 약 0.1 GB'와 이번 '약 0.45 GB'가 함께 있다. 원자료에 서로 다른 시험으로 적혀 있고 차이의 이유는 없어서 설명을 덧붙이지 않았다.
+- **검증:** 로컬 빌드와 배포 결과는 확인하지 않았다. 한국어 새 단락은 push 전에 다시 읽음. 리뷰 게이트 서브에이전트는 실행하지 않음.
+- **실수:** §5a를 읽기 전에 `fos-physical-ai`에서 `git status`와 `git fetch`를 실행했다. fetch는 실패했고 저장소는 멀쩡해 보이지만 `.git/index`가 01:37에 다시 쓰여서 회사 PC에 index 충돌 사본이 생길 수 있다. 이후에는 `GIT_OPTIONAL_LOCKS=0`을 붙인 읽기 전용 `git log`·`git diff`만 썼다.
+
+## 2026-10-10 (9) — 우분투 PC: Claude 설정 Koofr 연동, GitHub 계정 분기 (블로그 글 변경 없음)
+
+- **배경:** 집 우분투 24.04 PC(사용자 `butterflow`, 개인 Claude 계정)에 Claude Code를 새로 설치했다. 윈도우 PC들이 쓰는 공유 설정(`claude-config`, Koofr 동기화)을 이 PC에도 연결했다. 윈도우용 설치 키트(`SETUP.cmd`, `.reg`, `.ps1`)는 리눅스에서 실행되지 않아 같은 일을 bash로 다시 했다.
+- **설정 연결:** `~/claude-config`를 Koofr 동기화 폴더로 만들고, `~/.claude`의 `CLAUDE.md`·`settings.json`·`commands`·`skills`·`agents`·`bin`·`hooks`와 `~/.config/ccstatusline`을 그 폴더로 가는 심볼릭 링크로 바꿨다. 기존 `settings.json`과 `skills/`는 `.local-backup-20261010-2230`으로 남겼다.
+  - `rules/`(회사용 `work.md`만 있음)는 연결하지 않았다. 이 PC는 개인 계정으로 쓰기 때문이다.
+  - `~/.claude/pc-role`에 `home`을 써서 회사 전용 훅(`session-start.sh`, `svn-branch-check.sh`)은 조용히 끝난다. 확인함.
+  - 연결 스크립트는 사용자가 직접 실행했다. Claude가 자기 `settings.json`과 훅을 바꾸는 명령은 auto 모드 분류기가 막는다("Self-Modification").
+- **도구 설치(sudo 없이, `~/.local/opt` + `~/.local/bin` 링크):** Node 24.21.0(공유 상태 표시줄이 `npx -y ccstatusline@latest`를 실행), gh 2.102.0. 둘 다 체크섬을 확인했다. apt의 Node는 18이라 쓰지 않았다.
+- **GitHub 계정 분기:** 기본은 `butt2rflow`, 원격 저장소 소유자가 `416Automation`·`416Jae`이면 `416Jae`. `~/.gitconfig`의 `includeIf`와 `~/.gitconfig.d/github-{personal,work}.gitconfig`, `~/.bashrc`의 `gh()` 래퍼로 구현했다. 두 계정 모두 gh에 로그인했고 활성 계정은 `butt2rflow`. 새 셸에서 래퍼가 저장소에 따라 계정을 고르는 것, `416Automation/FOSFramework_v1` 원격 조회, 이 저장소의 `origin/main` 조회를 확인했다. push는 아직 해 보지 않았다.
+  - 윈도우 설정(`accounts.json`)과 다른 점: 원격이 없는 저장소도 이 PC에서는 개인 계정을 쓴다(사용자 결정).
+- **문서·메모리:** 절차 전체를 `~/claude-config/linux/README.md`에 적고 연결 스크립트 `link-claude-config.sh`를 같은 폴더에 뒀다(Koofr로 다른 PC에도 간다). 이 PC의 프로젝트 메모리에 `ubuntu-home-pc-setup`을 새로 만들었다. 핸드오프 §1에 이 PC의 경로와 주의 사항을 추가했다.
+- **주의:**
+  - 이 PC의 작업 폴더는 줄 끝이 CRLF이고 git 인덱스는 LF라서 `git status`가 약 857개 파일을 수정됨으로 표시한다. 내용 차이는 없었다(`git diff --ignore-cr-at-eol`이 비어 있음). **해결:** 이 저장소에 `git config core.autocrlf input`을 설정했고, 그 뒤 `git status`에는 이 항목과 핸드오프 수정 두 파일만 남는다. 두 파일은 커밋하지 않았다.
+  - 프로젝트 메모리는 PC마다 따로다. 핸드오프가 이름으로 가리키는 메모리(`feedback_korean_series_and_terms`, `butt2rflow-push-auth` 등)는 이 PC에 없다.
+  - 재시작한 뒤 확인할 것: Claude 안에서 상태 표시줄이 나오는지, `fos-claude-bank`·`runpod` 플러그인이 설치되는지.
+
 ## 2026-10-10 (8) — 세션 마무리: 메모리·핸드오프 정리
 
 - **이번 세션 전체(10-09 밤 ~ 10-10) 커밋 순서:**
