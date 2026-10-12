@@ -25,7 +25,7 @@ The short answer: one 16 GB box is tight. With continuous tracking, memory ran o
 - **Leaner settings bought 1 h 10 min.** The cuMotion settings save 1.3 GB with motion alone, but alongside perception cuMotion already sits near 2.5 GB, so they made little difference. All 8 CPU cores were saturated for the hour.
 - **Taking one pose per cycle held for 24 hours.** 2,398 of 2,399 poses succeeded, about 4 s each, including 15.5 hours after the lights went off. Perception and motion peaks take turns instead of overlapping. But the lowest free memory was 1.18 GB, less than 0.2 GB above the 1 GB warning line. Run again the same way after the Jetson had been up for 9 days, it reached the stop line in 3 hours. Perception had been piling up memory over hours, and restarting perception alone gave 2.4 GB back.
 - **Idle threads were burning the CPU.** Putting spinning threads to sleep and feeding cuMotion joint states at 50 Hz took the load average from about 7 to 2–3 and no-plan over the box from 16 % to 6–9 %. A back-to-back comparison, 4 hours each under the same conditions, gave 12.9 % against 6.2 %. With retries added, the failures that remained fell to 0.7 % of cycles. Memory didn't shrink.
-- **The UR driver didn't die from link drops.** It was a ROS 2 Humble action-handling crash. Resending fewer motion goals made it rarer, but the watchdog is still a must. Restarts that hung were fixed by moving the driver to UDP.
+- **The UR driver didn't die from link drops.** The cause was the rclcpp inside the Isaac ROS 3.2 Humble container image. It carries one change that upstream ROS 2 Humble doesn't have, and with it an action server sometimes throws and the process ends. With a workaround patch the driver ran 24 hours without dying once. Restarts that hung were fixed by moving the driver to UDP.
 - **A real cell wouldn't put it all on one 16 GB box.** Split it across two Jetsons, use a bigger Jetson (AGX Orin 32/64 GB), slim perception down, or design for one pose per cycle. Loading cuMotion only for fault recovery leaves about 7.5 GB free on one 16 GB box in normal running.
 
 ---
@@ -194,13 +194,33 @@ In the 24-hour run the UR driver died 4 times. At first it looked like the robot
 Taking data from action server but no ready event
 ```
 
-That is a crash in ROS 2 Humble's action handling (`rclcpp_action`). The driver process aborted within seconds of receiving a new motion goal, and the link drop was the result. The candidate fixes are fewer goal sends and cancels, or an rclcpp or driver build with the bug fixed. Until then the watchdog is a must. Counted over two days of driver logs, it happened 8 times in 16,192 motion goals, about once per 2,000. The failing code is not in the UR driver itself but inside ROS 2's multi-threaded executor.
+That is an exception thrown by ROS 2's action library (`rclcpp_action`). The driver process aborted while handling a motion goal, and the link drop was the result. Counted over two days of driver logs, it happened 8 times in 16,192 motion goals, about once per 2,000. The failing code is not in the UR driver itself but inside ROS 2's multi-threaded executor. At first this looked like a bug in ROS 2 Humble itself. The real cause was elsewhere, and it is at the end of this section. Until it was found, the watchdog carried the load.
 
 Restarting turned out to be tricky too. In the 12-hour run a restarted driver came up with only some of its controllers and stalled: the process was alive, but no joint states came out. Every cycle failed for 1 h 45 min. So the watchdog no longer checks only the process. It checks that fresh joint states actually arrive and that every expected controller is active. For the remaining 11 hours of the run the driver never died.
 
 We also found a way to make the crash itself rarer. The test client used to resend the robot program after every planning failure, and each resend reconnected the control link and toggled the controllers. Now a planning failure just ends the cycle, and the program is resent only after a failed move. Over about 14 hours the driver then died only twice, where the old rate of one every 3 to 4 hours would have meant 3 to 5. One more run is needed to confirm it, but stirring the goals less looks like the right direction. The watchdog now also waits up to 60 seconds for every controller of a restarted driver to come up, and the last crash was fully recovered in 28 seconds. In this run cycles were 92–94 % OK, motion steps about 98.5 %, and poses 100 %.
 
 Waiting 60 seconds still didn't cover every case. When we killed the driver on purpose while the test client was sending requests, about one restart in three or four came up with controllers missing. The process that starts the controllers was stuck creating its shared-memory connection in the ROS 2 middleware (FastDDS), while another process started at the same instant finished in under a second. With only the driver container switched from shared memory to UDP, 8 kills out of 8 under the same load recovered with nothing to repair (5 of 8 before the change). In the 10-hour run that followed, the driver crashed for real 3 times, and each time it was back with every controller in about 30 seconds. Not one restart came up incomplete.
+
+### The cause was the rclcpp in the container image
+
+*Added on 11 October 2026. This post first called the crash 'a ROS 2 Humble action-handling crash', which wasn't accurate.*
+
+The ROS 2 on this Jetson is the one inside NVIDIA's Isaac ROS 3.2 container image. That image doesn't use rclcpp 16.0.15 as released. It rebuilds it with one extra change (ros2/rclcpp#2109), which upstream ROS 2 Humble doesn't have. With that change, the multi-threaded executor can call an action server a second time after its event has already been handled. Humble's `rclcpp_action` throws in that case, nothing catches it, and the process ends. ROS 2 Iron, which has the same change upstream, was fixed to skip that case quietly (#2531).
+
+The check used no UR code. ros2_control's stock control node ran with mock hardware and the stock trajectory controller, and received about 170 motion goals a minute for 60 minutes.
+
+| rclcpp loaded | Motion goals | Aborts |
+|---|---|---|
+| The image's build (16.0.15 plus #2109) | 10,306 | **6** |
+| Upstream 16.0.15, built from source | 10,226 | **0** |
+| Upstream 16.0.21, built from source | 10,281 | **0** |
+
+Same version, and the only thing that decided it was whether that change was in. So as long as this image is in use, moving to a newer rclcpp doesn't fix it.
+
+The workaround is the one Iron uses. A rebuilt `rclcpp_action` logs a warning and carries on instead of throwing, and only the driver loads it. No event is lost: the request stays queued and is handled on the next pass. Run that way for 24 hours against URSim, the driver took 11,385 motion goals without dying once. At the earlier rate it would have died five or six times. The problem case did occur once, and the move in progress finished normally.
+
+What is affected is Isaac ROS on Humble, which means up to 3.2. The 4.x releases moved to Jazzy and don't carry the change. It is reported to NVIDIA as [isaac_ros_common issue #245](https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common/issues/245). Until a fixed image ships, the workaround library and the watchdog run together.
 
 ## In a real cell
 
@@ -216,7 +236,7 @@ The conclusion from these tests: **motion plus continuous tracking on one 16 GB 
 
 Whichever you pick, a few things come with it:
 
-- **A driver watchdog.** The UR control node doesn't come back on its own when it dies. After a restart, check that joint states actually arrive and every controller is active. If restarts sometimes hang, look at the ROS 2 shared-memory transport first.
+- **A driver watchdog.** The UR control node doesn't come back on its own when it dies. After a restart, check that joint states actually arrive and every controller is active. If restarts sometimes hang, look at the ROS 2 shared-memory transport first. On an Isaac ROS Humble image, add the `rclcpp_action` workaround above as well.
 - **No idle threads burning the CPU.** Check the OpenMP wait policy, PyTorch thread count and topic rates first.
 - **A real-time kernel and dedicated CPU cores for the UR driver.** A busy CPU delays the 2 ms reply.
 - **Retries and a fallback path for no-plan.**

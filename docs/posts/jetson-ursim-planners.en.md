@@ -22,7 +22,7 @@ The short version: judged by the tool tip, all three planners reached the goal. 
 - **The real robot's stack, with simulators instead.** The UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) drove both a UR12e simulator on PolyScope 5 and a UR20 simulator on PolyScope X.
 - **The tool got there every time; the joints did not agree.** For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint **about 510°**. On a real arm, cables and hoses would wind up.
 - **With OMPL, the trouble comes after.** The next run started from a folded pose with a protective stop (C403). The cause is UR's wrist-clamping rule, which the ROS robot model doesn't include. Checking every plan and adding the rule to cuMotion's collision model took risky plans from 58 to 0.
-- **Soak test:** motion alone ran 7.6 h at 98.2 % success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But the driver occasionally dies (a ROS 2 Humble action-handling crash), so it needs supervision, and about 8 % of box detours find no plan, so it needs retries and a fallback.
+- **Soak test:** motion alone ran 7.6 h at 98.2 % success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But the driver occasionally dies, so it needs supervision (the cause is the rclcpp in the Isaac ROS 3.2 Humble image, covered in [Memory](jetson-memory-budget.md)), and about 8 % of box detours find no plan, so it needs retries and a fallback.
 - **Add perception on the same 16 GB and memory runs out.** With continuous object tracking it hit the memory floor after 26 minutes, and after 1 h 10 min even with leaner settings. Perception, not cuMotion, filled the memory. A run that takes one pose per cycle held for 24 hours, a dark night included.
 - **cuMotion is smooth, but not identical every time.** It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).
 - **Put the floor in every request.** Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.
@@ -157,7 +157,7 @@ The connection took longer than the demo. Written down so it takes less wanderin
 
 | | Result | Meaning |
 |---|---|---|
-| Run 1 | After 30 minutes the UR control node died and never recovered. The robot data link (RTDE) dropped with it, but the driver log shows the cause was a ROS 2 Humble action-handling crash; the drop was the result | A real cell needs **supervision**. A watchdog was added and the test restarted |
+| Run 1 | After 30 minutes the UR control node died and never recovered. The robot data link (RTDE) dropped with it, but the driver log shows the process ended on an exception in ROS 2's action library; the drop was the result. The cause was later traced to the rclcpp in the Isaac ROS 3.2 Humble image ([Memory](jetson-memory-budget.md)) | A real cell needs **supervision**. A watchdog was added and the test restarted |
 | Run 3, 7.6 h | 98.2 % of 3,961 steps succeeded, "goal accepted" in 12 ms with no drift, 0 clamping rejects | No slowdown over time |
 | cuMotion memory | 2.4 → 3.8 GB in the first hour, then flat; it doesn't shrink while idle either | Not a leak but the GPU memory cache, freed only by restarting the process; budget about 4 GB on a 16 GB Orin |
 | No-plan rate | About 8 % of the 50 cm box detours find no path | Clean failures that don't grow, but a real cell needs retries and a fallback |
@@ -191,7 +191,7 @@ The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't surviv
 | Pilz LIN | 10 cm, within 0.1 mm of a line | doesn't avoid obstacles |
 | OMPL (defaults) | within 1 mm of the goal | 1–1.9 m tool detour, wrist 3 ~510° |
 | After OMPL | the next run protective-stops from a pose that trips the wrist-clamping rule (C403) | check every plan + clamp-aware collision model + Pilz PTP home; risky plans 58 → 0 |
-| Soak test (motion only, 7.6 h) | 98.2 % success, 12 ms replies with no drift, memory flat at 3.8 GB | the driver occasionally dies (ROS 2 action crash) → supervision; ~8 % no-plan → retries and a fallback |
+| Soak test (motion only, 7.6 h) | 98.2 % success, 12 ms replies with no drift, memory flat at 3.8 GB | the driver occasionally dies (the rclcpp in the Isaac ROS 3.2 Humble image) → supervision and a workaround patch; ~8 % no-plan → retries and a fallback |
 | Perception on the same box | continuous tracking hit the memory floor at 26 min (1 h 10 min with leaner settings); one pose per cycle held for 24 h (under 0.2 GB margin) | a real cell: two Jetsons, AGX Orin 32/64 GB, or lighter perception |
 | Floor | a floor slab in every request | without it, the tool went 0.68 m below the base |
 | Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel, restart containers before a demo |
