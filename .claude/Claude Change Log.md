@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-10-11 (4) — 메모리편·시뮬레이터편: 드라이버 크래시 원인 정정 (NVIDIA 이슈 게시 뒤)
+
+- **계기:** 사용자 'Fos physical ai updated, we can update blogs with final verdict'(저녁 8시 15분). fos-physical-ai 로드맵(커밋 전 변경)과 체인지로그에 게시 기록: `NVIDIA-ISAAC-ROS/isaac_ros_common#245`(butt2rflow, 10-11 23:47 UTC, `gh issue view`로 공개·OPEN 확인), 공개 gist에 근거 17개 파일.
+- **메모리편(한/영, `dd86896`, push함):** 30초 요약의 드라이버 항목을 고치고, 「UR 드라이버는 왜 죽었나」 첫 설명에서 'ROS 2 Humble 오류'와 '고쳐진 버전이 해결책 후보'를 뺐다. 절 끝에 새 소절 「원인은 컨테이너 이미지의 rclcpp였다」: Isaac ROS 3.2 Humble 이미지가 rclcpp 16.0.15에 ros2/rclcpp#2109를 더해 다시 빌드, 가짜 하드웨어 60분 표(이미지 6번/10,306, 원본 16.0.15 0번/10,226, 원본 16.0.21 0번/10,281), Iron 방식(#2531) 우회로 24시간·11,385번에 0번, 영향 범위(3.2까지, 4.x 아님), 이슈 #245 링크. '처음에는 Humble 오류라고 적었다'는 정정 문구를 넣음. '실제 셀이라면'의 드라이버 감시 항목에 우회 한 문장.
+- **시뮬레이터편(한/영, 같은 커밋):** 30초 요약, 1차 시험 표, 정리 표의 'ROS 2 Humble의 액션 처리 오류'를 이미지의 rclcpp 문제로 고치고 메모리편으로 연결.
+- **근거:** 공개된 이슈 본문과 같은 숫자(spatial-vision-ai `upstream/ISSUE_NVIDIA_isaac_ros_common.md`, 검토 패키지 README). 글에 넣지 않은 것: 진단 덤프 세부(232번, A/B/C 순서), JTC 세그폴트 한 번, x86 결과, 내부 로드맵.
+- **리뷰 게이트 서브에이전트는 돌리지 않음.** 로컬 strict 빌드 통과.
+
 ## 2026-10-11 (3) — Isaac Sim편: Ubuntu 멈칫 프레임의 원인(스레드 16개), 드라이버 크래시 원인은 보류
 
 - **계기:** 사용자 'check fos-physical-ai updated and if any blog article need to be updated'(저녁 7시). 세 폴더 읽기 전용 확인.
