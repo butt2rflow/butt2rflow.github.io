@@ -45,7 +45,7 @@ description: "같은 Orin NX 16GB에서 파운데이션 모델 체인을 물체�
 | FoundationStereo (깊이) | 2.01초 | 1.99초 | 이미 TensorRT라 그대로 |
 | Grounding DINO (검출) | 1.94초 | **0.58초** | TensorRT 엔진, 입력 크기 540×960으로 고정 |
 | 깊이 재투영 | 0.62초 | **0.02초** | CPU에서 하던 계산을 GPU로 |
-| SAM2 (마스크) | 0.44초 | **0.10초** | 이미지 인코더와 마스크 디코더를 TensorRT 엔진으로 |
+| SAM 2 (마스크) | 0.44초 | **0.10초** | 이미지 인코더와 마스크 디코더를 TensorRT 엔진으로 |
 | 왜곡 보정 | 0.10초 | 0.09초 | 그대로 |
 | **합계** | **11.42초** | **4.03초** | 메모리 7.7GB / 15.6GB |
 
@@ -61,7 +61,7 @@ FoundationPose는 조금 조심해서 읽어야 합니다. 6.33초 → 1.25초�
 
 | 단계 | 비교한 것 | 결과 |
 |---|---|---|
-| SAM2 | PyTorch 마스크 vs 엔진 마스크의 겹침(IoU) | 0.9995 이상 (인코더), 0.9997 이상 (인코더+디코더) |
+| SAM 2 | PyTorch 마스크 vs 엔진 마스크의 겹침(IoU) | 0.9995 이상 (인코더), 0.9997 이상 (인코더+디코더) |
 | Grounding DINO | 540×960 엔진 vs 원본 해상도 PyTorch의 상자 겹침 | 0.990~0.995, 점수는 같거나 더 높음 |
 | FoundationPose 정제 | 출력값 차이 | 0.2~0.3% |
 | FoundationPose 채점 | 후보별 점수 차이, 1등 후보 | 약 0.2%, 후보 1~252개 모두 같은 1등, 최종 자세 동일 |
@@ -71,7 +71,7 @@ IoU는 두 영역이 얼마나 겹치는지를 0~1로 나타낸 값입니다. 1�
 
 이 비교를 하지 않았다면 놓쳤을 문제가 두 개 있었습니다.
 
-- **변환 도구의 버그.** SAM2 마스크 디코더를 엔진으로 구웠더니 마스크가 틀어졌어요. 원인은 이 버전의 TensorRT(10.3)가 디코더 안의 작은 신경망 층들을 하나로 합치는 최적화를 하다 계산을 틀리는 버그로 보입니다. 중간 결과 다섯 개를 일부러 출력으로 꺼내 두면 그 합치기가 막혀서, 결과가 원본과 다시 맞아요. 속도만 봤다면 "빨라졌다"로 끝났을 겁니다.
+- **변환 도구의 버그.** SAM 2 마스크 디코더를 엔진으로 구웠더니 마스크가 틀어졌어요. 원인은 이 버전의 TensorRT(10.3)가 디코더 안의 작은 신경망 층들을 하나로 합치는 최적화를 하다 계산을 틀리는 버그로 보입니다. 중간 결과 다섯 개를 일부러 출력으로 꺼내 두면 그 합치기가 막혀서, 결과가 원본과 다시 맞아요. 속도만 봤다면 "빨라졌다"로 끝났을 겁니다.
 - **빠르지만 틀린 검출기.** 예전에 NVIDIA가 배포한 다른 Grounding DINO 체크포인트(학습을 마친 가중치 파일)로 구운 엔진은 166ms로 훨씬 빨랐지만, 상자를 엉뚱한 곳에 그렸습니다. TensorRT 탓이 아니라 체크포인트 자체의 문제였어요. 공개된 Hugging Face 가중치로 다시 구우니 제대로 잡았습니다.
 
 속도 숫자 옆에는 항상 "같은 입력에서 같은 답이 나오는가"를 함께 적어야 합니다. 그래야 그 속도를 믿고 쓸 수 있어요.
@@ -126,7 +126,7 @@ ESS로 바꾸면 빨라지지만, 두 깊이 모델은 약점이 다릅니다. �
 | 단계 | 연구용 체인 | 상업용 체인 |
 |---|---|---|
 | 검출 | Grounding DINO (Apache-2.0) | 같음 |
-| 마스크 | SAM2 (Apache-2.0) | 같음 |
+| 마스크 | SAM 2 (Apache-2.0) | 같음 |
 | 깊이 | FoundationStereo, NVLabs 코드 (비상업) | **ESS** 또는 **NGC판 FoundationStereo** (NVIDIA가 상업 사용 가능으로 표시) |
 | 자세 | FoundationPose, NVLabs 코드 (비상업) | **Isaac ROS FoundationPose 노드 + NGC 가중치** (상업 사용 가능) |
 | 빠른 검출기 | YOLO-World (원본 GPL-3.0, Ultralytics판 AGPL-3.0) | 쓰지 않음 |
@@ -139,7 +139,7 @@ YOLO-World는 조건이 또 다릅니다. GPL·AGPL 같은 카피레프트 라�
 
 ## 상업용 체인은 얼마나 빠른가
 
-그래서 상업용 조합으로 체인을 다시 짜서 쟀습니다. Grounding DINO → SAM2 → ESS → Isaac ROS FoundationPose 노드(NGC 가중치)입니다.
+그래서 상업용 조합으로 체인을 다시 짜서 쟀습니다. Grounding DINO → SAM 2 → ESS → Isaac ROS FoundationPose 노드(NGC 가중치)입니다.
 
 | 항목 | 결과 |
 |---|---|
@@ -197,7 +197,7 @@ YOLO-World는 조건이 또 다릅니다. GPL·AGPL 같은 카피레프트 라�
 
 | | 튜닝 전 | 튜닝 후 (연구용) | 상업용 체인 |
 |---|---|---|---|
-| 구성 | GDINO + SAM2 + FoundationStereo + FoundationPose (PyTorch 위주) | 같은 구성, 전부 TensorRT | GDINO + SAM2 + **ESS** + **Isaac ROS FoundationPose** |
+| 구성 | GDINO + SAM 2 + FoundationStereo + FoundationPose (PyTorch 위주) | 같은 구성, 전부 TensorRT | GDINO + SAM 2 + **ESS** + **Isaac ROS FoundationPose** |
 | 물체당 | 11.42초 | 4.03초 | **3.26초** |
 | 추적 | 약 70ms | 약 70ms | **34ms** |
 | 제품에 넣기 | ✗ (비상업 코드) | ✗ (비상업 코드) | ✓ (각 모델 약관 확인 전제) |
@@ -216,12 +216,12 @@ CAD 파일이 없는 물체는 어떻게 할까요? 인쇄한 보드 위에 물�
 
 시간·오차·메모리 수치는 제가 Jetson Orin NX 16GB(MAXN 전력 모드)와 OAK-D 스테레오 카메라로 **직접 측정한 값**입니다. 장면 하나, 물체 하나(Seeed reComputer Industrial, 제조사 공개 CAD 사용)에서 잰 결과라 다른 물체나 조명에서는 달라질 수 있어요. 자세 오차는 방향 특징과 반복성으로 확인한 기준 자세와의 차이이지, 별도 측정 장비로 잰 절대 정확도가 아닙니다. 검출 엔진은 입력 크기 하나(540×960)로 고정되어 있고, 가까이 있는 큰 물체에서만 확인했습니다. 가림 시험 사진은 합성한 평평한 가림막이고, 실제 손 시험은 한 번의 세션(98초) 결과입니다.
 
-라이선스 내용은 2026-09-29 기준으로 NVLabs FoundationPose·FoundationStereo 저장소의 LICENSE, NGC의 ESS·FoundationPose·FoundationStereo 모델 카드, Grounding DINO·SAM2 저장소(Apache-2.0), YOLO-World 저장소(GPL-3.0)를 확인한 것입니다. **법률 자문이 아니며**, 제품에 넣기 전에는 각 모델의 최신 약관을 직접 확인하세요.
+라이선스 내용은 2026-09-29 기준으로 NVLabs FoundationPose·FoundationStereo 저장소의 LICENSE, NGC의 ESS·FoundationPose·FoundationStereo 모델 카드, Grounding DINO·SAM 2 저장소(Apache-2.0), YOLO-World 저장소(GPL-3.0)를 확인한 것입니다. **법률 자문이 아니며**, 제품에 넣기 전에는 각 모델의 최신 약관을 직접 확인하세요.
 
 Jetson·Orin·Isaac ROS·TensorRT·NGC는 NVIDIA의, 그 외 제품명은 각 소유자의 상표로 지칭 목적으로만 사용했습니다.
 
 </details>
 
-**시리즈** · [← 이전 글: 정정편 — 16GB로 안 된다던 그 결론, 뒤집었습니다](jetson-foundationpose-16gb.md) · [다음 글: 스캔편 — CAD가 없는 물체, 인쇄한 보드 한 장과 사진 스무 장으로 →](jetson-scan-no-cad.md)
+**시리즈** · [← 이전 글: 정정편, 16GB로 안 된다던 그 결론, 뒤집었습니다](jetson-foundationpose-16gb.md) · [다음 글: 스캔편, CAD가 없는 물체, 인쇄한 보드 한 장과 사진 스무 장으로 →](jetson-scan-no-cad.md)
 
 *관련: [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md)*

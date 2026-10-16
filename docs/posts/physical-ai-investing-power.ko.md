@@ -112,9 +112,11 @@ Figure는 Figure 03 배터리 케이스를 몸통 구조물로 함께 써서 무
 
 3부의 결론은 이렇습니다. **휴머노이드의 전력 문제는 배터리를 더 키우는 문제가 아니라 멈추지 않게 만드는 문제이고, 원자력은 로봇 몸이 아닌 인프라 쪽 이야기다.**
 
+이것으로 이 블로그의 Physical AI 글을 한 바퀴 돌았습니다. [고르는 법](choosing-physical-ai.md)에서 설계를 고르고, 로봇 비전에서 보는 법을, 협동로봇과 펜던트에서 ROS 2로에서 팔과 소프트웨어를, 현장 노트에서 실제로 해 본 결과를, 그리고 이 장에서 돈의 흐름을 봤어요. 전체 지도는 [고르는 법](choosing-physical-ai.md) 끝에 있습니다.
+
 ---
 
-**시리즈** · [← 2부: 관절 하나로 보는 가치 이동](physical-ai-investing-actuators.md) · [1부: Physical AI에 투자한다면](cobot-investing.md)
+**시리즈** · [← 2부: 관절 하나로 보는 가치 이동](physical-ai-investing-actuators.md) · [1부부터 다시](cobot-investing.md) · [처음으로: Physical AI를 고르는 법 →](choosing-physical-ai.md)
 
 *관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [현장 노트 1부: 로봇의 뇌를 엣지에](jetson-ros2-setup.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md)*
 

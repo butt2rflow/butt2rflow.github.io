@@ -9,7 +9,7 @@ description: "로봇 비전 파이프라인은 결국 셀에 붙은 작은 컴�
 
 # 로봇의 뇌를 엣지에 올리기 (1) — JetPack부터 ROS 2까지, 내가 부딪힌 벽들
 
-> **현장 노트 · '로봇의 뇌를 엣지에' 1부.** 이번 편은 아무것도 깔리지 않은 Jetson을 **ROS 2가 동작하는 상태**까지 세운 기록입니다. 2부는 그 위에 **Isaac ROS**를 올려 GPU 가속 인식을 붙입니다.
+> **현장 노트 · '로봇의 뇌를 엣지에' 1부.** [로봇 비전](stereo-to-grasp.md)과 [펜던트에서 ROS 2로](ros2-for-robot-programmers.md)에서 개념으로 본 것을 실제 Jetson과 로봇에서 해 본 기록입니다. 1부부터 스캔편까지는 카메라로 물체의 자세를 구하는 쪽, 모션편부터 메모리편까지는 그 자세로 로봇을 움직이고 오래 실행해 보는 쪽입니다. 이번 편은 아무것도 깔리지 않은 Jetson을 **ROS 2가 동작하는 상태**까지 세운 기록입니다. 2부는 그 위에 **Isaac ROS**를 올려 GPU 가속 인식을 붙입니다.
 
 이 글이 어떻게 쓰였는지부터 밝혀 둘게요. 여기 나오는 셋업의 상당 부분을 저는 직접 키보드로 치지 않았습니다. 시작할 때 Jetson에 **SSH를 열어 에이전트형 AI(2세대·Claude)가 엣지 컴퓨터에 직접 들어오게** 해뒀고, 그 뒤로는 AI가 제 손보다 빠르게 명령을 치고 로그를 읽고 막힌 데를 풀었어요. 혼자였다면 며칠은 헤맸을 벽들을 AI와 함께 넘은 셈입니다. 붙인 방법은 조금 뒤에 설명하고, 먼저 무엇을 왜 만드는지부터 보겠습니다.
 
@@ -47,7 +47,7 @@ Physical AI는 결국 "AI가 로봇 속으로 들어가는" 흐름이에요. 그
 
 ![SSH로 에이전트형 AI를 엣지 컴퓨터에 들여보내기](../assets/diagrams/jetson-ssh-agent.svg)
 
-여기서 재미있는 겹침이 하나 생깁니다. 로봇 비전 시리즈에서 다룬 세대 이야기, 그러니까 1세대 생성형(글·그림), 2세대 에이전트형(스스로 판단하고 도구를 쓰는), 3세대 피지컬(로봇 속으로 들어간 AI)을 떠올려 보면, 저는 **2세대 에이전트형 AI를 써서, 3세대 피지컬 AI가 착륙할 엣지 박스를 세웠습니다.** 2세대가 3세대의 활주로를 깔아준 거죠. 그러니 이 작업이 전문가만의 영역은 아닙니다. AI를 옆에 두니 제 지식 밖의 문제도 넘을 수 있었어요.
+여기서 재미있는 겹침이 하나 생깁니다. 로봇 비전 시리즈에서 다룬 세대 이야기, 그러니까 1세대 생성형(글·그림), 2세대 에이전트형(스스로 판단하고 도구를 쓰는), 3세대 Physical AI(로봇 속으로 들어간 AI)을 떠올려 보면, 저는 **2세대 에이전트형 AI를 써서, 3세대 Physical AI가 착륙할 엣지 박스를 세웠습니다.** 2세대가 3세대의 활주로를 깔아준 거죠. 그러니 이 작업이 전문가만의 영역은 아닙니다. AI를 옆에 두니 제 지식 밖의 문제도 넘을 수 있었어요.
 
 ---
 
@@ -59,7 +59,7 @@ Physical AI는 결국 "AI가 로봇 속으로 들어가는" 흐름이에요. 그
 
 **Jetson**이 그 답입니다. NVIDIA가 만든, 손바닥만 한데 GPU가 달린 엣지 컴퓨터예요. 그중 **Orin NX**는 저전력·소형이면서 인식 파이프라인을 실행할 만한 GPU를 갖췄습니다. 두 가지는 처음부터 정해두는 게 좋아요.
 
-- **왜 16GB인가** — 스테레오·세그멘테이션·자세 추정 모델이 메모리를 꽤 먹습니다. 8GB짜리도 있지만 여러 모델을 동시에 실행하면 빡빡해요. **16GB가 안전한 선택**입니다.
+- **왜 16GB인가** — 스테레오·분할·자세 추정 모델이 메모리를 꽤 먹습니다. 8GB짜리도 있지만 여러 모델을 동시에 실행하면 빡빡해요. **16GB가 안전한 선택**입니다.
 - **왜 NVMe SSD인가** — 이게 초심자가 제일 자주 놓치는 부분입니다. 인식 프레임워크·도커 이미지·모델 파일은 금방 수십 GB가 돼요. 기본 저장소(eMMC나 SD카드)엔 애초에 안 들어갑니다. **NVMe SSD에서 부팅**하는 게 사실상 전제조건이에요. (저는 128GB NVMe를 썼는데, 출고 이미지가 디스크의 절반쯤을 할당하지 않은 채 남겨 둬서 `parted`로 디스크 전체까지 넓혀야 했습니다.)
 
 ---
@@ -126,7 +126,7 @@ Physical AI는 결국 "AI가 로봇 속으로 들어가는" 흐름이에요. 그
 
 ## 다음 편: Isaac ROS
 
-ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로 가속되는 ROS 2 인식 패키지 모음이에요. 로봇 비전 시리즈에서 본 그 파이프라인, 즉 스테레오 깊이·세그멘테이션·6-DoF 자세를 Jetson 위에서 zero-copy로 빠르게 실행하는 구현체입니다.
+ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로 가속되는 ROS 2 인식 패키지 모음이에요. 로봇 비전 시리즈에서 본 그 파이프라인, 즉 스테레오 깊이·분할·6-DoF 자세를 Jetson 위에서 zero-copy로 빠르게 실행하는 구현체입니다.
 
 미리 짚어둘 갈림길이 하나 있어요. 최근 Isaac ROS는 **두 갈래**로 나뉩니다. 옛 JetPack 6/ROS 2 Humble 계열과, 최신 JetPack 7/ROS 2 Jazzy 계열이죠. 제가 쓰는 **JetPack 6.2.2**에서는, 앞서 '안정·지원'을 이유로 6을 택한 논리 그대로 **Humble 쪽**이 자연스럽습니다. 2부에서 이 위에 인식 스택을 올립니다.
 
@@ -147,9 +147,9 @@ ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로
 
 ---
 
-**시리즈** · [다음 글: 로봇의 뇌를 엣지에 올리기 (2) — Isaac ROS와 파운데이션 모델 →](jetson-isaac-foundation-models.md)
+**시리즈** · [← 이전 장: 펜던트에서 ROS 2로 4부](isaac-ros-gpu.md) · [다음 글: 2부, Isaac ROS와 파운데이션 모델 →](jetson-isaac-foundation-models.md)
 
-*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md) · [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI 투자 1부](cobot-investing.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md) · [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI 투자 1부](cobot-investing.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 
@@ -157,12 +157,12 @@ ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로
 
 ### 용어 설명
 
-- *Jetson* — NVIDIA의 엣지용 소형 GPU 컴퓨터. Orin NX는 그 중형급 모듈
-- *JetPack* — Jetson 전용 OS+드라이버+CUDA+가속 라이브러리 묶음
-- *L4T (Linux for Tegra)* — JetPack이 얹히는 Jetson용 리눅스 커널·BSP
-- *CUDA* — NVIDIA GPU로 계산을 실행하는 플랫폼. 버전이 프레임워크와 맞아야 함
-- *ROS 2 · Humble* — 로봇 소프트웨어 미들웨어와 그 LTS 배포판
-- *colcon* — ROS 2 워크스페이스 빌드 도구
-- *NVMe SSD* — 고속 저장장치. Jetson에서 인식 스택을 실행하려면 사실상 필수
-- *엣지 AI* — 클라우드가 아니라 현장 기기에서 직접 AI를 실행하는 것
-- *Isaac ROS* — NVIDIA의 GPU 가속 ROS 2 인식 패키지 모음(2부 주제)
+- *Jetson*: NVIDIA의 엣지용 소형 GPU 컴퓨터. Orin NX는 그 중형급 모듈
+- *JetPack*: Jetson 전용 OS+드라이버+CUDA+가속 라이브러리 묶음
+- *L4T (Linux for Tegra)*: JetPack이 얹히는 Jetson용 리눅스 커널·BSP
+- *CUDA*: NVIDIA GPU로 계산을 실행하는 플랫폼. 버전이 프레임워크와 맞아야 함
+- *ROS 2 · Humble*: 로봇 소프트웨어 미들웨어와 그 LTS 배포판
+- *colcon*: ROS 2 워크스페이스 빌드 도구
+- *NVMe SSD*: 고속 저장장치. Jetson에서 인식 스택을 실행하려면 사실상 필수
+- *엣지 AI*: 클라우드가 아니라 현장 기기에서 직접 AI를 실행하는 것
+- *Isaac ROS*: NVIDIA의 GPU 가속 ROS 2 인식 패키지 모음(2부 주제)

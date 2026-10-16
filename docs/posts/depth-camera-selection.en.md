@@ -139,7 +139,7 @@ For the ZED X family, check the host first. Depth is computed on the host's NVID
 
 ## Once it arrives: check your camera first
 
-A spec sheet gives the model's typical values. The unit you actually receive behaves differently per resolution mode, per calibration state and per focus type. The camera in [the scanning post](jetson-scan-no-cad.md) put every distance 5.6 % short because of the default lens parameters for its 1080p mode, had stereo rectification 1.9 px off vertically, and changed its focal length by 3.3 % up close because of autofocus. None of it produced an error message. When a new camera arrives, check three things before real work:
+A spec sheet gives the model's typical values. The unit you actually receive behaves differently per resolution mode, per calibration state and per focus type. The camera in [the scanning post](jetson-scan-no-cad.md) put every distance about 5 % (5.3 %) short because of the default lens parameters for its 1080p mode, had stereo rectification 1.9 px off vertically, and changed its focal length by 3.3 % up close because of autofocus. None of it produced an error message. When a new camera arrives, check three things before real work:
 
 1. **Lens parameters:** in the resolution mode you'll use, put a board of known size at several distances and compare the distance computed from the lens parameters with the stereo distance. With fixed focus, the error should stay the same at every distance.
 2. **Stereo rectification:** in the rectified left and right images, matching points should sit within 0.5 px vertically.
@@ -173,7 +173,7 @@ The D405 is still the default for close wrist work, and the Gemini 305 is a cand
 
 ---
 
-**Series** · [← How Many Cameras, and Where](camera-placement.md)
+**Series** · [← How Many Cameras, and Where](camera-placement.md) · [Next chapter: Cobots, Part 1 →](cobot-basics.md)
 
 *Related: [Scanning post](jetson-scan-no-cad.md) · [Tuning post](jetson-tuning-licensing.md) · [Inside the Three Models](inside-the-models.md) · [From Stereo to Grasp](stereo-to-grasp.md)*
 

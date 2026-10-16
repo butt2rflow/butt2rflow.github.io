@@ -4,7 +4,7 @@ nav_title: "2부 · 관절 하나로 보는 가치 이동"
 date: 2026-09-28
 tags: [physical-ai, investing, humanoid, actuator, harmonic-drive, nabtesco, etf, rare-earth]
 lang: ko
-description: "휴머노이드 관절 하나를 뜯어보면 가치가 어디로 흐를지 보인다. 액추에이터의 구조, 감속비 높은 설계와 QDD의 대결, 공급망 지도, 옵티머스의 손 병목, 희토류 위험, 그리고 미국 상장 로봇 ETF 네 개의 성격과 중복. 「Physical AI에 투자한다면」의 후속편."
+description: "휴머노이드 관절 하나를 뜯어보면 가치가 어디로 흐를지 보인다. 액추에이터의 구조, 감속비 높은 설계와 QDD의 대결, 공급망 지도, 옵티머스의 손 병목, 희토류 위험, 그리고 미국 상장 로봇 ETF 네 개의 성격과 중복. Physical AI 투자 2부."
 ---
 
 # Physical AI에 투자한다면 (2) — 관절 하나로 보는 가치 이동: 감속기, 모터, 그리고 ETF

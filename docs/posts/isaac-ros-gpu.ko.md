@@ -39,7 +39,7 @@ description: "매 프레임 신경망을 실행하는 인식과 복잡한 경로
 
 Isaac ROS에 전용 화면이 따로 있는 건 아닙니다. 평범한 ROS 2 노드라서 1부의 `rqt_graph`, 2부의 RViz, 또는 Foxglove 같은 웹 기반 ROS 도구로 그대로 봅니다. 블록을 선으로 연결하는 그래픽 편집기는 시뮬레이터인 Isaac Sim 쪽에 있어요. Isaac Sim의 Action Graph(OmniGraph)는 가상 카메라와 로봇을 ROS 2 토픽에 블록과 선으로 연결합니다. 다만 시뮬레이터 안의 이야기이고, 실제 셀의 노드 연결은 여전히 launch 파일에서 합니다.
 
-GPU에서 신경망을 빠르게 실행할 때는 NVIDIA의 TensorRT를 씁니다. 모델을 그 GPU에 맞게 미리 변환해 두는 과정(엔진 빌드)이 한 번 필요한데, 메모리가 작은 엣지 컴퓨터에서는 여기서 처음 막히는 경우가 많아요. [현장 노트](jetson-foundationpose-16gb.md)에 Orin NX 16GB에서 이걸 넘긴 과정을 적어 두었습니다.
+GPU에서 신경망을 빠르게 실행할 때는 NVIDIA의 TensorRT를 씁니다. 모델을 그 GPU에 맞게 미리 변환해 두는 과정(엔진 빌드)이 한 번 필요한데, 메모리가 작은 엣지 컴퓨터에서는 여기서 처음 막히는 경우가 많아요. [현장 노트 정정편](jetson-foundationpose-16gb.md)에 Orin NX 16GB에서 이걸 넘긴 과정을 적어 두었습니다.
 
 ## 이미지를 GPU에 둔 채 넘기는 NITROS
 
@@ -69,7 +69,7 @@ Isaac ROS를 쓰기 시작하면 챙길 버전 번호가 많아집니다. 이 �
 
 ![같은 입력, 같은 출력, 플래너만 교체](../assets/diagrams/r2p4-cumotion-slot.svg)
 
-경로를 찾는 방법만 바뀝니다. 쓰려면 MoveIt 설정에 cuMotion 계획 파이프라인을 OMPL 옆에 추가하고, cuMotion 노드를 함께 실행합니다. OMPL이 후보를 하나씩 시험한다면, cuMotion은 GPU로 여러 후보를 동시에 시험하고 다듬습니다. nvblox와 함께 쓰면 카메라 깊이 정보를 계획용 장애물로 바꿔 쓸 수도 있습니다(자세한 건 아래 'cuMotion은 무엇을 피하나'에서). 제 [현장 노트](jetson-isaac-foundation-models.md)에서는 Orin NX 16GB에서 7축 팔의 경로 하나를 약 210 ms에, 뒤의 [모션편](jetson-pose-to-motion.md)에서는 UR10e 설정으로 약 186 ms에 계산했습니다(처음 한 번은 GPU 준비에 16초). 장면과 설정에 따라 달라지는 값이지만, 엣지 컴퓨터에서도 실전 속도가 난다는 감은 줍니다.
+경로를 찾는 방법만 바뀝니다. 쓰려면 MoveIt 설정에 cuMotion 계획 파이프라인을 OMPL 옆에 추가하고, cuMotion 노드를 함께 실행합니다. OMPL이 후보를 하나씩 시험한다면, cuMotion은 GPU로 여러 후보를 동시에 시험하고 다듬습니다. nvblox와 함께 쓰면 카메라 깊이 정보를 계획용 장애물로 바꿔 쓸 수도 있습니다(자세한 건 아래 'cuMotion은 무엇을 피하나'에서). [현장 노트 2부](jetson-isaac-foundation-models.md)에서는 Orin NX 16GB에서 7축 팔의 경로 하나를 약 210 ms에, 뒤의 [모션편](jetson-pose-to-motion.md)에서는 UR10e 설정으로 약 186 ms에 계산했습니다(처음 한 번은 GPU 준비에 16초). 장면과 설정에 따라 달라지는 값이지만, 엣지 컴퓨터에서도 실전 속도가 난다는 감은 줍니다.
 
 cuMotion을 쓰려면 로봇마다 파일이 하나 더 필요합니다.
 
@@ -162,6 +162,8 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 로봇 컨트롤러가 하던 "안전하게 움직이기"는 그대로 두고, 사람이 가르치던 "어디로, 어떻게"만 여러 회사의 프로그램이 대화하며 계산하게 만든다. 네 편에서 본 게 모두 이 이야기였습니다. 펜던트로 로봇을 다뤄 본 경험은 여기서도 쓸모가 있어요. 좌표계와 툴, 이동 방식과 안전을 이미 아는 사람은 ROS를 훨씬 빨리 익힙니다.
 
+이 네 편의 개념을 실제 Jetson과 UR20에서 하나씩 해 본 기록이 다음 장 [현장 노트](jetson-ros2-setup.md)입니다. 빈 Jetson에 ROS 2를 올리는 데서 시작해, 인식과 경로 계획을 거쳐 실제 로봇을 움직이기까지 갑니다.
+
 ### 더 읽을 곳
 
 위에서부터 읽으세요. 앞 문서를 알고 나면 뒤 문서가 훨씬 잘 읽힙니다. 각 문서는 쓰는 버전(예: Humble)에 맞춰 고르세요.
@@ -174,9 +176,9 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 ---
 
-**시리즈** · [← 이전 글: 3부 — MoveIt 2](moveit2-goals-not-points.md)
+**시리즈** · [← 이전 글: 3부, MoveIt 2](moveit2-goals-not-points.md) · [다음 장: 현장 노트 1부, JetPack부터 ROS 2까지 →](jetson-ros2-setup.md)
 
-*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [3부: MoveIt 2](moveit2-goals-not-points.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [3부: MoveIt 2](moveit2-goals-not-points.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

@@ -7,9 +7,9 @@ series-prev: "[모델 해부](model-anatomy.md)"
 description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠다"는 말의 정체. 왜 가짜 세계에서 배우는지, 현실과 어긋나는 sim-to-real 간극은 무엇인지, 도메인 랜덤화로 어떻게 넘는지 그림 다섯 장으로 풀어봅니다.
 ---
 
-# 로봇은 왜 '가짜 세계'에서 먼저 배우나
+# 로봇은 왜 '가짜 세계'에서 먼저 배우나 — 시뮬레이션과 sim-to-real
 
-*로봇 비전(robot vision) 심화 곁가지. [세 모델의 안쪽](inside-the-models.md)과 [모델 해부](model-anatomy.md)에서 여러 번 지나가듯 나온 한마디, "이 모델들은 시뮬레이션으로 배웠다"를 정면으로 파고듭니다.*
+> **로봇 비전 · 심화편 곁가지.** [심화 1부](inside-the-models.md)와 [심화 2부](model-anatomy.md)에서 여러 번 지나가듯 나온 한마디, "이 모델들은 시뮬레이션으로 배웠다"를 정면으로 파고듭니다.
 
 앞선 글들에서 "FoundationStereo와 FoundationPose는 시뮬레이션으로 학습했다"는 문장을
 여러 번 설명 없이 지나갔습니다. 로봇이 현실에서 물체를 잡는 이야기를 하면서, 정작 그 능력은
@@ -145,6 +145,8 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 가짜 세계에서 배운 능력이 진짜 세계에서 통하는 건 마법이 아닙니다. **넓게 배우고, 실물로
 검증하고, 남는 틈을 보정으로 메우는** 세 박자의 결과예요. sim-to-real 간극은 책으로만 읽지
 말고 언젠가 직접 겪어 보시길 권합니다. 그때 왜 이 순서인지 실감하게 될 거예요.
+
+여기까지가 모델 쪽 이야기입니다. 로봇 비전의 남은 두 글은 하드웨어를 고릅니다. 카메라를 몇 대, 어디에 달지([카메라는 몇 대, 어디에](camera-placement.md)), 그 자리에 어떤 3D 카메라를 달지([어떤 3D 카메라를](depth-camera-selection.md))입니다.
 
 ---
 

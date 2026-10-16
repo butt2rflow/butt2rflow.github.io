@@ -4,7 +4,7 @@ nav_title: "Isaac Sim편 · 3090 PC와 클라우드"
 date: 2026-10-04
 tags: [physical-ai, isaac-sim, simulation, synthetic-data, ros2, universal-robots, cloud-gpu, field-notes]
 lang: ko
-description: "시뮬레이터편의 URSim은 로봇 컨트롤러를 흉내 낸다. 이번에는 주변 세계를 흉내 내는 NVIDIA Isaac Sim을 놀고 있던 RTX 3090 PC와 클라우드 GPU(L4)에 올렸다. 최소 사양 아래인 3090으로도 UR20과 상자 40개, 실제 해상도의 가상 스테레오 카메라를 초당 19프레임으로 계산했고, 관절이 힘을 못 쓰는 줄 알았던 문제는 시험이 팔을 바닥에 누른 탓이었다. 가상 카메라를 ROS 2 토픽으로 내보내고, 합성 학습 데이터를 만들다 촬영마다 130 MB씩 새는 메모리를 잡았다. 클라우드 L4는 3090보다 빠르지 않았고, 검증 전체에 약 2달러가 들었다. 현장 노트 Isaac Sim편."
+description: "시뮬레이터편의 URSim은 로봇 컨트롤러를 흉내 낸다. 이번에는 주변 세계를 흉내 내는 NVIDIA Isaac Sim을 놀고 있던 RTX 3090 PC와 클라우드 GPU(L4)에 올렸다. 최소 사양 아래인 3090으로도 UR20과 상자 40개, 실제 해상도의 가상 스테레오 카메라를 초당 19프레임으로 계산했고, 관절이 힘을 못 쓰는 줄 알았던 문제는 시험이 팔을 바닥에 누른 탓이었다. 가상 카메라를 ROS 2 토픽으로 내보내고, 합성 학습 데이터를 만들다 촬영마다 130 MB씩 새는 메모리를 잡았다. 클라우드 L4는 3090보다 빠르지 않았고, 검증 전체에 약 1.45달러(약 2캐나다달러)가 들었다. 현장 노트 Isaac Sim편."
 ---
 
 # 로봇의 뇌를 엣지에 올리기 — Isaac Sim편: RTX 3090 PC와 클라우드 GPU에 가상 작업 셀 만들기
@@ -255,9 +255,9 @@ NVIDIA·Isaac Sim·Omniverse·Jetson·cuMotion·RTX·GeForce는 NVIDIA Corporati
 
 </details>
 
-**시리즈** · [← 이전 글: 시뮬레이터편 — URSim 두 대로 본 세 플래너](jetson-ursim-planners.md) · [다음 글: 메모리편 — 인식과 모션을 16 GB Jetson 한 대에 →](jetson-memory-budget.md)
+**시리즈** · [← 이전 글: 시뮬레이터편, URSim 두 대로 본 세 플래너](jetson-ursim-planners.md) · [다음 글: 메모리편, 인식과 모션을 16 GB Jetson 한 대에 →](jetson-memory-budget.md)
 
-*관련: [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [실물편](jetson-real-robot-first-move.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [어떤 3D 카메라를](depth-camera-selection.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [실물편](jetson-real-robot-first-move.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [어떤 3D 카메라를](depth-camera-selection.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 용어 설명
 

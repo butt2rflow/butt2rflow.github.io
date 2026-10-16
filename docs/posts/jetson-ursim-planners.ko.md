@@ -170,7 +170,7 @@ cuMotion의 경로는 부드러웠고 상자도 넉넉히 피했습니다. 다�
 
 ### 인식까지 한 대에 올리면
 
-실제 셀에서는 카메라로 부품 자세를 구하고 그 자세로 움직입니다. 그래서 같은 Orin NX 16 GB에 앞 글들의 인식 체인(Grounding DINO → SAM2 → 깊이 → FoundationPose로 물체 추적)을 켜 둔 채 같은 모션 시험을 했습니다. 감시 스크립트는 남은 메모리가 1 GB 아래로 내려가면 시험을 멈추게 했어요. GPU 메모리는 스왑으로 밀어낼 수 없어서, 한계에 닿으면 Jetson 전체가 멈출 수 있기 때문입니다.
+실제 셀에서는 카메라로 부품 자세를 구하고 그 자세로 움직입니다. 그래서 같은 Orin NX 16 GB에 앞 글들의 인식 체인(Grounding DINO → SAM 2 → 깊이 → FoundationPose로 물체 추적)을 켜 둔 채 같은 모션 시험을 했습니다. 감시 스크립트는 남은 메모리가 1 GB 아래로 내려가면 시험을 멈추게 했어요. GPU 메모리는 스왑으로 밀어낼 수 없어서, 한계에 닿으면 Jetson 전체가 멈출 수 있기 때문입니다.
 
 | 시험 | 결과 | 의미 |
 |---|---|---|
@@ -219,16 +219,16 @@ Universal Robots·UR·UR12e·UR20·PolyScope·URSim·URCap은 Universal Robots A
 
 </details>
 
-**시리즈** · [← 이전 글: 실물편 — 엣지 컴퓨터가 실제 로봇을 처음 움직이다](jetson-real-robot-first-move.md) · [다음 글: Isaac Sim편 — RTX 3090 PC와 클라우드 GPU에 가상 작업 셀 →](isaac-sim-pc-and-cloud.md)
+**시리즈** · [← 이전 글: 실물편, 엣지 컴퓨터가 실제 로봇을 처음 움직이다](jetson-real-robot-first-move.md) · [다음 글: Isaac Sim편, RTX 3090 PC와 클라우드 GPU에 가상 작업 셀 →](isaac-sim-pc-and-cloud.md)
 
-*관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [모션편](jetson-pose-to-motion.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md)*
+*관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [모션편](jetson-pose-to-motion.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md)*
 
 ### 용어 설명
 
 - *URSim*: UR이 무료로 제공하는 가상 컨트롤러. 진짜 컨트롤러 소프트웨어를 PC에서 실행한다
 - *PolyScope 5 · PolyScope X*: UR 컨트롤러 소프트웨어의 이전 세대와 최신 세대
 - *플래너*: 목표까지 부딪히지 않는 경로를 계산하는 프로그램
-- *cuMotion*: NVIDIA의 GPU 경로 계획기. 장애물을 피하는 부드러운 경로를 낸다
+- *cuMotion*: NVIDIA의 GPU 경로 플래너. 장애물을 피하는 부드러운 경로를 낸다
 - *Pilz*: MoveIt 2의 산업용 플래너. 펜던트의 관절·직선·원호 이동(PTP·LIN·CIRC)처럼 정해진 모양으로 움직인다
 - *OMPL*: MoveIt 2의 기본 플래너 모음. 부딪히지 않는 경로라면 아무 모양이든 찾는다
 - *플래닝 씬*: 플래너가 아는 주변 세계. 바닥, 받침대, 장애물을 여기에 넣는다

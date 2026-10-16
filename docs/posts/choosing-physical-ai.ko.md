@@ -14,6 +14,8 @@ description: "카메라가 본 것을 로봇 움직임으로 바꾸는 세 가�
 
 > **이 블로그가 말하려는 것.** 현장의 요구(부품 종류, 사이클 타임, 실패를 얼마나 확실히 알아채야 하는가)에 따라, AI가 필요 없는 방식부터 학습 정책까지 문제를 풀 수 있는 가장 낮은 단을 고릅니다. 움직임은 편차에 맞춰 달라져도 되지만, 합격·불합격 판정은 늘 결정론으로 둡니다. 이 판단을 하려면 각 방식이 어떻게 동작하고 어떻게 실패하는지 직접 만들어 보고 비교해 봐야 해요. 그래서 이 블로그는 개념 글과 함께, 실제로 만들어 보고 잰 기록([현장 노트](jetson-ros2-setup.md), [실습 노트](learn-without-industrial-robot.md))을 싣습니다.
 
+> **읽는 순서.** 글들은 일곱 장으로 이어집니다. ① **시작하기**: 어떤 설계를 고르나(이 글과 [학습 정책](learned-policy-track-b.md)) → ② **[로봇 비전](stereo-to-grasp.md)**: 로봇은 어떻게 보고 어디를 잡을지 아나 → ③ **[협동로봇](cobot-basics.md)**: 그 눈을 어떤 팔에 다나 → ④ **[펜던트에서 ROS 2로](ros2-for-robot-programmers.md)**: 펜던트 대신 소프트웨어로 어떻게 움직이나 → ⑤ **[현장 노트](jetson-ros2-setup.md)**: 엣지 컴퓨터와 실제 로봇에서 해 보니 → ⑥ **[실습 노트](learn-without-industrial-robot.md)**: 실물 로봇 없이 연습하려면 → ⑦ **[Physical AI 투자](cobot-investing.md)**: 돈은 어디로 가나. 장마다 마지막 글이 다음 장 첫 글로 이어지고, 장별 글 목록은 이 글 끝의 지도에 있습니다.
+
 ---
 
 ## 30초 요약
@@ -90,19 +92,15 @@ description: "카메라가 본 것을 로봇 움직임으로 바꾸는 세 가�
 
 ![이 글은 지도, 자세한 이야기는 각 글에](../assets/diagrams/cpa-map.svg)
 
-| 알고 싶은 것 | 읽을 글 |
-|---|---|
-| 신경망 인식의 단계 (깊이, 마스크, 자세) | [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [세 모델의 안쪽](inside-the-models.md) · [모델 해부](model-anatomy.md) |
-| 카메라 좌표를 로봇 좌표로 | [좌표계와 변환](frames-transforms.md) |
-| 시뮬레이션과 sim-to-real | [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) |
-| 카메라를 몇 대, 어디에, 어떤 걸 | [카메라는 몇 대, 어디에](camera-placement.md) · [어떤 3D 카메라를](depth-camera-selection.md) |
-| 로봇 제조사별 차이 | [협동로봇이란](cobot-basics.md) · [UR vs 화낙](cobot-ur-vs-fanuc.md) |
-| ROS 2, MoveIt 2, 결정론적 셀 설계 | [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [2부](ros2-robot-description.md) · [3부](moveit2-goals-not-points.md) · [4부](isaac-ros-gpu.md) |
-| 엣지 컴퓨터에서 실제로 실행하기 | [현장 노트 1부](jetson-ros2-setup.md) · [2부](jetson-isaac-foundation-models.md) · [정정편](jetson-foundationpose-16gb.md) · [튜닝편](jetson-tuning-licensing.md) · [스캔편](jetson-scan-no-cad.md) |
-| 자세에서 움직임, 실제 로봇까지 | [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [시뮬레이터편](jetson-ursim-planners.md) · [Isaac Sim편](isaac-sim-pc-and-cloud.md) · [메모리편](jetson-memory-budget.md) |
-| 학습 정책 | [학습 정책](learned-policy-track-b.md) |
-| 직접 해 보기 | [실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) |
-| 투자 관점 | [Physical AI 투자 1부](cobot-investing.md) · [2부](physical-ai-investing-actuators.md) · [3부](physical-ai-investing-power.md) |
+| 장 | 이 장의 질문 | 글 |
+|---|---|---|
+| ① 시작하기 | 어떤 설계를 고르나 | 이 글 · [학습 정책](learned-policy-track-b.md) |
+| ② 로봇 비전 | 로봇은 어떻게 보고, 어디를 잡을지 아나 | 기본편 [1부: 스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [2부: 좌표계와 변환](frames-transforms.md) · 심화 [1부: 세 모델의 안쪽](inside-the-models.md) · [2부: 모델 해부](model-anatomy.md) · [시뮬레이션과 sim-to-real](robot-simulation.md) · 설계 선택 [카메라는 몇 대, 어디에](camera-placement.md) · [어떤 3D 카메라를](depth-camera-selection.md) |
+| ③ 협동로봇 | 그 눈을 어떤 팔에 다나, 왜 열려 있어야 하나 | [1부: 협동로봇이란](cobot-basics.md) · [2부: UR vs 화낙](cobot-ur-vs-fanuc.md) |
+| ④ 펜던트에서 ROS 2로 | 펜던트 대신 소프트웨어로 어떻게 움직이나 | [1부: 노드와 그래프](ros2-for-robot-programmers.md) · [2부: URDF·TF2](ros2-robot-description.md) · [3부: MoveIt 2](moveit2-goals-not-points.md) · [4부: Isaac ROS](isaac-ros-gpu.md) |
+| ⑤ 현장 노트 | 엣지 컴퓨터와 실제 로봇에서 해 보니 | 자세 구하기: [1부](jetson-ros2-setup.md) · [2부](jetson-isaac-foundation-models.md) · [정정편](jetson-foundationpose-16gb.md) · [튜닝편](jetson-tuning-licensing.md) · [스캔편](jetson-scan-no-cad.md) / 움직이기: [모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [시뮬레이터편](jetson-ursim-planners.md) · [Isaac Sim편](isaac-sim-pc-and-cloud.md) · [메모리편](jetson-memory-budget.md) |
+| ⑥ 실습 노트 | 실물 로봇 없이 연습하려면 | [0부: SO-101과 URSim](learn-without-industrial-robot.md) |
+| ⑦ Physical AI 투자 | 돈은 어디로 가나 | [1부: 가치는 이동한다](cobot-investing.md) · [2부: 관절](physical-ai-investing-actuators.md) · [3부: 전력](physical-ai-investing-power.md) |
 
 ---
 
@@ -123,7 +121,7 @@ description: "카메라가 본 것을 로봇 움직임으로 바꾸는 세 가�
 
 **시리즈** · [다음: 학습 정책 →](learned-policy-track-b.md)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

@@ -288,4 +288,4 @@ The closest is a 2026 paper from UC Berkeley and Microsoft, "Offload or Overload
 
 ---
 
-**Series** · [← Previous: Isaac Sim — a virtual work cell on an RTX 3090 PC and a cloud GPU](isaac-sim-pc-and-cloud.md)
+**Series** · [← Previous: Isaac Sim, a virtual work cell on an RTX 3090 PC and a cloud GPU](isaac-sim-pc-and-cloud.md) · [Next chapter: Hands-on Notes, Part 0 →](learn-without-industrial-robot.md)

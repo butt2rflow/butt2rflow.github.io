@@ -193,7 +193,7 @@ We have now covered what a cobot is (cobot Part 1), what divides the two makers 
 
 ---
 
-**Series** · [Part 2: Value Shifts Seen Through One Joint →](physical-ai-investing-actuators.md) · [Part 3: The Humanoid Power Problem](physical-ai-investing-power.md)
+**Series** · [← Previous chapter: Hands-on Notes, Part 0](learn-without-industrial-robot.md) · [Part 2: Value Shifts Seen Through One Joint →](physical-ai-investing-actuators.md) · [Part 3: The Humanoid Power Problem](physical-ai-investing-power.md)
 
 *Related: [What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [UR vs FANUC — Openness](cobot-ur-vs-fanuc.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Field Notes, Part 1: Jetson + ROS 2 setup](jetson-ros2-setup.md)*
 

@@ -42,7 +42,7 @@ description: "경로 계획이 정말 필요한지부터(자동화 사다리, �
 
 지그는 고정이어도 팔레트, 컨베이어, 제품 자체의 공차(허용되는 치수 오차)가 더해지면 티칭 점 하나로는 맞지 않습니다. 이 편차들을 더한 예상 범위를 **누적 공차**라고 합니다. 이 범위를 미리 정해 두면, 벗어난 결과는 [4부](isaac-ros-gpu.md)의 관문에서 걸러 멈출 수 있어요. 이런 편차에 TP 프로그래머가 익숙하게 쓰는 해법이 2단입니다. 비전이 이번 편차를 재고, 티칭한 경로 전체를 그만큼 옮기는 방식(화낙의 VOFFSET이나 PR 오프셋)입니다. 경로 모양은 매번 같고 위치만 옮기니, 편차에 적응하면서도 동작을 예측할 수 있어요. 높이와 기울기까지 바뀌거나 옮긴 경로가 주변 설비와 부딪힐 수 있을 때 3단, 이 글의 MoveIt 2로 올라갑니다.
 
-어느 단이든 합격/불합격 판정은 [1부](ros2-for-robot-programmers.md)에서 말한 대로 기존 측정 하드웨어(센서·게이지·PLC 인터록)에 둡니다. 4단 학습 정책(시연 데이터로 학습한 AI가 동작을 정하는 방식)은 좌표로 적을 수 없는 일(케이블 배선처럼)에 씁니다. 다만 실패해도 스스로 알리지 않고 동작을 이어 가기 때문에 검사 셀에는 맞지 않아, 이 시리즈에서는 다루지 않습니다.
+어느 단이든 합격/불합격 판정은 [1부](ros2-for-robot-programmers.md)에서 말한 대로 기존 측정 하드웨어(센서·게이지·PLC 인터록)에 둡니다. 4단 학습 정책(시연 데이터로 학습한 AI가 동작을 정하는 방식)은 좌표로 적을 수 없는 일(케이블 배선처럼)에 씁니다. 다만 실패해도 스스로 알리지 않고 동작을 이어 가기 때문에 검사 셀에는 맞지 않아, 이 시리즈에서는 다루지 않고 [학습 정책](learned-policy-track-b.md) 글에 따로 정리했습니다.
 
 ## MoveIt 2의 중심, move_group
 
@@ -157,7 +157,7 @@ plan_and_run(above, straight_line=True)                #   곧게 올라옴 (L)
 
 ---
 
-**시리즈** · [← 이전 글: 2부 — 로봇을 ROS에 설명하기](ros2-robot-description.md) · [다음 글: 4부 — Isaac ROS와 cuMotion →](isaac-ros-gpu.md)
+**시리즈** · [← 이전 글: 2부, 로봇을 ROS에 설명하기](ros2-robot-description.md) · [다음 글: 4부, Isaac ROS와 cuMotion →](isaac-ros-gpu.md)
 
 *관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [2부: 로봇을 ROS에 설명하기](ros2-robot-description.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md) · [현장 노트 모션편: OMPL·cuMotion·Pilz 실측](jetson-pose-to-motion.md)*
 

@@ -164,7 +164,7 @@ So: **"stability and scale for a fixed high-speed line" → FANUC; "a flexible c
 
 ---
 
-**Series** · [← Part 1: What Is a Collaborative Robot?](cobot-basics.md) · Continues in: [Investing in Physical AI, Part 1 →](cobot-investing.md)
+**Series** · [← Part 1: What Is a Collaborative Robot?](cobot-basics.md) · [Next chapter: Pendant to ROS 2, Part 1 →](ros2-for-robot-programmers.md) · Investing angle: [Investing in Physical AI, Part 1](cobot-investing.md)
 
 *Related: [Part 1: What Is a Collaborative Robot (Cobot)?](cobot-basics.md) · [Physical AI Investing, Part 1](cobot-investing.md) · [Learned Policies: the real-time port](learned-policy-track-b.md) · [Pendant to ROS 2, Part 2: RTDE and ros2_control](ros2-robot-description.md) · [Field Notes: The Real Robot](jetson-real-robot-first-move.md)*
 

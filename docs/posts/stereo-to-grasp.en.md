@@ -167,7 +167,7 @@ Our Stereo → SAM → Pose pipeline lives in the first two boxes.
 
 <details>
 <summary>Why simulation was the real unlock</summary>
-<p>All four factory walls fall in one place — the simulator — because the renderer already knows the perfect answer for every pixel. The scale it took: FoundationPose was trained on about <strong>678,000 scenes</strong>, FoundationStereo on roughly <strong>1,000,000 synthetic stereo pairs</strong>, every image rendered with domain randomization (lighting, surface finish, and clutter varied on every single frame). That one trick buys <em>both</em> zero-shot generality <em>and</em> the lighting-robustness a factory floor needs.</p>
+<p>All four factory walls fall in one place — the simulator — because the renderer already knows the perfect answer for every pixel. The scale it took: FoundationPose was trained on about <strong>600,000 scenes</strong>, FoundationStereo on roughly <strong>1,000,000 synthetic stereo pairs</strong>, every image rendered with domain randomization (lighting, surface finish, and clutter varied on every single frame). That one trick buys <em>both</em> zero-shot generality <em>and</em> the lighting-robustness a factory floor needs.</p>
 </details>
 
 ---

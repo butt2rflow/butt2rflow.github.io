@@ -10,7 +10,7 @@ description: "좌표로 적을 수 없는 일을 사람이 보여 주면 로봇�
 
 > **Physical AI · 학습 정책.** [Physical AI를 고르는 법](choosing-physical-ai.md)에서 세 가지 설계를 한 축에 놓았습니다. 이 글은 그 오른쪽 끝, 계단의 맨 위 4단인 학습 정책입니다. 그 아래 3단은 기하 방식과 신경망 인식, 곧 기하 계산이나 신경망으로 물체 자세를 찾고 플래너가 경로를 계산하는 방식이에요.
 
-케이블을 지그 홈을 따라 끼워 넣는 일을 TP로 짜 본다고 생각해 보세요. 케이블은 매번 조금씩 다르게 휘고, 손끝으로 느끼며 밀어 넣어야 합니다. 점 몇 개로는 적을 수가 없죠. 그런데 사람에게 보여 달라고 하면 누구나 몇 초 만에 해 보입니다.
+케이블을 지그 홈을 따라 끼워 넣는 일을 티치 펜던트(TP)로 짜 본다고 생각해 보세요. 케이블은 매번 조금씩 다르게 휘고, 손끝으로 느끼며 밀어 넣어야 합니다. 점 몇 개로는 적을 수가 없죠. 그런데 사람에게 보여 달라고 하면 누구나 몇 초 만에 해 보입니다.
 
 좌표로는 적을 수 없지만 보여 줄 수는 있는 이런 일에 쓰는 방식이 **학습 정책**(카메라 영상과 관절 상태를 보고 다음 동작을 정하도록 학습한 모델)입니다. 다만 무엇을 대가로 치르는지 알고 써야 합니다.
 
@@ -100,9 +100,9 @@ TP의 티칭은 사람이 정한 점을 로봇이 똑같이 재생합니다. 시
 
 ---
 
-**시리즈** · [← Physical AI를 고르는 법](choosing-physical-ai.md)
+**시리즈** · [← Physical AI를 고르는 법](choosing-physical-ai.md) · [다음 장: 로봇 비전 기본편 1부, 스테레오 비전에서 목표물 잡기까지 →](stereo-to-grasp.md)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md) · [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [UR vs 화낙(개방성)](cobot-ur-vs-fanuc.md) · [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 

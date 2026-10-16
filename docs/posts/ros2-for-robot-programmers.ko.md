@@ -9,7 +9,7 @@ description: "TP나 URScript로 로봇을 다뤄 본 사람을 위한 ROS 2 입�
 
 # 티치 펜던트에서 ROS 2로 (1) — 로봇 프로그램 하나가 여러 프로그램의 대화가 된다
 
-> **티치 펜던트에서 ROS 2로 · 4부작 중 1부.** 로봇 프로그램은 짜 봤지만 ROS는 처음인 사람을 위한 시리즈입니다. 1부는 ROS 2 자체, [2부](ros2-robot-description.md)는 로봇을 ROS에 설명하는 법(URDF·TF2·ros2_control·RViz), [3부](moveit2-goals-not-points.md)는 MoveIt 2로 경로를 계획하는 법, [4부](isaac-ros-gpu.md)는 Isaac ROS와 cuMotion(GPU로 하는 인식과 경로 계획)입니다.
+> **티치 펜던트에서 ROS 2로 · 4부작 중 1부.** 로봇 프로그램은 짜 봤지만 ROS는 처음인 사람을 위한 시리즈입니다. [협동로봇](cobot-ur-vs-fanuc.md) 장에서 UR이 외부에 열어 둔 통로를 봤다면, 이 장은 그 통로 위에서 동작하는 소프트웨어 이야기예요. 1부는 ROS 2 자체, [2부](ros2-robot-description.md)는 로봇을 ROS에 설명하는 법(URDF·TF2·ros2_control·RViz), [3부](moveit2-goals-not-points.md)는 MoveIt 2로 경로를 계획하는 법, [4부](isaac-ros-gpu.md)는 Isaac ROS와 cuMotion(GPU로 하는 인식과 경로 계획)입니다.
 
 화낙(FANUC) 펜던트로 `J P[1] 100% FINE`을 치거나 UR에서 `movej`를 써 본 사람이라면 로봇 프로그래밍의 기본은 이미 압니다. 점을 가르치고, 순서를 짜고, 입출력 신호로 주변 장비와 타이밍을 맞추는 일이죠.
 
@@ -73,7 +73,7 @@ ROS 2에서는 이 작업을 역할별로 쪼갭니다.
 
 ![카메라를 A사에서 B사로 바꾸면](../assets/diagrams/r2p-swap.svg)
 
-카메라 드라이버는 카메라 회사가, 로봇 드라이버는 로봇 회사가, 플래너는 오픈소스 커뮤니티가 만들어 두었으니, 셀을 만드는 사람이 직접 짜는 건 작업 순서와 부품 찾기 정도인 경우가 많아요. 그래서 ROS는 '로봇 운영체제'라는 이름과 달리, 운영체제보다는 서로 다른 회사의 프로그램을 잇는 공통 배선에 가깝습니다.
+카메라 드라이버는 카메라 회사가, 로봇 드라이버는 로봇 회사가, 플래너는 오픈소스 커뮤니티가 만들어 두었으니, 셀을 만드는 사람이 직접 짜는 건 작업 순서와 부품 찾기 정도인 경우가 많아요. 그래서 ROS는 '로봇 운영체제'라는 이름과 달리, 운영체제보다는 서로 다른 회사의 프로그램을 연결하는 공통 배선에 가깝습니다.
 
 ## 노드끼리 말하는 세 가지 방식
 
@@ -209,9 +209,9 @@ ROS 2 쪽에서 챙길 것도 두 가지 있습니다.
 
 ---
 
-**시리즈** · [다음 글: 2부 — 로봇을 ROS에 설명하기 →](ros2-robot-description.md)
+**시리즈** · [← 이전 장: 협동로봇 2부, UR vs 화낙](cobot-ur-vs-fanuc.md) · [다음 글: 2부, 로봇을 ROS에 설명하기 →](ros2-robot-description.md)
 
-*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [좌표계와 변환](frames-transforms.md) · [현장 노트 1부: JetPack부터 ROS 2까지](jetson-ros2-setup.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md) · [직접 해 보기: 실습 노트 (0) — SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [좌표계와 변환](frames-transforms.md) · [현장 노트 1부: JetPack부터 ROS 2까지](jetson-ros2-setup.md) · [UR vs 화낙: 개방성](cobot-ur-vs-fanuc.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 

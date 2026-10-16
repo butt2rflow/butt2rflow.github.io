@@ -14,6 +14,8 @@ description: "Three designs that turn what a camera sees into robot motion (geom
 
 > **What this blog is about.** Depending on what the line needs (how many part types, the cycle time, how surely a failure must be caught), pick the lowest step that solves the problem, from no AI at all up to a learned policy. Motion may adapt to variation, but the pass/fail verdict always stays deterministic. Making that call takes building each approach and comparing how it works and how it fails. So alongside the concept posts, this blog carries records of actually building and measuring them ([Field Notes](jetson-ros2-setup.md), [Hands-on Notes](learn-without-industrial-robot.md)).
 
+> **Reading order.** The posts run in seven chapters. ① **Start here**: which design to choose (this post and [Learned Policies](learned-policy-track-b.md)) → ② **[Robot Vision](stereo-to-grasp.md)**: how a robot sees and knows where to grasp → ③ **[Cobots](cobot-basics.md)**: which arm carries those eyes → ④ **[Pendant to ROS 2](ros2-for-robot-programmers.md)**: moving the arm from software instead of a pendant → ⑤ **[Field Notes](jetson-ros2-setup.md)**: what happened on a real edge computer and a real robot → ⑥ **[Hands-on Notes](learn-without-industrial-robot.md)**: practising without a real industrial robot → ⑦ **[Physical AI Investing](cobot-investing.md)**: where the money goes. The last post of each chapter links to the first post of the next, and the map at the end of this post lists every chapter.
+
 ---
 
 ## The 30-second version
@@ -90,19 +92,15 @@ Taught-point automation is still step 1, and most of the time it's the right ans
 
 ![This post is the map; the details live in each post](../assets/diagrams_en/cpa-map.svg)
 
-| What you want to know | Read |
-|---|---|
-| Neural perception's stages (depth, mask, pose) | [From Stereo to Grasp](stereo-to-grasp.md) · [Inside the Three Models](inside-the-models.md) · [Model Anatomy](model-anatomy.md) |
-| Turning camera coordinates into robot coordinates | [Frames & Transforms](frames-transforms.md) |
-| Simulation and sim-to-real | [Why Robots Learn in a 'Fake World' First](robot-simulation.md) |
-| How many cameras, where, and which one | [How Many Cameras, and Where](camera-placement.md) · [Which Depth Camera](depth-camera-selection.md) |
-| Differences between robot makers | [What Is a Collaborative Robot](cobot-basics.md) · [UR vs FANUC](cobot-ur-vs-fanuc.md) |
-| ROS 2, MoveIt 2, deterministic cell design | [Pendant to ROS 2, Part 1](ros2-for-robot-programmers.md) · [Part 2](ros2-robot-description.md) · [Part 3](moveit2-goals-not-points.md) · [Part 4](isaac-ros-gpu.md) |
-| Actually running it on an edge computer | [Field Notes, Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [Correction](jetson-foundationpose-16gb.md) · [Tuning](jetson-tuning-licensing.md) · [Scanning](jetson-scan-no-cad.md) |
-| From pose to motion, and a real robot | [Field Notes: Motion](jetson-pose-to-motion.md) · [The Real Robot](jetson-real-robot-first-move.md) · [The Simulators](jetson-ursim-planners.md) · [Isaac Sim](isaac-sim-pc-and-cloud.md) · [The Memory Budget](jetson-memory-budget.md) |
-| Learned policies | [Learned Policies](learned-policy-track-b.md) |
-| Trying it yourself | [Hands-on Notes, Part 0: SO-101 and URSim](learn-without-industrial-robot.md) |
-| The investing angle | [Physical AI Investing, Part 1](cobot-investing.md) · [Part 2](physical-ai-investing-actuators.md) · [Part 3](physical-ai-investing-power.md) |
+| Chapter | The question | Posts |
+|---|---|---|
+| ① Start here | Which design to choose | This post · [Learned Policies](learned-policy-track-b.md) |
+| ② Robot Vision | How a robot sees and knows where to grasp | Basics [Part 1: From Stereo to Grasp](stereo-to-grasp.md) · [Part 2: Frames & Transforms](frames-transforms.md) · Deep dive [Part 1: Inside the Three Models](inside-the-models.md) · [Part 2: Model Anatomy](model-anatomy.md) · [Simulation and sim-to-real](robot-simulation.md) · Design choices [How Many Cameras, and Where](camera-placement.md) · [Which Depth Camera](depth-camera-selection.md) |
+| ③ Cobots | Which arm carries those eyes, and why openness matters | [Part 1: What Is a Collaborative Robot](cobot-basics.md) · [Part 2: UR vs FANUC](cobot-ur-vs-fanuc.md) |
+| ④ Pendant to ROS 2 | Moving the arm from software instead of a pendant | [Part 1: Nodes and the graph](ros2-for-robot-programmers.md) · [Part 2: URDF·TF2](ros2-robot-description.md) · [Part 3: MoveIt 2](moveit2-goals-not-points.md) · [Part 4: Isaac ROS](isaac-ros-gpu.md) |
+| ⑤ Field Notes | What happened on a real edge computer and a real robot | Getting a pose: [Part 1](jetson-ros2-setup.md) · [Part 2](jetson-isaac-foundation-models.md) · [Correction](jetson-foundationpose-16gb.md) · [Tuning](jetson-tuning-licensing.md) · [Scanning](jetson-scan-no-cad.md) / Moving: [Motion](jetson-pose-to-motion.md) · [The Real Robot](jetson-real-robot-first-move.md) · [The Simulator](jetson-ursim-planners.md) · [Isaac Sim](isaac-sim-pc-and-cloud.md) · [Memory Budget](jetson-memory-budget.md) |
+| ⑥ Hands-on Notes | Practising without a real industrial robot | [Part 0: SO-101 and URSim](learn-without-industrial-robot.md) |
+| ⑦ Physical AI Investing | Where the money goes | [Part 1: The value is moving](cobot-investing.md) · [Part 2: Joints](physical-ai-investing-actuators.md) · [Part 3: Power](physical-ai-investing-power.md) |
 
 ---
 

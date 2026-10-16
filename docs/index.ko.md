@@ -213,7 +213,7 @@ title: Home
 - [**카메라는 몇 대, 어디에**](posts/camera-placement.md) — 손목 하나로 충분할 때와 오버헤드가 필요할 때
 - [**어떤 3D 카메라를**](posts/depth-camera-selection.md) — 장착 위치에서 거리로, 거리에서 카메라로
 
-**코봇**
+**협동로봇**
 
 - [**협동로봇(cobot)이란**](posts/cobot-basics.md) — 사람 옆에서 일하는 로봇의 기초
 - [**UR vs 화낙: 개방성**](posts/cobot-ur-vs-fanuc.md) — 두 진영의 개방성과 생태계 비교
