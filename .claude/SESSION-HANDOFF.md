@@ -3,7 +3,7 @@
 > **세션 시작 시 이 문서를 먼저 읽으세요.** (또는 `/start-session` 스킬)
 > 이 문서는 "지금 어디까지 됐고, 어떻게 발행하며, 무엇을 조심하나"를 담은 **살아있는 핸드오프**입니다.
 > 세션 끝에 `/end-session` 스킬이 이 문서의 *현재 상태*와 체인지로그를 갱신합니다.
-> **마지막 갱신:** 2026-10-11
+> **마지막 갱신:** 2026-10-17
 
 ---
 
@@ -80,6 +80,7 @@
 
 ## 6. 현재 상태 (published, live)
 
+- **보는 AI / AI in Pictures (2026-10-17, `3502560`, 라이브):** 최상위 탭 새로 추가. `aip-*` 6편 × 한/영(0편 로봇의 감각 → 1~2편 소리 → 3~4편 움직임 → 5편 참고만으로). Physical AI 탭과 독자(수포자 입문자)·문체(해요체)가 달라 따로 둠, 다리는 0편 하나(Physical AI 허브·실습 노트 0부 '관련' 줄에서 링크). 원본은 claude.ai 아티팩트, 블로그 글은 변환기 `~/Documents/sound-ai-study/src/to_blog.py`로 생성(아티팩트를 고치면 다시 실행; 미디어는 `docs/assets/aip/`, 오디오·영상은 raw HTML이라 `/assets/aip/` 절대 경로). 시리즈 문서: `~/Documents/sound-ai-study/README.md`·`CHANGELOG.md`. ESC-50 소리는 CC BY-NC라 유료 전자책에 넣지 말 것. 6편(폰 실험)·7편(SO-101 손끝) 준비 중. 네이버 패키지 없음.
 - **🖥️ 홈 대시보드 2존 재편 완료(2026-09-09):** "돗데기 시장" → **오늘의 결정 / 시장 신호 한눈에** 2존 + 지표 **8종**(+ **GEX 딜러 감마 레짐** 타일, Yahoo SPY 옵션 라이브 계산) 반응형 그리드 + 차트 접이식(한/영). `update_dashboard.py`(deploy 시 CI 재생성) + `custom.css`. 상세·crumb 함정은 메모리 `home-dashboard-layout`.
 - **Investing:** SSF 재출시 · MOVE · CDS · (+ 기존 대시보드/시리즈)
 - **Investing › GEX/옵션 시장구조:** `gex-calculator`(보강: 잔물결/파도 섹션) · `gex-0dte-patterns` · **`vanna-charm`(신규 후속편)** · `volatility-dashboard` (Tools 체인 순서: …→gex-0dte→**vanna-charm**→volatility-dashboard)

@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-10-17 — 새 탭 「보는 AI / AI in Pictures」: 0~5편 한/영 12개 발행
+
+- **계기:** 사용자 '일단 5편까지 blog 에 올리자' → GitHub Pages, 0~5편 한+영. 위치는 처음에 Physical AI 새 장으로 골랐다가, 독자와 문체가 달라 별도 최상위 탭을 추천했고 사용자가 동의('좋아').
+- **변경(`3502560`, push함):** 글 12개 `docs/posts/aip-*.{ko,en}.md`, 미디어 160개 22.4 MB `docs/assets/aip/`(내용 해시 이름이라 한/영 공유 파일은 한 번만), `mkdocs.yml` nav 탭 + `nav_translations`, 홈 한/영 '무료 콘텐츠'에 보는 AI 목록, `choosing-physical-ai`·`learn-without-industrial-robot` 한/영 '관련' 줄에 0편 링크 하나씩. 일곱 장 스토리 라인은 그대로.
+- **변환:** 원본은 claude.ai 아티팩트(이미 수포자·팩트체크·deAI·최종 편집 리뷰를 거침). 변환기 `~/Documents/sound-ai-study/src/to_blog.py`가 HTML에서 미디어를 꺼내고 마크다운으로 바꿈: 그림 번호는 제목에('## 그림 3 · …', 본문의 '그림 N' 참조 유지), 한 줄 정리는 `!!! abstract`, 소리 버튼은 `<audio>`, 게임은 그림 + `??? success "정답 보기"`, 편끼리 링크는 블로그 글로, 끝에 시리즈 줄·출처·상표·용어 설명. 블로그 용어 규칙 적용(화낙(FANUC), '돌렸어요'→'실행했어요').
+- **검증:** 로컬 빌드에서 새 파일 경고 없음(strict 경고 5개는 CI가 만드는 대시보드 그림, 원래 있음). Deploy MkDocs 성공, 라이브 200(한/영 글, mp4, wav), 홈에 링크 확인. 이 PC에 크롬이 없어 화면 캡처는 못 함.
+- **실수:** 핸드오프를 읽기 전에 스크래치패드에 저장소를 한 번 clone함(§2 금지). 아무것도 바꾸지 않고 바로 지움.
+- **리뷰 게이트 서브에이전트는 돌리지 않음.** 새로 쓴 블로그 문장(머리 인용, 홈 소개, 상표 줄)은 직접 다시 읽음.
+
 ## 2026-10-11 (4) — 메모리편·시뮬레이터편: 드라이버 크래시 원인 정정 (NVIDIA 이슈 게시 뒤)
 
 - **계기:** 사용자 'Fos physical ai updated, we can update blogs with final verdict'(저녁 8시 15분). fos-physical-ai 로드맵(커밋 전 변경)과 체인지로그에 게시 기록: `NVIDIA-ISAAC-ROS/isaac_ros_common#245`(butt2rflow, 10-11 23:47 UTC, `gh issue view`로 공개·OPEN 확인), 공개 gist에 근거 17개 파일.
