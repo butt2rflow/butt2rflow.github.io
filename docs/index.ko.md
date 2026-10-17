@@ -245,6 +245,17 @@ title: Home
 - [**2부 · 관절 하나로 보는 가치 이동**](posts/physical-ai-investing-actuators.md) — 감속기·모터·ETF
 - [**3부 · 휴머노이드의 전력 문제**](posts/physical-ai-investing-power.md) — 배터리·가동률·원자로
 
+### 보는 AI
+
+수학이 싫어도 괜찮은, 그림으로 보는 소리·움직임 AI 시리즈예요. 수식 없이 그림으로 풀고, 실험 숫자는 모두 직접 실행한 결과예요.
+
+- [**0편 · 로봇은 무엇으로 느낄까**](posts/aip-robot-senses.md) — 위치·힘·기울기는 숫자 하나로, '방금 무슨 일이?'는 떨림의 모양으로
+- [**1편 · 소리를 보다**](posts/aip-seeing-sound.md) — 소리를 그림(스펙트로그램)으로 바꾸는 법
+- [**2편 · 소리를 알아듣는 AI**](posts/aip-teaching-sound.md) — 소리 그림 2,000장으로 AI를 직접 가르쳐 보니
+- [**3편 · 움직임을 보다**](posts/aip-seeing-motion.md) — 골프 센서 장갑으로 보는 IMU와 진동 그림
+- [**4편 · 움직임을 알아보는 AI**](posts/aip-teaching-motion.md) — 폰 센서로 여섯 동작을 알아보게 가르치기
+- [**5편 · 참고만 주면 알아보는 AI**](posts/aip-learning-from-reference.md) — 학습 없이 참고 몇 개나 글 한 줄로
+
 ---
 
 ## 시리즈 (유료 전자책)

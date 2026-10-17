@@ -245,6 +245,17 @@ Math- and data-driven investment principles. In an age where AI dominates market
 - [**Part 2 · Value Shifts Through One Joint**](posts/physical-ai-investing-actuators.md) — reducers, motors and ETFs
 - [**Part 3 · The Humanoid Power Problem**](posts/physical-ai-investing-power.md) — batteries, uptime and reactors
 
+### AI in Pictures
+
+A picture-first series on sound and motion AI for readers who dislike math. No formulas, one picture per idea, and every experiment number comes from a run we actually did.
+
+- [**Part 0 · How Robots Feel**](posts/aip-robot-senses.md) — position, force and tilt are one number; "what just happened?" is the shape of the shaking
+- [**Part 1 · Seeing Sound**](posts/aip-seeing-sound.md) — turning sound into a picture (a spectrogram)
+- [**Part 2 · Teaching Sound**](posts/aip-teaching-sound.md) — teaching an AI with 2,000 sound pictures
+- [**Part 3 · Seeing Motion**](posts/aip-seeing-motion.md) — IMUs and vibration pictures, through a golf sensor glove
+- [**Part 4 · Teaching Motion**](posts/aip-teaching-motion.md) — teaching an AI six activities from phone sensors
+- [**Part 5 · Learning from a Reference**](posts/aip-learning-from-reference.md) — no training, just a few references or one sentence
+
 ---
 
 ## Series (paid e-books)
