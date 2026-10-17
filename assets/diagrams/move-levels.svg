@@ -1,0 +1,53 @@
+<svg width="100%" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>MOVE 레벨 밴드 — 평온에서 발작까지</title>
+<desc>MOVE 지수의 구간: 80 미만 평온, 80~120 정상, 120~160 스트레스, 160 초과 발작. 현재는 약 75로 평온 구간. 역사적 스파이크는 2020년 코로나 약 164, 2023년 SVB 사태 약 200, 2008년 리먼 약 264.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.bandlab { font-size:13px; font-weight:500; }
+</style>
+<rect x="0" y="0" width="680" height="400" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="40">MOVE 레벨 — 평온에서 발작까지</text>
+
+<!-- band bar: 0..280 mapped x 90..620 (1.893 px/unit) -->
+<rect x="90"  y="210" width="151" height="38" fill="#CDE7DC"/>
+<rect x="241" y="210" width="76"  height="38" fill="#F0E4C4"/>
+<rect x="317" y="210" width="76"  height="38" fill="#F6D8C9"/>
+<rect x="393" y="210" width="227" height="38" fill="#EFB6AB"/>
+<rect x="90"  y="210" width="530" height="38" fill="none" stroke="#c9b89a" stroke-width="0.5"/>
+
+<!-- boundary ticks -->
+<text class="s" x="90"  y="266" text-anchor="middle">0</text>
+<text class="s" x="241" y="266" text-anchor="middle">80</text>
+<text class="s" x="317" y="266" text-anchor="middle">120</text>
+<text class="s" x="393" y="266" text-anchor="middle">160</text>
+<text class="s" x="620" y="266" text-anchor="middle">280</text>
+
+<!-- band labels -->
+<text class="bandlab" x="165" y="234" text-anchor="middle" fill="#0F3D30">평온</text>
+<text class="bandlab" x="279" y="234" text-anchor="middle" fill="#7a5e18">정상</text>
+<text class="bandlab" x="355" y="234" text-anchor="middle" fill="#7A2E12">스트레스</text>
+<text class="bandlab" x="506" y="234" text-anchor="middle" fill="#7A1F14">발작</text>
+
+<!-- current marker (~75 -> x=232) -->
+<path d="M232,254 L226,266 L238,266 Z" fill="#0F6E56"/>
+<text class="th" x="232" y="292" text-anchor="middle" fill="#0F6E56">현재 ~75</text>
+
+<!-- historical spikes above the bar -->
+<circle cx="400" cy="210" r="3" fill="#D85A30"/>
+<line x1="400" y1="210" x2="400" y2="168" stroke="#D85A30" stroke-width="0.6"/>
+<text class="s" x="400" y="160" text-anchor="middle" fill="#7A2E12">2020 코로나 ~164</text>
+
+<circle cx="469" cy="210" r="3" fill="#D85A30"/>
+<line x1="469" y1="210" x2="469" y2="132" stroke="#D85A30" stroke-width="0.6"/>
+<text class="s" x="469" y="124" text-anchor="middle" fill="#7A2E12">2023 SVB ~200</text>
+
+<circle cx="590" cy="210" r="3" fill="#B01E1E"/>
+<line x1="590" y1="210" x2="590" y2="96" stroke="#B01E1E" stroke-width="0.6"/>
+<text class="s" x="590" y="88" text-anchor="middle" fill="#7A1F14">2008 리먼 ~264</text>
+
+<text class="s" x="40" y="336" fill="var(--ts)">200을 넘긴 건 손에 꼽는다 — 그때마다 금융시스템이 흔들렸다</text>
+</svg>

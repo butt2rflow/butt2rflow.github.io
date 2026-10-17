@@ -1,0 +1,82 @@
+<svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">답을 아는 장면으로 먼저 시험한다</title>
+<desc id="de">nvblox에 실제 카메라 대신 계산으로 만든 깊이 영상을 넣었다. 카메라 앞 0.6 m에 상자, 1.0 m에 벽. nvblox가 만든 3D 지도에서 두 면은 0.610 m와 1.000 m로, 지도 칸 크기 2 cm 안에 들어왔다. 깊이 한 장을 지도에 더하는 데 약 0.6 ms, 메모리는 0.4 GB 늘었다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="260" rx="12"/>
+<text class="t" x="18" y="26">가짜 깊이로 만든 정답 장면: 지도가 제자리에 놓였나</text>
+<rect class="bx" x="30" y="120" width="54" height="40" rx="6"/>
+<text class="nd" x="57" y="145" text-anchor="middle">카메라</text>
+<line x1="84" y1="200" x2="630.0" y2="200" style="stroke:var(--mut);stroke-width:1.2"/>
+<line x1="84" y1="196" x2="84" y2="204" style="stroke:var(--mut);stroke-width:1.2"/>
+<text class="sm" x="84" y="218" text-anchor="middle">0.0 m</text>
+<line x1="188" y1="196" x2="188" y2="204" style="stroke:var(--mut);stroke-width:1.2"/>
+<text class="sm" x="188.0" y="218" text-anchor="middle">0.2 m</text>
+<line x1="292" y1="196" x2="292" y2="204" style="stroke:var(--mut);stroke-width:1.2"/>
+<text class="sm" x="292.0" y="218" text-anchor="middle">0.4 m</text>
+<line x1="396" y1="196" x2="396" y2="204" style="stroke:var(--mut);stroke-width:1.2"/>
+<text class="sm" x="396.0" y="218" text-anchor="middle">0.6 m</text>
+<line x1="500" y1="196" x2="500" y2="204" style="stroke:var(--mut);stroke-width:1.2"/>
+<text class="sm" x="500.0" y="218" text-anchor="middle">0.8 m</text>
+<line x1="604" y1="196" x2="604" y2="204" style="stroke:var(--mut);stroke-width:1.2"/>
+<text class="sm" x="604.0" y="218" text-anchor="middle">1.0 m</text>
+<rect class="hi" x="396.0" y="112" width="40" height="56" rx="3"/>
+<text class="nd" x="416.0" y="104" text-anchor="middle">상자 0.6 m</text>
+<rect class="obs" x="604.0" y="54" width="14" height="140" rx="2"/>
+<text class="nd" x="598.0" y="48" text-anchor="end">벽 1.0 m</text>
+<path class="ar" d="M88 140 L392.0 140"/>
+<text class="it" x="236.0" y="132" style="fill:var(--green)">지도: 0.610 m</text>
+<path class="ar" d="M88 82 L600.0 82"/>
+<text class="it" x="454.0" y="74" style="fill:var(--green)">지도: 1.000 m</text>
+<text class="st" x="18" y="242" style="fill:var(--fg)">지도 칸 2 cm · 깊이 한 장 더하기 약 0.6 ms · 지도 출력 약 11 Hz · 메모리 +0.4 GB</text>
+</svg>

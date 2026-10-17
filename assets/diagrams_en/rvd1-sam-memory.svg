@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 360 222" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">SAM 2's Memory-Based Tracking</title>
+<desc id="de">Click on just the first frame and SAM 2 follows the object through later frames on its own, using a memory of how this object has looked and where it has been. Even after occlusion it re-links to the same object.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="222" rx="12"/>
+<text class="t" x="18" y="22">One Click, Keeps Tracking</text>
+<circle class="hi2" cx="52" cy="46" r="4"/>
+<text class="lb" x="62" y="50" style="fill:var(--teal)">Click here only</text>
+<g>
+<rect class="bx" x="16" y="58" width="72" height="56" rx="8"/>
+<text class="st" x="52" y="92" text-anchor="middle">t1</text>
+<rect class="bx" x="100" y="58" width="72" height="56" rx="8"/>
+<text class="st" x="136" y="92" text-anchor="middle">t2</text>
+<rect class="bx" x="184" y="58" width="72" height="56" rx="8"/>
+<text class="st" x="220" y="92" text-anchor="middle">t3</text>
+<rect class="bx" x="268" y="58" width="72" height="56" rx="8"/>
+<text class="st" x="304" y="92" text-anchor="middle">t4</text>
+</g>
+<path class="arb" d="M88,86 L98,86"/>
+<path class="arb" d="M172,86 L182,86"/>
+<path class="arb" d="M256,86 L266,86"/>
+<path class="ln" d="M52,114 L52,138"/>
+<path class="ln" d="M136,114 L136,138"/>
+<path class="ln" d="M220,114 L220,138"/>
+<rect class="bxc" x="16" y="140" width="324" height="40" rx="9"/>
+<text class="st" x="178" y="165" text-anchor="middle">Memory — how this object has looked and where it has been</text>
+<path class="arb" d="M304,140 L304,120"/>
+<text class="lb" x="180" y="204" text-anchor="middle">After occlusion, re-links to the same object</text>
+</svg>

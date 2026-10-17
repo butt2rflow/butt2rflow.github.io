@@ -1,0 +1,55 @@
+<svg width="100%" viewBox="0 0 680 248" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Building the mesh from a height map</title>
+<desc>Split the board plane into 1 mm cells and take the 70th percentile of point heights from all views as each cell's height. The outline comes only from views steeper than 65°, and the edge is eroded by 8 pixels. The mesh comes out 100×66×29.7 mm against the real 100×62×34 mm, built in 4.5 s.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.sub{font-size:10.5px;fill:#73726c;}
+.m{font-size:11.5px;font-weight:700;fill:#3f4d66;}
+.s{font-size:9.5px;fill:#73726c;}
+.v{font-size:10.5px;font-weight:700;fill:#5f5e58;}
+.g{font-size:10.5px;font-weight:700;fill:#15803d;}
+.r{font-size:10.5px;font-weight:700;fill:#b91c1c;}
+.num{font-size:10px;font-weight:700;fill:#ffffff;}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#9a988f"/></marker></defs>
+<rect x="0" y="0" width="680" height="248" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="32">Height map: split the board into 1 mm cells, one height per cell</text>
+<text class="sub" x="40" y="50">A simple method that suits an object seen from above on a board · there is no underside</text>
+<line x1="40" y1="190" x2="330" y2="190" stroke="#5f5e58" stroke-width="1.5"/>
+<text class="s" x="40" y="206">board plane</text>
+<rect x="70" y="166.8" width="9" height="23.2" fill="#16a34a" opacity="0.85"/>
+<rect x="80" y="150.5" width="9" height="39.5" fill="#16a34a" opacity="0.85"/>
+<rect x="90" y="139.8" width="9" height="50.2" fill="#16a34a" opacity="0.85"/>
+<rect x="100" y="131.5" width="9" height="58.5" fill="#16a34a" opacity="0.85"/>
+<rect x="110" y="124.9" width="9" height="65.1" fill="#16a34a" opacity="0.85"/>
+<rect x="120" y="119.4" width="9" height="70.6" fill="#16a34a" opacity="0.85"/>
+<rect x="130" y="114.8" width="9" height="75.2" fill="#16a34a" opacity="0.85"/>
+<rect x="140" y="111.0" width="9" height="79.0" fill="#16a34a" opacity="0.85"/>
+<rect x="150" y="107.9" width="9" height="82.1" fill="#16a34a" opacity="0.85"/>
+<rect x="160" y="105.5" width="9" height="84.5" fill="#16a34a" opacity="0.85"/>
+<rect x="170" y="103.7" width="9" height="86.3" fill="#16a34a" opacity="0.85"/>
+<rect x="180" y="102.5" width="9" height="87.5" fill="#16a34a" opacity="0.85"/>
+<rect x="190" y="101.9" width="9" height="88.1" fill="#16a34a" opacity="0.85"/>
+<rect x="200" y="101.9" width="9" height="88.1" fill="#16a34a" opacity="0.85"/>
+<rect x="210" y="102.6" width="9" height="87.4" fill="#16a34a" opacity="0.85"/>
+<rect x="220" y="104.0" width="9" height="86.0" fill="#16a34a" opacity="0.85"/>
+<rect x="230" y="106.1" width="9" height="83.9" fill="#16a34a" opacity="0.85"/>
+<rect x="240" y="109.0" width="9" height="81.0" fill="#16a34a" opacity="0.85"/>
+<rect x="250" y="112.9" width="9" height="77.1" fill="#16a34a" opacity="0.85"/>
+<rect x="260" y="117.9" width="9" height="72.1" fill="#16a34a" opacity="0.85"/>
+<rect x="270" y="124.4" width="9" height="65.6" fill="#16a34a" opacity="0.85"/>
+<rect x="280" y="132.9" width="9" height="57.1" fill="#16a34a" opacity="0.85"/>
+<rect x="290" y="144.4" width="9" height="45.6" fill="#16a34a" opacity="0.85"/>
+<rect x="300" y="162.9" width="9" height="27.1" fill="#16a34a" opacity="0.85"/>
+<circle cx="362" cy="76" r="4" fill="#16a34a"/>
+<text class="m" x="374" y="80">Per 1 mm cell</text>
+<text class="s" x="374" y="95">70th percentile of point heights from all views</text>
+<circle cx="362" cy="118" r="4" fill="#16a34a"/>
+<text class="m" x="374" y="122">Outline from top views only</text>
+<text class="s" x="374" y="137">views steeper than 65° · side views fatten the outline</text>
+<circle cx="362" cy="160" r="4" fill="#16a34a"/>
+<text class="m" x="374" y="164">Erode the edge by 8 px</text>
+<text class="s" x="374" y="179">guards against mask spill and stereo edge-fattening</text>
+<text class="g" x="40" y="232">Result: 100 × 66 × 29.7 mm (real 100 × 62 × 34 mm) · 4.5 s</text>
+</svg>
