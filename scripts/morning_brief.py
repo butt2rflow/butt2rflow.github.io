@@ -59,7 +59,11 @@ HEDGE_SKEW_5D = 8.0       # SKEW points in 5 sessions
 HEDGE_SKEW_PCT = 0.90     # 1-year percentile
 HEDGE_COR90D_5D = 4.0     # COR90D points in 5 sessions
 STRESS_VIX_VIX3M = 0.95
-STRESS_VVIX = 105.0
+# VVIX as a 1-year percentile, not a level: the fixed VVIX ≥ 105 fired on
+# 79–90% of 2020–21 days and 2–5% of calm years. Backfill 2010–2026: same 🔴
+# drawdown rate (40%), yearly firing 1–43% instead of 1–90%, consistent
+# ≤2019 / 2020– / 2024-09– holdout (2026-10-18 review).
+STRESS_VVIX_PCT = 0.90
 
 
 # ============================================================
@@ -143,6 +147,12 @@ def base_rate(vix: pd.Series, skew: pd.Series, spx: pd.Series) -> dict:
         "p2_all": float((same_vix.dd10 <= -2).mean()),
         "p5_all": float((same_vix.dd10 <= -5).mean()),
         "band": ["SKEW 하위 50%", "SKEW 50~90%", "SKEW 상위 10%"][band(today.skpct)],
+        # A gap that only shows up in one regime isn't a rule (e.g. the
+        # same-VIX SKEW-top-10% effect is post-2020 only).
+        **{f"{k}_{era}": float((x[x.index < "2020"] if era == "pre" else x[x.index >= "2020"])
+                               .dd10.le(-2).mean())
+           if len(x[x.index < "2020"] if era == "pre" else x[x.index >= "2020"]) else float("nan")
+           for k, x in (("p2", like), ("p2_all", same_vix)) for era in ("pre", "post")},
     }
 
 
@@ -358,6 +368,7 @@ def collect() -> dict:
         "vix9d": float(idx["VIX9D"].iloc[-1]),
         "vix_vix3m": float(ratio.iloc[-1]), "vix_vix3m_5d": _chg(ratio),
         "vvix": float(idx["VVIX"].iloc[-1]), "vvix_5d": _chg(idx["VVIX"]),
+        "vvix_pct": _pct_1y(idx["VVIX"]),
         "skew": float(skew.iloc[-1]), "skew_5d": _chg(skew), "skew_pct": _pct_1y(skew),
         "cor90d": float(idx["COR90D"].iloc[-1]), "cor90d_5d": _chg(idx["COR90D"]),
         "cor1m": float(idx["COR1M"].iloc[-1]),
@@ -384,8 +395,8 @@ def classify(d: dict) -> tuple[str, str, list[str]]:
         stress.append(f"VX 곡선 역전 (M2−M1 {vs['spread_2_1']:+.2f})")
     if m["vix_vix3m"] >= STRESS_VIX_VIX3M:
         stress.append(f"VIX/VIX3M {m['vix_vix3m']:.2f} ≥ {STRESS_VIX_VIX3M}")
-    if m["vvix"] >= STRESS_VVIX:
-        stress.append(f"VVIX {m['vvix']:.0f} ≥ {STRESS_VVIX:.0f}")
+    if m["vvix_pct"] >= STRESS_VVIX_PCT:
+        stress.append(f"VVIX {m['vvix']:.0f} (1년 {m['vvix_pct']:.0%} 백분위)")
     hedge = []
     if m["skew_5d"] >= HEDGE_SKEW_5D:
         hedge.append(f"SKEW 5일 {m['skew_5d']:+.1f}")
@@ -469,10 +480,15 @@ def build_text(d: dict) -> str:
              f"−2% {b['p2']:.0%} (같은 VIX대 전체 {b['p2_all']:.0%}) · "
              f"−5% {b['p5']:.0%} (같은 VIX대 전체 {b['p5_all']:.0%})")
 
+    def _pp(v):
+        return "–" if v is None or not np.isfinite(v) else f"{v:.0%}"
+    L.append(f"• −2% 기준 시기별: ~2019 {_pp(b['p2_pre'])} (전체 {_pp(b['p2_all_pre'])}) · "
+             f"2020~ {_pp(b['p2_post'])} (전체 {_pp(b['p2_all_post'])}) — 한쪽 시기에만 보이는 차이는 규칙이 아닙니다")
+
     # 스트레스 / 기타 지표
     L += ["", "*지표*",
           f"• VIX {m['vix']:.2f} (5일 {m['vix_5d']:+.2f}) · VIX9D {m['vix9d']:.2f} · "
-          f"VIX/VIX3M {m['vix_vix3m']:.2f} · VVIX {m['vvix']:.1f} (5일 {m['vvix_5d']:+.1f})"
+          f"VIX/VIX3M {m['vix_vix3m']:.2f} · VVIX {m['vvix']:.1f} (5일 {m['vvix_5d']:+.1f}, 1년 {m['vvix_pct']:.0%})"
           + (f" · VolVol {ud.EMOJI[d['vvs']['state']]}" if d["vvs"] else "")]
     if vs:
         stale = f" ⚠️ {d['vx_stale']} 스냅샷" if d["vx_stale"] else ""

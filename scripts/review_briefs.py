@@ -63,6 +63,40 @@ def _boot_ci(hit: pd.Series, pos: pd.Series) -> tuple[float, float]:
     return tuple(np.percentile(est, [2.5, 97.5]))
 
 
+def diff_pvalues(bf: pd.DataFrame, masks: dict[str, pd.Series]) -> dict[str, float]:
+    """Two-sided block-bootstrap p-value for P(dd10≤−2%) | signal minus
+    P(dd10≤−2%) on all days. The same resampled blocks feed both means, so
+    the overlap between signal days and all days is respected."""
+    hit = (bf.h10_maxdd <= -2).values.astype(float)
+    blocks = (bf.pos // BOOT_BLOCK).values
+    keys = np.unique(blocks)
+    idx_by = {k: np.flatnonzero(blocks == k) for k in keys}
+    m_arr = {name: m.values for name, m in masks.items()}
+    diffs = {name: [] for name in masks}
+    for _ in range(BOOT_REPS):
+        ix = np.concatenate([idx_by[k] for k in RNG.choice(keys, size=len(keys), replace=True)])
+        h_all = hit[ix].mean()
+        for name, m in m_arr.items():
+            sel = m[ix]
+            if sel.any():
+                diffs[name].append(hit[ix][sel].mean() - h_all)
+    out = {}
+    for name, ds in diffs.items():
+        ds = np.asarray(ds)
+        out[name] = 1.0 if ds.size == 0 else min(1.0, 2 * min((ds <= 0).mean(), (ds >= 0).mean()))
+    return out
+
+
+def holm(p: dict[str, float]) -> dict[str, float]:
+    """Holm–Bonferroni step-down adjustment across the monthly signal set."""
+    items = sorted(p.items(), key=lambda kv: kv[1])
+    m, run, adj = len(items), 0.0, {}
+    for i, (k, v) in enumerate(items):
+        run = max(run, min(1.0, (m - i) * v))
+        adj[k] = run
+    return adj
+
+
 def _agg(g: pd.DataFrame) -> dict:
     hit = (g.h10_maxdd <= -2).astype(float)
     lo, hi = _boot_ci(hit, g.pos)
@@ -126,7 +160,8 @@ def backfill_tables(bf: pd.DataFrame) -> str:
             "SKEW 1년 ≥ 90%": x.skew_pct >= mb.HEDGE_SKEW_PCT,
             "COR90D 5일 ≥ +4": x.cor90d_5d >= mb.HEDGE_COR90D_5D,
             "VIX/VIX3M ≥ 0.95": x.vix_vix3m >= mb.STRESS_VIX_VIX3M,
-            "VVIX ≥ 105": x.vvix >= mb.STRESS_VVIX,
+            "VVIX 1년 ≥ 90%": x.vvix_pct >= mb.STRESS_VVIX_PCT,
+            "(참고) VVIX ≥ 105 — 이전 규칙": x.vvix >= 105,
             "VIX9D/VIX > 1": x.vix9d_vix > 1,
             "VRP < 0": x.vrp < 0,
             "VRP 1년 상위 20%": x.vrp_top20,
@@ -135,14 +170,22 @@ def backfill_tables(bf: pd.DataFrame) -> str:
     parts = []
     for label, sub in (("전 기간 — 판단 근거", bf), ("최근 12개월 — 참고용(서술)", bf.iloc[-252:])):
         by_state = {s: _agg(g) for s, g in sub.groupby("state")}
-        by_flag = {k: _agg(sub[v]) for k, v in flags(sub).items()}
+        fl = flags(sub)
+        by_flag = {k: _agg(sub[v]) for k, v in fl.items()}
         by_flag["전체"]["에피소드"] = np.nan    # one continuous run; not meaningful
+        if label.startswith("전 기간"):
+            p_holm = holm(diff_pvalues(sub, {k: v for k, v in fl.items() if k != "전체"}))
+            for k, p in p_holm.items():
+                floor = 2 / BOOT_REPS          # bootstrap resolution
+                by_flag[k]["vs 전체 p(Holm)"] = f"<{floor:.3f}" if p < floor else f"{p:.3f}"
         parts.append(f"### 백필 — {label} ({sub.index[0]} → {sub.index[-1]})\n\n"
                      f"상태별\n\n{_table(by_state)}\n\n신호별\n\n{_table(by_flag)}")
         if label.startswith("전 기간"):
             parts.append(f"VIX 밴드별 상태 (P(dd10≤−2%))\n\n{vix_band_table(sub)}")
     parts.append("_n은 겹치는 일별 행 수, '에피소드'는 10거래일 넘게 떨어진 독립 구간 수입니다. "
-                 "판단은 에피소드와 블록 부트스트랩 95% CI로 합니다. 최근 12개월 표의 끝은 "
+                 "판단은 에피소드와 블록 부트스트랩 95% CI로 하고, 신호별 'vs 전체 p(Holm)'은 "
+                 "매달 여러 신호를 비교하는 다중비교를 보정한 값입니다(0.05 미만만 의미 있게 봅니다). "
+                 "최근 12개월 표의 끝은 "
                  "결과 창(20거래일)이 끝난 날까지라 오늘보다 약 한 달 앞섭니다._")
     return "\n\n".join(parts)
 

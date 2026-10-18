@@ -118,6 +118,7 @@ def build_backfill(h: pd.DataFrame) -> pd.DataFrame:
     d["vix9d_vix"] = d.VIX9D / d.VIX
     d["skew_5d"] = d.SKEW.diff(5)
     d["skew_pct"] = d.SKEW.rolling(252).rank(pct=True)
+    d["vvix_pct"] = d.VVIX.rolling(252).rank(pct=True)
     d["cor90d_5d"] = d.COR90D.diff(5)
     rv20 = d.SPX.pct_change().rolling(20).std() * np.sqrt(252) * 100
     d["vrp"] = d.VIX - rv20
@@ -126,11 +127,12 @@ def build_backfill(h: pd.DataFrame) -> pd.DataFrame:
 
     rows = []
     for t, x in d.iterrows():
-        m = {"vix_vix3m": x.vix_vix3m, "vvix": x.VVIX, "skew_5d": x.skew_5d,
-             "skew_pct": x.skew_pct, "cor90d_5d": x.cor90d_5d}
+        m = {"vix_vix3m": x.vix_vix3m, "vvix": x.VVIX, "vvix_pct": x.vvix_pct,
+             "skew_5d": x.skew_5d, "skew_pct": x.skew_pct, "cor90d_5d": x.cor90d_5d}
         emoji, _, why = mb.classify({"m": m, "vs": None})
         rows.append({"date": t.strftime("%Y-%m-%d"), "state": emoji, "why": " · ".join(why),
                      "vix": x.VIX, "vix_vix3m": x.vix_vix3m, "vvix": x.VVIX,
+                     "vvix_pct": x.vvix_pct,
                      "vix9d_vix": x.vix9d_vix, "skew": x.SKEW, "skew_5d": x.skew_5d,
                      "skew_pct": x.skew_pct, "cor90d": x.COR90D, "cor90d_5d": x.cor90d_5d,
                      "vrp": x.vrp, "spx_from_high_20d": x.spx_from_high_20d})

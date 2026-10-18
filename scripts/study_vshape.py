@@ -44,3 +44,28 @@ for th in (0.03,0.05):
     print(g.round(2).to_string())
     if th==0.05:
         print(e.sort_values('cross').tail(12)[['peak','cross','skp','depth','rec_days','fwd20']].round(2).to_string())
+
+# ------------------------------------------------------------------
+# Uncertainty (added after the 2026-10-18 methodology review):
+# bootstrap the heavy-vs-light gap by resampling episodes, and count
+# episodes still unrecovered (censored) so the recovery medians aren't
+# read as complete.
+# ------------------------------------------------------------------
+rng = np.random.default_rng(7)
+for th in (0.03, 0.05):
+    e = episodes(th)
+    heavy, light = e[e.skp >= 0.8], e[e.skp < 0.5]
+    gaps = {"fwd20 median gap (pp)": [], "recovery median gap (days)": []}
+    for _ in range(2000):
+        h = heavy.sample(len(heavy), replace=True, random_state=rng.integers(1 << 31))
+        l = light.sample(len(light), replace=True, random_state=rng.integers(1 << 31))
+        gaps["fwd20 median gap (pp)"].append(h.fwd20.median() - l.fwd20.median())
+        gaps["recovery median gap (days)"].append(h.rec_days.median() - l.rec_days.median())
+    print(f"\n-{th:.0%} episodes: heavy n={len(heavy)} (unrecovered {heavy.rec_days.isna().sum()}), "
+          f"light n={len(light)} (unrecovered {light.rec_days.isna().sum()})")
+    for k, v in gaps.items():
+        v = np.array(v, dtype=float)
+        v = v[np.isfinite(v)]
+        lo, hi = np.percentile(v, [2.5, 97.5])
+        print(f"  {k}: point {np.median(v):+.1f}, 95% CI [{lo:+.1f}, {hi:+.1f}]"
+              f"{'  (includes 0 -> not significant)' if lo <= 0 <= hi else ''}")
