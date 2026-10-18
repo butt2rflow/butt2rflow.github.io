@@ -226,3 +226,5 @@ Sound: ESC-50 (K. J. Piczak, CC BY-NC); eye: AST (Gong, Chung, Glass); text mode
 - *AI that learned sound with text*: CLAP (contrastive language-audio pretraining)
 - *one eye for sound and motion*: multimodal joint embedding
 - *simulating with random changes*: domain randomization
+- *a broadly trained eye*: foundation model (general-purpose representation)
+- *learning in simulation, using it for real*: sim-to-real
