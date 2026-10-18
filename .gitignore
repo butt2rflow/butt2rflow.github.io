@@ -37,6 +37,8 @@ _archive/
 !scripts/backfill_vix_history.py
 # Plus the monthly backtest data generator (output is JSON, committed)
 !scripts/compute_backtest.py
+# Morning volatility briefing → Slack (runs in CI)
+!scripts/morning_brief.py
 # MkDocs build hook (short sidebar labels) runs in CI too
 !hooks/nav_titles.py
 !hooks/home_sidebar.py

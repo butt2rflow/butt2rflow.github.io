@@ -1,0 +1,55 @@
+name: Morning volatility brief
+
+# Slack briefing at 07:30 New York time (2h before the 09:30 US open),
+# Mon–Fri. GitHub cron is UTC with no DST, so both candidate slots are
+# scheduled and morning_brief.py keeps the one that is 07:30 ET today
+# (11:30 UTC under EDT, 12:30 UTC under EST). Reads the previous US close,
+# which Cboe has long since published by then.
+
+on:
+  schedule:
+    - cron: '30 11 * * 1-5'
+    - cron: '30 12 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pandas numpy matplotlib anthropic
+
+      - name: Build and send briefing
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BRIEF_SCHEDULE: ${{ github.event.schedule }}
+        run: python scripts/morning_brief.py
+
+      - name: Commit briefing log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add brief_log/
+          if git diff --cached --quiet; then
+            echo "No new briefing log."
+            exit 0
+          fi
+          git commit -m "chore: briefing log ($(date -u +%Y-%m-%d))"
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            git pull --rebase origin main
+          done
+          exit 1
