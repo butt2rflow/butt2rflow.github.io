@@ -90,7 +90,7 @@ SO-101에서 집기가 실패하면, 비전이 틀렸는지 팔이 부정확했�
 
 **시리즈** · [← 이전 장: 현장 노트 메모리편](jetson-memory-budget.md) · 다음: 실습 노트 1부, SO-101 조립과 시연 기록 (준비 중) · [다음 장: Physical AI 투자 1부 →](cobot-investing.md)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책](learned-policy-track-b.md) · [현장 노트 1부](jetson-ros2-setup.md) · [실물편](jetson-real-robot-first-move.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [보는 AI 0편, 로봇은 무엇으로 느낄까](aip-robot-senses.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI를 고르는 법](choosing-physical-ai.md) · [학습 정책](learned-policy-track-b.md) · [현장 노트 1부](jetson-ros2-setup.md) · [실물편](jetson-real-robot-first-move.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [보는 AI 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)*
 
 ### 출처와 표기
 

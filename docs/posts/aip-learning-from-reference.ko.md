@@ -209,7 +209,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 ----
 
-**시리즈** · [← 4편, 움직임을 알아보는 AI](aip-teaching-motion.md) · [처음부터: 0편, 로봇은 무엇으로 느낄까](aip-robot-senses.md)
+**시리즈** · [← 4편, 움직임을 알아보는 AI](aip-teaching-motion.md) · [처음부터: 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)
 
 ### 출처와 표기
 
