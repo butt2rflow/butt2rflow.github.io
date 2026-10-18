@@ -9,7 +9,7 @@ the homepage content; assets/home-sidebar.js moves it into the left sidebar.
   the newest date, the first one in nav order (the series' entry point) is shown,
   with the count ("· 6편") in its meta line.
 - Categories: every nav section under the top-level tabs, linking to its first
-  page. Titles come from the (translated) nav, labels from nav_titles.py.
+  page. A tab with no sub-sections (only posts) lists its posts instead. Titles come from the (translated) nav, labels from nav_titles.py.
 """
 
 import datetime
@@ -97,13 +97,16 @@ def on_page_context(context, page, config, nav):
         if not top.is_section:
             continue
         cats = [c for c in top.children if c.is_section]
-        if not cats:
+        flat = [c for c in top.children if c.is_page] if not cats else []
+        if not cats and not flat:
             continue
         out.append(f'<div class="home-side__tab">{html.escape(top.title)}</div><ul class="home-side__cats">')
         for c in cats:
             first = _first_page(c)
             if first:
                 out.append(f'<li><a href="{html.escape(_href(page, first))}">{html.escape(c.title)}</a></li>')
+        for c in flat:  # a tab with posts but no sub-sections (e.g. AI in Pictures): list its posts
+            out.append(f'<li><a href="{html.escape(_href(page, c))}">{html.escape(c.title)}</a></li>')
         out.append("</ul>")
     out.append("</div>")
     page.content = (page.content or "") + "\n".join(out)
