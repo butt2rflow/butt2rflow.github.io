@@ -168,7 +168,7 @@ table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
     document.getElementById("done").hidden = false;
     document.getElementById("bundle_info").textContent = `${bundleName} · 녹음 ${files.length}개 · ${(blob.size / 1e6).toFixed(1)} MB`;
     const up = document.getElementById("upload");
-    if (UPLOAD_URL) up.href = UPLOAD_URL; else { up.hidden = true; document.getElementById("upload_note").textContent = "저장한 꾸러미 파일을 카카오톡이나 메일로 보내 주세요."; }
+    if (UPLOAD_URL) up.href = UPLOAD_URL; else { up.hidden = true; document.getElementById("save").textContent = "꾸러미 저장하기"; document.getElementById("upload_note").textContent = "저장한 꾸러미 파일을 카카오톡이나 메일로 보내 주세요."; }
   });
   document.getElementById("save").addEventListener("click", () => {
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = bundleName;
