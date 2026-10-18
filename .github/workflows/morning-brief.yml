@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: pip install pandas numpy matplotlib anthropic
 
+      - name: Score past briefings (5/10/20-session outcomes)
+        run: python scripts/score_briefs.py --live-only
+
       - name: Build and send briefing
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -45,7 +48,7 @@ jobs:
             echo "No new briefing log."
             exit 0
           fi
-          git commit -m "chore: briefing log ($(date -u +%Y-%m-%d))"
+          git commit -m "chore: briefing log + scores ($(date -u +%Y-%m-%d))"
           for attempt in 1 2 3; do
             if git push; then
               exit 0

@@ -1,0 +1,66 @@
+name: Monthly briefing review
+
+# 1st of every month: score every logged briefing against what happened,
+# rebuild the historical backfill, have Claude write the review and propose
+# playbook edits. Results land on a branch for a human to merge — the
+# playbook only changes what the morning commentary says after review.
+
+on:
+  schedule:
+    - cron: '0 14 1 * *'
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Month under review (YYYY-MM). Default: previous month.'
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pandas numpy matplotlib anthropic tabulate
+
+      - name: Score briefings and rebuild backfill
+        run: python scripts/score_briefs.py
+
+      - name: Write review
+        id: review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/review_briefs.py ${{ inputs.month && format('--month {0}', inputs.month) || '' }}
+
+      - name: Push review branch and open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MONTH: ${{ steps.review.outputs.month }}
+          CHANGES: ${{ steps.review.outputs.changes }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="brief-review/${MONTH}"
+          git checkout -B "$branch"
+          git add brief_review/ brief_playbook.md brief_log/*.json
+          git commit -m "Briefing review ${MONTH} (playbook changes: ${CHANGES})"
+          git push -f origin "$branch"
+          repo="${GITHUB_REPOSITORY}"
+          url=$(gh pr create --base main --head "$branch" \
+                --title "Briefing review ${MONTH}" \
+                --body "Monthly review of the morning briefing. Report: brief_review/${MONTH}.md · proposed playbook changes: ${CHANGES}. Merge to apply." \
+                2>/dev/null || true)
+          [ -z "$url" ] && url="https://github.com/${repo}/compare/main...${branch}?expand=1"
+          report="https://github.com/${repo}/blob/${branch}/brief_review/${MONTH}.md"
+          msg="*📋 브리핑 월간 복기 — ${MONTH}*\nplaybook 변경 제안 ${CHANGES}건\n<${report}|보고서 보기> · <${url}|PR에서 검토·병합>"
+          curl -s -X POST -H 'Content-Type: application/json' \
+               --data "$(printf '{"text":"%s"}' "$msg")" "$SLACK_WEBHOOK_URL" >/dev/null

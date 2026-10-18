@@ -43,6 +43,9 @@ CLAUDE_MODEL = "claude-opus-5-5"
 # path, VIX, credit over the following 5/10/20 sessions) can be scored
 # against it later and the playbook tuned from the track record.
 LOG_DIR = Path(__file__).resolve().parent.parent / "brief_log"
+# Rules and findings the commentary must follow; the monthly review
+# (review_briefs.py) proposes edits to it as a PR.
+PLAYBOOK = Path(__file__).resolve().parent.parent / "brief_playbook.md"
 
 # Two-tier thresholds. Tier 1 = insurance being bought while the index is
 # calm; tier 2 = the stress has reached spot vol / the futures curve.
@@ -446,6 +449,14 @@ JSON 필드 이름(amp, vrp, pc, base 등)을 그대로 쓰지 말고 '하방 �
 선물 만기는 '1·2월물'이 아니라 '근월물·차월물'로 씁니다."""
 
 
+def playbook_section() -> str:
+    try:
+        return ("\n\n아래는 현재 playbook입니다. 신호 해석과 과거 발견은 이 내용을 따릅니다.\n\n"
+                + PLAYBOOK.read_text(encoding="utf-8"))
+    except OSError:
+        return ""
+
+
 def commentary(d: dict) -> str | None:
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return None
@@ -466,7 +477,7 @@ def commentary(d: dict) -> str | None:
             output_config={"effort": "low"},
             betas=["server-side-fallback-2026-07-01"],
             extra_body={"fallbacks": "default"},
-            system=COMMENTARY_SYSTEM,
+            system=COMMENTARY_SYSTEM + playbook_section(),
             messages=[{"role": "user",
                        "content": json.dumps(payload, ensure_ascii=False, default=float)}],
         )
