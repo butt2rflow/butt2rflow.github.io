@@ -4,7 +4,7 @@ Score morning briefings against what actually happened.
 Two inputs:
   brief_log/<date>.json   live briefings (morning_brief.py), scored in place
   brief_log/backfill.csv  the same template read replayed over Cboe history
-                          (2008–), so the monthly review has a usable sample
+                          (2008–, first rows after the 252-session warm-up: 2010-09), so the monthly review has a usable sample
                           from day one. No GEX / put-call / VX curve history
                           exists for the replay, so it carries only the
                           signals that do (SKEW, COR90D, VIX/VIX3M, VVIX,

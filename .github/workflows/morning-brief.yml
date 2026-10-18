@@ -15,6 +15,11 @@ on:
 permissions:
   contents: write
 
+# Both cron slots (and manual runs) commit to main; never overlap.
+concurrency:
+  group: morning-brief
+  cancel-in-progress: false
+
 jobs:
   brief:
     runs-on: ubuntu-latest
@@ -36,6 +41,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BRIEF_SCHEDULE: ${{ github.event.schedule }}
+          # Manual runs re-brief even if this close was already briefed.
+          BRIEF_FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: python scripts/morning_brief.py --stage
 
       # The chart must be on main before Slack fetches it by raw URL.
@@ -58,7 +65,10 @@ jobs:
           done
           exit 1
 
+      # Send even if the push failed — post_slack drops the chart when Slack
+      # can't fetch it. No-op when staging skipped (nothing pending).
       - name: Send to Slack
+        if: always()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python scripts/morning_brief.py --send-pending

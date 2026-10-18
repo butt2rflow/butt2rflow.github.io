@@ -23,26 +23,32 @@ The monthly review (`scripts/review_briefs.py`) proposes changes to it as a PR, 
 | Stress (🔴) | VVIX | ≥ 105 | **under review** (fires on 24% of days, see below) |
 | Display only | SPX/Equity put/call, VRP, VIX9D/VIX | not used in the state call | collecting data |
 
-## Findings to date (backfill 2010-09 → 2026-10, n≈4,000; 10-session max-drawdown basis)
-| State | n | P(≤−2%) | P(≤−5%) | 20-session return median |
-|---|---|---|---|---|
-| 🔴 Stress | 1,314 | 40% | 12% | +2.3% |
-| 🟡 Hedging | 807 | 21% | 4% | +1.3% |
-| 🟢 Calm | 1,907 | 23% | 4% | +1.3% |
+## Findings to date (backfill 2010-09 → 2026-09, 10-session max-drawdown basis)
+Daily rows overlap (10/20-session windows), so judge by **episodes** (runs more than 10 sessions apart) and the **block-bootstrap 95% CI**, not by n.
 
-- 🟡 hedging was **not followed by worse outcomes** than 🟢. It is a positioning read (big players prepared), not a predictor.
-- 🔴 stress had higher drawdown risk but also a higher 20-session median return, so stress often mean-reverts. Don't read 🔴 as "keep falling".
-- **V-shape hypothesis** (pre-drop hedge level vs −3% drawdowns, 1991–): with heavy hedging, the 20 days after hitting −3% returned a median +3.0% vs +1.7% with light hedging, and median recovery took 23 days vs 34. The odds of the drawdown deepening past −10% were the same (19% vs 18%). The big declines (2018 Q4, 2020, 2025 Mar–Apr) all started with heavy hedging in place. Prepared markets **bounce faster; they don't fall less**. Small sample (n=21/28).
-- Same VIX level (~20) with SKEW in the top 10%: 10-day −2% odds 28% vs 38% across all days at that VIX level. Hedging was followed by fewer drawdowns, not more.
+| State | days | episodes | P(≤−2%) [95% CI] | ≤2019 / 2020– | P(≤−5%) | 20-session return median |
+|---|---|---|---|---|---|---|
+| 🔴 Stress | 1,314 | 66 | 40% [34–45] | 38% / 41% | 12% | +2.3% |
+| 🟡 Hedging | 806 | 97 | 21% [16–26] | 18% / 26% | 4% | +1.3% |
+| 🟢 Calm | 1,898 | 46 | 23% [20–27] | 22% / 27% | 4% | +1.3% |
+
+- 🟡 hedging was **not followed by worse outcomes** than 🟢 (CIs overlap). It was not followed by fewer drawdowns either. It is a positioning read (big players prepared), not a predictor in either direction.
+- **🔴 is largely a VIX-level proxy.** Within VIX bands the gap shrinks: VIX 16–20, 🔴 38% vs 🟢 29%; VIX 20–25, 37% vs 28%; VIX 25–35, 47% vs 45%. Read 🔴 as "stress at this VIX level", not as an independent signal. Its higher 20-session median return is also partly a high-VIX effect, so don't read 🔴 as "keep falling".
+- VVIX ≥ 105 decides 🔴 on its own on about 42% of 🔴 days, and its firing rate depends on the regime: it fired on 79% of days in 2020 and 90% in 2021, but only 2–5% in 2013, 2017, 2019 and 2023. VIX/VIX3M ≥ 0.95 is the more stable stress rule.
+- Same VIX level with SKEW in the top 10% showed fewer drawdowns, but **only after 2020** (about 35 episodes; no difference before 2020). Treat it as an observation, not a rule.
+- **V-shape hypothesis (not significant):** in −3% drawdown episodes since 1991, heavy pre-drop hedging (n=21) vs light (n=28) showed a median 20-day return of +3.0% vs +1.7% and median recovery of 23 vs 34 days. Deepening past −10% was the same (19% vs 18%). The gaps sit inside sampling noise, recovery times are censored, and the episode definition was not fixed in advance. Read it as a hypothesis worth tracking that prepared markets bounce faster rather than fall less. It is not a finding.
 
 ## Open questions (to verify)
-- The VVIX ≥ 105 threshold fires too often. Consider a VVIX 1-year percentile or a 5-day change instead.
-- Is GEX recomputed at 07:30 ET any different from the overnight snapshot? Compare `gex.net_bn` and `gex.published_net_bn` in `brief_log`.
+- **Proposed (needs Jae's OK, a code change):** replace VVIX ≥ 105 with a VVIX 1-year percentile ≥ 90% (or require 2 of the 3 stress conditions). Adopt only if it holds before and after 2020 and on a holdout (the last 2 years).
+- Is GEX recomputed at 07:30 ET any different from the overnight snapshot? Compare `gex.net_bn` and `gex.published_net_bn` in `brief_log`. (On 10-16, a weekend, the two were identical, as expected.)
 - Does Yahoo's ^VIX carry Cboe extended-hours (GTH) values before the open?
 - Can put/call and VRP thresholds earn a place in the state call? (Needs history; for now, live logs only.)
+- `FOMC_DATES` in `update_dashboard.py` ends in 2027-06. Extend it before then.
 
 ## Change rules (followed by the monthly review)
-- Only change a threshold or a state rule when the group in question has **n ≥ 30** and the difference from the comparison group is clear (e.g. 5pp or more on P(≤−2%)).
-- Short of that, record it under "Open questions" or "Findings to date" only.
+- Thresholds and state rules are **code constants**. The review can only propose a change in its report, and a person makes it in code together with the table above. The review script reverts any edit to the threshold table.
+- A proposal needs **≥ 30 episodes** in the group, a **95% CI that doesn't overlap** the comparison group (same VIX band or all days), and the same direction **before and after 2020**. Before adopting it, check it on a holdout (the last 2 years).
+- About 9 signals are compared every month (multiple comparisons). Don't promote a one-off gap to a finding. Base decisions on the full-period table only; the last-12-months table is descriptive.
+- Short of that, record it under "Open questions" or "Findings to date" only, and word findings no stronger than the evidence.
 - Don't widen the scope beyond volatility and insurance premiums.
-- Record every change in the review report along with its evidence (table and n).
+- Record every change in the review report along with its evidence (episodes, CI, pre/post 2020).

@@ -25,6 +25,7 @@ import argparse
 import json
 import os
 import sys
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -78,6 +79,25 @@ def should_send_now(schedule: str | None) -> bool:
 # ============================================================
 # Data
 # ============================================================
+def _clean(o):
+    """NaN/inf → None so logs and prompts are strict JSON."""
+    if isinstance(o, dict):
+        return {k: _clean(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_clean(v) for v in o]
+    if isinstance(o, (float, np.floating)):
+        return None if not np.isfinite(o) else float(o)
+    if isinstance(o, (np.integer,)):
+        return int(o)
+    if isinstance(o, np.bool_):
+        return bool(o)
+    return o
+
+
+def _json(o, **kw) -> str:
+    return json.dumps(_clean(o), ensure_ascii=False, default=float, allow_nan=False, **kw)
+
+
 def _chg(s: pd.Series, n: int = 5) -> float:
     s = s.dropna()
     return float(s.iloc[-1] - s.iloc[-1 - n]) if len(s) > n else float("nan")
@@ -90,24 +110,34 @@ def _pct_1y(s: pd.Series) -> float:
 
 def base_rate(vix: pd.Series, skew: pd.Series, spx: pd.Series) -> dict:
     """P(SPX trades ≥2% / ≥5% below today's close within 10 sessions), since 2000,
-    for days resembling today (VIX within ±2pt, same SKEW 1y-percentile band)
-    vs all days at the same VIX level."""
+    for days resembling today (VIX within ±10% in log terms, same SKEW
+    1y-percentile band) vs all days at the same VIX level.
+
+    Daily rows with a 10-session window overlap, so `n` days is far fewer
+    independent observations; `n_ep` counts separate episodes (runs split by
+    >10-session gaps) and is the number to judge the sample by."""
     d = pd.DataFrame({"spx": spx, "vix": vix, "sk": skew}).dropna().loc["2000":]
     fwd_min = pd.concat([d.spx.shift(-k) for k in range(1, 11)], axis=1).min(axis=1)
     d["dd10"] = (fwd_min / d.spx - 1) * 100
     d["skpct"] = d.sk.rolling(252).rank(pct=True)
+    d["pos"] = np.arange(len(d))
     today = d.iloc[-1]
     hist = d.iloc[:-10].dropna()
 
     def band(p):
         return 2 if p >= HEDGE_SKEW_PCT else (1 if p >= 0.5 else 0)
 
+    def episodes(x: pd.DataFrame) -> int:
+        return int((x.pos.diff().fillna(99) > 10).sum())
+
     # Control group = same VIX level regardless of SKEW, so the comparison
-    # isolates what the insurance reading adds on top of spot vol.
-    same_vix = hist[hist.vix.sub(today.vix).abs() <= 2]
+    # isolates what the insurance reading adds on top of spot vol. A log band
+    # keeps "same level" proportional (±2pt was ±17% at VIX 12, ±7% at 30).
+    same_vix = hist[(np.log(hist.vix) - np.log(today.vix)).abs() <= np.log(1.1)]
     like = same_vix[same_vix.skpct.apply(band) == band(today.skpct)]
     return {
         "n": int(len(like)),
+        "n_ep": episodes(like),
         "p2": float((like.dd10 <= -2).mean()) if len(like) else float("nan"),
         "p5": float((like.dd10 <= -5).mean()) if len(like) else float("nan"),
         "p2_all": float((same_vix.dd10 <= -2).mean()),
@@ -164,29 +194,36 @@ def _third_friday(y: int, mth: int) -> pd.Timestamp:
     return first + pd.Timedelta(days=(4 - first.weekday()) % 7 + 14)
 
 
-def event_calendar(today: pd.Timestamp, vs: dict | None) -> list[str]:
+def event_calendar(today: pd.Timestamp, vs: dict | None) -> list[dict]:
     """Events that put option hedges on for a reason that expires — FOMC,
     earnings season, monthly opex, VIX expiry. Same SKEW reads differently
-    when an event explains it (the hedge unwinds once the event passes)."""
+    when an event explains it (the hedge unwinds once the event passes).
+    Each item: ko (display), en (chart label — no Korean font on CI), date.
+    D-N counts weekdays only (US holidays not excluded)."""
     def bd(t):
         return int(np.busday_count(today.date(), t.date()))
 
     out = []
     fomc = [pd.Timestamp(*x) for x in ud.FOMC_DATES if pd.Timestamp(*x) >= today]
     if fomc:
-        out.append(f"FOMC {fomc[0]:%m/%d} (D-{bd(fomc[0])})")
+        out.append({"ko": f"FOMC {fomc[0]:%m/%d} (D-{bd(fomc[0])})", "en": "FOMC",
+                    "date": fomc[0].strftime("%Y-%m-%d")})
+    else:
+        print("  [WARN] FOMC_DATES in update_dashboard.py has no future dates — extend it")
     mth, day = today.month, today.day
     if (mth in (1, 4, 7, 10) and day >= 10) or (mth in (2, 5, 8, 11) and day <= 15):
-        out.append("어닝 시즌")
+        out.append({"ko": "어닝 시즌", "en": None, "date": None})
     opex = _third_friday(today.year, mth)
     if opex < today:
         nxt = today + pd.offsets.MonthBegin(1)
         opex = _third_friday(nxt.year, nxt.month)
-    out.append(f"월물 만기 {opex:%m/%d} (D-{bd(opex)})")
+    out.append({"ko": f"월물 만기 {opex:%m/%d} (D-{bd(opex)})", "en": "OPEX",
+                "date": opex.strftime("%Y-%m-%d")})
     if vs and vs.get("front_expiry"):
         vxe = pd.Timestamp(vs["front_expiry"])
         if vxe >= today:
-            out.append(f"VIX 만기 {vxe:%m/%d} (D-{bd(vxe)})")
+            out.append({"ko": f"VIX 만기 {vxe:%m/%d} (D-{bd(vxe)})", "en": "VIX exp",
+                        "date": vxe.strftime("%Y-%m-%d")})
     return out
 
 
@@ -260,10 +297,30 @@ def fetch_gex_published() -> dict | None:
         return None
 
 
+def check_freshness(idx: dict[str, pd.Series]) -> list[str]:
+    """Each indicator takes its own last value, so flag any whose last date
+    lags SPX, and SPX itself if it lags the previous weekday (a US holiday
+    also trips this — the warning says so)."""
+    warn = []
+    spx_last = idx["SPX"].dropna().index[-1]
+    for n, s in idx.items():
+        last = s.dropna().index[-1]
+        if last < spx_last:
+            warn.append(f"{n} {last:%m/%d}")
+    prev_wd = pd.Timestamp(np.busday_offset(datetime.now(NY).date(), -1, roll="forward"))
+    if spx_last < prev_wd:
+        warn.insert(0, f"SPX 마지막 종가 {spx_last:%m/%d} (Cboe 미갱신 또는 휴장)")
+    return warn
+
+
 def collect() -> dict:
     idx = {n: ud._fetch_cboe_index(n)
            for n in ["SPX", "VIX", "VIX9D", "VIX3M", "VVIX", "SKEW", "COR90D", "COR1M"]}
+    empty = [n for n, s in idx.items() if s.dropna().empty]
+    if empty:
+        raise RuntimeError(f"Cboe returned no data for {empty} — not sending a partial brief")
     spx, vix, skew = idx["SPX"], idx["VIX"], idx["SKEW"]
+    freshness = check_freshness(idx)
 
     tenor, skew_df = ud.fetch_cor_skew()
     cs = ud.compute_cor_skew_signals(tenor, skew_df)
@@ -312,6 +369,7 @@ def collect() -> dict:
             "pre": fetch_premarket(m["date"]),
             "pc": fetch_putcall(list(spx.index[-20:])),
             "_series": {k: idx[k] for k in ("SPX", "VIX", "VIX9D", "VIX3M", "SKEW")},
+            "freshness": freshness,
             "base": base_rate(vix, skew, spx),
             "events": event_calendar(pd.Timestamp(datetime.now(NY).date()), vs)}
 
@@ -362,6 +420,7 @@ def build_text(d: dict) -> str:
     hedging = emoji != "🟢"
     L = [f"*{emoji} 변동성 브리핑 — {m['date']} 종가 기준*",
          "_변동성·보험료 관점의 읽기입니다. 방향 예측이나 매매 권유가 아닙니다._",
+         *([f"⚠️ 데이터 날짜 확인: {' · '.join(d['freshness'])}"] if d.get("freshness") else []),
          f"상태: *{label}*" + (f"  ({' · '.join(why)})" if why else ""),
          f"SPX {m['spx']:,.0f} ({m['spx_1d']:+.2f}%, 20일 고점 대비 {m['spx_from_high_20d']:+.1f}%)"]
     pre = d.get("pre")
@@ -396,7 +455,7 @@ def build_text(d: dict) -> str:
 
     # ② 이벤트 맥락
     L.append("*② 이벤트 맥락*")
-    ev = " · ".join(d["events"]) or "가까운 이벤트 없음"
+    ev = " · ".join(e["ko"] for e in d["events"]) or "가까운 이벤트 없음"
     L.append(f"• {ev}")
     short_fear = m["vix9d_vix"] > 1
     L.append(f"• VIX9D/VIX {m['vix9d_vix']:.2f} (5일 {m['vix9d_vix_5d']:+.2f})"
@@ -406,7 +465,7 @@ def build_text(d: dict) -> str:
 
     # ③ 과거 확률
     L.append("*③ 과거 확률 (신호 과신 방지)*")
-    L.append(f"• 2000~, VIX±2 & {b['band']} (n={b['n']}), 10일 내 하락: "
+    L.append(f"• 2000~, VIX±10% & {b['band']} ({b['n']}일, 독립 구간 {b['n_ep']}개), 10일 내 하락: "
              f"−2% {b['p2']:.0%} (같은 VIX대 전체 {b['p2_all']:.0%}) · "
              f"−5% {b['p5']:.0%} (같은 VIX대 전체 {b['p5_all']:.0%})")
 
@@ -479,13 +538,13 @@ def commentary(d: dict) -> str | None:
         client = anthropic.Anthropic()
         resp = client.beta.messages.create(
             model=CLAUDE_MODEL,
-            max_tokens=2000,
+            # Thinking is always on for this model and counts toward max_tokens.
+            max_tokens=4000,
             output_config={"effort": "low"},
             betas=["server-side-fallback-2026-07-01"],
             extra_body={"fallbacks": "default"},
             system=COMMENTARY_SYSTEM + playbook_section(),
-            messages=[{"role": "user",
-                       "content": json.dumps(payload, ensure_ascii=False, default=float)}],
+            messages=[{"role": "user", "content": _json(payload)}],
         )
     except anthropic.APIStatusError as e:
         print(f"  [WARN] Claude API {e.status_code}: {e.message}")
@@ -493,7 +552,11 @@ def commentary(d: dict) -> str | None:
     except anthropic.APIConnectionError as e:
         print(f"  [WARN] Claude API connection failed: {e}")
         return None
-    if resp.stop_reason == "refusal":
+    except Exception as e:  # noqa: BLE001 — commentary is optional; never block the brief
+        print(f"  [WARN] commentary failed ({type(e).__name__}: {e})")
+        return None
+    if resp.stop_reason in ("refusal", "max_tokens"):
+        print(f"  [WARN] commentary dropped (stop_reason={resp.stop_reason})")
         return None
     text = "".join(b.text for b in resp.content if b.type == "text").strip()
     return text or None
@@ -587,17 +650,14 @@ def render_chart(d: dict, days: int = 60) -> Path:
 
     # Upcoming events (FOMC, expiries) as dotted markers past the last close
     for e in d.get("events", []):
-        name = e.split()[0]
-        for tok in e.replace("(", " ").split():
-            if "/" in tok and tok[:2].isdigit():
-                dt = pd.Timestamp(f"{last.year}-{tok.replace('/', '-')}")
-                if dt < last - pd.Timedelta(days=180):
-                    dt += pd.DateOffset(years=1)
-                if last < dt <= last + pd.Timedelta(days=21):
-                    for a in axes:
-                        a.axvline(dt, color=MUTED, lw=0.8, ls=":")
-                    axes[2].text(dt, axes[2].get_ylim()[0], f" {name} {dt:%m/%d}",
-                                 fontsize=8, color=MUTED, va="bottom", rotation=90)
+        if not e.get("date") or not e.get("en"):
+            continue
+        dt = pd.Timestamp(e["date"])
+        if last < dt <= last + pd.Timedelta(days=21):
+            for a in axes:
+                a.axvline(dt, color=MUTED, lw=0.8, ls=":")
+            axes[2].text(dt, axes[2].get_ylim()[0], f" {e['en']} {dt:%m/%d}",
+                         fontsize=8, color=MUTED, va="bottom", rotation=90)
     axes[2].set_xlim(t0, last + pd.Timedelta(days=24))
     axes[2].xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
 
@@ -605,7 +665,7 @@ def render_chart(d: dict, days: int = 60) -> Path:
                  fontsize=13, color=INK, fontweight="bold")
     fig.tight_layout(rect=(0, 0, 0.86, 0.97))
     CHART_DIR.mkdir(exist_ok=True)
-    out = CHART_DIR / f"{m['date']}.png"
+    out = CHART_DIR / f"{m['date']}_{datetime.now(timezone.utc):%H%M}.png"
     fig.savefig(out, dpi=110, facecolor=SURF)
     plt.close(fig)
     return out
@@ -633,11 +693,25 @@ def slack_payload(text: str, image_url: str | None, date: str) -> dict:
 
 
 def post_slack(payload: dict) -> None:
+    """Slack fetches image_url while validating the post and rejects the
+    whole message (invalid_blocks) if it can't — e.g. raw CDN lag after the
+    push. Retry once without the image so the brief still goes out."""
     url = os.environ["SLACK_WEBHOOK_URL"]
-    body = json.dumps(payload).encode()
-    req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=20) as r:
-        r.read()
+
+    def send(p: dict) -> None:
+        req = urllib.request.Request(url, data=json.dumps(p).encode(),
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            r.read()
+
+    try:
+        send(payload)
+    except urllib.error.HTTPError as e:
+        blocks = [b for b in payload.get("blocks", []) if b.get("type") != "image"]
+        if len(blocks) == len(payload.get("blocks", [])):
+            raise
+        print(f"  [WARN] Slack rejected the post ({e.code}); retrying without the chart")
+        send({**payload, "blocks": blocks})
 
 
 def main():
@@ -664,6 +738,16 @@ def main():
         return
 
     d = collect()
+    date = d["m"]["date"]
+    # A holiday morning and the next session's morning read the same close;
+    # don't re-brief (and don't overwrite that day's log). Manual runs force.
+    force = os.environ.get("BRIEF_FORCE") == "1"
+    if args.stage and (LOG_DIR / f"{date}.json").exists() and not force:
+        note_txt = (f"📭 새 미국장 종가가 없습니다 — 마지막 브리핑은 {date} 종가 기준입니다 "
+                    f"(휴장일이거나 Cboe 미갱신).")
+        PENDING.write_text(_json({"text": note_txt}), encoding="utf-8")
+        print(note_txt)
+        return
     text = build_text(d)
     note = commentary(d)
     if note:
@@ -680,12 +764,11 @@ def main():
 
     if args.stage:
         url = f"{RAW_URL}/{chart.relative_to(ROOT).as_posix()}" if chart else None
-        PENDING.write_text(json.dumps(slack_payload(text, url, d["m"]["date"]),
-                                      ensure_ascii=False), encoding="utf-8")
+        PENDING.write_text(_json(slack_payload(text, url, date)), encoding="utf-8")
         write_log(d, text, note)
     elif not args.dry_run:
         # One-shot local send: no pushed chart to point at, so text only.
-        post_slack(slack_payload(text, None, d["m"]["date"]))
+        post_slack(slack_payload(text, None, date))
         print("Sent to Slack.")
         write_log(d, text, note)
 
@@ -699,7 +782,7 @@ def write_log(d: dict, text: str, note: str | None) -> None:
         "state": {"emoji": emoji, "label": label, "why": why},
         "amp_on": amp[0] if amp else None,
         "inputs": {k: d[k] for k in ("m", "cs", "vs", "vvs", "ks", "ts", "credit",
-                                       "move", "gex", "base", "events", "pre", "pc")},
+                                       "move", "gex", "base", "events", "pre", "pc", "freshness")},
         "vx_stale": d["vx_stale"],
         "commentary": note,
         "model": CLAUDE_MODEL if note else None,
@@ -708,8 +791,12 @@ def write_log(d: dict, text: str, note: str | None) -> None:
     }
     LOG_DIR.mkdir(exist_ok=True)
     path = LOG_DIR / f"{d['m']['date']}.json"
-    path.write_text(json.dumps(rec, ensure_ascii=False, indent=1, default=float),
-                    encoding="utf-8")
+    if path.exists():   # forced re-run: keep any outcome already scored
+        try:
+            rec["outcome"] = json.loads(path.read_text(encoding="utf-8")).get("outcome")
+        except ValueError:
+            pass
+    path.write_text(_json(rec, indent=1), encoding="utf-8")
     print(f"Logged: {path}")
 
 

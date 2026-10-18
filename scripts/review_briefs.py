@@ -17,10 +17,12 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -34,11 +36,44 @@ MODEL = "claude-opus-5-5"
 # ============================================================
 # Tables
 # ============================================================
+EP_GAP = 10          # rows more than 10 sessions apart start a new episode
+BOOT_BLOCK = 20      # block length for the bootstrap (≥ the 10/20-session horizons)
+BOOT_REPS = 400
+RNG = np.random.default_rng(7)
+
+
+def _episodes(mask: pd.Series, pos: pd.Series) -> int:
+    p = pos[mask]
+    return int((p.diff().fillna(EP_GAP + 1) > EP_GAP).sum())
+
+
+def _boot_ci(hit: pd.Series, pos: pd.Series) -> tuple[float, float]:
+    """Block bootstrap over consecutive-session blocks: daily rows with
+    10-session windows overlap, so an iid CI would be far too narrow."""
+    if len(hit) < 5:
+        return (np.nan, np.nan)
+    blocks = (pos // BOOT_BLOCK).values
+    keys = np.unique(blocks)
+    grouped = {k: hit.values[blocks == k] for k in keys}
+    est = []
+    for _ in range(BOOT_REPS):
+        pick = RNG.choice(keys, size=len(keys), replace=True)
+        v = np.concatenate([grouped[k] for k in pick])
+        est.append(v.mean())
+    return tuple(np.percentile(est, [2.5, 97.5]))
+
+
 def _agg(g: pd.DataFrame) -> dict:
+    hit = (g.h10_maxdd <= -2).astype(float)
+    lo, hi = _boot_ci(hit, g.pos)
+    pre, post = g[g.index < "2020"], g[g.index >= "2020"]
     return {"n": len(g),
-            "P(dd10≤−2%)": (g.h10_maxdd <= -2).mean(),
+            "에피소드": _episodes(g.vix.notna(), g.pos) if len(g) else 0,
+            "P(dd10≤−2%)": hit.mean(),
+            "95% CI": f"{lo:.0%}–{hi:.0%}" if np.isfinite(lo) else "",
+            "~2019": (pre.h10_maxdd <= -2).mean() if len(pre) else np.nan,
+            "2020~": (post.h10_maxdd <= -2).mean() if len(post) else np.nan,
             "P(dd10≤−5%)": (g.h10_maxdd <= -5).mean(),
-            "dd10 중앙": g.h10_maxdd.median(),
             "ret20 중앙": g.h20_ret.median(),
             "VIX−RV20 중앙": (g.vix - g.h20_rv).median(),
             "SKEW 20일 변화 중앙": g.h20_skew_chg.median()}
@@ -46,16 +81,42 @@ def _agg(g: pd.DataFrame) -> dict:
 
 def _table(rows: dict[str, dict]) -> str:
     df = pd.DataFrame(rows).T
-    fmt = {c: (lambda v: f"{v:.0%}") for c in df.columns if c.startswith("P(")}
+    pct = {c for c in df.columns if c.startswith("P(") or c in ("~2019", "2020~")}
     out = df.copy()
     for c in out.columns:
-        out[c] = [("" if pd.isna(v) else fmt[c](v) if c in fmt
-                   else f"{int(v):,}" if c == "n" else f"{v:+.2f}") for v in df[c]]
+        out[c] = [("" if (not isinstance(v, str) and pd.isna(v)) else v if isinstance(v, str)
+                   else f"{v:.0%}" if c in pct
+                   else f"{int(v):,}" if c in ("n", "에피소드") else f"{v:+.2f}") for v in df[c]]
+    return out.to_markdown()
+
+
+def vix_band_table(bf: pd.DataFrame) -> str:
+    """State vs outcome within VIX bands — separates 'stress on top of the
+    VIX level' from 'VIX is high' (🔴 is largely a VIX-level proxy)."""
+    bands = [(0, 16), (16, 20), (20, 25), (25, 35), (35, 200)]
+    rows = {}
+    for lo, hi in bands:
+        x = bf[(bf.vix >= lo) & (bf.vix < hi)]
+        if x.empty:
+            continue
+        base = (x.h10_maxdd <= -2).mean()
+        row = {"n": len(x), "밴드 전체": base}
+        for s in ("🟢", "🟡", "🔴"):
+            g = x[x.state == s]
+            row[f"{s} (n)"] = len(g)
+            row[s] = (g.h10_maxdd <= -2).mean() if len(g) else np.nan
+        rows[f"VIX {lo}–{hi if hi < 200 else '+'}"] = row
+    df = pd.DataFrame(rows).T
+    out = df.copy()
+    for c in out.columns:
+        out[c] = [("" if pd.isna(v) else f"{int(v):,}" if "(n)" in c or c == "n" else f"{v:.0%}")
+                  for v in df[c]]
     return out.to_markdown()
 
 
 def backfill_tables(bf: pd.DataFrame) -> str:
     bf = bf.dropna(subset=["h10_maxdd", "h20_ret"]).copy()
+    bf["pos"] = np.arange(len(bf))
     bf["vrp_top20"] = bf.vrp >= bf.vrp.rolling(252).quantile(0.8)
 
     def flags(x: pd.DataFrame) -> dict[str, pd.Series]:
@@ -72,12 +133,39 @@ def backfill_tables(bf: pd.DataFrame) -> str:
         }
 
     parts = []
-    for label, sub in (("전 기간", bf), ("최근 12개월", bf.iloc[-252:])):
+    for label, sub in (("전 기간 — 판단 근거", bf), ("최근 12개월 — 참고용(서술)", bf.iloc[-252:])):
         by_state = {s: _agg(g) for s, g in sub.groupby("state")}
         by_flag = {k: _agg(sub[v]) for k, v in flags(sub).items()}
+        by_flag["전체"]["에피소드"] = np.nan    # one continuous run; not meaningful
         parts.append(f"### 백필 — {label} ({sub.index[0]} → {sub.index[-1]})\n\n"
                      f"상태별\n\n{_table(by_state)}\n\n신호별\n\n{_table(by_flag)}")
+        if label.startswith("전 기간"):
+            parts.append(f"VIX 밴드별 상태 (P(dd10≤−2%))\n\n{vix_band_table(sub)}")
+    parts.append("_n은 겹치는 일별 행 수, '에피소드'는 10거래일 넘게 떨어진 독립 구간 수입니다. "
+                 "판단은 에피소드와 블록 부트스트랩 95% CI로 합니다. 최근 12개월 표의 끝은 "
+                 "결과 창(20거래일)이 끝난 날까지라 오늘보다 약 한 달 앞섭니다._")
     return "\n\n".join(parts)
+
+
+THRESH_HEADER = "## Signals and current thresholds"
+
+
+def _section(md: str, header: str) -> str | None:
+    i = md.find(header)
+    if i < 0:
+        return None
+    j = md.find("\n## ", i + len(header))
+    return md[i:] if j < 0 else md[i:j]
+
+
+def guard_thresholds(old: str, new: str) -> tuple[str, bool]:
+    """The thresholds are code constants (morning_brief.HEDGE_*/STRESS_*);
+    the review may only *propose* changing them, in the report. Keep the
+    playbook's threshold table as it was so it can't drift from the code."""
+    o, n = _section(old, THRESH_HEADER), _section(new, THRESH_HEADER)
+    if o is None or n is None or o.strip() == n.strip():
+        return new, False
+    return new.replace(n, o), True
 
 
 def live_section(month: str | None) -> tuple[str, list[dict]]:
@@ -115,13 +203,19 @@ REVIEW_SYSTEM = """당신은 변동성·보험료 관점의 아침 브리핑을 
 할 일:
 1. report_md: 한국어 복기 보고서. 이번 달 브리핑이 말한 것과 실제 결과를 비교하고, 어떤 신호가
    맞았고 틀렸는지, 해설이 과장하거나 놓친 것이 무엇인지 씁니다. 근거는 표의 숫자와 n을 인용합니다.
-   playbook의 '확인할 것' 항목 중 이번 데이터로 답할 수 있는 것은 답합니다
+   playbook의 'Open questions' 중 이번 데이터로 답할 수 있는 것은 답합니다
    (예: gex_live와 gex_published가 실제로 다른지, 프리마켓 VIX가 찍혔는지).
-2. playbook_md: 수정된 playbook 전체. playbook의 '변경 규칙'을 반드시 지킵니다 —
-   n ≥ 30이고 차이가 뚜렷할 때만 임계값·판정 규칙을 바꾸고, 아니면 '발견'이나 '확인할 것'에만 기록합니다.
+   임계값·판정 규칙을 바꿔야 한다고 판단하면 '제안'으로 보고서에만 쓰고 근거(에피소드 수, CI,
+   2019 이전/2020 이후 각각의 결과)를 붙입니다. 실제 변경은 사람이 코드와 함께 합니다.
+2. playbook_md: 수정된 playbook 전체. 'Change rules'를 반드시 지킵니다.
+   'Signals and current thresholds' 표는 코드 상수와 같아야 하므로 고치지 않습니다(코드가 되돌립니다).
+   'Findings'와 'Open questions'만 근거가 있을 때 갱신합니다. 판단은 '전 기간' 표로만 하고,
+   '최근 12개월' 표는 서술용입니다. n(겹치는 일수)이 아니라 에피소드 수와 95% CI를 근거로 쓰고,
+   9개 신호를 매달 보는 다중비교라는 점을 감안해 우연한 차이를 발견으로 올리지 않습니다.
    범위를 변동성·보험료 밖으로 넓히지 않습니다. 바꿀 근거가 없으면 기존 내용을 그대로 둡니다.
 3. changes: playbook에서 바꾼 점을 한 줄씩. 없으면 빈 목록.
-백필은 GEX·풋/콜·VX 곡선 이력이 없어 일부 신호만 담고 있다는 한계를 감안합니다."""
+백필은 GEX·풋/콜·VX 곡선 이력이 없어 일부 신호만 담고 있다는 한계를 감안합니다.
+🔴 상태는 상당 부분 VIX 수준의 대리변수이므로 'VIX 밴드별 상태' 표로 수준 효과를 걷어내고 읽습니다."""
 
 SCHEMA = {
     "type": "object",
@@ -174,8 +268,10 @@ def main():
     args = ap.parse_args()
 
     now = datetime.now(timezone.utc)
-    month = args.month or (pd.Timestamp(now.date()).replace(day=1)
-                           - pd.Timedelta(days=1)).strftime("%Y-%m")
+    month = (args.month or os.environ.get("REVIEW_MONTH", "").strip()
+             or (pd.Timestamp(now.date()).replace(day=1) - pd.Timedelta(days=1)).strftime("%Y-%m"))
+    if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", month):
+        sys.exit(f"Invalid month {month!r}; expected YYYY-MM")
     bf = pd.read_csv(mb.LOG_DIR / "backfill.csv", index_col="date")
     tables = backfill_tables(bf)
     live_md, live = live_section(month)
@@ -190,8 +286,11 @@ def main():
         if out:
             report += ["## 복기", "", out["report_md"], ""]
             changes = out["changes"]
-            if changes and out["playbook_md"].strip() != playbook.strip():
-                mb.PLAYBOOK.write_text(out["playbook_md"].rstrip() + "\n", encoding="utf-8")
+            new_pb, reverted = guard_thresholds(playbook, out["playbook_md"])
+            if reverted:
+                changes.append("(코드가 되돌림) 임계값 표 수정 시도 — 임계값은 코드 상수라 보고서의 제안으로만 남김")
+            if new_pb.strip() != playbook.strip():
+                mb.PLAYBOOK.write_text(new_pb.rstrip() + "\n", encoding="utf-8")
             report += ["## playbook 변경 제안", ""] + ([f"- {c}" for c in changes] or ["- 없음"]) + [""]
     report += ["## 실제 브리핑과 결과", "", live_md, "", "## 백필 통계", "", tables, ""]
 

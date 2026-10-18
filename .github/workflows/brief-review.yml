@@ -18,6 +18,10 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: brief-review
+  cancel-in-progress: false
+
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -38,7 +42,8 @@ jobs:
         id: review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python scripts/review_briefs.py ${{ inputs.month && format('--month {0}', inputs.month) || '' }}
+          REVIEW_MONTH: ${{ inputs.month }}   # validated in Python, never interpolated into the shell
+        run: python scripts/review_briefs.py
 
       - name: Push review branch and open PR
         env:
@@ -55,7 +60,8 @@ jobs:
           git commit -m "Briefing review ${MONTH} (playbook changes: ${CHANGES})"
           git push -f origin "$branch"
           repo="${GITHUB_REPOSITORY}"
-          url=$(gh pr create --base main --head "$branch" \
+          url=$(gh pr view "$branch" --json url -q .url 2>/dev/null || true)
+          [ -z "$url" ] && url=$(gh pr create --base main --head "$branch" \
                 --title "Briefing review ${MONTH}" \
                 --body "Monthly review of the morning briefing. Report: brief_review/${MONTH}.md · proposed playbook changes: ${CHANGES}. Merge to apply." \
                 2>/dev/null || true)
