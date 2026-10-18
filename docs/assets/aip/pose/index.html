@@ -43,7 +43,7 @@ a { color: var(--accent); }
     <button id="start" class="primary">카메라 시작</button>
     <button id="base" disabled>어드레스 기준 잡기</button>
     <button id="rec" disabled>녹화</button>
-    <select id="model" aria-label="모델"><option value="lite">빠른 모델</option><option value="full">정확한 모델</option></select>
+    <select id="model" aria-label="모델"><option value="full" selected>정확한 모델</option><option value="lite">빠른 모델 (손목이 부정확)</option></select>
     <label class="file">영상 파일로 시험<input id="file" type="file" accept="video/*"></label>
   </div>
   <div id="msg"></div>
@@ -69,6 +69,7 @@ a { color: var(--accent); }
       <li>어드레스 자세에서 <b>"어드레스 기준 잡기"</b>를 누르면 그 자세를 0으로 두고, 스윙하는 동안 가장 큰 값을 작은 글씨로 보여 줘요. 다음 스윙 전에 다시 누르면 돼요.</li>
       <li>회전은 화면에서 어깨선·골반선이 짧아진 정도로 계산한 <b>대략값</b>이에요. 다운스윙과 임팩트는 너무 빨라서 점이 튈 수 있어요. 정확한 손목과 임팩트는 센서 장갑이 맡아요.</li>
       <li>녹화는 점이 그려진 화면을 휴대폰에 저장해요(webm).</li>
+      <li>S25에서 정확한 모델은 약 26 fps, 손목 신뢰도 약 86%였어요. 빠른 모델은 더 빠르지만 손목 신뢰도가 50% 아래로 떨어져서 기본은 정확한 모델이에요.</li>
     </ul>
   </details>
 </div>
