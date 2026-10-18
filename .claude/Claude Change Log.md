@@ -1182,3 +1182,4 @@ SSF 재출시, MOVE 지수, 크레딧 스프레드(CDS), 로봇 비전 2부작(s
 ## 2026-10-18 — Swing pose camera page (보는 AI part 7 prep)
 - Added `docs/assets/aip/pose/index.html`, a hidden static page with noindex that no post links to. It runs a live MediaPipe Pose skeleton on the phone's rear camera, shows shoulder/hip turn, X-factor and head sway against an address baseline, and records the overlay to webm.
 - Tested in headless Chromium with the series' AI swing clip as a fake camera: the body was found in 64 of 64 frames and the numbers updated. Real phone fps is still to be checked on the S25.
+- `0ee2b88`: the pose camera now defaults to the full model. On the S25 it gives about 26 fps with about 86 % wrist confidence; the lite model drops wrist confidence under 50 %. The page is public to anyone with the link (no post links to it, noindex). Android Chrome works; iPhone Safari is expected to work but is untested.
