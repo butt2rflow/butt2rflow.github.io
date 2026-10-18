@@ -8,6 +8,10 @@ title: Home
 
 수학과 데이터에 기반한 투자 원칙을 연구하고 정리합니다. AI가 시장을 지배하는 시대에도 변하지 않는 것 — 복리의 수학, 변동성의 구조, 그리고 시간이라는 무기.
 
+!!! tip "새 시리즈 · 보는 AI"
+    소리와 움직임을 그림으로 바꿔 보는 AI, 수식 없이 그림으로 풀었어요.
+    [**0편부터 읽기 →**](posts/aip-robot-senses.md) · [**6편 실험 참여하기 (녹음 키트) →**](assets/aip/kit/index.html)
+
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
 
@@ -255,6 +259,7 @@ title: Home
 - [**3편 · 움직임을 보다**](posts/aip-seeing-motion.md) — 골프 센서 장갑으로 보는 IMU와 진동 그림
 - [**4편 · 움직임을 알아보는 AI**](posts/aip-teaching-motion.md) — 폰 센서로 여섯 동작을 알아보게 가르치기
 - [**5편 · 참고만 주면 알아보는 AI**](posts/aip-learning-from-reference.md) — 학습 없이 참고 몇 개나 글 한 줄로
+- [**6편 실험에 참여하기 (녹음 키트)**](assets/aip/kit/index.html) — 폰을 탁자에 놓고 노크·컵·손뼉 소리와 진동을 녹음해 보내 주세요. 15분, phyphox 앱 하나면 돼요
 
 ---
 

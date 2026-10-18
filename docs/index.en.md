@@ -8,6 +8,10 @@ title: Home
 
 Math- and data-driven investment principles. In an age where AI dominates markets in milliseconds, some things don't change — the math of compounding, the structure of volatility, and time as a weapon.
 
+!!! tip "New series · AI in Pictures"
+    AI that turns sound and motion into pictures, explained with pictures and no formulas.
+    [**Start from part 0 →**](posts/aip-robot-senses.md) · [**Join the part 6 experiment (recording kit, Korean) →**](assets/aip/kit/index.html)
+
 <!-- DASHBOARD_START -->
 <div class="live-dash" markdown>
 
@@ -255,6 +259,7 @@ A picture-first series on sound and motion AI for readers who dislike math. No f
 - [**Part 3 · Seeing Motion**](posts/aip-seeing-motion.md) — IMUs and vibration pictures, through a golf sensor glove
 - [**Part 4 · Teaching Motion**](posts/aip-teaching-motion.md) — teaching an AI six activities from phone sensors
 - [**Part 5 · Learning from a Reference**](posts/aip-learning-from-reference.md) — no training, just a few references or one sentence
+- [**Join the part 6 experiment (recording kit, in Korean)**](assets/aip/kit/index.html) — record table taps, a cup and claps with your phone and send them in. About 15 minutes with the free phyphox app
 
 ---
 
