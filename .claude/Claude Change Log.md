@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-10-18 — 보는 AI 0·1·3·5편 네이버 패키지
+
+- **계기:** 사용자 '0/1/3/5 편 네이버블로그 포스트 준비 부탁'.
+- **패키지(`naver/aip-robot-senses`, `aip-seeing-sound`, `aip-seeing-motion`, `aip-learning-from-reference`, git 밖):** 평문 txt(§4 규칙: ■/▸, 표→평문, 이미지·동영상 자리 표시, 링크 평문), 그림 PNG(`aip<N>-NN.png`), 동영상 mp4(0편 인트로, 3편 스윙), 세로 배너 680×900 SVG → 1360×1800 PNG(청록 다크 카드), UPLOAD.md. 소리는 네이버에 못 넣어서 '♪ 들어 보기: … (원문 블로그에서 재생)' 한 줄로 묶고, 재생 버튼을 전제한 문장은 '원문 블로그에서 들을 수 있어요'로 바꿈. 게임 정답은 글 끝 '게임 정답'으로 옮김. 원문(정본) 줄 유지.
+- **생성기:** `~/Documents/sound-ai-study/src/to_naver.py <blog> 0 1 3 5` (블로그 글 `docs/posts/aip-*.ko.md`에서 만듦, 배너는 playwright 크로미움으로 렌더).
+- **발행 후:** 네이버 글 주소(logNo)를 받으면 발행 목록에 기록.
+
 ## 2026-10-17 (2) — 보는 AI 6편 녹음 키트, 홈 '최근 글'은 같은 날 묶음의 첫 편
 
 - **변경(`7675f01`, push함):** `docs/assets/aip/kit/`에 친구용 녹음 키트 페이지(index.html, 내비 밖 정적 페이지). 내용: 안드로이드·아이폰 설치 링크, phyphox 화면 사용법, 예제(S25로 녹음한 실제 노크 그림), 실험 파일 5개(phyphox:// 버튼 + QR). 결과는 phyphox CSV 내보내기 zip. 실험 파일 원본과 변환기는 `~/Documents/Physical-ai-course/sim-eye/`(friend-kit, src/import_phyphox_zip.py).
