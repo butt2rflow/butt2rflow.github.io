@@ -43,6 +43,7 @@ _archive/
 !scripts/review_briefs.py
 # Briefing backfill is rebuilt from Cboe on each review run
 brief_log/backfill.csv
+brief_log/.pending_slack.json
 # MkDocs build hook (short sidebar labels) runs in CI too
 !hooks/nav_titles.py
 !hooks/home_sidebar.py

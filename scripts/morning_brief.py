@@ -46,6 +46,11 @@ LOG_DIR = Path(__file__).resolve().parent.parent / "brief_log"
 # Rules and findings the commentary must follow; the monthly review
 # (review_briefs.py) proposes edits to it as a PR.
 PLAYBOOK = Path(__file__).resolve().parent.parent / "brief_playbook.md"
+ROOT = Path(__file__).resolve().parent.parent
+CHART_DIR = ROOT / "brief_charts"
+PENDING = LOG_DIR / ".pending_slack.json"     # gitignored hand-off between CI steps
+# Slack fetches the chart by URL; the workflow pushes it before posting.
+RAW_URL = "https://raw.githubusercontent.com/butt2rflow/butt2rflow.github.io/main"
 
 # Two-tier thresholds. Tier 1 = insurance being bought while the index is
 # calm; tier 2 = the stress has reached spot vol / the futures curve.
@@ -306,6 +311,7 @@ def collect() -> dict:
             "ts": ts, "credit": credit, "move": move, "gex": fetch_gex_fresh(),
             "pre": fetch_premarket(m["date"]),
             "pc": fetch_putcall(list(spx.index[-20:])),
+            "_series": {k: idx[k] for k in ("SPX", "VIX", "VIX9D", "VIX3M", "SKEW")},
             "base": base_rate(vix, skew, spx),
             "events": event_calendar(pd.Timestamp(datetime.now(NY).date()), vs)}
 
@@ -494,11 +500,141 @@ def commentary(d: dict) -> str | None:
 
 
 # ============================================================
+# Chart
+# ============================================================
+# Validated default categorical slots (dataviz palette) + neutral ink.
+C_BLUE, C_ORANGE, C_AQUA = "#2a78d6", "#eb6834", "#1baf7a"
+C_CRIT, INK, MUTED, GRID, SURF = "#d03b3b", "#1f1f1e", "#6b6a64", "#e6e5e0", "#fcfcfb"
+
+
+def render_chart(d: dict, days: int = 60) -> Path:
+    """Three stacked panels, one per lens, each annotated with what the
+    briefing claims: SPX vs the GEX flip (amplifier), SKEW vs its 1-year
+    90th percentile (insurance price), VIX9D/VIX/VIX3M (event hedges +
+    stress). English labels — CI runners have no Korean font."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.dates as mdates
+    import matplotlib.pyplot as plt
+
+    s = d["_series"]
+    spx = s["SPX"].dropna().iloc[-days:]
+    t0, last = spx.index[0], spx.index[-1]
+    skew_all = s["SKEW"].dropna()
+    skew = skew_all.loc[t0:]
+    p90 = skew_all.rolling(252).quantile(0.9).loc[t0:]
+    vix, v9, v3 = (s[k].dropna().loc[t0:] for k in ("VIX", "VIX9D", "VIX3M"))
+    m, g = d["m"], d["gex"]
+
+    fig, axes = plt.subplots(3, 1, figsize=(10, 9.5), sharex=True,
+                             gridspec_kw={"height_ratios": [1.2, 1, 1]})
+    fig.patch.set_facecolor(SURF)
+    for ax in axes:
+        ax.set_facecolor(SURF)
+        ax.grid(axis="y", color=GRID, lw=0.8)
+        for side in ("top", "right"):
+            ax.spines[side].set_visible(False)
+        for side in ("left", "bottom"):
+            ax.spines[side].set_color(GRID)
+        ax.tick_params(colors=MUTED, labelsize=9)
+
+    def end_label(ax, y, txt, color):
+        ax.annotate(txt, (last, y), xytext=(6, 0), textcoords="offset points",
+                    va="center", fontsize=9, color=INK,
+                    bbox=dict(boxstyle="round,pad=0.2", fc=SURF, ec=color, lw=1))
+
+    # 1 — SPX vs GEX flip
+    ax = axes[0]
+    ax.plot(spx.index, spx, color=C_BLUE, lw=2)
+    ax.scatter([last], [spx.iloc[-1]], color=C_BLUE, s=36, zorder=3, ec=SURF, lw=2)
+    end_label(ax, spx.iloc[-1], f"SPX {spx.iloc[-1]:,.0f}", C_BLUE)
+    title = "1  SPX vs dealer gamma flip"
+    if g:
+        ax.axhline(g["flip"], color=MUTED, lw=1.2, ls="--")
+        end_label(ax, g["flip"], f"GEX flip {g['flip']:,.0f}", MUTED)
+        if g["regime"] == "short" and spx.iloc[-1] < g["flip"]:
+            ax.axhspan(min(spx.min(), g["flip"]) * 0.995, g["flip"], color=C_CRIT, alpha=0.06)
+            ax.text(0.01, 0.04, "Shaded: below flip + short gamma = dealer hedging amplifies declines",
+                    transform=ax.transAxes, fontsize=9, color=C_CRIT,
+                    bbox=dict(boxstyle="round,pad=0.25", fc=SURF, ec="none"))
+        title += f"   (GEX {g['net_bn']:+.1f}B, {g['regime']})"
+    ax.set_title(title, loc="left", fontsize=11, color=INK, fontweight="bold")
+
+    # 2 — SKEW vs its 1-year 90th percentile
+    ax = axes[1]
+    ax.plot(skew.index, skew, color=C_ORANGE, lw=2)
+    ax.plot(p90.index, p90, color=MUTED, lw=1.2, ls="--")
+    ax.scatter([skew.index[-1]], [skew.iloc[-1]], color=C_ORANGE, s=36, zorder=3, ec=SURF, lw=2)
+    end_label(ax, skew.iloc[-1], f"SKEW {skew.iloc[-1]:.1f}", C_ORANGE)
+    end_label(ax, p90.iloc[-1], f"1y 90th pct {p90.iloc[-1]:.0f}", MUTED)
+    if len(skew) > 6:
+        ax.annotate(f"{m['skew_5d']:+.1f} in 5 sessions",
+                    xy=(skew.index[-1], skew.iloc[-1]), xytext=(skew.index[-7], skew.iloc[-1]),
+                    fontsize=9, color=INK, ha="right", va="center",
+                    arrowprops=dict(arrowstyle="->", color=MUTED, lw=1))
+    ax.set_title("2  Insurance price: SKEW (OTM put demand)", loc="left",
+                 fontsize=11, color=INK, fontweight="bold")
+
+    # 3 — VIX term: 9-day / 30-day / 3-month
+    ax = axes[2]
+    for ser, c, name in ((v9, C_AQUA, "VIX9D"), (vix, C_BLUE, "VIX"), (v3, C_ORANGE, "VIX3M")):
+        ax.plot(ser.index, ser, color=c, lw=2, label=name)
+    ax.legend(loc="upper left", frameon=False, fontsize=9, ncol=3, labelcolor=INK)
+    end_label(ax, vix.iloc[-1],
+              f"VIX9D/VIX {m['vix9d_vix']:.2f}\nVIX/VIX3M {m['vix_vix3m']:.2f}", C_BLUE)
+    ax.set_title("3  Short-dated fear vs term (VIX9D > VIX = hedges crowd into the next days)",
+                 loc="left", fontsize=11, color=INK, fontweight="bold")
+
+    # Upcoming events (FOMC, expiries) as dotted markers past the last close
+    for e in d.get("events", []):
+        name = e.split()[0]
+        for tok in e.replace("(", " ").split():
+            if "/" in tok and tok[:2].isdigit():
+                dt = pd.Timestamp(f"{last.year}-{tok.replace('/', '-')}")
+                if dt < last - pd.Timedelta(days=180):
+                    dt += pd.DateOffset(years=1)
+                if last < dt <= last + pd.Timedelta(days=21):
+                    for a in axes:
+                        a.axvline(dt, color=MUTED, lw=0.8, ls=":")
+                    axes[2].text(dt, axes[2].get_ylim()[0], f" {name} {dt:%m/%d}",
+                                 fontsize=8, color=MUTED, va="bottom", rotation=90)
+    axes[2].set_xlim(t0, last + pd.Timedelta(days=24))
+    axes[2].xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+
+    fig.suptitle(f"Volatility briefing  |  close {m['date']}", x=0.01, ha="left",
+                 fontsize=13, color=INK, fontweight="bold")
+    fig.tight_layout(rect=(0, 0, 0.86, 0.97))
+    CHART_DIR.mkdir(exist_ok=True)
+    out = CHART_DIR / f"{m['date']}.png"
+    fig.savefig(out, dpi=110, facecolor=SURF)
+    plt.close(fig)
+    return out
+
+
+# ============================================================
 # Send
 # ============================================================
-def post_slack(text: str) -> None:
+def slack_payload(text: str, image_url: str | None, date: str) -> dict:
+    """Section blocks cap at 3000 chars, so split on paragraphs."""
+    blocks, chunk = [], ""
+    for para in text.split("\n\n"):
+        if chunk and len(chunk) + len(para) + 2 > 2900:
+            blocks.append(chunk)
+            chunk = ""
+        chunk = f"{chunk}\n\n{para}" if chunk else para
+    if chunk:
+        blocks.append(chunk)
+    out = [{"type": "section", "text": {"type": "mrkdwn", "text": b[:2990]}} for b in blocks]
+    if image_url:
+        # Chart right after the headline + lens sections, before the commentary
+        out.insert(1, {"type": "image", "image_url": image_url,
+                       "alt_text": f"Volatility briefing chart {date}"})
+    return {"text": text.split("\n", 1)[0], "blocks": out}
+
+
+def post_slack(payload: dict) -> None:
     url = os.environ["SLACK_WEBHOOK_URL"]
-    body = json.dumps({"text": text}).encode()
+    body = json.dumps(payload).encode()
     req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=20) as r:
         r.read()
@@ -506,8 +642,22 @@ def post_slack(text: str) -> None:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dry-run", action="store_true")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--dry-run", action="store_true", help="print + render chart locally")
+    mode.add_argument("--stage", action="store_true",
+                      help="build, render chart, log, write the Slack payload to PENDING (CI step 1)")
+    mode.add_argument("--send-pending", action="store_true",
+                      help="post PENDING to Slack (CI step 2, after the chart is pushed)")
     args = ap.parse_args()
+
+    if args.send_pending:
+        if not PENDING.exists():
+            print("Nothing pending.")
+            return
+        post_slack(json.loads(PENDING.read_text(encoding="utf-8")))
+        PENDING.unlink()
+        print("Sent to Slack.")
+        return
 
     if not should_send_now(os.environ.get("BRIEF_SCHEDULE")):
         print("Not 07:30 New York time for this cron slot — skipping.")
@@ -519,10 +669,23 @@ def main():
     if note:
         text += "\n\n*해설 (Claude)*\n" + note
     text += f"\n\n<{SITE_URL}|대시보드 열기>"
-
     print(text)
-    if not args.dry_run:
-        post_slack(text)
+
+    chart = None
+    try:
+        chart = render_chart(d)
+        print(f"Chart: {chart}")
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] chart failed ({e}); sending text only")
+
+    if args.stage:
+        url = f"{RAW_URL}/{chart.relative_to(ROOT).as_posix()}" if chart else None
+        PENDING.write_text(json.dumps(slack_payload(text, url, d["m"]["date"]),
+                                      ensure_ascii=False), encoding="utf-8")
+        write_log(d, text, note)
+    elif not args.dry_run:
+        # One-shot local send: no pushed chart to point at, so text only.
+        post_slack(slack_payload(text, None, d["m"]["date"]))
         print("Sent to Slack.")
         write_log(d, text, note)
 
