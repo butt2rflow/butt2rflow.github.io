@@ -24,10 +24,11 @@ a.btn { flex: 1; display: block; padding: 14px; border-radius: 12px; background:
 .st { display: grid; line-height: 1.25 } .st span { color: var(--muted); font-size: .9rem }
 a.sbtn { grid-column: 1 / 2; padding: 8px 12px; border-radius: 999px; background: var(--fg); color: var(--bg); text-decoration: none; font-weight: 700; text-align: center; white-space: nowrap }
 .store img { justify-self: end; background: #fff; border-radius: 8px; padding: 3px }
-figure.shot { margin: 10px 0 4px; display: grid; gap: 4px; justify-items: start }
-figure.shot img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line) }
+figure.shot { margin: 10px 0 4px; display: grid; gap: 4px; justify-items: start; max-width: 100%; min-width: 0 }
+figure.shot img { height: auto; max-width: 100%; border-radius: 12px; border: 1px solid var(--line) }
 figure.shot figcaption { color: var(--muted); font-size: .85rem }
-.shots { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start }
+.shots { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; max-width: 100% }
+.shots figure.shot { flex: 1 1 140px }
 img.ex { width: 100%; height: auto; border-radius: 10px; margin-top: 10px }
 b.k { color: var(--accent) }
 </style>
@@ -49,11 +50,11 @@ b.k { color: var(--accent) }
 <img src="store-ios.png" alt="App Store phyphox QR 코드" width="96" height="96"></div>
 </div>
 <p class="note">PC 화면으로 보고 있다면 폰 카메라로 QR을 찍으세요.</p></li>
-<li><b>화면을 한국어로 바꾸기</b> (영어로 나오면): phyphox 첫 화면 오른쪽 위 <b>ⓘ</b> → <b>Settings(설정)</b> → <b>App language(앱 언어)</b> → <b>한국어</b>. 아래 안내의 메뉴 이름은 한국어(영어)로 같이 적었어요.<figure class="shot"><img src="shot-lang.jpg" alt="설정 → 앱 언어: 한국어" style="max-width:300px"><figcaption>설정 → 앱 언어: 한국어</figcaption></figure></li>
-<li>아래 <b>버튼 5개</b>를 차례로 눌러요. 누를 때마다 phyphox가 열리고 <b>"Add experiment to collection"</b> 창이 떠요. <b>Save to collection(컬렉션에 저장)</b>을 누르고, 이 페이지로 돌아와 다음 버튼을 눌러요. 추가하는 동안 <b>"Could not initialize audio…"</b> 메시지가 떠도 괜찮아요. 무시하고 계속 추가하세요. PC 화면으로 보고 있다면 phyphox의 <b>＋ → QR 코드로 실험 추가</b>로 옆의 QR을 찍어도 돼요. phyphox 첫 화면의 <b>"보는 AI 6편"</b> 아래에 5개가 생기면 준비 끝이에요.<figure class="shot"><img src="shot-save.jpg" alt="이 창이 뜨면 Save to collection을 눌러요" style="max-width:300px"><figcaption>이 창이 뜨면 Save to collection을 눌러요</figcaption></figure></li></ol><div class="exps"><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/1-knock.phyphox">1. 노크 실험 추가</a><img src="1-knock.png" alt="노크 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/2-cup.phyphox">2. 컵 실험 추가</a><img src="2-cup.png" alt="컵 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/3-clap.phyphox">3. 손뼉 실험 추가</a><img src="3-clap.png" alt="손뼉 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/4-rub.phyphox">4. 문지르기 실험 추가</a><img src="4-rub.png" alt="문지르기 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/5-quiet.phyphox">5. 조용히 실험 추가</a><img src="5-quiet.png" alt="조용히 실험 QR 코드" width="120" height="120"></div></div><figure class="shot"><img src="shot-list.jpg" alt="다 추가하면 첫 화면에 이렇게 다섯 개가 보여요" style="max-width:360px"><figcaption>다 추가하면 첫 화면에 이렇게 다섯 개가 보여요</figcaption></figure><ol start="3" style="margin-top:10px">
+<li><b>화면을 한국어로 바꾸기</b> (영어로 나오면): phyphox 첫 화면 오른쪽 위 <b>ⓘ</b> → <b>Settings(설정)</b> → <b>App language(앱 언어)</b> → <b>한국어</b>. 아래 안내의 메뉴 이름은 한국어(영어)로 같이 적었어요.<figure class="shot"><img src="shot-lang.jpg" alt="설정 → 앱 언어: 한국어" style="width:min(100%,300px)"><figcaption>설정 → 앱 언어: 한국어</figcaption></figure></li>
+<li>아래 <b>버튼 5개</b>를 차례로 눌러요. 누를 때마다 phyphox가 열리고 <b>"Add experiment to collection"</b> 창이 떠요. <b>Save to collection(컬렉션에 저장)</b>을 누르고, 이 페이지로 돌아와 다음 버튼을 눌러요. 추가하는 동안 <b>"Could not initialize audio…"</b> 메시지가 떠도 괜찮아요. 무시하고 계속 추가하세요. PC 화면으로 보고 있다면 phyphox의 <b>＋ → QR 코드로 실험 추가</b>로 옆의 QR을 찍어도 돼요. phyphox 첫 화면의 <b>"보는 AI 6편"</b> 아래에 5개가 생기면 준비 끝이에요.<figure class="shot"><img src="shot-save.jpg" alt="이 창이 뜨면 Save to collection을 눌러요" style="width:min(100%,300px)"><figcaption>이 창이 뜨면 Save to collection을 눌러요</figcaption></figure></li></ol><div class="exps"><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/1-knock.phyphox">1. 노크 실험 추가</a><img src="1-knock.png" alt="노크 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/2-cup.phyphox">2. 컵 실험 추가</a><img src="2-cup.png" alt="컵 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/3-clap.phyphox">3. 손뼉 실험 추가</a><img src="3-clap.png" alt="손뼉 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/4-rub.phyphox">4. 문지르기 실험 추가</a><img src="4-rub.png" alt="문지르기 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/5-quiet.phyphox">5. 조용히 실험 추가</a><img src="5-quiet.png" alt="조용히 실험 QR 코드" width="120" height="120"></div></div><figure class="shot"><img src="shot-list.jpg" alt="다 추가하면 첫 화면에 이렇게 다섯 개가 보여요" style="width:min(100%,360px)"><figcaption>다 추가하면 첫 화면에 이렇게 다섯 개가 보여요</figcaption></figure><ol start="3" style="margin-top:10px">
 <li>처음 열 때 <b>마이크 권한</b>을 물으면 허용해요.</li>
 <li><b>5개를 다 추가했으면 phyphox를 완전히 닫았다가 다시 열어요</b>(최근 앱 화면에서 phyphox를 위로 밀어 닫기). 추가하면서 열린 실험들이 마이크를 잡고 있어서, 다시 열어야 녹음이 돼요.</li>
-<li>녹음 중에 <b>"Could not initialize audio"</b>가 뜨면 똑같이 phyphox를 닫았다가 다시 열면 돼요.<figure class="shot"><img src="shot-mic.jpg" alt="이 메시지가 보이면 phyphox를 닫았다가 다시 열어요" style="max-width:360px"><figcaption>이 메시지가 보이면 phyphox를 닫았다가 다시 열어요</figcaption></figure></li>
+<li>녹음 중에 <b>"Could not initialize audio"</b>가 뜨면 똑같이 phyphox를 닫았다가 다시 열면 돼요.<figure class="shot"><img src="shot-mic.jpg" alt="이 메시지가 보이면 phyphox를 닫았다가 다시 열어요" style="width:min(100%,360px)"><figcaption>이 메시지가 보이면 phyphox를 닫았다가 다시 열어요</figcaption></figure></li>
 <li>머그컵이나 텀블러 하나를 준비해요. 처음부터 끝까지 같은 컵을 써요.</li>
 </ol></div>
 
@@ -80,10 +81,10 @@ b.k { color: var(--accent) }
 <div class="card"><h2>2. 녹음 (실험마다 두 번)</h2>
 <ol>
 <li>폰을 탁자에 <b>평평하게</b> 놓아요. 컵은 폰에서 20~30 cm 떨어진 곳에 둬요.</li>
-<li>phyphox 첫 화면의 <b>"보는 AI 6편"</b> 목록에서 실험을 열고 <b class="k">▶</b>를 누른 뒤 <b>폰에서 손을 떼요.</b> 녹음하는 동안 폰을 만지지 않아요.<figure class="shot"><img src="shot-run.jpg" alt="실험 화면: 오른쪽 위 ▶ 시작, 🗑 지우기, ⋮ 메뉴" style="max-width:300px"><figcaption>실험 화면: 오른쪽 위 ▶ 시작, 🗑 지우기, ⋮ 메뉴</figcaption></figure></li>
+<li>phyphox 첫 화면의 <b>"보는 AI 6편"</b> 목록에서 실험을 열고 <b class="k">▶</b>를 누른 뒤 <b>폰에서 손을 떼요.</b> 녹음하는 동안 폰을 만지지 않아요.<figure class="shot"><img src="shot-run.jpg" alt="실험 화면: 오른쪽 위 ▶ 시작, 🗑 지우기, ⋮ 메뉴" style="width:min(100%,300px)"><figcaption>실험 화면: 오른쪽 위 ▶ 시작, 🗑 지우기, ⋮ 메뉴</figcaption></figure></li>
 <li>3초 뒤부터 아래 동작을 <b>한 번 하고 3초 쉬기</b>를 <b>5번</b> 해요.</li>
 <li>18초쯤 지나면 <b class="k">■</b>로 멈춰요.</li>
-<li>⋮ → <b>데이터 내보내기 (Export Data)</b> → 기본값인 Excel 대신 <b>CSV (Comma, decimal point)</b>를 골라요. 한 번 바꾸면 다음부터는 그대로 있어요. → <b>다운로드 (Download)</b>를 눌러요. 폰의 <b>다운로드</b> 폴더에 zip 파일 하나가 생겨요.<div class="shots"><figure class="shot"><img src="shot-menu.jpg" alt="⋮ → 데이터 내보내기" style="max-width:200px"><figcaption>⋮ → 데이터 내보내기</figcaption></figure><figure class="shot"><img src="shot-export.jpg" alt="CSV (Comma, decimal point) 고르고 → 다운로드" style="max-width:280px"><figcaption>CSV (Comma, decimal point) 고르고 → 다운로드</figcaption></figure></div></li>
+<li>⋮ → <b>데이터 내보내기 (Export Data)</b> → 기본값인 Excel 대신 <b>CSV (Comma, decimal point)</b>를 골라요. 한 번 바꾸면 다음부터는 그대로 있어요. → <b>다운로드 (Download)</b>를 눌러요. 폰의 <b>다운로드</b> 폴더에 zip 파일 하나가 생겨요.<div class="shots"><figure class="shot"><img src="shot-menu.jpg" alt="⋮ → 데이터 내보내기" style="width:min(100%,200px)"><figcaption>⋮ → 데이터 내보내기</figcaption></figure><figure class="shot"><img src="shot-export.jpg" alt="CSV (Comma, decimal point) 고르고 → 다운로드" style="width:min(100%,280px)"><figcaption>CSV (Comma, decimal point) 고르고 → 다운로드</figcaption></figure></div></li>
 <li>같은 실험을 <b>한 번 더</b> 해요. 그다음 실험으로 넘어가요.</li>
 </ol></div>
 
