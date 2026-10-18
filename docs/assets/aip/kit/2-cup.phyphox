@@ -1,0 +1,54 @@
+<phyphox version="1.20" locale="ko">
+    <title>보는AI 6편 · 컵</title>
+    <category>보는 AI 6편</category>
+    <description>폰을 탁자에 평평하게 놓고 ▶를 누른 뒤 손을 떼요. 3초 뒤부터 컵(텀블러)을 들었다가 같은 자리에 내려놓기 → 3초 쉬기를 5번 해요(조용히는 18초 가만히). 18초쯤 지나면 ■로 멈추고, ⋮ → 데이터 내보내기 → CSV → 저장(또는 공유)해요. 이 실험을 두 번 해 주세요.</description>
+    <data-containers>
+        <container size="0">acc_t</container>
+        <container size="0">accX</container>
+        <container size="0">accY</container>
+        <container size="0">accZ</container>
+        <container size="960000">recording</container>
+        <container size="1">audio_n</container>
+        <container size="1">audio_rate</container>
+    </data-containers>
+    <input>
+        <sensor type="accelerometer" rate="0">
+            <output component="x">accX</output>
+            <output component="y">accY</output>
+            <output component="z">accZ</output>
+            <output component="t">acc_t</output>
+        </sensor>
+        <audio rate="48000" append="true">
+            <output>recording</output>
+            <output component="rate">audio_rate</output>
+        </audio>
+    </input>
+    <analysis sleep="0.1">
+        <count>
+            <input clear="false">recording</input>
+            <output>audio_n</output>
+        </count>
+    </analysis>
+    <views>
+        <view label="진동">
+            <graph label="진동 (z)" labelX="t (s)" labelY="a (m/s²)" partialUpdate="true">
+                <input axis="x">acc_t</input>
+                <input axis="y">accZ</input>
+            </graph>
+        </view>
+    </views>
+    <export>
+        <set name="Acceleration_cup">
+            <data name="Time (s)">acc_t</data>
+            <data name="X (m/s^2)">accX</data>
+            <data name="Y (m/s^2)">accY</data>
+            <data name="Z (m/s^2)">accZ</data>
+        </set>
+        <set name="Audio_cup">
+            <data name="Sample">recording</data>
+        </set>
+        <set name="AudioRate_cup">
+            <data name="Rate (Hz)">audio_rate</data>
+        </set>
+    </export>
+</phyphox>

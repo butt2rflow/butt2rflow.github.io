@@ -5,7 +5,9 @@ The home tab's sidebar only holds "Home", so it looks empty. At render time
 the homepage content; assets/home-sidebar.js moves it into the left sidebar.
 
 - Recent: newest `date:` first, at most one post per nav section (so a series
-  published on one day doesn't fill the list), ties broken by later nav order.
+  published on one day doesn't fill the list). When several posts in a section share
+  the newest date, the first one in nav order (the series' entry point) is shown,
+  with the count ("· 6편") in its meta line.
 - Categories: every nav section under the top-level tabs, linking to its first
   page. Titles come from the (translated) nav, labels from nav_titles.py.
 """
@@ -67,20 +69,24 @@ def on_page_context(context, page, config, nav):
         d = _as_date(p.meta.get("date")) if p.meta else None
         if d and p.url not in ("", "en/"):
             dated.append((d, idx, p, sec))
-    dated.sort(key=lambda t: (t[0], t[1]), reverse=True)
+    # newest date first; a section published as a batch on one day shows its FIRST part (the entry point)
+    dated.sort(key=lambda t: (t[0], -t[1]), reverse=True)
     recent, seen = [], set()
     for d, _, p, sec in dated:
         if sec in seen:
             continue
         seen.add(sec)
-        recent.append((d, p, sec))
+        same_day = sum(1 for d2, _, _, s2 in dated if s2 == sec and d2 == d)
+        recent.append((d, p, sec, same_day))
         if len(recent) == RECENT:
             break
 
     out = ['<div id="home-sidebar-src" class="home-side" hidden>']
     out.append(f'<div class="home-side__title">{html.escape(recent_label)}</div><ul class="home-side__recent">')
-    for d, p, sec in recent:
+    for d, p, sec, n in recent:
         meta = f"{sec} · {d:%m-%d}" if sec else f"{d:%m-%d}"
+        if n > 1:  # a batch: say how many posts came out that day
+            meta += f" · {n}편" if lang == "ko" else f" · {n} posts"
         out.append(
             f'<li><a href="{html.escape(_href(page, p))}">{html.escape(p.title)}</a>'
             f'<span class="home-side__meta">{html.escape(meta)}</span></li>'
