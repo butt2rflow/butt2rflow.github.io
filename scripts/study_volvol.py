@@ -304,6 +304,154 @@ def chart(d: pd.DataFrame, peaks: list, troughs: list, path: Path) -> None:
     plt.close(fig)
 
 
+def lead_lag(d: pd.DataFrame) -> None:
+    """Is VolVol *faster* than VIX? (a) does today's VVIX move add to VIX's
+    next-k-day move given today's VIX move, (b) which rule crosses first."""
+    dv, dvv = np.log(d.VIX).diff(), np.log(d.VVIX).diff()
+    for k in (1, 3, 5, 10):
+        X = pd.DataFrame({"dvix": dv, "dvvix": dvv,
+                          "y": np.log(d.VIX).shift(-k) - np.log(d.VIX)}).dropna()
+        A = np.column_stack([np.ones(len(X)), X.dvix, X.dvvix])
+        b, *_ = np.linalg.lstsq(A, X.y.values, rcond=None)
+        X["pos"] = np.arange(len(X))
+        lo, hi = block_ci(X, lambda y: np.linalg.lstsq(
+            np.column_stack([np.ones(len(y)), y.dvix, y.dvvix]), y.y.values, rcond=None)[0][2],
+            reps=300, block=20)
+        flat = X[X.dvix.abs() < X.dvix.abs().quantile(0.3)]
+        print(f"  next {k:2d}d: coef(dVVIX | dVIX) {b[2]:+.3f} [{lo:+.3f},{hi:+.3f}] · "
+              f"flat-VIX days corr(dVVIX, future) {flat.dvvix.corr(flat.y):+.3f}")
+    print("  xcorr dVVIX(t) vs dVIX(t+L): "
+          + "  ".join(f"{L:+d}:{dvv.corr(dv.shift(-L)):+.3f}" for L in range(-2, 3)))
+    pos = pd.Series(np.arange(len(d)), index=d.index)
+    for label, want in (("delever", -1), ("lever", +1)):
+        a = d.vv_on.astype(int).diff(); b_ = d.vix_on.astype(int).diff()
+        a, b_ = a[a == want].index, b_[b_ == want].index
+        leads = []
+        for t in a:
+            near = b_[(b_ >= t - pd.Timedelta(days=30)) & (b_ <= t + pd.Timedelta(days=30))]
+            if len(near):
+                leads.append(pos[min(near, key=lambda u: abs(pos[u] - pos[t]))] - pos[t])
+        L = np.array(leads)
+        print(f"  {label} crosses (n={len(L)}): VolVol first {np.mean(L > 0):.0%}, same day "
+              f"{np.mean(L == 0):.0%}, VIX first {np.mean(L < 0):.0%}, median {np.median(L):+.0f} sessions")
+
+
+def acceleration_test(d: pd.DataFrame) -> None:
+    """The 'insurance on insurance = acceleration' idea: if VVIX is VIX's
+    acceleration, VVIX should bottom before VIX at the start of a spike and
+    peak before VIX at the top. Placebos (VIX9D, VIX3M, SKEW) run the same
+    turn-finding window, which by construction favours 'earlier' at the start
+    (VIX's start is its own 20-day low, so everything after it is rising)."""
+    from math import comb
+    vix = d.VIX
+    pos = pd.Series(np.arange(len(d)), index=d.index)
+    spikes, i, n = [], 25, len(d)
+    while i < n:
+        lo20 = vix.iloc[i - 20:i + 1].min()
+        if vix.iloc[i] >= 1.4 * lo20:
+            start = vix.iloc[i - 20:i + 1].idxmin()
+            j, pk = i, i
+            while j < n and vix.iloc[j] > (vix.iloc[pk] + lo20) / 2:
+                pk = j if vix.iloc[j] > vix.iloc[pk] else pk
+                j += 1
+            spikes.append((start, vix.index[pk]))
+            i = j + 5
+            continue
+        i += 1
+
+    def turn(ser, ref, kind, w=15):
+        p = pos[ref]
+        seg = ser.iloc[max(0, p - w):p + w + 1]
+        return seg.idxmax() if kind == "max" else seg.idxmin()
+
+    def sign_p(e, l):
+        k, m = int(min(e, l)), int(e + l)
+        return min(1.0, 2 * sum(comb(m, j) for j in range(k + 1)) / 2 ** m) if m else 1.0
+
+    extra = {nm: ud._fetch_cboe_index(nm).reindex(d.index).ffill() for nm in ("VIX9D", "VIX3M", "SKEW")}
+    print(f"  VIX spikes (≥+40% over 20-day low): {len(spikes)}; negative = turns before VIX")
+    for kind, idx_of, lab in (("min", 0, "bottom at spike start"), ("max", 1, "peak at spike top")):
+        for name, ser in (("VVIX", d.VVIX), ("VIX 5d momentum", vix.diff(5)),
+                          ("VIX9D (placebo)", extra["VIX9D"]), ("VIX3M (placebo)", extra["VIX3M"]),
+                          ("SKEW (placebo)", extra["SKEW"])):
+            if kind == "min" and name.startswith("VIX 5d"):
+                continue
+            L = np.array([pos[turn(ser, sp[idx_of], kind)] - pos[sp[idx_of]] for sp in spikes
+                          if ser.loc[:sp[idx_of]].notna().sum() > 20])
+            e, l = (L < 0).sum(), (L > 0).sum()
+            print(f"  {lab:22s} {name:18s} earlier {e / len(L):.0%} later {l / len(L):.0%} "
+                  f"median {np.median(L):+.0f} sign-p {sign_p(e, l):.4f}")
+
+
+def calmer_than_priced(d: pd.DataFrame) -> None:
+    """The user's claim: VolVol golden = a relatively low-vol market regardless
+    of the VIX level. Outcome = next-20-session realized vol / VIX (below 1 =
+    calmer than options priced). Gap golden − dead, stratified by VIX band
+    (and by the VIX-only rule state), block-bootstrap CI, era + holdout."""
+    x = d.dropna(subset=["rv20_fwd"]).copy()
+    x["band"] = pd.cut(x.VIX, [0, 15, 20, 25, 35, 200], labels=False)
+    x["rv_ratio"] = x.rv20_fwd / x.VIX
+    x["pos"] = np.arange(len(x))
+
+    def gap(y, flag, strata):
+        gs, w = [], []
+        for _, g in y.groupby(list(strata), observed=True):
+            a, b = g[g[flag]].rv_ratio, g[~g[flag]].rv_ratio
+            if len(a) >= 20 and len(b) >= 20:
+                gs.append(a.mean() - b.mean())
+                w.append(len(g))
+        return float(np.average(gs, weights=w)) if gs else np.nan
+
+    for lab, flag, strata in (("VolVol | VIX band × VIX rule", "vv_on", ("band", "vix_on")),
+                              ("VolVol | VIX band", "vv_on", ("band",)),
+                              ("VIX rule | VIX band", "vix_on", ("band",))):
+        lo, hi = block_ci(x, lambda y: gap(y, flag, strata), reps=300, block=60)
+        eras = [gap(x[m], flag, strata) for m in (x.index < "2020",
+                                                  (x.index >= "2020") & (x.index < "2024-09"),
+                                                  x.index >= "2024-09")]
+        print(f"  {lab:30s} {gap(x, flag, strata):+.3f} [{lo:+.3f}, {hi:+.3f}] · ≤2019 {eras[0]:+.3f}"
+              f" · 2020–24/08 {eras[1]:+.3f} · holdout 2024/09– {eras[2]:+.3f}")
+
+
+def shoulders_knees(d: pd.DataFrame, hold: int = 5) -> None:
+    """Not tops/bottoms — how early each detector flags the shoulder (first
+    lasting risk-off switch, SPX % from the peak) and the knee (first lasting
+    risk-on switch after the trough, SPX % above it), for declines ≥10%.
+    A switch counts only if the new state holds `hold` sessions."""
+    peaks, troughs = major_turns(d, th=-10.0)
+    pos = pd.Series(np.arange(len(d)), index=d.index)
+    det = {"VolVol": d.vv_on, "VIX rule": d.vix_on, "200MA": d.ma200_on}
+
+    def lasting(on, start, end, want):
+        for t in on.loc[start:end].index:
+            p = pos[t]
+            if bool(on.iloc[p]) == want and (p == 0 or bool(on.iloc[p - 1]) != want) \
+                    and all(bool(v) == want for v in on.iloc[p:p + hold]):
+                return t
+        return None
+
+    res = {k: {"off": [], "on": [], "on_s": []} for k in det}
+    for pk, tr in zip(peaks, troughs):
+        for k, on in det.items():
+            t_off = lasting(on, d.index[max(0, pos[pk] - 30)], tr, False)
+            t_on = lasting(on, tr, d.index[min(len(d) - 1, pos[tr] + 120)], True)
+            if t_off is not None:
+                res[k]["off"].append((d.SPX[t_off] / d.SPX[pk] - 1) * 100)
+            if t_on is not None:
+                res[k]["on"].append((d.SPX[t_on] / d.SPX[tr] - 1) * 100)
+                res[k]["on_s"].append(pos[t_on] - pos[tr])
+    fwd_min40 = pd.concat([d.SPX.shift(-k) for k in range(1, 41)], axis=1).min(axis=1) / d.SPX - 1
+    print(f"  {len(peaks)} declines ≥10% since 2007")
+    for k, on in det.items():
+        sw = on.astype(int).diff()
+        offs = sw[sw == -1].index
+        offs = offs[offs < d.index[-41]]
+        print(f"  {k:9s} shoulder: risk-off at SPX {np.median(res[k]['off']):+.1f}% from peak · "
+              f"knee: risk-on at {np.median(res[k]['on']):+.1f}% above trough, "
+              f"{np.median(res[k]['on_s']):.0f} sessions after · risk-off switches/yr "
+              f"{len(offs) / (len(d) / 252):.1f}, false alarm {np.mean(fwd_min40.loc[offs] > -0.05):.0%}")
+
+
 def main():
     pd.set_option("display.width", 220)
     pd.set_option("display.max_columns", 30)
@@ -343,6 +491,14 @@ def main():
             m = p.median(axis=1)
             print(f"  {col:6s} around {name}: median at −60 {m[-60]:.2f}, −20 {m[-20]:.2f}, "
                   f"+20 {m[20]:.2f}, +60 {m[60]:.2f}  (rebased 1.0 at event)")
+    print("\n== 6. Is VolVol faster than VIX? (lead/lag) ==")
+    lead_lag(d)
+    print("\n== 7. 'Insurance on insurance = acceleration': does VVIX turn before VIX? ==")
+    acceleration_test(d)
+    print("\n== 8. Golden = calmer than priced, regardless of VIX level? (future RV20 / VIX) ==")
+    calmer_than_priced(d)
+    print("\n== 9. Shoulders and knees (not tops/bottoms) ==")
+    shoulders_knees(d)
     out = ROOT / "brief_review" / "volvol_study.png"
     chart(d, peaks, troughs, out)
     print(f"\nChart: {out}")

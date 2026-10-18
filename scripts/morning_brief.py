@@ -208,6 +208,26 @@ def vvix_residual(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
     return df[["resid", "pct"]]
 
 
+def volvol_state(vvix: pd.Series, vix: pd.Series) -> dict:
+    """The blog's VolVol (2022-08-28): VVIX/VIX, 5-day MA vs its 20-day
+    Bollinger middle (20MA of the 5MA). scripts/study_volvol.py (2007–2026):
+    golden ⇒ next-20-session realized vol came in ~9% below what VIX priced,
+    even holding the VIX level and the VIX-only rule fixed (CI excludes 0,
+    holds pre/post 2020 and on the 2024-09– holdout). As a shoulder/knee
+    read it flags risk-off at SPX −2.5% from the peak (all 10 declines ≥10%)
+    but cries wolf often (71% of switches) and turns golden ~2 sessions after
+    the VIX rule on the way up. Not a direction call."""
+    r = (vvix / vix).dropna()
+    ma5 = r.rolling(5).mean()
+    on = (ma5 > ma5.rolling(20).mean()).dropna()
+    days = 0
+    for v in on[::-1]:
+        if bool(v) != bool(on.iloc[-1]):
+            break
+        days += 1
+    return {"volvol_golden": bool(on.iloc[-1]), "volvol_days": days}
+
+
 def vol_risk_premium(vix: pd.Series, spx: pd.Series) -> dict:
     """VIX minus SPX 20-day realized vol: how expensive insurance is relative
     to the risk actually being realized. Negative = realized vol is running
@@ -394,6 +414,7 @@ def collect() -> dict:
         "vix9d_vix": float(r9.iloc[-1]), "vix9d_vix_5d": _chg(r9),
         **vol_risk_premium(vix, spx),
         "vvix_resid_pct": float(vvix_residual(idx["VVIX"], vix).pct.dropna().iloc[-1]),
+        **volvol_state(idx["VVIX"], vix),
     }
     return {"m": m, "cs": cs, "vs": vs, "vx_stale": vx_stale, "vvs": vvs, "ks": ks,
             "ts": ts, "credit": credit, "move": move, "gex": fetch_gex_fresh(),
@@ -487,6 +508,13 @@ def build_text(d: dict) -> str:
     vv_lbl = ("비쌈 — 꼬리 헤지는 VIX 콜보다 SPX 풋(스프레드)이 상대적으로 유리" if rp >= VVIX_RICH
               else "쌈 — VIX 콜 헤지가 상대적으로 저렴" if rp <= VVIX_CHEAP else "보통")
     L.append(f"• VIX 옵션 보험료 (VIX 대비 VVIX, 잔차 1년 {rp:.0%}): {vv_lbl} · 방향 신호 아님")
+    if m["volvol_golden"]:
+        vv_state = (f"골든 {m['volvol_days']}일째 → 실제 변동이 VIX 가격보다 작게 나오는 국면 "
+                    f"(같은 VIX대에서 과거 −9%)")
+    else:
+        vv_state = (f"데드 {m['volvol_days']}일째 → 어깨 경고 구간 "
+                    f"(과거 10% 이상 하락 10번 모두 고점 −2.5% 부근에서 켜짐, 단 오경보 71%)")
+    L.append(f"• VolVol (VVIX/VIX 5일선 vs 20일 중앙선): {vv_state}")
 
     # ② 이벤트 맥락
     L.append("*② 이벤트 맥락*")
@@ -549,6 +577,10 @@ COMMENTARY_SYSTEM = """당신은 변동성 지표를 읽는 옵션 투자자의 
 VRP가 음수면 실현변동성이 옵션 가격을 앞지른 상태로, 보험이 위험을 따라가지 못한다는 뜻입니다.
 m.vvix_resid_pct는 VIX 수준 대비 VVIX(VIX 옵션 보험료)가 얼마나 비싼지입니다. 어떤 보험(VIX 콜 vs SPX 풋)이
 상대적으로 싼지를 말할 때만 쓰고, 방향이나 급등 예측 근거로 쓰지 않습니다(과거 데이터에서 예측력 없음).
+m.volvol_golden / m.volvol_days는 블로그의 볼볼 지표 상태입니다. 골든이면 같은 VIX 수준에서도 실제 변동이
+VIX 가격보다 작게 나오는 경향(약 −9%, 검증됨)이 있어 '변동성이 상대적으로 작은 국면'으로 읽습니다.
+데드 전환은 '어깨' 경고 후보(하락 초입을 일찍 잡지만 오경보가 잦음)이고, 무릎(반등 확인)은 VIX 규칙보다
+2거래일쯤 늦습니다. 꼭지·바닥 예측이 아니라 국면의 어깨·무릎을 보는 용도입니다.
 m.vix9d_vix가 1을 넘으면 단기 이벤트 헤지가 몰렸다는 뜻이라 2번 관점과 연결합니다.
 그 밖에: 보험 수요와 실제 스트레스(VIX/VIX3M·VX 곡선·VVIX)를 구분하고, 지난 5일 변화를 짚습니다.
 방향 예측이나 매매 권유는 하지 않습니다. 마크다운 제목·목록 없이 짧은 문장만 씁니다.

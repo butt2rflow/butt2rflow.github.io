@@ -43,11 +43,26 @@ Daily rows overlap (10/20-session windows), so judge by **episodes** (runs more 
   - Golden/dead state vs realized vol over the next 20 days: 14.1 vs 18.5, about the same split as the VIX-only rule (14.7 vs 18.4).
   - (A-2) A dip below the lower band then back inside (73 events): 20-day return +0.65% [−0.56, +1.77], vs +0.80% on all days. No V-shape effect.
   - In high-VIX regimes, a rising ratio trend went with fewer drawdowns of 10% or more over the next 120 days (18% vs 38%). A falling VIX trend gives exactly the same split (18% vs 39%), and once VIX's trend is controlled for, the gap disappears (16% vs 24%, CIs overlap widely, about 15 episodes).
-  - **Conclusion:** VolVol is a re-expression of VIX. Its pattern is real, but there was no information beyond VIX. In the briefing it was replaced with "VIX option premium" (the VVIX residual relative to VIX, display only), which carries no predictive power either. Both are tracked in the monthly review.
+  - **First conclusion (direction, timing):** in level and direction, VolVol is a re-expression of VIX. The leverage switch, (A-2) and the event study showed no information beyond VIX.
+  - **Revised (2026-10-18, sections 8–9): golden = "calmer than priced" — the user's claim holds.** Outcome is realized vol over the next 20 days ÷ VIX. Golden − dead gap, with VIX band and VIX-only rule state held fixed: **−8.9% [−15.1, −3.1]**. By era: ≤2019 −7.8% · 2020–24/08 −3.6% · holdout 2024/09– −16.6%. The same test on the VIX-only rule shows nothing (−3.6% [−9.6, +1.0], holdout +6.0%). So VolVol golden marks a phase where actual volatility comes in below what VIX priced, independent of the VIX level. (On "smart money is coming in": forward returns favoured golden only in the VIX 25–35 band (60-day +8.7% vs +4.0%); elsewhere the CIs overlap, so that part is not established.)
+  - **Shoulder/knee use (10 declines ≥10% since 2007; switch must hold 5 sessions):**
+    - VolVol: risk-off at SPX −2.5% from the peak (all 10 already on), risk-on at +6.9% above the trough (8 sessions after).
+    - VIX rule: −2.8%, and +5.1% (6 sessions after).
+    - 200-day MA: −8.3%, and +10.1% (36 sessions after).
+    - Both vol detectors catch the shoulder about 6pp of SPX earlier and the knee about 30 sessions earlier than the 200-day MA. But false alarms are frequent: 71% of VolVol risk-off switches and 74% of VIX-rule switches were not followed by a ≥5% decline within 40 sessions. Read a dead switch as "shoulder candidate", not a confirmed decline.
+  - **In the brief:**
+    - Shows the VolVol state (golden/dead, days in state) with the meaning above, display only.
+    - Also shows the "VIX option premium" (VVIX residual vs VIX), which has no predictive power and only compares hedge costs.
+    - Both are tracked in the monthly review. VolVol is not used in the 🟢/🟡/🔴 call.
 - Same VIX level with SKEW in the top 10% showed fewer drawdowns, but **only after 2020**: ≤2019 34% vs 40% at that VIX level, 2020– 18% vs 37% (37 episodes). Treat it as an observation, not a rule.
 - **V-shape hypothesis (not significant):** in −3% drawdown episodes since 1991, heavy pre-drop hedging (n=21) vs light (n=28). The 20-day median return gap was +1.1pp, 95% CI [−1.9, +2.9]. The recovery-day gap was −8 days, 95% CI [−24, +25]. Both CIs include 0. In −5% episodes (n=12/17) the CIs are wider still. Deepening past −10% was the same (19% vs 18%), and the episode definition was not fixed in advance. "Prepared markets bounce faster" is a hypothesis to keep tracking, not a finding (`scripts/study_vshape.py`).
 
 ## Open questions (to verify)
+- **VolVol speed hypothesis (in-sample, needs holdout validation):** VolVol does not react faster than VIX.
+  - Delever crosses: VolVol first 40% / VIX first 44%. Lever crosses: VIX first 64%, with VolVol a median 2 sessions later. The daily-change cross-correlation is lag ±1 ≈ 0.
+  - On days VIX moves, though, how far VVIX moves with it relates to the next 1–5 days of VIX, given today's VIX move. The 3-day coefficient is +0.21 [+0.12, +0.33]. If VVIX moves with VIX, the move tends to persist; if only VIX jumps, it tends to revert faster.
+  - VVIX moving alone on calm VIX days predicts nothing (corr +0.02).
+  - To test it as a "VIX spike persistence" read, check it on live records and the holdout. See `study_volvol.py` section 6.
 - VIX9D/VIX > 1 clears Holm against all days (39%, p<0.005). Check whether it adds information on non-🔴 days and within VIX bands before considering it for the state call.
 - Is GEX recomputed at 07:30 ET any different from the overnight snapshot? Compare `gex.net_bn` and `gex.published_net_bn` in `brief_log`. (On 10-16, a weekend, the two were identical, as expected.)
 - Does Yahoo's ^VIX carry Cboe extended-hours (GTH) values before the open?
