@@ -163,6 +163,9 @@ def backfill_tables(bf: pd.DataFrame) -> str:
             "VVIX 1년 ≥ 90%": x.vvix_pct >= mb.STRESS_VVIX_PCT,
             "(참고) VVIX ≥ 105 — 이전 규칙": x.vvix >= 105,
             "VIX9D/VIX > 1": x.vix9d_vix > 1,
+            # Display-only in the brief ("VIX 옵션 보험료"); tracked here in case it earns more.
+            "VVIX 잔차 상위 20% (VIX옵션 비쌈)": x.vvix_resid_pct >= mb.VVIX_RICH,
+            "VVIX 잔차 하위 20% (VIX옵션 쌈)": x.vvix_resid_pct <= mb.VVIX_CHEAP,
             "VRP < 0": x.vrp < 0,
             "VRP 1년 상위 20%": x.vrp_top20,
         }

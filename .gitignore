@@ -42,6 +42,7 @@ _archive/
 !scripts/score_briefs.py
 !scripts/review_briefs.py
 !scripts/study_vshape.py
+!scripts/study_volvol.py
 # Briefing backfill is rebuilt from Cboe on each review run
 brief_log/backfill.csv
 brief_log/.pending_slack.json

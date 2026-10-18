@@ -189,6 +189,25 @@ def fetch_putcall(dates: list[pd.Timestamp]) -> dict | None:
             "n": len(df)}
 
 
+VVIX_RICH, VVIX_CHEAP = 0.80, 0.20     # residual 1y-percentile bands
+
+
+def vvix_residual(vvix: pd.Series, vix: pd.Series) -> pd.DataFrame:
+    """How expensive VIX options (VVIX) are *for the current VIX level*.
+    The raw VVIX/VIX ratio is mostly 1/VIX (corr −0.77), so regress log VVIX
+    on log VIX over a trailing 252-session window (past data only) and take
+    the residual's 1-year percentile. Display-only: in 2010–2026 it predicted
+    neither SPX drawdowns, VIX spikes nor rebounds (all CIs overlap) — it
+    answers "is hedging via VIX calls cheap or rich vs SPX puts", not
+    "where is the market going"."""
+    df = pd.DataFrame({"lv": np.log(vvix), "lx": np.log(vix)}).dropna()
+    mv, mx = df.lv.rolling(252).mean(), df.lx.rolling(252).mean()
+    beta = ((df.lv * df.lx).rolling(252).mean() - mv * mx) / ((df.lx ** 2).rolling(252).mean() - mx ** 2)
+    df["resid"] = df.lv - (mv - beta * mx + beta * df.lx)
+    df["pct"] = df.resid.rolling(252).rank(pct=True)
+    return df[["resid", "pct"]]
+
+
 def vol_risk_premium(vix: pd.Series, spx: pd.Series) -> dict:
     """VIX minus SPX 20-day realized vol: how expensive insurance is relative
     to the risk actually being realized. Negative = realized vol is running
@@ -374,6 +393,7 @@ def collect() -> dict:
         "cor1m": float(idx["COR1M"].iloc[-1]),
         "vix9d_vix": float(r9.iloc[-1]), "vix9d_vix_5d": _chg(r9),
         **vol_risk_premium(vix, spx),
+        "vvix_resid_pct": float(vvix_residual(idx["VVIX"], vix).pct.dropna().iloc[-1]),
     }
     return {"m": m, "cs": cs, "vs": vs, "vx_stale": vx_stale, "vvs": vvs, "ks": ks,
             "ts": ts, "credit": credit, "move": move, "gex": fetch_gex_fresh(),
@@ -463,6 +483,10 @@ def build_text(d: dict) -> str:
     cheap = "보험이 실제 위험보다 싸다 — 실현변동성이 옵션 가격을 앞지름" if m["vrp"] < 0 else         ("보험료 비쌈" if m["vrp_pct"] >= 0.8 else "보험료 보통" if m["vrp_pct"] >= 0.3 else "보험료 쌈")
     L.append(f"• 보험료 수준 (VRP): VIX − 20일 실현 {m['rv20']:.1f} = {m['vrp']:+.1f}pt "
              f"(5일 {m['vrp_5d']:+.1f}, 1년 {m['vrp_pct']:.0%}) → {cheap}")
+    rp = m["vvix_resid_pct"]
+    vv_lbl = ("비쌈 — 꼬리 헤지는 VIX 콜보다 SPX 풋(스프레드)이 상대적으로 유리" if rp >= VVIX_RICH
+              else "쌈 — VIX 콜 헤지가 상대적으로 저렴" if rp <= VVIX_CHEAP else "보통")
+    L.append(f"• VIX 옵션 보험료 (VIX 대비 VVIX, 잔차 1년 {rp:.0%}): {vv_lbl} · 방향 신호 아님")
 
     # ② 이벤트 맥락
     L.append("*② 이벤트 맥락*")
@@ -489,7 +513,7 @@ def build_text(d: dict) -> str:
     L += ["", "*지표*",
           f"• VIX {m['vix']:.2f} (5일 {m['vix_5d']:+.2f}) · VIX9D {m['vix9d']:.2f} · "
           f"VIX/VIX3M {m['vix_vix3m']:.2f} · VVIX {m['vvix']:.1f} (5일 {m['vvix_5d']:+.1f}, 1년 {m['vvix_pct']:.0%})"
-          + (f" · VolVol {ud.EMOJI[d['vvs']['state']]}" if d["vvs"] else "")]
+          ]
     if vs:
         stale = f" ⚠️ {d['vx_stale']} 스냅샷" if d["vx_stale"] else ""
         L.append(f"• VX 곡선 {vs['shape']} (M1 {vs['front']:.2f}, M2−M1 {vs['spread_2_1']:+.2f}){stale}")
@@ -523,6 +547,8 @@ COMMENTARY_SYSTEM = """당신은 변동성 지표를 읽는 옵션 투자자의 
 
 보험 지표는 가격(SKEW·COR90D), 거래량(pc: 풋/콜 비율), 보험료 수준(m.vrp: VIX − 실현변동성)을 함께 봅니다.
 VRP가 음수면 실현변동성이 옵션 가격을 앞지른 상태로, 보험이 위험을 따라가지 못한다는 뜻입니다.
+m.vvix_resid_pct는 VIX 수준 대비 VVIX(VIX 옵션 보험료)가 얼마나 비싼지입니다. 어떤 보험(VIX 콜 vs SPX 풋)이
+상대적으로 싼지를 말할 때만 쓰고, 방향이나 급등 예측 근거로 쓰지 않습니다(과거 데이터에서 예측력 없음).
 m.vix9d_vix가 1을 넘으면 단기 이벤트 헤지가 몰렸다는 뜻이라 2번 관점과 연결합니다.
 그 밖에: 보험 수요와 실제 스트레스(VIX/VIX3M·VX 곡선·VVIX)를 구분하고, 지난 5일 변화를 짚습니다.
 방향 예측이나 매매 권유는 하지 않습니다. 마크다운 제목·목록 없이 짧은 문장만 씁니다.

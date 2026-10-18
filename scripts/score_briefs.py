@@ -113,6 +113,8 @@ def score_live(h: pd.DataFrame) -> int:
 # ============================================================
 def build_backfill(h: pd.DataFrame) -> pd.DataFrame:
     d = h.dropna(subset=["SPX", "VIX", "VIX3M", "VVIX", "SKEW", "COR90D"]).copy()
+    # Residual needs 2×252 sessions of warm-up; compute before the 2008 cut.
+    d["vvix_resid_pct"] = mb.vvix_residual(d.VVIX, d.VIX).pct
     d = d.loc["2008":]
     d["vix_vix3m"] = d.VIX / d.VIX3M
     d["vix9d_vix"] = d.VIX9D / d.VIX
@@ -132,7 +134,7 @@ def build_backfill(h: pd.DataFrame) -> pd.DataFrame:
         emoji, _, why = mb.classify({"m": m, "vs": None})
         rows.append({"date": t.strftime("%Y-%m-%d"), "state": emoji, "why": " · ".join(why),
                      "vix": x.VIX, "vix_vix3m": x.vix_vix3m, "vvix": x.VVIX,
-                     "vvix_pct": x.vvix_pct,
+                     "vvix_pct": x.vvix_pct, "vvix_resid_pct": x.vvix_resid_pct,
                      "vix9d_vix": x.vix9d_vix, "skew": x.SKEW, "skew_5d": x.skew_5d,
                      "skew_pct": x.skew_pct, "cor90d": x.COR90D, "cor90d_5d": x.cor90d_5d,
                      "vrp": x.vrp, "spx_from_high_20d": x.spx_from_high_20d})
