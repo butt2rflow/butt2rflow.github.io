@@ -25,12 +25,25 @@ button:disabled { opacity: .45; cursor: default }
 ul.files { margin: 0; padding-left: 1.1em } .ok { color: var(--ok) } .bad { color: var(--bad) }
 table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
 [hidden] { display: none !important }
+.warn { border: 2px solid var(--bad); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px }
+.warn b.big { color: var(--bad); font-size: 1.05rem }
+.good { border: 2px solid var(--ok); border-radius: 12px; padding: 12px 14px }
+button.go2, a.go2 { font: inherit; font-weight: 700; padding: 12px; border-radius: 12px; border: 0; background: var(--accent); color: #fff; cursor: pointer; text-decoration: none; text-align: center; display: block }
+button.ghost { font: inherit; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer }
+ol.how { margin: 0; padding-left: 1.3em; display: grid; gap: 4px }
 </style>
 </head>
 <body>
 <main>
 <h1>결과 보내기</h1>
 <p class="note">몇 가지만 묻고, 녹음 zip 파일들과 답을 <b>꾸러미 파일 하나</b>로 묶어 드려요. 묶는 동안 파일은 이 폰 밖으로 나가지 않아요.</p>
+
+<section class="warn" id="inapp" hidden>
+  <b class="big">앱 안 브라우저에서 열렸어요</b>
+  <p class="note" style="color:var(--fg)">메신저나 SNS 앱 안에서 링크를 열면 파일 저장이 안 될 때가 많아요. 아래 버튼으로 크롬(아이폰은 사파리)에서 다시 열어 주세요.</p>
+  <a class="go2" id="open_ext" href="#">크롬/사파리로 열기</a>
+  <p class="note" id="inapp_ios" hidden>버튼이 안 되면 화면 오른쪽 아래(또는 위) <b>⋯</b> 메뉴 → <b>다른 브라우저로 열기</b>를 눌러 주세요.</p>
+</section>
 
 <section class="card" data-step="1">
   <div class="step">1 / 6</div><h2>이름 (별명도 괜찮아요)</h2>
@@ -66,16 +79,35 @@ table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
   <p class="note">phyphox에서 <b>데이터 내보내기 → CSV → 다운로드</b>한 zip 파일을 <b>한꺼번에</b> 골라 주세요 (보통 10개). 폰의 <b>다운로드</b> 폴더에 "보는AI 6편 · 노크 …"처럼 들어 있어요.</p>
   <input type="file" id="files" accept=".zip,application/zip,.xlsx" multiple>
   <p class="note" id="xlsx_warn" hidden style="color:var(--bad)">Excel(.xlsx) 파일이 섞여 있어요. phyphox에서 <b>CSV (Comma, decimal point)</b>로 다시 다운로드해 주세요.</p>
+  <p class="note" id="fix_note" hidden style="color:var(--bad)">빨간 줄의 녹음은 쓸 수 없어요. <b>소리가 비어 있으면</b> phyphox를 완전히 끄고(최근 앱에서 밀어서 닫기) 다시 열어 그 녹음만 다시 해 주세요. 다른 phyphox 실험이 마이크를 잡고 있으면 진동만 녹음돼요. 그래도 나머지는 그대로 보내 주셔도 괜찮아요.</p>
   <table id="check"></table>
   <ul class="files" id="list"></ul>
 </section>
 
 <section class="card" id="done" hidden>
-  <h2>꾸러미가 준비됐어요</h2>
+  <h2>꾸러미를 만들었어요</h2>
   <p class="note" id="bundle_info"></p>
-  <button class="go" id="save" type="button" style="font:inherit;font-weight:700;padding:12px;border-radius:12px;border:0;background:var(--accent);color:#fff">1. 꾸러미 저장하기</button>
-  <a class="go" id="upload" href="#" target="_blank" rel="noopener">2. 꾸러미 올리기</a>
-  <p class="note" id="upload_note">올리기 페이지가 열리면 방금 저장한 꾸러미 파일 하나만 올리면 끝이에요. 안 되면 카카오톡으로 보내 주셔도 돼요.</p>
+  <div class="warn" id="not_sent"><b class="big">아직 보내지 않았어요</b><span class="note" style="color:var(--fg)">아래 순서대로 저장하고 보내 주셔야 저에게 도착해요.</span></div>
+
+  <h2 style="margin-top:6px">1. 꾸러미 저장하기</h2>
+  <button class="go2" id="save" type="button">꾸러미 저장하기</button>
+  <div id="saved_q" hidden>
+    <p class="note" style="color:var(--fg)">폰의 <b>다운로드</b> 폴더(또는 "내 파일")에 <b id="fname"></b> 파일이 생겼나요?</p>
+    <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="ghost" id="saved_yes" type="button">네, 생겼어요</button><button class="ghost" id="saved_no" type="button">아니요</button></div>
+    <div class="warn" id="saved_help" hidden><span class="note" style="color:var(--fg)">메신저 앱 안에서 링크를 열었다면 저장이 막혀요. 이 페이지를 <b>크롬</b>(아이폰은 <b>사파리</b>)에서 다시 열고 처음부터 해 주세요. 그래도 안 되면 phyphox zip 파일들을 직접 메시지나 이메일에 첨부해서 보내 주셔도 돼요.</span></div>
+  </div>
+
+  <h2 style="margin-top:6px">2. 보내기</h2>
+  <a class="go2" id="upload" href="#" target="_blank" rel="noopener" hidden>꾸러미 올리기 (업로드 페이지 열기)</a>
+  <button class="go2" id="share" type="button" hidden>메시지·이메일로 바로 보내기</button>
+  <ol class="how" id="how_send">
+    <li>평소 저와 연락하는 앱을 열어요 (카카오톡, 문자 메시지, WhatsApp, 이메일 등).</li>
+    <li>첨부 버튼(<b>+</b> 또는 <b>📎</b>)에서 <b>파일</b>(또는 문서)을 골라요.</li>
+    <li><b>다운로드</b> 폴더에서 <b id="fname2"></b>을 골라 보내요.</li>
+  </ol>
+  <p class="note" id="upload_note"></p>
+  <div class="good" id="all_done" hidden><b>보냈다면 끝이에요. 고마워요!</b></div>
+  <button class="ghost" id="sent_btn" type="button">보냈어요</button>
 </section>
 
 <div class="nav"><button class="back" id="back" type="button" disabled>이전</button><button id="next" type="button">다음</button></div>
@@ -108,6 +140,15 @@ table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
     });
   });
   const ua = navigator.userAgent;
+  const inApp = /KAKAOTALK|NAVER\(inapp|FBAN|FBAV|Instagram|Line\/|DaumApps|everytimeApp/i.test(ua);
+  if (inApp) {
+    document.getElementById("inapp").hidden = false;
+    const url = location.href, ext = document.getElementById("open_ext");
+    if (/KAKAOTALK/i.test(ua)) ext.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(url);
+    else if (/Android/i.test(ua)) ext.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+    else ext.href = url;
+    if (/iPhone|iPad/.test(ua)) document.getElementById("inapp_ios").hidden = false;
+  }
   document.getElementById("phone_hint").textContent = /iPhone/.test(ua) ? "이 폰은 아이폰으로 보여요." :
     (/SM-S93/.test(ua) ? "이 폰은 Galaxy S25로 보여요." : "");
 
@@ -129,10 +170,19 @@ table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
   ["who", "phone_other"].forEach(id => document.getElementById(id).addEventListener("input", update));
   back.addEventListener("click", () => show(Math.max(0, cur - 1)));
 
-  const kindMap = new Map();
+  const kindMap = new Map(), problem = new Map();
   async function detect(f) {  // the name first, then the CSV names inside (e.g. Acceleration_knock.csv)
     let k = kindOf(f.name);
-    if (!k) { try { const z = await JSZip.loadAsync(f); k = kindOf(Object.keys(z.files).join(" ").toLowerCase()); } catch (e) {} }
+    try {
+      const z = await JSZip.loadAsync(f), names = Object.keys(z.files);
+      if (!k) k = kindOf(names.join(" ").toLowerCase());
+      const aud = names.find(n => /(^|\/)audio(_\w+)?\.csv$/i.test(n)), acc = names.find(n => /(^|\/)acceleration[^/]*\.csv$/i.test(n));
+      if (aud) {  // header line only = the mic recorded nothing (another phyphox experiment was holding it)
+        const txt = await z.file(aud).async("string");
+        if (txt.trim().split(/\r?\n/).length < 2) problem.set(f, "소리가 비어 있어요");
+      }
+      if (acc) f._sig = (await z.file(acc).async("string")).slice(0, 4000) + "|" + (await z.file(acc).async("uint8array")).length;
+    } catch (e) {}
     kindMap.set(f, k); return k;
   }
   document.getElementById("files").addEventListener("change", async e => {
@@ -142,11 +192,20 @@ table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
     await Promise.all(files.map(detect));
     const count = {knock: 0, cup: 0, clap: 0, rub: 0, quiet: 0};
     const list = document.getElementById("list"); list.textContent = "";
-    files.forEach(f => {
-      const k = kindMap.get(f); if (k) count[k]++;
-      const li = document.createElement("li"); li.textContent = f.name + (k ? "" : "  (어떤 녹음인지 모르겠어요: phyphox 내보내기 파일이 맞는지 확인해 주세요)");
-      if (!k) li.className = "bad"; list.appendChild(li);
+    const sigs = new Map();
+    files.forEach(f => {  // the same recording exported twice looks like two files: count it once
+      if (f._sig && sigs.has(f._sig)) problem.set(f, "같은 녹음을 두 번 내보냈어요 (" + sigs.get(f._sig) + ")");
+      else if (f._sig) sigs.set(f._sig, f.name);
     });
+    let bad = 0;
+    files.forEach(f => {
+      const k = kindMap.get(f), pr = problem.get(f); if (k && !pr) count[k]++;
+      const li = document.createElement("li");
+      li.textContent = f.name + (!k ? "  (어떤 녹음인지 모르겠어요: phyphox 내보내기 파일이 맞는지 확인해 주세요)" : pr ? "  (" + pr + ")" : "");
+      if (!k || pr) { li.className = "bad"; bad++; } list.appendChild(li);
+    });
+    const fix = document.getElementById("fix_note");
+    fix.hidden = !bad;
     const names = {knock: "노크", cup: "컵", clap: "손뼉", rub: "문지르기", quiet: "조용히"};
     document.getElementById("check").innerHTML = Object.keys(count).map(k =>
       `<tr><td>${names[k]}</td><td class="${count[k] >= 2 ? "ok" : "bad"}">${count[k]}개 ${count[k] >= 2 ? "✓" : "(2개면 좋아요)"}</td></tr>`).join("");
@@ -170,12 +229,30 @@ table { border-collapse: collapse } td { padding: 3px 10px 3px 0 }
     document.querySelector(".nav").hidden = true;
     document.getElementById("done").hidden = false;
     document.getElementById("bundle_info").textContent = `${bundleName} · 녹음 ${files.length}개 · ${(blob.size / 1e6).toFixed(1)} MB`;
+    document.getElementById("fname").textContent = bundleName; document.getElementById("fname2").textContent = bundleName;
     const up = document.getElementById("upload");
-    if (UPLOAD_URL) up.href = UPLOAD_URL; else { up.hidden = true; document.getElementById("save").textContent = "꾸러미 저장하기"; document.getElementById("upload_note").textContent = "저장한 꾸러미 파일을 카카오톡이나 메일로 보내 주세요."; }
+    if (UPLOAD_URL) {
+      up.href = UPLOAD_URL; up.hidden = false;
+      document.getElementById("upload_note").textContent = "업로드 페이지가 열리면 방금 저장한 꾸러미 파일 하나만 올려 주세요. 안 되면 아래처럼 메시지나 이메일로 보내 주셔도 돼요.";
+    }
+    try {
+      const file = new File([blob], bundleName, {type: "application/zip"});
+      if (navigator.canShare && navigator.canShare({files: [file]})) {
+        const sh = document.getElementById("share"); sh.hidden = false;
+        sh.onclick = async () => { try { await navigator.share({files: [file], title: bundleName}); } catch (e) {} };
+      }
+    } catch (e) {}
   });
   document.getElementById("save").addEventListener("click", () => {
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = bundleName;
     document.body.appendChild(a); a.click(); a.remove();
+    document.getElementById("saved_q").hidden = false;
+    window.__saved = (window.__saved || 0) + 1;
+  });
+  document.getElementById("saved_yes").addEventListener("click", () => { document.getElementById("saved_help").hidden = true; });
+  document.getElementById("saved_no").addEventListener("click", () => { document.getElementById("saved_help").hidden = false; });
+  document.getElementById("sent_btn").addEventListener("click", () => {
+    document.getElementById("all_done").hidden = false; document.getElementById("not_sent").hidden = true; document.getElementById("sent_btn").hidden = true;
   });
   show(0);
 })();
