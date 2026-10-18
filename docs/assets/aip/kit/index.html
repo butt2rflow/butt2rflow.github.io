@@ -18,8 +18,12 @@ table { border-collapse: collapse; width: 100% } td, th { border-bottom: 1px sol
 .exp { display: flex; align-items: center; justify-content: space-between; gap: 12px }
 a.btn { flex: 1; display: block; padding: 14px; border-radius: 12px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 700; text-align: center }
 .exp img { background: #fff; border-radius: 8px; padding: 4px }
-.stores { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px }
-a.store { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--fg); text-decoration: none; font-weight: 700 }
+.stores { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 10px }
+.store { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; gap: 8px 12px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg) }
+.store svg { color: var(--fg) }
+.st { display: grid; line-height: 1.25 } .st span { color: var(--muted); font-size: .9rem }
+a.sbtn { grid-column: 1 / 2; padding: 8px 12px; border-radius: 999px; background: var(--fg); color: var(--bg); text-decoration: none; font-weight: 700; text-align: center; white-space: nowrap }
+.store img { justify-self: end; background: #fff; border-radius: 8px; padding: 3px }
 img.ex { width: 100%; height: auto; border-radius: 10px; margin-top: 10px }
 b.k { color: var(--accent) }
 </style>
@@ -32,8 +36,15 @@ b.k { color: var(--accent) }
 <div class="card"><h2>1. 준비 (한 번만)</h2>
 <ol>
 <li><b>phyphox</b>를 설치해요. 무료이고 광고나 가입이 없어요 (개발자: RWTH Aachen University).
-<div class="stores"><a class="store" href="https://play.google.com/store/apps/details?id=de.rwth_aachen.phyphox">안드로이드 (Google Play)</a>
-<a class="store" href="https://apps.apple.com/app/phyphox/id1127319693">아이폰 (App Store)</a></div></li>
+<div class="stores">
+<div class="store"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path fill="#3DDC84" d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.22A11.4 11.4 0 0 0 12 8.15c-1.77 0-3.43.4-4.92 1L5.22 5.92a.38.38 0 0 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg><div class="st"><b>안드로이드</b><span>Google Play</span></div>
+<a class="sbtn" href="https://play.google.com/store/apps/details?id=de.rwth_aachen.phyphox">설치하기</a>
+<img src="store-android.png" alt="Google Play phyphox QR 코드" width="96" height="96"></div>
+<div class="store"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><rect x="6" y="1.5" width="12" height="21" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="10" y="3.5" width="4" height="1.2" rx=".6" fill="currentColor"/><circle cx="12" cy="19.2" r="1" fill="currentColor"/></svg><div class="st"><b>아이폰</b><span>App Store</span></div>
+<a class="sbtn" href="https://apps.apple.com/app/phyphox/id1127319693">설치하기</a>
+<img src="store-ios.png" alt="App Store phyphox QR 코드" width="96" height="96"></div>
+</div>
+<p class="note">PC 화면으로 보고 있다면 폰 카메라로 QR을 찍으세요.</p></li></li>
 <li>아래 <b>버튼 5개</b>를 차례로 눌러요. 누를 때마다 phyphox가 열리며 실험이 하나씩 추가돼요. PC 화면으로 보고 있다면 phyphox의 <b>＋ → QR 코드로 실험 추가</b>로 옆의 QR을 찍어도 돼요. phyphox 첫 화면의 <b>"보는 AI 6편"</b> 아래에 5개가 생기면 준비 끝이에요.</li></ol><div class="exps"><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/1-knock.phyphox">1. 노크 실험 추가</a><img src="1-knock.png" alt="노크 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/2-cup.phyphox">2. 컵 실험 추가</a><img src="2-cup.png" alt="컵 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/3-clap.phyphox">3. 손뼉 실험 추가</a><img src="3-clap.png" alt="손뼉 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/4-rub.phyphox">4. 문지르기 실험 추가</a><img src="4-rub.png" alt="문지르기 실험 QR 코드" width="120" height="120"></div><div class="exp"><a class="btn" href="phyphox://butt2rflow.github.io/assets/aip/kit/5-quiet.phyphox">5. 조용히 실험 추가</a><img src="5-quiet.png" alt="조용히 실험 QR 코드" width="120" height="120"></div></div><ol start="3" style="margin-top:10px">
 <li>처음 열 때 <b>마이크 권한</b>을 물으면 허용해요.</li>
 <li>머그컵이나 텀블러 하나를 준비해요. 처음부터 끝까지 같은 컵을 써요.</li>
@@ -85,6 +96,7 @@ b.k { color: var(--accent) }
 <div class="card"><h2>4. 보내기</h2>
 <p>zip 파일 <b>10개</b>(실험 5개 × 2번)를 한 번에 보내 주세요. 카카오톡이나 Google Drive 공유 링크 모두 괜찮아요. 파일 이름은 바꾸지 않아도 돼요. 이름에 실험 이름과 시간이 들어 있어요.</p>
 <p class="note">탁자 종류(나무, 유리 등)와 컵 종류를 한 줄로 같이 적어 주시면 좋아요.</p></div>
+<p class="note" style="font-size:.78rem">The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License. Google Play is a trademark of Google LLC; App Store is a trademark of Apple Inc.</p>
 </main>
 </body>
 </html>
