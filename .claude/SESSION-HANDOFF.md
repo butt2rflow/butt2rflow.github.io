@@ -3,7 +3,7 @@
 > **세션 시작 시 이 문서를 먼저 읽으세요.** (또는 `/start-session` 스킬)
 > 이 문서는 "지금 어디까지 됐고, 어떻게 발행하며, 무엇을 조심하나"를 담은 **살아있는 핸드오프**입니다.
 > 세션 끝에 `/end-session` 스킬이 이 문서의 *현재 상태*와 체인지로그를 갱신합니다.
-> **마지막 갱신:** 2026-10-18
+> **마지막 갱신:** 2026-10-19
 
 ---
 
@@ -80,7 +80,7 @@
 
 ## 6. 현재 상태 (published, live)
 
-- **📈 아침 변동성 브리핑 → Slack (2026-10-18, `a5d507c`→`3be8386`, 가동 중):** 평일 **뉴욕 07:30**(미장 2시간 전; 사용자는 캐나다 거주)에 `scripts/morning_brief.py`가 Slack 채널(앱 `volatility-brief`, 워크스페이스 `tnrud`)로 발송. **변동성·보험료 관점만**(보험 수요는 '조심 신호'이지 예측 아님). 세 관점(보험+딜러 증폭 / 이벤트 / 같은 VIX대 과거 확률) + 프리마켓 + Claude 해설(`brief_playbook.md`를 읽음) + 주석 차트(`brief_charts/`). 기록 `brief_log/`에 매일 5·10·20일 결과 채점, 매월 1일 복기가 `brief-review/<월>` 브랜치로 playbook 수정 제안(사람이 병합). 판정 규칙·통계 원칙(에피소드·부트스트랩 CI·Holm·2020 전후) → `brief_playbook.md`, 운영 → CLAUDE.md "Morning volatility briefing", 작업은 `vol-briefing` 스킬. VVIX 🔴 규칙은 1년 백분위 ≥90%로 변경. VolVol 검증(`scripts/study_volvol.py`): 방향·속도는 VIX 재표현, 단 골든 = 실현변동성이 VIX 가격보다 ~9% 작음(홀드아웃 확인) → 브리핑에 표시만. 수동 테스트 3회 Slack 수신 확인(10-16 종가 기준).
+- **📈 아침 변동성 브리핑 → Slack (2026-10-18, `a5d507c`→`3be8386`, 가동 중):** 평일 **뉴욕 07:30**(미장 2시간 전; 사용자는 캐나다 거주)에 `scripts/morning_brief.py`가 Slack 채널(앱 `volatility-brief`, 워크스페이스 `tnrud`)로 발송. **변동성·보험료 관점만**(보험 수요는 '조심 신호'이지 예측 아님). 세 관점(보험+딜러 증폭 / 이벤트 / 같은 VIX대 과거 확률) + 프리마켓 + Claude 해설(`brief_playbook.md`를 읽음) + 주석 차트(`brief_charts/`). 기록 `brief_log/`에 매일 5·10·20일 결과 채점, 매월 1일 복기가 `brief-review/<월>` 브랜치로 playbook 수정 제안(사람이 병합). 판정 규칙·통계 원칙(에피소드·부트스트랩 CI·Holm·2020 전후) → `brief_playbook.md`, 운영 → CLAUDE.md "Morning volatility briefing", 작업은 `vol-briefing` 스킬. VVIX 🔴 규칙은 1년 백분위 ≥90%로 변경. VolVol 검증(`scripts/study_volvol.py`): 방향·속도는 VIX 재표현, 단 골든 = 실현변동성이 VIX 가격보다 ~9% 작음(홀드아웃 확인) → 브리핑에 표시만. 수동 테스트 3회 Slack 수신 확인(10-16 종가 기준). **트리거(2026-10-19, `6ba9aa8`):** GitHub cron이 첫 평일 07:30을 아예 안 돌려서(이 저장소 cron은 4~5시간 늦음) **cron-job.org**가 뉴욕 07:30 평일에 `workflow_dispatch`(`source=cron`)로 시작. GitHub cron 두 슬롯은 예비: 이미 보냈으면 조용히 끝나고, 아니면 '⏰ 지연 발송' 머리로 늦게 보냄. 테스트 실행 204 + 📭 수신 확인. PAT `cron-job-morning-brief` 만료 **2027-10-19**.
 
 - **보는 AI / AI in Pictures (2026-10-17, `3502560`, 라이브):** 최상위 탭 새로 추가. `aip-*` 6편 × 한/영(0편 로봇의 감각 → 1~2편 소리 → 3~4편 움직임 → 5편 참고만으로). Physical AI 탭과 독자(수포자 입문자)·문체(해요체)가 달라 따로 둠, 다리는 0편 하나(Physical AI 허브·실습 노트 0부 '관련' 줄에서 링크). 원본은 claude.ai 아티팩트, 블로그 글은 변환기 `~/Documents/sound-ai-study/src/to_blog.py`로 생성(아티팩트를 고치면 다시 실행; 미디어는 `docs/assets/aip/`, 오디오·영상은 raw HTML이라 `/assets/aip/` 절대 경로). 시리즈 문서: `~/Documents/sound-ai-study/README.md`·`CHANGELOG.md`. ESC-50 소리는 CC BY-NC라 유료 전자책에 넣지 말 것. 6편(폰 실험)·7편(SO-101 손끝) 준비 중. **네이버 패키지(2026-10-18): 0·1·3·5편** `naver/aip-robot-senses`, `aip-seeing-sound`, `aip-seeing-motion`, `aip-learning-from-reference` (생성기 `~/Documents/sound-ai-study/src/to_naver.py`). 발행 전, logNo 미기록. 2026-10-17 이름 변경: 0편 「로봇은 무엇으로 세상을 느낄까」, 5편 「레퍼런스만 주면 알아보는 AI」('참고'→'레퍼런스'). 6편 녹음 키트 페이지 `docs/assets/aip/kit/`(업로드 위자드 `upload.html`), 홈 맨 위 안내 상자. **7편 준비: 스윙 자세 카메라 `docs/assets/aip/pose/index.html` (2026-10-18)** — 휴대폰 후면 카메라 + MediaPipe Pose 0.10.21(jsdelivr, 모델은 Google storage) 실시간 점 33개·어깨/골반 회전·머리 이동, 녹화(webm). 블로그 글에서 링크하지 않은 숨은 경로(noindex). 헤드리스 크롬 가짜 카메라로 시험(64/64 프레임 인식). 원본 설명은 `~/Documents/sensor-glove/README.md`.
 - **🖥️ 홈 대시보드 2존 재편 완료(2026-09-09):** "돗데기 시장" → **오늘의 결정 / 시장 신호 한눈에** 2존 + 지표 **8종**(+ **GEX 딜러 감마 레짐** 타일, Yahoo SPY 옵션 라이브 계산) 반응형 그리드 + 차트 접이식(한/영). `update_dashboard.py`(deploy 시 CI 재생성) + `custom.css`. 상세·crumb 함정은 메모리 `home-dashboard-layout`.
@@ -163,9 +163,9 @@
 
 ## 7. 대기 중 (pending)
 
-- **아침 브리핑 첫 평일 실행 확인 (2026-10-19 월 07:30 ET):** ① `brief_log/2026-10-16.json`이 아닌 새 날짜 기록이 생겼는지, ② `gex.net_bn` vs `gex.published_net_bn`이 다른지(07:30 재계산이 의미 있는지 — 같으면 재계산 제거), ③ 프리마켓 줄에 ^VIX 장외 값이 찍히는지, ④ 차트 이미지가 Slack에 보이는지. 휴장일엔 📭 한 줄만 가야 함.
+- **아침 브리핑 첫 정시 실행 확인 (2026-10-20 화 07:30 ET, cron-job.org 첫 실행):** cron-job.org 기록 204 + GitHub 실행 + Slack 수신, 그리고 늦게 도는 GitHub 예비 슬롯이 조용히 끝나는지("Backup slot: … silent"). 10-19 수동 발송(08:43 ET)으로 이미 확인된 것: ② GEX 재계산 의미 있음(`net_bn` -26.6B vs `published_net_bn` -30.3B), ③ 프리마켓 ^VIX 장외 값 찍힘(18.59, 08:27 ET). 남은 것: ④ 차트 이미지가 Slack에 보이는지 사용자 확인.
 - **`brief-review/2026-10` 브랜치 검토·병합 (사용자):** 비교 페이지에서 PR 만들어 병합해야 playbook 갱신이 해설에 반영. 선택: 리포 설정 "Allow GitHub Actions to create and approve pull requests" 켜면 다음 달부터 PR 자동.
-- **브리핑 검증 거리:** VIX9D/VIX>1을 VIX 밴드·비🔴일에서 재검증, VolVol '급등 지속성'(VVIX가 VIX와 함께 움직이는지) 실기록으로 확인, `update_dashboard.py`의 `FOMC_DATES` 2027-06 이후 연장. API 키(`morning-brief`) 만료 2027-10-25.
+- **브리핑 검증 거리:** VIX9D/VIX>1을 VIX 밴드·비🔴일에서 재검증, VolVol '급등 지속성'(VVIX가 VIX와 함께 움직이는지) 실기록으로 확인, `update_dashboard.py`의 `FOMC_DATES` 2027-06 이후 연장. API 키(`morning-brief`) 만료 2027-10-25, cron-job.org PAT 만료 2027-10-19(같이 갱신, `X-GitHub-Api-Version: 2022-11-28`은 2028-03-10 종료라 그때 함께 올릴 것).
 - **`docs/assets/aip/kit/upload.html` 미커밋 변경:** 다른 세션 작업 — 이 세션에서 손대지 않음.
 
 - **모션편·3D 카메라 글 한국어 최종 확인:** 리뷰 게이트 서브에이전트는 안 돌렸다. 모션편은 10-02 저녁 사용자 지적 뒤 직접 다듬음. 사용자가 라이브 글을 읽고 확인할 것.
@@ -230,7 +230,7 @@
 - **사이트 전체 이전/다음 링크(`navigation.footer`) 켤지 결정 대기.** 지금은 시리즈 글에만 직접 링크를 넣음(메모리 `series-prev-next-links`).
 - **Pendant to ROS 2 네이버 크로스포스트:** 미실시(4편 × 그림 9개 PNG 변환 필요). Start Here 2편·투자 2·3편·실습 0편도 네이버 미발행.
 - **투자 3부 후속 확인:** 미·중 합의는 2027-01-10까지 연장됐다(미국 재무장관, 2026-09-25). 배터리 소재 통제(공고 58호) 유예도 연장되는지 중국 상무부 공고로 확인해야 한다. 본문과 `inv3-controls` 그림에 "미확인"으로 적어 두었다. 늦어도 2026-11-10 전에 다시 볼 것.
-- **대시보드 장중 갱신 외부 트리거 설정 대기:** (2026-10-01: 예약 실행이 다시 돌기 시작했다 — 일일 아카이브·백테스트·Deploy 성공. 하지만 장중 9회 중 대부분이 건너뛰어져 외부 트리거는 여전히 필요.) GitHub 예약 실행이 9/26 이후 전혀 안 돌아 cron-job.org → workflow_dispatch로 가기로 함. 사용자가 fine-grained PAT(butt2rflow, 이 저장소 Actions만)와 cron-job.org 작업(ET 평일 :35, 09:35~16:35)을 만든 뒤 실행 기록 확인할 것. 상세는 메모리 `dashboard-indicator-tiles`.
+- **대시보드 장중 갱신 외부 트리거 설정 대기:** (2026-10-01: 예약 실행이 다시 돌기 시작했다 — 일일 아카이브·백테스트·Deploy 성공. 하지만 장중 9회 중 대부분이 건너뛰어져 외부 트리거는 여전히 필요.) GitHub 예약 실행이 9/26 이후 전혀 안 돌아 cron-job.org → workflow_dispatch로 가기로 함. 사용자가 fine-grained PAT(butt2rflow, 이 저장소 Actions만)와 cron-job.org 작업(ET 평일 :35, 09:35~16:35)을 만든 뒤 실행 기록 확인할 것. 상세는 메모리 `dashboard-indicator-tiles`. **2026-10-19:** 브리핑용 PAT `cron-job-morning-brief`(이 저장소 Actions 쓰기)와 cron-job.org 계정이 생겼으니, 장중 갱신 작업도 같은 PAT로 cron-job.org 작업만 추가하면 됨.
 - **사용자 리뷰 대기:** 2026-09-28 발행분(투자 2·3편, 실습 0편, 투자 카테고리 이동, 교차 링크) — 사용자가 라이브 글로 리뷰 예정.
 
 - **GEX Track-1 현행화:** 시트 v1.6 대비 볼륨가중 GEX·멀티인덱스 등을 gex-calculator에 반영(대조 완료, 미반영).

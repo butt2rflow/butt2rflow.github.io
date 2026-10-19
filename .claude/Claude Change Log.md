@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-10-19 — 아침 브리핑: GitHub cron 미발송 → cron-job.org 정시 트리거
+
+- **계기:** 사용자 '오늘 아침 7시/7시 반에 Slack 브리핑이 안 왔다'. 원인: GitHub 예약 실행이 아예 시작되지 않음(08:40 ET까지 11:30·12:30 UTC 슬롯 모두 없음). 이 저장소의 다른 cron도 4~5시간 늦게 돔(03:00 UTC 작업이 07:39·08:01 UTC에 시작). 코드 문제 아님.
+- **즉시 조치:** 08:43 ET 수동 발송(run 39254127124, Slack 수신). 이 PC의 `gh` 기본 계정이 회사 계정(416Jae)이라 403 → `GH_TOKEN=$(gh auth token --user butt2rflow)`로 실행.
+- **변경(`6ba9aa8`, push함):** `morning-brief.yml`에 `workflow_dispatch` 입력 `source`(기본 manual). `source=cron`이면 `BRIEF_FORCE=0`(휴장일 📭 유지), 수동은 계속 강제 재발송. `morning_brief.py`: GitHub cron(예비) 슬롯은 이미 브리핑한 종가면 조용히 끝나고, 아니면 '⏰ 지연 발송' 머리를 붙여 보냄.
+- **사용자 설정:** fine-grained PAT `cron-job-morning-brief`(butt2rflow, 이 저장소만, Actions 읽기/쓰기, 만료 2027-10-19). cron-job.org 작업 "Morning volatility brief": `30 7 * * 1-5` America/New_York, POST dispatches URL, 헤더 4개(`Authorization: Bearer …` 포함), 본문 `{"ref":"main","inputs":{"source":"cron"}}`, 실패 시 알림. 첫 저장 때 `Bearer ` 빠진 것 바로잡음.
+- **문서:** CLAUDE.md(트리거·수동 실행 명령·PAT 만료, gitignore라 로컬만), `vol-briefing` 스킬 운영 항목(추적 안 됨), 메모리 `morning-brief-secrets`에 PAT·API 버전 종료일. playbook은 판정 규칙만 다뤄서 바꿀 것 없음.
+- **검증:** cron-job.org 테스트 실행 HTTP 204 → GitHub run 39258572124 성공, Slack에 📭(10-16 종가 기준) 수신. 오늘 08:43 브리핑 기록에서 GEX 재계산 차이(-26.6B vs 발표 -30.3B)와 프리마켓 ^VIX 장외 값 확인. 정시(07:30) 실제 발송은 내일 첫 확인.
+
 ## 2026-10-18 — 보는 AI 0·1·3·5편 네이버 패키지
 
 - **계기:** 사용자 '0/1/3/5 편 네이버블로그 포스트 준비 부탁'.
