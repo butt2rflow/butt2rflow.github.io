@@ -75,7 +75,7 @@ description: FoundationStereo·FoundationPose가 "시뮬레이션으로 배웠�
 있죠. 그래서 개념과 대부분의 연습은 **시뮬레이션의 Franka로** 익히고, 직접 만지는 실습은 **저가
 팔**로, 실전 통합은 현장의 **산업용 협동로봇**으로 하면 돈을 거의 들이지 않고 단계를 밟을 수 있습니다.
 
-![네 시뮬레이터의 성격과 공통점 Franka](../assets/diagrams/rvd-sim-tools.svg)
+![시뮬레이터 네 가지의 성격과 공통점 Franka](../assets/diagrams/rvd-sim-tools.svg)
 
 > **예시 — 목적에 따라 도구가 갈린다.** "인식 모델 학습용 이미지 10만 장이 필요하다" → 사진급
 > 렌더가 강한 **Isaac Sim**. "그리퍼가 물체를 미끄러뜨리는 순간을 정확히 보고 싶다" → 접촉

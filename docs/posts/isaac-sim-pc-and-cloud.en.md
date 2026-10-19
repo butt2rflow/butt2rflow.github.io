@@ -4,7 +4,7 @@ nav_title: "Isaac Sim · a 3090 PC and the cloud"
 date: 2026-10-04
 tags: [physical-ai, isaac-sim, simulation, synthetic-data, ros2, universal-robots, cloud-gpu, field-notes]
 lang: en
-description: "URSim in The Simulators imitates the robot controller. This time NVIDIA Isaac Sim, which imitates the world around the robot, went onto an idle RTX 3090 PC and a cloud GPU (L4). The 3090 sits below the official minimum, yet it simulated a UR20, 40 boxes and a virtual stereo camera at the real camera's resolution at 19 frames per second, and the 'weak drives' turned out to be the test pressing the arm into the floor. The virtual camera went out as ROS 2 topics, and a synthetic-data script leaking 130 MB of GPU memory per capture was caught. The cloud L4 was not faster than the 3090, and the whole validation cost about two dollars. Field Notes: Isaac Sim."
+description: "URSim in The Simulators imitates the robot controller. This time NVIDIA Isaac Sim, which imitates the world around the robot, went onto an idle RTX 3090 PC and a cloud GPU (L4). The 3090 sits below the official minimum, yet it simulated a UR20, 40 boxes and a virtual stereo camera at the real camera's resolution at 19 frames per second, and the 'weak drives' turned out to be the test pressing the arm into the floor. The virtual camera went out as ROS 2 topics, and a synthetic-data script leaking 130 MB of GPU memory per capture was caught. The cloud L4 was not faster than the 3090, and the whole validation cost about US$1.45 (about CAD $2). Field Notes: Isaac Sim."
 ---
 
 # Putting the Robot's Brain on the Edge — Isaac Sim: A Virtual Work Cell on an RTX 3090 PC and a Cloud GPU
@@ -53,7 +53,7 @@ The test scene imitates the work cell I actually plan to use. A UR20 model moves
 | Stereo 640×400 + 720p colour | 27.1 | 3.6 GB |
 | Stereo 1280×800 + 1080p colour (the real camera's maximum) | 18.9 | 4.3 GB |
 
-Even the heaviest setting ran at 19 frames per second on under 5 GB of the 24 GB. The below-minimum worry didn't matter for this work. In real use the cameras don't need a frame every physics step, since the depth model on the Jetson runs far slower than 30 times a second. In the SIL section below, physics at 60 Hz and cameras at 30 Hz brought the sim up to 0.93× real time.
+Even the heaviest setting ran at 19 frames per second on under 5 GB of the 24 GB. Being below the minimum didn't matter for this work. In real use the cameras don't need a frame every physics step, since the depth model on the Jetson runs far slower than 30 times a second. In the SIL section below, physics at 60 Hz and cameras at 30 Hz brought the sim up to 0.93× real time.
 
 ## Not weak drives: the floor
 
@@ -89,7 +89,7 @@ All four stereo topics (left and right images and their camera infos) carried id
 Here's what got in the way:
 
 - **Isaac Sim 6.1 on Windows defaults to Jazzy and Zenoh for ROS 2.** The edge computer runs Humble on Fast DDS, so out of the box they can't see each other. I set the bundled Humble and `rmw_fastrtps_cpp` explicitly. Also watch out: the bundled setup script only adds its library paths when `ROS_DISTRO` is unset.
-- **One frame is 2.7 MB.** A single 1280×720 colour frame is 2.7 MB, and with Fast DDS's default buffers a best-effort subscriber lost about 75% of them. A profile with 16 MB UDP send and receive buffers fixed it. Linux caps `net.core.rmem_max` below that, so the edge computer needs that value raised as well. On the cloud's Linux, with the cap left alone, colour arrived at only 5.7 Hz.
+- **One frame is 2.7 MB.** A single 1280×720 colour frame is 2.7 MB, and with Fast DDS's default buffers a best-effort subscriber lost about 75% of them. A profile with 16 MB UDP send and receive buffers fixed it. Linux's default `net.core.rmem_max` caps buffers below that, so the edge computer needs that value raised as well. On the cloud's Linux, with the cap left alone, colour arrived at only 5.7 Hz.
 - **The mono stereo pair is built by hand.** Isaac Sim's camera helper only publishes colour. The real camera's stereo pair is mono, so the colour image is converted to brightness and published as mono from Python.
 - **The joint-state node must point at the robot's root joint.** Point it at the whole robot and it logs "no matching articulation" every frame and publishes nothing.
 
@@ -173,7 +173,7 @@ Runpod is built differently. On Google Cloud I rented a server and ran the Isaac
 
 The 4090 was about 14% faster than the 3090. Given that the L4 was held back by its CPU, this test can't say whether the gain comes from the GPU or from that host's CPU, and it is a single run. The hourly price is higher than the L4 spot instance (US$0.51), but there is no setup time and billing is per second, so a short test comes out cheaper. Including the first Isaac Sim start, it took under five minutes.
 
-What it can't do is clear.
+The limits are just as clear.
 
 - **No screen.** Runpod pods have no UDP, so WebRTC streaming doesn't work. It is for headless runs where only the results matter. When someone needs to see the arm move, Google Cloud is the path.
 - **Moving files is awkward.** The image has no SSH server. The scripts and robot model files went in compressed inside environment variables (a request over 100 KB is rejected), and the results came back as text lines in the pod log. Large outputs such as synthetic-data images would need network storage attached, which I haven't tried.

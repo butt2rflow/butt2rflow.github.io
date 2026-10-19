@@ -61,7 +61,7 @@ description: 6년 만에 부활한 CME 개별주식선물(SSF) — 쉬운 설명
 | 2026.07.27 | **CME 단독 재상장** |
 | 2026.09.18 | 6년 만의 진짜 네마녀의 날 |
 
-![네 다리의 존재 기간](../assets/diagrams/ssf-four-legs-timeline.svg)
+![다리 네 개의 존재 기간](../assets/diagrams/ssf-four-legs-timeline.svg)
 
 여기서 제일 아이러니한 대목. OneChicago가 문을 닫은 **직후**, SEC와 CFTC는 헤지되지 않은 증권선물의 최소 증거금을 명목가치의 20%에서 **15%로 인하**했습니다. 발효일 2020년 12월 24일.
 

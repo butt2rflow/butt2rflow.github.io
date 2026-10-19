@@ -22,7 +22,7 @@ With a real robot, one mistake can hurt a person or the equipment. So instead of
 - **It went up in steps.** Read-only link → factory calibration → one joint ±5° → a cuMotion-planned move. Each step started only after the previous one passed.
 - **One calibration file removes 4 mm.** The tool position computed from the standard model was 3.95 mm off from what the robot reports; with this robot's factory calibration it was 0.06 mm. A simulator never shows this gap.
 - **The first planned move arrived within 0.1 mm of its goal.** Tool up 5 cm and back down. Planning took 1.3 s; execution waited for a person's OK.
-- **Three traps.** Upgrade only the driver and it crashes on the first command because it no longer matches the control packages. At an 18 % speed slider a 5-second trajectory takes 28 seconds. cuMotion quietly adds a floor at the base-plane height when the request has no obstacles.
+- **Three traps.** Upgrade only the driver and it crashes on the first command because it no longer matches the control packages. At an 18% speed slider a 5-second trajectory takes 28 seconds. cuMotion quietly adds a floor at the base-plane height unless you give it obstacles of your own.
 - **A person stands between planning and execution.** The plan shows the joint changes first, runs only when a person allows it, and stale plans are refused.
 
 ---
@@ -31,7 +31,7 @@ With a real robot, one mistake can hurt a person or the equipment. So instead of
 
 ![Commands come only on the last step](../assets/diagrams_en/r7-ladder.svg)
 
-Simulated hardware follows whatever you send. A real robot doesn't forgive like that: one wrong frame, model dimensions off by a few millimetres, or a safety setting you didn't expect, and the arm goes somewhere else. So each step checked just one thing.
+Simulated hardware follows whatever you send. A real robot is less forgiving: one wrong frame, model dimensions off by a few millimetres, or a safety setting you didn't expect, and the arm goes somewhere else. So each step checked just one thing.
 
 | Step | What was checked | Result |
 |---|---|---|
@@ -42,7 +42,7 @@ Simulated hardware follows whatever you send. A real robot doesn't forgive like 
 
 ## Step 0: a read-only link
 
-The first connection was deliberately one that **can't send commands**. UR robots stream joint angles, tool position and safety state over a real-time data channel called RTDE (the channel [UR vs FANUC](cobot-ur-vs-fanuc.md) names as the heart of openness), and subscribing only to its outputs writes nothing to the robot. That was enough to confirm the network and see what state the robot was in.
+The first connection was deliberately one that **can't send commands**. UR robots stream joint angles, tool position and safety state over a real-time data channel called RTDE (the channel [UR vs FANUC](cobot-ur-vs-fanuc.md) names as the heart of openness), and a link that only subscribes to those outputs can't write anything to the robot. That was enough to confirm the network and see what state the robot was in.
 
 One thing to know: PolyScope X robots **don't have the Dashboard server (port 29999)** that older UR robots have. Program state and similar information come from the robot's REST API instead. If you're following older guides and can't reach the dashboard, that's why.
 
@@ -70,7 +70,7 @@ A few things on PolyScope X weren't what I expected:
 
 ### Upgrade only the driver and it dies on the first command
 
-The UR driver in the Isaac ROS 3.2 image is version 2.9, too old to connect to a real robot; on ARM (Jetson) 2.14 or later is recommended. So I upgraded only the UR driver packages, and once the controllers were up, **the driver crashed the moment it handled the first command.**
+The UR driver in the Isaac ROS 3.2 image is version 2.9, too old to connect to a real robot; older releases have a reported bug on ARM (Jetson), so I went with 2.14 or later. So I upgraded only the UR driver packages, and once the controllers were up, **the driver crashed the moment it handled the first command.**
 
 The cause was version pairing. The new UR controller was built against a newer ros2_control, but apt left ros2_control at the old version without stopping the install. The error message doesn't make it obvious that this is a version problem. Upgrading **the UR packages and the ros2_control packages together** fixed it. "Change versions as a set", from [Part 4](isaac-ros-gpu.md), applies at the package level too.
 
@@ -78,17 +78,17 @@ The cause was version pairing. The new UR controller was built against a newer r
 
 The first move was the last wrist joint, +5° and then −5°. Both ended with "goal reached", and no other joint moved even 0.001°.
 
-But a trajectory planned for 5 seconds took **27.8 seconds**. That isn't a fault either. The pendant's speed slider was at 18 %, and the UR driver's default trajectory controller stretches time by that slider (5 s ÷ 0.18 ≈ 28 s). A low slider is right for first tests, but if your program waits for "done in 5 seconds", the move will look hung or get cut short. Wait for the planned time divided by the slider fraction.
+But a trajectory planned for 5 seconds took **27.8 seconds**. That isn't a fault either. The pendant's speed slider was at 18%, and the UR driver's default trajectory controller stretches time by that slider (5 s ÷ 0.18 ≈ 28 s). A low slider is right for first tests, but if your program waits for "done in 5 seconds", the move will look hung or get cut short. Wait for the planned time divided by the slider fraction.
 
 ## Step 3: a cuMotion-planned move
 
-Now the cuMotion from the [motion post](jetson-pose-to-motion.md) went onto the real robot. Planning used the UR20 cuMotion configuration (the one built in the motion post) and the calibrated model, and planning and execution were split so that execution happens only after a person checks the plan.
+Next I put the cuMotion setup from the [motion post](jetson-pose-to-motion.md) on the real robot. Planning used the UR20 cuMotion configuration (the one built in the motion post) and the calibrated model, and planning and execution were split so that execution happens only after a person checks the plan.
 
 ![A person stands between planning and execution](../assets/diagrams_en/r7-gate.svg)
 
-The planning program doesn't move the arm; it only shows how many degrees each joint will move. When the person at the cell has looked and allowed it, the execution program moves. If the arm has moved more than 0.5° since planning, the plan is treated as stale and refused. It's a way for a person to look at a new path once before it runs.
+The planning program doesn't move the arm; it only shows how many degrees each joint will move. Once the person at the cell has looked at it and said OK, the execution program moves the arm. If the arm has moved more than 0.5° since planning, the plan is treated as stale and refused. It's a way for a person to look at a new path once before it runs.
 
-The result: the tool went up 5 cm and back down. Planning took 1.3 s, and execution took 43 s and 37 s (slider about 18 %). Both moves arrived **within 0.1 mm of the goal**, and after coming back down the joints were exactly at their starting angles.
+The result: the tool went up 5 cm and back down. Planning took 1.3 s, and execution took 43 s and 37 s (slider about 18%). Both moves arrived **within 0.1 mm of the goal**, and after coming back down the joints were exactly at their starting angles.
 
 ### The floor cuMotion adds without asking
 
@@ -96,7 +96,7 @@ One thing stopped me here: every plan failed with "start state in collision".
 
 ![The floor cuMotion adds without asking](../assets/diagrams_en/r7-table.svg)
 
-When a request carries no obstacles at all, the cuMotion planner node adds a 2 m × 2 m plate at height 0 of the robot base frame as a floor. That's a sensible default for a tabletop robot. But this UR20 sits on a pedestal and works **below** its base plane, so the tool was inside that plate from the start. Any obstacle in the request removes the plate entirely, so I sent one tiny dummy object far away, leaving **self-collision checks only**.
+When it starts, the cuMotion planner node adds a 2 m × 2 m plate to the robot base frame as a floor, with its top at height 0. That's a sensible default for a tabletop robot. But this UR20 sits on a pedestal and works **below** its base plane, so the tool was inside that plate from the start. Any obstacle in the request removes the plate entirely, so I sent one tiny dummy object far away, leaving **self-collision checks only**.
 
 That's a stopgap. To avoid real obstacles, the camera has to be calibrated against the robot base so that the obstacle map from the [motion post](jetson-pose-to-motion.md) lands in this robot's frame. This time the arm moved only 5 cm through empty space, so self-collision checks were enough.
 
@@ -105,7 +105,7 @@ That's a stopgap. To avoid real obstacles, the camera has to be calibrated again
 The most important part of this record is the procedure, more than the numbers.
 
 - **A person was at the cell for every motion step,** holding the 3-position enabling switch; letting go puts the robot in a safeguard stop. The emergency stop was within reach too.
-- **Only small moves at low speed:** slider about 18 %, 5° on one joint, 5 cm at the tool.
+- **Only small moves at low speed:** slider about 18%, 5° on one joint, 5 cm at the tool.
 - **The edge computer never uploaded robot programs remotely.** Creating and saving robot programs was done by a person on the pendant.
 - Moving on to work near people, unattended runs, or contact and force needs speed and force limits, the real payload settings, and a risk assessment and sign-off from whoever owns the cell first. As [How Many Cameras, and Where](camera-placement.md) put it, collision-avoiding path planning is not a safety function.
 
@@ -124,7 +124,7 @@ The most important part of this record is the procedure, more than the numbers.
 |---|---|---|
 | 0. Read only | Joints, tool and safety state all readable | No Dashboard server (PolyScope X), force-sensor zero |
 | 1. Calibrate | 3.95 mm → 0.06 mm | A gap the simulator never shows |
-| 2. One joint | ±5°, reached exactly | Driver-only upgrade crashes; at an 18 % slider 5 s becomes 28 s |
+| 2. One joint | ±5°, reached exactly | Driver-only upgrade crashes; at an 18% slider 5 s becomes 28 s |
 | 3. Planned move | 5 cm up and down, 0.1 mm from goal | cuMotion's default floor |
 
 - **Approach a real robot in steps.** Read only → calibrate → one joint → planned move.

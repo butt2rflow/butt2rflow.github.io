@@ -75,7 +75,7 @@ cuMotion is the plugin that puts NVIDIA's GPU motion-planning library, cuRobo, i
 
 The one failure was a start pose I offset by a large amount on purpose. When planning fails, cuMotion answers "no path found" and the arm doesn't move. It stops rather than handing back a strange path, which is the behaviour you want. Your program can take that answer and retry from another standby pose, or call a person.
 
-The number to use in practice is the **16 seconds**. cuRobo spends a long time preparing its GPU work on the first plan and is fast after that. Plan for the first time when the first part arrives, and only that first cycle is 16 seconds longer. Run any plan once when the program starts and the problem goes away.
+The number to use in practice is the **16 seconds**. cuRobo spends a long time preparing its GPU work on the first plan and is fast after that. If the first plan waits until the first part arrives, that first cycle runs 16 seconds longer. Run any plan once when the program starts and the problem goes away.
 
 I won't put this next to the 210 ms from [Part 2 of the field notes](jetson-isaac-foundation-models.md) (a 7-axis arm, the demo Franka configuration) and call it faster. The arm and the scene are different. What I can say is that both land around 0.2 s on the same edge computer. If you use a different UR model, you need a cuMotion configuration for it (joint limits, collision spheres). UR's MoveIt configuration covers several models, but the cuMotion configuration is separate.
 
@@ -160,7 +160,7 @@ If every test means turning the camera on and placing things again, you can't te
 Two things mattered while recording:
 
 - **The colour camera's focus was locked at its factory-calibration position.** The [scanning post](jetson-scan-no-cad.md) measured that this camera's factory lens parameters hold at only one focus position. Locked there for the whole recording, the lens parameters stay right for anything later computed from this bag.
-- **One way of building image messages in ROS 2 Python made a 10× speed difference.** At first only 2.2 frames a second came out, while the camera was sending 10.4 synced sets a second and the Python work took 2.6 ms. The culprit was assigning a raw byte string to `Image.data`. Filling an `array("B")` instead let all 10 frames a second through.
+- **One way of building image messages in ROS 2 Python made a more than 4× speed difference.** At first only 2.2 frames a second came out, while the camera was sending 10.4 synced sets a second and the Python work took 2.6 ms. The culprit was assigning a raw byte string to `Image.data`. Filling an `array("B")` instead let all 10 frames a second through.
 
 Replaying this bag into nvblox put all 425 depth frames into the map with no camera attached (about 1.8 ms each). Here is the resulting map laid over the same colour frame:
 
@@ -180,7 +180,7 @@ This map was built from the stereo depth the camera chip computes itself. To che
 | FoundationStereo | 100% / 96% | **97%** | about 2.2 s |
 | ESS | 100% / 95% | **96%** | about 0.13 s |
 
-The holes came from the depth. Where both exist, FoundationStereo and ESS depth differ from the chip depth by under 1 mm at the median, so the map wasn't shifted as a whole; what differed was the gaps. It matters because a spot missing from the map is not an obstacle to the planner: by default nvblox treats unobserved space as free ([Part 4](isaac-ros-gpu.md), 'Four things to watch'). So in real use, feed the map learned stereo depth instead of the chip's, and if speed matters ESS was enough (ESS is an NGC model cleared for commercial use, [tuning post](jetson-tuning-licensing.md)). Handle the remaining gaps by treating unobserved space as occupied. (One bag, fixed camera.)
+The holes came from the depth. Where both exist, FoundationStereo and ESS depth differ from the chip depth by under 1 mm at the median, so the map wasn't shifted as a whole; the difference was in the gaps. It matters because a spot missing from the map is not an obstacle to the planner: by default nvblox treats unobserved space as free ([Part 4](isaac-ros-gpu.md), 'Four things to watch'). So in real use, feed the map learned stereo depth instead of the chip's, and if speed matters ESS was enough (ESS is an NGC model cleared for commercial use, [tuning post](jetson-tuning-licensing.md)). Handle the remaining gaps by treating unobserved space as occupied. (One bag, fixed camera.)
 
 Now the same scene can be compared while only the settings change.
 
@@ -202,11 +202,11 @@ One thing is confusing. cuMotion reports a goal blocked by obstacles as **`NO_IK
 
 ## Turning the pose into goals
 
-So far the goals were placed by hand. This time they came from object poses found by the foundation models. On one frame of the recorded bag, Grounding DINO → SAM2 → FoundationPose found the poses of the mini PC and the mouse, and each object got a "pre-grasp" goal 20 cm above its top with the tool pointing down.
+So far the goals were placed by hand. This time they came from object poses found by the foundation models. On one frame of the recorded bag, Grounding DINO → SAM 2 → FoundationPose found the poses of the mini PC and the mouse, and each object got a "pre-grasp" goal 20 cm above its top with the tool pointing down.
 
-![The same frame with only the depth changed: camera-chip depth on the left, ESS depth on the right. Blue is the CAD placed at each pose, yellow the SAM2 mask](../assets/demos/jetson-motion-pose-depth-compare-en.jpg)
+![The same frame with only the depth changed: camera-chip depth on the left, ESS depth on the right. Blue is the CAD placed at each pose, yellow the SAM 2 mask](../assets/demos/jetson-motion-pose-depth-compare-en.jpg)
 
-*The same frame of the same bag. Blue is the CAD drawn at each pose, the yellow line is the SAM2 mask, and the three arrows are the object axes. On the left (camera-chip depth) the mouse is off up and to the right, with an overlap ratio (IoU) of 0.66 and an 11 mm depth difference, so it was flagged low-confidence; the mini PC also had to be snapped to the table (0.88, 6 mm). On the right (ESS depth) the mini PC comes out at 0.92 / 6 mm and the mouse at 0.87 / 4 mm, and the CAD sits on both.*
+*The same frame of the same bag. Blue is the CAD drawn at each pose, the yellow line is the SAM 2 mask, and the three arrows are the object axes. On the left (camera-chip depth) the mouse is off up and to the right, with an overlap ratio (IoU) of 0.66 and an 11 mm depth difference, so it was flagged low-confidence; the mini PC also had to be snapped to the table (0.88, 6 mm). On the right (ESS depth) the mini PC comes out at 0.92 / 6 mm and the mouse at 0.87 / 4 mm, and the CAD sits on both.*
 
 At first the poses came from **the depth computed on the camera chip**, to match the depth the map uses. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse. So FoundationStereo and ESS depth were recomputed from the left and right images recorded in the same bag, and only the depth was swapped; the pose code stayed the same. Depth from the stereo pair is in the left camera's view, so the camera's factory calibration was used to move it into the colour image's view.
 
@@ -288,7 +288,6 @@ In the bigger picture, "taught point + vision offset" becomes **"object pose fro
 - **Planning runs at working speed on the edge.** Just move the 16-second warm-up out of the cycle.
 - **A pose plus CAD tells you what depth can't see.** The hidden corner's distance came out within about 1 mm.
 - **Test an obstacle map on a scene with a known answer first.** When live numbers look bad, it narrows down what to suspect; this time it pointed at the check, not the tool.
-- **Check the measurement before blaming the tool.** Having passed the known-answer scene is what sent me back to the check when the live numbers looked bad.
 - **Record once and you can keep comparing on the same scene,** with no camera and no robot.
 - **Each kind of fake checks something different.** Simulated hardware checks the wiring, URSim checks controller behaviour, and a physics simulator or a real robot checks force and contact.
 
