@@ -1193,3 +1193,64 @@ SSF 재출시, MOVE 지수, 크레딧 스프레드(CDS), 로봇 비전 2부작(s
   - an in-app browser banner (KakaoTalk opens externally via `kakaotalk://web/openExternal`, Android via a Chrome intent)
 - The wizard now flags recordings with an empty Audio CSV (the mic was held by another experiment) and the same recording exported twice. These come from the first real friend bundle.
 - Tested in 412 px headless Chromium with a normal UA and a KakaoTalk UA, using the friend's real 10 recordings. The 3 problem takes were flagged, the download fired and there were no page errors.
+
+## 2026-10-18 — Morning volatility briefing (Slack) + self-review loop
+Session 1 (started 10:33). Commits `a5d507c` → `2287608`.
+- **What it is:** `scripts/morning_brief.py` sends a weekday Slack brief at 07:30 America/New_York (2h before the US open, at the user's request; they live in Canada). Both cron slots 11:30 and 12:30 UTC are scheduled, and `should_send_now()` keeps the one that is 07:30 ET. The brief reuses `update_dashboard.py` fetchers and signals. **Scope is volatility / insurance premium only**; the user stressed this repeatedly. Hedging demand is a caution signal ("big players are already prepared"), never a forecast.
+- **Three lenses:**
+  - Insurance plus dealer amplification: SKEW, COR90D, SPX/equity put/call, VRP, and GEX short below the flip.
+  - Event context: FOMC, earnings season, OPEX, VIX expiry, VIX9D/VIX.
+  - Base rate since 2000 at the same VIX (log ±10%), with episode counts and the ≤2019 / 2020– split.
+- **Brief extras:**
+  - A pre-market line (ES since the close; VIX GTH if Yahoo has it).
+  - GEX recomputed at send time, with the published snapshot also logged so we can verify whether the 07:30 recompute differs. The earlier claim that it does was unverified and was corrected.
+  - Claude commentary (`claude-opus-5-5`, effort low, fallbacks default). It reads `brief_playbook.md`.
+  - An annotated 3-panel PNG (`brief_charts/<date>_<HHMM>.png`) served by raw URL.
+- **Pipeline:** stage (build, chart, `brief_log/<date>.json`), then commit/push, then send. Slack fetches the image by URL, so the push has to land first. `post_slack` resends without the image if Slack rejects it.
+- **Self-review loop:**
+  - `score_briefs.py` fills 5/10/20-session outcomes daily and rebuilds `brief_log/backfill.csv` monthly. The backfill replays classify() over Cboe history from 2010; it is gitignored and rebuilt each time.
+  - `review_briefs.py` (`brief-review.yml`, 1st of the month) writes `brief_review/<YYYY-MM>.md` and proposes playbook edits on branch `brief-review/<month>`. Slack gets a compare link, because the repo setting that lets Actions open PRs is off.
+  - Thresholds are code constants, and `guard_thresholds()` reverts LLM edits to the playbook's threshold table.
+- **Agent review (code + stats), all applied in `cedd213` / `2287608`:**
+  - Duplicate data-date guard: holidays get a 📭 note; manual dispatch sets `BRIEF_FORCE=1`.
+  - Freshness warnings; abort on empty Cboe series.
+  - Concurrency groups; send step `if: always()`.
+  - Commentary max_tokens 4000 plus truncation check.
+  - Strict JSON (NaN → null).
+  - English chart event labels (no Korean font on CI).
+  - Review month passed via env and regex-validated.
+- **Statistics:**
+  - Daily rows overlap, so reports use episodes plus block-bootstrap CIs and Holm p, never raw n.
+  - 🔴 is largely a VIX-level proxy (VIX-band table).
+  - **Stress rule changed: VVIX ≥ 105 → VVIX 1-year percentile ≥ 90%.** The old level fired on 79–90% of days in 2020–21 and 2–5% in calm years. The 🔴 drawdown rate is unchanged (40%), and the result is consistent pre/post 2020 and on the 2024-09– holdout.
+  - The hedging signals are not significant vs all days (Holm p 0.12–0.71).
+  - The same-VIX SKEW-top-10% effect appears only after 2020.
+  - The V-shape study (`scripts/study_vshape.py`) is a hypothesis: bootstrap CIs include 0.
+- **Setup done with the user:**
+  - Slack app `volatility-brief` (workspace `tnrud`, incoming-webhook scope only).
+  - Secrets `SLACK_WEBHOOK_URL` and `ANTHROPIC_API_KEY`. The console key `morning-brief` expires 2027-10-25; this is in memory.
+- **Docs and memory:**
+  - New `brief_playbook.md`.
+  - CLAUDE.md "Morning volatility briefing" section.
+  - Project skill `.claude/skills/vol-briefing/`.
+  - Memories: `naver-publish-check-via-rss` (check Naver publish status via RSS), `user-timezone-canada-eastern`, `vol-briefing-scope`, `morning-brief-secrets`.
+- **Gotcha:** in this Git Bash, heredoc-fed Python mangles backslashes (`\n` in string literals became real newlines, and `\` line continuations broke). Use the Edit tool for code containing escapes.
+- **Next:**
+  - Check the first weekday run (Mon 10-19, 07:30 ET): does GEX live ≠ published, does a ^VIX GTH value appear, and do the chart and 📭 logic behave?
+  - The user should merge or review `brief-review/2026-10`.
+  - Optionally enable "Allow GitHub Actions to create PRs".
+  - Test VIX9D/VIX within VIX bands and on non-🔴 days.
+  - Extend `FOMC_DATES` past 2027-06.
+- **Verification:** three manual morning-brief runs posted to Slack (the user confirmed receipt; chart raw URL 200). Two monthly-review runs succeeded, producing branch `brief-review/2026-10`. Deploy MkDocs runs were green for `16cdbcd` and `3be8386`, and the site returns 200. Not yet verified: the first scheduled weekday run (Mon 10-19 07:30 ET).
+- Not mine: `docs/assets/aip/kit/upload.html` was modified in the working tree by another session and was left uncommitted.
+- **VolVol follow-up (`16cdbcd`):**
+  - **Study:** `scripts/study_volvol.py` tested the blog's own definition (2022-08-28 and 2022-12-18 posts). The Bollinger band is drawn on the 5-day MA, not on the raw ratio; the raw-ratio band is never pierced. Result: VVIX/VIX is VIX re-expressed. Corr −0.77, and the trend corr in high-VIX regimes is −0.78. It added nothing beyond VIX on four tests: the 2x/1x leverage switch, future realized vol, the (A-2) events, and the event study around 7 major turns.
+  - **The user's read:** they observed that the ratio's level and pattern track bull and bear markets, and they themselves raised possible confirmation bias. The data shows that pattern is real but is carried by VIX.
+  - **Brief change:** the brief's VolVol emoji was replaced by "VIX option premium", the residual of log VVIX on log VIX as a 1-year percentile. It is display only and answers which hedge is cheaper (VIX calls vs SPX puts), not where the market is going. The backfill and the monthly review track it.
+  - **Revision (`3be8386`):** the user explained their concept: insurance on insurance, acceleration before speed, catching the shoulders and knees rather than the tops and bottoms. More tests followed:
+    - **Not faster:** the early-bottom-at-spike-start result was a window artifact, since the VIX3M and VIX9D placebos showed the same thing.
+    - **Golden really does mean calmer than priced:** with VIX band and the VIX-only rule held fixed, next-20-day realized vol ÷ VIX was −8.9% [−15.1, −3.1], consistent across eras and on the holdout. The VIX-only rule shows nothing.
+    - **Shoulders:** VolVol goes risk-off at SPX −2.5% from the peak (200MA: −8.3%), but 71% of its switches are false alarms.
+    - **Brief:** shows the VolVol golden/dead state with days in state, display only. `study_volvol.py` §§6–9 hold these tests.
+    - **Lesson:** the first "no information beyond VIX" verdict tested the wrong outcome (direction). Test against the outcome the indicator was designed for, here "realized vs priced vol".
+  - **Gotcha:** PowerShell 5.1 `Get-Content`/`Set-Content` mangles UTF-8 (it added a BOM and turned em-dashes into mojibake in `.gitignore`, which was restored). Here-string commit messages split on quotes; use `git commit -F <file>`.
