@@ -1,16 +1,24 @@
 name: Morning volatility brief
 
 # Slack briefing at 07:30 New York time (2h before the 09:30 US open),
-# Mon–Fri. GitHub cron is UTC with no DST, so both candidate slots are
-# scheduled and morning_brief.py keeps the one that is 07:30 ET today
-# (11:30 UTC under EDT, 12:30 UTC under EST). Reads the previous US close,
-# which Cboe has long since published by then.
+# Mon–Fri. Reads the previous US close, which Cboe has long since published.
+#
+# Primary trigger: cron-job.org POSTs a workflow_dispatch with
+# inputs.source=cron at 07:30 America/New_York (it handles DST). GitHub's own
+# cron ran 4-5 h late on this repo, so the schedule below is only a backup:
+# it stays silent when the on-time run already briefed this close, and
+# otherwise sends a brief marked as late. GitHub cron is UTC with no DST, so
+# both slots are listed and morning_brief.py keeps the one that is 07:30 ET.
 
 on:
   schedule:
     - cron: '30 11 * * 1-5'
     - cron: '30 12 * * 1-5'
   workflow_dispatch:
+    inputs:
+      source:
+        description: "'cron' = cron-job.org on-time trigger; 'manual' re-briefs even if already briefed"
+        default: manual
 
 permissions:
   contents: write
@@ -41,8 +49,9 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BRIEF_SCHEDULE: ${{ github.event.schedule }}
-          # Manual runs re-brief even if this close was already briefed.
-          BRIEF_FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
+          # Manual runs re-brief even if this close was already briefed;
+          # the cron-job.org trigger (source=cron) does not.
+          BRIEF_FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.source != 'cron' && '1' || '0' }}
         run: python scripts/morning_brief.py --stage
 
       # The chart must be on main before Slack fetches it by raw URL.

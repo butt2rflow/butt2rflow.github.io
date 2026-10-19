@@ -17,7 +17,9 @@ Env:
     ANTHROPIC_API_KEY   optional; commentary is skipped when unset
     FRED_API_KEY        optional; credit OAS falls back to the CSV endpoint
     BRIEF_SCHEDULE      the cron string that fired (github.event.schedule);
-                        used to send exactly once at 07:30 New York time
+                        set only on the late GitHub backup slot, which keeps
+                        the 07:30-ET slot and stays silent if already briefed
+                        (the on-time trigger is cron-job.org, no schedule)
 """
 from __future__ import annotations
 
@@ -816,13 +818,20 @@ def main():
     # A holiday morning and the next session's morning read the same close;
     # don't re-brief (and don't overwrite that day's log). Manual runs force.
     force = os.environ.get("BRIEF_FORCE") == "1"
+    backup = bool(os.environ.get("BRIEF_SCHEDULE"))  # late GitHub cron, not cron-job.org
     if args.stage and (LOG_DIR / f"{date}.json").exists() and not force:
+        if backup:
+            print(f"Backup slot: {date} close already briefed (or holiday) — silent.")
+            return
         note_txt = (f"📭 새 미국장 종가가 없습니다 — 마지막 브리핑은 {date} 종가 기준입니다 "
                     f"(휴장일이거나 Cboe 미갱신).")
         PENDING.write_text(_json({"text": note_txt}), encoding="utf-8")
         print(note_txt)
         return
     text = build_text(d)
+    if backup:
+        text = ("⏰ *지연 발송* — 07:30 ET 트리거(cron-job.org)가 실패해 "
+                "GitHub 예비 스케줄로 늦게 보냅니다.\n\n" + text)
     note = commentary(d)
     if note:
         text += "\n\n*해설 (Claude)*\n" + note
