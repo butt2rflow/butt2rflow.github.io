@@ -224,4 +224,4 @@ This is general edge-R&D experience, not a specific field deployment. Jetson, Or
 
 </details>
 
-**Series** · [← Previous: Putting the Robot's Brain on the Edge (2) — Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Next: Tuning — from 11 seconds to 4, and a chain you can ship →](jetson-tuning-licensing.md)
+**Series** · [← Previous: Putting the Robot's Brain on the Edge (2), Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Next: Tuning, from 11 seconds to 4, and a chain you can ship →](jetson-tuning-licensing.md)

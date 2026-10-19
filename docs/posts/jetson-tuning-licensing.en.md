@@ -21,7 +21,7 @@ A chain that runs and a chain you can use on a line are separated by two thresho
 
 - **Same chain, same Orin NX 16GB: 11.4 s → 4.0 s per object (2.8×).** Every network moved to a TensorRT engine and two slow pieces of code were fixed. The pose stayed within 1.5° and 3.4 mm of the verified orientation.
 - **FoundationPose shrank the most (6.3 s → 1.25 s).** The bottleneck now is the depth model, FoundationStereo (2.0 s), about half of the total.
-- **After each speed-up we checked the answers stayed the same.** Masks overlap 99.95 %+, detection boxes 0.99+, pose-model outputs within 0.3 %. That check also caught a bug in the conversion tool.
+- **After each speed-up we checked the answers stayed the same.** Masks overlap 99.95%+, detection boxes 0.99+, pose-model outputs within 0.3%. That check also caught a bug in the conversion tool.
 - **Swap the depth model for ESS, NVIDIA's real-time stereo model, and the chain takes 2.1 s.** Depth drops from 2.0 s to 61 ms; pose error grows a little, to 2.0° and 4.9 mm. On shiny parts, though, the two models fail differently, so control the background first.
 - **Licensing splits the chain in two.** The NVLabs FoundationPose code is for research and evaluation only, and the FoundationStereo code for research only. For commercial use you take the Isaac ROS node and the weights published on NGC. That commercial chain ran at **3.3 s per object** and tracked at **34 ms per frame**.
 
@@ -63,9 +63,9 @@ Converting a model to an engine changes the order and precision of the arithmeti
 |---|---|---|
 | SAM2 | PyTorch mask vs engine mask overlap (IoU) | ≥ 0.9995 (encoder), ≥ 0.9997 (encoder + decoder) |
 | Grounding DINO | 540×960 engine vs full-resolution PyTorch box overlap | 0.990–0.995, scores equal or higher |
-| FoundationPose refine | Output difference | 0.2–0.3 % |
-| FoundationPose score | Per-candidate score difference, top candidate | ~0.2 %, same winner for 1–252 candidates, identical final pose |
-| Depth re-projection (GPU) | Pixel-level match | 99.99 % |
+| FoundationPose refine | Output difference | 0.2–0.3% |
+| FoundationPose score | Per-candidate score difference, top candidate | ~0.2%, same winner for 1–252 candidates, identical final pose |
+| Depth re-projection (GPU) | Pixel-level match | 99.99% |
 
 IoU measures how much two regions overlap, from 0 to 1, where 1 means identical. An IoU of 0.9995 means about five pixels in ten thousand differ.
 
@@ -99,14 +99,14 @@ ESS is faster, but the two depth models fail in different ways. So we compared t
 | Part and background | FoundationStereo | ESS |
 |---|---|---|
 | Glossy mouse: surface noise (how many mm a flat face wobbles on average, RMS) | **3.3 mm** | 6.0 mm |
-| Mirror-like cup on a checkerboard: "see-through" | **48 %** | 12 % |
-| Same cup on a plain **black** table | **1.6 %** | 6.3 % |
-| Cup with the lid off, on plain **white** paper | ~11 % | ~11 % |
+| Mirror-like cup on a checkerboard: "see-through" | **48%** | 12% |
+| Same cup on a plain **black** table | **1.6%** | 6.3% |
+| Cup with the lid off, on plain **white** paper | ~11% | ~11% |
 
 "See-through" is the share of the part whose depth came out at the height of the surface below instead of the part. When stereo matches a pattern reflected in a shiny surface, it places the depth where that pattern really is, behind the surface.
 
 - **Normally FoundationStereo is cleaner.** Its surface noise on the mouse is about half of ESS's.
-- **But it is more easily fooled by reflections.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for a similar 93–95 % of the cup, so coverage alone hides the problem completely.
+- **But it is more easily fooled by reflections.** On the cup reflecting the checkerboard, it read half the cup as "not there". Both models fill depth for a similar 93–95% of the cup, so coverage alone hides the problem completely.
 - **The background decides.** The problem grew from a plain black surface to plain white to a patterned one. With shiny parts, controlling **what the part reflects** works better than changing models.
 
 So "swap to ESS and halve the time" holds for matte parts. In a cell with many glossy parts, clean up the background first, then compare both models on those parts before choosing. (One cup and one mouse show a tendency, not a statistic.)
@@ -162,24 +162,24 @@ On a real line, objects don't sit still, and hands or grippers get in the way. W
 
 First, a flat, hand-coloured rectangle was pasted over the image to hide part of the object (a synthetic cover, not a real hand).
 
-![Tracking with a synthetic cover over 0 %, 50 % and 90 % of the object, then removed](../assets/demos/jetson-tuning-occlusion.jpg)
+![Tracking with a synthetic cover over 0%, 50% and 90% of the object, then removed](../assets/demos/jetson-tuning-occlusion.jpg)
 
-*The numbers under the photos are from the same test with the NVLabs research tracker. The table below is the commercial Isaac ROS tracker. Both hold up to half covered and drift badly from 90 %.*
+*The numbers under the photos are from the same test with the NVLabs research tracker. The table below is the commercial Isaac ROS tracker. Both hold up to half covered and drift badly from 90%.*
 
 | Covered | Pose error (commercial Isaac ROS tracker) |
 |---|---|
-| 0–50 % | within 1.4° / 4.4 mm, about the same as uncovered |
-| 75 % | 3.3–4.0° / 8.5–14.6 mm |
-| 90 % | 3.2–4.6° / 25–31 mm, position well off |
-| 100 % | 8.6–10.2° / 30–36 mm, effectively lost |
+| 0–50% | within 1.4° / 4.4 mm, about the same as uncovered |
+| 75% | 3.3–4.0° / 8.5–14.6 mm |
+| 90% | 3.2–4.6° / 25–31 mm, position well off |
+| 100% | 8.6–10.2° / 30–36 mm, effectively lost |
 | Uncovered again | back to 0.9° / 2.7 mm within a frame or two |
 
 Up to half covered, it barely moves; once most of the object is hidden, the position drifts by a few centimetres. When the cover comes off, it snaps back.
 
 We also tried a real hand: a 98-second test of picking up the mini PC, moving it, half covering it with a hand, and shaking it fast.
 
-- Tracked **86 %** of the time; the longest unbroken track was **58.6 s**
-- **100 %** tracked while a hand covered half of it
+- Tracked **86%** of the time; the longest unbroken track was **58.6 s**
+- **100%** tracked while a hand covered half of it
 - Followed motion up to about 300 mm/s and 130°/s
 - When lost, found again in **3.4 s**
 
@@ -222,6 +222,6 @@ Jetson, Orin, Isaac ROS, TensorRT and NGC are trademarks of NVIDIA; other produc
 
 </details>
 
-**Series** · [← Previous: A Correction — reversing the "16 GB can't do it" verdict](jetson-foundationpose-16gb.md) · [Next: Scanning — no CAD? One printed board and twenty photos →](jetson-scan-no-cad.md)
+**Series** · [← Previous: A Correction, reversing the "16 GB can't do it" verdict](jetson-foundationpose-16gb.md) · [Next: Scanning, no CAD? One printed board and twenty photos →](jetson-scan-no-cad.md)
 
 *Related: [Field Notes, Part 2: Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md)*

@@ -60,8 +60,8 @@ Inside a brand-new AI are about 1.2 million numbers, all set at random. So play 
 **How to read the picture**
 
 - The 50 bars are the AI's answer for the 50 kinds. Taller = more sure.
-- The red bar is the right answer (dog), but it's about as tall as the rest: all near 2 %.
-- On the 400 exam sounds it got 2 % right. Guessing one of 50 gets 2 %.
+- The red bar is the right answer (dog), but it's about as tall as the rest: all near 2%.
+- On the 400 exam sounds it got 2% right. Guessing one of 50 gets 2%.
 
 !!! abstract "In one line"
     Before learning, the AI is guessing. That's where we start.
@@ -109,8 +109,8 @@ The AI we used is a CNN. It sweeps dozens of small magnifiers over the picture, 
 
 **How to read the picture**
 
-- The teal line is the study-set score (practice problems). It quickly reaches nearly 100 %.
-- The yellow line is the exam score (new sounds). It climbs much more slowly and ends at 84 %.
+- The teal line is the study-set score (practice problems). It quickly reaches nearly 100%.
+- The yellow line is the exam score (new sounds). It climbs much more slowly and ends at 84%.
 - In the red zone it gets every practice problem right, but the exam stays about 16 points behind. Part of what it learned is memorized answers, not the pattern.
 
 !!! abstract "In one line"
@@ -129,7 +129,7 @@ A common way to stop memorizing: each time the AI studies a sound, change it sli
 **How to read the picture**
 
 - Top: the original dog picture and three changed versions: shifted in time, parts hidden (stripes blanked out), mixed with rain.
-- Bottom: plain study (yellow) ended at 84 %, studying with changed problems (purple) at 84 %. Practically the same.
+- Bottom: plain study (yellow) ended at 84%, studying with changed problems (purple) at 84%. Practically the same.
 - The exam has only 400 sounds, so one sound is a quarter of a point. A gap this small is luck, not skill. Here the trick simply didn't help.
 
 !!! abstract "In one line"
@@ -144,7 +144,7 @@ A common way to stop memorizing: each time the AI studies a sound, change it sli
 **How to read the picture**
 
 - Left: the kinds it got right most often, such as hand saw, church bells, can opening.
-- Right: the kinds it got right least often, such as fireworks, pig, water drops. Each kind has only 8 exam sounds, so 50 % means 4 of 8.
+- Right: the kinds it got right least often, such as fireworks, pig, water drops. Each kind has only 8 exam sounds, so 50% means 4 of 8.
 - The mix-up it made most was answering “crackling fire” for “fireworks” (5 times). Listen to real exam sounds in the cards below.
 - Each card puts the exam sound's picture next to a study sound of the kind the AI answered. On the wrong card both are full of thin upright stripes, so mixing up fireworks and a crackling fire is understandable. Motion has pairs like this too: in [part 4, Teaching Motion](aip-teaching-motion.md), it's sitting and standing.
 
@@ -187,9 +187,9 @@ We borrowed a big AI that another research team trained in advance on about 2 mi
 
 **How to read the picture**
 
-- Guessing gets 2 %. Our small AI, taught from zero, got 84 % (84 % with changed problems).
-- The borrowed AI got 95 % on the same exam.
-- The dashed line is how well people did on ESC-50 when it was published: 81 %. The borrowed AI goes well past it (though the conditions weren't exactly the same).
+- Guessing gets 2%. Our small AI, taught from zero, got 84% (84% with changed problems).
+- The borrowed AI got 95% on the same exam.
+- The dashed line is how well people did on ESC-50 when it was published: 81%. The borrowed AI goes well past it (though the conditions weren't exactly the same).
 - With a borrowed eye you can even skip training and recognize from a few references; see [part 5, Learning from a Reference](aip-learning-from-reference.md).
 
 !!! abstract "In one line"
@@ -211,7 +211,7 @@ We borrowed a big AI that another research team trained in advance on about 2 mi
 
 ### Sources and notices
 
-Recordings: ESC-50 (K. J. Piczak, CC BY-NC). Human score 81.3 % from Piczak (2015). Pretrained model: AST by Gong, Chung and Glass (MIT). Training ran on one RTX 3090. NVIDIA and GeForce RTX are trademarks of NVIDIA Corporation, used here only to refer to them.
+Recordings: ESC-50 (K. J. Piczak, CC BY-NC). Human score 81.3% from Piczak (2015). Pretrained model: AST by Gong, Chung and Glass (MIT). Training ran on one RTX 3090. NVIDIA and GeForce RTX are trademarks of NVIDIA Corporation, used here only to refer to them.
 
 ### Terms
 

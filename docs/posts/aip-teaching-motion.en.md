@@ -73,7 +73,7 @@ The phone's IMU gives six signals: shaking in three directions and turning in th
 **How to read the picture**
 
 - The six bars are the AI's answer for one walking slice. All are near the dashed line, 1 in 6.
-- On the 2,947 exam slices it got 17 % right. Guessing one of six gets 17 %.
+- On the 2,947 exam slices it got 17% right. Guessing one of six gets 17%.
 
 !!! abstract "In one line"
     Before learning, the AI is guessing, exactly as in [part 2](aip-teaching-sound.md).
@@ -88,8 +88,8 @@ Learning works exactly as in [part 2, Teaching Sound](aip-teaching-sound.md). Th
 
 **How to read the picture**
 
-- Yellow: an AI that studied the wiggles as they are. It ended at 94 % on the 9 new people.
-- Purple: an AI that studied the vibration pictures. It wobbled at first, then ended at 97 %.
+- Yellow: an AI that studied the wiggles as they are. It ended at 94% on the 9 new people.
+- Purple: an AI that studied the vibration pictures. It wobbled at first, then ended at 97%.
 
 !!! abstract "In one line"
     In this experiment, turning movement into pictures helped, as it did for sound.
@@ -120,8 +120,8 @@ We trained the wiggle AI again, but mixed everyone before splitting, so the same
 
 **How to read the picture**
 
-- Guessing: 17 %. Wiggle AI on new people: 94 %. Vibration-picture AI on new people: 97 %.
-- The same wiggle AI with people mixed: 98 %, 3.5 points higher than its honest score. The same people's slices, even neighboring slices that share half their time, were on both sides, so it had partly seen the exam.
+- Guessing: 17%. Wiggle AI on new people: 94%. Vibration-picture AI on new people: 97%.
+- The same wiggle AI with people mixed: 98%, 3.5 points higher than its honest score. The same people's slices, even neighboring slices that share half their time, were on both sides, so it had partly seen the exam.
 
 !!! abstract "In one line"
     Always examine on new people, or the score looks better than the AI really is.

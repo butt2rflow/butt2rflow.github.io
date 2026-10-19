@@ -149,7 +149,7 @@ ROS 2까지 왔으니 다음은 **Isaac ROS**입니다. NVIDIA가 만든, GPU로
 
 **시리즈** · [← 이전 장: 펜던트에서 ROS 2로 4부](isaac-ros-gpu.md) · [다음 글: 2부, Isaac ROS와 파운데이션 모델 →](jetson-isaac-foundation-models.md)
 
-*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md) · [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI 투자 1부](cobot-investing.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [좌표계와 변환](frames-transforms.md) · [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [Physical AI 투자 1부](cobot-investing.md) · [직접 해 보기: 실습 노트 0부, SO-101과 URSim](learn-without-industrial-robot.md)*
 
 ### 출처와 표기
 

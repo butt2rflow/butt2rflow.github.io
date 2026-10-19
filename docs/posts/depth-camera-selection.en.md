@@ -139,7 +139,7 @@ For the ZED X family, check the host first. Depth is computed on the host's NVID
 
 ## Once it arrives: check your camera first
 
-A spec sheet gives the model's typical values. The unit you actually receive varies with resolution mode, calibration state and focus type. The camera in [the scanning post](jetson-scan-no-cad.md) put every distance about 5 % (5.3 %) short because of the default lens parameters for its 1080p mode, had stereo rectification 1.9 px off vertically, and changed its focal length by 3.3 % up close because of autofocus. None of it produced an error message. When a new camera arrives, check three things before real work:
+A spec sheet gives the model's typical values. The unit you actually receive varies with resolution mode, calibration state and focus type. The camera in [the scanning post](jetson-scan-no-cad.md) put every distance about 5% (5.3%) short because of the default lens parameters for its 1080p mode, had stereo rectification 1.9 px off vertically, and changed its focal length by 3.3% up close because of autofocus. None of it produced an error message. When a new camera arrives, check three things before real work:
 
 1. **Lens parameters:** in the resolution mode you'll use, put a board of known size at several distances and compare the distance computed from the lens parameters with the stereo distance. With fixed focus, the error should stay the same at every distance.
 2. **Stereo rectification:** in the rectified left and right images, matching points should sit within 0.5 px vertically.
@@ -170,6 +170,8 @@ Write the result as one line, "this camera is within ○ % from ○ to ○ cm". 
 | 6 | Check the received camera's lens parameters, rectification and focus yourself |
 
 The D405 is still the default for close wrist work, and the Gemini 305 is a candidate for the same slot that is slightly more accurate and costs less. Either way, trust the numbers you measure on the camera you received over the spec sheet.
+
+That's the end of the Robot Vision chapter. The next chapter, [Cobots](cobot-basics.md), looks at the arm this camera will be mounted on.
 
 ---
 

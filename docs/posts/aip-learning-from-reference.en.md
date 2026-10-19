@@ -77,9 +77,9 @@ We gave a few reference sounds per kind and named each of the 400 exam sounds af
 
 **How to read the picture**
 
-- 1 reference: 79 %. 2: 86 %. 5: about 89 %. 20: 91 %. More witnesses make a sharper sketch, and more references make a sharper representative, so the score rises.
-- With just 2 references it beat the AI trained from zero on 1,600 sounds in [part 2](aip-teaching-sound.md) (84 %, yellow line).
-- We redid the test 20 times with different references, picked at random. The pale band runs from the lowest score to the highest: 74-84 % with one reference. Which reference you pick matters too.
+- 1 reference: 79%. 2: 86%. 5: about 89%. 20: 91%. More witnesses make a sharper sketch, and more references make a sharper representative, so the score rises.
+- With just 2 references it beat the AI trained from zero on 1,600 sounds in [part 2](aip-teaching-sound.md) (84%, yellow line).
+- We redid the test 20 times with different references, picked at random. The pale band runs from the lowest score to the highest: 74-84% with one reference. Which reference you pick matters too.
 
 !!! abstract "In one line"
     A good eye plus a few references does as well as an AI trained from zero.
@@ -94,8 +94,8 @@ CLAP learned sounds together with sentences describing them, so a sentence like 
 
 **How to read the picture**
 
-- One exam sound (a siren) against 50 sentences: “siren” wins with 98 %.
-- Over all 400 exam sounds, sentences alone got 92 % right.
+- One exam sound (a siren) against 50 sentences: “siren” wins with 98%.
+- Over all 400 exam sounds, sentences alone got 92% right.
 - This number is a little optimistic: CLAP's training data includes Freesound, where ESC-50's sounds come from, so it may have heard similar ones.
 
 !!! abstract "In one line"
@@ -157,8 +157,8 @@ The same test on the phone data from [part 4](aip-teaching-motion.md). Motion st
 **How to read the picture**
 
 - Top: the vibration pictures from [part 4](aip-teaching-motion.md). Sitting, standing and lying down barely move, so all three are nearly black. Comparing pictures directly can hardly tell them apart. Sitting and standing were the pair that even the trained AI mixed up in picture 6 of [part 4](aip-teaching-motion.md).
-- Bottom: 1 reference: 43 %. 5: 58 %. 20: 72 %.
-- Far below the 97 % of the AI trained in [part 4](aip-teaching-motion.md).
+- Bottom: 1 reference: 43%. 5: 58%. 20: 72%.
+- Far below the 97% of the AI trained in [part 4](aip-teaching-motion.md).
 
 !!! abstract "In one line"
     The reference way needs a good eye; comparing raw pictures isn't enough.
@@ -173,9 +173,9 @@ For example, we taught an eye the five activities other than lying down, then re
 
 **How to read the picture**
 
-- Gray: all six together score 83-93 %, far better than without an eye (58 %).
-- Teal: the newly registered activity alone scores 47-85 %, 66 % on average.
-- Upstairs (85 %) resembles the walking the eye learned (see the vibration pictures in picture 7), which likely makes it easy. Lying down (47 %) and sitting (54 %) seem to need features the eye never learned.
+- Gray: all six together score 83-93%, far better than without an eye (58%).
+- Teal: the newly registered activity alone scores 47-85%, 66% on average.
+- Upstairs (85%) resembles the walking the eye learned (see the vibration pictures in picture 7), which likely makes it easy. Lying down (47%) and sitting (54%) seem to need features the eye never learned.
 
 !!! abstract "In one line"
     An eye recognizes things like what it learned. To recognize something truly new, it has to learn far more broadly.

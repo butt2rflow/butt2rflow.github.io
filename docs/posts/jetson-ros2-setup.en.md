@@ -149,7 +149,7 @@ One fork worth flagging ahead of time: Isaac ROS recently **split into two track
 
 **Series** · [← Previous chapter: Pendant to ROS 2, Part 4](isaac-ros-gpu.md) · [Next: Part 2, Isaac ROS and Foundation Models →](jetson-isaac-foundation-models.md)
 
-*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames & Transforms](frames-transforms.md) · [Investing in Physical AI](cobot-investing.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
+*Related: [From Stereo to Grasp](stereo-to-grasp.md) · [Frames & Transforms](frames-transforms.md) · [Investing in Physical AI](cobot-investing.md) · [Try it: Hands-on Notes (0), SO-101 and URSim](learn-without-industrial-robot.md)*
 
 ### Sources & trademarks
 

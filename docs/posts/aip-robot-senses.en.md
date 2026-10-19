@@ -81,7 +81,7 @@ FANUC robots have a feature called Learning Vibration Control. A bump feeler is 
 **How to read the picture**
 
 - Left: before learning. After a fast stop the hand keeps swaying for a while (a concept drawing).
-- Right: after learning. The sway is small, so the next move can start sooner. FANUC says cycle times drop by 10-15 %.
+- Right: after learning. The sway is small, so the next move can start sooner. FANUC says cycle times drop by 10-15%.
 - Universal Robots also has a bump feeler in the wrist, but it measures only a few times a second and includes gravity, so it is reportedly used mainly to check how the robot is mounted. To study shaking closely, people add a separate sensor.
 - Factories also attach vibration sensors to catch parts such as the gears inside a motor shaking differently before they fail.
 

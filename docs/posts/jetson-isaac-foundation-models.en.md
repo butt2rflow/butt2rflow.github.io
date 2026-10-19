@@ -230,9 +230,9 @@ The next things to check are clear now, too.
 
 ---
 
-**Series** · [← Previous: Putting the Robot's Brain on the Edge (1) — From JetPack to ROS 2](jetson-ros2-setup.md) · [Next: A Correction — reversing the "16 GB can't do it" verdict →](jetson-foundationpose-16gb.md)
+**Series** · [← Previous: Putting the Robot's Brain on the Edge (1), From JetPack to ROS 2](jetson-ros2-setup.md) · [Next: A Correction, reversing the "16 GB can't do it" verdict →](jetson-foundationpose-16gb.md)
 
-*Related: [From stereo vision to grasping the target](stereo-to-grasp.md) · [Inside the models — deep dive, part 1](inside-the-models.md) · [Field Notes, Part 1: from JetPack to ROS 2](jetson-ros2-setup.md) · [If you're investing in Physical AI — the cobot angle](cobot-investing.md)*
+*Related: [From stereo vision to grasping the target](stereo-to-grasp.md) · [Inside the models, deep dive, part 1](inside-the-models.md) · [Field Notes, Part 1: from JetPack to ROS 2](jetson-ros2-setup.md) · [If you're investing in Physical AI, the cobot angle](cobot-investing.md)*
 
 ### Sources and notes
 

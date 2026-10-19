@@ -176,7 +176,7 @@ Read them in this order; each builds on the one before. Pick the documentation f
 
 **Series** · [← Previous: Part 3, MoveIt 2](moveit2-goals-not-points.md) · [Next chapter: Field Notes, Part 1, From JetPack to ROS 2 →](jetson-ros2-setup.md)
 
-*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Part 3 — MoveIt 2](moveit2-goals-not-points.md) · [Field Notes, Part 2: Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md) · [How Many Cameras, and Where](camera-placement.md)*
+*Related: [Choosing a Physical AI Approach](choosing-physical-ai.md) · [Part 3, MoveIt 2](moveit2-goals-not-points.md) · [Field Notes, Part 2: Isaac ROS and Foundation Models](jetson-isaac-foundation-models.md) · [Inside the Three Models](inside-the-models.md) · [Try it: Hands-on Notes (0), SO-101 and URSim](learn-without-industrial-robot.md) · [How Many Cameras, and Where](camera-placement.md)*
 
 ### Sources and notices
 

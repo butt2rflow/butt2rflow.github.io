@@ -210,7 +210,7 @@ nvblox가 내놓는 지도는 CAD 모델처럼 **작은 삼각형 면을 이어 
 
 처음에는 지도와 같은 깊이를 쓰려고 **카메라 칩이 직접 계산한 깊이**로 자세를 잡았습니다. 그런데 이 깊이는 미니 PC의 방열 핀 윗면에서 거의 비고, 검고 반짝이는 마우스에서는 60%만 값이 있었어요. 그래서 같은 bag에 함께 녹화해 둔 좌우 영상으로 FoundationStereo와 ESS 깊이를 다시 계산하고, 자세를 잡는 코드는 그대로 둔 채 깊이만 바꿨습니다. 좌우 영상으로 만든 깊이는 왼쪽 카메라 시점이라, 카메라의 공장 보정값으로 컬러 영상 시점에 옮겨 맞췄어요.
 
-결과는 그림 오른쪽과 같습니다. FoundationStereo 깊이도 거의 같아서(미니 PC 0.92, 마우스 0.84), 두 깊이로 잡은 미니 PC 자세는 1.2°, 2.9 mm만 달랐어요. 자세가 어긋났던 건 FoundationPose 탓이 아니라 깊이 탓이었던 거죠. 이 장면에서 깊이 계산에 ESS는 0.05초, FoundationStereo는 2초가 걸려서, 목표를 만들 때는 ESS를 쓰기로 했습니다.
+결과는 그림 오른쪽과 같습니다. FoundationStereo 깊이도 거의 같아서(미니 PC 0.92, 마우스 0.84), 두 깊이로 잡은 미니 PC 자세는 1.2°, 2.9 mm만 달랐어요. 자세가 어긋났던 건 FoundationPose 탓이 아니라 깊이 탓이었던 거죠. 이 장면에서 깊이 계산에 ESS는 0.05초, FoundationStereo는 2초가 걸려서, 목표를 만들 때는 ESS를 쓰기로 했습니다. (앞의 지도 표 시간은 bag 전체에서 고른 20장을 처리한 실행에서 잰 값이고, 여기는 이 한 장면만 처리한 실행이라 숫자가 조금 다릅니다.)
 
 여기서 세 가지를 배웠어요.
 
@@ -306,4 +306,4 @@ NVIDIA·Jetson·Orin·JetPack·Isaac ROS·Isaac Sim·cuMotion·cuRobo·nvblox·R
 
 **시리즈** · [← 이전 글: 스캔편, CAD가 없는 물체, 인쇄한 보드 한 장과 사진 스무 장으로](jetson-scan-no-cad.md) · [다음 글: 실물편, 엣지 컴퓨터가 실제 로봇을 처음 움직이다 →](jetson-real-robot-first-move.md)
 
-*관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md)*
+*관련: [펜던트에서 ROS 2로 3부: MoveIt 2](moveit2-goals-not-points.md) · [펜던트에서 ROS 2로 4부: Isaac ROS와 cuMotion](isaac-ros-gpu.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [직접 해 보기: 실습 노트 0부, SO-101과 URSim](learn-without-industrial-robot.md)*

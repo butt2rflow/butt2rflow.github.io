@@ -178,7 +178,7 @@ mock 하드웨어나 탁상용 교육 팔(3부에서 말한 관절 다섯 개짜
 
 **시리즈** · [← 이전 글: 3부, MoveIt 2](moveit2-goals-not-points.md) · [다음 장: 현장 노트 1부, JetPack부터 ROS 2까지 →](jetson-ros2-setup.md)
 
-*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [3부: MoveIt 2](moveit2-goals-not-points.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
+*관련: [Physical AI를 고르는 법](choosing-physical-ai.md) · [3부: MoveIt 2](moveit2-goals-not-points.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md) · [세 모델의 안쪽](inside-the-models.md) · [현장 노트 모션편](jetson-pose-to-motion.md) · [실물편](jetson-real-robot-first-move.md) · [직접 해 보기: 실습 노트 0부, SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md)*
 
 ### 출처와 표기
 

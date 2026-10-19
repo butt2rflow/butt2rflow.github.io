@@ -121,7 +121,7 @@ description: "카메라가 본 것을 로봇 움직임으로 바꾸는 세 가�
 
 **시리즈** · [다음: 학습 정책 →](learned-policy-track-b.md)
 
-*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md) · [직접 해 보기: 실습 노트 0부: SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [보는 AI 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)*
+*관련: [펜던트에서 ROS 2로 1부](ros2-for-robot-programmers.md) · [스테레오 비전에서 목표물 잡기까지](stereo-to-grasp.md) · [현장 노트 2부](jetson-isaac-foundation-models.md) · [직접 해 보기: 실습 노트 0부, SO-101과 URSim](learn-without-industrial-robot.md) · [카메라는 몇 대, 어디에](camera-placement.md) · [보는 AI 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)*
 
 ### 출처와 표기
 

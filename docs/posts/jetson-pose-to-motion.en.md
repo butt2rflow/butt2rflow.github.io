@@ -77,7 +77,7 @@ The one failure was a start pose I offset by a large amount on purpose. When pla
 
 The number to use in practice is the **16 seconds**. cuRobo spends a long time preparing its GPU work on the first plan and is fast after that. If the first plan waits until the first part arrives, that first cycle runs 16 seconds longer. Run any plan once when the program starts and the problem goes away.
 
-I won't put this next to the 210 ms from [Part 2 of the field notes](jetson-isaac-foundation-models.md) (a 7-axis arm, the demo Franka configuration) and call it faster. The arm and the scene are different. What I can say is that both land around 0.2 s on the same edge computer. If you use a different UR model, you need a cuMotion configuration for it (joint limits, collision spheres). UR's MoveIt configuration covers several models, but the cuMotion configuration is separate.
+I won't put this next to the 210 ms from [Part 2 of the field notes](jetson-isaac-foundation-models.md) (a 7-axis arm, the demo Franka configuration) and call it faster. The arm and the scene are different. What I can say is that both land around 0.2 s on the same edge computer. If you use a different UR model, you need a cuMotion configuration for it (joint limits, collision spheres). UR's MoveIt configuration covers several models, but the cuMotion configuration is separate (how I built the UR20 one is [further down](#all-the-way-on-simulated-hardware-and-building-a-ur20-cumotion-config)).
 
 [Part 3](moveit2-goals-not-points.md) covered how to choose a planner, so briefly:
 
@@ -114,7 +114,7 @@ Now the real camera. The OAK-D's stereo depth went out as a ROS 2 topic, and nvb
 
 Speed was fine from the start. The camera sent 13.5 frames a second, adding one depth frame to the map took 4–7 ms, and memory grew by 0.3–0.5 GB.
 
-To check the map, I redrew it from the camera's viewpoint and compared it, pixel by pixel, with the depth the camera measured. Day one looked bad: only **14 %** of points agreed within 3 cm, and the board right in front seemed to be missing from the map. I even had a plausible story: false far depth readings had erased the board.
+To check the map, I redrew it from the camera's viewpoint and compared it, pixel by pixel, with the depth the camera measured. Day one looked bad: only **14%** of points agreed within 3 cm, and the board right in front seemed to be missing from the map. I even had a plausible story: false far depth readings had erased the board.
 
 Looking again the next day, the map wasn't wrong. **The check was.**
 
@@ -128,17 +128,17 @@ The map nvblox produces is a **mesh of small triangle faces**, like a CAD model.
 
 | Scene | Median error, near pixels | Within 3 cm | Map coverage |
 |---|---|---|---|
-| Flat checkerboard, dim office | **5 mm** | 81 % | 95 % |
-| PC case with a glass side panel, lights on | 19 mm | 63 % | 95 % |
-| Same scene, depth clipped at 1.5 m | 15 mm | 70 % | 56 % |
+| Flat checkerboard, dim office | **5 mm** | 81% | 95% |
+| PC case with a glass side panel, lights on | 19 mm | 63% | 95% |
+| Same scene, depth clipped at 1.5 m | 15 mm | 70% | 56% |
 
 A 5 mm median on a flat scene is far smaller than one map cell (2 cm). The dim lighting wasn't a problem either. Reflective surfaces like glass make stereo depth itself noisy, so the error grows to 19 mm, but that's still about one cell.
 
 ![The same glass-case scene with depth clipped at 1.5 m: a little less error, but a much smaller map](../assets/demos/jetson-nvblox-clamp-compare.png)
 
-Clipping depth at 1.5 m drops far-away noise and trims the error a little (19 → 15 mm), but map coverage falls from 95 % to 56 %. Useful for a cell where only the work area matters; otherwise there's no need to clip.
+Clipping depth at 1.5 m drops far-away noise and trims the error a little (19 → 15 mm), but map coverage falls from 95% to 56%. Useful for a cell where only the work area matters; otherwise there's no need to clip.
 
-What to take from this is the **order** more than the numbers. Had I trusted day one's 14 %, I'd have started blaming nvblox and changing its settings. Having already passed the known-answer scene is what pointed me back at the check. Check the measurement before blaming the tool. And as [Part 4](isaac-ros-gpu.md) said, nvblox is not a device for protecting people. Human safety belongs to the robot controller's safety functions and safety sensors.
+What to take from this is the **order** more than the numbers. Had I trusted day one's 14%, I'd have started blaming nvblox and changing its settings. Having already passed the known-answer scene is what pointed me back at the check. Check the measurement before blaming the tool. And as [Part 4](isaac-ros-gpu.md) said, nvblox is not a device for protecting people. Human safety belongs to the robot controller's safety functions and safety sensors.
 
 <details>
 <summary>Things that tripped me up while wiring it</summary>
@@ -208,9 +208,9 @@ So far the goals were placed by hand. This time they came from object poses foun
 
 *The same frame of the same bag. Blue is the CAD drawn at each pose, the yellow line is the SAM 2 mask, and the three arrows are the object axes. On the left (camera-chip depth) the mouse is off up and to the right, with an overlap ratio (IoU) of 0.66 and an 11 mm depth difference, so it was flagged low-confidence; the mini PC also had to be snapped to the table (0.88, 6 mm). On the right (ESS depth) the mini PC comes out at 0.92 / 6 mm and the mouse at 0.87 / 4 mm, and the CAD sits on both.*
 
-At first the poses came from **the depth computed on the camera chip**, to match the depth the map uses. That depth is nearly empty over the mini PC's finned top and only 60 % valid on the dark, glossy mouse. So FoundationStereo and ESS depth were recomputed from the left and right images recorded in the same bag, and only the depth was swapped; the pose code stayed the same. Depth from the stereo pair is in the left camera's view, so the camera's factory calibration was used to move it into the colour image's view.
+At first the poses came from **the depth computed on the camera chip**, to match the depth the map uses. That depth is nearly empty over the mini PC's finned top and only 60% valid on the dark, glossy mouse. So FoundationStereo and ESS depth were recomputed from the left and right images recorded in the same bag, and only the depth was swapped; the pose code stayed the same. Depth from the stereo pair is in the left camera's view, so the camera's factory calibration was used to move it into the colour image's view.
 
-The result is the right side of the figure. FoundationStereo depth gave nearly the same (mini PC 0.92, mouse 0.84), and the mini PC poses from the two differed by only 1.2° and 2.9 mm. The bad poses came from the depth, not from FoundationPose. On this frame ESS took 0.05 s and FoundationStereo 2 s, so ESS became the depth for making goals.
+The result is the right side of the figure. FoundationStereo depth gave nearly the same (mini PC 0.92, mouse 0.84), and the mini PC poses from the two differed by only 1.2° and 2.9 mm. The bad poses came from the depth, not from FoundationPose. On this frame ESS took 0.05 s and FoundationStereo 2 s, so ESS became the depth for making goals. (The times in the map table above came from a separate run over 20 frames picked across the bag, so they differ a little from this single-frame run.)
 
 Three lessons came out of this:
 
@@ -240,9 +240,9 @@ Finally the driver was wired in too. The UR20 driver ran on simulated hardware, 
 
 The part that took work was the cuMotion configuration. Isaac ROS 3.2 ships configs for the UR5e and UR10e only, so the UR20 one had to be built. cuMotion checks collisions by wrapping the arm in spheres, and how those spheres are placed is the whole job.
 
-- **cuRobo's automatic sphere fitting failed.** Three of the six UR20 meshes aren't fully closed shapes, so it covered only 1–8 % of the surface.
+- **cuRobo's automatic sphere fitting failed.** Three of the six UR20 meshes aren't fully closed shapes, so it covered only 1–8% of the surface.
 - **Slicing each link into thin slabs with one sphere per slab** covered everything but made the arm up to 110 mm fatter than it is, so it can't get that close to obstacles.
-- **Adding, one at a time, the sphere inside the link that covers the most still-uncovered surface** worked. 71 spheres (the UR10e config has 20) covered 99–100 % of the surface with at most 24 mm sticking out, and there was no self-collision at home and a few other poses.
+- **Adding, one at a time, the sphere inside the link that covers the most still-uncovered surface** worked. 71 spheres (the UR10e config has 20) covered 99–100% of the surface with at most 24 mm sticking out, and there was no self-collision at home and a few other poses.
 
 Planning the same goals with the UR20 config gave the same pattern as the UR10e (inside objects rejected, pre-grasps and open space planned). Simulated hardware only checks the wiring, though; it doesn't imitate a real UR's timing, limits or contact. That part was checked on a real UR20 in the next post, [The Real Robot](jetson-real-robot-first-move.md).
 
@@ -304,6 +304,6 @@ NVIDIA, Jetson, Orin, JetPack, Isaac ROS, Isaac Sim, cuMotion, cuRobo, nvblox an
 
 </details>
 
-**Series** · [← Previous: Scanning — No CAD? One Printed Board and Twenty Photos](jetson-scan-no-cad.md) · [Next: The Real Robot — an edge computer moves a real arm for the first time →](jetson-real-robot-first-move.md)
+**Series** · [← Previous: Scanning, No CAD? One Printed Board and Twenty Photos](jetson-scan-no-cad.md) · [Next: The Real Robot, an edge computer moves a real arm for the first time →](jetson-real-robot-first-move.md)
 
-*Related: [Pendant to ROS 2, Part 3: MoveIt 2](moveit2-goals-not-points.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [How Many Cameras, and Where](camera-placement.md) · [Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
+*Related: [Pendant to ROS 2, Part 3: MoveIt 2](moveit2-goals-not-points.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [How Many Cameras, and Where](camera-placement.md) · [Hands-on Notes (0), SO-101 and URSim](learn-without-industrial-robot.md)*

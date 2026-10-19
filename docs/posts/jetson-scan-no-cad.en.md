@@ -25,7 +25,7 @@ We tried two answers. One is a simple method: **photograph the object on a print
 - **The mesh takes 4.5 seconds.** A "height map" splits the board into 1 mm cells with one height each; the result is 100×66×29.7 mm against the real 100×62×34 mm.
 - **Track with that mesh straight away.** The detect → mask → depth → FoundationPose chain follows the mouse at about 7 frames per second using the scanned mesh instead of CAD. The tracking chain is all commercially usable parts; the scan's depth, though, came from research-licensed FoundationStereo.
 - **BundleSDF (model-free) ran on the same photos.** It got the width more exactly (61.7 mm), but took 8.7 minutes, fit the live depth less well than the height map, and is research-licensed.
-- **Check the camera before scanning.** On the OAK-D we used, the 1080p mode's default lens parameters (K) put every distance about 5 % (5.3 %) short, and autofocus shifted the focal length by 3.3 % up close (17 cm). With an autofocus camera and its factory values, the key is **don't get closer than the factory-calibration distance (about 44 cm on this camera)**; going farther barely changed the error. Every camera behaves differently, both in the numbers and in whether the trap exists at all, so check the one you're using.
+- **Check the camera before scanning.** On the OAK-D we used, the 1080p mode's default lens parameters (K) put every distance about 5% (5.3%) short, and autofocus shifted the focal length by 3.3% up close (17 cm). With an autofocus camera and its factory values, the key is **don't get closer than the factory-calibration distance (about 44 cm on this camera)**; going farther barely changed the error. Every camera behaves differently, both in the numbers and in whether the trap exists at all, so check the one you're using.
 
 ---
 
@@ -47,9 +47,9 @@ A ChArUco board combines a checkerboard (black-and-white grid) with ArUco marker
 | Corners | 108 inner corners |
 | Check | Measure the bar at the bottom: exactly 100 mm |
 
-**[Download the board (SVG, actual size)](../assets/downloads/charuco-scan-board-letter.svg)**. Turn off "fit to page" and print at **100 % / actual size**. If the bar isn't 100 mm, every dimension is off by the same ratio. Our print measured exactly 100 mm, so the 19.0 mm square size could be trusted as is.
+**[Download the board (SVG, actual size)](../assets/downloads/charuco-scan-board-letter.svg)**. Turn off "fit to page" and print at **100% / actual size**. If the bar isn't 100 mm, every dimension is off by the same ratio. Our print measured exactly 100 mm, so the 19.0 mm square size could be trusted as is.
 
-> **Print it from Inkscape.** In our tests, the only app that printed the SVG at exactly 100 % was the free vector editor **Inkscape**. Other apps changed the size slightly even when set to "actual size". Open the file in Inkscape, print it on Letter landscape as is, and check the bar is 100 mm with a ruler.
+> **Print it from Inkscape.** In our tests, the only app that printed the SVG at exactly 100% was the free vector editor **Inkscape**. Other apps changed the size slightly even when set to "actual size". Open the file in Inkscape, print it on Letter landscape as is, and check the bar is 100 mm with a ruler.
 
 <details>
 <summary>Making the same board with OpenCV</summary>
@@ -75,11 +75,11 @@ To compute the camera position from the board, you need the camera's **lens para
 
 One thing first. The numbers below come from **this one camera**. They don't mean every camera behaves this way. How the sensor is cropped and scaled, the factory calibration, and the lens type all vary by camera (and unit to unit within a model); on another camera a trap may not exist at all, or may show up at a different size. What carries over is not the numbers but **the way to check** (the checklist at the end of this section).
 
-![Get the 1080p lens parameters wrong and every distance is about 5 % short](../assets/diagrams_en/jetson-scan-k-trap.svg)
+![Get the 1080p lens parameters wrong and every distance is about 5% short](../assets/diagrams_en/jetson-scan-k-trap.svg)
 
-**Trap 1: this camera's 1080p lens parameters were 5.6 % off.** This camera's colour sensor is 4056×3040, and its 1080p image is made by cropping the central 3840×2160 and halving it. But the 1080p lens parameters the camera SDK returned by default assumed "the whole sensor was scaled to 1920 wide". The focal length came out as 1465.5; following the crop-and-halve correctly gives 1547.9.
+**Trap 1: this camera's 1080p lens parameters were 5.6% off.** This camera's colour sensor is 4056×3040, and its 1080p image is made by cropping the central 3840×2160 and halving it. But the 1080p lens parameters the camera SDK returned by default assumed "the whole sensor was scaled to 1920 wide". The focal length came out as 1465.5; following the crop-and-halve correctly gives 1547.9.
 
-It shows up directly in distance. With the default, the checkerboard came out at 298.8 mm; with the corrected value, 315.4 mm. The same scene measured separately with the stereo pair gave 315.2 mm, so the correction is right. FoundationPose computes distance from these lens parameters too, so with the default, **every pose would have come out about 5 % (5.3 %) too close**, without a single error message. A focal length 5.6 % too small makes distances 5.3 % short. Some cameras and SDKs do compute per-mode lens parameters correctly, but for a mode that crops the sensor you can't know the crop was accounted for until you measure it. This mode's lens-parameter problem is also filed in the DepthAI repository ([luxonis/depthai#842](https://github.com/luxonis/depthai/issues/842)).
+It shows up directly in distance. With the default, the checkerboard came out at 298.8 mm; with the corrected value, 315.4 mm. The same scene measured separately with the stereo pair gave 315.2 mm, so the correction is right. FoundationPose computes distance from these lens parameters too, so with the default, **every pose would have come out about 5% (5.3%) too close**, without a single error message. A focal length 5.6% too small makes distances 5.3% short. Some cameras and SDKs do compute per-mode lens parameters correctly, but for a mode that crops the sensor you can't know the crop was accounted for until you measure it. This mode's lens-parameter problem is also filed in the DepthAI repository ([luxonis/depthai#842](https://github.com/luxonis/depthai/issues/842)).
 
 **Trap 2: the stereo rectification was 1.9 pixels off vertically.** A stereo camera aligns (rectifies) its left and right images to the same height, then measures depth from the left–right shift. Matching hundreds of the same points in the rectified pair and comparing their vertical positions showed a consistent 1.8–1.9 px offset, regardless of the scene. A well-calibrated camera is within 0.5 px. That's enough to degrade the camera's on-board depth, so this unit needs recalibrating. This is the state of this one unit rather than a trait of the model, so check each unit, even of the same model.
 
@@ -87,18 +87,18 @@ It shows up directly in distance. With the default, the checkerboard came out at
 
 We measured how much it changes. The stereo cameras have fixed focus, so their lens parameters don't change; using them as the reference, we put the board at several distances and compared the colour camera's real focal length.
 
-![The colour camera's focal length changes with the autofocus lens position: +3.3 % at 17 cm, almost 0 at 44 cm](../assets/demos/jetson-af-focal-shift.jpg)
+![The colour camera's focal length changes with the autofocus lens position: +3.3% at 17 cm, almost 0 at 44 cm](../assets/demos/jetson-af-focal-shift.jpg)
 
 *The horizontal axis is the lens position (higher = closer focus); the vertical axis is the real focal length relative to the factory value. The stars are where autofocus actually settled; the black dashed line is the correction table built for this camera.*
 
 | Board distance | Autofocus lens position | Error vs factory value |
 |---|---|---|
-| 17 cm | 180 | **+3.3 %** |
-| 24 cm | 161 | +2.3 % |
-| 44 cm | 143 | +0.2 % |
-| 59–77 cm | 133–137 | −0.4 % |
+| 17 cm | 180 | **+3.3%** |
+| 24 cm | 161 | +2.3% |
+| 44 cm | 143 | +0.2% |
+| 59–77 cm | 133–137 | −0.4% |
 
-The closer, the bigger the error. At 17 cm, 3.3 % means the distance is off by about 6 mm. Depth comes from the fixed-focus stereo cameras, so it's unaffected; only positions computed from the colour image (the board pose, FoundationPose's input) are skewed. Our scan was taken at about 40 cm, right where the factory value holds, which is why the problem didn't show.
+The closer, the bigger the error. At 17 cm, 3.3% means the distance is off by about 6 mm. Depth comes from the fixed-focus stereo cameras, so it's unaffected; only positions computed from the colour image (the board pose, FoundationPose's input) are skewed. Our scan was taken at about 40 cm, right where the factory value holds, which is why the problem didn't show.
 
 So should you lock the focus manually? Up close, that isn't the answer either.
 
@@ -106,12 +106,12 @@ So should you lock the focus manually? Up close, that isn't the answer either.
 
 On this camera at 17 cm, moving just ±15 steps from the autofocus position blurs the image. Lock the focus in one place and other distances go blurry, and in a blurry image the board corners can't be found precisely.
 
-We found two more things on this camera. After a big lens move, the lens takes time to settle: 2.5 s later it was still about 1 % off. And at the lens's end stop (its closest focus), the error grew to +6 %. The timing and size will differ by camera, but using only frames where the lens position has stopped changing holds for any autofocus camera.
+We found two more things on this camera. After a big lens move, the lens takes time to settle: 2.5 s later it was still about 1% off. And at the lens's end stop (its closest focus), the error grew to +6%. The timing and size will differ by camera, but using only frames where the lens position has stopped changing holds for any autofocus camera.
 
 There are three fixes.
 
-- **Work near the factory-calibration distance:** if you use the factory values as they are, with no table, the simplest fix is to keep the object near the distance where they hold. On this camera the error was +0.2 % at 44 cm and −0.4 % at 59–77 cm: it barely changes going farther, and climbs steeply going closer. It's less "44 cm is optimal" than **"don't get closer than the factory-calibration distance"**. Too far has its own cost, though: the object covers fewer pixels and stereo depth error grows, so about 40–50 cm looks like a safe range for this camera. Which distance the factory values fit differs by camera, so check yours first. What the camera stores is not a distance but the lens position at calibration. In DepthAI, read it with `calibData.getLensPosition()`, then measure the distance at which autofocus settles near that value; that's your camera's calibration distance.
-- **A per-camera correction table:** tabulate the focal length per lens position, and on every frame look up the value from the lens position the camera reports. Tested on sessions not used to build the table, the error dropped from 1.4 % median (5.9 % max) to **0.24 % (1.1 % max)**. It has to be built separately for each camera.
+- **Work near the factory-calibration distance:** if you use the factory values as they are, with no table, the simplest fix is to keep the object near the distance where they hold. On this camera the error was +0.2% at 44 cm and −0.4% at 59–77 cm: it barely changes going farther, and climbs steeply going closer. It's less "44 cm is optimal" than **"don't get closer than the factory-calibration distance"**. Too far has its own cost, though: the object covers fewer pixels and stereo depth error grows, so about 40–50 cm looks like a safe range for this camera. Which distance the factory values fit differs by camera, so check yours first. What the camera stores is not a distance but the lens position at calibration. In DepthAI, read it with `calibData.getLensPosition()`, then measure the distance at which autofocus settles near that value; that's your camera's calibration distance.
+- **A per-camera correction table:** tabulate the focal length per lens position, and on every frame look up the value from the lens position the camera reports. Tested on sessions not used to build the table, the error dropped from 1.4% median (5.9% max) to **0.24% (1.1% max)**. It has to be built separately for each camera.
 - **A fixed-focus camera:** if measurement is the goal, a fixed-focus model is cleanest from the start. Check that its closest sharp distance is nearer than your working distance.
 
 What the three traps share is that they all **produce plausible numbers**, so you can't spot them from the results. When you use a new camera or a new resolution mode (or even another unit of the same model), check three things first:
@@ -145,7 +145,7 @@ It wasn't clean from the start. These are the things we fixed one by one.
 
 - **Depth and board pose disagreed by 0.3–8 mm per view.** The board pose (from corners) and the stereo depth are measured in different ways, so they differ slightly. Merged as is, the "at least 1 mm above the board" condition kept only the top of the mouse. So we re-fitted the board plane **inside the depth data**, using the board visible around the object, and corrected every point to that plane.
 - **Not too far.** At about 90 cm the mask was patchy. Moving in to 40 cm, the mouse filled about a quarter of the frame and both depth and mask came out clean.
-- **Shiny spots dropped out of the mask.** SAM2 treated the highlight on the mouse's top as not part of the object and left holes. The depth there was fine, so we filled the mask inside its outer outline. Views at 40 cm, whose outline used to drop to 55 %, now keep 91–96 %.
+- **Shiny spots dropped out of the mask.** SAM2 treated the highlight on the mouse's top as not part of the object and left holes. The depth there was fine, so we filled the mask inside its outer outline. Views at 40 cm, whose outline used to drop to 55%, now keep 91–96%.
 - **Edges bloated.** The mask was slightly generous, and stereo depth tends to spread at object edges, so the first mesh was 112×79 mm, far bigger than the real thing. Eroding the edge by 8 px fixed it.
 
 ## Building the mesh with a height map
@@ -188,13 +188,13 @@ We compared them with the mouse sitting still, tracking for 30 seconds each.
 |---|---|---|
 | Size (real 100 × 62 × 34 mm) | 100 × 66 × 29.7 mm | 96.2 × **61.7** × 27.7 mm |
 | Build time | **4.5 s** | 8.7 min (1000 training steps) |
-| Tracking kept / losses | 100 % / 0 | 100 % / 0 |
+| Tracking kept / losses | 100% / 0 | 100% / 0 |
 | Mesh vs measured depth (median) | **2.8 mm** | 4.2 mm |
 | Outline overlap with the mask (IoU) | **0.85–0.91** | 0.79–0.83 |
 | Pose jitter (x/y/z std) | 0.5 / 0.5 / 1.5 mm | 0.5 / 0.9 / 1.7 mm |
 | Licence | Own method (commercially usable); this run's depth was research-licensed FoundationStereo | NVLabs research only |
 
-In a 30-second hand-moving test, both tracked 99 % of the time. BundleSDF lost the object once and the height map twice, all found again within 3.4 s, with no 180° flips. In motion, the difference was negligible.
+In a 30-second hand-moving test, both tracked 99% of the time. BundleSDF lost the object once and the height map twice, all found again within 3.4 s, with no 180° flips. In motion, the difference was negligible.
 
 In short, BundleSDF got **the width most exactly**, but the height map fit the live depth better, builds about 100 times faster, and can be used commercially. BundleSDF earns its place for shapes a height map can't represent, or when you have a video of the object turned 360° in the hand.
 
@@ -217,7 +217,7 @@ We started on merging a scan of the underside but stopped. The mouse's outline a
 | **Complex shapes** | BundleSDF model-free | Most exact width | 8.7 min | Research only |
 
 - **If you have CAD, CAD is best.** It includes the underside, and as in [the correction post](jetson-foundationpose-16gb.md), colouring it by part prevents front-back flips. The scanner is the fallback when there's no CAD.
-- **One board solves the camera-position problem.** ChArUco tolerates hidden corners, so it works with the object on it, and one bar tells you whether it printed at 100 %.
+- **One board solves the camera-position problem.** ChArUco tolerates hidden corners, so it works with the object on it, and one bar tells you whether it printed at 100%.
 - **Camera first.** On this camera, lens parameters, stereo rectification and autofocus drift were all off, and each skews the mesh and poses silently. With an autofocus camera, **don't get closer than the factory-calibration distance.** Cameras differ, so check that distance and the error size on the one you're using.
 - **Kill reflections on shiny objects.** The low height came from reflection, not from too few views.
 
@@ -234,6 +234,6 @@ Jetson, Orin and Isaac ROS are trademarks of NVIDIA and OAK-D of Luxonis; other 
 
 </details>
 
-**Series** · [← Previous: Tuning — from 11 seconds to 4, and a chain you can ship](jetson-tuning-licensing.md) · [Next: Motion — After the Pose Comes Movement, Planning Around an Obstacle Map →](jetson-pose-to-motion.md)
+**Series** · [← Previous: Tuning, from 11 seconds to 4, and a chain you can ship](jetson-tuning-licensing.md) · [Next: Motion, After the Pose Comes Movement, Planning Around an Obstacle Map →](jetson-pose-to-motion.md)
 
 *Related: [Which Depth Camera](depth-camera-selection.md) · [Frames & Transforms](frames-transforms.md) · [Inside the Three Models](inside-the-models.md) · [Field Notes, Part 2: Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md)*

@@ -87,7 +87,7 @@ Narrowing **what the camera has to see** makes a cell simpler and more predictab
 
 **Series** · [← Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [Next: Which Depth Camera →](depth-camera-selection.md)
 
-*Related: [Pendant to ROS 2, Part 2 — URDF and CAD vs as-built](ros2-robot-description.md) · [Part 4 — Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Try it: Hands-on Notes (0)](learn-without-industrial-robot.md)*
+*Related: [Pendant to ROS 2, Part 2, URDF and CAD vs as-built](ros2-robot-description.md) · [Part 4, Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Choosing a Physical AI Approach](choosing-physical-ai.md) · [From Stereo to Grasp](stereo-to-grasp.md) · [Try it: Hands-on Notes (0)](learn-without-industrial-robot.md)*
 
 ### Sources and notices
 

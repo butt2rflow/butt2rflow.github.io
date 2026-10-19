@@ -24,7 +24,7 @@ The short version: the 3090 PC was enough. The cloud GPU wasn't faster; its valu
 - **The 'weak drives' were a test mistake.** Swinging the arm around the all-zero joint pose pressed it into the floor. Starting from a ready pose, the error was about 0.01 rad. The model's mass, torque and speed limits match the real UR20.
 - **The virtual camera and arm went out as ROS 2 topics.** To the edge computer they look like a real camera and a real robot. The Windows build's defaults (Jazzy, Zenoh) had to become Humble and Fast DDS, and the UDP buffers had to grow to 16 MB.
 - **500 synthetic images at 0.79 seconds each.** But following NVIDIA's examples and toggling rendering off and on per capture leaked about 130 MB of GPU memory per image, and the run died at 170–190 images. Without the toggle, memory stayed flat.
-- **The cloud L4 was not faster than the 3090.** On the same test it ran at between half and four-fifths of the 3090's speed, and the bottleneck was the CPU, not the GPU. The cloud is for running in parallel and keeping the PC free, not for speed. The whole validation cost about US$1.45.
+- **The cloud L4 was not faster than the 3090.** On the same test it ran at between a little over half and four-fifths of the 3090's speed, and the bottleneck was the CPU, not the GPU. The cloud is for running in parallel and keeping the PC free, not for speed. The whole validation cost about US$1.45.
 - **Ubuntu on the same PC ran the same tests 19–52% faster.** At first, physics alone was slower than on Windows. Isaac Sim was using 16 threads, and about 14% of frames ran 60 ms late. Lowering it to 8 removed them. A single run of 10,000 synthetic images left GPU memory almost where it started, 2.80 GB to 2.88 GB.
 - **An RTX 4090 on Runpod took one command, 5 minutes and about US$0.07.** The same test ran at 34.8 frames per second, a little faster than the 3090 (30.6). But there is no screen to watch, and results come back only as text logs.
 
@@ -125,7 +125,7 @@ The GPU choice is constrained first. Isaac Sim needs **RT cores** for rendering,
 
 ![RTX 3090 PC vs cloud L4: frames per second](../assets/diagrams_en/r9-fps.svg)
 
-On the same test scene the L4 ran at 49–83% of the 3090's speed. The telling part is that the L4 stalls around 16–20 frames per second whatever the camera resolution. If raising the resolution doesn't slow it down, the GPU isn't the limit: **the CPU (8 virtual cores at 2.2 GHz) is the bottleneck.** The 3090 PC's CPU was simply faster per core. Synthetic data was a little slower too, 0.91 seconds per image against the 3090's 0.79. Joint tracking error matched to three decimal places, so physics came out the same wherever it ran.
+On the same test scene the L4 ran at 55–83% of the 3090's speed. I left out the 30.4 from the physics-only test: it was the first run after the driver change, and it included recompiling the shaders. The telling part is that the L4 stalls around 16–20 frames per second whatever the camera resolution. If raising the resolution doesn't slow it down, the GPU isn't the limit: **the CPU (8 virtual cores at 2.2 GHz) is the bottleneck.** The 3090 PC's CPU was simply faster per core. Synthetic data was a little slower too, 0.91 seconds per image against the 3090's 0.79. Joint tracking error matched to three decimal places, so physics came out the same wherever it ran.
 
 So the cloud's value isn't speed. It's for running **several machines at once** to split synthetic-data jobs, or for keeping the 3090 PC free. If you need one faster machine, you have to step up to an L40S-class GPU.
 
@@ -190,7 +190,7 @@ So there are now two clouds: the L4 on Google Cloud for watching the screen or r
 
 ## The same 3090 PC under Ubuntu
 
-Every 3090 number so far came from Windows. Six days later I installed Ubuntu 24.04 on a second disk in the same PC and ran the same tests again with the same Isaac Sim 6.1.0.
+Every 3090 number so far came from Windows. Six days later I installed Ubuntu 24.04 on a second disk in the same PC and ran the same tests again with the same Isaac Sim 6.1.0-rc.26.
 
 | Camera setting | Windows | Ubuntu, default | Ubuntu, 8 threads |
 |---|---|---|---|
@@ -231,7 +231,7 @@ GPU memory grew by 0.08 GB over 10,000 images. Next to a leak of 130 MB per imag
 | ROS 2 topics | cameras ~28 Hz, joints ~56 Hz, 0.93× real time | Jazzy/Zenoh defaults; 16 MB buffers for 2.7 MB frames |
 | Synthetic data | 500 images, 0.79 s each (L4 0.91 s) | the render toggle leaked 130 MB per image |
 | Ubuntu on the same PC | 25–74 fps with 8 threads (Windows 19–63); GPU memory flat over 10,000 synthetic images | with the default 16 threads, about 14% of frames ran 60 ms late; Isaac Sim 5.1 crashes on 595-series drivers |
-| Cloud L4 | 49–83% of the 3090, CPU-bound, ~US$1.45 | graphics and encoder libraries, NVIDIA runtime |
+| Cloud L4 | 55–83% of the 3090, CPU-bound, ~US$1.45 | graphics and encoder libraries, NVIDIA runtime |
 | Runpod RTX 4090 | one command, 4 min 30 s, ~US$0.07; 34.8 frames per second | no screen (no UDP), 100 KB request limit, 595-series driver condition |
 
 - **Measure with what you have before buying anything.** Below the minimum spec can still be enough for the real job.
@@ -247,7 +247,7 @@ Next is the edge computer's side: putting the real camera's calibration into the
 <details>
 <summary>Notes — sources for these results, and disclaimers</summary>
 
-Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time. The Runpod section's figures are from **a single run** on 10 October 2026 on an RTX 4090 24 GB pod (driver 595.91, the official Isaac Sim 6.1.0 container image), with that day's price. The Ubuntu section's figures are from 10–11 October 2026 on the same PC under Ubuntu 24.04 (drivers 580.178 and 595.99, Isaac Sim 6.1.0 from the zip package). The speed test and the 500-image run were run once each, and so was the 10,000-image run. The thread-count comparison used 600 frames per setting and was not repeated on Windows.
+Figures are **my own measurements** from 4 October 2026 on an RTX 3090 24 GB under Windows 11 (driver 610.88, Isaac Sim 6.1.0-rc.26 standalone) and on an NVIDIA L4 24 GB in a Google Cloud `g2-standard-8` spot instance (Ubuntu 22.04, drivers 580.178 and 595.91, Isaac Sim 6.1.0 container). Each is one machine and one or two runs, and the cloud machine was a shared spot instance, so read them as tendencies rather than statistics. The virtual camera's field of view and mount are published specs and placeholders; the real camera's calibration isn't in yet. Prices are from each cloud's public price list on 4 October 2026 and vary by region and over time. The Runpod section's figures are from **a single run** on 10 October 2026 on an RTX 4090 24 GB pod (driver 595.91, the official Isaac Sim 6.1.0 container image), with that day's price. The Ubuntu section's figures are from 10–11 October 2026 on the same PC under Ubuntu 24.04 (drivers 580.178 and 595.99, Isaac Sim 6.1.0 from the zip package). The speed test and the 500-image run were run once each, and so was the 10,000-image run. The thread-count comparison used 600 frames per setting and was not repeated on Windows.
 
 GPU, RAM and driver requirements and the lack of support for GPUs without RT cores (A100, H100) are from Isaac Sim's official requirements page; the UR20's mass, torque and speed limits from Universal Robots' published specifications; the render-toggle pattern from NVIDIA Isaac Sim's synthetic-data examples; the ROS 2 setup from Isaac Sim's ROS 2 installation docs. The memory leak was reproduced with this script on Isaac Sim 6.1 and may differ in other versions.
 
@@ -255,15 +255,18 @@ NVIDIA, Isaac Sim, Omniverse, Jetson, cuMotion, RTX and GeForce are trademarks o
 
 </details>
 
-**Series** · [← Previous: The Simulators — three planners on two URSims](jetson-ursim-planners.md) · [Next: The Memory Budget — perception and motion on one 16 GB Jetson →](jetson-memory-budget.md)
+**Series** · [← Previous: The Simulators, three planners on two URSims](jetson-ursim-planners.md) · [Next: The Memory Budget, perception and motion on one 16 GB Jetson →](jetson-memory-budget.md)
 
-*Related: [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [The Real Robot](jetson-real-robot-first-move.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Which 3D camera](depth-camera-selection.md) · [Try it: Hands-on Notes (0) — SO-101 and URSim](learn-without-industrial-robot.md)*
+*Related: [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [The Real Robot](jetson-real-robot-first-move.md) · [Pendant to ROS 2, Part 4: Isaac ROS and cuMotion](isaac-ros-gpu.md) · [Which 3D camera](depth-camera-selection.md) · [Try it: Hands-on Notes (0), SO-101 and URSim](learn-without-industrial-robot.md)*
 
 ### Glossary
 
 - *Isaac Sim*: NVIDIA's robot simulator; computes physics and near-photographic camera images on the GPU
 - *URSim*: UR's free virtual controller; it runs the real controller software on a PC
 - *Synthetic data*: training images and their answers (depth, class masks, boxes) rendered in a simulator
+- *Class masks (segmentation)*: answers that label every pixel of an image with what it is (box, robot, floor)
+- *Bounding box*: a rectangle drawn around an object; the answer an object-detection model learns from
+- *Timestamp*: the time a piece of data was created, recorded with it
 - *Domain randomization*: changing colours, lighting, positions and so on for every capture so a model doesn't latch onto one look of the fake world
 - *SIL (software-in-the-loop)*: testing the real software unchanged by connecting a simulator in place of real sensors and robots
 - *Topic*: a named channel that data flows through in ROS 2
