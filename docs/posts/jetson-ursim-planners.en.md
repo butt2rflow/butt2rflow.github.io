@@ -22,7 +22,7 @@ The short version: judged by the tool tip, all three planners reached the goal. 
 - **The real robot's stack, with simulators instead.** The UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) drove both a UR12e simulator on PolyScope 5 and a UR20 simulator on PolyScope X.
 - **The tool got there every time; the joints did not agree.** For the same 10 cm move, Pilz LIN stayed within 0.1 mm of a straight line, while OMPL reached within 1 mm of the goal but detoured the tool 1–1.9 m, and on the UR12e turned the last wrist joint **about 510°**. On a real arm, cables and hoses would wind up.
 - **With OMPL, the trouble comes after.** The next run started from a folded pose with a protective stop (C403). The cause is UR's wrist-clamping rule, which the ROS robot model doesn't include. Checking every plan and adding the rule to cuMotion's collision model took risky plans from 58 to 0.
-- **Soak test:** motion alone ran 7.6 h at 98.2% success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But the driver occasionally dies, so it needs supervision (the cause is the rclcpp in the Isaac ROS 3.2 Humble image, covered in [Memory](jetson-memory-budget.md)), and about 6% of box detours find no plan, so it needs retries and a fallback.
+- **Soak test:** motion alone ran 7.6 h at 98.2% success, 12 ms replies with no drift, cuMotion memory flat at 3.8 GB (not a leak). But the driver occasionally dies, so it needs supervision (the cause is the rclcpp in the Isaac ROS 3.2 Humble image, covered in [Memory](jetson-memory-budget.md)), and about 8% of box detours find no plan, so it needs retries and a fallback.
 - **Add perception on the same 16 GB and memory runs out.** With continuous object tracking it hit the memory floor after 26 minutes, and after 1 h 10 min even with leaner settings. Perception, not cuMotion, filled the memory. A run that takes one pose per cycle held for 24 hours, a dark night included.
 - **cuMotion is smooth, but not identical every time.** It cleared the box on a 50 cm move by about 199 mm. The same request, though, went over the box once and around it another time (clearance 93–199 mm).
 - **Put the floor in every request.** Without one, OMPL sent the UR20's tool 0.68 m below its base, and the simulator needed a restart after a protective stop.
@@ -164,7 +164,7 @@ The likely cause of that last one was R&D-style use, hundreds of test scripts st
 | Run 1 | After 30 minutes the UR control node died and never recovered. The robot data link (RTDE) dropped with it, but the driver log shows the process ended on an exception in ROS 2's action library; the drop was the result. The cause was later traced to the rclcpp in the Isaac ROS 3.2 Humble image ([Memory](jetson-memory-budget.md)) | A real cell needs **supervision**. A watchdog was added and the test restarted |
 | Run 3, 7.6 h | 98.2% of 3,961 steps succeeded, "goal accepted" in 12 ms with no drift, 0 clamping rejects | No slowdown over time |
 | cuMotion memory | 2.4 → 3.8 GB in the first hour, then flat; it doesn't shrink while idle either | Not a leak but the GPU memory cache, freed only by restarting the process; budget about 4 GB on a 16 GB Orin |
-| No-plan rate | About 6% of the 50 cm box detours find no path | Clean failures that don't grow, but a real cell needs retries and a fallback |
+| No-plan rate | About 8% of the 50 cm box detours find no path | Clean failures that don't grow, but a real cell needs retries and a fallback |
 
 Run 3 was stopped at 7.6 hours. The numbers had stopped changing, so we moved on to running perception alongside.
 
@@ -175,7 +175,7 @@ A real cell gets the part pose from the camera and moves to it. So on the same 1
 | Run | Result | Meaning |
 |---|---|---|
 | Continuous tracking, dark office | 1.4 GB free after 20 minutes, stopped at **26 min**. Tracking 6.8 → 4.5 fps, cuMotion planning 1.3 → 2.0 s | Default settings don't fit in 16 GB |
-| Continuous tracking, leaner settings | Desktop off, a lighter depth model (ESS light), fewer cuMotion seeds, PyTorch cache cleanup. cuMotion flat at 2.33 GB, planning 1.4 s. Still stopped at **1 h 10 min** | Delays the crossing, doesn't prevent it. All 8 CPU cores saturated for the hour, 26% no-plan over the box, 31 driver link drops per hour |
+| Continuous tracking, leaner settings | Desktop off, a lighter depth model (ESS light), fewer cuMotion seeds, PyTorch cache cleanup. cuMotion flat at 2.33 GB, planning 1.4 s. Still stopped at **1 h 10 min** | Delays the crossing, doesn't prevent it. All 8 CPU cores saturated for the hour, 24% no-plan over the box, 31 driver link drops per hour |
 | One pose per cycle, default settings (lit for 8.5 h, then dark for 15.5 h) | **The full 24 h.** 2,398 of 2,399 poses succeeded, median 3.9 s, lowest free memory 1.18 GB. Motion steps 95.8% OK (16% no-plan over the box), 4 driver restarts, 0 wrist-clamping stops | A realistic setup for a cell that needs the part pose once per cycle, though the margin to the 1 GB warning line was under 0.2 GB |
 
 - **Perception, not cuMotion, filled the memory.** Alongside perception, cuMotion sat near 2.5 GB even with default settings; what pulled free memory down was perception (about 10 GB). The FoundationPose container's memory in particular swung up and down, but its GPU allocation stayed flat, so exactly what moves is still unknown.
@@ -194,7 +194,7 @@ The verdict: motion plus continuous tracking on one 16 GB Orin NX doesn't surviv
 | Pilz LIN | 10 cm, within 0.1 mm of a line | doesn't avoid obstacles |
 | OMPL (defaults) | within 1 mm of the goal | 1–1.9 m tool detour, wrist 3 ~510° |
 | After OMPL | the next run protective-stops from a pose that trips the wrist-clamping rule (C403) | check every plan + clamp-aware collision model + Pilz PTP home; risky plans 58 → 0 |
-| Soak test (motion only, 7.6 h) | 98.2% success, 12 ms replies with no drift, memory flat at 3.8 GB | the driver occasionally dies (the rclcpp in the Isaac ROS 3.2 Humble image) → supervision and a workaround patch; ~6% no-plan → retries and a fallback |
+| Soak test (motion only, 7.6 h) | 98.2% success, 12 ms replies with no drift, memory flat at 3.8 GB | the driver occasionally dies (the rclcpp in the Isaac ROS 3.2 Humble image) → supervision and a workaround patch; ~8% no-plan → retries and a fallback |
 | Perception on the same box | continuous tracking hit the memory floor at 26 min (1 h 10 min with leaner settings); one pose per cycle held for 24 h (under 0.2 GB margin) | a real cell: two Jetsons, AGX Orin 32/64 GB, or lighter perception |
 | Floor | a floor slab in every request | without it, the tool went 0.68 m below the base |
 | Connection | one reverse SSH tunnel | `--ipc host`, resend the program, a non-real-time kernel, restart containers before a demo |

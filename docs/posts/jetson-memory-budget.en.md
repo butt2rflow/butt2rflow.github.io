@@ -78,7 +78,7 @@ Yet in all three runs alongside perception, cuMotion with default settings staye
 | Motion only | no perception | 98.2% of 3,961 steps over 7.6 h, 12 ms replies with no drift. Ended by choice once the numbers stopped changing |
 | Continuous tracking | dark office, default settings | 1.4 GB free after 20 minutes, stopped at **26 min** with 0.93 GB. Tracking 6.8 → 4.5 fps, cuMotion planning 1.3 → 2.0 s |
 | Continuous tracking, leaner settings | dark office | stopped at **1 h 10 min** with 0.88 GB. 588 of 625 steps OK |
-| One pose per cycle | lit for the first 8.5 h, then dark for 15.5 h; default settings | **the full 24 h**. Lowest available 1.18 GB, median 1.41 GB |
+| One pose per cycle | lit for the first 8.5 h, then dark for 15.5 h; default settings | **the full 24 h**. Lowest available 1.18 GB, median 1.4 GB |
 
 The dark office wasn't planned. The tests ran into the night, the lights went off, and the mean image brightness fell to 19 out of 255. The object sat at the edge of the frame, so it was lost and re-found often. We treated those two runs as the worst case and kept going. The one-pose-per-cycle run also went dark, 8.5 hours in, and stayed dark all night.
 
@@ -102,7 +102,7 @@ The same dark conditions, rerun with leaner settings:
 |---|---|---|
 | Desktop off (headless) | +0.2 GB available | small, because no desktop session was logged in; access over SSH only |
 | ESS light | depth 64–70 → 45 ms | slightly lower depth quality |
-| Fewer cuMotion seeds + PyTorch cache cleanup | **flat at 2.33 GB**, planning 2.0 → 1.4 s. With motion alone that's about 1.3 GB less than 3.8 GB; alongside perception, a little over 0.1 GB | 26% no-plan over the box (6% with motion alone) |
+| Fewer cuMotion seeds + PyTorch cache cleanup | **flat at 2.33 GB**, planning 2.0 → 1.4 s. With motion alone that's about 1.3 GB less than 3.8 GB; alongside perception, a little over 0.1 GB | 24% no-plan over the box (8% with motion alone) |
 
 With motion alone, the cuMotion settings pay off: memory that climbed to 3.8 GB stops at 2.33 GB. But alongside perception cuMotion already sits near 2.5 GB with defaults, so this run saved a little over 0.1 GB. Why the run went from 26 minutes to 1 h 10 min is one of two things: small savings adding up (desktop off, +0.2 GB), or the big swings landing at different times. One run each can't tell them apart. What's clear is that it stopped for the same reason, perception's memory. The settings can delay the crossing; they didn't prevent it.
 
@@ -124,7 +124,7 @@ Now perception's peak (registration) and motion's peak (planning) take turns. Th
 | Item | Result (24 h, October 5 11:00 → October 6 11:00) |
 |---|---|
 | Pose | 2,398 of 2,399 succeeded; median 4.0 s lit and 3.9 s dark, 95% within 6.8 s lit and 4.8 s dark; the one failure was a 30 s timeout |
-| Available memory | lowest 1.18 GB (3 a.m., in the dark), median 1.41 GB; never below 1 GB |
+| Available memory | lowest 1.18 GB (3 a.m., in the dark), median 1.4 GB; never below 1 GB |
 | Motion steps | 95.8% OK; 96.2% excluding the PC reboot and the simulator move; 16% no-plan over the box |
 | UR driver | died 4 times (see "Why the UR driver died" below); the watchdog brought it back in about 30 s each time; no deaths in the last 12.5 h |
 | Wrist-clamping protective stops (C403) | 0 (the three-layer fix from [The Simulators](jetson-ursim-planners.md), unchanged) |
@@ -136,7 +136,7 @@ About 8.5 hours in, the office lights went off: the same kind of dark office at 
 
 That doesn't make one 16 GB box enough. At the tightest moment, 1.18 GB was free, less than 0.2 GB above the 1 GB stop line. One more model, or nvblox, could push it over. For a cell where the part doesn't move during the cycle, the mode is realistic; for a production cell, we'd pair it with a Jetson that has room to spare, like an AGX Orin 32 GB.
 
-The open issues are clear too. A 16% no-plan rate is nearly three times the 6% with motion alone. Both runs used cuMotion's default settings, so the settings aren't the cause; fewer seeds to save memory were used only in the leaner-settings run above, which was worse still at 26%. It was 17% in the light and 15% in the dark, so lighting doesn't seem to matter. Most of it was CPU load, covered in the next section. The test client counts a cycle as failed at the first failure and doesn't retry, so 448 of 2,399 cycles (about one in five) were logged as failed. 375 of those were no-plan, and the count includes failures when the simulator's PC rebooted and when the simulator moved to another PC. A real cell must have retries and a fallback for a failed plan (a Pilz straight-line move or a taught path).
+The open issues are clear too. A 16% no-plan rate is about twice the 8% with motion alone. Both runs used cuMotion's default settings, so the settings aren't the cause; fewer seeds to save memory were used only in the leaner-settings run above, which was worse still at 24%. It was 17% in the light and 15% in the dark, so lighting doesn't seem to matter. Most of it was CPU load, covered in the next section. The test client counts a cycle as failed at the first failure and doesn't retry, so 448 of 2,399 cycles (about one in five) were logged as failed. 375 of those were no-plan, and the count includes failures when the simulator's PC rebooted and when the simulator moved to another PC. A real cell must have retries and a fallback for a failed plan (a Pilz straight-line move or a taught path).
 
 ## Idle threads were burning the CPU
 
@@ -156,7 +156,7 @@ So two things changed. The front end lets OpenMP threads sleep while waiting (`O
 | plan time median / p95 | 1.48 / 8.7 s | 1.14 / 4.5 s |
 | motion steps OK | 96.2% | 98.8% |
 
-An hour is short, so the same setup ran another 12 hours (evening of October 6 to the next morning). Over 8 dark overnight hours with the viewer bridge off, no-plan was 8.5%, moving between 4 and 12% by hour with no upward trend. Motion steps were 98.5% OK, and all 816 poses in the dark succeeded. That is clearly below the 24-hour run's 16% and close to motion alone (6%).
+An hour is short, so the same setup ran another 12 hours (evening of October 6 to the next morning). Over 8 dark overnight hours with the viewer bridge off, no-plan was 8.5%, moving between 4 and 12% by hour with no upward trend. Motion steps were 98.5% OK, and all 816 poses in the dark succeeded. That is clearly below the 24-hour run's 16% and close to motion alone (8%).
 
 A further 14-hour run held no-plan steady at about 7%. By hour it swung from 0 to 14%, but statistically that is chance, and failures didn't bunch together (3 back-to-back failures vs 6.7 expected by chance). Restarting cuMotion alone changed nothing (5.4% → 5.1%). Every cycle asks the same question and the planner occasionally finds no answer, so a real cell has to catch that with retries and a fallback path. With about 100 plans an hour, a single hour at 12–13% is noise. Heat wasn't the cause either: 53–57 °C against a 99 °C trip, and the CPU clock never dropped.
 
@@ -258,7 +258,7 @@ The closest is a 2026 paper from UC Berkeley and Microsoft, "Offload or Overload
 |---|---|---|
 | Motion only | 7.6 h, 98.2%, about 4.1 GB | cuMotion's cache isn't released when idle → budget about 4 GB |
 | Continuous tracking, dark | memory floor at 26 min | perception about 10 GB, the FoundationPose container swinging; cuMotion 2.5 GB |
-| Leaner settings | 1 h 10 min; alongside perception the cuMotion saving is a little over 0.1 GB | CPU saturated, 26% no-plan, 31 link drops per hour |
+| Leaner settings | 1 h 10 min; alongside perception the cuMotion saving is a little over 0.1 GB | CPU saturated, 24% no-plan, 31 link drops per hour |
 | One pose per cycle | 24 h, poses 2,398/2,399, about 4 s; held through a dark night | lowest free 1.18 GB (under 0.2 GB margin); after 9 days of uptime, the stop line in about 3 h; perception piles up memory (a restart gives 2.4 GB back) → restart it on a schedule. 16% no-plan, 4 driver restarts |
 | CPU cleanup | load average about 7 → 2–3, no-plan 16% → 6–9% (same-conditions comparison 12.9% → 6.2%), motion steps 98.5–98.8% | memory unchanged (12 h low 0.87 GB); the remaining 6% is a cuMotion optimization failure; with retries, 0.7% of cycles failed |
 | A real cell | two Jetsons, AGX Orin 32/64 GB, lighter perception, one pose per cycle, cuMotion only after a fault (about 7.5 GB free in normal running) | driver watchdog, idle-thread cleanup, real-time kernel, retries, long tests in bad conditions |
