@@ -163,6 +163,7 @@
 
 ## 7. 대기 중 (pending)
 
+- **업무 저장소 push 대기 (사용자가 업무 자격 증명으로, 2026-10-20):** `~/Documents/spatial-vision-ai` main이 origin보다 4커밋 앞섬(`fa6f426`·`b739926`·`bc30525`(10-12) + `f4322ae` 장시간 시험 수치 정정). `~/Documents/fos-physical-ai` `phase2-scaffolding`은 14커밋 앞, 1커밋 뒤 → pull/rebase 먼저(`1555afd` 포함). Claude는 push하지 않음. spatial-vision-ai의 luxonis-camera·isaac-sim-engineer 미커밋 수정은 다른 작업이라 건드리지 않음.
 - **아침 브리핑 첫 정시 실행 확인 (2026-10-20 화 07:30 ET, cron-job.org 첫 실행):** cron-job.org 기록 204 + GitHub 실행 + Slack 수신, 그리고 늦게 도는 GitHub 예비 슬롯이 조용히 끝나는지("Backup slot: … silent"). 10-19 수동 발송(08:43 ET)으로 이미 확인된 것: ② GEX 재계산 의미 있음(`net_bn` -26.6B vs `published_net_bn` -30.3B), ③ 프리마켓 ^VIX 장외 값 찍힘(18.59, 08:27 ET). 남은 것: ④ 차트 이미지가 Slack에 보이는지 사용자 확인.
 - **`brief-review/2026-10` 브랜치 검토·병합 (사용자):** 비교 페이지에서 PR 만들어 병합해야 playbook 갱신이 해설에 반영. 선택: 리포 설정 "Allow GitHub Actions to create and approve pull requests" 켜면 다음 달부터 PR 자동.
 - **브리핑 검증 거리:** VIX9D/VIX>1을 VIX 밴드·비🔴일에서 재검증, VolVol '급등 지속성'(VVIX가 VIX와 함께 움직이는지) 실기록으로 확인, `update_dashboard.py`의 `FOMC_DATES` 2027-06 이후 연장. API 키(`morning-brief`) 만료 2027-10-25, cron-job.org PAT 만료 2027-10-19(같이 갱신, `X-GitHub-Api-Version: 2022-11-28`은 2028-03-10 종료라 그때 함께 올릴 것).
