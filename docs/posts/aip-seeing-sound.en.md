@@ -1,7 +1,7 @@
 ---
 title: "AI in Pictures Part 1: Seeing Sound"
 nav_title: "Part 1 · Seeing Sound"
-date: 2026-10-17
+date: 2026-10-14
 tags: [ai-in-pictures, audio, spectrogram, stft]
 lang: en
 description: "This series is about AI that understands sounds and movements, so why is it called AI in Pictures? A hint: an AI doesn't hear sounds with ears. Follow what a computer turns a sound into, and by the end of this part you'll have the answer. Press play as you go."

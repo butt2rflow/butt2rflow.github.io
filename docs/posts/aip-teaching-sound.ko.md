@@ -1,7 +1,7 @@
 ---
 title: "보는 AI 2편: 소리를 알아듣는 AI"
 nav_title: "2편 · 소리를 알아듣는 AI"
-date: 2026-10-17
+date: 2026-10-15
 tags: [ai-in-pictures, audio, cnn, esc-50]
 lang: ko
 description: "1편 「소리를 보다」에서 소리를 그림으로 바꿨어요. 이번엔 그 그림 2,000장으로 AI를 직접 가르쳐요. 아래 그림과 숫자는 모두 이 페이지를 만들면서 실제로 학습시킨 결과예요."

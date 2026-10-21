@@ -1,7 +1,7 @@
 ---
 title: "AI in Pictures Part 5: Learning from a Reference"
 nav_title: "Part 5 · Learning from a Reference"
-date: 2026-10-17
+date: 2026-10-16
 tags: [ai-in-pictures, few-shot, zero-shot, clap]
 lang: en
 description: "Parts 2 and 4 trained AIs on thousands of examples. This time there's no training: just a few references or one sentence. Every number below was measured (only the last picture is a concept drawing)."

@@ -1,7 +1,7 @@
 ---
 title: "보는 AI 5편: 레퍼런스만 주면 알아보는 AI"
 nav_title: "5편 · 레퍼런스만 주면 알아보는 AI"
-date: 2026-10-17
+date: 2026-10-16
 tags: [ai-in-pictures, few-shot, zero-shot, clap]
 lang: ko
 description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어요. 이번엔 학습 없이, 레퍼런스 몇 개나 글 한 줄만 주고 알아보게 해요. 아래 숫자는 모두 직접 잰 결과예요(마지막 그림만 개념도예요)."

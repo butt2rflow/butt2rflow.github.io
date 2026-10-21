@@ -1,7 +1,7 @@
 ---
 title: "보는 AI 1편: 소리를 보다"
 nav_title: "1편 · 소리를 보다"
-date: 2026-10-17
+date: 2026-10-14
 tags: [ai-in-pictures, audio, spectrogram, stft]
 lang: ko
 description: "소리를 알아듣는 AI, 움직임을 알아보는 AI를 다루는데, 시리즈 이름은 왜 「보는 AI」일까요? 힌트: AI는 소리를 귀로 듣지 않아요. 이 편에서 컴퓨터가 소리를 무엇으로 바꾸는지 따라가 보면 답이 나와요. 재생 버튼을 눌러 가며 보세요."
