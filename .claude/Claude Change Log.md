@@ -6,6 +6,12 @@
 
 ---
 
+## 2026-10-21 — 보는 AI 2·5편 출처에 AST·CLAP 라이선스
+
+- **계기:** 사용자 'AST, CLAP은 상업 라이선스 필요?' → 둘 다 불필요(AST `MIT/ast-finetuned-audioset-10-10-0.4593` BSD-3-Clause, CLAP `laion/clap-htsat-unfused` Apache-2.0, 코드 저장소 CC0; HF·GitHub 원문 확인). 유료판에서 걸리는 건 ESC-50(CC BY-NC) 소리와 그 스펙트로그램.
+- **수정:** 5편 출처 줄에 두 라이선스(`reference-ai/src/build5.py`), 2편은 "AST (… MIT)"가 MIT 라이선스로 읽혀서 체크포인트·BSD-3-Clause로(`sound-ai-study/src/build_page2.py`). 두 편 모두 아티팩트 재게시(라이브 버전이 로컬과 동일함 확인 후) + `to_blog.py` 재생성. 커밋 `f159a77`, `0474e47`, 라이브 확인.
+- **정정:** '6편 결론 굳히기(다른 탁자 녹음)'를 남은 일로 잘못 안내함. 호텔 탁자 녹음이 그 시험이고 6편에 이미 반영. `sim-eye/HANDOFF.md` Next도 완료로 고침.
+
 ## 2026-10-20 — 보는 AI 6편 발행 + sim-eye 후속 실험 두 개
 
 - **실험(사용자 '6편 쓸 수 있을까'):** `Physical-ai-course/sim-eye`에서 ① 시뮬레이터 수정 `wide_fix`(노크·컵 진동 세기 겹치게) → 친구 10-19 시험 71%→64%로 오히려 하락, 세기 가설 기각 ② 현장 레퍼런스(`REFS=site1|site2`) → 같은 눈이 71%→94%, 노크→컵 혼동 사라짐. 기록은 `sim-eye/HANDOFF.md`. 6편 본문(다른 세션 작성, 호텔 탁자·AST 비교 포함)에 ①이 반영됨.
