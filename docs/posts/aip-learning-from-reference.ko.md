@@ -213,7 +213,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 ### 출처와 표기
 
-소리: ESC-50 (K. J. Piczak, CC BY-NC), ‘눈’: AST (Gong, Chung, Glass), 글 모델: LAION CLAP(laion/clap-htsat-unfused). 움직임: UCI HAR (Anguita 외 2013, CC BY 4.0). 실험은 RTX 3090 한 대에서 했어요. 그림 9는 개념도예요. Meta·ImageBind는 Meta Platforms, Inc.의, NVIDIA·GeForce RTX는 NVIDIA Corporation의 상표이며, 지칭 목적으로만 사용했습니다.
+소리: ESC-50 (K. J. Piczak, CC BY-NC), ‘눈’: AST (Gong, Chung, Glass; MIT/ast-finetuned-audioset-10-10-0.4593, BSD-3-Clause), 글 모델: LAION CLAP(laion/clap-htsat-unfused, Apache-2.0). 움직임: UCI HAR (Anguita 외 2013, CC BY 4.0). 실험은 RTX 3090 한 대에서 했어요. 그림 9는 개념도예요. Meta·ImageBind는 Meta Platforms, Inc.의, NVIDIA·GeForce RTX는 NVIDIA Corporation의 상표이며, 지칭 목적으로만 사용했습니다.
 
 ### 용어 설명
 

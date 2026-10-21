@@ -213,7 +213,7 @@ Simulation is one way to build a broad eye: generate lots of virtual swings whil
 
 ### Sources and notices
 
-Sound: ESC-50 (K. J. Piczak, CC BY-NC); eye: AST (Gong, Chung, Glass); text model: LAION CLAP (laion/clap-htsat-unfused). Motion: UCI HAR (Anguita et al. 2013, CC BY 4.0). Experiments ran on one RTX 3090. Picture 9 is a concept drawing. Meta and ImageBind are trademarks of Meta Platforms, Inc., and NVIDIA and GeForce RTX of NVIDIA Corporation, used here only to refer to them.
+Sound: ESC-50 (K. J. Piczak, CC BY-NC); eye: AST (Gong, Chung, Glass; MIT/ast-finetuned-audioset-10-10-0.4593, BSD-3-Clause); text model: LAION CLAP (laion/clap-htsat-unfused, Apache-2.0). Motion: UCI HAR (Anguita et al. 2013, CC BY 4.0). Experiments ran on one RTX 3090. Picture 9 is a concept drawing. Meta and ImageBind are trademarks of Meta Platforms, Inc., and NVIDIA and GeForce RTX of NVIDIA Corporation, used here only to refer to them.
 
 ### Terms
 
