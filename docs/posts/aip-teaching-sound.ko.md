@@ -211,7 +211,7 @@ AI의 답 1~3위: 장작 타는 소리 54%, 발소리 13%, 불꽃놀이 10%
 
 ### 출처와 표기
 
-녹음: ESC-50 (K. J. Piczak, CC BY-NC). 사람 점수 81.3%는 Piczak(2015). 빌린 모델: AST (Gong, Chung, Glass, MIT). 학습은 RTX 3090 한 대에서 실행했어요. NVIDIA·GeForce RTX는 NVIDIA Corporation의 상표이며, 지칭 목적으로만 사용했습니다.
+녹음: ESC-50 (K. J. Piczak, CC BY-NC). 사람 점수 81.3%는 Piczak(2015). 빌린 모델: AST (Gong, Chung, Glass; MIT/ast-finetuned-audioset-10-10-0.4593, BSD-3-Clause). 학습은 RTX 3090 한 대에서 실행했어요. NVIDIA·GeForce RTX는 NVIDIA Corporation의 상표이며, 지칭 목적으로만 사용했습니다.
 
 ### 용어 설명
 

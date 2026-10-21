@@ -211,7 +211,7 @@ We borrowed a big AI that another research team trained in advance on about 2 mi
 
 ### Sources and notices
 
-Recordings: ESC-50 (K. J. Piczak, CC BY-NC). Human score 81.3% from Piczak (2015). Pretrained model: AST by Gong, Chung and Glass (MIT). Training ran on one RTX 3090. NVIDIA and GeForce RTX are trademarks of NVIDIA Corporation, used here only to refer to them.
+Recordings: ESC-50 (K. J. Piczak, CC BY-NC). Human score 81.3% from Piczak (2015). Pretrained model: AST by Gong, Chung and Glass (MIT/ast-finetuned-audioset-10-10-0.4593, BSD-3-Clause). Training ran on one RTX 3090. NVIDIA and GeForce RTX are trademarks of NVIDIA Corporation, used here only to refer to them.
 
 ### Terms
 
