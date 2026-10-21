@@ -21,7 +21,7 @@ description: "1편 「소리를 보다」에서 소리를 그림으로 바꿨어
 
 AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서는 ESC-50이라는 공개 자료를 써요. 개, 비, 사이렌처럼 50종류의 소리가 종류마다 40개씩, 하나에 5초예요.
 
-![](../assets/aip/aip-teaching-sound-7de2ad3884.png)
+![그림 1 · 재료: 이름표 붙은 소리 2,000개](../assets/aip/aip-teaching-sound-7de2ad3884.png)
 
 **그림 보는 법**
 
@@ -38,7 +38,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 시험 문제를 미리 보고 공부하면 점수는 높아도 진짜 실력은 알 수 없죠. AI도 같아요. 그래서 일부는 숨겨 두고 마지막 시험에만 써요.
 
-![](../assets/aip/aip-teaching-sound-17bc24cd85.png)
+![그림 2 · 공부용과 시험용을 나눠요](../assets/aip/aip-teaching-sound-17bc24cd85.png)
 
 **그림 보는 법**
 
@@ -55,7 +55,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 막 만든 AI 안에는 숫자가 약 119만 개 있는데, 전부 아무렇게나 정해져 있어요. 그래서 개 소리를 들려줘도 50종류에 골고루 찍어요.
 
-![](../assets/aip/aip-teaching-sound-696e6d1a10.png)
+![그림 3 · 처음 AI는 아무것도 몰라요](../assets/aip/aip-teaching-sound-696e6d1a10.png)
 
 **그림 보는 법**
 
@@ -72,7 +72,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 선생님이 문제집을 채점해 주는 것과 같아요. 사람이 규칙을 알려 주지 않아요. 맞혀 보고, 틀리면 고치는 걸 아주 많이 반복할 뿐이에요.
 
-![](../assets/aip/aip-teaching-sound-e9e82880ba.png)
+![그림 4 · 학습 = 맞혀 보고, 채점하고, 조금 고치기](../assets/aip/aip-teaching-sound-e9e82880ba.png)
 
 **그림 보는 법**
 
@@ -90,7 +90,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 이번에 쓴 AI는 CNN이라는 종류예요. 작은 돋보기 수십 개로 그림을 훑으면서 무늬를 찾아요. 각 돋보기가 어떤 무늬를 찾을지는 학습하면서 스스로 정해요.
 
-![](../assets/aip/aip-teaching-sound-db2ac6f07a.png)
+![그림 5 · AI 안에 ‘돋보기’가 저절로 생겨요](../assets/aip/aip-teaching-sound-db2ac6f07a.png)
 
 **그림 보는 법**
 
@@ -105,7 +105,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 ## 그림 6 · 점수가 오르는데… 외우기가 끼어들어요
 
-![](../assets/aip/aip-teaching-sound-be775d9ee7.png)
+![그림 6 · 점수가 오르는데… 외우기가 끼어들어요](../assets/aip/aip-teaching-sound-be775d9ee7.png)
 
 **그림 보는 법**
 
@@ -122,9 +122,9 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 외우기를 막는 흔한 방법이 있어요. 공부할 때마다 소리를 살짝 바꿔서 보여 주는 거예요. 소리가 조금 늦게 시작하거나, 일부가 가려지거나, 비 소리가 섞여도 개는 개예요.
 
-![](../assets/aip/aip-teaching-sound-0eb10b33ab.png)
+![그림 7 · 문제를 바꿔 가며 공부시켜 봤어요](../assets/aip/aip-teaching-sound-0eb10b33ab.png)
 
-![](../assets/aip/aip-teaching-sound-a10db1e509.png)
+![그림 7 · 문제를 바꿔 가며 공부시켜 봤어요](../assets/aip/aip-teaching-sound-a10db1e509.png)
 
 **그림 보는 법**
 
@@ -139,7 +139,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 ## 그림 8 · 시험 결과: 잘 맞히는 소리, 헷갈리는 소리
 
-![](../assets/aip/aip-teaching-sound-8fc39f4806.png)
+![그림 8 · 시험 결과: 잘 맞히는 소리, 헷갈리는 소리](../assets/aip/aip-teaching-sound-8fc39f4806.png)
 
 **그림 보는 법**
 
@@ -154,7 +154,7 @@ AI를 가르치려면 정답이 붙은 예제가 많이 필요해요. 여기서�
 
 <p class="aip-audio"><b>듣기</b><br><audio controls preload="none" src="/assets/aip/aip-teaching-sound-3f2baf8d44.wav"></audio></p>
 
-![](../assets/aip/aip-teaching-sound-f24ccb7a8d.png)
+![그림 8 · 시험 결과: 잘 맞히는 소리, 헷갈리는 소리](../assets/aip/aip-teaching-sound-f24ccb7a8d.png)
 
 AI의 답 1~3위: 개 100%, 재채기 0%, 박수 0%
 
@@ -162,7 +162,7 @@ AI의 답 1~3위: 개 100%, 재채기 0%, 박수 0%
 
 <p class="aip-audio"><b>듣기</b><br><audio controls preload="none" src="/assets/aip/aip-teaching-sound-2f1a921149.wav"></audio></p>
 
-![](../assets/aip/aip-teaching-sound-26d8cf8821.png)
+![그림 8 · 시험 결과: 잘 맞히는 소리, 헷갈리는 소리](../assets/aip/aip-teaching-sound-26d8cf8821.png)
 
 AI의 답 1~3위: 비행기 30%, 천둥번개 27%, 바람 22%
 
@@ -170,7 +170,7 @@ AI의 답 1~3위: 비행기 30%, 천둥번개 27%, 바람 22%
 
 <p class="aip-audio"><b>듣기</b><br><audio controls preload="none" src="/assets/aip/aip-teaching-sound-4142412477.wav"></audio></p>
 
-![](../assets/aip/aip-teaching-sound-e67ae19d64.png)
+![그림 8 · 시험 결과: 잘 맞히는 소리, 헷갈리는 소리](../assets/aip/aip-teaching-sound-e67ae19d64.png)
 
 AI의 답 1~3위: 장작 타는 소리 54%, 발소리 13%, 불꽃놀이 10%
 
@@ -183,7 +183,7 @@ AI의 답 1~3위: 장작 타는 소리 54%, 발소리 13%, 불꽃놀이 10%
 
 다른 연구팀이 소리 약 200만 개로 미리 학습시켜 공개한 큰 AI를 빌렸어요. 이 AI의 ‘눈’(숫자 약 8,600만 개)은 그대로 두고, 맨 끝의 ‘50종류 중 고르기’ 부분만 우리 1,600개로 새로 가르쳤어요. 몇 초면 끝나요.
 
-![](../assets/aip/aip-teaching-sound-8b44395192.png)
+![그림 9 · 이미 많이 배운 AI를 빌려 써요](../assets/aip/aip-teaching-sound-8b44395192.png)
 
 **그림 보는 법**
 

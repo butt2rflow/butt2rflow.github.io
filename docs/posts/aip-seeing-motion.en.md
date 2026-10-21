@@ -29,7 +29,7 @@ In [part 1](aip-seeing-sound.md) we turned sound into pictures to look at. Movem
 
 The golfer keeps their usual glove on the left hand. A thin extra sensor glove goes on the right hand (the lower hand on the grip), and a small band on the right forearm. The glove carries one feeler chip on the back of the hand, one on a finger, and a tiny microphone; the band carries one more chip, a radio that sends everything to your phone, and the battery.
 
-![](../assets/aip/aip-seeing-motion-f3f4bb27f8.png)
+![Picture 1 · A sensor glove and a band on the right arm](../assets/aip/aip-seeing-motion-f3f4bb27f8.png)
 
 **How to read the picture**
 
@@ -47,7 +47,7 @@ The golfer keeps their usual glove on the left hand. A thin extra sensor glove g
 
 The bump feeler is like a coffee cup in a car: it spills when the car brakes hard. It feels pushes and sudden stops. The turn feeler is like sitting in a spinning office chair: it feels the hand and wrist turning. Both feelers sit together in one chip smaller than a fingernail. That chip is called an IMU, and the glove and band carry three of them.
 
-![](../assets/aip/aip-seeing-motion-602777c0fb.png)
+![Picture 2 · Two kinds of feeling](../assets/aip/aip-seeing-motion-602777c0fb.png)
 
 **How to read the picture**
 
@@ -63,7 +63,7 @@ The bump feeler is like a coffee cup in a car: it spills when the car brakes har
 
 Almost every smartphone has an IMU inside. Many things you do every day rely on it.
 
-![](../assets/aip/aip-seeing-motion-d07cd7edff.png)
+![Picture 3 · Your phone has one too](../assets/aip/aip-seeing-motion-d07cd7edff.png)
 
 **How to read the picture**
 
@@ -78,7 +78,7 @@ Almost every smartphone has an IMU inside. Many things you do every day rely on 
 
 ## Picture 4 · A golf swing has a shape
 
-![](../assets/aip/aip-seeing-motion-6cb571c146.png)
+![Picture 4 · A golf swing has a shape](../assets/aip/aip-seeing-motion-6cb571c146.png)
 
 **How to read the picture**
 
@@ -97,7 +97,7 @@ Almost every smartphone has an IMU inside. Many things you do every day rely on 
 
 The wrist angle is the difference between where the back-of-hand chip points and where the forearm chip points (the red arc in picture 1); that's why glove and band sit on the same arm. The two feelers in each chip correct each other's mistakes, so the angle can be drawn through the whole swing.
 
-![](../assets/aip/aip-seeing-motion-9352035526.png)
+![Picture 5 · It also draws how your wrist bends](../assets/aip/aip-seeing-motion-9352035526.png)
 
 **How to read the picture**
 
@@ -115,7 +115,7 @@ The wrist angle is the difference between where the back-of-hand chip points and
 
 The feeler doesn't watch all the time. It takes a quick look, then another, many times a second, like the frames of a video. The golf study above recorded its swings with motion capture 400 times a second for exactly this reason. The sounds in [part 1](aip-seeing-sound.md) were measured 16,000 times a second; a bump feeler usually looks a few hundred to a few thousand times a second.
 
-![](../assets/aip/aip-seeing-motion-3da9e0b4e3.png)
+![Picture 6 · Impact is quick, so the feeler has to look often](../assets/aip/aip-seeing-motion-3da9e0b4e3.png)
 
 **How to read the picture**
 
@@ -129,7 +129,7 @@ The feeler doesn't watch all the time. It takes a quick look, then another, many
 
 ## Picture 7 · A real hit: you hear it and feel it at the same moment
 
-![](../assets/aip/aip-seeing-motion-c44d797bdf.png)
+![Picture 7 · A real hit: you hear it and feel it at the same moment](../assets/aip/aip-seeing-motion-c44d797bdf.png)
 
 **How to read the picture**
 
@@ -173,35 +173,35 @@ Top = the sound picture, bottom = the vibration picture, just like the sound-pic
 
 **Card 1**
 
-![](../assets/aip/aip-seeing-motion-c2dcc2f541.png)
+![Your hit or not?](../assets/aip/aip-seeing-motion-c2dcc2f541.png)
 
 ??? success "Show the answer"
     Your hit: a thin line in both pictures at the same moment.
 
 **Card 2**
 
-![](../assets/aip/aip-seeing-motion-44158ab06f.png)
+![Your hit or not?](../assets/aip/aip-seeing-motion-44158ab06f.png)
 
 ??? success "Show the answer"
     Not yours: a line in the sound picture only. The next bay.
 
 **Card 3**
 
-![](../assets/aip/aip-seeing-motion-e0100755d0.png)
+![Your hit or not?](../assets/aip/aip-seeing-motion-e0100755d0.png)
 
 ??? success "Show the answer"
     Not a clean hit: dull low blobs instead of thin lines. A fat shot that hit the ground.
 
 **Card 4**
 
-![](../assets/aip/aip-seeing-motion-ffee48a340.png)
+![Your hit or not?](../assets/aip/aip-seeing-motion-ffee48a340.png)
 
 ??? success "Show the answer"
     Your hit: a thin line in both pictures at the same moment.
 
 **Card 5**
 
-![](../assets/aip/aip-seeing-motion-7c7417ec58.png)
+![Your hit or not?](../assets/aip/aip-seeing-motion-7c7417ec58.png)
 
 ??? success "Show the answer"
     Not counted: both lines are very faint. An off-center hit is easy to miss.

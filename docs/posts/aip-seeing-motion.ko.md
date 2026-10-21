@@ -29,7 +29,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 왼손에는 평소 끼던 골프 장갑을 그대로 껴요. 오른손(그립 아래쪽 손)에 얇은 센서 장갑을 하나 더 끼고, 오른 팔뚝에 작은 밴드를 차요. 장갑에는 손등에 감지기 칩 하나, 손가락에 하나, 그리고 아주 작은 마이크가 있어요. 밴드에는 칩이 하나 더 있고, 신호를 전화기로 보내는 무선 칩과 배터리가 들어 있어요.
 
-![](../assets/aip/aip-seeing-motion-23097cac62.png)
+![그림 1 · 오른손 센서 장갑과 오른팔 밴드](../assets/aip/aip-seeing-motion-23097cac62.png)
 
 **그림 보는 법**
 
@@ -47,7 +47,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 흔들림 감지기는 차 안의 커피잔 같아요. 차가 급정거하면 커피가 쏟아지죠. 밀고 갑자기 멈추는 걸 느껴요. 돌림 감지기는 회전의자에 앉아 빙글 도는 느낌 같아요. 손과 손목이 도는 걸 느껴요. 두 감지기는 손톱보다 작은 칩 하나에 같이 들어 있어요. 이 칩을 IMU(관성 측정 장치)라고 하고, 장갑과 밴드에 세 개가 있어요.
 
-![](../assets/aip/aip-seeing-motion-f2bc1cb15c.png)
+![그림 2 · 느끼는 방법은 두 가지예요](../assets/aip/aip-seeing-motion-f2bc1cb15c.png)
 
 **그림 보는 법**
 
@@ -63,7 +63,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 거의 모든 스마트폰 안에 IMU가 들어 있어요. 매일 쓰는 기능 중에 IMU 덕분인 게 많아요.
 
-![](../assets/aip/aip-seeing-motion-8829677162.png)
+![그림 3 · 여러분 전화기에도 있어요](../assets/aip/aip-seeing-motion-8829677162.png)
 
 **그림 보는 법**
 
@@ -78,7 +78,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 ## 그림 4 · 골프 스윙에는 모양이 있어요
 
-![](../assets/aip/aip-seeing-motion-85fd7f4646.png)
+![그림 4 · 골프 스윙에는 모양이 있어요](../assets/aip/aip-seeing-motion-85fd7f4646.png)
 
 **그림 보는 법**
 
@@ -97,7 +97,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 손목 각도는 손등 칩이 향하는 방향과 팔뚝 칩이 향하는 방향의 차이예요(그림 1의 빨간 호). 그래서 장갑과 밴드를 같은 팔에 껴요. 칩 속 두 감지기가 서로 틀린 걸 바로잡아 줘서, 스윙 내내 각도를 그릴 수 있어요.
 
-![](../assets/aip/aip-seeing-motion-629366b8ed.png)
+![그림 5 · 손목이 얼마나 꺾이는지도 그려요](../assets/aip/aip-seeing-motion-629366b8ed.png)
 
 **그림 보는 법**
 
@@ -115,7 +115,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 감지기는 계속 지켜보는 게 아니라, 1초에 여러 번 ‘슬쩍 보기’를 해요. 동영상이 사진을 빠르게 이어 붙인 것과 같아요. 앞에서 본 골프 연구도 바로 이 이유로 스윙을 1초에 400번 찍었어요. [1편](aip-seeing-sound.md)의 소리는 1초에 16,000번씩 잰 거였고, 흔들림 감지기는 보통 1초에 수백~수천 번 봐요.
 
-![](../assets/aip/aip-seeing-motion-dac0dad8ab.png)
+![그림 6 · 임팩트는 아주 빨라서 자주 봐야 해요](../assets/aip/aip-seeing-motion-dac0dad8ab.png)
 
 **그림 보는 법**
 
@@ -129,7 +129,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 ## 그림 7 · 진짜 내 타구는 듣는 순간과 느끼는 순간이 같아요
 
-![](../assets/aip/aip-seeing-motion-99bd83baf4.png)
+![그림 7 · 진짜 내 타구는 듣는 순간과 느끼는 순간이 같아요](../assets/aip/aip-seeing-motion-99bd83baf4.png)
 
 **그림 보는 법**
 
@@ -173,35 +173,35 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 **1번**
 
-![](../assets/aip/aip-seeing-motion-d12b8ffb18.png)
+![내 타구일까요?](../assets/aip/aip-seeing-motion-d12b8ffb18.png)
 
 ??? success "정답 보기"
     내 타구: 두 그림 모두 같은 순간에 가는 세로줄이 있어요.
 
 **2번**
 
-![](../assets/aip/aip-seeing-motion-f0bcefdb20.png)
+![내 타구일까요?](../assets/aip/aip-seeing-motion-f0bcefdb20.png)
 
 ??? success "정답 보기"
     아님: 소리 그림에만 세로줄이 있어요. 옆 타석이에요.
 
 **3번**
 
-![](../assets/aip/aip-seeing-motion-cad6d4d865.png)
+![내 타구일까요?](../assets/aip/aip-seeing-motion-cad6d4d865.png)
 
 ??? success "정답 보기"
     아님: 가는 세로줄 대신 아래쪽에 뭉툭한 덩어리. 땅을 먼저 친 뒤땅이에요.
 
 **4번**
 
-![](../assets/aip/aip-seeing-motion-301bf0478b.png)
+![내 타구일까요?](../assets/aip/aip-seeing-motion-301bf0478b.png)
 
 ??? success "정답 보기"
     내 타구: 두 그림 모두 같은 순간에 가는 세로줄이 있어요.
 
 **5번**
 
-![](../assets/aip/aip-seeing-motion-99fe12db88.png)
+![내 타구일까요?](../assets/aip/aip-seeing-motion-99fe12db88.png)
 
 ??? success "정답 보기"
     인정 안 됨: 두 그림의 세로줄이 아주 희미해요. 빗맞으면 놓치기 쉬워요.

@@ -1,7 +1,7 @@
 ---
 title: "AI in Pictures Part 6: An Eye Taught in Simulation"
 nav_title: "Part 6 · An Eye Taught in Simulation"
-date: 2026-10-17
+date: 2026-10-20
 tags: [ai-in-pictures, sim-to-real, domain-randomization, phyphox]
 lang: en
 description: "Part 5 named simulation as the next step toward a broadly trained eye. I tried it. A small eye taught only on fake sounds and vibrations did worse on other tables than simply overlaying two pictures and checking how alike they are (no eye at all). What worked best overall was an AI that had heard lots of real sounds, given a few references recorded on the spot. The pictures show how I found out."
@@ -21,7 +21,7 @@ Part 5 named simulation as the next step toward a broadly trained eye. I tried i
 
 phyphox is a free app from RWTH Aachen University in Germany. It turns the sensors already in your phone, like the microphone and the accelerometer, into lab instruments. You can also design your own experiment screens, so for this part I made five experiments that record sound and vibration together.
 
-![](../assets/aip/aip-eye-from-simulation-a817b6e861.png)
+![Picture 1 · A phone becomes a lab](../assets/aip/aip-eye-from-simulation-a817b6e861.png)
 
 **How to read the picture**
 
@@ -38,7 +38,7 @@ phyphox is a free app from RWTH Aachen University in Germany. It turns the senso
 
 I wrote a small program (a simulator) that imitates a table's sounds and vibrations. A knock goes ‘tock’ and the table rings; a cup goes ‘clink’ and then its base touches down once more; a clap is sound only; a rub is a long ‘shhh’. It can make thousands of fake sounds in seconds.
 
-![](../assets/aip/aip-eye-from-simulation-e10ad85e1d.png)
+![Picture 2 · Why not learn from fake sounds?](../assets/aip/aip-eye-from-simulation-e10ad85e1d.png)
 
 **How to read the picture**
 
@@ -55,7 +55,7 @@ I wrote a small program (a simulator) that imitates a table's sounds and vibrati
 
 Every fake gets a random table material, room echo, background noise, distance from the phone and strength. The idea: an AI that has seen enough variety might treat a real table it has never met as just one more variation. This is the next step [part 5](aip-learning-from-reference.md) ended on.
 
-![](../assets/aip/aip-eye-from-simulation-50d0954d1e.png)
+![Picture 3 · Fakes with randomized conditions](../assets/aip/aip-eye-from-simulation-50d0954d1e.png)
 
 **How to read the picture**
 
@@ -70,7 +70,7 @@ Every fake gets a random table material, room echo, background noise, distance f
 
 Part 5 said an ‘eye’ (an AI that only describes features) works better the more variety it has learned from. There are two main ways to get such an eye. In [part 5](aip-learning-from-reference.md)'s detective terms:
 
-![](../assets/aip/aip-eye-from-simulation-bc28bdc7a0.png)
+![Picture 4 · Two ways to a broadly trained eye](../assets/aip/aip-eye-from-simulation-bc28bdc7a0.png)
 
 **How to read the picture**
 
@@ -87,7 +87,7 @@ Part 5 said an ‘eye’ (an AI that only describes features) works better the m
 
 I ran two tests: one on fake sounds from the simulator, one on real sounds recorded on my table. For the real exam I gave a few of my recordings of each kind as references (the [part 5](aip-learning-from-reference.md) method) and labeled each new sound with the kind of its closest reference. I also set a baseline: no eye at all, just laying two sound-and-vibration pictures on top of each other and measuring how alike they are.
 
-![](../assets/aip/aip-eye-from-simulation-54f21eae31.png)
+![Picture 5 · The first exam looked perfect](../assets/aip/aip-eye-from-simulation-54f21eae31.png)
 
 **How to read the picture**
 
@@ -104,7 +104,7 @@ I ran two tests: one on fake sounds from the simulator, one on real sounds recor
 
 A friend recorded at home on a wooden table with a glass cup, and I recorded on a coated hotel table with a stainless steel tumbler. The references were still my own recordings from my table.
 
-![](../assets/aip/aip-eye-from-simulation-fd47933378.png)
+![Picture 6 · What about other tables?](../assets/aip/aip-eye-from-simulation-fd47933378.png)
 
 **How to read the picture**
 
@@ -119,7 +119,7 @@ A friend recorded at home on a wooden table with a glass cup, and I recorded on 
 
 The most visible mistake was on the friend's knocks: the eye called about half of them cups (rubs were almost all wrong, too).
 
-![](../assets/aip/aip-eye-from-simulation-2bbeb1ff1a.png)
+![Picture 7 · Where did it go wrong?](../assets/aip/aip-eye-from-simulation-2bbeb1ff1a.png)
 
 **How to read the picture**
 
@@ -137,7 +137,7 @@ The most visible mistake was on the friend's knocks: the eye called about half o
 
 This time the references came from the table being tested. Each table was recorded twice, so one recording served as references and the other as the exam; then I swapped them. I also varied the number of references from one to five per kind.
 
-![](../assets/aip/aip-eye-from-simulation-92822aff26.png)
+![Picture 8 · References from that table](../assets/aip/aip-eye-from-simulation-92822aff26.png)
 
 **How to read the picture**
 
@@ -155,7 +155,7 @@ This time the references came from the table being tested. Each table was record
 
 I gave AST, the AI from parts 2 and 5, the same exam. AST never learned from my recordings; it only got the same references.
 
-![](../assets/aip/aip-eye-from-simulation-ee879b93c9.png)
+![Picture 9 · What about an AI that heard lots of real sounds?](../assets/aip/aip-eye-from-simulation-ee879b93c9.png)
 
 **How to read the picture**
 
@@ -170,7 +170,7 @@ I gave AST, the AI from parts 2 and 5, the same exam. AST never learned from my 
 
 No. This result covers one case: table sounds. Simulators do well at other jobs. The picture below is a concept drawing of my own view, not an experimental result.
 
-![](../assets/aip/aip-eye-from-simulation-cc44f682f1.png)
+![Picture 10 · So are simulators useless?](../assets/aip/aip-eye-from-simulation-cc44f682f1.png)
 
 **How to read the picture**
 
@@ -210,6 +210,8 @@ Limits: the exams are small (23–57 one-second clips per place, two people, one
 ----
 
 **Series** · [← Part 5, Learning from a Reference](aip-learning-from-reference.md) · [Back to part 0, How Robots Feel](aip-robot-senses.md)
+
+*Related: [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [Field Notes, Part 2: Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md)*
 
 ### Sources and notices
 

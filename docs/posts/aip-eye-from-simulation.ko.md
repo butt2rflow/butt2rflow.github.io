@@ -1,7 +1,7 @@
 ---
 title: "보는 AI 6편: 시뮬레이션으로 배운 ‘눈’"
 nav_title: "6편 · 시뮬레이션으로 배운 ‘눈’"
-date: 2026-10-17
+date: 2026-10-20
 tags: [ai-in-pictures, sim-to-real, domain-randomization, phyphox]
 lang: ko
 description: "5편 끝에서 넓게 배운 ‘눈’을 만드는 다음 단계로 시뮬레이션을 꼽았어요. 직접 해 봤어요. 가짜 소리와 진동으로만 배운 작은 ‘눈’은 다른 테이블에서, ‘눈’ 없이 그대로 비교하는 것보다도 못했어요. 대체로 가장 좋았던 건 진짜 소리를 많이 배운 AI에 그 자리에서 녹음한 레퍼런스 몇 개를 주는 방법이었어요. 어떻게 알게 됐는지 그림으로 따라가 볼게요."
@@ -21,7 +21,7 @@ description: "5편 끝에서 넓게 배운 ‘눈’을 만드는 다음 단계�
 
 phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가속도 센서처럼 폰에 든 센서를 그대로 실험 도구로 쓸 수 있게 해 줘요. 실험 화면을 직접 만들 수도 있어서, 이번 편을 위해 소리와 진동을 함께 녹음하는 실험 다섯 개를 만들었어요.
 
-![](../assets/aip/aip-eye-from-simulation-839064f943.png)
+![그림 1 · 폰 하나가 실험실이 돼요](../assets/aip/aip-eye-from-simulation-839064f943.png)
 
 **그림 보는 법**
 
@@ -38,7 +38,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 컴퓨터로 테이블의 소리와 진동을 흉내 내는 작은 프로그램(시뮬레이터)을 만들었어요. 노크는 ‘딱’ 하고 테이블이 울리고, 컵은 ‘쨍’ 울린 뒤 바닥이 한 번 더 ‘톡’ 닿고, 손뼉은 소리만 나고, 문지르기는 길게 ‘스윽’ 하는 식이에요. 이런 가짜 소리는 몇 초면 수천 개를 만들 수 있어요.
 
-![](../assets/aip/aip-eye-from-simulation-40bf946815.png)
+![그림 2 · 가짜 소리로 배우면 안 될까요?](../assets/aip/aip-eye-from-simulation-40bf946815.png)
 
 **그림 보는 법**
 
@@ -55,7 +55,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 테이블 재질, 방 울림, 잡음, 폰과의 거리, 세기를 가짜 하나마다 무작위로 바꿔요. 여러 가지를 배운 AI라면 처음 보는 진짜 테이블도 그중 하나로 여기지 않을까 하는 생각이에요. [5편](aip-learning-from-reference.md) 끝에서 ‘다음 단계’라고 했던 방법이에요.
 
-![](../assets/aip/aip-eye-from-simulation-9c1228cbd9.png)
+![그림 3 · 조건을 마구 바꿔 가짜 만들기](../assets/aip/aip-eye-from-simulation-9c1228cbd9.png)
 
 **그림 보는 법**
 
@@ -72,7 +72,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 [5편](aip-learning-from-reference.md)에서 ‘눈’(특징만 적어 주는 AI)은 여러 가지를 두루 배웠을수록 좋다고 했어요. 그런 ‘눈’을 얻는 길은 크게 두 가지예요. [5편](aip-learning-from-reference.md)의 형사로 비유하면 이래요.
 
-![](../assets/aip/aip-eye-from-simulation-d0d7f25245.png)
+![그림 4 · 넓게 배운 ‘눈’을 얻는 두 가지 길](../assets/aip/aip-eye-from-simulation-d0d7f25245.png)
 
 **그림 보는 법**
 
@@ -89,7 +89,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 시뮬레이터가 만든 가짜 소리와 제 테이블에서 녹음한 진짜 소리, 두 가지로 시험했어요. 진짜 시험에서는 종류마다 제 녹음 몇 개를 레퍼런스로 주고([5편](aip-learning-from-reference.md)의 방법), 가장 닮은 레퍼런스의 이름을 답하게 했어요. 비교할 기준도 하나 두었어요. ‘눈’ 없이, 소리·진동 그림 두 장을 그대로 겹쳐 보고 얼마나 닮았는지만 재는 방법이에요.
 
-![](../assets/aip/aip-eye-from-simulation-1985e78f2f.png)
+![그림 5 · 첫 시험은 완벽해 보였어요](../assets/aip/aip-eye-from-simulation-1985e78f2f.png)
 
 **그림 보는 법**
 
@@ -106,7 +106,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 친구가 자기 집 나무 테이블과 유리컵으로, 저는 호텔의 코팅된 테이블과 스테인리스 텀블러로 녹음했어요. 레퍼런스는 여전히 제 테이블의 녹음이에요.
 
-![](../assets/aip/aip-eye-from-simulation-a39cbb740f.png)
+![그림 6 · 다른 테이블에서는요?](../assets/aip/aip-eye-from-simulation-a39cbb740f.png)
 
 **그림 보는 법**
 
@@ -123,7 +123,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 가장 눈에 띄는 혼동은 친구의 노크를 ‘컵 내려놓기’로 착각한 거였어요(문지르기는 거의 다 틀렸고요).
 
-![](../assets/aip/aip-eye-from-simulation-c93072b219.png)
+![그림 7 · 어디서 틀렸을까요?](../assets/aip/aip-eye-from-simulation-c93072b219.png)
 
 **그림 보는 법**
 
@@ -141,7 +141,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 이번엔 그 테이블에서 녹음한 소리를 레퍼런스로 줬어요. 녹음을 두 번 했으니 한 번은 레퍼런스로, 다른 한 번은 시험으로 쓰고, 역할을 바꿔 한 번 더 했어요. 레퍼런스도 1개에서 5개까지 늘려 봤어요.
 
-![](../assets/aip/aip-eye-from-simulation-4235a9ee99.png)
+![그림 8 · 그 테이블의 레퍼런스를 주면?](../assets/aip/aip-eye-from-simulation-4235a9ee99.png)
 
 **그림 보는 법**
 
@@ -159,7 +159,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 [2편](aip-teaching-sound.md)과 [5편](aip-learning-from-reference.md)의 AST에게도 같은 시험을 보게 했어요. AST는 제 녹음을 한 번도 배운 적이 없어요. 똑같이 레퍼런스만 줬어요.
 
-![](../assets/aip/aip-eye-from-simulation-8fd04b9ac2.png)
+![그림 9 · 진짜 소리를 많이 배운 AI라면?](../assets/aip/aip-eye-from-simulation-8fd04b9ac2.png)
 
 **그림 보는 법**
 
@@ -174,7 +174,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 아니에요. 이번 결과는 테이블 소리라는 한 가지 경우예요. 시뮬레이터가 제 몫을 하는 곳은 따로 있어요. 아래 그림은 실험 결과가 아니라 제 생각을 정리한 개념도예요.
 
-![](../assets/aip/aip-eye-from-simulation-510ed58a6c.png)
+![그림 10 · 그럼 시뮬레이터는 쓸모없나요?](../assets/aip/aip-eye-from-simulation-510ed58a6c.png)
 
 **그림 보는 법**
 
@@ -214,6 +214,8 @@ FoundationPose에게 3D 모델이 본보기라면, 소리와 움직임에서는 
 ----
 
 **시리즈** · [← 5편, 레퍼런스만 주면 알아보는 AI](aip-learning-from-reference.md) · [처음부터: 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)
+
+*관련: [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md)*
 
 ### 출처와 표기
 

@@ -21,7 +21,7 @@ In [part 1](aip-seeing-sound.md) you turned sounds into pictures. Now we teach a
 
 To teach an AI you need lots of examples with the right answer attached. Here we use ESC-50, a public collection: 50 kinds of sound, such as dog, rain and siren, 40 recordings of each, 5 seconds apiece.
 
-![](../assets/aip/aip-teaching-sound-a75c02f7db.png)
+![Picture 1 · Ingredients: 2,000 sounds with name tags](../assets/aip/aip-teaching-sound-a75c02f7db.png)
 
 **How to read the picture**
 
@@ -38,7 +38,7 @@ To teach an AI you need lots of examples with the right answer attached. Here we
 
 If you see the exam questions while studying, your score is high but tells nobody what you actually know. Same for an AI. So we hide part of the data and use it only for the final exam.
 
-![](../assets/aip/aip-teaching-sound-1907acc7e7.png)
+![Picture 2 · Split it: a study set and an exam](../assets/aip/aip-teaching-sound-1907acc7e7.png)
 
 **How to read the picture**
 
@@ -55,7 +55,7 @@ If you see the exam questions while studying, your score is high but tells nobod
 
 Inside a brand-new AI are about 1.2 million numbers, all set at random. So play it a dog and it guesses across all 50 kinds evenly.
 
-![](../assets/aip/aip-teaching-sound-b9fb73d2b6.png)
+![Picture 3 · A brand-new AI knows nothing](../assets/aip/aip-teaching-sound-b9fb73d2b6.png)
 
 **How to read the picture**
 
@@ -72,7 +72,7 @@ Inside a brand-new AI are about 1.2 million numbers, all set at random. So play 
 
 Like a teacher marking a workbook. Nobody tells the AI any rules. It guesses, and when it's wrong it gets adjusted, over and over.
 
-![](../assets/aip/aip-teaching-sound-67dc724c1c.png)
+![Picture 4 · Learning = guess, get marked, fix a little](../assets/aip/aip-teaching-sound-67dc724c1c.png)
 
 **How to read the picture**
 
@@ -90,7 +90,7 @@ Like a teacher marking a workbook. Nobody tells the AI any rules. It guesses, an
 
 The AI we used is a CNN. It sweeps dozens of small magnifiers over the picture, each looking for a pattern. Which pattern each magnifier looks for is something it decides by itself while learning.
 
-![](../assets/aip/aip-teaching-sound-61340aa286.png)
+![Picture 5 · Magnifiers grow inside the AI on their own](../assets/aip/aip-teaching-sound-61340aa286.png)
 
 **How to read the picture**
 
@@ -105,7 +105,7 @@ The AI we used is a CNN. It sweeps dozens of small magnifiers over the picture, 
 
 ## Picture 6 · The score rises… and memorizing creeps in
 
-![](../assets/aip/aip-teaching-sound-d221a4f34e.png)
+![Picture 6 · The score rises… and memorizing creeps in](../assets/aip/aip-teaching-sound-d221a4f34e.png)
 
 **How to read the picture**
 
@@ -122,9 +122,9 @@ The AI we used is a CNN. It sweeps dozens of small magnifiers over the picture, 
 
 A common way to stop memorizing: each time the AI studies a sound, change it slightly. A dog is still a dog if it starts a bit later, if part of it is hidden, or if rain is mixed in.
 
-![](../assets/aip/aip-teaching-sound-65c945e5a1.png)
+![Picture 7 · Changing the problems: we tried it](../assets/aip/aip-teaching-sound-65c945e5a1.png)
 
-![](../assets/aip/aip-teaching-sound-0db8bbf23d.png)
+![Picture 7 · Changing the problems: we tried it](../assets/aip/aip-teaching-sound-0db8bbf23d.png)
 
 **How to read the picture**
 
@@ -139,7 +139,7 @@ A common way to stop memorizing: each time the AI studies a sound, change it sli
 
 ## Picture 8 · Exam results: easy sounds and confusing ones
 
-![](../assets/aip/aip-teaching-sound-085def083a.png)
+![Picture 8 · Exam results: easy sounds and confusing ones](../assets/aip/aip-teaching-sound-085def083a.png)
 
 **How to read the picture**
 
@@ -154,7 +154,7 @@ A common way to stop memorizing: each time the AI studies a sound, change it sli
 
 <p class="aip-audio"><b>Listen</b><br><audio controls preload="none" src="/assets/aip/aip-teaching-sound-3f2baf8d44.wav"></audio></p>
 
-![](../assets/aip/aip-teaching-sound-e246c669a5.png)
+![Picture 8 · Exam results: easy sounds and confusing ones](../assets/aip/aip-teaching-sound-e246c669a5.png)
 
 The AI's top 3: dog 100%, sneezing 0%, clapping 0%
 
@@ -162,7 +162,7 @@ The AI's top 3: dog 100%, sneezing 0%, clapping 0%
 
 <p class="aip-audio"><b>Listen</b><br><audio controls preload="none" src="/assets/aip/aip-teaching-sound-2f1a921149.wav"></audio></p>
 
-![](../assets/aip/aip-teaching-sound-c6b4d10e32.png)
+![Picture 8 · Exam results: easy sounds and confusing ones](../assets/aip/aip-teaching-sound-c6b4d10e32.png)
 
 The AI's top 3: airplane 30%, thunderstorm 27%, wind 22%
 
@@ -170,7 +170,7 @@ The AI's top 3: airplane 30%, thunderstorm 27%, wind 22%
 
 <p class="aip-audio"><b>Listen</b><br><audio controls preload="none" src="/assets/aip/aip-teaching-sound-4142412477.wav"></audio></p>
 
-![](../assets/aip/aip-teaching-sound-5b18cf25c8.png)
+![Picture 8 · Exam results: easy sounds and confusing ones](../assets/aip/aip-teaching-sound-5b18cf25c8.png)
 
 The AI's top 3: crackling fire 54%, footsteps 13%, fireworks 10%
 
@@ -183,7 +183,7 @@ The AI's top 3: crackling fire 54%, footsteps 13%, fireworks 10%
 
 We borrowed a big AI that another research team trained in advance on about 2 million sounds and shared. We keep its “eye” as it is (86 million numbers) and only teach the last part, “pick one of 50”, with our 1,600 sounds. That took seconds.
 
-![](../assets/aip/aip-teaching-sound-ca786d4792.png)
+![Picture 9 · Borrow an AI that has already learned a lot](../assets/aip/aip-teaching-sound-ca786d4792.png)
 
 **How to read the picture**
 

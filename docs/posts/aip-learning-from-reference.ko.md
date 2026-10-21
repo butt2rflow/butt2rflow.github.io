@@ -21,7 +21,7 @@ description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어�
 
 지금까지는 새 종류가 생기면 이름표 붙은 예제를 다시 모으고 다시 학습해야 했어요. 이번 편은 다른 방법이에요. 이미 많이 배운 AI를 ‘눈’으로만 쓰고, 알아볼 대상은 레퍼런스(비교할 본보기) 몇 개나 글 한 줄로 알려 줘요.
 
-![](../assets/aip/aip-learning-from-reference-9dcb9d10ed.png)
+![그림 1 · 가르치는 대신, 레퍼런스만 보여 주기](../assets/aip/aip-learning-from-reference-9dcb9d10ed.png)
 
 **그림 보는 법**
 
@@ -37,7 +37,7 @@ description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어�
 
 [2편](aip-teaching-sound.md)에서 빌린 AI는 두 부분으로 되어 있어요. 소리 그림을 보고 특징을 숫자 768개로 적는 ‘보는 부분’과, 그 메모를 보고 50종류 중 하나를 고르는 ‘고르는 부분’이에요. ‘눈’으로 쓴다는 건 고르는 부분을 떼어 내고 보는 부분만 쓰는 거예요.
 
-![](../assets/aip/aip-learning-from-reference-df655212f1.png)
+![그림 2 · ‘눈’으로 쓴다는 건](../assets/aip/aip-learning-from-reference-df655212f1.png)
 
 **그림 보는 법**
 
@@ -55,7 +55,7 @@ description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어�
 
 소리마다 ‘눈’의 메모(숫자 768개)를 받아서, 지구본을 평면 지도로 펴듯 2개로 줄여 지도에 찍어 보면 닮은 소리끼리 가까이 모여요.
 
-![](../assets/aip/aip-learning-from-reference-f5e2d61b6b.png)
+![그림 3 · ‘눈’은 닮은 소리끼리 모아 놓아요](../assets/aip/aip-learning-from-reference-f5e2d61b6b.png)
 
 **그림 보는 법**
 
@@ -73,7 +73,7 @@ description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어�
 
 종류마다 레퍼런스 소리를 몇 개씩만 주고, 시험 소리 400개가 어느 종류의 레퍼런스와 가장 닮았는지로 맞혀 봤어요. 학습은 0번이에요. 레퍼런스가 여러 개면 메모들의 평균을 그 종류의 대표로 써요. 몽타주로 치면, 목격자 여러 명의 말을 합쳐 그린 얼굴 하나예요.
 
-![](../assets/aip/aip-learning-from-reference-67ca3b5b02.png)
+![그림 4 · 레퍼런스 몇 개면 될까요](../assets/aip/aip-learning-from-reference-67ca3b5b02.png)
 
 **그림 보는 법**
 
@@ -90,7 +90,7 @@ description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어�
 
 CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. 그래서 레퍼런스 소리 대신 “이건 사이렌 소리예요” 같은 글을 레퍼런스로 쓸 수 있어요(실험에서는 “This is a sound of siren.”처럼 영어 문장을 썼어요).
 
-![](../assets/aip/aip-learning-from-reference-30771e21fe.png)
+![그림 5 · 글 한 줄만으로도 알아봐요](../assets/aip/aip-learning-from-reference-30771e21fe.png)
 
 **그림 보는 법**
 
@@ -111,7 +111,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 <p class="aip-audio"><b>고른 레퍼런스</b><br><audio controls preload="none" src="/assets/aip/aip-learning-from-reference-ac8c23a157.wav"></audio></p>
 
-![](../assets/aip/aip-learning-from-reference-fd2c566011.png)
+![그림 6 · 가장 닮은 레퍼런스, 직접 들어 보기](../assets/aip/aip-learning-from-reference-fd2c566011.png)
 
 가장 닮은 레퍼런스 1~3위: 수탉 93, 암탉 58, 소 19
 
@@ -121,7 +121,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 <p class="aip-audio"><b>고른 레퍼런스</b><br><audio controls preload="none" src="/assets/aip/aip-learning-from-reference-82d4271eae.wav"></audio></p>
 
-![](../assets/aip/aip-learning-from-reference-1d77f64216.png)
+![그림 6 · 가장 닮은 레퍼런스, 직접 들어 보기](../assets/aip/aip-learning-from-reference-1d77f64216.png)
 
 가장 닮은 레퍼런스 1~3위: 시계 째깍 66, 자명종 46, 마우스 클릭 26
 
@@ -131,7 +131,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 <p class="aip-audio"><b>고른 레퍼런스</b><br><audio controls preload="none" src="/assets/aip/aip-learning-from-reference-57253cfc61.wav"></audio></p>
 
-![](../assets/aip/aip-learning-from-reference-b2d1d2e551.png)
+![그림 6 · 가장 닮은 레퍼런스, 직접 들어 보기](../assets/aip/aip-learning-from-reference-b2d1d2e551.png)
 
 가장 닮은 레퍼런스 1~3위: 문 노크 80, 발소리 59, 불꽃놀이 16
 
@@ -150,9 +150,9 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 [4편](aip-teaching-motion.md)의 폰 동작 데이터로 같은 실험을 했어요. 다만 IMU에는 소리의 CLAP이나 AST처럼 널리 쓰이는 ‘눈’이 아직 드물어서, 진동 그림끼리 바로 비교했어요.
 
-![](../assets/aip/aip-learning-from-reference-70bd21ac4c.png)
+![그림 7 · 움직임은 ‘눈’이 없으면 잘 안 돼요](../assets/aip/aip-learning-from-reference-70bd21ac4c.png)
 
-![](../assets/aip/aip-learning-from-reference-c5dc3e8ee5.png)
+![그림 7 · 움직임은 ‘눈’이 없으면 잘 안 돼요](../assets/aip/aip-learning-from-reference-c5dc3e8ee5.png)
 
 **그림 보는 법**
 
@@ -169,7 +169,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 예를 들어 눕기를 뺀 다섯 동작으로만 ‘눈’을 가르친 뒤, 눕기는 레퍼런스 5개만 보여 주고 새로 등록했어요. 빼는 동작을 하나씩 바꿔 가며 모두 여섯 번 해 봤어요.
 
-![](../assets/aip/aip-learning-from-reference-b3293908f6.png)
+![그림 8 · 좁게 배운 ‘눈’은 처음 보는 동작에 약해요](../assets/aip/aip-learning-from-reference-b3293908f6.png)
 
 **그림 보는 법**
 
@@ -186,7 +186,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 넓게 배운 ‘눈’을 만드는 한 가지 방법이 시뮬레이션이에요. 스윙, 센서 위치, 체형, 연습장 울림, 옆 타석까지의 거리를 무작위로 바꿔 가며 가상 데이터를 잔뜩 만들고(도메인 랜덤화), 실제 스윙 몇 개를 섞어 배워요. 이때 소리와 움직임을 따로가 아니라 함께 배우게 해요.
 
-![](../assets/aip/aip-learning-from-reference-0679a602a2.png)
+![그림 9 · 소리와 움직임을 함께 보는 ‘눈’](../assets/aip/aip-learning-from-reference-0679a602a2.png)
 
 **그림 보는 법**
 

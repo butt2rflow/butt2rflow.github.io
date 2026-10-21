@@ -25,7 +25,7 @@ Robots feel the world through several senses. Most of them answer with a single 
 
 With your eyes closed you still know where your arm is, how heavy a thing feels and whether you're leaning. Robots get similar senses from sensors. Here are a factory robot arm and a walking robot.
 
-![](../assets/aip/aip-robot-senses-bca201a79b.png)
+![Picture 1 · Robots have senses too](../assets/aip/aip-robot-senses-bca201a79b.png)
 
 **How to read the picture**
 
@@ -41,7 +41,7 @@ With your eyes closed you still know where your arm is, how heavy a thing feels 
 
 ## Picture 2 · Three senses answer with one number
 
-![](../assets/aip/aip-robot-senses-2e51c12c72.png)
+![Picture 2 · Three senses answer with one number](../assets/aip/aip-robot-senses-2e51c12c72.png)
 
 **How to read the picture**
 
@@ -57,7 +57,7 @@ With your eyes closed you still know where your arm is, how heavy a thing feels 
 
 Here is the shaking a bump feeler at the hand would feel in four situations (signals made for illustration). Top: the shaking as a wiggle. Bottom: the same shaking drawn as a vibration picture, the way [part 1, Seeing Sound](aip-seeing-sound.md), draws sound.
 
-![](../assets/aip/aip-robot-senses-8c7d2843f1.png)
+![Picture 3 · “What just happened?” needs the shape of the shaking](../assets/aip/aip-robot-senses-8c7d2843f1.png)
 
 **How to read the picture**
 
@@ -76,7 +76,7 @@ Here is the shaking a bump feeler at the hand would feel in four situations (sig
 
 FANUC robots have a feature called Learning Vibration Control. A bump feeler is attached to the hand and the same motion is run a few times, so the robot learns how much its hand sways after a fast stop. Then the sensor comes off, and the robot moves in a way that keeps the sway down.
 
-![](../assets/aip/aip-robot-senses-cb808acc58.png)
+![Picture 4 · Factory robots learn from shaking too](../assets/aip/aip-robot-senses-cb808acc58.png)
 
 **How to read the picture**
 

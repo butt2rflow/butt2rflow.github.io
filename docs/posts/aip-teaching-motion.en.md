@@ -21,7 +21,7 @@ In [part 3, Seeing Motion](aip-seeing-motion.md), the vibration of a swing becam
 
 We use UCI HAR, a public dataset: 30 people wore a phone on the waist while walking, climbing stairs, going down stairs, sitting, standing and lying down. The phone's IMU measured 50 times a second; the recordings are cut into 2.56-second slices, each with a name tag.
 
-![](../assets/aip/aip-teaching-motion-fba1035264.png)
+![Picture 1 · Ingredients: 10,000 slices of six activities](../assets/aip/aip-teaching-motion-fba1035264.png)
 
 **How to read the picture**
 
@@ -38,7 +38,7 @@ We use UCI HAR, a public dataset: 30 people wore a phone on the waist while walk
 
 Everyone walks a little differently. If the same person shows up in both the study set and the exam, the AI can recognize that person's habits instead of the activity. So the exam uses people the AI has never seen.
 
-![](../assets/aip/aip-teaching-motion-6a99886b0a.png)
+![Picture 2 · Split by person: study with 21, examine 9 new people](../assets/aip/aip-teaching-motion-6a99886b0a.png)
 
 **How to read the picture**
 
@@ -54,7 +54,7 @@ Everyone walks a little differently. If the same person shows up in both the stu
 
 The phone's IMU gives six signals: shaking in three directions and turning in three directions. The shaking is then split into two parts: the body's own movement, and gravity, which shows how the phone is tilted. That makes nine signals, and each becomes its own vibration picture.
 
-![](../assets/aip/aip-teaching-motion-fef7730a2b.png)
+![Picture 3 · One slice becomes nine vibration pictures](../assets/aip/aip-teaching-motion-fef7730a2b.png)
 
 **How to read the picture**
 
@@ -68,7 +68,7 @@ The phone's IMU gives six signals: shaking in three directions and turning in th
 
 ## Picture 4 · A brand-new AI knows nothing
 
-![](../assets/aip/aip-teaching-motion-1bdfcd655d.png)
+![Picture 4 · A brand-new AI knows nothing](../assets/aip/aip-teaching-motion-1bdfcd655d.png)
 
 **How to read the picture**
 
@@ -84,7 +84,7 @@ The phone's IMU gives six signals: shaking in three directions and turning in th
 
 Learning works exactly as in [part 2, Teaching Sound](aip-teaching-sound.md). The slices are small, so 40 rounds of study took about 9 seconds on the RTX 3090.
 
-![](../assets/aip/aip-teaching-motion-e0ea0f91fb.png)
+![Picture 5 · It learns in seconds](../assets/aip/aip-teaching-motion-e0ea0f91fb.png)
 
 **How to read the picture**
 
@@ -98,7 +98,7 @@ Learning works exactly as in [part 2, Teaching Sound](aip-teaching-sound.md). Th
 
 ## Picture 6 · The mix-up: sitting and standing
 
-![](../assets/aip/aip-teaching-motion-abec308072.png)
+![Picture 6 · The mix-up: sitting and standing](../assets/aip/aip-teaching-motion-abec308072.png)
 
 **How to read the picture**
 
@@ -116,7 +116,7 @@ Learning works exactly as in [part 2, Teaching Sound](aip-teaching-sound.md). Th
 
 We trained the wiggle AI again, but mixed everyone before splitting, so the same people were in study and exam.
 
-![](../assets/aip/aip-teaching-motion-abc1fc3067.png)
+![Picture 7 · An unfair exam inflates the score](../assets/aip/aip-teaching-motion-abc1fc3067.png)
 
 **How to read the picture**
 
@@ -132,7 +132,7 @@ We trained the wiggle AI again, but mixed everyone before splitting, so the same
 
 The same recipe works for the sensor glove: put the sound picture and the vibration picture of each swing together, label it, and teach an AI.
 
-![](../assets/aip/aip-teaching-motion-389c438ab8.png)
+![Picture 8 · Back to the golf glove](../assets/aip/aip-teaching-motion-389c438ab8.png)
 
 **How to read the picture**
 
@@ -152,42 +152,42 @@ Each card is an exam slice from a new person: tilt wiggles on top, vibration pic
 
 **Card 1**
 
-![](../assets/aip/aip-teaching-motion-6db8509119.png)
+![Which activity is it?](../assets/aip/aip-teaching-motion-6db8509119.png)
 
 ??? success "Show the answer"
     lying down
 
 **Card 2**
 
-![](../assets/aip/aip-teaching-motion-3111d50969.png)
+![Which activity is it?](../assets/aip/aip-teaching-motion-3111d50969.png)
 
 ??? success "Show the answer"
     upstairs
 
 **Card 3**
 
-![](../assets/aip/aip-teaching-motion-dc0734ef0b.png)
+![Which activity is it?](../assets/aip/aip-teaching-motion-dc0734ef0b.png)
 
 ??? success "Show the answer"
     sitting
 
 **Card 4**
 
-![](../assets/aip/aip-teaching-motion-9edfd37bff.png)
+![Which activity is it?](../assets/aip/aip-teaching-motion-9edfd37bff.png)
 
 ??? success "Show the answer"
     walking
 
 **Card 5**
 
-![](../assets/aip/aip-teaching-motion-6e0c447240.png)
+![Which activity is it?](../assets/aip/aip-teaching-motion-6e0c447240.png)
 
 ??? success "Show the answer"
     standing
 
 **Card 6**
 
-![](../assets/aip/aip-teaching-motion-3aa27d6aae.png)
+![Which activity is it?](../assets/aip/aip-teaching-motion-3aa27d6aae.png)
 
 ??? success "Show the answer"
     downstairs

@@ -155,6 +155,8 @@ three-beat rhythm — **learn broadly, validate on hardware, close the remaining
 calibration.** Don't just read about the sim-to-real gap; live it once, and you'll feel in your
 hands why the three beats come in that order.
 
+A small hands-on run of this sequence with one phone is [AI in Pictures, Part 6: An Eye Taught in Simulation](aip-eye-from-simulation.md). On phone recordings of table sounds, a small eye taught only on fake data did not hold up on other tables, and a few references recorded on the spot made the difference.
+
 ---
 
 **Series** · [← Model Anatomy (deep dive 2)](model-anatomy.md) · [Next: How Many Cameras, and Where →](camera-placement.md)

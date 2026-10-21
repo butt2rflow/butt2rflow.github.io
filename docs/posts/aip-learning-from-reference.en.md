@@ -21,7 +21,7 @@ Parts 2 and 4 trained AIs on thousands of examples. This time there's no trainin
 
 Until now, a new kind meant collecting labeled examples and training all over again. This part works differently: use an AI that already learned a lot as an ‘eye’, and tell it what to look for with a few references or a sentence.
 
-![](../assets/aip/aip-learning-from-reference-ee3842af9c.png)
+![Picture 1 · Instead of teaching, just show a reference](../assets/aip/aip-learning-from-reference-ee3842af9c.png)
 
 **How to read the picture**
 
@@ -37,7 +37,7 @@ Until now, a new kind meant collecting labeled examples and training all over ag
 
 The AI borrowed in [part 2](aip-teaching-sound.md) has two parts: a seeing part that looks at a sound picture and writes its features down as 768 numbers, and a choosing part that reads those numbers and picks one of 50 kinds. Using it as an eye means removing the choosing part and keeping only the seeing part.
 
-![](../assets/aip/aip-learning-from-reference-d77a6df039.png)
+![Picture 2 · What using it as an ‘eye’ means](../assets/aip/aip-learning-from-reference-d77a6df039.png)
 
 **How to read the picture**
 
@@ -55,7 +55,7 @@ The AI borrowed in [part 2](aip-teaching-sound.md) has two parts: a seeing part 
 
 Take the eye's description (768 numbers) of each sound. Squeeze those 768 numbers down to 2, the way a flat world map flattens the globe, and plot them: similar sounds land close together.
 
-![](../assets/aip/aip-learning-from-reference-895a981eac.png)
+![Picture 3 · The eye puts similar sounds together](../assets/aip/aip-learning-from-reference-895a981eac.png)
 
 **How to read the picture**
 
@@ -73,7 +73,7 @@ Take the eye's description (768 numbers) of each sound. Squeeze those 768 number
 
 We gave a few reference sounds per kind and named each of the 400 exam sounds after the kind whose references it was closest to. No training. With several references, their descriptions are averaged into one representative for the kind, like a police sketch drawn from several witnesses.
 
-![](../assets/aip/aip-learning-from-reference-44d4be042e.png)
+![Picture 4 · How many references does it take](../assets/aip/aip-learning-from-reference-44d4be042e.png)
 
 **How to read the picture**
 
@@ -90,7 +90,7 @@ We gave a few reference sounds per kind and named each of the 400 exam sounds af
 
 CLAP learned sounds together with sentences describing them, so a sentence like “This is a sound of siren.” can serve as the reference.
 
-![](../assets/aip/aip-learning-from-reference-620f766e28.png)
+![Picture 5 · A single sentence is enough](../assets/aip/aip-learning-from-reference-620f766e28.png)
 
 **How to read the picture**
 
@@ -111,7 +111,7 @@ CLAP learned sounds together with sentences describing them, so a sentence like 
 
 <p class="aip-audio"><b>Chosen reference</b><br><audio controls preload="none" src="/assets/aip/aip-learning-from-reference-ac8c23a157.wav"></audio></p>
 
-![](../assets/aip/aip-learning-from-reference-e46776531e.png)
+![Picture 6 · Hear the closest reference](../assets/aip/aip-learning-from-reference-e46776531e.png)
 
 Closest references: rooster 93, hen 58, cow 19
 
@@ -121,7 +121,7 @@ Closest references: rooster 93, hen 58, cow 19
 
 <p class="aip-audio"><b>Chosen reference</b><br><audio controls preload="none" src="/assets/aip/aip-learning-from-reference-82d4271eae.wav"></audio></p>
 
-![](../assets/aip/aip-learning-from-reference-0a90c7d58e.png)
+![Picture 6 · Hear the closest reference](../assets/aip/aip-learning-from-reference-0a90c7d58e.png)
 
 Closest references: clock tick 66, clock alarm 46, mouse click 26
 
@@ -131,7 +131,7 @@ Closest references: clock tick 66, clock alarm 46, mouse click 26
 
 <p class="aip-audio"><b>Chosen reference</b><br><audio controls preload="none" src="/assets/aip/aip-learning-from-reference-57253cfc61.wav"></audio></p>
 
-![](../assets/aip/aip-learning-from-reference-aee80e3c6b.png)
+![Picture 6 · Hear the closest reference](../assets/aip/aip-learning-from-reference-aee80e3c6b.png)
 
 Closest references: door wood knock 80, footsteps 59, fireworks 16
 
@@ -150,9 +150,9 @@ Closest references: door wood knock 80, footsteps 59, fireworks 16
 
 The same test on the phone data from [part 4](aip-teaching-motion.md). Motion still has few widely used eyes like CLAP or AST, so we compared vibration pictures directly.
 
-![](../assets/aip/aip-learning-from-reference-6c8c10d198.png)
+![Picture 7 · Motion doesn't work without an eye](../assets/aip/aip-learning-from-reference-6c8c10d198.png)
 
-![](../assets/aip/aip-learning-from-reference-2bd1c7b482.png)
+![Picture 7 · Motion doesn't work without an eye](../assets/aip/aip-learning-from-reference-2bd1c7b482.png)
 
 **How to read the picture**
 
@@ -169,7 +169,7 @@ The same test on the phone data from [part 4](aip-teaching-motion.md). Motion st
 
 For example, we taught an eye the five activities other than lying down, then registered lying down from just 5 references. We repeated this leaving out each activity in turn.
 
-![](../assets/aip/aip-learning-from-reference-63ef207d2b.png)
+![Picture 8 · A narrow eye struggles with new activities](../assets/aip/aip-learning-from-reference-63ef207d2b.png)
 
 **How to read the picture**
 
@@ -186,7 +186,7 @@ For example, we taught an eye the five activities other than lying down, then re
 
 Simulation is one way to build a broad eye: generate lots of virtual swings while randomizing the swing, sensor placement, body, the range's echo and the distance to the next bay (domain randomization), then mix in some real swings. And learn sound and motion together, not separately.
 
-![](../assets/aip/aip-learning-from-reference-16f89146b1.png)
+![Picture 9 · One eye for sound and motion together](../assets/aip/aip-learning-from-reference-16f89146b1.png)
 
 **How to read the picture**
 

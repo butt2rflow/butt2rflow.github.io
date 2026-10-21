@@ -21,7 +21,7 @@ description: "3편 「움직임을 보다」에서 스윙의 진동이 그림이
 
 UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 계단 오르기, 계단 내려가기, 앉기, 서기, 눕기를 했어요. 폰 속 IMU가 1초에 50번씩 쟀고, 기록을 2.56초짜리 조각으로 잘라 조각마다 이름표를 붙였어요.
 
-![](../assets/aip/aip-teaching-motion-3ffa6dfcbe.png)
+![그림 1 · 재료: 여섯 가지 동작을 담은 조각 1만 개](../assets/aip/aip-teaching-motion-3ffa6dfcbe.png)
 
 **그림 보는 법**
 
@@ -38,7 +38,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 사람마다 걷는 습관이 조금씩 달라요. 같은 사람이 공부용과 시험용에 다 들어 있으면, AI가 동작이 아니라 그 사람의 습관을 알아볼 수 있어요. 그래서 시험은 AI가 한 번도 못 본 사람으로 봐요.
 
-![](../assets/aip/aip-teaching-motion-c78ab0d402.png)
+![그림 2 · 사람 기준으로 나눠요: 21명으로 공부, 처음 보는 9명으로 시험](../assets/aip/aip-teaching-motion-c78ab0d402.png)
 
 **그림 보는 법**
 
@@ -54,7 +54,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 폰 속 IMU는 신호 6개를 줘요. 세 방향의 흔들림과 세 방향의 회전이에요. 흔들림을 다시 몸이 움직인 부분과 중력(폰이 기운 방향) 부분으로 나누면 모두 9개가 돼요. 신호마다 진동 그림을 한 장씩 만들어요.
 
-![](../assets/aip/aip-teaching-motion-5b8886eedc.png)
+![그림 3 · 조각 하나가 진동 그림 9장이 돼요](../assets/aip/aip-teaching-motion-5b8886eedc.png)
 
 **그림 보는 법**
 
@@ -68,7 +68,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 ## 그림 4 · 처음 AI는 아무것도 몰라요
 
-![](../assets/aip/aip-teaching-motion-883e9fa735.png)
+![그림 4 · 처음 AI는 아무것도 몰라요](../assets/aip/aip-teaching-motion-883e9fa735.png)
 
 **그림 보는 법**
 
@@ -84,7 +84,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 학습 방법은 [2편 「소리를 알아듣는 AI」](aip-teaching-sound.md)와 똑같아요. 조각이 작아서 40회 공부가 RTX 3090으로 9초쯤 걸렸어요.
 
-![](../assets/aip/aip-teaching-motion-75f0fae628.png)
+![그림 5 · 몇 초 만에 배워요](../assets/aip/aip-teaching-motion-75f0fae628.png)
 
 **그림 보는 법**
 
@@ -98,7 +98,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 ## 그림 6 · 헷갈리는 짝: 앉기와 서기
 
-![](../assets/aip/aip-teaching-motion-f3f7ace9eb.png)
+![그림 6 · 헷갈리는 짝: 앉기와 서기](../assets/aip/aip-teaching-motion-f3f7ace9eb.png)
 
 **그림 보는 법**
 
@@ -116,7 +116,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 물결 AI를 다시 학습시키되, 이번엔 사람을 다 섞은 뒤 나눴어요. 같은 사람이 공부용과 시험용에 다 들어갔어요.
 
-![](../assets/aip/aip-teaching-motion-6966415193.png)
+![그림 7 · 불공정한 시험은 점수를 부풀려요](../assets/aip/aip-teaching-motion-6966415193.png)
 
 **그림 보는 법**
 
@@ -132,7 +132,7 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 센서 장갑에도 같은 방법을 써요. 스윙마다 소리 그림과 진동 그림을 한 장으로 붙이고, 이름표를 달아 AI를 가르쳐요.
 
-![](../assets/aip/aip-teaching-motion-bbf7d57467.png)
+![그림 8 · 다시 골프 장갑으로](../assets/aip/aip-teaching-motion-bbf7d57467.png)
 
 **그림 보는 법**
 
@@ -152,42 +152,42 @@ UCI HAR라는 공개 자료를 써요. 30명이 허리에 폰을 차고 걷기, 
 
 **1번**
 
-![](../assets/aip/aip-teaching-motion-6db8509119.png)
+![어떤 동작일까요?](../assets/aip/aip-teaching-motion-6db8509119.png)
 
 ??? success "정답 보기"
     눕기
 
 **2번**
 
-![](../assets/aip/aip-teaching-motion-3111d50969.png)
+![어떤 동작일까요?](../assets/aip/aip-teaching-motion-3111d50969.png)
 
 ??? success "정답 보기"
     계단 오르기
 
 **3번**
 
-![](../assets/aip/aip-teaching-motion-dc0734ef0b.png)
+![어떤 동작일까요?](../assets/aip/aip-teaching-motion-dc0734ef0b.png)
 
 ??? success "정답 보기"
     앉기
 
 **4번**
 
-![](../assets/aip/aip-teaching-motion-9edfd37bff.png)
+![어떤 동작일까요?](../assets/aip/aip-teaching-motion-9edfd37bff.png)
 
 ??? success "정답 보기"
     걷기
 
 **5번**
 
-![](../assets/aip/aip-teaching-motion-6e0c447240.png)
+![어떤 동작일까요?](../assets/aip/aip-teaching-motion-6e0c447240.png)
 
 ??? success "정답 보기"
     서기
 
 **6번**
 
-![](../assets/aip/aip-teaching-motion-3aa27d6aae.png)
+![어떤 동작일까요?](../assets/aip/aip-teaching-motion-3aa27d6aae.png)
 
 ??? success "정답 보기"
     계단 내려가기
