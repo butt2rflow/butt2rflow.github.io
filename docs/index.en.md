@@ -259,6 +259,7 @@ A picture-first series on sound and motion AI for readers who dislike math. No f
 - [**Part 3 · Seeing Motion**](posts/aip-seeing-motion.md) — IMUs and vibration pictures, through a golf sensor glove
 - [**Part 4 · Teaching Motion**](posts/aip-teaching-motion.md) — teaching an AI six activities from phone sensors
 - [**Part 5 · Learning from a Reference**](posts/aip-learning-from-reference.md) — no training, just a few references or one sentence
+- [**Part 6 · An Eye Taught in Simulation**](posts/aip-eye-from-simulation.md) — can an eye taught only on fake sounds and vibrations work on a real table?
 - [**Join the part 6 experiment (recording kit, in Korean)**](assets/aip/kit/index.html) — record table taps, a cup and claps with your phone and send them in. About 15 minutes with the free phyphox app
 
 ---

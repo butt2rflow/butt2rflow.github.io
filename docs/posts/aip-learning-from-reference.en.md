@@ -209,7 +209,7 @@ Simulation is one way to build a broad eye: generate lots of virtual swings whil
 
 ----
 
-**Series** · [← Part 4, Teaching Motion](aip-teaching-motion.md) · [Back to part 0, How Robots Feel](aip-robot-senses.md)
+**Series** · [← Part 4, Teaching Motion](aip-teaching-motion.md) · [Part 6, An Eye Taught in Simulation →](aip-eye-from-simulation.md)
 
 ### Sources and notices
 

@@ -4,7 +4,7 @@ nav_title: "Part 3 · Seeing Motion"
 date: 2026-10-17
 tags: [ai-in-pictures, imu, golf, spectrogram]
 lang: en
-description: "In [part 1](aip-seeing-sound.md) we turned sound into pictures to look at. Movement becomes pictures the same way. The sensor glove on this page (an example design) can find the exact moment your club hits the ball, and record the swing around it. Besides listening for the “tock”, it feels the jolt in your fingers, so the golfer in the next bay can't fool it. Everything is shown in pictures, with no formulas."
+description: "In part 1 we turned sound into pictures to look at. Movement becomes pictures the same way. The sensor glove on this page (an example design) can find the exact moment your club hits the ball, and record the swing around it. Besides listening for the “tock”, it feels the jolt in your fingers, so the golfer in the next bay can't fool it. Everything is shown in pictures, with no formulas."
 ---
 
 # AI in Pictures Part 3: Seeing Motion

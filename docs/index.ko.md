@@ -259,6 +259,7 @@ title: Home
 - [**3편 · 움직임을 보다**](posts/aip-seeing-motion.md) — 골프 센서 장갑으로 보는 IMU와 진동 그림
 - [**4편 · 움직임을 알아보는 AI**](posts/aip-teaching-motion.md) — 폰 센서로 여섯 동작을 알아보게 가르치기
 - [**5편 · 레퍼런스만 주면 알아보는 AI**](posts/aip-learning-from-reference.md) — 학습 없이 레퍼런스 몇 개나 글 한 줄로
+- [**6편 · 시뮬레이션으로 배운 ‘눈’**](posts/aip-eye-from-simulation.md) — 가짜 소리와 진동으로만 배운 눈이 진짜 탁자에서도 통할까
 - [**6편 실험에 참여하기 (녹음 키트)**](assets/aip/kit/index.html) — 폰을 탁자에 놓고 노크·컵·손뼉 소리와 진동을 녹음해 보내 주세요. 15분, phyphox 앱 하나면 돼요
 
 ---

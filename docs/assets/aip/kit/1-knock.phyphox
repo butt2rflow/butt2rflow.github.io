@@ -2,7 +2,7 @@
     <title>보는AI 6편 · 노크</title>
     <icon>노크</icon>
     <category>보는 AI 6편</category>
-    <description>폰을 탁자에 평평하게 놓고 ▶를 누른 뒤 손을 떼요. 3초 뒤부터 폰 옆 탁자를 손가락 마디로 '톡' → 3초 쉬기를 5번 해요(조용히는 18초 가만히). 18초쯤 지나면 ■로 멈추고, ⋮ → 데이터 내보내기 → CSV → 저장(또는 공유)해요. 이 실험을 두 번 해 주세요.</description>
+    <description>폰을 탁자에 평평하게 놓고 ▶를 누른 뒤 손을 떼요. 3초 뒤부터 폰 옆 탁자를 손가락 마디로 '톡' → 3초 쉬기를 5번 해요(조용히는 18초 가만히). 18초쯤 지나면 ■로 멈추고, ⋮ → 데이터 내보내기(Export Data) → CSV (Comma, decimal point) → 다운로드(또는 공유)해요. 「실험 기록 저장」은 보낼 파일이 안 생기니 누르지 마세요. 이 실험을 두 번 해 주세요.</description>
     <data-containers>
         <container size="0">acc_t</container>
         <container size="0">accX</container>

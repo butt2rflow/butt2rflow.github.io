@@ -4,7 +4,7 @@ nav_title: "Part 2 · Teaching Sound"
 date: 2026-10-17
 tags: [ai-in-pictures, audio, cnn, esc-50]
 lang: en
-description: "In [part 1](aip-seeing-sound.md) you turned sounds into pictures. Now we teach an AI with 2,000 of those pictures. Every picture and number below comes from training we actually ran for this page."
+description: "In part 1 you turned sounds into pictures. Now we teach an AI with 2,000 of those pictures. Every picture and number below comes from training we actually ran for this page."
 ---
 
 # AI in Pictures Part 2: Teaching Sound

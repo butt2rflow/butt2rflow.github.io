@@ -4,7 +4,7 @@ nav_title: "Part 4 · Teaching Motion"
 date: 2026-10-17
 tags: [ai-in-pictures, imu, har, cnn]
 lang: en
-description: "In [part 3, Seeing Motion](aip-seeing-motion.md), the vibration of a swing became a picture. Now we teach an AI to recognize movements from such pictures, with real phone data from 30 people. Every number below comes from training we ran."
+description: "In part 3, Seeing Motion, the vibration of a swing became a picture. Now we teach an AI to recognize movements from such pictures, with real phone data from 30 people. Every number below comes from training we ran."
 ---
 
 # AI in Pictures Part 4: Teaching Motion

@@ -4,7 +4,7 @@ nav_title: "5편 · 레퍼런스만 주면 알아보는 AI"
 date: 2026-10-17
 tags: [ai-in-pictures, few-shot, zero-shot, clap]
 lang: ko
-description: "[2편](aip-teaching-sound.md)과 [4편](aip-teaching-motion.md)에서는 AI를 예제 수천 개로 학습시켰어요. 이번엔 학습 없이, 레퍼런스 몇 개나 글 한 줄만 주고 알아보게 해요. 아래 숫자는 모두 직접 잰 결과예요(마지막 그림만 개념도예요)."
+description: "2편과 4편에서는 AI를 예제 수천 개로 학습시켰어요. 이번엔 학습 없이, 레퍼런스 몇 개나 글 한 줄만 주고 알아보게 해요. 아래 숫자는 모두 직접 잰 결과예요(마지막 그림만 개념도예요)."
 ---
 
 # 보는 AI 5편: 레퍼런스만 주면 알아보는 AI
@@ -209,7 +209,7 @@ CLAP은 소리와 그 소리를 설명하는 글을 짝지어 배운 AI예요. �
 
 ----
 
-**시리즈** · [← 4편, 움직임을 알아보는 AI](aip-teaching-motion.md) · [처음부터: 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)
+**시리즈** · [← 4편, 움직임을 알아보는 AI](aip-teaching-motion.md) · [6편, 시뮬레이션으로 배운 ‘눈’ →](aip-eye-from-simulation.md)
 
 ### 출처와 표기
 

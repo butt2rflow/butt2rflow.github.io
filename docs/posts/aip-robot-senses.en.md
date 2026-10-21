@@ -9,7 +9,7 @@ description: "Robots feel the world through several senses. Most of them answer 
 
 # AI in Pictures Part 0: How Robots Feel
 
-> **AI in Pictures · Part 0.** The first post of a picture-first series on sound and motion AI. It starts from a robot's senses; parts 1-5 turn sound and motion into pictures for an AI.
+> **AI in Pictures · Part 0.** The first post of a picture-first series on sound and motion AI. It starts from a robot's senses; parts 1-6 turn sound and motion into pictures for an AI.
 
 Robots feel the world through several senses. Most of them answer with a single number, but one doesn't. Handling that one takes an AI that looks at pictures, and that is what AI in Pictures is about.
 
