@@ -37,6 +37,10 @@ a { color: var(--accent); }
 .chart .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .chart canvas { position: static; display: block; width: 100%; height: 150px; background: #0b0e10; border-radius: 6px; }
 .key { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; color: var(--fg); }
+.live { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+.live th { color: var(--muted); font-weight: 400; font-size: 12px; text-align: right; padding: 2px 6px; }
+.live td { text-align: right; padding: 3px 6px; border-top: 1px solid #2d353b; }
+.live td:first-child, .live th:first-child { text-align: left; }
 .key i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 </style>
 </head>
@@ -83,6 +87,14 @@ a { color: var(--accent); }
 
   <div class="charts">
     <div class="chart">
+      <div class="head"><span>장갑 센서 지금 값 (초당 5번 갱신)</span></div>
+      <table class="live">
+        <tr><th></th><th>자이로 x</th><th>y</th><th>z</th><th>°/s</th><th>가속 x</th><th>y</th><th>z</th><th>g</th></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#4fc3f7"></i>손</span></td><td id="h0">–</td><td id="h1">–</td><td id="h2">–</td><td id="hG">–</td><td id="h3">–</td><td id="h4">–</td><td id="h5">–</td><td id="hA">–</td></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#ffb74d"></i>팔뚝</span></td><td id="a0">–</td><td id="a1">–</td><td id="a2">–</td><td id="aG">–</td><td id="a3">–</td><td id="a4">–</td><td id="a5">–</td><td id="aA">–</td></tr>
+      </table>
+    </div>
+    <div class="chart">
       <div class="head"><span>장갑 회전 속도 (최근 5초, °/s)</span><span><span class="key"><i style="background:#4fc3f7"></i>손</span><span class="key"><i style="background:#ffb74d"></i>팔뚝</span></span></div>
       <canvas id="gyroCv"></canvas>
     </div>
@@ -116,7 +128,7 @@ a { color: var(--accent); }
 
 <script type="module">
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs";
-import { Glove, clipSamples, GYRO_DPS, SAT_DPS } from "./glove.js";
+import { Glove, clipSamples, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -270,7 +282,7 @@ function onGlove(r) {
     for (const f of r.frames) {
       const h = Math.max(Math.abs(f[3]), Math.abs(f[4]), Math.abs(f[5])) * GYRO_DPS, a = Math.max(Math.abs(f[9]), Math.abs(f[10]), Math.abs(f[11])) * GYRO_DPS;
       gStats.hand = Math.max(gStats.hand, h); gStats.arm = Math.max(gStats.arm, a);
-      gyroBuf.push([f[2] / 1e6, h, a]);
+      gyroBuf.push([f[2] / 1e6, h, a]); lastFrame = f;
       if (logging) log.glove.push(f);
     }
   } else if (r.type === "status") {
@@ -317,7 +329,16 @@ $("glove").onclick = async () => {
 };
 
 // ---- live charts ----
-const gyroBuf = [];
+const gyroBuf = []; let lastFrame = null;
+// live numbers: x/y/z plus the magnitude ("°/s" and "g" columns)
+setInterval(() => {
+  if (!lastFrame) return;
+  for (const [pre, o] of [["h", 3], ["a", 9]]) {
+    const gy = [0, 1, 2].map((k) => lastFrame[o + k] * GYRO_DPS), ac = [0, 1, 2].map((k) => lastFrame[o + 3 + k] * ACC_G);
+    gy.forEach((v, k) => ($(pre + k).textContent = v.toFixed(0))); ac.forEach((v, k) => ($(pre + (k + 3)).textContent = v.toFixed(2)));
+    $(pre + "G").textContent = Math.hypot(...gy).toFixed(0); $(pre + "A").textContent = Math.hypot(...ac).toFixed(2);
+  }
+}, 200);
 function sizeCv(cv) { const w = cv.clientWidth * devicePixelRatio, h = cv.clientHeight * devicePixelRatio; if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; } return [w, h]; }
 function drawGyro() {
   const cv = $("gyroCv"), [W, H] = sizeCv(cv), g = cv.getContext("2d"), d = devicePixelRatio;
