@@ -356,31 +356,37 @@ function drawGyro() {
     gyroBuf.forEach((r, i) => (i ? g.lineTo(X(r[0]), Y(r[k])) : g.moveTo(X(r[0]), Y(r[k])))); g.stroke();
   }
 }
-setInterval(drawGyro, 100);
+setInterval(drawGyro, 200);   // 5 redraws/s is enough to watch; leave the main thread to Bluetooth and pose
 
 // one-hue colour ramp for spectrograms: dark -> accent blue -> white
 function heat(v) { v = Math.max(0, Math.min(1, v)); return v < 0.6 ? `rgb(${Math.round(79 * v / 0.6)},${Math.round(195 * v / 0.6)},${Math.round(247 * v / 0.6)})` : `rgb(${Math.round(79 + 176 * (v - 0.6) / 0.4)},${Math.round(195 + 60 * (v - 0.6) / 0.4)},247)`; }
 
 let audioCtx = null, analyser = null, micStream = null, specBuf = null;
-function specLoop() {
+// Light on purpose: a 300 x 128 canvas (CSS scales it), one 1-pixel ImageData column per tick, ~30 ticks/s.
+// The first version painted every screen row with its own fillStyle each frame and starved the Bluetooth
+// events: 11 % of glove packets were lost on the S25 (2026-10-23).
+const SPEC_W = 300, SPEC_H = 128;
+let specCol = null, specTimer = null;
+function heatRGB(v) { v = Math.max(0, Math.min(1, v)); return v < 0.6 ? [79 * v / 0.6, 195 * v / 0.6, 247 * v / 0.6] : [79 + 176 * (v - 0.6) / 0.4, 195 + 60 * (v - 0.6) / 0.4, 247]; }
+function specTick() {
   if (!analyser) return;
-  const cv = $("specCv"), [W, H] = sizeCv(cv), g = cv.getContext("2d"), d = devicePixelRatio;
+  const cv = $("specCv"), g = cv.getContext("2d");
+  if (cv.width !== SPEC_W) { cv.width = SPEC_W; cv.height = SPEC_H; specCol = g.createImageData(1, SPEC_H); }
   analyser.getFloatFrequencyData(specBuf);
-  const nyq = audioCtx.sampleRate / 2, top = Math.floor(specBuf.length * 8000 / nyq), step = 2 * d;
-  g.drawImage(cv, -step, 0);   // scroll left
-  for (let y = 0; y < H; y++) {
-    const bin = Math.floor((1 - y / H) * top), db = specBuf[bin];
-    g.fillStyle = heat((db + 100) / 70); g.fillRect(W - step, y, step, 1);
+  const top = Math.floor(specBuf.length * 8000 / (audioCtx.sampleRate / 2));
+  for (let y = 0; y < SPEC_H; y++) {
+    const c = heatRGB((specBuf[Math.floor((1 - y / SPEC_H) * top)] + 100) / 70), o = 4 * y;
+    specCol.data[o] = c[0]; specCol.data[o + 1] = c[1]; specCol.data[o + 2] = c[2]; specCol.data[o + 3] = 255;
   }
-  requestAnimationFrame(specLoop);
+  g.drawImage(cv, -1, 0); g.putImageData(specCol, SPEC_W - 1, 0);
 }
 $("mic").onclick = async () => {
-  if (analyser) { micStream.getTracks().forEach((t) => t.stop()); audioCtx.close(); analyser = null; $("mic").textContent = "마이크 켜기"; return; }
+  if (analyser) { clearInterval(specTimer); micStream.getTracks().forEach((t) => t.stop()); audioCtx.close(); analyser = null; $("mic").textContent = "마이크 켜기"; return; }
   try {
     micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
     audioCtx = new AudioContext(); analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0;
     audioCtx.createMediaStreamSource(micStream).connect(analyser); specBuf = new Float32Array(analyser.frequencyBinCount);
-    $("mic").textContent = "마이크 끄기"; requestAnimationFrame(specLoop);
+    $("mic").textContent = "마이크 끄기"; specTimer = setInterval(specTick, 33);
   } catch (e) { say("마이크를 열지 못했어요. 브라우저의 마이크 권한을 허용해 주세요."); console.error(e); }
 };
 
@@ -422,7 +428,7 @@ function drawClip(c) {
 
 function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-23b", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
