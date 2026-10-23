@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>스윙 카메라 + 센서 장갑</title>
+<meta name="robots" content="noindex">
+<style>
+:root { --bg: #0f1214; --panel: #1a1f23; --fg: #eef1f3; --muted: #9aa5ad; --accent: #4fc3f7; --ok: #66bb6a; --warn: #ffb74d; color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: "Noto Sans KR", system-ui, sans-serif; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 12px 16px 28px; display: grid; gap: 12px; }
+h1 { font-size: 20px; margin: 4px 0 0; }
+p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.stage { position: relative; width: 100%; background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 9; }
+video, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+video { opacity: 0; }
+.hud { position: absolute; left: 8px; top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { background: rgba(0,0,0,.6); border-radius: 6px; padding: 3px 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.num { background: var(--panel); border-radius: 8px; padding: 8px 10px; }
+.num b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; }
+.num span { font-size: 12px; color: var(--muted); }
+.num small { color: var(--accent); font-size: 12px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+button, select, label.file { background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
+button.primary { background: var(--accent); color: #002433; border-color: var(--accent); font-weight: 700; }
+button:disabled { opacity: .5; }
+label.file input { display: none; }
+#msg { color: var(--warn); font-size: 14px; min-height: 1.4em; }
+details { background: var(--panel); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted); }
+details summary { color: var(--fg); cursor: pointer; }
+details li { margin: 4px 0; }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>스윙 카메라 + 센서 장갑 <small style="font-size:13px;color:var(--warn)">시험판</small></h1>
+  <p>카메라로 몸의 점 33개를 찾고, 블루투스로 센서 장갑(손·팔뚝 IMU)을 함께 받아요. "기록 시작"을 누르면 두 데이터에 휴대폰 시각을 붙여 한 파일에 저장해요. 시간 맞추기와 분석은 다음 단계예요. 영상은 휴대폰 밖으로 나가지 않아요.</p>
+
+  <div class="row">
+    <button id="start" class="primary">카메라 시작</button>
+    <button id="base" disabled>어드레스 기준 잡기</button>
+    <button id="rec" disabled>녹화</button>
+    <select id="model" aria-label="모델"><option value="full" selected>정확한 모델</option><option value="lite">빠른 모델 (손목이 부정확)</option></select>
+    <label class="file">영상 파일로 시험<input id="file" type="file" accept="video/*"></label>
+  </div>
+  <div class="row">
+    <button id="glove">센서 장갑 연결</button>
+    <button id="log" disabled>기록 시작</button>
+  </div>
+  <div id="msg"></div>
+
+  <div class="stage" id="stage">
+    <video id="video" playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <div class="hud"><span class="chip" id="fps">준비</span><span class="chip" id="vis"></span></div>
+  </div>
+
+  <div class="nums">
+    <div class="num"><span>어깨 회전</span><b id="sh">–</b><small id="shMax"></small></div>
+    <div class="num"><span>골반 회전</span><b id="hp">–</b><small id="hpMax"></small></div>
+    <div class="num"><span>꼬임 (어깨 − 골반)</span><b id="xf">–</b><small id="xfMax"></small></div>
+    <div class="num"><span>머리 좌우 이동 (머리 폭)</span><b id="hd">–</b><small id="hdMax"></small></div>
+  </div>
+
+  <div class="nums" id="gnums">
+    <div class="num"><span>장갑 수신</span><b id="gHz">–</b><small id="gState">연결 안 됨</small></div>
+    <div class="num"><span>빠진 프레임</span><b id="gMiss">–</b><small id="gBatch"></small></div>
+    <div class="num"><span>손 / 팔 자이로 최대</span><b id="gGyro">–</b><small id="gSat"></small></div>
+    <div class="num"><span>배터리</span><b id="gBat">–</b><small id="gArm"></small></div>
+    <div class="num"><span>소리 클립</span><b id="gClips">0</b><small id="gLog"></small></div>
+  </div>
+
+  <details open>
+    <summary>쓰는 법</summary>
+    <ul>
+      <li><b>카메라 위치:</b> 정면(얼굴 쪽)에서 2.5~3 m, 허리 높이, 휴대폰은 가로. 발부터 머리, 클럽 끝까지 화면에 다 들어오게 해요.</li>
+      <li><b>후면 카메라</b>를 써요. 화면을 좌우로 뒤집지 않아서 오른손잡이는 오른손잡이로 보여요.</li>
+      <li>어드레스 자세에서 <b>"어드레스 기준 잡기"</b>를 누르면 그 자세를 0으로 두고, 스윙하는 동안 가장 큰 값을 작은 글씨로 보여 줘요. 다음 스윙 전에 다시 누르면 돼요.</li>
+      <li>회전은 화면에서 어깨선·골반선이 짧아진 정도로 계산한 <b>대략값</b>이에요. 다운스윙과 임팩트는 너무 빨라서 점이 튈 수 있어요. 정확한 손목과 임팩트는 센서 장갑이 맡아요.</li>
+      <li>녹화는 점이 그려진 화면을 휴대폰에 저장해요(webm).</li>
+      <li>S25에서 정확한 모델은 약 26 fps, 손목 신뢰도 약 86%였어요. 빠른 모델은 더 빠르지만 손목 신뢰도가 50% 아래로 떨어져서 기본은 정확한 모델이에요.</li>
+      <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
+      <li><b>기록:</b> "기록 시작" → 스윙 → "기록 멈추고 저장". 장갑 프레임(장갑 시계 + 휴대폰 도착 시각), 자세 프레임(휴대폰 시각), 배터리, 소리 클립이 json 파일 하나로 저장돼요. 카메라 없이 장갑만 기록해도 돼요.</li>
+      <li>시험판이라 아직 시간 맞추기·손목 각도는 없어요. 숫자는 받는 상태 확인용이에요(장갑 수신 약 180 Hz, 빠진 프레임 0이면 정상).</li>
+    </ul>
+  </details>
+</div>
+
+<script type="module">
+import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs";
+import { Glove, clipSamples, GYRO_DPS, SAT_DPS } from "./glove.js";
+
+const $ = (id) => document.getElementById(id);
+const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
+const MODELS = {
+  lite: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task",
+  full: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task",
+};
+const EDGES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[15,19],[16,20],[27,31],[28,32]];
+let pose = null, running = false, base = null, peaks = null, recorder = null, chunks = [];
+let lastT = performance.now(), fpsAvg = 0, frames = 0;
+window.__stats = { frames: 0, found: 0, fps: 0, last: null };
+
+const say = (t) => { $("msg").textContent = t || ""; };
+
+async function loadModel() {
+  say("AI 모델을 불러오는 중…");
+  const files = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm");
+  const opts = (delegate) => ({ baseOptions: { modelAssetPath: MODELS[$("model").value], delegate }, runningMode: "VIDEO", numPoses: 1 });
+  try { pose = await PoseLandmarker.createFromOptions(files, opts("GPU")); }
+  catch (e) { pose = await PoseLandmarker.createFromOptions(files, opts("CPU")); }
+  say("");
+}
+
+function fit() {
+  const w = video.videoWidth || 1280, h = video.videoHeight || 720;
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  $("stage").style.aspectRatio = `${w} / ${h}`;
+}
+
+const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const turn = (w, w0) => (180 / Math.PI) * Math.acos(Math.max(0, Math.min(1, w / w0)));
+
+function measure(p) {
+  const W = canvas.width, H = canvas.height;
+  const P = p.map((q) => ({ x: q.x * W, y: q.y * H, v: q.visibility ?? 1 }));
+  return { sh: dist(P[11], P[12]), hp: dist(P[23], P[24]), head: P[0].x, headW: dist(P[7], P[8]), P };
+}
+
+function show(id, v, unit = "°", digits = 0) { $(id).textContent = v == null || isNaN(v) ? "–" : v.toFixed(digits) + unit; }
+
+function draw(P) {
+  ctx.lineWidth = Math.max(2, canvas.width / 300); ctx.strokeStyle = "#4fc3f7";
+  for (const [a, b] of EDGES) {
+    if (P[a].v > 0.4 && P[b].v > 0.4) { ctx.beginPath(); ctx.moveTo(P[a].x, P[a].y); ctx.lineTo(P[b].x, P[b].y); ctx.stroke(); }
+  }
+  for (let k = 0; k < 33; k++) {
+    if (P[k].v < 0.4) continue;
+    ctx.fillStyle = k === 15 || k === 16 ? "#ff5252" : "#ffffff";
+    ctx.beginPath(); ctx.arc(P[k].x, P[k].y, Math.max(3, canvas.width / 250), 0, 2 * Math.PI); ctx.fill();
+  }
+}
+
+function loop() {
+  if (!running) return;
+  if (video.readyState >= 2 && !video.paused) {
+    fit();
+    const now = performance.now();
+    const res = pose.detectForVideo(video, now);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    frames++; window.__stats.frames++;
+    const dt = now - lastT; lastT = now; fpsAvg = fpsAvg ? 0.9 * fpsAvg + 0.1 * (1000 / dt) : 1000 / dt;
+    if (res.landmarks && res.landmarks.length) {
+      window.__stats.found++;
+      const m = measure(res.landmarks[0]);
+      draw(m.P);
+      if (logging) log.pose.push([+now.toFixed(1), ...res.landmarks[0].flatMap((q) => [+q.x.toFixed(4), +q.y.toFixed(4), +(q.visibility ?? 1).toFixed(2)])]);
+      const wv = (m.P[15].v + m.P[16].v) / 2;
+      $("vis").textContent = `손목 신뢰도 ${(wv * 100).toFixed(0)}%`;
+      if (base) {
+        const s = turn(m.sh, base.sh), h = turn(m.hp, base.hp), x = s - h, hd = (m.head - base.head) / base.headW;
+        show("sh", s); show("hp", h); show("xf", x); show("hd", hd, "", 2);
+        peaks.sh = Math.max(peaks.sh, s); peaks.hp = Math.max(peaks.hp, h); peaks.xf = Math.max(peaks.xf, x); peaks.hd = Math.max(peaks.hd, Math.abs(hd));
+        $("shMax").textContent = `최대 ${peaks.sh.toFixed(0)}°`; $("hpMax").textContent = `최대 ${peaks.hp.toFixed(0)}°`;
+        $("xfMax").textContent = `최대 ${peaks.xf.toFixed(0)}°`; $("hdMax").textContent = `최대 ${peaks.hd.toFixed(2)}`;
+        window.__stats.last = { sh: s, hp: h, xf: x, hd };
+      }
+      window.__lastMeasure = m;
+    } else {
+      $("vis").textContent = "사람을 찾는 중";
+    }
+    if (frames % 10 === 0) { $("fps").textContent = `${fpsAvg.toFixed(0)} fps`; window.__stats.fps = fpsAvg; }
+  }
+  requestAnimationFrame(loop);
+}
+
+async function begin(source) {
+  try {
+    if (!pose) await loadModel();
+    running = true; base = null; peaks = null;
+    $("base").disabled = false; $("rec").disabled = typeof MediaRecorder === "undefined";
+    lastT = performance.now(); requestAnimationFrame(loop);
+    say(source === "camera" ? "어드레스 자세를 잡고 '어드레스 기준 잡기'를 눌러 주세요." : "영상 시험 중이에요. 첫 장면에서 '어드레스 기준 잡기'를 누르면 숫자가 나와요.");
+  } catch (e) { say("AI 모델을 불러오지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요."); console.error(e); }
+}
+
+$("start").onclick = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } } });
+    video.srcObject = stream; await video.play(); await begin("camera");
+  } catch (e) {
+    say("카메라를 열지 못했어요. 브라우저의 카메라 권한을 허용하고 다시 눌러 주세요."); console.error(e);
+  }
+};
+
+$("file").onchange = async (ev) => {
+  const f = ev.target.files[0]; if (!f) return;
+  video.srcObject = null; video.src = URL.createObjectURL(f); video.loop = true; await video.play(); await begin("file");
+};
+
+$("base").onclick = () => {
+  const m = window.__lastMeasure;
+  if (!m) { say("아직 사람을 찾지 못했어요. 몸 전체가 화면에 들어오게 해 주세요."); return; }
+  base = { sh: m.sh, hp: m.hp, head: m.head, headW: m.headW }; peaks = { sh: 0, hp: 0, xf: 0, hd: 0 };
+  say("기준을 잡았어요. 이제 스윙해 보세요.");
+};
+
+$("model").onchange = async () => { if (pose) { pose.close(); pose = null; if (running) await loadModel(); } };
+
+// ---- sensor glove (Web Bluetooth) ----
+let glove = null, logging = false, log = null, gStats = { n: 0, t0: 0, hand: 0, arm: 0, clips: 0 };
+function gloveText(id, t) { $(id).textContent = t; }
+function onGlove(r) {
+  if (r.type === "imu") {
+    gStats.n += r.frames.length;
+    for (const f of r.frames) {
+      const h = Math.max(Math.abs(f[3]), Math.abs(f[4]), Math.abs(f[5])) * GYRO_DPS, a = Math.max(Math.abs(f[9]), Math.abs(f[10]), Math.abs(f[11])) * GYRO_DPS;
+      gStats.hand = Math.max(gStats.hand, h); gStats.arm = Math.max(gStats.arm, a);
+      if (logging) log.glove.push(f);
+    }
+  } else if (r.type === "status") {
+    gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? "팔 IMU 있음" : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
+    if (logging) log.status.push(r);
+  } else if (r.type === "clip") {
+    gStats.clips++; gloveText("gClips", String(gStats.clips));
+    const c = r.clip; gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
+    if (logging) log.clips.push({ kind: c.kind, id: c.id, t_us: c.t_us, pre: c.pre, total: c.total, rate: c.rate, peak: c.peak, firstNow: c.firstNow, lastNow: c.lastNow, samples: Array.from(clipSamples(c)) });
+  }
+}
+setInterval(() => {
+  if (!glove) return;
+  const now = performance.now(), dt = (now - gStats.t0) / 1000;
+  if (dt >= 1) {
+    gloveText("gHz", (gStats.n / dt).toFixed(0) + " Hz"); gStats.n = 0; gStats.t0 = now;
+    gloveText("gMiss", String(glove.parser.missing));
+    gloveText("gGyro", `${gStats.hand.toFixed(0)} / ${gStats.arm.toFixed(0)}`);
+    gloveText("gSat", gStats.hand >= SAT_DPS - 1 || gStats.arm >= SAT_DPS - 1 ? "°/s · 한계(2293)에 닿음" : "°/s");
+    if (logging) gloveText("gLog", `기록 중 ${((now - log.t0) / 1000).toFixed(0)}초`);
+  }
+}, 250);
+
+$("glove").onclick = async () => {
+  if (glove && glove.device && glove.device.gatt.connected) { await glove.stop().catch(() => {}); glove.disconnect(); return; }
+  try {
+    glove = new Glove(onGlove, (st) => {
+      gloveText("gState", st === "connected" ? "연결됨" : "연결 끊김");
+      $("glove").textContent = st === "connected" ? "장갑 연결 끊기" : "센서 장갑 연결";
+      $("log").disabled = st !== "connected";
+      if (st !== "connected" && logging) stopLog();
+    });
+    say("장갑을 찾는 중… 목록에서 SensorGlove를 골라 주세요.");
+    const p = await glove.connect();
+    gloveText("gBatch", p.probeLen ? `패킷 ${p.probeLen} B · ${p.batch}프레임씩` : "패킷 크기 확인 실패 · 1프레임씩");
+    gStats = { n: 0, t0: performance.now(), hand: 0, arm: 0, clips: 0 };
+    await glove.start(200, 1); await glove.send("status");
+    say("장갑 연결됨. '기록 시작'으로 저장할 수 있어요.");
+  } catch (e) {
+    console.error(e);
+    say(e.message === "no-web-bluetooth" ? "이 브라우저는 웹 블루투스가 없어요. 안드로이드 Chrome으로 열어 주세요." :
+        e.name === "NotFoundError" ? "장갑을 고르지 않았거나 찾지 못했어요. 장갑 LED가 파랗게 깜빡이는지 확인해 주세요." : "장갑 연결 실패: " + e.message);
+  }
+};
+
+function stopLog() {
+  logging = false; $("log").textContent = "기록 시작";
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+    missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
+    pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords" } };
+  const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `swing-glove-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`; a.click();
+  say(`저장했어요: 장갑 ${log.glove.length}프레임, 자세 ${log.pose.length}프레임, 클립 ${log.clips.length}개.`);
+}
+$("log").onclick = () => {
+  if (logging) { stopLog(); return; }
+  log = { t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
+  logging = true; $("log").textContent = "기록 멈추고 저장"; say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
+};
+
+$("rec").onclick = () => {
+  if (recorder && recorder.state === "recording") { recorder.stop(); return; }
+  chunks = [];
+  recorder = new MediaRecorder(canvas.captureStream(30), { mimeType: MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm" });
+  recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  recorder.onstop = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(chunks, { type: "video/webm" }));
+    a.download = `swing-pose-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.webm`; a.click();
+    $("rec").textContent = "녹화"; say("저장했어요.");
+  };
+  recorder.start(); $("rec").textContent = "녹화 멈추고 저장"; say("녹화 중…");
+};
+</script>
+</body>
+</html>
