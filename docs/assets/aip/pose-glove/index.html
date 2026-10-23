@@ -153,11 +153,14 @@ function loop() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     frames++; window.__stats.frames++;
     const dt = now - lastT; lastT = now; fpsAvg = fpsAvg ? 0.9 * fpsAvg + 0.1 * (1000 / dt) : 1000 / dt;
+    if (logging) log.pose.push(res.landmarks && res.landmarks.length   // every camera frame: its time matters for sync even with no person
+      ? [+now.toFixed(1), ...res.landmarks[0].flatMap((q) => [+q.x.toFixed(4), +q.y.toFixed(4), +(q.visibility ?? 1).toFixed(2)])]
+      : [+now.toFixed(1)]);
     if (res.landmarks && res.landmarks.length) {
       window.__stats.found++;
       const m = measure(res.landmarks[0]);
       draw(m.P);
-      if (logging) log.pose.push([+now.toFixed(1), ...res.landmarks[0].flatMap((q) => [+q.x.toFixed(4), +q.y.toFixed(4), +(q.visibility ?? 1).toFixed(2)])]);
+
       const wv = (m.P[15].v + m.P[16].v) / 2;
       $("vis").textContent = `손목 신뢰도 ${(wv * 100).toFixed(0)}%`;
       if (base) {
@@ -268,7 +271,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
-    pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords" } };
+    pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
   a.download = `swing-glove-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`; a.click();
