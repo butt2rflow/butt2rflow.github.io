@@ -17,6 +17,7 @@ export class GloveParser {
   reset() {
     this.frames = []; this.status = []; this.clips = new Map();
     this.nextSeq = null; this.missing = 0; this.count = 0; this.probeLen = null; this.armOk = null;
+    this.clock = new ClockFit();
   }
   feed(dv, now) {
     if (this.probeLen === null && dv.byteLength > 30 && [0, 1, 2, 3, 4, 5, 6, 7].every((v) => dv.getUint8(v) === v)) {
@@ -41,6 +42,7 @@ export class GloveParser {
       for (let k = 0; k < 12; k++) f.push(dv.getInt16(off + 4 + 2 * k, true));
       this.frames.push(f); got.push(f); this.count++;
     }
+    if (got.length) this.clock.add(now, got[got.length - 1][2]);
     return { type: "imu", frames: got };
   }
   clipChunk(dv, now) {
@@ -108,4 +110,28 @@ export class Glove {
   start(hz = 200, mic = 1) { this.parser.nextSeq = null; return this.send(`start ${hz} ${this.batch} ${mic}`); }
   stop() { return this.send("stop"); }
   disconnect() { if (this.device && this.device.gatt.connected) this.device.gatt.disconnect(); }
+}
+
+// Glove clock -> phone clock (ms). Each packet's newest frame gives one point: arrival time minus glove time.
+// Bluetooth only ever delays, so the lowest points in each 2 s window trace the true offset; a line through
+// those window minima (offset + drift) is the fit. On the S25 the residual was about +-8 ms (2026-10-22 logs).
+export class ClockFit {
+  constructor(win = 2000, keep = 60) { this.win = win; this.keep = keep; this.mins = new Map(); this.a = 0; this.b = null; this.t0 = null; }
+  add(phoneMs, gloveUs) {
+    const g = gloveUs / 1000, off = phoneMs - g;
+    if (this.t0 === null) this.t0 = g;
+    const k = Math.floor((g - this.t0) / this.win), m = this.mins.get(k);
+    if (!m || off < m[1]) { this.mins.set(k, [g, off]); this.refit(); }
+    if (this.mins.size > this.keep) this.mins.delete(Math.min(...this.mins.keys()));
+  }
+  refit() {
+    const pts = [...this.mins.values()];
+    if (pts.length < 3) { this.a = 0; this.b = Math.min(...pts.map((p) => p[1])); return; }
+    let sx = 0, sy = 0, sxx = 0, sxy = 0; const n = pts.length;
+    for (const [x0, y] of pts) { const x = x0 - this.t0; sx += x; sy += y; sxx += x * x; sxy += x * y; }
+    // Both crystals are good to ~+-50 ppm, so a steeper slope is window noise in a short log: clamp it.
+    this.a = Math.max(-150e-6, Math.min(150e-6, (n * sxy - sx * sy) / (n * sxx - sx * sx))); this.b = (sy - this.a * sx) / n;
+  }
+  ready() { return this.b !== null; }
+  toPhone(gloveUs) { const g = gloveUs / 1000; return g + this.b + this.a * (g - this.t0); }
 }
