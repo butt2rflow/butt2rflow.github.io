@@ -80,7 +80,7 @@ a { color: var(--accent); }
   <div class="nums" id="gnums">
     <div class="num"><span>장갑 수신</span><b id="gHz">–</b><small id="gState">연결 안 됨</small></div>
     <div class="num"><span>빠진 프레임</span><b id="gMiss">–</b><small id="gBatch"></small></div>
-    <div class="num"><span>손 / 팔 자이로 최대</span><b id="gGyro">–</b><small id="gSat"></small></div>
+    <div class="num"><span>손 / 팔 자이로 최대 (최근 3초)</span><b id="gGyro">–</b><small id="gSat"></small></div>
     <div class="num"><span>배터리</span><b id="gBat">–</b><small id="gArm"></small></div>
     <div class="num"><span>소리 클립</span><b id="gClips">0</b><small id="gLog"></small></div>
   </div>
@@ -300,8 +300,12 @@ setInterval(() => {
   if (dt >= 1) {
     gloveText("gHz", (gStats.n / dt).toFixed(0) + " Hz"); gStats.n = 0; gStats.t0 = now;
     gloveText("gMiss", String(glove.parser.missing));
-    gloveText("gGyro", `${gStats.hand.toFixed(0)} / ${gStats.arm.toFixed(0)}`);
-    gloveText("gSat", gStats.hand >= SAT_DPS - 1 || gStats.arm >= SAT_DPS - 1 ? "°/s · 한계(2293)에 닿음" : "°/s");
+    // big number = peak of the last 3 s (from the chart buffer); small line = session max since connect / log start
+    const tEnd = gyroBuf.length ? gyroBuf[gyroBuf.length - 1][0] : 0; let h3 = 0, a3 = 0;
+    for (const r of gyroBuf) if (r[0] >= tEnd - 3) { h3 = Math.max(h3, r[1]); a3 = Math.max(a3, r[2]); }
+    gloveText("gGyro", `${h3.toFixed(0)} / ${a3.toFixed(0)}`);
+    const hit = h3 >= SAT_DPS - 1 || a3 >= SAT_DPS - 1;
+    gloveText("gSat", `°/s${hit ? " · 한계(2293)에 닿음" : ""} · 전체 최대 ${gStats.hand.toFixed(0)} / ${gStats.arm.toFixed(0)}`);
     if (logging) gloveText("gLog", `기록 중 ${((now - log.t0) / 1000).toFixed(0)}초`);
   }
 }, 250);
@@ -428,7 +432,7 @@ function drawClip(c) {
 
 function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-23b", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-23c", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
@@ -439,6 +443,7 @@ function stopLog() {
 }
 $("log").onclick = () => {
   if (logging) { stopLog(); return; }
+  gStats.hand = 0; gStats.arm = 0;
   log = { t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
   logging = true; $("log").textContent = "기록 멈추고 저장"; speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
 };
