@@ -113,24 +113,34 @@ export class Glove {
 }
 
 // Glove clock -> phone clock (ms). Each packet's newest frame gives one point: arrival time minus glove time.
-// Bluetooth only ever delays, so the lowest points in each 2 s window trace the true offset; a line through
-// those window minima (offset + drift) is the fit. On the S25 the residual was about +-8 ms (2026-10-22 logs).
+// Bluetooth only ever delays, so the lowest point in each 2 s window traces the true offset. The fit uses only the
+// last 30 s of window minima, with robust statistics (Theil-Sen slope, 25th-percentile intercept): the first version fitted the whole
+// connection with least squares, and a backlog of late packets right after connecting pulled it 3.3 s off
+// (2026-10-24 log). On the S25 the residual is about +-10 ms.
 export class ClockFit {
-  constructor(win = 2000, keep = 60) { this.win = win; this.keep = keep; this.mins = new Map(); this.a = 0; this.b = null; this.t0 = null; }
+  constructor(win = 2000, span = 30000) { this.win = win; this.span = span; this.mins = new Map(); this.a = 0; this.b = null; this.t0 = null; }
   add(phoneMs, gloveUs) {
     const g = gloveUs / 1000, off = phoneMs - g;
     if (this.t0 === null) this.t0 = g;
     const k = Math.floor((g - this.t0) / this.win), m = this.mins.get(k);
-    if (!m || off < m[1]) { this.mins.set(k, [g, off]); this.refit(); }
-    if (this.mins.size > this.keep) this.mins.delete(Math.min(...this.mins.keys()));
+    if (!m || off < m[1]) {
+      this.mins.set(k, [g, off]);
+      for (const key of this.mins.keys()) if (key < k - this.span / this.win) this.mins.delete(key);
+      this.refit();
+    }
   }
   refit() {
-    const pts = [...this.mins.values()];
-    if (pts.length < 3) { this.a = 0; this.b = Math.min(...pts.map((p) => p[1])); return; }
-    let sx = 0, sy = 0, sxx = 0, sxy = 0; const n = pts.length;
-    for (const [x0, y] of pts) { const x = x0 - this.t0; sx += x; sy += y; sxx += x * x; sxy += x * y; }
-    // Both crystals are good to ~+-50 ppm, so a steeper slope is window noise in a short log: clamp it.
-    this.a = Math.max(-150e-6, Math.min(150e-6, (n * sxy - sx * sy) / (n * sxx - sx * sx))); this.b = (sy - this.a * sx) / n;
+    const pts = [...this.mins.values()], med = (v) => { v.sort((x, y) => x - y); const n = v.length; return n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2; };
+    let a = 0;
+    if (pts.length >= 4) {
+      const sl = [];
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) if (pts[j][0] !== pts[i][0]) sl.push((pts[j][1] - pts[i][1]) / (pts[j][0] - pts[i][0]));
+      a = Math.max(-150e-6, Math.min(150e-6, med(sl)));   // both crystals are good to ~+-50 ppm
+    }
+    // intercept: the 25th percentile, not the median: under load many windows never see an on-time packet, and
+    // packets can only be late, so the fastest windows are the truthful ones (a busy 2026-10-23 log needed this)
+    const r = pts.map(([x, y]) => y - a * (x - this.t0)).sort((x, y) => x - y);
+    this.a = a; this.b = r[Math.floor(0.25 * (r.length - 1))];
   }
   ready() { return this.b !== null; }
   toPhone(gloveUs) { const g = gloveUs / 1000; return g + this.b + this.a * (g - this.t0); }
