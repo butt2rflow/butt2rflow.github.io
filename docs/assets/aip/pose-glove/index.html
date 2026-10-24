@@ -12,32 +12,33 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); f
 .wrap { max-width: 900px; margin: 0 auto; padding: 12px 16px 28px; display: grid; gap: 12px; }
 h1 { font-size: 20px; margin: 4px 0 0; }
 p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
-.stage { position: relative; width: 100%; background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 9; }
+.stage { position: relative; width: 100%; background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 4; }
 video, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 video { opacity: 0; }
 .hud { position: absolute; left: 8px; top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
 .chip { background: rgba(0,0,0,.6); border-radius: 6px; padding: 3px 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
 .num { background: var(--panel); border-radius: 8px; padding: 8px 10px; }
-.num b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; }
-.num span { font-size: 12px; color: var(--muted); }
-.num small { color: var(--accent); font-size: 12px; }
+.num b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num small { display: block; color: var(--accent); font-size: 12px; min-height: 1.4em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
 button, select, label.file { background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
 button.primary { background: var(--accent); color: #002433; border-color: var(--accent); font-weight: 700; }
 button:disabled { opacity: .5; }
 label.file input { display: none; }
-#msg { color: var(--warn); font-size: 14px; min-height: 1.4em; }
+#msg { color: var(--warn); font-size: 14px; line-height: 1.4; height: 2.8em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 details { background: var(--panel); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted); }
 details summary { color: var(--fg); cursor: pointer; }
 details li { margin: 4px 0; }
 a { color: var(--accent); }
 .charts { display: grid; gap: 8px; }
 .chart { background: var(--panel); border-radius: 8px; padding: 8px 10px; display: grid; gap: 6px; }
-.chart .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.chart .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); min-height: 2em; }
+.chart .head > span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chart canvas { position: static; display: block; width: 100%; height: 150px; background: #0b0e10; border-radius: 6px; }
 .key { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; color: var(--fg); }
-.live { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+.live { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; table-layout: fixed; }
 .live th { color: var(--muted); font-weight: 400; font-size: 12px; text-align: right; padding: 2px 6px; }
 .live td { text-align: right; padding: 3px 6px; border-top: 1px solid #2d353b; }
 .live td:first-child, .live th:first-child { text-align: left; }
@@ -63,8 +64,8 @@ a { color: var(--accent); }
     <button id="log" disabled>기록 시작</button>
   </div>
   <div class="row" id="lensRow" style="display:none;align-items:center">
-    <select id="lens" aria-label="렌즈"></select>
-    <label id="zoomBox" style="display:none;align-items:center;gap:6px;font-size:14px;color:var(--muted)">줌 <input id="zoom" type="range" step="0.1" style="width:140px"> <span id="zoomV"></span></label>
+    <select id="lens" aria-label="렌즈" style="width:220px;max-width:100%;overflow:hidden;text-overflow:ellipsis"></select>
+    <label id="zoomBox" style="display:none;align-items:center;gap:6px;font-size:14px;color:var(--muted)">줌 <input id="zoom" type="range" step="0.1" style="width:140px"> <span id="zoomV" style="display:inline-block;width:8.5em;white-space:nowrap"></span></label>
   </div>
   <div id="msg"></div>
 
@@ -108,7 +109,7 @@ a { color: var(--accent); }
     </div>
     <div class="chart">
       <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
-      <canvas id="impImg" style="height:auto;aspect-ratio:16/9"></canvas>
+      <canvas id="impImg" style="height:auto;aspect-ratio:3/4"></canvas>
       <canvas id="impCv"></canvas>
       <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span></span><span id="impNote"></span></div>
     </div>
@@ -295,6 +296,7 @@ async function openCamera(deviceId) {
   if (deviceId) v.deviceId = { exact: deviceId }; else v.facingMode = { ideal: "environment" };   // first time: a back camera; after that the remembered lens
   camStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: v });
   video.srcObject = camStream; await video.play();
+  if (video.videoWidth) $("impImg").style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
   const track = camStream.getVideoTracks()[0], caps = track.getCapabilities ? track.getCapabilities() : {}, set = track.getSettings();
   // lens list (labels exist only after permission)
   const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "videoinput");
@@ -304,9 +306,9 @@ async function openCamera(deviceId) {
   if (caps.zoom) {
     const z = $("zoom"); z.min = caps.zoom.min; z.max = Math.min(caps.zoom.max, 4); z.step = caps.zoom.step || 0.1;
     const saved = parseFloat(pref("pg-zoom")); z.value = isFinite(saved) ? Math.max(caps.zoom.min, Math.min(z.max, saved)) : (set.zoom ?? caps.zoom.min);
-    $("zoomV").textContent = `${(+z.value).toFixed(1)}x (최소 ${caps.zoom.min})`; $("zoomBox").style.display = "flex";
+    $("zoomV").textContent = `${(+z.value).toFixed(1)}x (최소 ${caps.zoom.min})`; $("zoomBox").style.display = "flex"; $("zoomBox").style.visibility = "visible";
     await track.applyConstraints({ advanced: [{ zoom: +z.value }] }).catch(() => {});
-  } else $("zoomBox").style.display = "none";
+  } else { $("zoomBox").style.display = "flex"; $("zoomBox").style.visibility = "hidden"; }
   say(`카메라: ${set.width}×${set.height}${caps.zoom ? "" : " · 이 렌즈는 줌 조절이 안 돼요"}. 더 넓게 보려면 렌즈 목록에서 다른 후면 카메라(초광각)를 골라 보세요.`);
 }
 $("start").onclick = async () => {
@@ -540,7 +542,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-24d", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-24e", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
