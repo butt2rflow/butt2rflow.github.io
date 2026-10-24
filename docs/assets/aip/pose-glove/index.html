@@ -54,6 +54,7 @@ a { color: var(--accent); }
     <button id="base" disabled>어드레스 기준 잡기</button>
     <button id="rec" disabled>녹화</button>
     <select id="cam" aria-label="카메라"><option value="environment" selected>후면 카메라</option><option value="user">전면 카메라 (시험용)</option></select>
+    <select id="aspect" aria-label="화면 비율"><option value="4:3" selected>4:3 (위아래가 더 넓게)</option><option value="16:9">16:9</option></select>
     <label class="file" style="display:flex;align-items:center;gap:6px"><input id="speak" type="checkbox" checked style="display:inline">음성 안내</label>
     <select id="model" aria-label="모델"><option value="full" selected>정확한 모델</option><option value="lite">빠른 모델 (손목이 부정확)</option></select>
     <label class="file">영상 파일로 시험<input id="file" type="file" accept="video/*"></label>
@@ -61,6 +62,10 @@ a { color: var(--accent); }
   <div class="row">
     <button id="glove">센서 장갑 연결</button>
     <button id="log" disabled>기록 시작</button>
+  </div>
+  <div class="row" id="lensRow" style="display:none;align-items:center">
+    <select id="lens" aria-label="렌즈"></select>
+    <label id="zoomBox" style="display:none;align-items:center;gap:6px;font-size:14px;color:var(--muted)">줌 <input id="zoom" type="range" step="0.1" style="width:140px"> <span id="zoomV"></span></label>
   </div>
   <div id="msg"></div>
 
@@ -123,6 +128,7 @@ a { color: var(--accent); }
       <li>회전은 화면에서 어깨선·골반선이 짧아진 정도로 계산한 <b>대략값</b>이에요. 다운스윙과 임팩트는 너무 빨라서 점이 튈 수 있어요. 정확한 손목과 임팩트는 센서 장갑이 맡아요.</li>
       <li>녹화는 점이 그려진 화면을 휴대폰에 저장해요(webm).</li>
       <li>S25에서 정확한 모델은 약 26 fps, 손목 신뢰도 약 86%였어요. 빠른 모델은 더 빠르지만 손목 신뢰도가 50% 아래로 떨어져서 기본은 정확한 모델이에요.</li>
+      <li><b>화면이 좁을 때:</b> 화면 비율을 "4:3"으로 두면 위아래가 더 넓게 찍혀요(기본). 카메라를 켠 뒤 렌즈 목록에서 다른 후면 카메라를 고르면 초광각 렌즈가 잡히는 휴대폰도 있어요. 줌 막대가 보이면 왼쪽 끝이 가장 넓어요. 고른 렌즈와 줌은 이 휴대폰에 기억돼요.</li>
       <li><b>화면이 안 보일 때:</b> "음성 안내"를 켜 두면 카메라가 몸 전체를 보는지 소리로 알려 줘요("전신이 보여요", "발이 잘려요", "머리가 잘려요"). 휴대폰을 세워 두고 소리를 들으며 자리를 잡으면 돼요. 책상에서 시험할 때는 전면 카메라를 골라도 돼요(화면을 뒤집지 않아요).</li>
       <li><b>그래프:</b> 장갑 회전 속도는 실시간이에요. 휴대폰 마이크 스펙트로그램은 "마이크 켜기"를 누르면 실시간으로 흘러요(가로 = 시간, 세로 = 소리 높낮이, 밝을수록 큰 소리). 장갑 마이크는 블루투스로 소리를 계속 보낼 수 없어서, 임팩트나 목소리 클립이 도착할 때마다(임팩트 뒤 약 1.5초) 아래 칸에 그려져요.</li>
       <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
@@ -279,13 +285,43 @@ async function begin(source) {
   } catch (e) { say("AI 모델을 불러오지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요."); console.error(e); }
 }
 
+// Wider view: 4:3 keeps the sensor's full height (16:9 crops top and bottom); some phones also list their
+// ultra-wide lens as a separate camera, and Chrome can zoom out (zoom < 1) on some. Saved per phone.
+const pref = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+let camStream = null;
+async function openCamera(deviceId) {
+  if (camStream) camStream.getTracks().forEach((t) => t.stop());
+  const [w, h] = $("aspect").value === "4:3" ? [1280, 960] : [1280, 720];
+  const v = { width: { ideal: w }, height: { ideal: h }, frameRate: { ideal: 30 } };
+  if (deviceId) v.deviceId = { exact: deviceId }; else v.facingMode = { ideal: $("cam").value };
+  camStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: v });
+  video.srcObject = camStream; await video.play();
+  const track = camStream.getVideoTracks()[0], caps = track.getCapabilities ? track.getCapabilities() : {}, set = track.getSettings();
+  // lens list (labels exist only after permission)
+  const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "videoinput");
+  const sel = $("lens"); sel.innerHTML = "";
+  cams.forEach((d, i) => { const o = document.createElement("option"); o.value = d.deviceId; o.textContent = d.label || `카메라 ${i + 1}`; if (d.deviceId === set.deviceId) o.selected = true; sel.appendChild(o); });
+  $("lensRow").style.display = "flex";
+  if (caps.zoom) {
+    const z = $("zoom"); z.min = caps.zoom.min; z.max = Math.min(caps.zoom.max, 4); z.step = caps.zoom.step || 0.1;
+    const saved = parseFloat(pref("pg-zoom")); z.value = isFinite(saved) ? Math.max(caps.zoom.min, Math.min(z.max, saved)) : (set.zoom ?? caps.zoom.min);
+    $("zoomV").textContent = `${(+z.value).toFixed(1)}x (최소 ${caps.zoom.min})`; $("zoomBox").style.display = "flex";
+    await track.applyConstraints({ advanced: [{ zoom: +z.value }] }).catch(() => {});
+  } else $("zoomBox").style.display = "none";
+  say(`카메라: ${set.width}×${set.height}${caps.zoom ? "" : " · 이 렌즈는 줌 조절이 안 돼요"}. 더 넓게 보려면 렌즈 목록에서 다른 후면 카메라(초광각)를 골라 보세요.`);
+}
 $("start").onclick = async () => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: $("cam").value }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } } });
-    video.srcObject = stream; await video.play(); await begin("camera");
-  } catch (e) {
-    say("카메라를 열지 못했어요. 브라우저의 카메라 권한을 허용하고 다시 눌러 주세요."); console.error(e);
+  try { await openCamera(pref("pg-lens-" + $("cam").value) || null); if (!running) await begin("camera"); }
+  catch (e) {
+    try { pref("pg-lens-" + $("cam").value, ""); await openCamera(null); if (!running) await begin("camera"); }
+    catch (e2) { say("카메라를 열지 못했어요. 브라우저의 카메라 권한을 허용하고 다시 눌러 주세요."); console.error(e2); }
   }
+};
+$("lens").onchange = async () => { pref("pg-lens-" + $("cam").value, $("lens").value); try { await openCamera($("lens").value); } catch (e) { say("그 카메라는 열 수 없어요."); console.error(e); } };
+$("aspect").onchange = async () => { if (camStream) await openCamera($("lens").value || null).catch(console.error); };
+$("zoom").oninput = async () => {
+  const z = +$("zoom").value; pref("pg-zoom", String(z)); $("zoomV").textContent = `${z.toFixed(1)}x`;
+  const t = camStream && camStream.getVideoTracks()[0]; if (t) await t.applyConstraints({ advanced: [{ zoom: z }] }).catch(() => {});
 };
 
 $("file").onchange = async (ev) => {
@@ -505,7 +541,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-24b", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-24c", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
