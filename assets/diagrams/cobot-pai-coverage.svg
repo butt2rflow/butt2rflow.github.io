@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Physical AI 커버리지 — 개방형 vs 폐쇄형</title>
+<desc>한 현장 분석 예시에서 Physical AI 커버리지는 개방형(UR)이 대략 75~80%, 폐쇄형(화낙)이 대략 40~50%로 갈렸다. 격차의 원인은 오롯이 힘 제어 접근성 — 팔이 나빠서가 아니라 열려 있지 않아서다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.lb{font-size:13px;font-weight:700;fill:#3d3d3a;}
+.pct{font-size:13px;font-weight:700;}
+.s{font-size:11px;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="270" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">Physical AI 커버리지 — 개방형 vs 폐쇄형</text>
+
+<!-- scale track 180..600 = 100% -->
+<line x1="180" y1="70" x2="180" y2="180" stroke="#d6d3c8" stroke-width="1"/>
+<text class="s" x="180" y="200" text-anchor="middle">0%</text>
+<text class="s" x="600" y="200" text-anchor="middle">100%</text>
+
+<!-- open UR -->
+<text class="lb" x="40" y="98">개방형 (UR)</text>
+<rect x="180" y="82" width="420" height="24" rx="5" fill="#e7e4da"/>
+<rect x="180" y="82" width="328" height="24" rx="5" style="fill:#16a34a"/>
+<text class="pct" x="518" y="99" style="fill:#15803d">75~80%</text>
+
+<!-- closed FANUC -->
+<text class="lb" x="40" y="150">폐쇄형 (화낙)</text>
+<rect x="180" y="134" width="420" height="24" rx="5" fill="#e7e4da"/>
+<rect x="180" y="134" width="189" height="24" rx="5" style="fill:#d84a3a"/>
+<text class="pct" x="379" y="151" style="fill:#b23a2c">40~50%</text>
+
+<text class="s" x="40" y="230" style="fill:#8a6d3b">격차의 원인은 오롯이 '힘 제어 접근성' — 팔이 나빠서가 아니라, 열려 있지 않아서.</text>
+<text class="s" x="40" y="250">※ 한 현장 분석 예시. 절대 수치는 응용에 따라 달라지고, 상대 구조가 요점이다.</text>
+</svg>

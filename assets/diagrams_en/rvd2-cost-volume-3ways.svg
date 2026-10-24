@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Three ways to build the cost volume</title>
+<desc id="de">There are three ways to match left-right features: correlation, concat, and group-wise correlation. FoundationStereo is a hybrid using concat and group-wise correlation together.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="300" rx="12"/>
+<text class="t" x="18" y="22">Same 4D, different ways to fill it</text>
+<rect class="bx" x="16" y="34" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="53" style="fill:var(--blue)">① Correlation — a single dot product</text>
+<text class="st" x="30" y="72">Multiply two feature vectors into one scalar. 1 channel,</text>
+<text class="st" x="30" y="88">so very light. But <tspan style="fill:var(--red)">information gets crushed</tspan>.</text>
+<text class="lb" x="30" y="104">[1, D, H, W]</text>
+<rect class="bx" x="16" y="118" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="137" style="fill:var(--teal)">② Concat — just stack them</text>
+<text class="st" x="30" y="156">Stack left-right features along channels and leave the</text>
+<text class="st" x="30" y="172">decision to the network. Top expressiveness, <tspan style="fill:var(--red)">worst memory</tspan>.</text>
+<text class="lb" x="30" y="188">[2C, D, H, W]</text>
+<rect class="bx" x="16" y="202" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="221" style="fill:var(--amber)">③ Group-wise correlation — the compromise</text>
+<text class="st" x="30" y="240">Split channels into G groups, dot product per group. Between</text>
+<text class="st" x="30" y="256">correlation's lightness and concat's expressiveness.</text>
+<text class="lb" x="30" y="272">[G, D, H, W]</text>
+<text class="lb" x="180" y="294" text-anchor="middle">FoundationStereo is a hybrid using ②+③ together</text>
+</svg>

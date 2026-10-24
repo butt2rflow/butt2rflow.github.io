@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">ADD와 ADD-S의 차이</title>
+<desc id="de">ADD는 같은 점끼리, ADD-S는 가장 가까운 짝끼리 어긋남을 잰다. ADD-S만 좋고 ADD가 나쁘면 대칭 의존을 뜻한다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="220" rx="12"/>
+<text class="t" x="18" y="22">같은 점끼리 vs 가장 가까운 점끼리</text>
+<rect class="bx" x="16" y="36" width="156" height="130" rx="10"/>
+<text class="lb" x="94" y="56" text-anchor="middle">ADD</text>
+<circle class="hi" cx="60" cy="96" r="4"/><circle class="bad" cx="128" cy="96" r="4"/>
+<path class="ln" d="M64,96 L124,96" stroke="var(--red)"/>
+<circle class="hi" cx="60" cy="126" r="4"/><circle class="bad" cx="128" cy="126" r="4"/>
+<path class="ln" d="M64,126 L124,126" stroke="var(--red)"/>
+<text class="lb" x="94" y="152" text-anchor="middle">대응이 고정 → 대칭에 불리</text>
+<rect class="bx" x="188" y="36" width="156" height="130" rx="10"/>
+<text class="lb" x="266" y="56" text-anchor="middle" style="fill:var(--teal)">ADD-S</text>
+<circle class="hi" cx="232" cy="96" r="4"/><circle class="hi2" cx="300" cy="96" r="4"/>
+<circle class="hi" cx="232" cy="126" r="4"/><circle class="hi2" cx="300" cy="126" r="4"/>
+<path class="ln" d="M236,96 L232,120" stroke="var(--teal)"/>
+<path class="ln" d="M236,126 L296,126" stroke="var(--teal)" stroke-dasharray="3 2"/>
+<text class="lb" x="266" y="152" text-anchor="middle">가장 가까운 짝을 찾아 잰다</text>
+<text class="lb" x="180" y="192" text-anchor="middle">보통 "물체 지름의 10% 이내면 성공"으로 판정</text>
+<text class="lb" x="180" y="210" text-anchor="middle" style="fill:var(--amber)">논문 표에서 ADD-S만 좋고 ADD가 나쁘면 — 대칭 의존</text>
+</svg>

@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>스윙 카메라 + 센서 장갑</title>
+<meta name="robots" content="noindex">
+<style>
+:root { --bg: #0f1214; --panel: #1a1f23; --fg: #eef1f3; --muted: #9aa5ad; --accent: #4fc3f7; --ok: #66bb6a; --warn: #ffb74d; color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: "Noto Sans KR", system-ui, sans-serif; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 12px 16px 28px; display: grid; gap: 12px; }
+h1 { font-size: 20px; margin: 4px 0 0; }
+p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.stage { position: relative; width: 100%; background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 4; }
+video, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+video { opacity: 0; }
+.hud { position: absolute; left: 8px; top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { background: rgba(0,0,0,.6); border-radius: 6px; padding: 3px 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.num { background: var(--panel); border-radius: 8px; padding: 8px 10px; }
+.num b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num small { display: block; color: var(--accent); font-size: 12px; min-height: 1.4em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+button, select, label.file { background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
+button.primary { background: var(--accent); color: #002433; border-color: var(--accent); font-weight: 700; }
+button:disabled { opacity: .5; }
+label.file input { display: none; }
+#msg { color: var(--warn); font-size: 14px; line-height: 1.4; height: 2.8em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+details { background: var(--panel); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted); }
+details summary { color: var(--fg); cursor: pointer; }
+details li { margin: 4px 0; }
+a { color: var(--accent); }
+.charts { display: grid; gap: 8px; }
+.chart { background: var(--panel); border-radius: 8px; padding: 8px 10px; display: grid; gap: 6px; }
+.chart .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); min-height: 2em; }
+.chart .head > span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart canvas { position: static; display: block; width: 100%; height: 150px; background: #0b0e10; border-radius: 6px; }
+.key { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; color: var(--fg); }
+.live { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; table-layout: fixed; }
+.live th { color: var(--muted); font-weight: 400; font-size: 12px; text-align: right; padding: 2px 6px; }
+.live td { text-align: right; padding: 3px 6px; border-top: 1px solid #2d353b; }
+.live td:first-child, .live th:first-child { text-align: left; }
+.key i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>스윙 카메라 + 센서 장갑 <small style="font-size:13px;color:var(--warn)">시험판</small></h1>
+  <p>카메라로 몸의 점 33개를 찾고, 블루투스로 센서 장갑(손·팔뚝 IMU)을 함께 받아요. "기록 시작"을 누르면 두 데이터에 휴대폰 시각을 붙여 한 파일에 저장해요. 시간 맞추기와 분석은 다음 단계예요. 영상은 휴대폰 밖으로 나가지 않아요.</p>
+
+  <div class="row">
+    <button id="start" class="primary">카메라 시작</button>
+    <button id="base" disabled>어드레스 기준 잡기</button>
+    <button id="rec" disabled>녹화</button>
+    <select id="aspect" aria-label="화면 비율"><option value="4:3" selected>4:3 (위아래가 더 넓게)</option><option value="16:9">16:9</option></select>
+    <label class="file" style="display:flex;align-items:center;gap:6px"><input id="speak" type="checkbox" checked style="display:inline">음성 안내</label>
+    <select id="model" aria-label="모델"><option value="full" selected>정확한 모델</option><option value="lite">빠른 모델 (손목이 부정확)</option></select>
+    <label class="file">영상 파일로 시험<input id="file" type="file" accept="video/*"></label>
+  </div>
+  <div class="row">
+    <button id="glove">센서 장갑 연결</button>
+    <button id="log" disabled>기록 시작</button>
+  </div>
+  <div class="row" id="lensRow" style="display:none;align-items:center">
+    <select id="lens" aria-label="렌즈" style="width:220px;max-width:100%;overflow:hidden;text-overflow:ellipsis"></select>
+    <label id="zoomBox" style="display:none;align-items:center;gap:6px;font-size:14px;color:var(--muted)">줌 <input id="zoom" type="range" step="0.1" style="width:140px"> <span id="zoomV" style="display:inline-block;width:8.5em;white-space:nowrap"></span></label>
+  </div>
+  <div id="msg"></div>
+
+  <div class="stage" id="stage">
+    <video id="video" playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <div class="hud"><span class="chip" id="fps">준비</span><span class="chip" id="vis"></span></div>
+  </div>
+
+  <div class="nums">
+    <div class="num"><span>어깨 회전</span><b id="sh">–</b><small id="shMax"></small></div>
+    <div class="num"><span>골반 회전</span><b id="hp">–</b><small id="hpMax"></small></div>
+    <div class="num"><span>꼬임 (어깨 − 골반)</span><b id="xf">–</b><small id="xfMax"></small></div>
+    <div class="num"><span>머리 좌우 이동 (머리 폭)</span><b id="hd">–</b><small id="hdMax"></small></div>
+  </div>
+
+  <div class="nums" id="gnums">
+    <div class="num"><span>장갑 수신</span><b id="gHz">–</b><small id="gState">연결 안 됨</small></div>
+    <div class="num"><span>빠진 프레임</span><b id="gMiss">–</b><small id="gBatch"></small></div>
+    <div class="num"><span>손 / 팔 자이로 최대 (최근 3초)</span><b id="gGyro">–</b><small id="gSat"></small></div>
+    <div class="num"><span>배터리</span><b id="gBat">–</b><small id="gArm"></small></div>
+    <div class="num"><span>소리 클립</span><b id="gClips">0</b><small id="gLog"></small></div>
+  </div>
+
+  <div class="charts">
+    <div class="chart">
+      <div class="head"><span>장갑 센서 지금 값 (초당 5번 갱신)</span></div>
+      <table class="live">
+        <tr><th></th><th>자이로 x</th><th>y</th><th>z</th><th>°/s</th><th>가속 x</th><th>y</th><th>z</th><th>g</th></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#4fc3f7"></i>손</span></td><td id="h0">–</td><td id="h1">–</td><td id="h2">–</td><td id="hG">–</td><td id="h3">–</td><td id="h4">–</td><td id="h5">–</td><td id="hA">–</td></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#ffb74d"></i>팔뚝</span></td><td id="a0">–</td><td id="a1">–</td><td id="a2">–</td><td id="aG">–</td><td id="a3">–</td><td id="a4">–</td><td id="a5">–</td><td id="aA">–</td></tr>
+      </table>
+    </div>
+    <div class="chart">
+      <div class="head"><span>장갑 회전 속도 (최근 5초, °/s)</span><span><span class="key"><i style="background:#4fc3f7"></i>손</span><span class="key"><i style="background:#ffb74d"></i>팔뚝</span></span></div>
+      <canvas id="gyroCv"></canvas>
+    </div>
+    <div class="chart">
+      <div class="head"><span>휴대폰 마이크 스펙트로그램 (실시간, 0~8 kHz)</span><button id="mic" style="padding:6px 10px;font-size:13px">마이크 켜기</button></div>
+      <canvas id="specCv"></canvas>
+    </div>
+    <div class="chart">
+      <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
+      <canvas id="impImg" style="height:auto;aspect-ratio:3/4"></canvas>
+      <canvas id="impCv"></canvas>
+      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span></span><span id="impNote"></span></div>
+    </div>
+    <div class="chart">
+      <div class="head"><span id="clipTitle">장갑 소리 클립 (임팩트·목소리가 오면 그려져요)</span></div>
+      <canvas id="clipCv"></canvas>
+    </div>
+  </div>
+
+  <details open>
+    <summary>쓰는 법</summary>
+    <ul>
+      <li><b>카메라 위치:</b> 정면(얼굴 쪽)에서 2.5~3 m, 허리 높이, 휴대폰은 가로. 발부터 머리, 클럽 끝까지 화면에 다 들어오게 해요.</li>
+      <li><b>후면 카메라</b>를 써요. 화면을 좌우로 뒤집지 않아서 오른손잡이는 오른손잡이로 보여요.</li>
+      <li>어드레스 자세에서 <b>"어드레스 기준 잡기"</b>를 누르면 그 자세를 0으로 두고, 스윙하는 동안 가장 큰 값을 작은 글씨로 보여 줘요. 다음 스윙 전에 다시 누르면 돼요.</li>
+      <li>회전은 화면에서 어깨선·골반선이 짧아진 정도로 계산한 <b>대략값</b>이에요. 다운스윙과 임팩트는 너무 빨라서 점이 튈 수 있어요. 정확한 손목과 임팩트는 센서 장갑이 맡아요.</li>
+      <li>녹화는 점이 그려진 화면을 휴대폰에 저장해요(webm).</li>
+      <li>S25에서 정확한 모델은 약 26 fps, 손목 신뢰도 약 86%였어요. 빠른 모델은 더 빠르지만 손목 신뢰도가 50% 아래로 떨어져서 기본은 정확한 모델이에요.</li>
+      <li><b>화면이 좁을 때:</b> 화면 비율을 "4:3"으로 두면 위아래가 더 넓게 찍혀요(기본). 카메라를 켜면 렌즈 목록이 나와요. 앞뒤 카메라가 모두 들어 있고, 초광각 렌즈가 따로 보이는 휴대폰도 있어요. 처음에는 후면 카메라로 시작해요. 줌 막대가 보이면 왼쪽 끝이 가장 넓어요. 고른 렌즈와 줌은 이 휴대폰에 기억돼요. 갤럭시 S25에서는 <b>camera 2 (후면)</b>와 <b>camera 1 (전면)</b>이 넓게 찍혀요.</li>
+      <li><b>화면이 안 보일 때:</b> "음성 안내"를 켜 두면 카메라가 몸 전체를 보는지 소리로 알려 줘요("전신이 보여요", "발이 잘려요", "머리가 잘려요"). 휴대폰을 세워 두고 소리를 들으며 자리를 잡으면 돼요. 책상에서 시험할 때는 렌즈 목록에서 전면 카메라를 골라도 돼요(화면을 뒤집지 않아요).</li>
+      <li><b>그래프:</b> 장갑 회전 속도는 실시간이에요. 휴대폰 마이크 스펙트로그램은 "마이크 켜기"를 누르면 실시간으로 흘러요(가로 = 시간, 세로 = 소리 높낮이, 밝을수록 큰 소리). 장갑 마이크는 블루투스로 소리를 계속 보낼 수 없어서, 임팩트나 목소리 클립이 도착할 때마다(임팩트 뒤 약 1.5초) 아래 칸에 그려져요.</li>
+      <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
+      <li><b>기록:</b> "기록 시작" → 스윙 → "기록 멈추고 저장". 장갑 프레임(장갑 시계 + 휴대폰 도착 시각), 자세 프레임(휴대폰 시각), 배터리, 소리 클립이 json 파일 하나로 저장돼요. 카메라 없이 장갑만 기록해도 돼요.</li>
+      <li>시험판이라 아직 시간 맞추기·손목 각도는 없어요. 숫자는 받는 상태 확인용이에요(장갑 수신 약 180 Hz, 빠진 프레임 0이면 정상).</li>
+    </ul>
+  </details>
+</div>
+
+<script type="module">
+import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs";
+import { Glove, clipSamples, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
+
+const $ = (id) => document.getElementById(id);
+const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
+const MODELS = {
+  lite: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task",
+  full: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task",
+};
+const EDGES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[15,19],[16,20],[27,31],[28,32]];
+let pose = null, running = false, base = null, peaks = null, recorder = null, chunks = [];
+let lastT = performance.now(), fpsAvg = 0, frames = 0;
+window.__stats = { frames: 0, found: 0, fps: 0, last: null };
+
+const say = (t) => { $("msg").textContent = t || ""; };
+
+async function loadModel() {
+  say("AI 모델을 불러오는 중…");
+  const files = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm");
+  const opts = (delegate) => ({ baseOptions: { modelAssetPath: MODELS[$("model").value], delegate }, runningMode: "VIDEO", numPoses: 1 });
+  try { pose = await PoseLandmarker.createFromOptions(files, opts("GPU")); }
+  catch (e) { pose = await PoseLandmarker.createFromOptions(files, opts("CPU")); }
+  say("");
+}
+
+function fit() {
+  const w = video.videoWidth || 1280, h = video.videoHeight || 720;
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  $("stage").style.aspectRatio = `${w} / ${h}`;
+}
+
+const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const turn = (w, w0) => (180 / Math.PI) * Math.acos(Math.max(0, Math.min(1, w / w0)));
+
+function measure(p) {
+  const W = canvas.width, H = canvas.height;
+  const P = p.map((q) => ({ x: q.x * W, y: q.y * H, v: q.visibility ?? 1 }));
+  return { sh: dist(P[11], P[12]), hp: dist(P[23], P[24]), head: P[0].x, headW: dist(P[7], P[8]), P };
+}
+
+function show(id, v, unit = "°", digits = 0) { $(id).textContent = v == null || isNaN(v) ? "–" : v.toFixed(digits) + unit; }
+
+function draw(P) {
+  ctx.lineWidth = Math.max(2, canvas.width / 300); ctx.strokeStyle = "#4fc3f7";
+  for (const [a, b] of EDGES) {
+    if (P[a].v > 0.4 && P[b].v > 0.4) { ctx.beginPath(); ctx.moveTo(P[a].x, P[a].y); ctx.lineTo(P[b].x, P[b].y); ctx.stroke(); }
+  }
+  for (let k = 0; k < 33; k++) {
+    if (P[k].v < 0.4) continue;
+    ctx.fillStyle = k === 15 || k === 16 ? "#ff5252" : "#ffffff";
+    ctx.beginPath(); ctx.arc(P[k].x, P[k].y, Math.max(3, canvas.width / 250), 0, 2 * Math.PI); ctx.fill();
+  }
+}
+
+// ---- spoken framing check (you can't see the screen with the rear camera) ----
+let frameState = "", frameSince = 0, frameSaid = "", frameSaidAt = 0;
+function speak(t) {
+  if (!$("speak").checked || !window.speechSynthesis) return;
+  speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = "ko-KR"; u.rate = 1.1; speechSynthesis.speak(u);
+}
+function framing(lm) {
+  let st;
+  if (!lm) st = "사람이 안 보여요";
+  else {
+    const ok = (k) => (lm[k].visibility ?? 1) > 0.5 && lm[k].x > 0.02 && lm[k].x < 0.98 && lm[k].y > 0.02 && lm[k].y < 0.98;
+    if (![0, 7, 8].some(ok)) st = "머리가 잘려요";
+    else if (![27, 28, 31, 32].every(ok)) st = "발이 잘려요";
+    else if (![15, 16].every(ok)) st = "손이 잘려요";
+    else st = "전신이 보여요";
+  }
+  const now = performance.now();
+  if (st !== frameState) { frameState = st; frameSince = now; }
+  // say it once it has held for 0.8 s; repeat a problem every 6 s, the OK message only once
+  if (now - frameSince > 800 && (st !== frameSaid || (st !== "전신이 보여요" && now - frameSaidAt > 6000))) { speak(st); frameSaid = st; frameSaidAt = now; }
+}
+
+// Camera frame time: the capture time Chrome reports for this frame (requestVideoFrameCallback), when it has one.
+// It is on the same clock as performance.now(); detection finishes tens of ms later, which is not when the image was taken.
+let capTime = null;
+function watchFrames() {
+  if (!video.requestVideoFrameCallback) return;
+  const cb = (_now, md) => { capTime = md.captureTime ?? md.expectedDisplayTime ?? null; video.requestVideoFrameCallback(cb); };
+  video.requestVideoFrameCallback(cb);
+}
+// Last ~4 s of small camera frames + landmarks, to show the frame at an impact that the glove reports 1-2 s later.
+const ring = [], pool = [], wristBuf = [];
+function keepFrame(t, lm) {
+  const c = pool.pop() || document.createElement("canvas");
+  c.width = 320; c.height = Math.round(320 * (video.videoHeight || 720) / (video.videoWidth || 1280));
+  c.getContext("2d").drawImage(video, 0, 0, c.width, c.height);
+  ring.push({ t, c, lm });
+  while (ring.length && ring[ring.length - 1].t - ring[0].t > 4000) pool.push(ring.shift().c);
+  if (lm) { const w = lm[16]; wristBuf.push([t, w.x, w.y, w.visibility ?? 1]); }
+  while (wristBuf.length && t - wristBuf[0][0] > 6000) wristBuf.shift();
+}
+
+function loop() {
+  if (!running) return;
+  if (video.readyState >= 2 && !video.paused) {
+    fit();
+    const now = performance.now();
+    const res = pose.detectForVideo(video, now);
+    const ft = capTime ?? now;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    keepFrame(ft, res.landmarks && res.landmarks.length ? res.landmarks[0] : null);
+    if (logging) log.cap.push(+ft.toFixed(1));
+    frames++; window.__stats.frames++;
+    const dt = now - lastT; lastT = now; fpsAvg = fpsAvg ? 0.9 * fpsAvg + 0.1 * (1000 / dt) : 1000 / dt;
+    if (logging) log.pose.push(res.landmarks && res.landmarks.length   // every camera frame: its time matters for sync even with no person
+      ? [+now.toFixed(1), ...res.landmarks[0].flatMap((q) => [+q.x.toFixed(4), +q.y.toFixed(4), +(q.visibility ?? 1).toFixed(2)])]
+      : [+now.toFixed(1)]);
+    framing(res.landmarks && res.landmarks.length ? res.landmarks[0] : null);
+    if (res.landmarks && res.landmarks.length) {
+      window.__stats.found++;
+      const m = measure(res.landmarks[0]);
+      draw(m.P);
+
+      const wv = (m.P[15].v + m.P[16].v) / 2;
+      $("vis").textContent = `손목 신뢰도 ${(wv * 100).toFixed(0)}%`;
+      if (base) {
+        const s = turn(m.sh, base.sh), h = turn(m.hp, base.hp), x = s - h, hd = (m.head - base.head) / base.headW;
+        show("sh", s); show("hp", h); show("xf", x); show("hd", hd, "", 2);
+        peaks.sh = Math.max(peaks.sh, s); peaks.hp = Math.max(peaks.hp, h); peaks.xf = Math.max(peaks.xf, x); peaks.hd = Math.max(peaks.hd, Math.abs(hd));
+        $("shMax").textContent = `최대 ${peaks.sh.toFixed(0)}°`; $("hpMax").textContent = `최대 ${peaks.hp.toFixed(0)}°`;
+        $("xfMax").textContent = `최대 ${peaks.xf.toFixed(0)}°`; $("hdMax").textContent = `최대 ${peaks.hd.toFixed(2)}`;
+        window.__stats.last = { sh: s, hp: h, xf: x, hd };
+      }
+      window.__lastMeasure = m;
+    } else {
+      $("vis").textContent = "사람을 찾는 중";
+    }
+    if (frames % 10 === 0) { $("fps").textContent = `${fpsAvg.toFixed(0)} fps`; window.__stats.fps = fpsAvg; }
+  }
+  requestAnimationFrame(loop);
+}
+
+async function begin(source) {
+  try {
+    if (!pose) await loadModel();
+    running = true; base = null; peaks = null; watchFrames();
+    $("base").disabled = false; $("rec").disabled = typeof MediaRecorder === "undefined";
+    lastT = performance.now(); requestAnimationFrame(loop);
+    say(source === "camera" ? "어드레스 자세를 잡고 '어드레스 기준 잡기'를 눌러 주세요." : "영상 시험 중이에요. 첫 장면에서 '어드레스 기준 잡기'를 누르면 숫자가 나와요.");
+  } catch (e) { say("AI 모델을 불러오지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요."); console.error(e); }
+}
+
+// Wider view: 4:3 keeps the sensor's full height (16:9 crops top and bottom); some phones also list their
+// ultra-wide lens as a separate camera, and Chrome can zoom out (zoom < 1) on some. Saved per phone.
+const pref = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+let camStream = null;
+async function openCamera(deviceId) {
+  if (camStream) camStream.getTracks().forEach((t) => t.stop());
+  const [w, h] = $("aspect").value === "4:3" ? [1280, 960] : [1280, 720];
+  const v = { width: { ideal: w }, height: { ideal: h }, frameRate: { ideal: 30 } };
+  if (deviceId) v.deviceId = { exact: deviceId }; else v.facingMode = { ideal: "environment" };   // first time: a back camera; after that the remembered lens
+  camStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: v });
+  video.srcObject = camStream; await video.play();
+  if (video.videoWidth) $("impImg").style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+  const track = camStream.getVideoTracks()[0], caps = track.getCapabilities ? track.getCapabilities() : {}, set = track.getSettings();
+  // lens list (labels exist only after permission)
+  const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "videoinput");
+  const sel = $("lens"); sel.innerHTML = "";
+  cams.forEach((d, i) => { const o = document.createElement("option"); o.value = d.deviceId; o.textContent = (d.label || `카메라 ${i + 1}`).replace(/facing back/, "후면").replace(/facing front/, "전면"); if (d.deviceId === set.deviceId) o.selected = true; sel.appendChild(o); });
+  $("lensRow").style.display = "flex";
+  if (caps.zoom) {
+    const z = $("zoom"); z.min = caps.zoom.min; z.max = Math.min(caps.zoom.max, 4); z.step = caps.zoom.step || 0.1;
+    const saved = parseFloat(pref("pg-zoom")); z.value = isFinite(saved) ? Math.max(caps.zoom.min, Math.min(z.max, saved)) : (set.zoom ?? caps.zoom.min);
+    $("zoomV").textContent = `${(+z.value).toFixed(1)}x (최소 ${caps.zoom.min})`; $("zoomBox").style.display = "flex"; $("zoomBox").style.visibility = "visible";
+    await track.applyConstraints({ advanced: [{ zoom: +z.value }] }).catch(() => {});
+  } else { $("zoomBox").style.display = "flex"; $("zoomBox").style.visibility = "hidden"; }
+  say(`카메라: ${set.width}×${set.height}${caps.zoom ? "" : " · 이 렌즈는 줌 조절이 안 돼요"}. 더 넓게 보려면 렌즈 목록에서 다른 후면 카메라(초광각)를 골라 보세요.`);
+}
+$("start").onclick = async () => {
+  try { await openCamera(pref("pg-lens") || null); if (!running) await begin("camera"); }
+  catch (e) {
+    try { pref("pg-lens", ""); await openCamera(null); if (!running) await begin("camera"); }
+    catch (e2) { say("카메라를 열지 못했어요. 브라우저의 카메라 권한을 허용하고 다시 눌러 주세요."); console.error(e2); }
+  }
+};
+$("lens").onchange = async () => { pref("pg-lens", $("lens").value); try { await openCamera($("lens").value); } catch (e) { say("그 카메라는 열 수 없어요."); console.error(e); } };
+$("aspect").onchange = async () => { if (camStream) await openCamera($("lens").value || null).catch(console.error); };
+$("zoom").oninput = async () => {
+  const z = +$("zoom").value; pref("pg-zoom", String(z)); $("zoomV").textContent = `${z.toFixed(1)}x`;
+  const t = camStream && camStream.getVideoTracks()[0]; if (t) await t.applyConstraints({ advanced: [{ zoom: z }] }).catch(() => {});
+};
+
+$("file").onchange = async (ev) => {
+  const f = ev.target.files[0]; if (!f) return;
+  video.srcObject = null; video.src = URL.createObjectURL(f); video.loop = true; await video.play(); await begin("file");
+};
+
+$("base").onclick = () => {
+  const m = window.__lastMeasure;
+  if (!m) { say("아직 사람을 찾지 못했어요. 몸 전체가 화면에 들어오게 해 주세요."); return; }
+  base = { sh: m.sh, hp: m.hp, head: m.head, headW: m.headW }; peaks = { sh: 0, hp: 0, xf: 0, hd: 0 };
+  say("기준을 잡았어요. 이제 스윙해 보세요.");
+};
+
+$("model").onchange = async () => { if (pose) { pose.close(); pose = null; if (running) await loadModel(); } };
+
+// ---- sensor glove (Web Bluetooth) ----
+let glove = null, logging = false, log = null, gStats = { n: 0, t0: 0, hand: 0, arm: 0, clips: 0 };
+function gloveText(id, t) { $(id).textContent = t; }
+function onGlove(r) {
+  if (r.type === "imu") {
+    gStats.n += r.frames.length;
+    for (const f of r.frames) {
+      const h = Math.max(Math.abs(f[3]), Math.abs(f[4]), Math.abs(f[5])) * GYRO_DPS, a = Math.max(Math.abs(f[9]), Math.abs(f[10]), Math.abs(f[11])) * GYRO_DPS;
+      gStats.hand = Math.max(gStats.hand, h); gStats.arm = Math.max(gStats.arm, a);
+      gyroBuf.push([f[2] / 1e6, h, a]); lastFrame = f;
+      gyroLong.push([f[2], h, a]); if (gyroLong.length > 1400) gyroLong.shift();
+      if (logging) log.glove.push(f);
+    }
+  } else if (r.type === "status") {
+    gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? "팔 IMU 있음" : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
+    if (logging) log.status.push(r);
+  } else if (r.type === "clip") {
+    gStats.clips++; gloveText("gClips", String(gStats.clips));
+    const c = r.clip; drawClip(c); if (c.kind === "impact") setTimeout(() => drawImpact(c), 0); gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
+    if (logging) log.clips.push({ kind: c.kind, id: c.id, t_us: c.t_us, pre: c.pre, total: c.total, rate: c.rate, peak: c.peak, firstNow: c.firstNow, lastNow: c.lastNow, samples: Array.from(clipSamples(c)) });
+  }
+}
+setInterval(() => {
+  if (!glove) return;
+  const now = performance.now(), dt = (now - gStats.t0) / 1000;
+  if (dt >= 1) {
+    gloveText("gHz", (gStats.n / dt).toFixed(0) + " Hz"); gStats.n = 0; gStats.t0 = now;
+    gloveText("gMiss", String(glove.parser.missing));
+    // big number = peak of the last 3 s (from the chart buffer); small line = session max since connect / log start
+    const tEnd = gyroBuf.length ? gyroBuf[gyroBuf.length - 1][0] : 0; let h3 = 0, a3 = 0;
+    for (const r of gyroBuf) if (r[0] >= tEnd - 3) { h3 = Math.max(h3, r[1]); a3 = Math.max(a3, r[2]); }
+    gloveText("gGyro", `${h3.toFixed(0)} / ${a3.toFixed(0)}`);
+    const hit = h3 >= SAT_DPS - 1 || a3 >= SAT_DPS - 1;
+    gloveText("gSat", `°/s${hit ? " · 한계(2293)에 닿음" : ""} · 전체 최대 ${gStats.hand.toFixed(0)} / ${gStats.arm.toFixed(0)}`);
+    if (logging) gloveText("gLog", `기록 중 ${((now - log.t0) / 1000).toFixed(0)}초`);
+  }
+}, 250);
+
+$("glove").onclick = async () => {
+  if (glove && glove.device && glove.device.gatt.connected) { await glove.stop().catch(() => {}); glove.disconnect(); return; }
+  try {
+    glove = new Glove(onGlove, (st) => {
+      gloveText("gState", st === "connected" ? "연결됨" : "연결 끊김");
+      $("glove").textContent = st === "connected" ? "장갑 연결 끊기" : "센서 장갑 연결";
+      $("log").disabled = st !== "connected";
+      if (st !== "connected" && logging) stopLog();
+    });
+    say("장갑을 찾는 중… 목록에서 SensorGlove를 골라 주세요.");
+    const p = await glove.connect();
+    gloveText("gBatch", p.probeLen ? `패킷 ${p.probeLen} B · ${p.batch}프레임씩` : "패킷 크기 확인 실패 · 1프레임씩");
+    gStats = { n: 0, t0: performance.now(), hand: 0, arm: 0, clips: 0 };
+    await glove.start(200, 1); await glove.send("status");
+    say("장갑 연결됨. '기록 시작'으로 저장할 수 있어요.");
+  } catch (e) {
+    console.error(e);
+    say(e.message === "no-web-bluetooth" ? "이 브라우저는 웹 블루투스가 없어요. 안드로이드 Chrome으로 열어 주세요." :
+        e.name === "NotFoundError" ? "장갑을 고르지 않았거나 찾지 못했어요. 장갑 LED가 파랗게 깜빡이는지 확인해 주세요." : "장갑 연결 실패: " + e.message);
+  }
+};
+
+// ---- live charts ----
+const gyroBuf = [], gyroLong = []; let lastFrame = null;
+// live numbers: x/y/z plus the magnitude ("°/s" and "g" columns)
+setInterval(() => {
+  if (!lastFrame) return;
+  for (const [pre, o] of [["h", 3], ["a", 9]]) {
+    const gy = [0, 1, 2].map((k) => lastFrame[o + k] * GYRO_DPS), ac = [0, 1, 2].map((k) => lastFrame[o + 3 + k] * ACC_G);
+    gy.forEach((v, k) => ($(pre + k).textContent = v.toFixed(0))); ac.forEach((v, k) => ($(pre + (k + 3)).textContent = v.toFixed(2)));
+    $(pre + "G").textContent = Math.hypot(...gy).toFixed(0); $(pre + "A").textContent = Math.hypot(...ac).toFixed(2);
+  }
+}, 200);
+function sizeCv(cv) { const w = cv.clientWidth * devicePixelRatio, h = cv.clientHeight * devicePixelRatio; if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; } return [w, h]; }
+function drawGyro() {
+  const cv = $("gyroCv"), [W, H] = sizeCv(cv), g = cv.getContext("2d"), d = devicePixelRatio;
+  g.clearRect(0, 0, W, H);
+  if (!gyroBuf.length) return;
+  const tEnd = gyroBuf[gyroBuf.length - 1][0];
+  while (gyroBuf.length && gyroBuf[0][0] < tEnd - 5) gyroBuf.shift();
+  const X = (t) => W - (tEnd - t) / 5 * W, Y = (v) => H - 4 * d - Math.min(v, 2400) / 2400 * (H - 18 * d);
+  g.font = `${11 * d}px system-ui`; g.fillStyle = "#9aa5ad"; g.strokeStyle = "#2d353b"; g.lineWidth = d;
+  for (const v of [0, 1000, 2000]) { g.beginPath(); g.moveTo(0, Y(v)); g.lineTo(W, Y(v)); g.stroke(); g.fillText(String(v), 4 * d, Y(v) - 3 * d); }
+  g.setLineDash([5 * d, 4 * d]); g.strokeStyle = "#9aa5ad"; g.beginPath(); g.moveTo(0, Y(SAT_DPS)); g.lineTo(W, Y(SAT_DPS)); g.stroke(); g.setLineDash([]);
+  g.fillText("센서 한계 2293", W - 90 * d, Y(SAT_DPS) - 3 * d);
+  for (const [k, col] of [[1, "#4fc3f7"], [2, "#ffb74d"]]) {
+    g.strokeStyle = col; g.lineWidth = 2 * d; g.beginPath();
+    gyroBuf.forEach((r, i) => (i ? g.lineTo(X(r[0]), Y(r[k])) : g.moveTo(X(r[0]), Y(r[k])))); g.stroke();
+  }
+}
+setInterval(drawGyro, 200);   // 5 redraws/s is enough to watch; leave the main thread to Bluetooth and pose
+
+// one-hue colour ramp for spectrograms: dark -> accent blue -> white
+function heat(v) { v = Math.max(0, Math.min(1, v)); return v < 0.6 ? `rgb(${Math.round(79 * v / 0.6)},${Math.round(195 * v / 0.6)},${Math.round(247 * v / 0.6)})` : `rgb(${Math.round(79 + 176 * (v - 0.6) / 0.4)},${Math.round(195 + 60 * (v - 0.6) / 0.4)},247)`; }
+
+let audioCtx = null, analyser = null, micStream = null, specBuf = null;
+// Light on purpose: a 300 x 128 canvas (CSS scales it), one 1-pixel ImageData column per tick, ~30 ticks/s.
+// The first version painted every screen row with its own fillStyle each frame and starved the Bluetooth
+// events: 11 % of glove packets were lost on the S25 (2026-10-23).
+const SPEC_W = 300, SPEC_H = 128;
+let specCol = null, specTimer = null;
+function heatRGB(v) { v = Math.max(0, Math.min(1, v)); return v < 0.6 ? [79 * v / 0.6, 195 * v / 0.6, 247 * v / 0.6] : [79 + 176 * (v - 0.6) / 0.4, 195 + 60 * (v - 0.6) / 0.4, 247]; }
+function specTick() {
+  if (!analyser) return;
+  const cv = $("specCv"), g = cv.getContext("2d");
+  if (cv.width !== SPEC_W) { cv.width = SPEC_W; cv.height = SPEC_H; specCol = g.createImageData(1, SPEC_H); }
+  analyser.getFloatFrequencyData(specBuf);
+  const top = Math.floor(specBuf.length * 8000 / (audioCtx.sampleRate / 2));
+  for (let y = 0; y < SPEC_H; y++) {
+    const c = heatRGB((specBuf[Math.floor((1 - y / SPEC_H) * top)] + 100) / 70), o = 4 * y;
+    specCol.data[o] = c[0]; specCol.data[o + 1] = c[1]; specCol.data[o + 2] = c[2]; specCol.data[o + 3] = 255;
+  }
+  g.drawImage(cv, -1, 0); g.putImageData(specCol, SPEC_W - 1, 0);
+}
+$("mic").onclick = async () => {
+  if (analyser) { clearInterval(specTimer); micStream.getTracks().forEach((t) => t.stop()); audioCtx.close(); analyser = null; $("mic").textContent = "마이크 켜기"; return; }
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    audioCtx = new AudioContext(); analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0;
+    audioCtx.createMediaStreamSource(micStream).connect(analyser); specBuf = new Float32Array(analyser.frequencyBinCount);
+    $("mic").textContent = "마이크 끄기"; specTimer = setInterval(specTick, 33);
+  } catch (e) { say("마이크를 열지 못했어요. 브라우저의 마이크 권한을 허용해 주세요."); console.error(e); }
+};
+
+// glove clip: waveform (top third) + spectrogram (256-sample window, 2 ms step at 16 kHz)
+function fftMag(re) {
+  const n = re.length, im = new Float32Array(n);
+  for (let i = 1, j = 0; i < n; i++) { let b = n >> 1; for (; j & b; b >>= 1) j ^= b; j ^= b; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const a = -2 * Math.PI / len;
+    for (let i = 0; i < n; i += len) for (let k = 0; k < len / 2; k++) {
+      const c = Math.cos(a * k), s = Math.sin(a * k), xr = re[i + k + len / 2], xi = im[i + k + len / 2];
+      const tr = xr * c - xi * s, ti = xr * s + xi * c;
+      re[i + k + len / 2] = re[i + k] - tr; im[i + k + len / 2] = im[i + k] - ti; re[i + k] += tr; im[i + k] += ti;
+    }
+  }
+  const out = new Float32Array(n / 2); for (let k = 0; k < n / 2; k++) out[k] = Math.hypot(re[k], im[k]); return out;
+}
+function drawClip(c) {
+  const x = clipSamples(c), cv = $("clipCv"), [W, H] = sizeCv(cv), g = cv.getContext("2d"), d = devicePixelRatio;
+  g.clearRect(0, 0, W, H);
+  const hw = Math.round(H * 0.35), N = 256, hop = c.rate >= 16000 ? 32 : 16, frames = Math.floor((x.length - N) / hop);
+  let mx = 1; for (const v of x) mx = Math.max(mx, Math.abs(v));
+  g.strokeStyle = "#eef1f3"; g.lineWidth = d; g.beginPath();
+  for (let px = 0; px < W; px++) {
+    const i0 = Math.floor(px / W * x.length), i1 = Math.max(i0 + 1, Math.floor((px + 1) / W * x.length)); let lo = 0, hi = 0;
+    for (let i = i0; i < i1; i++) { lo = Math.min(lo, x[i]); hi = Math.max(hi, x[i]); }
+    g.moveTo(px, hw / 2 - hi / mx * hw / 2); g.lineTo(px, hw / 2 - lo / mx * hw / 2);
+  }
+  g.stroke();
+  const win = new Float32Array(N).map((_, i) => 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1))), specs = [];
+  let peak = -1e9;
+  for (let f = 0; f < frames; f++) { const seg = new Float32Array(N); for (let i = 0; i < N; i++) seg[i] = x[f * hop + i] / 32768 * win[i]; const m = fftMag(seg).map((v) => 20 * Math.log10(v + 1e-6)); specs.push(m); for (const v of m) peak = Math.max(peak, v); }
+  const sh = H - hw - 2 * d, cw = W / frames;
+  specs.forEach((m, f) => { for (let k = 0; k < N / 2; k++) { g.fillStyle = heat((m[k] - peak + 70) / 70); g.fillRect(f * cw, H - (k + 1) / (N / 2) * sh, cw + 1, sh / (N / 2) + 1); } });
+  if (c.pre) { const xm = c.pre / x.length * W; g.strokeStyle = "#ffb74d"; g.beginPath(); g.moveTo(xm, 0); g.lineTo(xm, H); g.stroke(); }
+  g.fillStyle = "#9aa5ad"; g.font = `${11 * d}px system-ui`; g.fillText(`${(c.rate / 2000).toFixed(0)} kHz`, 4 * d, hw + 14 * d); g.fillText("0", 4 * d, H - 4 * d);
+  $("clipTitle").textContent = c.kind === "voice" ? `목소리 클립 #${c.id} · ${(c.total / c.rate).toFixed(1)}초` : `임팩트 #${c.id} · 앞뒤 0.25초 · 주황 선 = 가장 큰 순간 · 최대 ${(c.peak / 32768 * 100).toFixed(0)}%`;
+}
+
+const EDGE2 = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
+function drawImpact(c) {
+  const clock = glove.parser.clock; if (!clock.ready()) return;
+  const ti = clock.toPhone(c.t_us);
+  let best = null; for (const f of ring) if (!best || Math.abs(f.t - ti) < Math.abs(best.t - ti)) best = f;
+  const note = { id: c.id, impactPhoneMs: +ti.toFixed(1), frameMs: best ? +best.t.toFixed(1) : null };
+  if (logging) log.impacts.push(note);
+  // frame + skeleton (right wrist red)
+  const im = $("impImg"), gi = im.getContext("2d");
+  if (best) {
+    im.width = best.c.width; im.height = best.c.height; im.style.aspectRatio = `${im.width} / ${im.height}`;
+    gi.drawImage(best.c, 0, 0);
+    if (best.lm) {
+      const P = best.lm.map((q) => [q.x * im.width, q.y * im.height, q.visibility ?? 1]);
+      gi.strokeStyle = "#4fc3f7"; gi.lineWidth = 2;
+      for (const [a, b] of EDGE2) if (P[a][2] > 0.4 && P[b][2] > 0.4) { gi.beginPath(); gi.moveTo(P[a][0], P[a][1]); gi.lineTo(P[b][0], P[b][1]); gi.stroke(); }
+      for (const k of [15, 16]) if (P[k][2] > 0.2) { gi.fillStyle = k === 16 ? "#ff5252" : "#ffffff"; gi.beginPath(); gi.arc(P[k][0], P[k][1], 4, 0, 7); gi.fill(); }
+    }
+  } else { gi.clearRect(0, 0, im.width, im.height); }
+  // +-1 s chart on the phone clock
+  const cv = $("impCv"), [W, H] = sizeCv(cv), g = cv.getContext("2d"), d = devicePixelRatio;
+  g.clearRect(0, 0, W, H);
+  const X = (t) => (t - ti + 1000) / 2000 * W, Y = (v, top) => H - 4 * d - Math.min(v, top) / top * (H - 10 * d);
+  g.strokeStyle = "#2d353b"; g.lineWidth = d; for (const v of [-1000, -500, 0, 500, 1000]) { g.beginPath(); g.moveTo(X(ti + v), 0); g.lineTo(X(ti + v), H); g.stroke(); }
+  g.fillStyle = "#9aa5ad"; g.font = `${11 * d}px system-ui`; g.fillText("-1초", 2 * d, 12 * d); g.fillText("+1초", W - 26 * d, 12 * d);
+  for (const [k, col] of [[1, "#4fc3f7"], [2, "#ffb74d"]]) {
+    g.strokeStyle = col; g.lineWidth = 2 * d; g.beginPath(); let first = true;
+    for (const r of gyroLong) { const t = clock.toPhone(r[0]); if (t < ti - 1000 || t > ti + 1000) continue; first ? g.moveTo(X(t), Y(r[k], 2400)) : g.lineTo(X(t), Y(r[k], 2400)); first = false; }
+    g.stroke();
+  }
+  const sp = []; for (let i = 1; i < wristBuf.length; i++) { const [t0, x0, y0, v0] = wristBuf[i - 1], [t1, x1, y1, v1] = wristBuf[i]; if (v0 > 0.3 && v1 > 0.3 && t1 > t0) sp.push([t1, Math.hypot(x1 - x0, y1 - y0) / (t1 - t0) * 1000]); }
+  const top = Math.max(0.5, ...sp.filter((r) => Math.abs(r[0] - ti) < 1000).map((r) => r[1]));
+  g.strokeStyle = "#eef1f3"; g.lineWidth = 2 * d; g.beginPath(); let first = true;
+  for (const [t, v] of sp) { if (t < ti - 1000 || t > ti + 1000) continue; first ? g.moveTo(X(t), Y(v, top)) : g.lineTo(X(t), Y(v, top)); first = false; }
+  g.stroke();
+  g.strokeStyle = "#ff5252"; g.lineWidth = 2 * d; g.beginPath(); g.moveTo(X(ti), 0); g.lineTo(X(ti), H); g.stroke();
+  if (best) { g.setLineDash([4 * d, 3 * d]); g.strokeStyle = "#eef1f3"; g.beginPath(); g.moveTo(X(best.t), 0); g.lineTo(X(best.t), H); g.stroke(); g.setLineDash([]); }
+  $("impTitle").textContent = `임팩트 #${c.id} · 빨간 선 = 장갑이 들은 임팩트(휴대폰 시계로 바꾼 시각)`;
+  $("impNote").textContent = best ? `화면은 임팩트 ${(best.t - ti >= 0 ? "+" : "") + (best.t - ti).toFixed(0)} ms 프레임 (점선)` : "카메라 화면 없음";
+}
+
+function stopLog() {
+  logging = false; $("log").textContent = "기록 시작";
+  const ck = glove && glove.parser.clock;
+  log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-24e", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+    missing: glove && glove.parser.missing - log.missing0, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
+    pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
+  const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `swing-glove-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`; a.click();
+  speak("저장했어요");
+  say(`저장했어요: 장갑 ${log.glove.length}프레임, 자세 ${log.pose.length}프레임, 클립 ${log.clips.length}개.`);
+}
+$("log").onclick = () => {
+  if (logging) { stopLog(); return; }
+  gStats.hand = 0; gStats.arm = 0;
+  log = { cap: [], impacts: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
+  logging = true; $("log").textContent = "기록 멈추고 저장"; speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
+};
+
+$("rec").onclick = () => {
+  if (recorder && recorder.state === "recording") { recorder.stop(); return; }
+  chunks = [];
+  recorder = new MediaRecorder(canvas.captureStream(30), { mimeType: MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm" });
+  recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  recorder.onstop = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(chunks, { type: "video/webm" }));
+    a.download = `swing-pose-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.webm`; a.click();
+    $("rec").textContent = "녹화"; say("저장했어요.");
+  };
+  recorder.start(); $("rec").textContent = "녹화 멈추고 저장"; say("녹화 중…");
+};
+</script>
+</body>
+</html>
