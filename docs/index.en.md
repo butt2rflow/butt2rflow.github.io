@@ -266,7 +266,7 @@ A picture-first series on sound and motion AI for readers who dislike math. No f
 
 Hands-on notes from installing AI tools, measuring them and putting them to work.
 
-- [**Handing the reading to a local AI**](posts/local-llm-reading.md) — splitting reading work between Qwen3.6 on an RTX 3090 and Claude Code to cut Claude usage
+- [**Handing the reading to a local AI**](posts/local-llm-reading.md) — keeping the same Claude Code screen but swapping its brain for Qwen3.6 on an RTX 3090, and splitting reading work to cut Claude usage
 
 ---
 

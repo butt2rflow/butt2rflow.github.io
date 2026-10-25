@@ -4,7 +4,7 @@ nav_title: "Handing the reading to a local AI"
 date: 2026-10-25
 tags: [local-llm, ollama, qwen, claude-code, rtx-3090, token-savings]
 lang: en
-description: "A day of running Qwen3.6 on a home RTX 3090 next to Claude Code. Reading-heavy jobs went to the local model, judging and editing stayed with Claude, and summarizing 131 blog posts used about 98% less Claude usage. Switching from the 27B to the 35B model made the same jobs 1.6-2.8x faster. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
+description: "A day of running Qwen3.6 on a home RTX 3090 next to Claude Code. The same Claude Code screen can run on the local model with no Claude usage. Reading-heavy jobs went to the local model, judging and editing stayed with Claude, and summarizing 131 blog posts used about 98% less Claude usage. Switching from the 27B to the 35B model made the same jobs 1.6-2.8x faster. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
 ---
 
 # Handing the Reading to a Local AI: an RTX 3090 and Claude Code
@@ -20,7 +20,8 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 ## 30-second summary
 
 - With **Qwen3.6 35B** on the 3090, answers come at about 164 tokens per second, and it can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word). It's weaker than Claude, but enough for "read and summarize."
-- We split the roles. **Claude finds, judges and edits**; **the local AI reads and sends back something short**.
+- **You can keep the same Claude Code screen and swap only the brain for the local model.** One command (`claude-local`) gives you file edits, commands and even web search with no Claude usage.
+- Day to day we split the roles. **Claude finds, judges and edits**; **the local AI reads and sends back something short**.
 - Summarizing **131 blog posts**: 4 min 38 s locally, with **about 98% less Claude usage** (against an estimate of Claude reading them itself).
 - I started with the 27B model. Switching to the 35B made the same jobs 1.6-2.8x faster.
 - For **7 posts** the difference was small. The payoff starts once there are dozens of things to read.
@@ -44,11 +45,30 @@ One memory setting made a big difference. Storing the space where the model keep
 
 ---
 
+## Same screen, different brain: Claude Code on a local model
+
+This was the most useful thing I got working. **You keep the Claude Code screen you already use and swap only the brain that answers for the model on your own graphics card.**
+
+![One Claude Code screen used by Claude and by the local model](../assets/diagrams_en/llm-same-ui.svg)
+
+- Open it with `claude` and Claude on Anthropic's servers answers, as usual.
+- Open it with `claude-local` and you get the same screen and the same tools, but Qwen3.6 35B at home answers. Claude usage: zero.
+- Editing files, running terminal commands and reading web pages all work. Web search, which didn't work at first, now goes through a search program running at home (see "Why search didn't work at first" below).
+
+So running out of Claude usage doesn't stop the work. Before you hit the limit, have Claude write a few lines on where things stand, reopen with `claude-local`, hand it that note, and carry on in the same screen.
+
+The measured numbers:
+
+- Create one file, run it and report the result: 39 s with the 35B (1 min 42 s with the 27B I started with)
+- 4 hard research questions that need dates and numbers from several pages: all 13 facts right, 68 s per question on average
+
+There are limits. The local runtime can't remember instructions it has already read (prompt caching), so every turn it re-reads Claude Code's 20,000-token set of standing instructions from the start. Even short jobs take tens of seconds, and long jobs with dozens of steps are clearly weaker than Claude. Two setup traps are listed under "The trap" below.
+
+---
+
 ## Splitting the roles: Claude finds, the local AI reads
 
-First I tried running Claude Code itself on the local model. It worked, but a simple job (create one file and run it) took 1 min 42 s with the 27B and still 39 s with the 35B. The local runtime has no way to remember instructions it has already read (prompt caching), so every turn it re-reads Claude Code's 20,000-token set of standing instructions from the start.
-
-So I changed the approach. I work with Claude as usual and hand over **only the reading-heavy jobs**.
+Day to day, I use it like this: I work with Claude and hand over **only the reading-heavy jobs**.
 
 1. Claude decides what to read. It picks file paths or web addresses and doesn't read the content.
 2. The local AI opens the files and pages and reads them.
@@ -147,14 +167,12 @@ In the end the 35B alone took over summaries, search and image checks. BigBang-v
 
 The 35B has a downside too. It takes 23.2 GB of graphics memory, so if any other program holds even a little memory, it slows down.
 
-After the switch I checked with numbers whether the local AI could take on more work.
+After the switch I checked with numbers whether the local AI could take on more work. The research and full-Claude-Code results are above in "Same screen, different brain"; here is the rest.
 
 | Use | Test | Result |
 |---|---|---|
-| Research when Claude usage runs out | 4 hard questions needing dates and numbers from several pages | All 13 facts right, 68 s per question on average |
 | Sorting lots of photos | Captions and tags for 61 photos | 97 s (1.6 s per photo). In 5 I checked myself, the scene descriptions were all right |
 | Short summaries | Summarizing 3 posts | 13 s |
-| Claude Code fully local | Create one file and run it | 39 s (27B: 1 min 42 s) |
 
 For finding photos ("river and snowy forest," "domed building"), the tagging was good enough. Details were weak, though. It made up text that wasn't in a photo, called a stone wall a bridge and counted people loosely. It recognized only 1 of 5 AI-generated photos as AI-generated.
 
