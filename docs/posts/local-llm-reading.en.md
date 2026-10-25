@@ -61,6 +61,8 @@ This was the most useful thing I got working. **You keep the Claude Code screen 
 
 So running out of Claude usage doesn't stop the work. Before you hit the limit, have Claude write a few lines on where things stand, reopen with `claude-local`, hand it that note, and carry on in the same screen.
 
+The two sessions can even message each other. Claude Code can send messages to other sessions open on the same computer, and a session running on the local model joins in just the same. In a test, opening a local session and sending the Claude session a message took 13 s, and the message arrived intact. So instead of copying a progress note over, you can send it as a message. The other direction uses the same mechanism, so a Claude session should be able to hand a long job to a local session and get the result back as a message; I haven't tested that direction yet. From the local session, though, sessions on other computers or connected remotely were not visible.
+
 The measured numbers:
 
 - Create one file, run it and report the result: 39 s with the 35B (1 min 42 s with the 27B I started with)
@@ -80,6 +82,13 @@ Day to day, I use it like this: I work with Claude and hand over **only the read
 4. Claude reads those few lines and makes the call.
 
 The expensive part is the source text. Because it never passes through Claude, Claude's usage drops by that much.
+
+This link is built with MCP, a standard plug for attaching tools to Claude. Register a small program and Claude sees it as one more tool, next to "edit a file" or "run a command." I built a "have the local AI read this" tool and plugged it in. Because the tool opens the files on the home PC itself, the source text never passes through Claude. Its description says "use this when there is a lot to read," so Claude hands jobs over without my asking.
+
+| Approach | Who answers | When |
+|---|---|---|
+| `claude-local` | The local model runs the whole session | When Claude usage runs out |
+| MCP tool | Claude works; only the reading goes to the local model | Day to day |
 
 ---
 
@@ -137,7 +146,7 @@ The old Word and PowerPoint formats need a conversion tool that is no longer mai
 
 **Reading** web pages works locally. **Searching** didn't.
 
-Claude Code's web search runs on Anthropic's servers, not on my computer. Once Claude Code points at a local model, requests no longer reach those servers, so search goes away with them. So I set up SearXNG, an open-source program that queries several search engines on your behalf, on the home PC. It uses about 125 MB of memory.
+Claude Code's web search runs on Anthropic's servers, not on my computer. Once Claude Code points at a local model, requests no longer reach those servers, so search goes away with them. So I set up SearXNG, an open-source program that queries several search engines on your behalf, on the home PC. It is plugged into the local session as an MCP tool, the same way as above. It uses about 125 MB of memory.
 
 As a test I asked it to find the latest Ollama version. The local AI searched, opened the GitHub page and answered with the right version and its source in 52 s. Even on a day when my Claude usage runs out, it can now look things up on its own.
 
@@ -237,6 +246,7 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 ### Glossary
 
 - *Local AI*: an AI model that runs on your own computer instead of an online service
+- *Session*: one running Claude Code window and the conversation in it
 - *Token*: the unit an AI reads and writes text in. Roughly three quarters of an English word
 - *Claude usage*: how many tokens Claude has read and written. Each plan has a limit
 - *Ollama*: a free program that downloads AI models and runs them on your computer
@@ -245,4 +255,5 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 - *Prompt caching*: remembering instructions so they don't have to be re-read. The local runtime didn't have it
 - *Container (Docker)*: a box that runs a program apart from the rest of the system
 - *SearXNG*: an open-source program that asks several search engines for you and gathers the results
+- *MCP*: a standard way to connect outside tools to an AI like Claude. A registered program shows up in the AI's tool list
 - *MoE (mixture of experts)*: a model split into many "experts," using only some of them for each job. Fast for its size
