@@ -262,6 +262,12 @@ title: Home
 - [**6편 · 시뮬레이션으로 배운 ‘눈’**](posts/aip-eye-from-simulation.md) — 가짜 소리와 진동으로만 배운 눈이 진짜 탁자에서도 통할까
 - [**6편 실험에 참여하기 (녹음 키트)**](assets/aip/kit/index.html) — 폰을 탁자에 놓고 노크·컵·손뼉 소리와 진동을 녹음해 보내 주세요. 15분, phyphox 앱 하나면 돼요
 
+### AI 작업실
+
+AI 도구를 직접 설치하고, 재 보고, 일에 붙여 쓴 기록이에요.
+
+- [**로컬 AI에게 읽기를 맡겨 보니**](posts/local-llm-reading.md) — RTX 3090의 Qwen3.6과 Claude Code로 읽기 일을 나눠 Claude 사용량을 줄인 하루
+
 ---
 
 ## 시리즈 (유료 전자책)

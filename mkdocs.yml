@@ -44,6 +44,7 @@ plugins:
             "Hands-on Notes": 실습 노트
             "Physical AI Investing": Physical AI 투자
             "AI in Pictures": 보는 AI
+            "AI Workbench": AI 작업실
             Series: 시리즈
             Posts: 글
             "Options Analysis": 옵션 분석
@@ -173,5 +174,7 @@ nav:
     - posts/aip-teaching-motion.md
     - posts/aip-learning-from-reference.md
     - posts/aip-eye-from-simulation.md
+  - "AI Workbench":
+    - posts/local-llm-reading.md
 
 copyright: "&copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>"

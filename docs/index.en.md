@@ -262,6 +262,12 @@ A picture-first series on sound and motion AI for readers who dislike math. No f
 - [**Part 6 · An Eye Taught in Simulation**](posts/aip-eye-from-simulation.md) — can an eye taught only on fake sounds and vibrations work on a real table?
 - [**Join the part 6 experiment (recording kit, in Korean)**](assets/aip/kit/index.html) — record table taps, a cup and claps with your phone and send them in. About 15 minutes with the free phyphox app
 
+### AI Workbench
+
+Hands-on notes from installing AI tools, measuring them and putting them to work.
+
+- [**Handing the reading to a local AI**](posts/local-llm-reading.md) — splitting reading work between Qwen3.6 on an RTX 3090 and Claude Code to cut Claude usage
+
 ---
 
 ## Series (paid e-books)
