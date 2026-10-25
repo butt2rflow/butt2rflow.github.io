@@ -25,6 +25,7 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 - Day to day we split the roles. **Claude finds, judges and edits**; **the local AI reads and sends back something short**.
 - I started with the 27B model. Switching to the 35B made the same jobs 1.6-2.8x faster.
 - For **7 posts** the difference was small. The payoff starts once there are dozens of things to read.
+- **A 1,069-page book took 15 minutes and a 3-minute video about 40 seconds.** The numbers were right, but some explanations came out reversed.
 - Anything that needs judgment, like reviews, and code edits stay with Claude. The local AI also makes wrong calls.
 
 ---
@@ -166,6 +167,16 @@ So I settled on how to use it. When I generate several images, **the local AI we
 
 ---
 
+## A whole book and a video, too
+
+**A 1,069-page book.** I had it summarize an options-investing textbook chapter by chapter. The PDF is a scanned paper book with a text layer added. It had no bookmarks, so first the local AI read the contents pages and found where each of the 42 chapters starts (42 s). Then it read and summarized each chapter and wrote one file: a contents table, an overview of the book, and per-chapter summaries. It took **15 minutes**, and the local AI read about 630,000 tokens. Claude spent about 30,000 tokens writing the program and checking the result. Reading the book itself would have taken over 630,000, so that is roughly 95% less (an estimate).
+
+I checked two chapters against the book. Every number was right. But one chapter had **two explanations reversed**. The book says "sell time value and buy intrinsic value," and the summary said the opposite. Five Chinese words slipped in too. It is great for skimming the book's structure and finding the chapter you need, but risky to act on the summary alone. The book is under copyright, so the summary is for my own study only.
+
+**A 3-minute video.** I also tried a 3-minute video NASA released, about finding mine pollution from space. A speech-to-text model (Whisper) transcribed the audio, and Qwen3.6 looked at 24 frames taken wherever the scene changed. Together they produced a one-line summary, a timeline table and the facts that appear only on screen. All of it took **about 40 seconds**. It read the on-screen text exactly: the "~50,000 mines" caption, the instrument's acronym spelled out, and the numbers on a data screen all matched the video. Having Claude look at the 24 frames and the transcript would have cost about 10,000-30,000 tokens depending on frame size (an estimate); the result file, full transcript included, was about 4,000. It made small slips, like calling a blank white frame "a person speaking."
+
+---
+
 ## Switching models: from the 27B to the 35B
 
 I started with Qwen3.6 27B. Then I learned that the 35B model of the same family was faster and could also see, and switched. The 35B has more numbers yet is faster, thanks to a design called MoE (mixture of experts). Picture a company with 100 experts where a receptionist sends each question only to the two or three who fit it best. The 27B uses all 27 billion numbers for every token it writes; the 35B uses about 3 billion of its 35 billion. The catch: all the experts must wait in memory, so it needs more of it. I also tried BigBang-v1, a version tuned for search.
@@ -241,7 +252,7 @@ For Korean proofreading both models went the wrong way. Most suggestions turned 
 
 ### Sources and notices
 
-Settings (KV cache quantization, context length, keep-alive) follow the official Ollama FAQ; the environment variables for running Claude Code on a local model follow the Ollama and Claude Code docs and community guides; tokens per PDF page follow Anthropic's PDF support documentation. AMD and Mac support is based on Ollama's release files and model library (not tested here). Speeds, times and memory figures are single measurements on my PC on October 25, 2026, and the "if Claude read it itself" figures are estimates from character counts. The photos checked are not real places; I generated them with FLUX.2 [klein]. Claude and Claude Code are trademarks of Anthropic PBC; Qwen of Alibaba Cloud; Ollama of Ollama, Inc.; NVIDIA, GeForce and RTX of NVIDIA Corporation; Docker of Docker, Inc.; Microsoft Word, Excel and PowerPoint of Microsoft Corporation; Hangul (HWP) of Hancom Inc.; GitHub of GitHub, Inc.; FLUX of Black Forest Labs; ComfyUI of Comfy Org. They are used for identification only.
+Settings (KV cache quantization, context length, keep-alive) follow the official Ollama FAQ; the environment variables for running Claude Code on a local model follow the Ollama and Claude Code docs and community guides; tokens per PDF page follow Anthropic's PDF support documentation. The book summarized is Lawrence G. McMillan's *Options as a Strategic Investment*, 5th edition, and the video is NASA's "How NASA Uses Light to Detect Waste From Mines" (public domain). AMD and Mac support is based on Ollama's release files and model library (not tested here). Speeds, times and memory figures are single measurements on my PC on October 25, 2026, and the "if Claude read it itself" figures are estimates from character counts. The photos checked are not real places; I generated them with FLUX.2 [klein]. Claude and Claude Code are trademarks of Anthropic PBC; Qwen of Alibaba Cloud; Ollama of Ollama, Inc.; NVIDIA, GeForce and RTX of NVIDIA Corporation; Docker of Docker, Inc.; Microsoft Word, Excel and PowerPoint of Microsoft Corporation; Hangul (HWP) of Hancom Inc.; GitHub of GitHub, Inc.; FLUX of Black Forest Labs; ComfyUI of Comfy Org; Whisper of OpenAI. They are used for identification only.
 
 ### Glossary
 
@@ -256,4 +267,5 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 - *Container (Docker)*: a box that runs a program apart from the rest of the system
 - *SearXNG*: an open-source program that asks several search engines for you and gathers the results
 - *MCP*: a standard way to connect outside tools to an AI like Claude. A registered program shows up in the AI's tool list
+- *Whisper*: an open speech-to-text model that turns speech into text
 - *MoE (mixture of experts)*: a model split into many "experts," using only some of them for each job. Fast for its size
