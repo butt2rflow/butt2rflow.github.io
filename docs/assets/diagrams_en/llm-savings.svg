@@ -71,7 +71,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="sm" x="554.0" y="167" style="fill:var(--fg)">~350-420K (est.)</text>
 <rect class="bxt" x="176" y="182" width="4.404761904761904" height="18" rx="3" style="fill:var(--teal);fill-opacity:.35"/>
 <text class="sm" x="188.4047619047619" y="195" style="fill:var(--fg)">~5K</text>
-<text class="it" x="18" y="222" style="fill:var(--teal)">hundreds of thousands saved, ~98%</text>
+<text class="it" x="18" y="222" style="fill:var(--teal)">hundreds of thousands saved, over 90%</text>
 <rect class="bxa" x="176" y="252" width="14" height="12" rx="2" style="fill:var(--amber);fill-opacity:.35"/>
 <text class="sm" x="196" y="262" style="fill:var(--fg)">Claude reads it itself</text>
 <rect class="bxt" x="372" y="252" width="14" height="12" rx="2" style="fill:var(--teal);fill-opacity:.35"/>

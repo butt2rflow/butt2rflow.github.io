@@ -266,7 +266,7 @@ A picture-first series on sound and motion AI for readers who dislike math. No f
 
 Hands-on notes from installing AI tools, measuring them and putting them to work.
 
-- [**131 posts, 98% less Claude usage**](posts/local-llm-reading.md) — keeping the same Claude Code screen but swapping its brain for Qwen3.6 on an RTX 3090, and splitting reading work to cut Claude usage
+- [**A 1,069-page book in 15 minutes: over 90% less Claude usage**](posts/local-llm-reading.md) — having Qwen3.6 on an RTX 3090 read 131 posts, a whole book and a 3-minute video, and swapping only the brain behind the same Claude Code screen
 
 ---
 

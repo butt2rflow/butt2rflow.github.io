@@ -78,7 +78,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="it" x="442" y="190">들쑥날쑥한 부두 기둥</text>
 <text class="sm" x="442" y="208" style="fill:var(--teal)">맞힘</text>
 <rect class="bxa" x="410" y="240" width="254" height="70" rx="8"/>
-<text class="lb" x="424" y="262">앞서 쓴 27B는 틀리기도</text>
+<text class="lb" x="424" y="262">비교한 27B는 틀리기도</text>
 <text class="st" x="424" y="282" style="fill:var(--fg)">"10월 말엔 나무가 앙상해야"</text>
 <text class="st" x="424" y="299" style="fill:var(--fg)">점수도 3점, 4점으로 흔들림</text>
 <text class="sm" x="18" y="348">사진은 실제 장소가 아니라 FLUX.2로 만든 이미지다. 35B로 한 장 검사에 약 2.7초.</text>

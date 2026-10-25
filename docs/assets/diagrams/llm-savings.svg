@@ -71,7 +71,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="sm" x="554.0" y="167" style="fill:var(--fg)">약 35만~42만 (추정)</text>
 <rect class="bxt" x="176" y="182" width="4.404761904761904" height="18" rx="3" style="fill:var(--teal);fill-opacity:.35"/>
 <text class="sm" x="188.4047619047619" y="195" style="fill:var(--fg)">약 5천</text>
-<text class="it" x="18" y="222" style="fill:var(--teal)">수십만 토큰, 약 98% 절약</text>
+<text class="it" x="18" y="222" style="fill:var(--teal)">수십만 토큰, 90% 넘게 절약</text>
 <rect class="bxa" x="176" y="252" width="14" height="12" rx="2" style="fill:var(--amber);fill-opacity:.35"/>
 <text class="sm" x="196" y="262" style="fill:var(--fg)">Claude가 직접 읽었다면</text>
 <rect class="bxt" x="372" y="252" width="14" height="12" rx="2" style="fill:var(--teal);fill-opacity:.35"/>

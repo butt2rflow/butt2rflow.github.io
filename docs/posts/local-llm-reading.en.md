@@ -1,17 +1,17 @@
 ---
-title: "131 Posts, 98% Less Claude Usage: Putting a Local AI on My GPU"
+title: "A 1,069-Page Book in 15 Minutes: Cutting Claude Usage by Over 90% With a Local AI on My GPU"
 nav_title: "Handing the reading to a local AI"
 date: 2026-10-25
 tags: [local-llm, ollama, qwen, claude-code, rtx-3090, token-savings]
 lang: en
-description: "Having a local AI on my home GPU read 131 blog posts cut Claude usage by about 98% (against an estimate of Claude reading them). A day of running Qwen3.6 on a home RTX 3090 next to Claude Code. The same Claude Code screen can run on the local model with no Claude usage. Reading-heavy jobs went to the local model, judging and editing stayed with Claude, and summarizing 131 blog posts used about 98% less Claude usage. Switching from the 27B to the 35B model made the same jobs 1.6-2.8x faster. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
+description: "Running Qwen3.6 35B on a home graphics card (RTX 3090) next to Claude Code. The local AI summarized a 1,069-page book in 15 minutes and a 3-minute video in about 40 seconds, and on the book and 131 blog posts Claude usage fell by over 90% (against an estimate of Claude reading them). The same Claude Code screen can also run on the local model. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
 ---
 
-# 131 Posts, 98% Less Claude Usage: Putting a Local AI on My GPU
+# A 1,069-Page Book in 15 Minutes: Cutting Claude Usage by Over 90% With a Local AI on My GPU
 
-Claude plans come with a usage limit. Work with Claude Code for a while and you can see where that usage goes: far more into **reading** than into editing code. Have it read dozens of documents, a long PDF or a handful of web pages, and the limit fills up fast.
+Each Claude plan has a set amount you can use (a usage limit). Work with Claude Code for a while and you see where that usage goes: far more into **reading** than into editing code. Have it read dozens of documents, a book-length PDF or several web pages, and the limit fills up fast.
 
-So I installed an AI model on the graphics card at home (an RTX 3090) and handed it only the reading. This is a record of one day of setting it up and measuring it.
+So I installed an AI model on the graphics card at home (an RTX 3090) and handed the reading to it. This is a record of one day of setting it up and measuring it.
 
 ![Claude finds, judges and edits; the local AI reads and sends back something short](../assets/diagrams_en/llm-split.svg)
 
@@ -19,13 +19,12 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 
 ## 30-second summary
 
-- Having the local AI read and summarize **131 blog posts** cut **Claude usage by about 98%** (4 min 38 s). That is against an estimate of Claude reading them itself, and for just a few posts the difference is small.
-- With **Qwen3.6 35B** on the 3090, answers come at about 164 tokens per second, and it can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word). It's weaker than Claude, but enough for "read and summarize."
+- The local AI summarized a **1,069-page book in 15 minutes**, chapter by chapter, and a 3-minute video in about 40 seconds. The numbers were right, but some explanations came out reversed.
+- On the book and on **131 blog posts** (4 min 38 s), **Claude usage fell by over 90%**. That is against an estimate of Claude reading them itself; for just a few posts the difference is small.
+- The model is **Qwen3.6 35B**. It answers at about 164 tokens per second and can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word). It's weaker than Claude, but enough for "read and summarize."
 - **You can keep the same Claude Code screen and swap only the brain for the local model.** One line, `claude-local`, gives you file edits, terminal runs and even web search with no Claude usage.
 - Day to day we split the roles. **Claude finds, judges and edits**; **the local AI reads and sends back something short**.
-- I started with the 27B model. Switching to the 35B made the same jobs 1.6-2.8x faster.
-- For **7 posts** the difference was small. The payoff starts once there are dozens of things to read.
-- **A 1,069-page book took 15 minutes and a 3-minute video about 40 seconds.** The numbers were right, but some explanations came out reversed.
+- The payoff starts once there are dozens of things to read. For 7 posts the difference was small.
 - Anything that needs judgment, like reviews, and code edits stay with Claude. The local AI also makes wrong calls.
 
 ---
@@ -36,11 +35,11 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 |---|---|
 | Graphics card | RTX 3090 (24 GB of memory) |
 | Runtime | Ollama (a free program that downloads and runs models) |
-| Model | Qwen3.6 35B (Alibaba's open model. 35B means 35 billion numbers inside; it uses only about 3 billion of them at a time, which makes it fast; explained under "Switching models") |
+| Model | Qwen3.6 35B (Alibaba's open model. 35B means 35 billion numbers inside; it uses only about 3 billion of them at a time, which makes it fast; explained under "Why the 35B") |
 | Model file | 22 GB (each number stored in 4 bits, a much shorter form) |
 | GPU memory used | 23.2 GB (of 24 GB) |
 | Reading window | 65,536 tokens (well over 100 book pages) |
-| Speed | about 164 tokens/s (the 27B I started with: about 63) |
+| Speed | about 164 tokens/s |
 
 One memory setting made a big difference. Storing the space where the model keeps what it has already read (the KV cache) in shorter numbers halves its memory. I spent the saving on a reading window twice as large.
 
@@ -52,41 +51,43 @@ The 35B (4-bit) with a 65,536-token reading window needs about 23 GB, so you nee
 
 ## Same screen, different brain: Claude Code on a local model
 
-This was the most useful thing I got working. **You keep the Claude Code screen you already use and swap only the brain that answers for the model on your own graphics card.**
+This was the most useful part. **You keep the Claude Code screen you already use and swap only the brain that answers for the model on your own graphics card.**
 
 ![One Claude Code screen used by Claude and by the local model](../assets/diagrams_en/llm-same-ui.svg)
 
 - Open it with `claude` and Claude on Anthropic's servers answers, as usual.
 - Open it with `claude-local` and you get the same screen and the same tools, but Qwen3.6 35B at home answers. Claude usage: zero.
-- Editing files, running terminal commands and reading web pages all work. Web search, which didn't work at first, now goes through a search program running at home (see "Why search didn't work at first" below).
+- Editing files, running terminal commands and reading web pages all work. Web search goes through a search program I run at home (see "Search had to be added" below).
 
-So running out of Claude usage doesn't stop the work. Before you hit the limit, have Claude write a few lines on where things stand, reopen with `claude-local`, hand it that note, and carry on in the same screen.
+So running out of Claude usage doesn't stop the work. Before the limit hits, have Claude write a few lines on where things stand, reopen with `claude-local`, hand it the note, and carry on in the same screen.
 
-The two sessions can even message each other. Claude Code can send messages to other sessions open on the same computer, and a session running on the local model joins in just the same. In a test, opening a local session and sending the Claude session a message took 13 s, and the message arrived intact. So instead of copying a progress note over, you can send it as a message. I tested the other direction too: the Claude session sent "ping," and the busy local session read it and answered "pong." So a Claude session can hand a long job to a local session and get the result back as a message. The local model did need step-by-step instructions, though; the first time, it ignored the instruction to wait and quit after a few seconds. From the local session, though, sessions on other computers or connected remotely were not visible.
+The two sessions can also message each other. Claude Code can send a message to another session open on the same computer, and a session running on the local model joins in the same way. Opening a local session and having it message the Claude session took 13 s, and the message arrived intact. The other way round, the Claude session sent "ping," and the local session, busy with a task, read it and answered "pong." So you can pass the progress note as a message, or have the Claude session hand a long job to the local session and get the result back as a message.
 
-The measured numbers:
+The local model needed instructions spelled out as "step 1, step 2…". Told vaguely to wait, it ignored that and finished within seconds. The local session also couldn't see sessions on other computers or connected remotely.
 
-- Create one file, run it and report the result: 39 s with the 35B (1 min 42 s with the 27B I started with)
-- 4 hard research questions that need dates and numbers from several pages: all 13 facts right, 68 s per question on average
+The numbers:
 
-There are limits. The local runtime can't remember instructions it has already read (prompt caching), so every turn it re-reads Claude Code's 20,000-token set of standing instructions from the start. Even short jobs take tens of seconds, and long jobs with dozens of steps are clearly weaker than Claude. Two setup traps are listed under "The trap" below.
+- Create one file, run it and report the result: 39 s
+- Four hard research questions that needed dates and numbers from several pages: all 13 facts right, 68 s per question on average
+
+There are limits. The local runtime has no way to remember instructions it has already read (prompt caching), so every exchange re-reads Claude Code's 20,000-token system prompt from scratch. Even short jobs take tens of seconds, and long jobs with dozens of steps are clearly weaker than on Claude. Two setup traps are under "The trap" below.
 
 ---
 
 ## Splitting the roles: Claude finds, the local AI reads
 
-Day to day, I use it like this: I work with Claude and hand over **only the reading-heavy jobs**.
+Day to day it works like this. I work in Claude and hand over **only the reading-heavy jobs**.
 
-1. Claude decides what to read. It picks file paths or web addresses and doesn't read the content.
-2. The local AI opens the files and pages and reads them.
-3. The local AI sends back a few lines of summary.
-4. Claude reads those few lines and makes the call.
+1. Claude decides what to read. It picks file paths or web addresses, without reading the contents.
+2. The local AI opens and reads the files and pages itself.
+3. The local AI sends back only a few lines of summary.
+4. Claude judges from those few lines.
 
-The expensive part is the source text. Because it never passes through Claude, Claude's usage drops by that much.
+The expensive part is the source text. It never passes through Claude, so the usage drops by that much.
 
-This link is built with MCP, a standard plug for attaching tools to Claude. Register a small program and Claude sees it as one more tool, next to "edit a file" or "run a command." I built a "have the local AI read this" tool and plugged it in. Because the tool opens the files on the home PC itself, the source text never passes through Claude. Its description says "use this when there is a lot to read," so Claude hands jobs over without my asking.
+The link is built with MCP, a standard plug for adding tools to Claude. Register a small program and Claude sees it as one more tool, next to "edit a file" or "run a command." I built a "have the local AI read this" tool and plugged it in. The tool opens the files on my computer itself, so the source text never goes through Claude. Its description says "use this when there's a lot to read," and Claude hands work over without my asking.
 
-| Approach | Who answers | When |
+| Way | Who answers | When |
 |---|---|---|
 | `claude-local` | The local model runs the whole session | When Claude usage runs out |
 | MCP tool | Claude works; only the reading goes to the local model | Day to day |
@@ -97,89 +98,95 @@ This link is built with MCP, a standard plug for attaching tools to Claude. Regi
 
 I tested it twice on my own blog.
 
-![Claude usage for summarizing 7 and 131 posts](../assets/diagrams_en/llm-savings.svg)
+![Claude usage when summarizing 7 and 131 posts](../assets/diagrams_en/llm-savings.svg)
 
-Seven series posts (52,000 characters) took 41 s locally (1 min 56 s with the 27B). With 7 posts the percentage drop looks large, but the actual saving is only 20,000-30,000 tokens, and since it was the first run, the tokens Claude spent writing the summary script are counted in. With the 27B it wasn't even faster than Claude reading the posts itself.
+Seven series posts (52,000 characters) took 41 s locally. The percentage saved looks large, but the actual saving was only about 20,000-30,000 tokens, and it includes the tokens spent writing the summary program for the first time.
 
-The 131 investment posts (650,000 characters) were different. They took 4 min 38 s locally (12 min 16 s with the 27B), and Claude's side ended at about 5,000 tokens for reading the result. Reading them itself, Claude would have spent hundreds of thousands of tokens and nearly filled the conversation.
+The 131 investment posts (650,000 characters) were a different story. Locally they took 4 min 38 s, and the Claude side used only about 5,000 tokens to read the summaries. Had Claude read them itself, it would have taken hundreds of thousands of tokens and nearly filled the conversation.
 
-In both cases the "if Claude read it itself" figure is an estimate from character counts, not a measured run of Claude doing the same job.
+In both cases the "if Claude read it itself" figures are estimates from character counts, not measurements of Claude doing the same job.
 
-The summaries were usable. The accuracy figures in the series summary (95%, 97%) matched the posts. But a few stray Chinese words (three or four spots across 131 summaries) slipped into the Korean text, with both the 27B and the 35B. It's a habit of this model family, so I check key numbers and names against the source.
-
----
-
-## What to hand over, and what not
-
-![Splitting jobs between the local AI and Claude by how much there is to read and whether judgment is needed](../assets/diagrams_en/llm-fit.svg)
-
-The rule is simple. **Lots to read, short result**: hand it to the local AI.
-
-- Hand over: summarizing several documents, boiling down long logs, reading several web pages, finding what you need in a long PDF
-- Keep: code edits and debugging (Claude has to read the code anyway), fact checks, post reviews, final edits, small jobs
-
-I also looked at my blog reviews. Every post goes through six steps: copyright, fact check, removing AI-sounding phrasing, reading as a math-averse reader, final edit, and Korean proofreading. Four of them need judgment, so Claude does them. Only "reading as a reader" and "Korean proofreading" looked worth letting the local AI draft candidates for. I tested that on this very post; the result is below in "The test I ran on this post."
+The summaries were usable. The accuracy figures in the series summary (95%, 97%) matched the source. But a few Chinese words slipped into the 131-post summary, an occasional habit of this model family. So I check key numbers and names against the source.
 
 ---
 
-## PDFs, Hangul files and web pages too
+## PDFs, Hangul files, web pages and phone photos
 
 I added a step that turns files into plain text the local AI can read.
 
-| Format | How |
+| Format | How it's converted |
 |---|---|
-| PDF | Text is pulled out page by page. Pages with no text (scans) are read by the model as images |
-| Word, Excel, PowerPoint | Paragraphs, tables and sheets become text, old formats (.doc, .xls, .ppt) included |
-| Hangul (.hwp, .hwpx) | Text is pulled out with an open-source tool |
-| Web pages | Give it the address and it fetches just the main text |
+| PDF | Text is pulled from each page. Pages with no text (scans) are read by the model as images |
+| Word, Excel, PowerPoint | Paragraphs, tables and sheets become text. Old formats (.doc, .xls, .ppt) work too |
+| Hangul (.hwp, .hwpx) | Text is pulled with an open-source tool |
+| Web pages | Give it an address and it fetches only the main text |
 
-The biggest win is **long PDFs**. When Claude reads a PDF, it receives each page's text plus an image of the page. The text alone is 1,500-3,000 tokens per page, and the image costs extra, so a 36-page English technical manual runs over 50,000-110,000 tokens. The local AI summarized the title, the product and the main contents in 16 s.
+The biggest win is **long PDFs**. When Claude reads a PDF, it gets each page's text plus an image of the page. Text alone is 1,500-3,000 tokens per page, and the images cost extra. A 36-page English technical manual comes to over 50,000-110,000 tokens. The local AI summarized its title, target product and main contents in 16 s.
 
-Number-heavy files like spreadsheets I don't hand over. The model gets sums and trends wrong easily. Having Claude compute the numbers with code is more accurate and cheap anyway.
+I don't hand over number-heavy files like Excel sheets. This model gets totals and trends wrong easily. Claude computing the numbers with code is more accurate and uses little to begin with.
 
-The old Word and PowerPoint formats need a conversion tool that is no longer maintained, and old software doesn't get its security holes fixed. Since this means opening files of unknown origin, the tool runs only inside an isolated container (Docker) with no internet access and no write permission.
+The old Word and PowerPoint formats need a converter that is no longer maintained, and old programs don't get security holes fixed. Because these are files of unknown origin, it runs only inside an isolated container (Docker) with no internet and no write access.
 
-**Phone photos and screenshots** work the same way. I often snap an article on my phone and send it to Claude. But a photo attached straight to a message goes into Claude the moment it is sent, so the usage is already spent. So I changed the habit: I upload the photos to an "inbox" folder in a cloud-synced drive and just say "read the inbox." The local AI reads them on the home PC, and Claude gets only the summary. With 6 article screenshots, Claude's side dropped from about 12,000 tokens (estimated from the image sizes) to about 1,000, and the reading took 13 s. The title, body text and numbers were transcribed correctly. For just a few photos, attaching them directly is still easier, since Claude can look at them and judge for itself.
-
----
-
-## Why search didn't work at first
-
-**Reading** web pages works locally. **Searching** didn't.
-
-Claude Code's web search runs on Anthropic's servers, not on my computer. Once Claude Code points at a local model, requests no longer reach those servers, so search goes away with them. So I set up SearXNG, an open-source program that queries several search engines on your behalf, on the home PC. It is plugged into the local session as an MCP tool, the same way as above. It uses about 125 MB of memory.
-
-As a test I asked it to find the latest Ollama version. The local AI searched, opened the GitHub page and answered with the right version and its source in 52 s. Even on a day when my Claude usage runs out, it can now look things up on its own.
+**Phone photos and screenshots** work the same way. I often photograph news articles on my phone and send them to Claude. But attaching a photo straight to a message puts it into Claude the moment it's sent, so the usage is already spent. So photos go to an inbox folder in my cloud sync, and I just say "read the inbox." The local AI reads the photos on my home PC, and Claude gets only the summary. With 6 article screenshots, Claude's side went from about 12,000 tokens (an estimate from image size) to about 1,000, and the reading took 13 s. Titles, text and numbers were transcribed correctly. For just a few photos, attaching them directly is easier, since Claude can look and judge for itself.
 
 ---
 
 ## The model can see, too
 
-Qwen3.6 also reads images. Claude sees images well too, and judges them more accurately, but every image costs usage. So I handed only the first pass over many images to the local AI, testing it on photos I had made with an AI image model.
+Qwen3.6 can look at images. Claude sees images well too and judges more accurately, but every image costs usage: about 1,500 tokens each. So I gave the local AI the first pass over a batch.
 
-![Problems the local AI found in an AI-generated photo](../assets/diagrams_en/llm-vision.svg)
+First I had it look for flaws in photos I had generated with AI.
 
-- The 35B checked 7 photos in 19 s, about 2.7 s each.
+![Problems the local AI caught in AI-generated photos](../assets/diagrams_en/llm-vision.svg)
+
+- It checked 7 photos in 19 s, about 2.7 s each.
 - In one pass it found a Canadian flag with a malformed maple leaf, a car standing on bare rock with no road, and uneven dock posts.
-- The 27B I used first took about 7 s per photo and made a wrong call: it said trees should be mostly bare in late October, when in that region the leaves often still have color. Its scores wobbled too: the same photo got 3 out of 10 one time and 4 the next.
+- The scores wobbled. The 27B, run for comparison, gave the same photo 3 out of 10 one time and 4 the next, and made a wrong call: it said trees should be mostly bare in late October, when in that region the leaves often still have color.
 
-So I settled on how to use it. When I generate several images, **the local AI weeds out the clear failures first**, and Claude looks only at the few that remain. Choosing between two good images is not its job. Each image Claude views costs about 1,500 tokens.
+So I settled on how to use it. When I generate several images, **the local AI weeds out the clear failures first**, and Claude looks only at the few that remain. Choosing between two good images is not its job.
+
+I also tried sorting photos in bulk. Captioning and tagging 61 photos took 97 s (1.6 s each), and in the 5 I checked, every scene description was right. That's enough for finding things later, like "river and snow-covered forest" or "domed building." Details were weak, though: it made up text in photos, called a stone wall a bridge, and counted people loosely. It also spotted only 1 of 5 AI-generated photos as AI-made.
 
 ---
 
-## A whole book and a video, too
+## A whole book and a video
 
-**A 1,069-page book.** I had it summarize an options-investing textbook chapter by chapter. The PDF is a scanned paper book with a text layer added. It had no bookmarks, so first the local AI read the contents pages and found where each of the 42 chapters starts (42 s). Then it read and summarized each chapter and wrote one file: a contents table, an overview of the book, and per-chapter summaries. It took **15 minutes**, and the local AI read about 630,000 tokens. Claude spent about 30,000 tokens writing the program and checking the result. Reading the book itself would have taken over 630,000, so that is roughly 95% less (an estimate).
+I also tried things bigger than a few dozen posts.
+
+**A 1,069-page book.** I had it summarize an options-investing textbook chapter by chapter. The PDF is a scanned paper book with a text layer added. It had no bookmarks, so first the local AI read the contents pages and found where each of the 42 chapters starts (42 s). Then it read and summarized each chapter and wrote one file: a contents table, an overview of the book, and per-chapter summaries. It took **15 minutes**, and the local AI read about 630,000 tokens. Claude spent about 30,000 tokens writing the program and checking the result. Reading the book itself would have taken over 630,000, so that is over 90% less (an estimate).
 
 I checked two chapters against the book. Every number was right. But one chapter had **two explanations reversed**. The book says "sell time value and buy intrinsic value," and the summary said the opposite. Five Chinese words slipped in too. It is great for skimming the book's structure and finding the chapter you need, but risky to act on the summary alone. The book is under copyright, so the summary is for my own study only.
 
-**A 3-minute video.** I also tried a 3-minute video NASA released, about finding mine pollution from space. A speech-to-text model (Whisper) transcribed the audio, and Qwen3.6 looked at 24 frames taken wherever the scene changed. Together they produced a one-line summary, a timeline table and the facts that appear only on screen. All of it took **about 40 seconds**. It read the on-screen text exactly: the "~50,000 mines" caption, the instrument's acronym spelled out, and the numbers on a data screen all matched the video. Having Claude look at the 24 frames and the transcript would have cost about 10,000-30,000 tokens depending on frame size (an estimate); the result file, full transcript included, was about 4,000. It made small slips, like calling a blank white frame "a person speaking."
+**A 3-minute video.** I tried a 3-minute video NASA released, about finding mine pollution from space. A speech-to-text model (Whisper) transcribed the audio, and Qwen3.6 looked at 24 frames taken wherever the scene changed. Together they produced a one-line summary, a timeline table and the facts that appear only on screen. All of it took **about 40 seconds**. It read the on-screen text exactly: the "~50,000 mines" caption, the instrument's acronym spelled out, and the numbers on a data screen all matched the video. Having Claude look at the 24 frames and the transcript would have cost about 10,000-30,000 tokens depending on frame size (an estimate); the result file, full transcript included, was about 4,000. It made small slips, like calling a blank white frame "a person speaking."
 
 ---
 
-## Switching models: from the 27B to the 35B
+## Search had to be added
 
-I started with Qwen3.6 27B. Then I learned that the 35B model of the same family was faster and could also see, and switched. The 35B has more numbers yet is faster, thanks to a design called MoE (mixture of experts). Picture a company with 100 experts where a receptionist sends each question only to the two or three who fit it best. The 27B uses all 27 billion numbers for every token it writes; the 35B uses about 3 billion of its 35 billion. The catch: all the experts must wait in memory, so it needs more of it. I also tried BigBang-v1, a version tuned for search.
+**Reading** web pages works locally. **Searching** didn't, at first.
+
+Claude Code's search runs on Anthropic's servers, not on my computer. Switch to a local model and requests no longer go there, so search disappears with them. So I ran an open-source program at home that queries several search engines for you (SearXNG), and plugged it into the local session as an MCP tool, the same way as above. It uses only about 125 MB of memory.
+
+As a test I asked, "find the latest Ollama version." The local AI searched, opened the GitHub page and answered with the right version and its source in 52 s. Even on a day with no Claude usage left, it can look things up on its own.
+
+---
+
+## What to hand over, and what not
+
+![Splitting jobs between the local AI and Claude by amount of reading and need for judgment](../assets/diagrams_en/llm-fit.svg)
+
+The rule is simple. If a job means **reading a lot and returning something short**, it goes to the local AI.
+
+- Hand over: summarizing many documents, condensing long logs, reading several web pages, finding what you need in a long PDF or a book, summarizing a video, a first pass over photos
+- Keep on Claude: code edits and debugging (Claude has to read the code anyway), fact checks, post reviews, final edits, calculations, small jobs
+
+I also considered post reviews. I check every post in six steps (copyright, fact check, removing AI-sounding prose, reading as a math-averse reader, final edit, Korean proofreading). Four of them need judgment, so Claude does them. Only two, reading as a reader and Korean proofreading, seemed worth letting the local AI draft "candidates" for first. I tested that on this post; the results are under "The test I ran on this post."
+
+---
+
+## Why the 35B: against the 27B and BigBang-v1
+
+I gave the same jobs to the Qwen3.6 27B from the same family and to BigBang-v1, a model tuned for search. The 35B has more numbers yet runs faster, thanks to a design called MoE (mixture of experts). Picture a company with 100 experts, where a front desk passes each question to only the two or three who fit it best. The 27B uses all 27 billion of its numbers for every token it writes; the 35B uses about 3 billion of its 35 billion. The catch is that all the experts have to wait in memory, so it needs more memory.
 
 | | Qwen3.6 27B | BigBang-v1 | **Qwen3.6 35B** |
 |---|---|---|---|
@@ -188,65 +195,58 @@ I started with Qwen3.6 27B. Then I learned that the 35B model of the same family
 | Search test (3 questions, 7 facts) | 6 of 7, 323 s | all 7, 168 s | **all 7, 128 s** |
 | Checking 7 photos | about 47 s | - | **19 s** |
 | Summarizing 7 posts | 1 min 56 s | - | **41 s** |
+| Summarizing 131 posts | 12 min 16 s | - | **4 min 38 s** |
+| `claude-local` task (create and run a file) | 1 min 42 s | - | **39 s** |
 
-In the end the 35B alone took over summaries, search and image checks. BigBang-v1 searched well but couldn't see images. The copy I downloaded was an unofficial upload by an individual, and it failed as soon as I connected it to Claude Code: the chat-format settings bundled with the model didn't match the shape of the requests Claude Code sends. So I removed it.
+The same jobs ran 1.6-2.8x faster on the 35B, so summarizing, search and image checks all go to that one model. BigBang-v1 searched well but can't see images. The copy I got was an unofficial upload by an individual, and it threw errors as soon as I connected Claude Code: the chat-format settings bundled with the model didn't match the shape of the requests Claude Code sends.
 
-The 35B has a downside too. It takes 23.2 GB of graphics memory, so if any other program holds even a little memory, it slows down.
-
-After the switch I checked with numbers whether the local AI could take on more work. The research and full-Claude-Code results are above in "Same screen, different brain"; here is the rest.
-
-| Use | Test | Result |
-|---|---|---|
-| Sorting lots of photos | Captions and tags for 61 photos | 97 s (1.6 s per photo). In 5 I checked myself, the scene descriptions were all right |
-| Short summaries | Summarizing 3 posts | 13 s |
-
-For finding photos ("river and snowy forest," "domed building"), the tagging was good enough. Details were weak, though. It made up text that wasn't in a photo, called a stone wall a bridge and counted people loosely. It recognized only 1 of 5 AI-generated photos as AI-generated.
+The 35B has a downside too. It takes 23.2 GB of GPU memory, so it slows down as soon as another program holds a little memory. That is the next trap.
 
 ---
 
 ## The trap: one graphics card
 
-![Sharing the GPU's 24 GB between an image generator and the local AI](../assets/diagrams_en/llm-gpu.svg)
+![Image generation and the local AI sharing 24 GB of GPU memory](../assets/diagrams_en/llm-gpu.svg)
 
-This is where I lost the most time. I also make images on the same card (ComfyUI). I finished an image job without closing that program, and it kept holding 15.8 GB. When I then ran the local AI, three quarters of the model didn't fit on the card and spilled onto the CPU, which does this kind of math far more slowly. No error appeared. The 27B I used then simply slowed from 63 tokens/s to 7. Only when the speed looked wrong did I check who was using the graphics memory (`nvidia-smi`) and find the cause. The 35B I use now takes 23.2 GB, so there is even less room.
+This is the problem I spent longest on. I also make images on the same graphics card (ComfyUI). I finished an image job without closing that program, and it kept holding 15.8 GB. When I then ran the 27B, three quarters of the model didn't fit on the graphics card and spilled onto the CPU, which does this kind of math far slower than a graphics card. There was no error. It just slowed from 63 to 7 tokens per second. The odd speed made me check who was using GPU memory (`nvidia-smi`), and only then did I find the cause. The 35B takes 23.2 GB, so it has even less room.
 
-Since then I follow three rules.
+So I set rules:
 
-1. When an image job is done, always close the image program.
-2. Before using the local AI, check that the model sits 100% on the graphics card (`ollama ps`).
+1. Always close the image program when an image job is done.
+2. Before using the local AI, check that the model is 100% on the graphics card (`ollama ps`).
 3. Before making images again, unload the local model (`ollama stop`).
 
-For anyone trying this, two more technical traps.
+For anyone trying this, two technical traps:
 
-- Running Claude Code on a local model can fail mid-session with "model not found." The small model it uses for background work (the haiku alias) also has to point at the local model.
-- Claude Code assumes an unknown model reads 200,000 tokens at a time. If you don't tell it the real size (65,536), the local runtime rejects requests once the conversation gets long.
+- Running Claude Code on a local model can throw "model not found" mid-session. The small model name used for background tasks (haiku) has to point at the local model too.
+- For an unknown model, Claude Code assumes it reads 200,000 tokens at once. Unless you tell it the real size (65,536), the local runtime rejects requests once the conversation gets long.
 
 ---
 
 ## The test I ran on this post
 
-I used the draft of this post to test two review steps. First I had the local AI read the draft and saved its list of findings to a file. Without opening that list, I did the same two reviews with Claude. Then I compared them. After switching models, I ran the 35B on the same draft too.
+I tested two review steps on this post's draft. First the local AI read the draft and its list of findings was saved to a file. Without opening that list, I ran the same two review steps with Claude separately. Then I compared them. I ran it with both the 27B and the 35B.
 
 | | Reading as a math-averse reader | Korean proofreading |
 |---|---|---|
-| Time (27B → 35B) | 26 s → 8 s | 34 s → 12 s |
-| Of Claude's findings, also found | 4 of 9 → 6 | 1 of 7 key ones → 2 |
-| Useful findings only the local AI had | 3 → 3 | 2 → 0 |
-| Wrong findings | almost none | 3 → 3 (called correct phrasing wrong) |
+| Time (27B / 35B) | 26 s / 8 s | 34 s / 12 s |
+| Of Claude's findings, also found | 4 of 9 / 6 | 1 of 7 key items / 2 |
+| Useful findings only the local AI had | 3 / 3 | 2 / 0 |
+| Wrong findings | almost none | 3 / 3 (called correct phrasing wrong) |
 
-As a reader it was useful. "Why does spilling onto the CPU slow things down," "what does 4-bit mean" and "how did you notice who held the memory" were things I had missed, and they're now in the post. The 35B also caught a wrong analogy I had found myself.
+As a reader it was useful. "Why does spilling onto the CPU make it slow," "what does 4-bit mean" and "how did you notice who was holding the memory" were things I had missed, and they went into this post. The 35B even caught a wrong analogy I had caught ("a few pages of a book").
 
-For Korean proofreading both models went the wrong way. Most suggestions turned plain everyday words into stiff, formal ones, which would have made the Korean read more like a translation. So Korean proofreading stays with Claude, and the local AI's list is used only for the reader step.
+For Korean proofreading both models did the opposite of what I want. Most suggestions turned plain words like "돌려줘요" (sends back) and "받아 와요" (fetches) into stiff ones like "제공해요" (provides), "추출해요" (extracts) and "반환해요" (returns). Following them would make the prose read more like a translation. So Korean proofreading stays with Claude, and only the reader step uses the local AI's list as a reference.
 
 ---
 
 ## Takeaways
 
-- A local AI can't replace Claude, but as a **reader** it's enough.
-- The payoff grows with how much there is to read. For a few documents just use Claude; from dozens on, it clearly pays.
-- Treat the results as drafts. Check numbers and names against the source, and leave judgment and editing to Claude.
-- If you share the graphics card with other work, first check who is holding its memory.
-- One model, Qwen3.6 35B, could take on summaries, search and image checks. Details and judgment are still weak.
+- A local AI can't replace Claude, but as a **reading worker** it is enough.
+- The payoff grows with the amount of reading. For a few documents just use Claude; from dozens on, and for a whole book even more, it clearly pays.
+- Treat results as drafts. Check numbers and names against the source, and leave judging and editing to Claude. An explanation can come out reversed.
+- If you share the graphics card with other work, first check who is holding the memory.
+- One model, Qwen3.6 35B, handled summarizing, search, image checks and video summaries. Details and judgment are still its weak spot.
 
 ---
 
@@ -267,5 +267,5 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 - *Container (Docker)*: a box that runs a program apart from the rest of the system
 - *SearXNG*: an open-source program that asks several search engines for you and gathers the results
 - *MCP*: a standard way to connect outside tools to an AI like Claude. A registered program shows up in the AI's tool list
-- *Whisper*: an open speech-to-text model that turns speech into text
 - *MoE (mixture of experts)*: a model split into many "experts," using only some of them for each job. Fast for its size
+- *Whisper*: an open speech-to-text model

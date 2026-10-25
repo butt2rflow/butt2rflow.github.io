@@ -78,7 +78,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="it" x="442" y="190">uneven dock posts</text>
 <text class="sm" x="442" y="208" style="fill:var(--teal)">hit</text>
 <rect class="bxa" x="410" y="240" width="254" height="70" rx="8"/>
-<text class="lb" x="424" y="262">The earlier 27B also erred</text>
+<text class="lb" x="424" y="262">The 27B, for comparison, erred</text>
 <text class="st" x="424" y="282" style="fill:var(--fg)">"trees bare in late October"</text>
 <text class="st" x="424" y="299" style="fill:var(--fg)">scores wobbled: 3, then 4</text>
 <text class="sm" x="18" y="348">The photo is not a real place; it was generated with FLUX.2. About 2.7 s per image with the 35B.</text>
