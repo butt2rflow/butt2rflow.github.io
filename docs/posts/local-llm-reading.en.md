@@ -154,7 +154,7 @@ As a test I asked it to find the latest Ollama version. The local AI searched, o
 
 ## The model can see, too
 
-Qwen3.6 also reads images. I had it check photos I had made with an AI image model.
+Qwen3.6 also reads images. Claude sees images well too, and judges them more accurately, but every image costs usage. So I handed only the first pass over many images to the local AI, testing it on photos I had made with an AI image model.
 
 ![Problems the local AI found in an AI-generated photo](../assets/diagrams_en/llm-vision.svg)
 
