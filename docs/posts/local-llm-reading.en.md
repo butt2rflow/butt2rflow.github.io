@@ -1,13 +1,13 @@
 ---
-title: "Handing the Reading to a Local AI: My GPU and Claude Code"
+title: "131 Posts, 98% Less Claude Usage: Putting a Local AI on My GPU"
 nav_title: "Handing the reading to a local AI"
 date: 2026-10-25
 tags: [local-llm, ollama, qwen, claude-code, rtx-3090, token-savings]
 lang: en
-description: "A day of running Qwen3.6 on a home RTX 3090 next to Claude Code. The same Claude Code screen can run on the local model with no Claude usage. Reading-heavy jobs went to the local model, judging and editing stayed with Claude, and summarizing 131 blog posts used about 98% less Claude usage. Switching from the 27B to the 35B model made the same jobs 1.6-2.8x faster. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
+description: "Having a local AI on my home GPU read 131 blog posts cut Claude usage by about 98% (against an estimate of Claude reading them). A day of running Qwen3.6 on a home RTX 3090 next to Claude Code. The same Claude Code screen can run on the local model with no Claude usage. Reading-heavy jobs went to the local model, judging and editing stayed with Claude, and summarizing 131 blog posts used about 98% less Claude usage. Switching from the 27B to the 35B model made the same jobs 1.6-2.8x faster. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
 ---
 
-# Handing the Reading to a Local AI: My GPU and Claude Code
+# 131 Posts, 98% Less Claude Usage: Putting a Local AI on My GPU
 
 Claude plans come with a usage limit. Work with Claude Code for a while and you can see where that usage goes: far more into **reading** than into editing code. Have it read dozens of documents, a long PDF or a handful of web pages, and the limit fills up fast.
 
@@ -19,10 +19,10 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 
 ## 30-second summary
 
+- Having the local AI read and summarize **131 blog posts** cut **Claude usage by about 98%** (4 min 38 s). That is against an estimate of Claude reading them itself, and for just a few posts the difference is small.
 - With **Qwen3.6 35B** on the 3090, answers come at about 164 tokens per second, and it can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word). It's weaker than Claude, but enough for "read and summarize."
 - **You can keep the same Claude Code screen and swap only the brain for the local model.** One line, `claude-local`, gives you file edits, terminal runs and even web search with no Claude usage.
 - Day to day we split the roles. **Claude finds, judges and edits**; **the local AI reads and sends back something short**.
-- Summarizing **131 blog posts**: 4 min 38 s locally, with **about 98% less Claude usage** (against an estimate of Claude reading them itself).
 - I started with the 27B model. Switching to the 35B made the same jobs 1.6-2.8x faster.
 - For **7 posts** the difference was small. The payoff starts once there are dozens of things to read.
 - Anything that needs judgment, like reviews, and code edits stay with Claude. The local AI also makes wrong calls.

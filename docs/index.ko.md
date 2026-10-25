@@ -266,7 +266,7 @@ title: Home
 
 AI 도구를 직접 설치하고, 재 보고, 일에 붙여 쓴 기록이에요.
 
-- [**로컬 AI에게 읽기를 맡겨 보니**](posts/local-llm-reading.md) — 같은 Claude Code 화면에서 두뇌만 RTX 3090의 Qwen3.6으로 바꾸고, 읽기 일을 나눠 Claude 사용량을 줄인 하루
+- [**글 131편을 읽혔더니 Claude 사용량 98%가 줄었다**](posts/local-llm-reading.md) — 같은 Claude Code 화면에서 두뇌만 RTX 3090의 Qwen3.6으로 바꾸고, 읽기 일을 나눠 Claude 사용량을 줄인 하루
 
 ---
 
