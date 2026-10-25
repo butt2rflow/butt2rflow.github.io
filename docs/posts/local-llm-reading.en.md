@@ -125,6 +125,8 @@ Number-heavy files like spreadsheets I don't hand over. The model gets sums and 
 
 The old Word and PowerPoint formats need a conversion tool that is no longer maintained, and old software doesn't get its security holes fixed. Since this means opening files of unknown origin, the tool runs only inside an isolated container (Docker) with no internet access and no write permission.
 
+**Phone photos and screenshots** work the same way. I often snap an article on my phone and send it to Claude. But a photo attached straight to a message goes into Claude the moment it is sent, so the usage is already spent. So I changed the habit: I upload the photos to an "inbox" folder in a cloud-synced drive and just say "read the inbox." The local AI reads them on the home PC, and Claude gets only the summary. With 6 article screenshots, Claude's side dropped from about 12,000 tokens to about 1,000, and the reading took 13 s. The title, body text and numbers were transcribed correctly. For just a few photos, attaching them directly is still easier, since Claude can look at them and judge for itself.
+
 ---
 
 ## Why search didn't work at first
