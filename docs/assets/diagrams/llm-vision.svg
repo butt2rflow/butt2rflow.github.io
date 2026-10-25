@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">로컬 AI의 이미지 검수: 맞힌 것과 틀린 것</title>
-<desc id="de">왼쪽은 제가 AI(FLUX.2)로 만든 가짜 사진. 로컬 AI(Qwen3.6 35B)가 한 번에 잡아낸 문제: 1 단풍잎이 일그러진 캐나다 국기, 2 길도 없는 바위 위의 자동차, 3 들쑥날쑥한 부두 기둥. 앞서 쓴 27B는 '10월 말이면 나무가 앙상해야 한다'고 틀리게 지적했고, 같은 사진에 3점과 4점을 오가는 등 점수도 흔들렸다.</desc>
+<desc id="de">왼쪽은 제가 AI(FLUX.2)로 만든 가짜 사진. 로컬 AI(Qwen3.6 35B)가 한 번에 잡아낸 문제: 1 단풍잎이 일그러진 캐나다 국기, 2 길도 없는 바위 위의 자동차, 3 들쑥날쑥한 부두 기둥.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -77,9 +77,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="nd" x="424" y="190" text-anchor="middle" style="fill:#ffffff">3</text>
 <text class="it" x="442" y="190">들쑥날쑥한 부두 기둥</text>
 <text class="sm" x="442" y="208" style="fill:var(--teal)">맞힘</text>
-<rect class="bxa" x="410" y="240" width="254" height="70" rx="8"/>
-<text class="lb" x="424" y="262">비교한 27B는 틀리기도</text>
-<text class="st" x="424" y="282" style="fill:var(--fg)">"10월 말엔 나무가 앙상해야"</text>
-<text class="st" x="424" y="299" style="fill:var(--fg)">점수도 3점, 4점으로 흔들림</text>
 <text class="sm" x="18" y="348">사진은 실제 장소가 아니라 FLUX.2로 만든 이미지다. 35B로 한 장 검사에 약 2.7초.</text>
 </svg>

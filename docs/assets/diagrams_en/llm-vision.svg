@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">The local AI checking an image: hits and misses</title>
-<desc id="de">Left: a fake photo I made with an AI image model (FLUX.2). Problems the local AI (Qwen3.6 35B) caught in one pass: 1 a Canadian flag with a malformed maple leaf, 2 a car on bare rock with no road, 3 uneven dock posts. The 27B used earlier wrongly said trees should be bare in late October, and its scores wobbled (3, then 4, for the same photo).</desc>
+<desc id="de">Left: a fake photo I made with an AI image model (FLUX.2). Problems the local AI (Qwen3.6 35B) caught in one pass: 1 a Canadian flag with a malformed maple leaf, 2 a car on bare rock with no road, 3 uneven dock posts.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -77,9 +77,5 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="nd" x="424" y="190" text-anchor="middle" style="fill:#ffffff">3</text>
 <text class="it" x="442" y="190">uneven dock posts</text>
 <text class="sm" x="442" y="208" style="fill:var(--teal)">hit</text>
-<rect class="bxa" x="410" y="240" width="254" height="70" rx="8"/>
-<text class="lb" x="424" y="262">The 27B, for comparison, erred</text>
-<text class="st" x="424" y="282" style="fill:var(--fg)">"trees bare in late October"</text>
-<text class="st" x="424" y="299" style="fill:var(--fg)">scores wobbled: 3, then 4</text>
 <text class="sm" x="18" y="348">The photo is not a real place; it was generated with FLUX.2. About 2.7 s per image with the 35B.</text>
 </svg>
