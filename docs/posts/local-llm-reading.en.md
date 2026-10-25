@@ -20,7 +20,7 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 ## 30-second summary
 
 - With **Qwen3.6 35B** on the 3090, answers come at about 164 tokens per second, and it can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word). It's weaker than Claude, but enough for "read and summarize."
-- **You can keep the same Claude Code screen and swap only the brain for the local model.** One command (`claude-local`) gives you file edits, commands and even web search with no Claude usage.
+- **You can keep the same Claude Code screen and swap only the brain for the local model.** One line, `claude-local`, gives you file edits, terminal runs and even web search with no Claude usage.
 - Day to day we split the roles. **Claude finds, judges and edits**; **the local AI reads and sends back something short**.
 - Summarizing **131 blog posts**: 4 min 38 s locally, with **about 98% less Claude usage** (against an estimate of Claude reading them itself).
 - I started with the 27B model. Switching to the 35B made the same jobs 1.6-2.8x faster.
@@ -35,7 +35,7 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 |---|---|
 | Graphics card | RTX 3090 (24 GB of memory) |
 | Runtime | Ollama (a free program that downloads and runs models) |
-| Model | Qwen3.6 35B (Alibaba's open model. 35B means 35 billion numbers inside; it uses only about 3 billion of them at a time, which makes it fast) |
+| Model | Qwen3.6 35B (Alibaba's open model. 35B means 35 billion numbers inside; it uses only about 3 billion of them at a time, which makes it fast; explained under "Switching models") |
 | Model file | 22 GB (each number stored in 4 bits, a much shorter form) |
 | GPU memory used | 23.2 GB (of 24 GB) |
 | Reading window | 65,536 tokens (well over 100 book pages) |
@@ -43,7 +43,9 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 
 One memory setting made a big difference. Storing the space where the model keeps what it has already read (the KV cache) in shorter numbers halves its memory. I spent the saving on a reading window twice as large.
 
-It isn't NVIDIA-only. The runtime (Ollama) also supports AMD graphics cards and Apple silicon Macs, and there are Mac builds of Qwen3.6. What matters is memory, not the brand: running the 35B like this needs a 24 GB graphics card or a Mac with 32 GB or more. I only measured on NVIDIA, though.
+It isn't NVIDIA-only. The runtime (Ollama) also supports AMD graphics cards and Apple silicon Macs, and there are Mac builds of Qwen3.6. What matters is memory, not the brand.
+
+The 35B (4-bit) with a 65,536-token reading window needs about 23 GB, so you need a 24 GB graphics card or a Mac with 32 GB or more. With less memory, use a smaller model (the 27B takes 20.6 GB, and smaller versions exist) or a shorter reading window. Speed depends on how fast the memory moves data (memory bandwidth), much as a wider road lets more cars through at once, so the same model can run faster or slower than the numbers here on other hardware. I only measured on NVIDIA, though.
 
 ---
 
@@ -81,7 +83,7 @@ The expensive part is the source text. Because it never passes through Claude, C
 
 ---
 
-## Measured: 7 posts and 131 posts
+## Measured: summarizing 7 and 131 blog posts
 
 I tested it twice on my own blog.
 
@@ -127,7 +129,7 @@ Number-heavy files like spreadsheets I don't hand over. The model gets sums and 
 
 The old Word and PowerPoint formats need a conversion tool that is no longer maintained, and old software doesn't get its security holes fixed. Since this means opening files of unknown origin, the tool runs only inside an isolated container (Docker) with no internet access and no write permission.
 
-**Phone photos and screenshots** work the same way. I often snap an article on my phone and send it to Claude. But a photo attached straight to a message goes into Claude the moment it is sent, so the usage is already spent. So I changed the habit: I upload the photos to an "inbox" folder in a cloud-synced drive and just say "read the inbox." The local AI reads them on the home PC, and Claude gets only the summary. With 6 article screenshots, Claude's side dropped from about 12,000 tokens to about 1,000, and the reading took 13 s. The title, body text and numbers were transcribed correctly. For just a few photos, attaching them directly is still easier, since Claude can look at them and judge for itself.
+**Phone photos and screenshots** work the same way. I often snap an article on my phone and send it to Claude. But a photo attached straight to a message goes into Claude the moment it is sent, so the usage is already spent. So I changed the habit: I upload the photos to an "inbox" folder in a cloud-synced drive and just say "read the inbox." The local AI reads them on the home PC, and Claude gets only the summary. With 6 article screenshots, Claude's side dropped from about 12,000 tokens (estimated from the image sizes) to about 1,000, and the reading took 13 s. The title, body text and numbers were transcribed correctly. For just a few photos, attaching them directly is still easier, since Claude can look at them and judge for itself.
 
 ---
 
@@ -157,7 +159,7 @@ So I settled on how to use it. When I generate several images, **the local AI we
 
 ## Switching models: from the 27B to the 35B
 
-I started with Qwen3.6 27B. Then I learned that the 35B model of the same family was faster and could also see, and switched. The 35B has more numbers yet is faster, thanks to a design called MoE (mixture of experts). Picture a company with 100 experts where a receptionist sends each question only to the two or three who fit it best. The 27B uses all 27 billion numbers for every word it writes; the 35B uses about 3 billion of its 35 billion. The catch: all the experts must wait in memory, so it needs more of it. I also tried BigBang-v1, a version tuned for search.
+I started with Qwen3.6 27B. Then I learned that the 35B model of the same family was faster and could also see, and switched. The 35B has more numbers yet is faster, thanks to a design called MoE (mixture of experts). Picture a company with 100 experts where a receptionist sends each question only to the two or three who fit it best. The 27B uses all 27 billion numbers for every token it writes; the 35B uses about 3 billion of its 35 billion. The catch: all the experts must wait in memory, so it needs more of it. I also tried BigBang-v1, a version tuned for search.
 
 | | Qwen3.6 27B | BigBang-v1 | **Qwen3.6 35B** |
 |---|---|---|---|
@@ -230,7 +232,7 @@ For Korean proofreading both models went the wrong way. Most suggestions turned 
 
 ### Sources and notices
 
-Settings (KV cache quantization, context length, keep-alive) follow the official Ollama FAQ; the environment variables for running Claude Code on a local model follow the Ollama and Claude Code docs and community guides; tokens per PDF page follow Anthropic's PDF support documentation. Speeds, times and memory figures are single measurements on my PC on October 25, 2026, and the "if Claude read it itself" figures are estimates from character counts. The photos checked are not real places; I generated them with FLUX.2 [klein]. Claude and Claude Code are trademarks of Anthropic PBC; Qwen of Alibaba Cloud; Ollama of Ollama, Inc.; NVIDIA, GeForce and RTX of NVIDIA Corporation; Docker of Docker, Inc.; Microsoft Word, Excel and PowerPoint of Microsoft Corporation; Hangul (HWP) of Hancom Inc.; GitHub of GitHub, Inc.; FLUX of Black Forest Labs; ComfyUI of Comfy Org. They are used for identification only.
+Settings (KV cache quantization, context length, keep-alive) follow the official Ollama FAQ; the environment variables for running Claude Code on a local model follow the Ollama and Claude Code docs and community guides; tokens per PDF page follow Anthropic's PDF support documentation. AMD and Mac support is based on Ollama's release files and model library (not tested here). Speeds, times and memory figures are single measurements on my PC on October 25, 2026, and the "if Claude read it itself" figures are estimates from character counts. The photos checked are not real places; I generated them with FLUX.2 [klein]. Claude and Claude Code are trademarks of Anthropic PBC; Qwen of Alibaba Cloud; Ollama of Ollama, Inc.; NVIDIA, GeForce and RTX of NVIDIA Corporation; Docker of Docker, Inc.; Microsoft Word, Excel and PowerPoint of Microsoft Corporation; Hangul (HWP) of Hancom Inc.; GitHub of GitHub, Inc.; FLUX of Black Forest Labs; ComfyUI of Comfy Org. They are used for identification only.
 
 ### Glossary
 
