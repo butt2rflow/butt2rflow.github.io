@@ -1,5 +1,5 @@
 ---
-title: "Handing the Reading to a Local AI: an NVIDIA GPU and Claude Code"
+title: "Handing the Reading to a Local AI: My GPU and Claude Code"
 nav_title: "Handing the reading to a local AI"
 date: 2026-10-25
 tags: [local-llm, ollama, qwen, claude-code, rtx-3090, token-savings]
@@ -7,7 +7,7 @@ lang: en
 description: "A day of running Qwen3.6 on a home RTX 3090 next to Claude Code. The same Claude Code screen can run on the local model with no Claude usage. Reading-heavy jobs went to the local model, judging and editing stayed with Claude, and summarizing 131 blog posts used about 98% less Claude usage. Switching from the 27B to the 35B model made the same jobs 1.6-2.8x faster. Also: what didn't pay off, the wrong calls, and the trap of sharing one GPU."
 ---
 
-# Handing the Reading to a Local AI: an NVIDIA GPU and Claude Code
+# Handing the Reading to a Local AI: My GPU and Claude Code
 
 Claude plans come with a usage limit. Work with Claude Code for a while and you can see where that usage goes: far more into **reading** than into editing code. Have it read dozens of documents, a long PDF or a handful of web pages, and the limit fills up fast.
 

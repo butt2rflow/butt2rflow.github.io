@@ -1,5 +1,5 @@
 ---
-title: "로컬 AI에게 읽기를 맡겨 보니: NVIDIA GPU와 Claude Code"
+title: "로컬 AI에게 읽기를 맡겨 보니: 내 GPU와 Claude Code"
 nav_title: "로컬 AI에게 읽기 맡기기"
 date: 2026-10-25
 tags: [local-llm, ollama, qwen, claude-code, rtx-3090, token-savings]
@@ -7,7 +7,7 @@ lang: ko
 description: "집에 있는 RTX 3090에 Qwen3.6을 설치하고 Claude Code와 함께 써 본 하루 기록. 같은 Claude Code 화면에서 두뇌만 로컬 모델로 바꿔 Claude 사용량 없이 일할 수 있었다. 읽을 게 많은 일은 로컬 AI에게, 판단과 수정은 Claude에게 맡기니 블로그 글 131편 요약에서 Claude 사용량이 약 98% 줄었다. 27B에서 35B 모델로 바꾸자 같은 작업이 1.6~2.8배 빨라졌고, 효과가 없던 일, 틀린 지적, 그래픽카드를 같이 쓸 때의 함정까지 정리했다."
 ---
 
-# 로컬 AI에게 읽기를 맡겨 보니: NVIDIA GPU와 Claude Code
+# 로컬 AI에게 읽기를 맡겨 보니: 내 GPU와 Claude Code
 
 Claude는 요금제마다 쓸 수 있는 양(사용량 한도)이 정해져 있어요. Claude Code로 일하다 보면 그 사용량이 어디서 새는지 보여요. 코드를 고치는 데보다 **읽는 데** 훨씬 많이 들어요. 문서 수십 편, 긴 PDF, 웹 페이지 여러 장을 읽히면 한도가 금방 차요.
 
