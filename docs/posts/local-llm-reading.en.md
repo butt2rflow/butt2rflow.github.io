@@ -153,7 +153,7 @@ So I settled on how to use it. When I generate several images, **the local AI we
 
 ## Switching models: from the 27B to the 35B
 
-I started with Qwen3.6 27B. Then I learned that the 35B model of the same family was faster and could also see, and switched. The 35B has more numbers, but it uses only a part of them (about 3 billion) at a time, a design called MoE, so it is actually faster. Think of a team of experts where each job calls in only a few of them. I also tried BigBang-v1, a version tuned for search.
+I started with Qwen3.6 27B. Then I learned that the 35B model of the same family was faster and could also see, and switched. The 35B has more numbers yet is faster, thanks to a design called MoE (mixture of experts). Picture a company with 100 experts where a receptionist sends each question only to the two or three who fit it best. The 27B uses all 27 billion numbers for every word it writes; the 35B uses about 3 billion of its 35 billion. The catch: all the experts must wait in memory, so it needs more of it. I also tried BigBang-v1, a version tuned for search.
 
 | | Qwen3.6 27B | BigBang-v1 | **Qwen3.6 35B** |
 |---|---|---|---|
@@ -182,7 +182,7 @@ For finding photos ("river and snowy forest," "domed building"), the tagging was
 
 ![Sharing the GPU's 24 GB between an image generator and the local AI](../assets/diagrams_en/llm-gpu.svg)
 
-This was the biggest trap I fell into. I also make images on the same card (ComfyUI). I finished an image job without closing that program, and it kept holding 15.8 GB. When I then ran the local AI, three quarters of the model didn't fit on the card and spilled onto the CPU, which does this kind of math far more slowly. No error appeared. The 27B I used then simply slowed from 63 tokens/s to 7. Only when the speed looked wrong did I check who was using the graphics memory (`nvidia-smi`) and find the cause. The 35B I use now takes 23.2 GB, so there is even less room.
+This is where I lost the most time. I also make images on the same card (ComfyUI). I finished an image job without closing that program, and it kept holding 15.8 GB. When I then ran the local AI, three quarters of the model didn't fit on the card and spilled onto the CPU, which does this kind of math far more slowly. No error appeared. The 27B I used then simply slowed from 63 tokens/s to 7. Only when the speed looked wrong did I check who was using the graphics memory (`nvidia-smi`) and find the cause. The 35B I use now takes 23.2 GB, so there is even less room.
 
 Since then I follow three rules.
 
