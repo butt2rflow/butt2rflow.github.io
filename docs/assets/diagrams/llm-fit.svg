@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">로컬 AI에 맡길 일과 Claude가 할 일</title>
-<desc id="de">가로축은 읽을 양(왼쪽 적다, 오른쪽 많다), 세로축은 Claude가 판단하거나 고쳐야 하는지(아래 아니다, 위 그렇다). 오른쪽 아래(많이 읽고 결과는 짧게)는 로컬에 맡긴다: 수십 편 요약, 긴 PDF, 웹 페이지 여러 장. 오른쪽 위는 로컬이 후보만 뽑고 Claude가 판단한다: 글 리뷰의 독자 읽기와 한국어 교정, 생성 이미지 검수. 왼쪽 위(코드 수정, 짧은 질문)와 왼쪽 아래(문서 몇 편)는 Claude가 직접 한다.</desc>
+<desc id="de">가로축은 읽을 양(왼쪽 적다, 오른쪽 많다), 세로축은 Claude가 판단하거나 고쳐야 하는지(아래 아니다, 위 그렇다). 오른쪽 아래(많이 읽고 결과는 짧게)는 로컬에 맡긴다: 수십 편 요약, 긴 PDF, 웹 페이지 여러 장. 오른쪽 위는 로컬이 후보만 뽑고 Claude가 판단한다: 책 장별 요약(원문 대조는 Claude), 생성 이미지 검수. 왼쪽 위(코드 수정, 짧은 질문)와 왼쪽 아래(문서 몇 편)는 Claude가 직접 한다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -61,7 +61,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="st" x="168" y="124" style="fill:var(--fg)">짧은 질문</text>
 <rect class="bxa" x="410.0" y="50" width="248.0" height="127.0" rx="8"/>
 <text class="lb" x="424.0" y="76">로컬은 후보만, 판단은 Claude</text>
-<text class="st" x="424.0" y="102" style="fill:var(--fg)">글 리뷰: 독자 읽기·한국어 교정</text>
+<text class="st" x="424.0" y="102" style="fill:var(--fg)">책 장별 요약: 원문 대조는 Claude</text>
 <text class="st" x="424.0" y="124" style="fill:var(--fg)">생성 이미지·영상 검수</text>
 <rect class="bxg" x="154" y="185.0" width="248.0" height="127.0" rx="8"/>
 <text class="lb" x="168" y="211.0">Claude가 직접 (넘기는 수고가 더 큼)</text>

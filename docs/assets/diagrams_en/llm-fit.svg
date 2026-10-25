@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">What to hand the local AI and what Claude keeps</title>
-<desc id="de">The horizontal axis is how much there is to read (left little, right a lot); the vertical axis is whether Claude has to judge or edit (bottom no, top yes). Bottom right, a lot of reading with a short result, goes to the local AI: dozens of documents, long PDFs, several web pages. Top right: the local AI drafts candidates and Claude decides, for reader and Korean-proofreading reviews and checking generated images. Top left (code edits, quick questions) and bottom left (a few documents) stay with Claude.</desc>
+<desc id="de">The horizontal axis is how much there is to read (left little, right a lot); the vertical axis is whether Claude has to judge or edit (bottom no, top yes). Bottom right, a lot of reading with a short result, goes to the local AI: dozens of documents, long PDFs, several web pages. Top right: the local AI drafts candidates and Claude decides, for chapter-by-chapter book summaries (Claude spot-checks them) and checking generated images. Top left (code edits, quick questions) and bottom left (a few documents) stay with Claude.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -61,7 +61,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="st" x="168" y="124" style="fill:var(--fg)">quick questions</text>
 <rect class="bxa" x="410.0" y="50" width="248.0" height="127.0" rx="8"/>
 <text class="lb" x="424.0" y="76">local drafts, Claude decides</text>
-<text class="st" x="424.0" y="102" style="fill:var(--fg)">post review: reader, Korean proofread</text>
+<text class="st" x="424.0" y="102" style="fill:var(--fg)">book summaries: Claude spot-checks</text>
 <text class="st" x="424.0" y="124" style="fill:var(--fg)">checking generated images, clips</text>
 <rect class="bxg" x="154" y="185.0" width="248.0" height="127.0" rx="8"/>
 <text class="lb" x="168" y="211.0">Claude (handing off costs more)</text>

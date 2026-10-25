@@ -180,8 +180,6 @@ The rule is simple. If a job means **reading a lot and returning something short
 - Hand over: summarizing many documents, condensing long logs, reading several web pages, finding what you need in a long PDF or a book, summarizing a video, a first pass over photos
 - Keep on Claude: code edits and debugging (Claude has to read the code anyway), fact checks, post reviews, final edits, calculations, small jobs
 
-I also considered post reviews. I check every post in six steps (copyright, fact check, removing AI-sounding prose, reading as a math-averse reader, final edit, Korean proofreading). Four of them need judgment, so Claude does them. Only two, reading as a reader and Korean proofreading, seemed worth letting the local AI draft "candidates" for first. I tested that on this post; the results are under "The test I ran on this post."
-
 ---
 
 ## Why the 35B: against the 27B and BigBang-v1
@@ -220,23 +218,6 @@ For anyone trying this, two technical traps:
 
 - Running Claude Code on a local model can throw "model not found" mid-session. The small model name used for background tasks (haiku) has to point at the local model too.
 - For an unknown model, Claude Code assumes it reads 200,000 tokens at once. Unless you tell it the real size (65,536), the local runtime rejects requests once the conversation gets long.
-
----
-
-## The test I ran on this post
-
-I tested two review steps on this post's draft. First the local AI read the draft and its list of findings was saved to a file. Without opening that list, I ran the same two review steps with Claude separately. Then I compared them. I ran it with both the 27B and the 35B.
-
-| | Reading as a math-averse reader | Korean proofreading |
-|---|---|---|
-| Time (27B / 35B) | 26 s / 8 s | 34 s / 12 s |
-| Of Claude's findings, also found | 4 of 9 / 6 | 1 of 7 key items / 2 |
-| Useful findings only the local AI had | 3 / 3 | 2 / 0 |
-| Wrong findings | almost none | 3 / 3 (called correct phrasing wrong) |
-
-As a reader it was useful. "Why does spilling onto the CPU make it slow," "what does 4-bit mean" and "how did you notice who was holding the memory" were things I had missed, and they went into this post. The 35B even caught a wrong analogy I had caught ("a few pages of a book").
-
-For Korean proofreading both models did the opposite of what I want. Most suggestions turned plain words like "돌려줘요" (sends back) and "받아 와요" (fetches) into stiff ones like "제공해요" (provides), "추출해요" (extracts) and "반환해요" (returns). Following them would make the prose read more like a translation. So Korean proofreading stays with Claude, and only the reader step uses the local AI's list as a reference.
 
 ---
 
