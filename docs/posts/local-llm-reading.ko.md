@@ -153,9 +153,9 @@ Qwen3.6은 그림도 봐요. Claude도 그림을 잘 보고 판단은 더 정확
 
 글 몇십 편보다 큰 걸로도 시험했어요.
 
-**1,069쪽짜리 책.** 옵션 투자 교과서 한 권을 장별로 요약하게 했어요. 종이책을 스캔해 글자를 입힌 PDF예요. 목차 책갈피가 없어서, 먼저 로컬 AI가 목차 쪽을 읽고 42개 장이 몇 쪽에서 시작하는지 찾았어요(42초). 그다음 장마다 읽고 요약해 목차 표, 책 전체 개요, 장별 요약을 한 파일로 만들었어요. **15분** 걸렸고, 로컬 AI가 읽은 양은 약 63만 토큰이에요. Claude는 프로그램을 짜고 결과를 검사하는 데 약 3만 토큰을 썼어요. 직접 읽었다면 63만 토큰이 넘었을 테니 90% 넘게 줄어든 셈이에요(추정).
+**1,069쪽짜리 책.** 교과서 한 권을 장별로 요약하게 했어요. 종이책을 스캔해 글자를 입힌 PDF예요. 목차 책갈피가 없어서, 먼저 로컬 AI가 목차 쪽을 읽고 42개 장이 몇 쪽에서 시작하는지 찾았어요(42초). 그다음 장마다 읽고 요약해 목차 표, 책 전체 개요, 장별 요약을 한 파일로 만들었어요. **15분** 걸렸고, 로컬 AI가 읽은 양은 약 63만 토큰이에요. Claude는 프로그램을 짜고 결과를 검사하는 데 약 3만 토큰을 썼어요. 직접 읽었다면 63만 토큰이 넘었을 테니 90% 넘게 줄어든 셈이에요(추정).
 
-장 두 개를 원문과 맞춰 보니 숫자는 다 맞았어요. 그런데 그중 한 장에 **설명이 거꾸로** 된 곳이 두 군데 있었어요. 책은 "시간가치는 팔고 내재가치는 사라"고 하는데, 요약에는 반대로 적혀 있었어요. 중국어 한자도 다섯 군데 섞였어요. 책의 뼈대를 훑고 필요한 장을 찾는 데는 아주 좋지만, 요약만 믿고 판단하면 위험해요. 저작권이 있는 책이라 요약본은 제 공부용으로만 써요.
+장 두 개를 원문과 맞춰 보니 숫자는 다 맞았어요. 그런데 그중 한 장에 **설명이 거꾸로** 된 곳이 두 군데 있었어요. 책이 "A는 팔고 B는 사라"고 한 원칙을 요약은 "A는 사고 B는 팔라"로 적은 식이에요. 중국어 한자도 다섯 군데 섞였어요. 책의 뼈대를 훑고 필요한 장을 찾는 데는 아주 좋지만, 요약만 믿고 판단하면 위험해요.
 
 **3분짜리 영상.** NASA가 공개한 3분 영상으로 해 봤어요. 위성으로 폐광 오염을 찾는 이야기예요. 음성은 받아쓰기 모델(Whisper)이 글자로 옮기고, 장면이 바뀌는 곳마다 화면 24장을 뽑아 Qwen3.6이 봤어요. 둘을 합쳐 한 줄 요약, 시간대별 표, 화면에만 나온 정보를 정리했어요. 전부 **약 40초** 걸렸어요. 화면 속 글자도 정확히 읽었어요. "약 5만 개 광산"이라는 자막, 위성 장비 이름의 약자 풀이, 데이터 화면의 숫자까지 원본과 같았어요. 화면 24장과 받아쓰기를 Claude가 직접 봤다면 화면 크기에 따라 약 1만~3만 토큰이 들었을 텐데(추정), 받아쓰기 원문까지 담은 결과 파일은 약 4천 토큰이었어요. 흰 화면을 "말하는 사람"으로 적는 작은 실수는 있었어요.
 
@@ -252,7 +252,7 @@ Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실�
 
 ### 출처와 표기
 
-설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 요약한 책은 Lawrence G. McMillan의 *Options as a Strategic Investment* 5판이고, 영상은 NASA의 "How NASA Uses Light to Detect Waste From Mines"(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX는 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의 상표이며, 지칭 목적으로만 사용했어요.
+설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 "How NASA Uses Light to Detect Waste From Mines"(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX는 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의 상표이며, 지칭 목적으로만 사용했어요.
 
 ### 용어 설명
 
