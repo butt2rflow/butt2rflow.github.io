@@ -43,6 +43,8 @@ So I installed an AI model on the graphics card at home (an RTX 3090) and handed
 
 One memory setting made a big difference. Storing the space where the model keeps what it has already read (the KV cache) in shorter numbers halves its memory. I spent the saving on a reading window twice as large.
 
+It isn't NVIDIA-only. The runtime (Ollama) also supports AMD graphics cards and Apple silicon Macs, and there are Mac builds of Qwen3.6. What matters is memory, not the brand: running the 35B like this needs a 24 GB graphics card or a Mac with 32 GB or more. I only measured on NVIDIA, though.
+
 ---
 
 ## Same screen, different brain: Claude Code on a local model
