@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-10-25 — local-llm-reading: 휴대폰 tmux 접속 확인 반영
+
+- **계기:** 사용자가 S25에 Termius를 설치해 `claude-local-tmux`로 접속(sshd 20:10, tmux `local` 붙음 확인) → 'update all as needed'.
+- **변경:** 한/영 tmux 문단에 휴대폰(Termius) 접속 확인, "나올 때는 앱만 닫기", Ctrl+d 함정(첫 시도에서 tmux가 닫힘) 추가. 블로그 밖: local-llm 스킬, CLAUDE.md, Claude Doc, pc-setup HANDOFF에 같은 내용.
+
+---
+
 ## 2026-10-25 — local-llm-reading: 유머 오프닝, 작업별 감소 차트, 실측 순서 재배치, GPU 가드·tmux
 
 - **계기:** 사용자 요청 묶음(30초 요약에 책·영상 90%대, '집의 Qwen' 표현, 시작에 작업별 감소 차트, 27B 흔들림 문단 삭제, NASA 영상 링크, 실측 순서 131편→책→그림→영상, '7편'→'서너 편', '하루 동안' 문장 삭제, 신입 토큰 구걸 유머 오프닝, tmux, GPU 사용 중 처리, 로컬 요약 더블체크).
