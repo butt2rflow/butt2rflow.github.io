@@ -102,11 +102,12 @@ What backwardation means in practice:
 
 | Signal | Reading | Color |
 |:-------|:--------|:------|
-| **VIX spot < Front month** | Most common state (contango setup) | 🟢 Normal |
-| **VIX spot > Front month** | **Backwardation** — short-term stress | 🔴 Warning |
 | **M2 − M1 > +1** | Deep contango (strong calm) | 🟢 Calm |
-| **M2 − M1 < 0** | Backwardation (stress) | 🔴 Risk |
 | **Curve nearly flat** | Even volatility expectation (transition) | 🟡 Caution |
+| **M2 − M1 < 0** | Backwardation (stress) | 🔴 Risk |
+| **VIX spot > Front month** | Fear right now is above the front-month price — for reference | ⚪ Reference |
+
+The curve's shape (contango or backwardation) is judged **only by the sign of M2 − M1**. The front month converges to spot as it nears expiry, so comparing spot with the front month alone can make a normal curve look backwardated around expiry. Spot above the front month is a separate reference signal.
 
 ---
 

@@ -8,7 +8,7 @@ The monthly review (`scripts/review_briefs.py`) proposes changes to it as a PR, 
 - No earnings, valuation, news or macro calls. No direction forecasts or trade advice.
 
 ## Three lenses
-1. **Insurance and downside amplification:** hedging demand (SKEW and COR90D up, SPX put/call above its 20-day average) means the big players are already prepared. Treat it as a **signal to be careful, not a crash forecast**. The dealers who sold that insurance are short gamma on the downside. When GEX is short and SPX sits below the flip, a decline gets amplified by their hedge selling.
+1. **Insurance and downside amplification:** hedging demand (SKEW and COR90D up, SPX put/call above its 20-day average) means the big players are already prepared. Treat it as a **signal to be careful, not a crash forecast**. The dealers who sold that insurance are short gamma on the downside. When GEX is short and SPX sits below the flip, their hedge selling can add to a decline that real selling starts. It amplifies the move; it doesn't drive it (see the GEX rule below).
 2. **Event context:** SKEW alone doesn't say who bought insurance or why. Near FOMC, earnings season or an expiry, event hedges may be mixed in, and those unwind once the event passes. VIX9D/VIX > 1 means hedges are crowded into the next few days.
 3. **Historical base rate:** compare against days at the same VIX level and don't overstate the signal.
 
@@ -22,6 +22,26 @@ The monthly review (`scripts/review_briefs.py`) proposes changes to it as a PR, 
 | Stress (🔴) | VIX/VIX3M | ≥ 0.95 | keep |
 | Stress (🔴) | VVIX 1-year percentile | ≥ 90% | changed 2026-10-18 (was VVIX ≥ 105; see Findings) |
 | Display only | SPX/Equity put/call, VRP, VIX9D/VIX | not used in the state call | collecting data |
+
+## Reading rules from the blog's indicator posts (added 2026-10-26)
+The home dashboard links each indicator to a post the owner wrote and checked. The commentary reads each indicator the way its post does and must not contradict it. Where a post and this playbook's backfill findings differ, follow the findings and name the post section in the monthly review as one to update. Fix the post itself, don't keep two readings. Each rule below was checked against the post text. When a post changes, update this section in the same commit.
+
+- **GEX** (`gex-calculator`, `vanna-charm`): GEX is a *map* of the regime, not a signal. Gamma hedging is the ripple and real order flow (delta) is the wave: "감마의 진짜 역할은 파도를 만드는 게 아니라, 델타가 만든 파도를 키우거나 잠재우는 것". Cboe's own study puts dealer net gamma at 0.04–0.17% of daily S&P futures liquidity, so "dealer hedging dominates the market" is an overstatement. With short gamma below the flip, say dealer hedging **can add to** a decline that selling starts. Never say it causes or drives the decline. Nobody sees dealer inventory directly, so the sign of dealer positioning is estimated. The GEX is built from the prior close's OI.
+- **SKEW, COR90D** (`volatility-dashboard`): post-2020 regime levels: SKEW median ≈ 145, 150–158 caution, 158+ high tail-risk pricing. COR90D median ≈ 50, 50–60 caution, 60+ stress. The old 35/50 and 140/150 cutoffs were pre-2020 and no longer mean much. SKEW paradox: SKEW can be higher in a recovery than right before a crash (puts are already held during the drop, new ones are bought after), so a low SKEW can mean the market is near a bottom. Only call structural stress when the COR term spread, COR90D and SKEW worsen together. A COR spike can be a short event effect (earnings, Fed), and correlation is not causation. The brief's 🟡 uses SKEW's 1-year percentile and 5-day changes (backfill-tested); quote the post's level bands as context.
+- **VIX futures curve** (`vix-term-structure`): M2−M1 > +1 is deep contango (calm), < 0 is backwardation (stress). There is no reliable single sign that stress is over; M2−M1 back above +1.0 is the suggested check. The curve's value is context, not a short-term trade signal. Don't use it alone.
+- **MOVE** (`move-index`): bond-rate implied volatility in bp, a measure of size not direction. Rough levels: under 80 calm, 80–120 normal, 120–160 stress, over 160 a spasm; above 200 has happened only a handful of times. The signal is when MOVE and VIX disagree. Quote the level band next to the percentile, because a 96th percentile at 107 is still "normal" by the post's bands.
+- **Credit**: see the next section (`credit-spreads`).
+- **Kelly cash allocation** (`cash-allocation`): σ ≈ VIX/100 in f* = (μ−r)/σ², so higher vol means a lower equity weight. Risk signals multiply in extra discounts. The post says this is a buffer against losses compounding after a drop, not a forecasting tool.
+- Not used by the commentary: COT and FedWatch (positioning and rate direction are outside this brief's scope), `gex-0dte-patterns` (intraday), `skew` (its SKEW level table is pre-2020 and now points to `volatility-dashboard`), and `implied-correlation` (its 30%/60% table is COR3M at the money, a different index from the brief's COR90D).
+
+## Credit spreads (display only, added 2026-10-26)
+- Read the **level** and the **gap between ratings** separately. HY OAS (level) can stay low while CCC widens away from B and BBB. Then the index hides that the bottom of the market is being repriced on its own.
+- The brief shows HY as a number (no 🟢: low is not safe), CCC−B with its change this year (🟡 ≥ +30bp, 🔴 ≥ +100bp, the dashboard's `_credit_state`), and CCC−BBB (bottom of HY vs bottom of investment grade) with its change this year and 1-year percentile.
+- When the CCC−B gap is 🟡/🔴 or CCC−BBB is at or above the 1-year 90th percentile, the commentary must not call credit "stable". It says the index is calm but the lowest ratings are widening on their own, and whether that agrees with the other stress signals.
+- **Why** the gap widens (defaults, sectors, news) is out of scope. Say how unusual it is, not what caused it.
+- A low HY level is **thin compensation, not safety** (blog post `credit-spreads`: HY near its historic low means implied default ≈ realized default, so almost no risk premium). Don't write "calm" or "stable" for a low HY number.
+- Read it with VIX, as the post says: calm equity vol plus widening credit dispersion means the two markets disagree. Say that plainly; don't pick a side.
+- These states are dashboard rules, not tested against SPX outcomes here. They are not used in the 🟢/🟡/🔴 call. Credit is not in the backfill: since 2026-04 FRED serves only the last 3 years of these ICE BofA series, so a test needs the live logs to accumulate.
 
 ## Findings to date (backfill 2010-09 → 2026-09, 10-session max-drawdown basis)
 Daily rows overlap (10/20-session windows), so judge by **episodes** (runs more than 10 sessions apart) and the **block-bootstrap 95% CI**, not by n.

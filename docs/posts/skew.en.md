@@ -110,6 +110,8 @@ CBOE publishes the **SKEW Index**, a single number that quantifies how much extr
 | ~120 | Moderate tail risk |
 | ~140+ | Market pricing in significant probability of an extreme drop |
 
+> This table reflects the pre-2020 distribution. Since 2020 SKEW has shifted up structurally, to a median of about 145. The current bands (150–158 caution, 158+ high tail risk) are in the [volatility dashboard](volatility-dashboard.md) post.
+
 > You can pull SKEW from Yahoo Finance with the ticker `^SKEW`.
 
 ---

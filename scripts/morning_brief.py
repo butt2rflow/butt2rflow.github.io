@@ -394,6 +394,9 @@ def collect() -> dict:
 
     credit = ud.fetch_credit_oas()
     credit.pop("series", None)
+    # The dashboard's own credit rule, so the brief and the commentary see the
+    # state and not just the number (HY level and CCC−B gap judged separately).
+    credit["level_state"], credit["gap_state"] = ud._credit_state(credit["hy"], credit["gap_ytd"])
     move = ud.fetch_move()
     if move:
         move.pop("series", None)
@@ -548,7 +551,14 @@ def build_text(d: dict) -> str:
         stale = f" ⚠️ {d['vx_stale']} 스냅샷" if d["vx_stale"] else ""
         L.append(f"• VX 곡선 {vs['shape']} (M1 {vs['front']:.2f}, M2−M1 {vs['spread_2_1']:+.2f}){stale}")
     c = d["credit"]
-    L.append(f"• 신용 HY {c['hy']:.0f}bp · CCC−B {c['gap']:.0f}bp" + ("" if c.get("live") else " (스냅샷)")
+    qual = ""
+    if c.get("gap_bbb") is not None:
+        qual = f" · CCC−BBB {c['gap_bbb']:,.0f}bp (올해 {c['gap_bbb_ytd']:+.0f}"
+        qual += f", 1년 {c['gap_bbb_pct']:.0f}%)" if c.get("gap_bbb_pct") is not None else ")"
+    # No emoji on the HY level: low HY is thin compensation, not "calm" (posts/credit-spreads).
+    L.append(f"• 신용 HY {c['hy']:.0f}bp · "
+             f"CCC−B {c['gap']:.0f}bp (올해 {c['gap_ytd']:+.0f} {ud.EMOJI[c['gap_state']]}){qual}"
+             + ("" if c.get("live") else " (스냅샷)")
              + (f" · MOVE {d['move']['value']:.0f} ({d['move']['pct']:.0f}%ile)" if d["move"] else "")
              + f" · COR1M {m['cor1m']:.1f}")
     if ks:
@@ -569,7 +579,8 @@ COMMENTARY_SYSTEM = """당신은 변동성 지표를 읽는 옵션 투자자의 
 1. 보험과 하방 증폭: 보험 수요(SKEW·COR90D 상승)는 사고 예고가 아니라 '큰손들이 이미 대비 중'이라는
    조심해야 할 신호입니다. 큰손이 산 풋은 주로 딜러가 팔았고, 딜러는 하방에서 short gamma라
    가격이 떨어질수록 헤지 매도를 늘립니다. 그래서 GEX가 short이고 지수가 flip 아래면
-   보험이 많다는 사실 자체가 하락을 키우는 구조가 됩니다. amp 필드로 이 구조가 켜져 있는지 말합니다.
+   실제 매도가 시작한 하락을 딜러 헤지가 더 키울 수 있습니다. 감마는 파도를 키우는 쪽이지 파도를 만드는 쪽이
+   아니므로 '딜러가 하락을 일으킨다'고 쓰지 않습니다. amp 필드로 이 구조가 켜져 있는지 말합니다.
 2. 이벤트 맥락: 누가 왜 샀는지는 SKEW만으로 알 수 없습니다. events의 FOMC·어닝 시즌·만기가 가까우면
    이벤트 헤지가 섞였을 수 있고, 이벤트 헤지는 이벤트가 지나면 풀립니다. 그 가능성을 짚습니다.
 3. 과거 확률: 보험 신호만으로 하락을 예측할 수는 없습니다. base 필드의
@@ -584,7 +595,15 @@ VIX 가격보다 작게 나오는 경향(약 −9%, 검증됨)이 있어 '변동
 데드 전환은 '어깨' 경고 후보(하락 초입을 일찍 잡지만 오경보가 잦음)이고, 무릎(반등 확인)은 VIX 규칙보다
 2거래일쯤 늦습니다. 꼭지·바닥 예측이 아니라 국면의 어깨·무릎을 보는 용도입니다.
 m.vix9d_vix가 1을 넘으면 단기 이벤트 헤지가 몰렸다는 뜻이라 2번 관점과 연결합니다.
+신용(credit)은 수준과 등급 간 격차를 따로 읽습니다. hy·level_state는 하이일드 지수 수준이고,
+gap(CCC−B)·gap_ytd·gap_state와 gap_bbb(CCC−BBB)·gap_bbb_ytd·gap_bbb_pct는 등급 간 격차입니다.
+gap_state가 caution·danger이거나 gap_bbb_pct가 90 이상이면, HY 수준이 낮아도 '신용이 안정적'이라고 쓰지 말고
+'지수는 잠잠하지만 최하위 등급만 따로 벌어지고 있다'처럼 격차를 짚습니다. 격차가 왜 벌어지는지(부도·업종·뉴스)는
+추측하지 않고, 얼마나 이례적인지(올해 변화, 1년 백분위)와 다른 스트레스 지표와 같은 쪽인지만 말합니다.
+HY 수준이 낮다는 건 '안전하다'가 아니라 '부도 위험에 대한 보상이 얇다'는 뜻입니다. VIX는 잠잠한데 격차가 벌어지면
+주식과 채권 시장이 다른 얘기를 하고 있다고 그대로 씁니다.
 그 밖에: 보험 수요와 실제 스트레스(VIX/VIX3M·VX 곡선·VVIX)를 구분하고, 지난 5일 변화를 짚습니다.
+각 지표는 playbook의 '블로그 지표 글' 규칙대로 읽고, 그 글과 다르게 해석하지 않습니다.
 방향 예측이나 매매 권유는 하지 않습니다. 마크다운 제목·목록 없이 짧은 문장만 씁니다.
 JSON 필드 이름(amp, vrp, pc, base 등)을 그대로 쓰지 말고 '하방 증폭 구조', '풋/콜 비율'처럼 우리말로 씁니다.
 선물 만기는 '1·2월물'이 아니라 '근월물·차월물'로 씁니다."""

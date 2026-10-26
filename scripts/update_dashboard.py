@@ -112,11 +112,14 @@ FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
 FRED_API_URL = ("https://api.stlouisfed.org/fred/series/observations"
                 "?series_id={id}&api_key={key}&file_type=json"
                 "&sort_order=desc&limit=400")
-CREDIT_IDS = {"hy": "BAMLH0A0HYM2", "b": "BAMLH0A2HYB", "ccc": "BAMLH0A3HYC"}
+CREDIT_IDS = {"hy": "BAMLH0A0HYM2", "b": "BAMLH0A2HYB", "ccc": "BAMLH0A3HYC",
+              "bbb": "BAMLC0A4CBBB"}
 # Verified 2026-08-28 (see posts/credit-spreads). Seeds the tile when the live
 # pull fails, marked stale so the reader knows it's last-known-good.
 CREDIT_FALLBACK = {"hy": 260.0, "b": 276.0, "ccc": 1031.0,
-                   "gap": 755.0, "gap_ytd": 150.0, "date": "2026-08-28", "live": False}
+                   "gap": 755.0, "gap_ytd": 150.0, "date": "2026-08-28", "live": False,
+                   # BBB from FRED for the same date (97bp; 2026-01-02 CCC−BBB was 787bp).
+                   "bbb": 97.0, "gap_bbb": 934.0, "gap_bbb_ytd": 147.0, "gap_bbb_pct": None}
 
 # CFTC Commitments of Traders — Traders in Financial Futures (Socrata, no key).
 # E-mini S&P 500 Leveraged-Funds net = the modern "large speculator" cohort
@@ -300,13 +303,29 @@ def fetch_credit_oas() -> dict:
         ccc_y, b_y = ccc[ccc.index.year == year], b[b.index.year == year]
         gap_start = (float(ccc_y.iloc[0]) - float(b_y.iloc[0])
                      if len(ccc_y) and len(b_y) else gap)
-        return {"hy": hy_bp, "b": b_bp, "ccc": ccc_bp, "gap": gap,
-                "gap_ytd": gap - gap_start,
-                "date": hy.index[-1].strftime("%Y-%m-%d"), "live": True,
-                "series": {"hy": hy, "b": b, "ccc": ccc}}
+        out = {"hy": hy_bp, "b": b_bp, "ccc": ccc_bp, "gap": gap,
+               "gap_ytd": gap - gap_start,
+               "date": hy.index[-1].strftime("%Y-%m-%d"), "live": True,
+               "series": {"hy": hy, "b": b, "ccc": ccc}}
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] FRED credit OAS fetch failed ({e}); using snapshot fallback")
         return dict(CREDIT_FALLBACK)
+    # CCC−BBB: the full quality spread (bottom of HY vs bottom of IG). Optional —
+    # a BBB failure leaves the HY/B/CCC tile intact with the BBB fields as None.
+    out.update(bbb=None, gap_bbb=None, gap_bbb_ytd=None, gap_bbb_pct=None)
+    try:
+        bbb = _fetch_fred_series(CREDIT_IDS["bbb"]) * 100.0
+        qg = (ccc - bbb).dropna()
+        if len(qg):
+            qg_y = qg[qg.index.year == qg.index[-1].year]
+            out.update(bbb=float(bbb.loc[qg.index[-1]]), gap_bbb=float(qg.iloc[-1]),
+                       gap_bbb_ytd=float(qg.iloc[-1] - qg_y.iloc[0]),
+                       # 1-year percentile (the FRED API path returns ~400 obs).
+                       gap_bbb_pct=float((qg.tail(252) <= qg.iloc[-1]).mean() * 100))
+            out["series"]["bbb"] = bbb
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] FRED BBB OAS fetch failed ({e}); CCC−BBB omitted")
+    return out
 
 
 def _cot_state(pct: float) -> str:
