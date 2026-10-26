@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-10-25 — local-llm-reading: 오프닝에 H3 만화 영상 추가
+
+- **계기:** 사용자 'h3로 동영상 하나 만들어서 블로그 글에 사용하자… 툰 만화 분위기… 프롬프트에 사용자 메뉴얼 분석해줘가 타자기처럼… 버스 토큰이 쨍쨍 날아가 소멸', '만화 스타일로 재미있게'.
+- **제작:** 첫 장면 FLUX 3 Image Klein(+업샘플러, seed 42, 1440×800 → 864×480; 첫 시도는 업샘플러가 화면에 "READY TO GO!"를 넣어 "거의 빈 터미널"로 다시). H3 I2VA 864×480·192프레임(8초)·8스텝 터보 LoRA, **174초, 최대 23.9 GB, Xid 없음**. 프롬프트 `~/ComfyUI/prompts/h3toon_tokens.txt`(3샷: 어깨 너머 push in → 화면 정지샷에 "사용자 매뉴얼 분석해줘" 한 글자씩 → 토큰 폭발·소멸). 한글 화면 글자 깨짐 없음, 오디오 AAC 32 kHz(평균 -16 dB).
+- **글:** `docs/assets/llm/local-llm-tokens.mp4`(2.0 MB) + 포스터 jpg, 한/영 오프닝 첫 문단 아래 `<video … muted autoplay loop>` + 설명 한 줄, 출처에 제작 도구, 상표 MiniMax.
+
+---
+
 ## 2026-10-25 — local-llm-reading: 휴대폰 tmux 접속 확인 반영
 
 - **계기:** 사용자가 S25에 Termius를 설치해 `claude-local-tmux`로 접속(sshd 20:10, tmux `local` 붙음 확인) → 'update all as needed'.

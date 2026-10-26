@@ -11,6 +11,10 @@ description: "1,000쪽 넘는 PDF 앞에서 토큰 걱정을 덜어 준 방법. 
 
 1,000쪽이 넘는 PDF 사용자 매뉴얼이 앞에 놓이면 감이 와요. 아, 오늘 토큰 활활 타겠구나.
 
+<video controls playsinline muted autoplay loop preload="metadata" poster="/assets/llm/local-llm-tokens-poster.jpg" src="/assets/llm/local-llm-tokens.mp4" style="width:100%"></video>
+
+*집 PC의 그래픽카드로 만든 8초짜리 AI 영상이에요(첫 장면은 FLUX 3, 영상은 MiniMax H3, 약 3분). 소리를 켜면 토큰 날아가는 소리가 들려요.*
+
 이럴 때 방법은 두 가지예요. 첫 번째는 새로 들어온 신입을 살살 꼬셔서 토큰을 얻어 쓰는 거예요. 신입은 아직 이번 주 한도를 거의 안 썼을지도 모르거든요. 두 번째 방법은 이 글에서 공개해요. 양심에는 이쪽이 덜 찔려요.
 
 Claude는 요금제마다 쓸 수 있는 양(사용량 한도)이 정해져 있고, 그 사용량은 코드를 고치는 데보다 **읽는 데** 훨씬 많이 들어요. 그래서 집 PC의 그래픽카드(RTX 3090)에 AI 모델을 로컬로 띄우고, 읽기를 그쪽에 맡겼어요. 맡긴 일마다 Claude 사용량이 대부분 90% 넘게 줄었어요.
@@ -235,7 +239,7 @@ Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실�
 
 ### 출처와 표기
 
-설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ)(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의, Tailscale은 Tailscale Inc.의 상표이며, 지칭 목적으로만 사용했어요.
+설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ)(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. 글 첫머리 영상은 FLUX 3 Image Klein으로 첫 장면을 만들고 MiniMax H3로 움직이게 한 AI 영상이에요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, MiniMax는 MiniMax의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의, Tailscale은 Tailscale Inc.의 상표이며, 지칭 목적으로만 사용했어요.
 
 ### 용어 설명
 
