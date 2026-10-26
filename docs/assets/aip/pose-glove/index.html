@@ -112,6 +112,11 @@ a { color: var(--accent); }
     <div class="num"><span>소리 클립</span><b id="gClips">0</b><small id="gLog"></small></div>
   </div>
 
+  <div class="chart" id="voiceBox">
+    <div class="head"><span>음성 명령</span><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="vCont" type="checkbox"> 계속 듣기</label></div>
+    <div class="row"><button id="vTalk">말로 하기</button><span id="vHeard" style="font-size:14px;color:var(--muted);align-self:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">예: "7번 하프", "굿샷", "플레이어 민수", "방금 거 어때"</span></div>
+  </div>
+
   <div class="chart" id="quick">
     <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="qOn" type="checkbox"> 빠른 선택 (음성 명령 대신 눌러서)</label><button id="qEdit" style="padding:6px 10px;font-size:13px;flex:none;display:none">편집</button></div>
     <div id="qBody" style="display:none">
@@ -178,6 +183,7 @@ a { color: var(--accent); }
       <li><b>장갑 속도:</b> 휴대폰 블루투스로는 새 펌웨어(2026-10-25부터)가 약 250 Hz까지 고르게 보내요(S25 측정). 그래서 기본은 240 Hz예요. 400 Hz를 고르면 장갑이 보내지 못한 샘플을 건너뛰어 간격이 고르지 않아요. 옛 펌웨어는 180 Hz로 두세요.</li>
       <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
       <li><b>기록:</b> "기록 시작" → 스윙 → "기록 멈추고 저장". 장갑 프레임(장갑 시계 + 휴대폰 도착 시각), 자세 프레임(휴대폰 시각), 배터리, 소리 클립이 json 파일 하나로 저장돼요. 카메라 없이 장갑만 기록해도 돼요.</li>
+      <li><b>음성 명령:</b> "말로 하기"를 누르고 말해요. "7번 하프"(클럽과 스윙 종류 함께), "굿샷"·"뒤땅"(방금 스윙 라벨), "플레이어 민수", "친구 차례", "방금 거 어때", "오늘 요약", "배터리", "기록 시작"·"그만", "취소". 알아들은 걸 소리로 다시 말해 줘요. "계속 듣기"를 켜면 누르지 않아도 계속 들어요(옆 사람 말을 잘못 알아들을 수 있어요). 명령 목록은 PC 음성 명령과 같은 파일에서 와요. Chrome 음성 인식은 인터넷이 필요해요.</li>
       <li><b>스윙 분석:</b> 장갑을 연결하면 스윙이 끝날 때마다 표에 한 줄이 생겨요. 템포(백스윙 시간 ÷ 다운스윙 시간), 손목 풀림(꺾였던 손목이 반쯤 풀린 순간, − = 임팩트 전), 손목 꺾임 최대, 손 회전 최고 속도예요. 임팩트 시각은 장갑이 들은 소리로 잡고(약 1.5초 뒤에 도착해서 그만큼 늦게 나와요), 소리가 없으면 움직임으로 잡아요. "스윙마다 말하기"를 켜면 한 줄로 읽어 줘요. 기록 파일에도 들어가요.</li>
       <li>손목 꺾임은 어드레스를 0으로 둔 상대값이에요("정렬 시작"을 붙이면 실제 각도가 돼요). 템포는 시뮬레이션에서 실제보다 0.2~0.3쯤 낮게 나와요(백스윙 시작을 조금 늦게 잡아서). 스윙끼리 비교하는 데는 문제없어요. 장갑 수신 약 240 Hz, 빠진 프레임 0이면 정상이에요.</li>
     </ul>
@@ -188,6 +194,7 @@ a { color: var(--accent); }
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs";
 import { Glove, clipSamples, motionFrames, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
 import { SwingDetector, swingLine } from "./swing.js";
+import { VoiceCommands, Listener } from "./voice.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -387,6 +394,7 @@ $("base").onclick = () => {
 $("model").onchange = async () => { if (pose) { pose.close(); pose = null; if (running) await loadModel(); } };
 
 // ---- sensor glove (Web Bluetooth) ----
+let lastStatus = null;
 let glove = null, logging = false, log = null, gStats = { n: 0, t0: 0, hand: 0, arm: 0, clips: 0 };
 function gloveText(id, t) { $(id).textContent = t; }
 function onGlove(r) {
@@ -402,6 +410,7 @@ function onGlove(r) {
                       f[9] * GYRO_DPS, f[10] * GYRO_DPS, f[11] * GYRO_DPS, f[12] * ACC_G, f[13] * ACC_G, f[14] * ACC_G]);
     }
   } else if (r.type === "status") {
+    lastStatus = r;
     gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? "팔 IMU 있음" : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
     if (logging) log.status.push(r);
   } else if (r.type === "clip" && r.clip.kind === "motion") {   // 833 Hz gyro around the impact, after its sound clip
@@ -477,6 +486,76 @@ function renderSwings() {
   const tp = swings.slice(-10).map((w) => w.tempo).sort((a, b) => a - b);
   $("swTitle").textContent = `스윙 ${swings.length}번 · 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}`;
 }
+
+// ---- voice commands (voice.js: voice.py's matcher; Chrome speech-to-text) ----
+let vc = null;
+fetch("./commands.json").then((r) => r.json()).then((cfg) => { vc = new VoiceCommands(cfg); }).catch(() => {});
+// what to show for a command's args: the matching button name if there is one (so voice and buttons agree)
+function shown(kind, cmd, value) {
+  const btn = qList[kind] || [];
+  if (cmd) { const hit = cmd.say.find((ph) => btn.includes(ph)); if (hit) return hit; return cmd.say[0]; }
+  if (kind === "player") { const pl = vc.players.find((x) => x.name === value); const hit = pl && pl.say.find((ph) => btn.includes(ph)); return hit || value; }
+  return value;
+}
+function reply(t) {
+  $("vHeard").textContent = t;
+  if (!window.speechSynthesis) return;
+  listener.pause(); speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t); u.lang = "ko-KR"; u.rate = 1.1;
+  u.onend = u.onerror = () => listener.resume(); speechSynthesis.speak(u);
+}
+const KIND = { set_club: "club", set_swing: "swing", set_player: "player" };
+function runVoice(alts) {
+  if (!vc) { $("vHeard").textContent = "명령 목록을 아직 못 불러왔어요"; return; }
+  // Chrome gives up to 3 guesses: take the best-scoring command
+  let m = null;
+  for (const a of alts) { const x = vc.match(a); if (x && (!m || (x.action !== "note" && (m.action === "note" || x.score > m.score)))) m = x; }
+  if (!m) return;
+  const heard = m.text, said = [];
+  for (const c of [m, ...(m.also || [])]) {
+    const kind = KIND[c.action];
+    if (kind) {
+      const v = kind === "player" ? shown("player", null, c.args.name) : shown(kind, c.cmd);
+      setSetting(kind, v, "voice", heard); said.push(v);
+    } else if (c.action === "label_last") {
+      const v = c.args.label && !c.cmd ? c.args.label : shown("label", c.cmd);
+      if (labelLast(v, "voice", heard)) said.push(`방금 스윙 ${v}`); else return reply("아직 스윙이 없어요");
+    } else if (c.action === "undo_label") {
+      const x = labeled.pop(); if (logging && log.labels.length) log.labels.pop();
+      const sw = x && x.swing && swings.find((w) => w.n === x.swing); if (sw && sw.labels) sw.labels.pop();
+      qEvent("undo_label", x || null, "voice", heard); said.push(x ? `${x.label} 지웠어요` : "지울 라벨이 없어요");
+    } else if (c.action === "speak_last") {
+      said.push(swings.length ? swingLine(swings[swings.length - 1]) : "아직 스윙이 없어요");
+    } else if (c.action === "speak_summary") {
+      const tp = swings.map((w) => w.tempo).sort((a, b) => a - b);
+      said.push(swings.length ? `스윙 ${swings.length}번, 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}` : "아직 스윙이 없어요");
+    } else if (c.action === "speak_battery") {
+      said.push(lastStatus ? `장갑 배터리 ${(lastStatus.mv / 1000).toFixed(1)}볼트` : "장갑이 연결되지 않았어요");
+    } else if (c.action === "speak_club") {
+      said.push(`지금 ${cur.player || "선수 없음"}, ${cur.club || "클럽 없음"}, ${cur.swing || "스윙 종류 없음"}`);
+    } else if (c.action === "start" || c.action === "stop") {
+      const want = c.action === "start";
+      if ($("log").disabled) said.push("장갑을 먼저 연결해 주세요");
+      else if (want !== logging) { $("log").click(); said.push(want ? "기록 시작" : "기록 저장"); }
+      else said.push(want ? "이미 기록 중이에요" : "기록 중이 아니에요");
+    } else if (c.action === "calibrate") {
+      said.push("정렬은 아직 준비 중이에요");
+    } else {   // "note": nothing matched; keep it in the log
+      qEvent("note", m.text, "voice", heard);
+      return reply(`못 알아들었어요: ${m.text}`);
+    }
+  }
+  reply(said.join(", "));
+  $("vHeard").textContent = `"${heard}" → ${said.join(", ")}`;
+}
+const listener = new Listener(runVoice, (st, err) => {
+  $("vTalk").textContent = st === "listening" ? "듣는 중…" : "말로 하기";
+  if (st === "error" && err !== "no-speech" && err !== "aborted") $("vHeard").textContent = `음성 인식 오류: ${err}`;
+});
+if (!listener.ok) { $("vTalk").disabled = true; $("vCont").disabled = true; $("vHeard").textContent = "이 브라우저는 음성 인식이 없어요 (안드로이드 Chrome에서 돼요)"; }
+window.__pgTest.runVoice = runVoice;
+$("vTalk").onclick = () => listener.listenOnce();
+$("vCont").onchange = () => listener.setContinuous($("vCont").checked);
 
 // ---- live charts ----
 const gyroBuf = [], gyroLong = []; let lastFrame = null;
@@ -592,8 +671,25 @@ const qSave = () => { try { localStorage.setItem("pg-quick-v1", JSON.stringify(q
 let qList = qLoad(), qEditing = false;
 const cur = { player: (() => { try { return localStorage.getItem("pg-quick-player") || "나"; } catch (e) { return "나"; } })(), club: null, swing: null };
 const labeled = [];   // {id, label} for this session
-function qEvent(action, value) {
-  if (logging) log.events.push({ phoneMs: +performance.now().toFixed(1), action, value, source: "tap" });
+function qEvent(action, value, source = "tap", heard) {
+  if (logging) log.events.push({ phoneMs: +performance.now().toFixed(1), action, value, source, ...(heard ? { heard } : {}) });
+}
+// shared by the buttons and the voice commands
+function setSetting(kind, name, source, heard) {
+  cur[kind] = name;
+  if (kind === "player") { try { localStorage.setItem("pg-quick-player", cur.player); } catch (e) {} }
+  qEvent(Q_ACTION[kind], cur[kind], source, heard); qRender();
+}
+function labelLast(name, source, heard) {
+  // the label goes to the latest impact sound and to the latest analysed swing (a practice swing has no sound)
+  const sw = typeof swings !== "undefined" && swings.length ? swings[swings.length - 1] : null;
+  if (!lastImpact && !sw) { say("아직 스윙이 없어요. 스윙한 뒤에 라벨을 붙여 주세요."); return false; }
+  const tgt = { impact: lastImpact ? lastImpact.id : null, swing: sw ? sw.n : null };
+  if (sw) (sw.labels = sw.labels || []).push(name);
+  labeled.push({ id: tgt.impact, swing: tgt.swing, label: name }); qEvent("label_last", { ...tgt, label: name }, source, heard);
+  if (logging) log.labels.push({ ...tgt, label: name, phoneMs: +performance.now().toFixed(1), source });
+  $("qLast").textContent = `${tgt.swing ? `스윙 #${tgt.swing}` : `임팩트 #${tgt.impact}`} → ${name}` + (labeled.length > 1 ? ` (이번에 ${labeled.length}개)` : "");
+  return true;
 }
 function qRender() {
   $("nowSet").textContent = `지금: ${cur.player || "–"} · ${cur.club || "클럽 –"} · ${cur.swing || "스윙 –"}`;
@@ -606,16 +702,8 @@ function qRender() {
       if (qEditing) { const x = document.createElement("span"); x.className = "x"; x.textContent = "✕"; b.appendChild(x); }
       b.onclick = () => {
         if (qEditing) { qList[kind].splice(i, 1); qSave(); qRender(); return; }
-        if (kind === "label") {
-          if (!lastImpact) { say("아직 임팩트가 없어요. 스윙한 뒤에 눌러 주세요."); return; }
-          labeled.push({ id: lastImpact.id, label: name }); qEvent("label_last", { impact: lastImpact.id, label: name });
-          if (logging) log.labels.push({ impact: lastImpact.id, label: name, phoneMs: +performance.now().toFixed(1) });
-          $("qLast").textContent = `임팩트 #${lastImpact.id} → ${name}` + (labeled.length > 1 ? ` (이번에 ${labeled.length}개)` : "");
-          return;
-        }
-        cur[kind] = cur[kind] === name && kind !== "player" ? null : name;   // tap again to clear club / swing
-        if (kind === "player") { try { localStorage.setItem("pg-quick-player", cur.player); } catch (e) {} }
-        qEvent(Q_ACTION[kind], cur[kind]); qRender();
+        if (kind === "label") { labelLast(name, "tap"); return; }
+        setSetting(kind, cur[kind] === name && kind !== "player" ? null : name, "tap");   // tap again to clear club / swing
       };
       box.appendChild(b);
     });
@@ -697,7 +785,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26f", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26g", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };
