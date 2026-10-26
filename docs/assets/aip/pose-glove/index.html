@@ -108,10 +108,12 @@ a { color: var(--accent); }
   </div>
 
   <div class="chart" id="quick">
-    <div class="head"><span>빠른 선택 (음성 명령 대신 눌러서)</span><button id="qEdit" style="padding:6px 10px;font-size:13px;flex:none">편집</button></div>
-    <div id="nowSet">지금: –</div>
-    <div class="chips" id="qChips"></div>
-    <div class="head"><span id="qLast">라벨은 가장 최근 임팩트에 붙어요</span></div>
+    <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="qOn" type="checkbox"> 빠른 선택 (음성 명령 대신 눌러서)</label><button id="qEdit" style="padding:6px 10px;font-size:13px;flex:none;display:none">편집</button></div>
+    <div id="qBody" style="display:none">
+      <div id="nowSet">지금: –</div>
+      <div class="chips" id="qChips"></div>
+      <div class="head"><span id="qLast">라벨은 가장 최근 임팩트에 붙어요</span></div>
+    </div>
   </div>
 
   <div class="charts">
@@ -157,7 +159,7 @@ a { color: var(--accent); }
       <li>S25에서 정확한 모델은 약 26 fps, 손목 신뢰도 약 86%였어요. 빠른 모델은 더 빠르지만 손목 신뢰도가 50% 아래로 떨어져서 기본은 정확한 모델이에요.</li>
       <li><b>화면이 좁을 때:</b> 화면 비율을 "4:3"으로 두면 위아래가 더 넓게 찍혀요(기본). 카메라를 켜면 렌즈 목록이 나와요. 앞뒤 카메라가 모두 들어 있고, 초광각 렌즈가 따로 보이는 휴대폰도 있어요. 처음에는 후면 카메라로 시작해요. 줌 막대가 보이면 왼쪽 끝이 가장 넓어요. 고른 렌즈와 줌은 이 휴대폰에 기억돼요. 갤럭시 S25에서는 <b>camera 2 (후면)</b>와 <b>camera 1 (전면)</b>이 넓게 찍혀요.</li>
       <li><b>화면이 안 보일 때:</b> "음성 안내"를 켜 두면 카메라가 몸 전체를 보는지 소리로 알려 줘요("전신이 보여요", "발이 잘려요", "머리가 잘려요"). 휴대폰을 세워 두고 소리를 들으며 자리를 잡으면 돼요. 책상에서 시험할 때는 렌즈 목록에서 전면 카메라를 골라도 돼요(화면을 뒤집지 않아요).</li>
-      <li><b>빠른 선택:</b> 음성 명령과 같은 일을 버튼으로 해요. 선수·클럽·스윙 종류를 고르면 그다음 임팩트부터 그 설정이 기록에 붙고, 결과 라벨(굿샷, 뒤땅…)은 가장 최근 임팩트에 붙어요. "편집"으로 버튼을 더하거나 지울 수 있고, 바꾼 목록은 이 휴대폰에 기억돼요.</li>
+      <li><b>빠른 선택:</b> 체크하면 펼쳐지고, 평소에는 접혀 있어요. 음성 명령과 같은 일을 버튼으로 해요. 선수·클럽·스윙 종류를 고르면 그다음 임팩트부터 그 설정이 기록에 붙고, 결과 라벨(굿샷, 뒤땅…)은 가장 최근 임팩트에 붙어요. "편집"으로 버튼을 더하거나 지울 수 있고, 바꾼 목록은 이 휴대폰에 기억돼요.</li>
       <li><b>그래프:</b> 장갑 회전 속도는 실시간이에요. 휴대폰 마이크 스펙트로그램은 "마이크 켜기"를 누르면 실시간으로 흘러요(가로 = 시간, 세로 = 소리 높낮이, 밝을수록 큰 소리). 장갑 마이크는 블루투스로 소리를 계속 보낼 수 없어서, 임팩트나 목소리 클립이 도착할 때마다(임팩트 뒤 약 1.5초) 아래 칸에 그려져요.</li>
       <li><b>장갑 속도:</b> 휴대폰 블루투스로는 새 펌웨어(2026-10-25부터)가 약 250 Hz까지 고르게 보내요(S25 측정). 그래서 기본은 240 Hz예요. 400 Hz를 고르면 장갑이 보내지 못한 샘플을 건너뛰어 간격이 고르지 않아요. 옛 펌웨어는 180 Hz로 두세요.</li>
       <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
@@ -586,6 +588,11 @@ function qRender() {
   }
 }
 $("qEdit").onclick = () => { qEditing = !qEditing; $("qEdit").textContent = qEditing ? "완료" : "편집"; qRender(); };
+// collapsed unless checked; the choice is remembered on this phone
+const qShow = (on) => { $("qBody").style.display = on ? "" : "none"; $("qEdit").style.display = on ? "" : "none"; if (!on && qEditing) $("qEdit").click(); };
+$("qOn").checked = (() => { try { return localStorage.getItem("pg-quick-on") === "1"; } catch (e) { return false; } })();
+$("qOn").onchange = () => { try { localStorage.setItem("pg-quick-on", $("qOn").checked ? "1" : "0"); } catch (e) {} qShow($("qOn").checked); };
+qShow($("qOn").checked);
 qRender();
 const EDGE2 = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
 function drawImpact(c) {
@@ -646,7 +653,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26d", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26e", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
