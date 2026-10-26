@@ -6,6 +6,12 @@
 
 ---
 
+## 2026-10-25 — local-llm-reading: tmux 원격 접속 내용 삭제
+
+- 사용자 '불필요한 것 같아'로 한/영 tmux·휴대폰 접속 문단, 용어(tmux, SSH), 상표(Tailscale) 삭제. 도구 기록(스킬·CLAUDE.md·HANDOFF·Claude Doc)은 유지.
+
+---
+
 ## 2026-10-25 — local-llm-reading: 영상 아래 설명 줄 삭제
 
 - 사용자 요청으로 한/영 영상 설명 이탤릭 줄 삭제(제작 도구는 출처와 표기에만 남김).

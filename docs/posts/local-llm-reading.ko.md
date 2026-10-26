@@ -68,8 +68,6 @@ NVIDIA 그래픽카드만 되는 건 아니에요. 실행 프로그램(Ollama)�
 
 두 세션은 서로 메시지도 주고받아요. Claude Code에는 같은 컴퓨터에 열린 다른 세션에 메시지를 보내는 기능이 있는데, 로컬 모델로 연 세션도 똑같이 참여해요. 로컬 세션을 열어 Claude 세션에 메시지를 보내기까지 13초가 걸렸고, 메시지는 제대로 도착했어요. 반대로 Claude 세션이 "ping"을 보내면, 작업 중이던 로컬 세션이 읽고 "pong"으로 답했어요. 그래서 진행 메모를 메시지로 넘길 수도 있고, Claude 세션이 긴 작업을 로컬 세션에 맡겨 두고 결과를 메시지로 받을 수도 있어요.
 
-밖에서 휴대폰으로 이어 쓰고 싶을 때는 **tmux**를 써요. tmux는 터미널 창을 닫아도 그 안의 프로그램이 계속 돌게 해 주는 도구예요. 휴대폰 Claude 앱으로 PC 세션을 조종하는 Remote Control은 Anthropic 서버와 claude.ai 로그인을 거치는 기능이라, 로컬 모델로 연 세션에는 쓰지 않았어요. 대신 집 PC에서 tmux 안에 `claude-local`을 띄워 두고, 휴대폰에서 SSH로 접속해(집 밖에서는 Tailscale 같은 사설 연결로) 같은 화면을 이어 받아요. 휴대폰(Galaxy S25)의 SSH 앱 Termius로 접속해 같은 로컬 세션을 이어 받는 것까지 확인했어요. 나올 때는 앱만 닫으면 돼요. tmux가 계속 돌고 있어서 다음에 접속하면 그 화면 그대로예요. 반대로 Ctrl+d를 누르면 Claude Code가 끝나고, 한 번 더 누르면 tmux까지 닫혀요. 첫 시도에서 제가 그랬어요.
-
 로컬 모델에게는 지시를 "1단계, 2단계…"처럼 구체적으로 줘야 했어요. 막연하게 "기다려"라고 하면 그 지시를 무시하고 몇 초 만에 끝내 버렸어요. 로컬 세션에서는 다른 컴퓨터나 원격으로 연결한 세션도 보이지 않았어요.
 
 재 본 숫자예요.
@@ -237,7 +235,7 @@ Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실�
 
 ### 출처와 표기
 
-설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ)(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. 글 첫머리 영상은 FLUX 3 Image Klein으로 첫 장면을 만들고 MiniMax H3로 움직이게 한 AI 영상이에요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, MiniMax는 MiniMax의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의, Tailscale은 Tailscale Inc.의 상표이며, 지칭 목적으로만 사용했어요.
+설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ)(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. 글 첫머리 영상은 FLUX 3 Image Klein으로 첫 장면을 만들고 MiniMax H3로 움직이게 한 AI 영상이에요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, MiniMax는 MiniMax의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의 상표이며, 지칭 목적으로만 사용했어요.
 
 ### 용어 설명
 
@@ -254,5 +252,3 @@ Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실�
 - *MCP*: Claude 같은 AI에 외부 도구를 연결하는 표준 방식. 등록한 프로그램이 AI가 쓰는 도구 목록에 나타난다
 - *MoE(전문가 혼합)*: 모델 안을 여러 "전문가"로 나눠, 일마다 그중 일부만 쓰는 구조. 크기에 비해 빠르다
 - *Whisper*: 말소리를 글자로 옮기는 공개 받아쓰기 모델
-- *tmux*: 터미널 창을 닫거나 접속이 끊겨도 그 안의 프로그램을 계속 돌려 주는 도구. 나중에 다시 붙어 이어 쓸 수 있다
-- *SSH*: 다른 기기에서 이 컴퓨터의 터미널에 안전하게 접속하는 방법
