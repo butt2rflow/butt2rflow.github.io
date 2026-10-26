@@ -4,7 +4,7 @@ nav_title: "Handing the reading to a local AI"
 date: 2026-10-25
 tags: [local-llm, ollama, qwen, claude-code, rtx-3090, token-savings]
 lang: en
-description: "What to do when a 1,000-page PDF lands on your desk. With Qwen3.6 35B running locally on the graphics card in my home PC (an RTX 3090) doing the reading, Claude usage fell by mostly over 90% on 131 blog posts, a 1,069-page book, phone screenshots and a 3-minute NASA video (against an estimate of Claude reading them). The same Claude Code screen can also run on the local model. Also: wrong summaries and the trap of sharing one GPU."
+description: "What to do when a 1,000-page PDF lands on your desk. With Qwen3.6 35B running on the graphics card in my local PC (an RTX 3090) doing the reading, Claude usage fell by mostly over 90% on 131 blog posts, a 1,069-page book, phone screenshots and a 3-minute NASA video (against an estimate of Claude reading them). The same Claude Code screen can also run on the local model. Also: wrong summaries and the trap of sharing one GPU."
 ---
 
 # A 1,069-Page Book in 15 Minutes: Cutting Claude Usage by Over 90% With a Local AI on My GPU
@@ -15,7 +15,7 @@ When a 1,000-page PDF user manual lands in front of you, you know what's coming.
 
 There are two ways out. The first is to sweet-talk the new hire into lending you some tokens; they may have barely touched this week's limit. The second is in this post. It's easier on the conscience.
 
-Each Claude plan has a set amount you can use (a usage limit), and that usage goes far more into **reading** than into editing code. So I ran an AI model locally on the graphics card in my home PC (an RTX 3090) and handed the reading to it. On most jobs, Claude usage fell by over 90%.
+Each Claude plan has a set amount you can use (a usage limit), and that usage goes far more into **reading** than into editing code. So I ran an AI model on the graphics card in my local PC (an RTX 3090) and handed the reading to it. On most jobs, Claude usage fell by over 90%.
 
 ![How much Claude usage fell per task: 131 blog posts, a 1,069-page book, 6 article screenshots, a 3-minute NASA video](../assets/diagrams_en/llm-cut.svg)
 
@@ -28,7 +28,7 @@ Each Claude plan has a set amount you can use (a usage limit), and that usage go
 - A **3-minute NASA video** was summarized in about 40 seconds from a transcript plus frame descriptions. Claude usage fell by **85-95%**, depending on frame size.
 - The savings are against an estimate of Claude reading or viewing it itself. For three or four posts the difference is small.
 - Numbers and on-screen text were accurate, but the book summary had some explanations reversed. So **Claude double-checks the local AI's summaries against the source**.
-- The model is **Qwen3.6 35B**, running locally on my home PC. It answers at about 164 tokens per second and can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word).
+- The model is **Qwen3.6 35B**, running on my local PC. It answers at about 164 tokens per second and can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word).
 - **You can keep the same Claude Code screen and swap only the brain for the local model.** One line, `claude-local`, gives you file edits, terminal runs and even web search with no Claude usage.
 - Code edits and anything that needs judgment stay with Claude.
 
@@ -56,13 +56,13 @@ The 35B (4-bit) with a 65,536-token reading window needs about 23 GB, so you nee
 
 ## Same screen, different brain: Claude Code on a local model
 
-This was the most useful part. **You keep the Claude Code screen you already use and swap only the brain that answers for a model running locally on your home PC.**
+This was the most useful part. **You keep the Claude Code screen you already use and swap only the brain that answers for a model running on your local PC.**
 
 ![One Claude Code screen used by Claude and by the local model](../assets/diagrams_en/llm-same-ui.svg)
 
 - Open it with `claude` and Claude on Anthropic's servers answers, as usual.
-- Open it with `claude-local` and you get the same screen and the same tools, but Qwen3.6 35B, running locally on my home PC, answers. Claude usage: zero.
-- Editing files, running terminal commands and reading web pages all work. Web search goes through a search program I run at home (see "Search had to be added" below).
+- Open it with `claude-local` and you get the same screen and the same tools, but Qwen3.6 35B, running on my local PC, answers. Claude usage: zero.
+- Editing files, running terminal commands and reading web pages all work. Web search goes through a search program I run on the local PC (see "Search had to be added" below).
 
 So running out of Claude usage doesn't stop the work. Before the limit hits, have Claude write a few lines on where things stand, reopen with `claude-local`, hand it the note, and carry on in the same screen.
 
@@ -123,7 +123,7 @@ I checked two chapters against the book. Every number was right. But one chapter
 
 Qwen3.6 can look at images. Claude sees images well too and judges more accurately, but every image costs usage: about 1,500 tokens each.
 
-**Phone screenshots.** I often photograph news articles on my phone and send them to Claude. But attaching a photo straight to a message puts it into Claude the moment it's sent, so the usage is already spent. So photos go to an inbox folder in my cloud sync, and I just say "read the inbox." The local AI reads the photos on my home PC, and Claude gets only the summary. With 6 article screenshots, Claude's side went from about 12,000 tokens (an estimate from image size) to about 1,000, and the reading took 13 s. Titles, text and numbers were transcribed correctly. For just a few photos, attaching them directly is easier, since Claude can look and judge for itself.
+**Phone screenshots.** I often photograph news articles on my phone and send them to Claude. But attaching a photo straight to a message puts it into Claude the moment it's sent, so the usage is already spent. So photos go to an inbox folder in my cloud sync, and I just say "read the inbox." The local AI reads the photos on the PC, and Claude gets only the summary. With 6 article screenshots, Claude's side went from about 12,000 tokens (an estimate from image size) to about 1,000, and the reading took 13 s. Titles, text and numbers were transcribed correctly. For just a few photos, attaching them directly is easier, since Claude can look and judge for itself.
 
 **Checking AI-generated photos.** I had it look for flaws in photos I had generated with AI.
 
@@ -164,7 +164,7 @@ The old Word and PowerPoint formats need a converter that is no longer maintaine
 
 **Reading** web pages works locally. **Searching** didn't, at first.
 
-Claude Code's search runs on Anthropic's servers, not on my computer. Switch to a local model and requests no longer go there, so search disappears with them. So I ran an open-source program on my home PC that queries several search engines for you (SearXNG), and plugged it into the local session as an MCP tool, the same way as above. It uses only about 125 MB of memory.
+Claude Code's search runs on Anthropic's servers, not on my computer. Switch to a local model and requests no longer go there, so search disappears with them. So I ran an open-source program on my local PC that queries several search engines for you (SearXNG), and plugged it into the local session as an MCP tool, the same way as above. It uses only about 125 MB of memory.
 
 As a test I asked, "find the latest Ollama version." The local AI searched, opened the GitHub page and answered with the right version and its source in 52 s. Even on a day with no Claude usage left, it can look things up on its own.
 

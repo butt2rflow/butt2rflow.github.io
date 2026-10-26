@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">One Claude Code screen, two brains</title>
-<desc id="de">In the middle is the same Claude Code screen and tools (edit files, run commands, search the web, read pages). Open it with the command claude and Claude on Anthropic's servers answers; open it with claude-local and Qwen3.6 35B on the home RTX 3090 answers. The local side uses no Claude usage, and web search goes through SearXNG running at home. Measured: create and run one file in 39 s; 4 hard research questions, all 13 facts right.</desc>
+<desc id="de">In the middle is the same Claude Code screen and tools (edit files, run commands, search the web, read pages). Open it with the command claude and Claude on Anthropic's servers answers; open it with claude-local and Qwen3.6 35B on the local PC's RTX 3090 answers. The local side uses no Claude usage, and web search goes through SearXNG running on the local PC. Measured: create and run one file in 39 s; 4 hard research questions, all 13 facts right.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -71,7 +71,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="st" x="106" y="148" text-anchor="middle">usage-limited</text>
 <rect class="bxt" x="484" y="80" width="180" height="96" rx="10"/>
 <text class="code" x="574" y="104" text-anchor="middle" style="fill:var(--teal)">claude-local</text>
-<text class="it" x="574" y="128" text-anchor="middle">Qwen3.6 35B, home 3090</text>
+<text class="it" x="574" y="128" text-anchor="middle">Qwen3.6 35B, local 3090</text>
 <text class="st" x="574" y="148" text-anchor="middle">zero Claude usage</text>
 <line class="ar" x1="198" y1="128" x2="228" y2="128"/>
 <line class="art" x1="482" y1="128" x2="452" y2="128"/>

@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">같은 Claude Code 화면, 두 가지 두뇌</title>
-<desc id="de">가운데는 같은 Claude Code 화면과 도구(파일 고치기, 명령 실행, 웹 검색, 페이지 읽기). 명령 claude로 열면 Anthropic 서버의 Claude가, 명령 claude-local로 열면 집 RTX 3090의 Qwen3.6 35B가 답한다. 로컬 쪽은 Claude 사용량이 들지 않고, 웹 검색은 집에 띄운 SearXNG로 한다. 실측: 파일 하나 만들고 실행 39초, 어려운 조사 질문 4개 사실 13개 모두 맞힘.</desc>
+<desc id="de">가운데는 같은 Claude Code 화면과 도구(파일 고치기, 명령 실행, 웹 검색, 페이지 읽기). 명령 claude로 열면 Anthropic 서버의 Claude가, 명령 claude-local로 열면 로컬 PC(RTX 3090)의 Qwen3.6 35B가 답한다. 로컬 쪽은 Claude 사용량이 들지 않고, 웹 검색은 로컬 PC에 띄운 SearXNG로 한다. 실측: 파일 하나 만들고 실행 39초, 어려운 조사 질문 4개 사실 13개 모두 맞힘.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -71,11 +71,11 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="st" x="106" y="148" text-anchor="middle">사용량 한도 있음</text>
 <rect class="bxt" x="484" y="80" width="180" height="96" rx="10"/>
 <text class="code" x="574" y="104" text-anchor="middle" style="fill:var(--teal)">claude-local</text>
-<text class="it" x="574" y="128" text-anchor="middle">집 RTX 3090의 Qwen3.6 35B</text>
+<text class="it" x="574" y="128" text-anchor="middle">로컬 3090의 Qwen3.6 35B</text>
 <text class="st" x="574" y="148" text-anchor="middle">Claude 사용량 0</text>
 <line class="ar" x1="198" y1="128" x2="228" y2="128"/>
 <line class="art" x1="482" y1="128" x2="452" y2="128"/>
 <rect class="bxg" x="16" y="234" width="648" height="40" rx="8"/>
-<text class="st" x="30" y="259" style="fill:var(--fg)">실측(35B): 파일 하나 만들고 실행 39초 · 어려운 조사 질문 4개, 사실 13개 모두 맞힘 · 웹 검색은 집의 SearXNG로</text>
+<text class="st" x="30" y="259" style="fill:var(--fg)">실측(35B): 파일 하나 만들고 실행 39초 · 어려운 조사 질문 4개, 사실 13개 모두 맞힘 · 웹 검색은 로컬 SearXNG로</text>
 <text class="sm" x="18" y="292">Claude 사용량이 바닥나면 명령 하나만 바꿔 같은 화면에서 이어서 일한다.</text>
 </svg>
