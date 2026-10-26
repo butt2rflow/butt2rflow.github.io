@@ -27,7 +27,7 @@ Each Claude plan has a set amount you can use (a usage limit), and that usage go
 - **131 blog posts** took 4 min 38 s and 6 phone screenshots of articles took 13 s; both cut Claude usage by **over 90%**.
 - A **3-minute NASA video** was summarized in about 40 seconds from a transcript plus frame descriptions. Claude usage fell by **85-95%**, depending on frame size.
 - The savings are against an estimate of Claude reading or viewing it itself. For three or four posts the difference is small.
-- Numbers and on-screen text were accurate, but the book summary had some explanations reversed. So **Claude double-checks the local AI's summaries against the source**.
+- Numbers and on-screen text were accurate, but the book summary had some explanations reversed, and copying rules word for word out of posts was right only about half the time. So **Claude double-checks the local AI's summaries against the source**.
 - The model is **Qwen3.6 35B**, running on my local PC. It answers at about 164 tokens per second and can look at images (a token is the unit an AI counts text in; roughly three quarters of an English word).
 - **You can keep the same Claude Code screen and swap only the brain for the local model.** One line, `claude-local`, gives you file edits, terminal runs and even web search with no Claude usage.
 - Code edits and anything that needs judgment stay with Claude.
@@ -113,6 +113,8 @@ Small batches are different. Seven series posts (52,000 characters) took 41 s, b
 
 The summaries were usable. The accuracy figures in the series summary (95%, 97%) matched the source. But a few Chinese words slipped into the 131-post summary, an occasional habit of this model family.
 
+**Copying exactly**, as opposed to summarizing, was weak. Asked to pull "how to read this indicator" rules, each with a quote, out of 12 indicator posts, it copied the source word for word in 49 of 100 quotes. The rest were shortened or stitched together from several sentences, and five changed the meaning: a band moved ("above +1.5" became "0 to 1.5"), and a tool "for getting a sense of size" became one that "hides the size". It also carried over an error that was in a post. It was good for finding where to look; Claude had to check each rule against the source.
+
 ### A 1,069-page book
 
 I had it summarize a textbook chapter by chapter. The PDF is a scanned paper book with a text layer added. It had no bookmarks, so first the local AI read the contents pages and found where each of the 42 chapters starts (42 s). Then it read and summarized each chapter and wrote one file: a contents table, an overview of the book, and per-chapter summaries. It took **15 minutes**, and the local AI read about 630,000 tokens. Claude spent about 30,000 tokens writing the program and checking the result. Reading the book itself would have taken over 630,000, so that is over 90% less (an estimate).
@@ -178,7 +180,7 @@ The rule is simple. If a job means **reading a lot and returning something short
 
 - Hand over: summarizing many documents, condensing long logs, reading several web pages, finding what you need in a long PDF or a book, summarizing a video, a first pass over photos
 - After handing over: don't use the result as is; Claude checks numbers, names and key explanations against the source once more
-- Keep on Claude: code edits and debugging (Claude has to read the code anyway), fact checks, post reviews, final edits, calculations, small jobs
+- Keep on Claude: code edits and debugging (Claude has to read the code anyway), fact checks, post reviews, final edits, calculations, copying rules or sentences word for word, small jobs
 
 ---
 
