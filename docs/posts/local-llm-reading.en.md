@@ -13,8 +13,6 @@ When a 1,000-page PDF user manual lands in front of you, you know what's coming.
 
 <video controls playsinline muted autoplay loop preload="metadata" poster="/assets/llm/local-llm-tokens-poster.jpg" src="/assets/llm/local-llm-tokens.mp4" style="width:100%"></video>
 
-*An 8-second AI clip made on my home PC's graphics card (first frame with FLUX 3, motion with MiniMax H3, about 3 minutes). Turn the sound on to hear the tokens fly. The typed prompt is Korean for "analyze the user manual."*
-
 There are two ways out. The first is to sweet-talk the new hire into lending you some tokens; they may have barely touched this week's limit. The second is in this post. It's easier on the conscience.
 
 Each Claude plan has a set amount you can use (a usage limit), and that usage goes far more into **reading** than into editing code. So I ran an AI model locally on the graphics card in my home PC (an RTX 3090) and handed the reading to it. On most jobs, Claude usage fell by over 90%.

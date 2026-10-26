@@ -13,8 +13,6 @@ description: "1,000쪽 넘는 PDF 앞에서 토큰 걱정을 덜어 준 방법. 
 
 <video controls playsinline muted autoplay loop preload="metadata" poster="/assets/llm/local-llm-tokens-poster.jpg" src="/assets/llm/local-llm-tokens.mp4" style="width:100%"></video>
 
-*집 PC의 그래픽카드로 만든 8초짜리 AI 영상이에요(첫 장면은 FLUX 3, 영상은 MiniMax H3, 약 3분). 소리를 켜면 토큰 날아가는 소리가 들려요.*
-
 이럴 때 방법은 두 가지예요. 첫 번째는 새로 들어온 신입을 살살 꼬셔서 토큰을 얻어 쓰는 거예요. 신입은 아직 이번 주 한도를 거의 안 썼을지도 모르거든요. 두 번째 방법은 이 글에서 공개해요. 양심에는 이쪽이 덜 찔려요.
 
 Claude는 요금제마다 쓸 수 있는 양(사용량 한도)이 정해져 있고, 그 사용량은 코드를 고치는 데보다 **읽는 데** 훨씬 많이 들어요. 그래서 집 PC의 그래픽카드(RTX 3090)에 AI 모델을 로컬로 띄우고, 읽기를 그쪽에 맡겼어요. 맡긴 일마다 Claude 사용량이 대부분 90% 넘게 줄었어요.
