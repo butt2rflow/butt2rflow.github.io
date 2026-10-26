@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-10-25 — local-llm-reading 네이버 패키지
+
+- **계기:** 사용자 '네이버 포스트 준비 부탁'.
+- **결과:** `naver/local-llm-reading/` — 본문 txt, 그림 7장 PNG(2배), 오프닝 영상 mp4, 세로 배너(svg/png: 131편·책·영상 세 칸, 90%+/85~95%), UPLOAD.md. 발행 전, logNo 미기록.
+- **도구:** `tools/naver_pack.py`를 Linux에서도 돌게 고침(puppeteer의 chrome-headless-shell, `--no-sandbox`, `as_uri()`; 새 headless Chrome은 아래 약 90 px가 비어 나옴). raw HTML `<video src="/assets/…">`를 `[동영상 삽입: 파일]` + mp4 복사로 처리. 원본 백업은 세션 스크래치패드.
+
+---
+
 ## 2026-10-25 — local-llm-reading: tmux 원격 접속 내용 삭제
 
 - 사용자 '불필요한 것 같아'로 한/영 tmux·휴대폰 접속 문단, 용어(tmux, SSH), 상표(Tailscale) 삭제. 도구 기록(스킬·CLAUDE.md·HANDOFF·Claude Doc)은 유지.
