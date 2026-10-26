@@ -42,11 +42,13 @@ export function axisRate(g) {          // g: array of [x, y, z]
 
 // One swing's numbers. fr = frames [t_s, hgx, hgy, hgz, hax, hay, haz, agx, agy, agz, aax, aay, aaz] (dps, g),
 // tImp = impact time (s, same clock).
-export function analyse(fr, tImp, sat = 2290) {
+// handOnly: no forearm IMU (e.g. a bare XIAO taped to the hand). Phases then come from the hand's own rotation, and
+// the wrist hinge (forearm minus hand) can't be measured, so hinge_top / hinge_imp / release_ms are NaN.
+export function analyse(fr, tImp, sat = 2290, handOnly = false) {
   const w = fr.filter((f) => f[0] >= tImp - PRE_S && f[0] <= tImp + POST_S);
   if (w.length < 50) return null;
   const tt = w.map((f) => f[0] - tImp);
-  const wh = axisRate(w.map((f) => [f[1], f[2], f[3]])), wa = axisRate(w.map((f) => [f[7], f[8], f[9]]));
+  const wh = axisRate(w.map((f) => [f[1], f[2], f[3]])), wa = handOnly ? wh : axisRate(w.map((f) => [f[7], f[8], f[9]]));
   const beta = [0];                      // trail-wrist hinge (deg): integral of forearm minus hand rate
   for (let i = 1; i < w.length; i++) {
     const dt = tt[i] - tt[i - 1];
@@ -79,7 +81,8 @@ export function analyse(fr, tImp, sat = 2290) {
   let hp = 0; for (let i = 1; i < wh.length; i++) if (wh[i] > wh[hp]) hp = i;
   let saturated = 0; for (const f of w) for (const j of [1, 2, 3, 7, 8, 9]) if (Math.abs(f[j]) >= sat) saturated++;
   const down = -tTop, back = tTop - tt[take];
-  return { tempo: back / Math.max(1e-3, down), back_s: back, down_s: down, release_ms: rel, hinge_top: bmax, hinge_imp: beta[i0],
+  return { tempo: back / Math.max(1e-3, down), back_s: back, down_s: down, release_ms: handOnly ? NaN : rel,
+           hinge_top: handOnly ? NaN : bmax, hinge_imp: handOnly ? NaN : beta[i0], hand_only: handOnly,
            arm_back_deg: amp, pause_ms: (tt[a1] - tt[a0]) * 1000, arm_dps_imp: wa[i0], hand_dps_peak: wh[hp], hand_peak_ms: tt[hp] * 1000, saturated, frames: w.length,
            rate_hz: (w.length - 1) / (tt[tt.length - 1] - tt[0]) };
 }
@@ -110,14 +113,18 @@ export class SwingDetector {
   frame(f) {
     this.buf.push(f);
     while (this.buf.length && this.buf[0][0] < f[0] - this.keep) this.buf.shift();
-    this.sm.push([f[0], Math.hypot(f[7], f[8], f[9])]);   // forearm speed, smoothed over ~20 ms
+    if (Math.abs(f[7]) + Math.abs(f[8]) + Math.abs(f[9]) + Math.abs(f[10]) + Math.abs(f[11]) + Math.abs(f[12]) > 0) this.armSeen = true;
+    const arm = this.armSeen ? [f[7], f[8], f[9]] : [f[1], f[2], f[3]];   // no forearm IMU: use the hand (as the firmware does)
+    this.sm.push([f[0], Math.hypot(...arm)]);   // forearm speed, smoothed over ~20 ms
     while (this.sm.length && this.sm[0][0] < f[0] - 0.02) this.sm.shift();
     const v = this.sm.reduce((a, r) => a + r[1], 0) / this.sm.length;
-    if (!this.pending && v > this.thresh && f[0] >= this.nextOk) this.pending = { t0: f[0] };
+    // hand-only: the hand already passes ~440 deg/s in the backswing (the wrist cocks), so wait for the downswing
+    const thr = this.armSeen ? this.thresh : Math.max(this.thresh, 800);
+    if (!this.pending && v > thr && f[0] >= this.nextOk) this.pending = { t0: f[0] };
     if (this.pending && !this.pending.peak && f[0] >= this.pending.t0 + 0.5) {
       // forearm speed peak in the 0.5 s after the swing started, then the impact estimate from the hand accel
       const w = this.buf.filter((r) => r[0] >= this.pending.t0 && r[0] <= this.pending.t0 + 0.5);
-      const s = gauss(Float64Array.from(w.map((r) => Math.hypot(r[7], r[8], r[9]))), 4 * (w.length / 0.5) / 400);
+      const s = gauss(Float64Array.from(w.map((r) => this.armSeen ? Math.hypot(r[7], r[8], r[9]) : Math.hypot(r[1], r[2], r[3]))), 4 * (w.length / 0.5) / 400);
       let pk = 0; for (let i = 1; i < s.length; i++) if (s[i] > s[pk]) pk = i;
       this.pending.peak = w[pk][0];
     }
@@ -136,13 +143,14 @@ export class SwingDetector {
   }
   finish(tImp, source) {
     this.pending = null; this.nextOk = tImp + GAP_S;
-    const a = analyse(this.buf, tImp);
+    const a = analyse(this.buf, tImp, 2290, !this.armSeen);
     if (a) this.onSwing({ n: ++this.n, t_imp: tImp, source, ...a });
   }
 }
 
 // One short spoken line for a swing (Korean, plain numbers; no judgement until real swings give references).
 export function swingLine(s) {
+  if (s.hand_only || Number.isNaN(s.release_ms)) return `템포 ${s.tempo.toFixed(1)} 대 1.`;
   const rel = Math.round(-s.release_ms);
   const when = rel > 5 ? `임팩트 ${rel}밀리초 전` : rel < -5 ? `임팩트 ${-rel}밀리초 뒤` : "임팩트 때";
   return `템포 ${s.tempo.toFixed(1)} 대 1. 손목은 ${when} 풀렸어요.`;

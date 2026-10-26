@@ -481,10 +481,10 @@ const SRC = { sound: "소리", accel: "움직임", "arm peak": "팔 최고속" }
 function renderSwings() {
   const last = swings.slice(-8).reverse();
   $("swRows").innerHTML = last.map((w) => `<tr><td>${w.n}</td><td>${w.club || "–"}</td><td>${w.tempo.toFixed(1)}</td>` +
-    `<td>${(w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0)}</td><td>${w.hinge_top.toFixed(0)}</td>` +
+    `<td>${Number.isFinite(w.release_ms) ? (w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0) : "–"}</td><td>${Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–"}</td>` +
     `<td class="${w.saturated ? "sat" : ""}">${w.hand_dps_peak.toFixed(0)}${w.saturated ? " (한계)" : ""}</td><td>${SRC[w.source] || w.source}</td></tr>`).join("");
   const tp = swings.slice(-10).map((w) => w.tempo).sort((a, b) => a - b);
-  $("swTitle").textContent = `스윙 ${swings.length}번 · 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}`;
+  $("swTitle").textContent = `스윙 ${swings.length}번 · 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}` + (swings[swings.length - 1].hand_only ? " · 팔 IMU 없음: 템포는 대략값" : "");
 }
 
 // ---- voice commands (voice.js: voice.py's matcher; Chrome speech-to-text) ----
@@ -785,7 +785,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26g", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26h", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };

@@ -29,6 +29,8 @@ export class GloveParser {
     if (n === 0) {
       if (dv.byteLength < 15) return null;
       const s = { now, armOk: dv.getUint8(5), mv: dv.getUint16(6, true), charging: dv.getUint8(8), dropped: dv.getUint32(9, true), hz: dv.getUint16(13, true) };
+      if (dv.byteLength >= 27)   // breadcrumb build: reset reason at boot, previous boot's last step + detail, boot count
+        Object.assign(s, { resetReason: dv.getUint32(15, true), prevStep: dv.getUint16(19, true), prevDetail: dv.getUint32(21, true), boots: dv.getUint16(25, true) });
       this.armOk = s.armOk; this.status.push(s); return { type: "status", ...s };
     }
     const seq = dv.getUint32(0, true);
