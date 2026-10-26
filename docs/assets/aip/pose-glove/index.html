@@ -112,7 +112,7 @@ a { color: var(--accent); }
       <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
       <canvas id="impImg" style="height:auto;aspect-ratio:3/4"></canvas>
       <canvas id="impCv"></canvas>
-      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span><span class="key"><i style="background:#e1f5fe;height:1px"></i>손 833 Hz</span></span><span id="impNote"></span></div>
+      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span><span class="key"><i style="background:#ff4fa3"></i>손 833 Hz</span></span><span id="impNote"></span></div>
     </div>
     <div class="chart">
       <div class="head"><span id="clipTitle">장갑 소리 클립 (임팩트·목소리가 오면 그려져요)</span></div>
@@ -537,7 +537,7 @@ function drawImpact(c) {
   }
   const mo = motionById.get(c.id);
   if (mo) {   // 833 Hz hand gyro from the glove's FIFO: thin light line over the 240 Hz trace
-    g.strokeStyle = "#e1f5fe"; g.lineWidth = 1 * d; g.beginPath(); let f1 = true;
+    g.strokeStyle = "#ff4fa3"; g.lineWidth = 1.5 * d; g.beginPath(); let f1 = true;
     for (let i = 0; i < mo.t.length; i++) {
       const t = clock.toPhone(mo.t[i]); if (t < ti - 1000 || t > ti + 1000) continue;
       const v = Math.hypot(mo.g[6 * i], mo.g[6 * i + 1], mo.g[6 * i + 2]) * GYRO_DPS;
@@ -563,7 +563,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26a", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26b", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
