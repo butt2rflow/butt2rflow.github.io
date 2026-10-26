@@ -184,6 +184,7 @@ a { color: var(--accent); }
       <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
       <li><b>기록:</b> "기록 시작" → 스윙 → "기록 멈추고 저장". 장갑 프레임(장갑 시계 + 휴대폰 도착 시각), 자세 프레임(휴대폰 시각), 배터리, 소리 클립이 json 파일 하나로 저장돼요. 카메라 없이 장갑만 기록해도 돼요.</li>
       <li><b>음성 명령:</b> "말로 하기"를 누르고 말해요. "7번 하프"(클럽과 스윙 종류 함께), "굿샷"·"뒤땅"(방금 스윙 라벨), "플레이어 민수", "친구 차례", "방금 거 어때", "오늘 요약", "배터리", "기록 시작"·"그만", "취소". 알아들은 걸 소리로 다시 말해 줘요. "계속 듣기"를 켜면 누르지 않아도 계속 들어요(옆 사람 말을 잘못 알아들을 수 있어요). 명령 목록은 PC 음성 명령과 같은 파일에서 와요. Chrome 음성 인식은 인터넷이 필요해요.</li>
+      <li><b>화면과 연결:</b> 장갑이 연결돼 있는 동안 화면이 꺼지지 않아요. 화면이 꺼지거나 다른 앱으로 가거나 뒤로 가면, 기록을 저장하고 장갑 연결을 끊어요. 그래야 장갑이 바로 다시 보여요(전에는 장갑이 연결된 줄 알고 RST를 눌러야 했어요). 돌아와서 "센서 장갑 연결"을 다시 누르면 돼요.</li>
       <li><b>스윙 분석:</b> 장갑을 연결하면 스윙이 끝날 때마다 표에 한 줄이 생겨요. 템포(백스윙 시간 ÷ 다운스윙 시간), 손목 풀림(꺾였던 손목이 반쯤 풀린 순간, − = 임팩트 전), 손목 꺾임 최대, 손 회전 최고 속도예요. 임팩트 시각은 장갑이 들은 소리로 잡고(약 1.5초 뒤에 도착해서 그만큼 늦게 나와요), 소리가 없으면 움직임으로 잡아요. "스윙마다 말하기"를 켜면 한 줄로 읽어 줘요. 기록 파일에도 들어가요.</li>
       <li>손목 꺾임은 어드레스를 0으로 둔 상대값이에요("정렬 시작"을 붙이면 실제 각도가 돼요). 템포는 시뮬레이션에서 실제보다 0.2~0.3쯤 낮게 나와요(백스윙 시작을 조금 늦게 잡아서). 스윙끼리 비교하는 데는 문제없어요. 장갑 수신 약 240 Hz, 빠진 프레임 0이면 정상이에요.</li>
     </ul>
@@ -444,6 +445,7 @@ $("glove").onclick = async () => {
   try {
     glove = new Glove(onGlove, (st) => {
       gloveText("gState", st === "connected" ? "연결됨" : "연결 끊김");
+      if (st === "connected") keepAwake(); else releaseAwake();
       $("glove").textContent = st === "connected" ? "장갑 연결 끊기" : "센서 장갑 연결";
       $("log").disabled = st !== "connected";
       if (st !== "connected" && logging) stopLog();
@@ -556,6 +558,22 @@ if (!listener.ok) { $("vTalk").disabled = true; $("vCont").disabled = true; $("v
 window.__pgTest.runVoice = runVoice;
 $("vTalk").onclick = () => listener.listenOnce();
 $("vCont").onchange = () => listener.setContinuous($("vCont").checked);
+
+// ---- keep the link clean (range 2026-10-26: screen-off / back left the glove "connected" to a page that had
+// stopped, so it never advertised again until RST) ----
+let wake = null;
+async function keepAwake() { try { if (!wake && navigator.wakeLock) { wake = await navigator.wakeLock.request("screen"); wake.addEventListener("release", () => { wake = null; }); } } catch (e) {} }
+function releaseAwake() { try { wake && wake.release(); } catch (e) {} wake = null; }
+function gloveConnected() { return glove && glove.device && glove.device.gatt.connected; }
+function leaveCleanly() {   // save what was recorded, stop the stream, drop the link so the glove advertises again
+  if (logging) { try { stopLog(); } catch (e) {} }
+  if (gloveConnected()) { try { glove.stop().catch(() => {}); } catch (e) {} try { glove.disconnect(); } catch (e) {} }
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") { if (gloveConnected()) keepAwake(); }
+  else if (gloveConnected()) leaveCleanly();     // screen off despite the wake lock, app switch, or back
+});
+window.addEventListener("pagehide", leaveCleanly);
 
 // ---- live charts ----
 const gyroBuf = [], gyroLong = []; let lastFrame = null;
@@ -785,7 +803,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26h", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26i", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };
