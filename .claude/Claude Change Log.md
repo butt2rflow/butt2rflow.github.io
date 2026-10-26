@@ -6,6 +6,24 @@
 
 ---
 
+## 2026-10-26 — 뒤땅 소리 녹음 페이지(7편 0단계)
+
+- **계기:** 장갑이 없는 동안 할 일로 사용자가 0단계(휴대폰으로 뒤땅 소리 먼저 재기)를 고름.
+- **변경:** 새 숨은 페이지 `docs/assets/aip/fat-shot/index.html`(noindex, 글에서 링크 안 함). 마이크 원음으로 녹음, 소리 크기로 샷을 잡아 앞뒤 0.5초 저장, 깨끗/뒤땅 라벨(치기 전에 고르고 카드에서 고침), ±5 ms 파형, 잘림 경고, 새로 고쳐도 IndexedDB에 남음, 화면 꺼짐 방지, JSON 저장. 커밋 `4a93b7c` push, 라이브 확인(`version 2026-10-26a`).
+- **검증:** 헤드리스 크롬(`--no-sandbox`, 가짜 마이크 = 만든 소리 WAV, 44.1 kHz)으로 16/16샷 잡음, `fat_gap.py` 결과가 원본 파일과 같음(order 중앙값 차 0.02 ms 이내), 360 px 폭에서 가로 넘침 없음. S25 실기 시험은 아직.
+
+---
+
+## 2026-10-26 — local-llm-reading: '집 PC' → '로컬 PC'
+
+- **계기:** 사용자 '굳이 집 PC 라고 할 필요없이 로컬 PC 라고 하자'.
+- **변경:** 한/영 본문 8곳씩('집 PC에 로컬로 띄운' → '로컬 PC에 띄운', 'home PC' → 'local PC'), 그림 `llm-same-ui`(생성기 `tools/r2pgen/figs_llm.py` 고친 뒤 재생성: '로컬 3090의 Qwen3.6 35B', '로컬 SearXNG'). 커밋 `64d194e` push.
+- **네이버:** `tools/naver_pack.py`로 패키지 재생성(txt·PNG 전부, 태그 그대로). '집 PC' 0곳, `llm-same-ui.png` 육안 확인.
+- **세션 시작 때:** 로컬이 origin보다 20커밋 뒤처져 있었음 → pull. autostash가 HANDOFF에서 충돌, 원격 쪽으로 정리. 중단된 git 명령이 남긴 `.git/index.lock` 삭제.
+- **동기화 잔여물 정리:** 사용자가 `git checkout`으로 pose-glove `index.html` HEAD 판(`2026-10-26e`) 복원. 사용자 지시로 `pose-glove/index (… conflicted copy 2026-10-25).html`과 `.git/refs/remotes/origin/gh-pages (… conflicted copy 2026-10-25)` 삭제 → `git fetch` 경고 없음. 이어서 사용자 지시로 `.git/` 안 Koofr 충돌 사본 11개(`index`, `FETCH_HEAD`, `logs/...`)도 모두 삭제, `git fsck` 정상.
+
+---
+
 ## 2026-10-25 — local-llm-reading 네이버 패키지
 
 - **계기:** 사용자 '네이버 포스트 준비 부탁'.
