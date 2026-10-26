@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>뒤땅 소리 녹음</title>
+<meta name="robots" content="noindex">
+<style>
+:root { --bg: #0f1214; --panel: #1a1f23; --fg: #eef1f3; --muted: #9aa5ad; --accent: #4fc3f7; --ok: #66bb6a; --warn: #ffb74d; --bad: #ef5350; --fat: #ef5350; --clean: #4fc3f7; color-scheme: dark; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overflow-x: hidden; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: "Noto Sans KR", system-ui, sans-serif; overflow-x: hidden; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 12px 16px 40px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+.wrap > * { min-width: 0; max-width: 100%; }
+h1 { font-size: 20px; margin: 4px 0 0; }
+p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+button { background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; white-space: nowrap; }
+button.primary { background: var(--accent); color: #002433; border-color: var(--accent); font-weight: 700; }
+button.on.clean { background: var(--clean); color: #002433; border-color: var(--clean); font-weight: 700; }
+button.on.fat { background: var(--fat); color: #2a0000; border-color: var(--fat); font-weight: 700; }
+button:disabled { opacity: .45; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seg button { padding: 16px 8px; font-size: 18px; }
+.meter { height: 14px; background: var(--panel); border-radius: 7px; overflow: hidden; position: relative; }
+.meter i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ok); width: 0; }
+.meter b { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--warn); }
+.nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.num { background: var(--panel); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+.num b { display: block; font-size: 22px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#msg { color: var(--warn); font-size: 14px; line-height: 1.5; min-height: 1.5em; }
+label { font-size: 14px; color: var(--muted); }
+input[type=range] { width: 100%; }
+input[type=text] { background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 8px 10px; font-size: 15px; width: 6em; }
+details { background: var(--panel); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+details summary { color: var(--fg); cursor: pointer; }
+ol { padding-left: 20px; margin: 6px 0; }
+.shots { display: grid; gap: 8px; }
+.shot { background: var(--panel); border-radius: 8px; padding: 8px; display: grid; gap: 6px; border-left: 4px solid #555; }
+.shot.clean { border-left-color: var(--clean); }
+.shot.fat { border-left-color: var(--fat); }
+.shot .top { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.shot .top b { color: var(--fg); }
+.shot canvas { width: 100%; height: 70px; display: block; background: #0b0e10; border-radius: 6px; }
+.shot .row button { padding: 6px 10px; font-size: 14px; }
+.ver { font-size: 12px; color: #5f6b73; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>뒤땅 소리 녹음</h1>
+  <p>공을 칠 때마다 1초 소리를 저장해요. 깨끗한 샷과 뒤땅 샷이 소리로 구별되는지 보는 시험(0단계)이에요.</p>
+
+  <details>
+    <summary>준비와 사용법</summary>
+    <ol>
+      <li>휴대폰을 매트 위, 치는 자리에서 약 1 m 뒤에 놓아요. 클럽이 지나가지 않는 곳에, 아래쪽(충전 단자 쪽)이 공을 향하게요.</li>
+      <li><b>녹음 시작</b>을 누르고 한 번 쳐 봐요. 샷 카드에 <b>잘림</b>이 뜨면 휴대폰을 조금 더 멀리 놓아요.</li>
+      <li>치기 전에 <b>깨끗</b> 또는 <b>뒤땅</b>을 골라요. 뒤땅은 공 3–5 cm 뒤에 얇은 수건이나 티를 놓고, 클럽이 그걸 건드리면 뒤땅이에요.</li>
+      <li>7번 아이언, 풀스윙으로 깨끗 10번, 뒤땅 10번. 실제 결과가 다르면 카드에서 라벨을 고쳐요(수건을 안 건드린 뒤땅 → 깨끗).</li>
+      <li>옆 타석 소리가 잡히면 그 카드는 <b>삭제</b>. 끝나면 <b>파일로 저장</b>해서 PC로 옮겨요.</li>
+    </ol>
+    샷은 휴대폰에도 남아서, 페이지를 다시 열어도 이어서 녹음할 수 있어요. 녹음 중에는 화면이 꺼지지 않아요.
+  </details>
+
+  <div class="row">
+    <button id="start" class="primary">녹음 시작</button>
+    <button id="stop" disabled>정지</button>
+    <button id="save">파일로 저장</button>
+    <button id="clear">모두 지우기</button>
+  </div>
+  <div id="msg"></div>
+
+  <div class="seg">
+    <button id="lab-clean" class="clean">깨끗</button>
+    <button id="lab-fat" class="fat">뒤땅</button>
+  </div>
+  <div class="row"><label>클럽 <input id="club" type="text" value="7번"></label></div>
+
+  <div>
+    <label>소리 크기 (노란 선 = 샷으로 잡는 크기, <span id="thr-v">-18</span> dBFS)</label>
+    <div class="meter"><i id="lvl"></i><b id="thr-mark"></b></div>
+    <input id="thr" type="range" min="-45" max="-3" step="1" value="-18">
+  </div>
+
+  <div class="nums">
+    <div class="num"><b id="n-clean">0</b><span>깨끗</span></div>
+    <div class="num"><b id="n-fat">0</b><span>뒤땅</span></div>
+    <div class="num"><b id="sr">–</b><span>샘플레이트 Hz</span></div>
+  </div>
+
+  <div class="shots" id="shots"></div>
+  <div class="ver">version 2026-10-26a · 마이크 원음(에코 제거·잡음 제거·자동 음량 끔)</div>
+</div>
+
+<script>
+"use strict";
+const VERSION = "2026-10-26a";
+const PRE_S = 0.5, POST_S = 0.5, DEAD_S = 1.5, RING_S = 3;
+const $ = id => document.getElementById(id);
+const msg = t => { $("msg").textContent = t || ""; };
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+// ---------- shot storage (IndexedDB, so a reload at the range loses nothing) ----------
+let db = null;
+function openDb() {
+  return new Promise(res => {
+    try {
+      const r = indexedDB.open("fatshot", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("shots", { keyPath: "id" });
+      r.onsuccess = () => { db = r.result; res(); };
+      r.onerror = () => res();
+    } catch { res(); }
+  });
+}
+function dbPut(s) { try { db && db.transaction("shots", "readwrite").objectStore("shots").put(s); } catch {} }
+function dbDel(id) { try { db && db.transaction("shots", "readwrite").objectStore("shots").delete(id); } catch {} }
+function dbAll() {
+  return new Promise(res => {
+    if (!db) return res([]);
+    try {
+      const r = db.transaction("shots").objectStore("shots").getAll();
+      r.onsuccess = () => res(r.result || []); r.onerror = () => res([]);
+    } catch { res([]); }
+  });
+}
+
+// ---------- state ----------
+let shots = [];
+let nextLabel = store.get("fs-label", "clean");
+let thrDb = store.get("fs-thr", -18);
+let ctx = null, stream = null, node = null, wake = null, meta = {};
+let ring = null, ringPos = 0, total = 0;      // total = samples received since start
+let lastShotAt = -1e12, pending = null, lvlPeak = 0;
+
+function setLabel(l) {
+  nextLabel = l; store.set("fs-label", l);
+  $("lab-clean").classList.toggle("on", l === "clean");
+  $("lab-fat").classList.toggle("on", l === "fat");
+}
+$("lab-clean").onclick = () => setLabel("clean");
+$("lab-fat").onclick = () => setLabel("fat");
+setLabel(nextLabel);
+$("club").value = store.get("fs-club", "7번");
+$("club").onchange = () => store.set("fs-club", $("club").value.trim());
+function setThr(v) {
+  thrDb = +v; store.set("fs-thr", thrDb);
+  $("thr").value = thrDb; $("thr-v").textContent = thrDb;
+  $("thr-mark").style.left = `${(thrDb + 60) / 60 * 100}%`;
+}
+$("thr").oninput = e => setThr(e.target.value);
+setThr(thrDb);
+
+// ---------- audio ----------
+const WORKLET = `class Tap extends AudioWorkletProcessor {
+  process(inputs) { const c = inputs[0] && inputs[0][0]; if (c) this.port.postMessage(c.slice(0)); return true; }
+}
+registerProcessor("tap", Tap);`;
+
+async function start() {
+  msg("");
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: {
+      echoCancellation: false, noiseSuppression: false, autoGainControl: false,
+      channelCount: 1, sampleRate: 48000 } });
+  } catch (e) { msg("마이크를 쓸 수 없어요: " + e.message); return; }
+  const track = stream.getAudioTracks()[0];
+  const st = track.getSettings ? track.getSettings() : {};
+  try { ctx = new AudioContext({ sampleRate: st.sampleRate || 48000 }); }
+  catch { ctx = new AudioContext(); }
+  const url = URL.createObjectURL(new Blob([WORKLET], { type: "text/javascript" }));
+  await ctx.audioWorklet.addModule(url);
+  const src = ctx.createMediaStreamSource(stream);
+  node = new AudioWorkletNode(ctx, "tap", { numberOfInputs: 1, numberOfOutputs: 0 });
+  node.port.onmessage = e => onBlock(e.data);
+  src.connect(node);
+  ring = new Float32Array(Math.round(RING_S * ctx.sampleRate)); ringPos = 0; total = 0;
+  lastShotAt = -1e12; pending = null;
+  meta = { version: VERSION, started: new Date().toISOString(), sampleRate: ctx.sampleRate,
+           settings: st, userAgent: navigator.userAgent, baseLatency: ctx.baseLatency };
+  $("sr").textContent = ctx.sampleRate;
+  const warn = [];
+  if (ctx.sampleRate < 44100) warn.push(`샘플레이트가 ${ctx.sampleRate} Hz예요(48000 권장)`);
+  for (const k of ["echoCancellation", "noiseSuppression", "autoGainControl"])
+    if (st[k] === true) warn.push(`${k}가 켜져 있어요`);
+  msg(warn.length ? "주의: " + warn.join(", ") : "녹음 중. 치면 아래에 샷 카드가 생겨요.");
+  try { wake = await navigator.wakeLock.request("screen"); } catch {}
+  $("start").disabled = true; $("stop").disabled = false;
+}
+
+function stop() {
+  try { node && node.disconnect(); } catch {}
+  try { stream && stream.getTracks().forEach(t => t.stop()); } catch {}
+  try { ctx && ctx.close(); } catch {}
+  try { wake && wake.release(); } catch {}
+  node = stream = ctx = wake = null;
+  $("start").disabled = false; $("stop").disabled = true;
+  msg("정지했어요. 샷은 휴대폰에 남아 있어요.");
+}
+$("start").onclick = start;
+$("stop").onclick = stop;
+document.addEventListener("visibilitychange", async () => {
+  if (document.visibilityState === "visible" && ctx && !wake) { try { wake = await navigator.wakeLock.request("screen"); } catch {} }
+});
+
+function onBlock(x) {
+  const n = x.length, R = ring.length;
+  let pk = 0, at = -1;
+  for (let i = 0; i < n; i++) {
+    const a = Math.abs(x[i]);
+    ring[(ringPos + i) % R] = x[i];
+    if (a > pk) { pk = a; at = i; }
+  }
+  const blockStart = total;
+  ringPos = (ringPos + n) % R; total += n;
+  lvlPeak = Math.max(lvlPeak * 0.995, pk);
+  const sr = ctx.sampleRate;
+  const thr = Math.pow(10, thrDb / 20);
+  if (!pending && pk >= thr && blockStart + at - lastShotAt > DEAD_S * sr) {
+    pending = { trig: blockStart + at };
+    lastShotAt = pending.trig;
+  }
+  if (pending && total >= pending.trig + Math.round((POST_S + 0.06) * sr)) {
+    cut(pending.trig); pending = null;
+  }
+}
+
+function sample(abs) { return ring[((ringPos - (total - abs)) % ring.length + ring.length) % ring.length]; }
+
+function cut(trig) {
+  const sr = ctx.sampleRate;
+  // loudest sample in the first 50 ms after the trigger = the impact
+  let p = trig, pk = 0;
+  for (let i = trig; i < trig + Math.round(0.05 * sr); i++) { const a = Math.abs(sample(i)); if (a > pk) { pk = a; p = i; } }
+  const a = p - Math.round(PRE_S * sr), b = p + Math.round(POST_S * sr);
+  if (total - a > ring.length) return;          // fell out of the buffer (should not happen)
+  const pcm = new Int16Array(b - a);
+  let clipped = 0;
+  for (let i = a; i < b; i++) {
+    const v = sample(i);
+    if (Math.abs(v) >= 0.999) clipped++;
+    pcm[i - a] = Math.max(-32767, Math.min(32767, Math.round(v * 32767)));
+  }
+  const s = { id: Date.now() + Math.random(), n: (shots.reduce((m, q) => Math.max(m, q.n), 0) + 1),
+              t: new Date().toISOString(), label: nextLabel, club: $("club").value.trim(),
+              sr, peak_index: p - a, peak_db: +(20 * Math.log10(pk + 1e-12)).toFixed(1), clipped, pcm: pcm.buffer };
+  shots.push(s); dbPut(s); render(); try { navigator.vibrate && navigator.vibrate(60); } catch {}
+}
+
+// ---------- shot cards ----------
+function counts() {
+  $("n-clean").textContent = shots.filter(s => s.label === "clean").length;
+  $("n-fat").textContent = shots.filter(s => s.label === "fat").length;
+}
+function draw(cv, s) {
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const g = cv.getContext("2d"); g.scale(dpr, dpr);
+  const pcm = new Int16Array(s.pcm), half = Math.round(0.005 * s.sr), c = s.peak_index;
+  const a = Math.max(0, c - half), b = Math.min(pcm.length, c + half);
+  let m = 1; for (let i = a; i < b; i++) m = Math.max(m, Math.abs(pcm[i]));
+  g.strokeStyle = "#2d353b"; g.beginPath(); g.moveTo(w / 2, 0); g.lineTo(w / 2, h); g.stroke();
+  g.strokeStyle = s.label === "fat" ? "#ef5350" : s.label === "clean" ? "#4fc3f7" : "#9aa5ad";
+  g.beginPath();
+  for (let i = a; i < b; i++) {
+    const x = (i - a) / (b - a) * w, y = h / 2 - pcm[i] / m * (h / 2 - 2);
+    i === a ? g.moveTo(x, y) : g.lineTo(x, y);
+  }
+  g.stroke();
+  g.fillStyle = "#5f6b73"; g.font = "10px system-ui"; g.fillText("±5 ms", 4, 11);
+}
+const NAMES = { clean: "깨끗", fat: "뒤땅", unsure: "모름" };
+function render() {
+  const box = $("shots"); box.innerHTML = "";
+  for (const s of [...shots].sort((x, y) => y.n - x.n)) {
+    const el = document.createElement("div");
+    el.className = "shot " + s.label;
+    const time = new Date(s.t).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+    el.innerHTML = `<div class="top"><span><b>#${s.n} ${NAMES[s.label] || s.label}</b> · ${s.club || ""} · ${time}</span>
+      <span>${s.peak_db} dBFS${s.clipped ? ` · <span style="color:var(--bad)">잘림 ${s.clipped}</span>` : ""}</span></div>
+      <canvas></canvas>
+      <div class="row"><button data-l="clean">깨끗</button><button data-l="fat">뒤땅</button><button data-l="unsure">모름</button><button data-l="del">삭제</button></div>`;
+    box.appendChild(el);
+    draw(el.querySelector("canvas"), s);
+    el.querySelectorAll("button").forEach(btn => btn.onclick = () => {
+      const l = btn.dataset.l;
+      if (l === "del") { shots = shots.filter(q => q !== s); dbDel(s.id); }
+      else { s.label = l; dbPut(s); }
+      render();
+    });
+  }
+  counts();
+}
+
+function b64(buf) {
+  const u = new Uint8Array(buf); let s = "";
+  for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+function exportData() {
+  return { version: VERSION, meta: { ...meta, saved: new Date().toISOString() },
+    shots: [...shots].sort((x, y) => x.n - y.n).map(s => ({ n: s.n, t: s.t, label: s.label, club: s.club, sr: s.sr,
+      peak_index: s.peak_index, peak_db: s.peak_db, clipped: s.clipped, pcm16: b64(s.pcm) })) };
+}
+window.exportData = exportData;      // also used by the headless test
+$("save").onclick = () => {
+  if (!shots.length) { msg("저장할 샷이 없어요."); return; }
+  const out = exportData();
+  const blob = new Blob([JSON.stringify(out)], { type: "application/json" });
+  const d = new Date(), pad = v => String(v).padStart(2, "0");
+  const name = `fatshot-${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}.json`;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  msg(`${name} 저장 (${shots.length}샷). 다운로드 폴더에 있어요.`);
+};
+$("clear").onclick = () => {
+  if (!shots.length || !confirm(`샷 ${shots.length}개를 모두 지울까요? 저장하지 않은 샷은 사라져요.`)) return;
+  shots.forEach(s => dbDel(s.id)); shots = []; render();
+};
+
+setInterval(() => {
+  const dbv = 20 * Math.log10(lvlPeak + 1e-9);
+  $("lvl").style.width = `${Math.max(0, Math.min(100, (dbv + 60) / 60 * 100))}%`;
+  $("lvl").style.background = lvlPeak >= 0.999 ? "var(--bad)" : lvlPeak >= Math.pow(10, thrDb / 20) ? "var(--warn)" : "var(--ok)";
+}, 100);
+
+openDb().then(dbAll).then(all => { shots = all; render(); if (all.length) msg(`이전 샷 ${all.length}개를 불러왔어요.`); });
+</script>
+</body>
+</html>
