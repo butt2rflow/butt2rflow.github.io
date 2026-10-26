@@ -9,7 +9,14 @@
 :root { --bg: #0f1214; --panel: #1a1f23; --fg: #eef1f3; --muted: #9aa5ad; --accent: #4fc3f7; --ok: #66bb6a; --warn: #ffb74d; color-scheme: dark; }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: "Noto Sans KR", system-ui, sans-serif; }
-.wrap { max-width: 900px; margin: 0 auto; padding: 12px 16px 28px; display: grid; gap: 12px; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 12px 16px 28px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+/* Never wider than the screen: grid/flex children may shrink below their text width (a one-line title used to widen the
+   whole page to ~620 px on a ~400 px phone, so Chrome zoomed and re-laid it out as numbers changed). */
+.wrap > *, .row > *, .chart, .chart > *, .num { min-width: 0; max-width: 100%; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.chart .head > span:has(.key) { white-space: normal; overflow: visible; }   /* legends may wrap; titles stay one line */
+.key { white-space: nowrap; }   /* no Chrome font boosting on content updates */
+html, body { overflow-x: hidden; }
 h1 { font-size: 20px; margin: 4px 0 0; }
 p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .stage { position: relative; width: 100%; background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 4; }
@@ -19,11 +26,11 @@ video { opacity: 0; }
 .chip { background: rgba(0,0,0,.6); border-radius: 6px; padding: 3px 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
 .num { background: var(--panel); border-radius: 8px; padding: 8px 10px; }
-.num b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num b { display: block; font-size: clamp(18px, 5vw, 26px); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .num span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .num small { display: block; color: var(--accent); font-size: 12px; min-height: 1.4em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
-button, select, label.file { background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
+button, select, label.file { white-space: nowrap;  background: var(--panel); color: var(--fg); border: 1px solid #2d353b; border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
 button.primary { background: var(--accent); color: #002433; border-color: var(--accent); font-weight: 700; }
 button:disabled { opacity: .5; }
 label.file input { display: none; }
@@ -38,9 +45,10 @@ a { color: var(--accent); }
 .chart .head > span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chart canvas { position: static; display: block; width: 100%; height: 150px; background: #0b0e10; border-radius: 6px; }
 .key { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; color: var(--fg); }
-.live { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; table-layout: fixed; }
-.live th { color: var(--muted); font-weight: 400; font-size: 12px; text-align: right; padding: 2px 6px; }
-.live td { text-align: right; padding: 3px 6px; border-top: 1px solid #2d353b; }
+.live { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: clamp(11px, 3.2vw, 14px); table-layout: fixed; }
+.live col.part { width: 5.5em; }
+.live th { color: var(--muted); font-weight: 400; font-size: 0.85em; text-align: right; padding: 2px 2px; white-space: nowrap; }
+.live td { text-align: right; padding: 3px 2px; border-top: 1px solid #2d353b; white-space: nowrap; overflow: hidden; }
 .live td:first-child, .live th:first-child { text-align: left; }
 .key i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 </style>
@@ -93,11 +101,14 @@ a { color: var(--accent); }
 
   <div class="charts">
     <div class="chart">
-      <div class="head"><span>장갑 센서 지금 값 (초당 5번 갱신)</span></div>
+      <div class="head"><span>장갑 센서 지금 값 (자이로 °/s, 가속 g, 초당 5번)</span></div>
       <table class="live">
-        <tr><th></th><th>자이로 x</th><th>y</th><th>z</th><th>°/s</th><th>가속 x</th><th>y</th><th>z</th><th>g</th></tr>
-        <tr><td><span class="key" style="margin:0"><i style="background:#4fc3f7"></i>손</span></td><td id="h0">–</td><td id="h1">–</td><td id="h2">–</td><td id="hG">–</td><td id="h3">–</td><td id="h4">–</td><td id="h5">–</td><td id="hA">–</td></tr>
-        <tr><td><span class="key" style="margin:0"><i style="background:#ffb74d"></i>팔뚝</span></td><td id="a0">–</td><td id="a1">–</td><td id="a2">–</td><td id="aG">–</td><td id="a3">–</td><td id="a4">–</td><td id="a5">–</td><td id="aA">–</td></tr>
+        <colgroup><col class="part"><col span="4"></colgroup>
+        <tr><th></th><th>x</th><th>y</th><th>z</th><th>크기</th></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#4fc3f7"></i>손 자이로</span></td><td id="h0">–</td><td id="h1">–</td><td id="h2">–</td><td id="hG">–</td></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#4fc3f7"></i>손 가속</span></td><td id="h3">–</td><td id="h4">–</td><td id="h5">–</td><td id="hA">–</td></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#ffb74d"></i>팔 자이로</span></td><td id="a0">–</td><td id="a1">–</td><td id="a2">–</td><td id="aG">–</td></tr>
+        <tr><td><span class="key" style="margin:0"><i style="background:#ffb74d"></i>팔 가속</span></td><td id="a3">–</td><td id="a4">–</td><td id="a5">–</td><td id="aA">–</td></tr>
       </table>
     </div>
     <div class="chart">
@@ -105,7 +116,7 @@ a { color: var(--accent); }
       <canvas id="gyroCv"></canvas>
     </div>
     <div class="chart">
-      <div class="head"><span>휴대폰 마이크 스펙트로그램 (실시간, 0~8 kHz)</span><button id="mic" style="padding:6px 10px;font-size:13px">마이크 켜기</button></div>
+      <div class="head"><span>휴대폰 마이크 스펙트로그램 (실시간, 0~8 kHz)</span><button id="mic" style="padding:6px 10px;font-size:13px;white-space:nowrap;flex:none">마이크 켜기</button></div>
       <canvas id="specCv"></canvas>
     </div>
     <div class="chart">
@@ -563,7 +574,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26b", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26c", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
