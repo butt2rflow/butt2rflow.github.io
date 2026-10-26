@@ -117,6 +117,14 @@ a { color: var(--accent); }
     <div class="row"><button id="vTalk">말로 하기</button><span id="vHeard" style="font-size:14px;color:var(--muted);align-self:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">예: "7번 하프", "굿샷", "플레이어 민수", "방금 거 어때"</span></div>
   </div>
 
+  <div class="chart" id="gestBox">
+    <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="gOn" type="checkbox"> 손짓 명령</label><span id="gLast" style="font-size:13px"></span></div>
+    <div id="gBody" style="display:none">
+      <table class="sw" id="gTable"><colgroup><col style="width:40%"><col></colgroup><tbody id="gRows"></tbody></table>
+      <div class="head"><span style="white-space:normal;line-height:1.5">손짓은 1초쯤 가만히 있다가 하고, 한 뒤에도 잠깐 멈추면 알아들어요. 스윙 중이나 직후 2초는 안 받아요. 명령은 음성 명령과 같은 문장이라 "직접 입력"으로 무엇이든 붙일 수 있어요.</span></div>
+    </div>
+  </div>
+
   <div class="chart" id="quick">
     <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="qOn" type="checkbox"> 빠른 선택 (음성 명령 대신 눌러서)</label><button id="qEdit" style="padding:6px 10px;font-size:13px;flex:none;display:none">편집</button></div>
     <div id="qBody" style="display:none">
@@ -184,6 +192,7 @@ a { color: var(--accent); }
       <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
       <li><b>기록:</b> "기록 시작" → 스윙 → "기록 멈추고 저장". 장갑 프레임(장갑 시계 + 휴대폰 도착 시각), 자세 프레임(휴대폰 시각), 배터리, 소리 클립이 json 파일 하나로 저장돼요. 카메라 없이 장갑만 기록해도 돼요.</li>
       <li><b>음성 명령:</b> "말로 하기"를 누르고 말해요. "7번 하프"(클럽과 스윙 종류 함께), "굿샷"·"뒤땅"(방금 스윙 라벨), "플레이어 민수", "친구 차례", "방금 거 어때", "오늘 요약", "배터리", "기록 시작"·"그만", "취소". 알아들은 걸 소리로 다시 말해 줘요. "계속 듣기"를 켜면 누르지 않아도 계속 들어요(옆 사람 말을 잘못 알아들을 수 있어요). 명령 목록은 PC 음성 명령과 같은 파일에서 와요. Chrome 음성 인식은 인터넷이 필요해요.</li>
+      <li><b>손짓 명령:</b> 장갑을 손등에 붙인 채로 해요. 기본은 손등 두 번 톡톡 = 듣기 시작, 손 세우고 1초 멈춤 = "방금 거 어때", 손목 빠르게 두 번 비틀기 = 굿샷, 세 번 흔들기 = 취소예요. 칸마다 다른 명령으로 바꾸거나 "직접 입력"으로 아무 음성 명령 문장(예: "7번 하프")을 붙일 수 있고, 이 휴대폰에 기억돼요. "손 세우고 멈춤"은 원하는 자세를 잡고 "자세 등록"을 한 번 눌러야 써요.</li>
       <li><b>화면과 연결:</b> 장갑이 연결돼 있는 동안 화면이 꺼지지 않아요. 화면이 꺼지거나 다른 앱으로 가거나 뒤로 가면, 기록을 저장하고 장갑 연결을 끊어요. 그래야 장갑이 바로 다시 보여요(전에는 장갑이 연결된 줄 알고 RST를 눌러야 했어요). 돌아와서 "센서 장갑 연결"을 다시 누르면 돼요.</li>
       <li><b>스윙 분석:</b> 장갑을 연결하면 스윙이 끝날 때마다 표에 한 줄이 생겨요. 템포(백스윙 시간 ÷ 다운스윙 시간), 손목 풀림(꺾였던 손목이 반쯤 풀린 순간, − = 임팩트 전), 손목 꺾임 최대, 손 회전 최고 속도예요. 임팩트 시각은 장갑이 들은 소리로 잡고(약 1.5초 뒤에 도착해서 그만큼 늦게 나와요), 소리가 없으면 움직임으로 잡아요. "스윙마다 말하기"를 켜면 한 줄로 읽어 줘요. 기록 파일에도 들어가요.</li>
       <li>손목 꺾임은 어드레스를 0으로 둔 상대값이에요("정렬 시작"을 붙이면 실제 각도가 돼요). 템포는 시뮬레이션에서 실제보다 0.2~0.3쯤 낮게 나와요(백스윙 시작을 조금 늦게 잡아서). 스윙끼리 비교하는 데는 문제없어요. 장갑 수신 약 240 Hz, 빠진 프레임 0이면 정상이에요.</li>
@@ -196,6 +205,7 @@ import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@m
 import { Glove, clipSamples, motionFrames, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
 import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
+import { GestureDetector } from "./gesture.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -407,8 +417,11 @@ function onGlove(r) {
       gyroBuf.push([f[2] / 1e6, h, a]); lastFrame = f;
       gyroLong.push([f[2], h, a]); if (gyroLong.length > 1400) gyroLong.shift();
       if (logging) log.glove.push(f);
-      swingDet.frame([f[2] / 1e6, f[3] * GYRO_DPS, f[4] * GYRO_DPS, f[5] * GYRO_DPS, f[6] * ACC_G, f[7] * ACC_G, f[8] * ACC_G,
-                      f[9] * GYRO_DPS, f[10] * GYRO_DPS, f[11] * GYRO_DPS, f[12] * ACC_G, f[13] * ACC_G, f[14] * ACC_G]);
+      const fu = [f[2] / 1e6, f[3] * GYRO_DPS, f[4] * GYRO_DPS, f[5] * GYRO_DPS, f[6] * ACC_G, f[7] * ACC_G, f[8] * ACC_G,
+                  f[9] * GYRO_DPS, f[10] * GYRO_DPS, f[11] * GYRO_DPS, f[12] * ACC_G, f[13] * ACC_G, f[14] * ACC_G];
+      swingDet.frame(fu);
+      if (gCfg.on) { gestDet.armOk = !!(glove && glove.parser.armOk); gestDet.frame(fu); }
+      lastHandAcc = [fu[4], fu[5], fu[6]];
     }
   } else if (r.type === "status") {
     lastStatus = r;
@@ -558,6 +571,56 @@ if (!listener.ok) { $("vTalk").disabled = true; $("vCont").disabled = true; $("v
 window.__pgTest.runVoice = runVoice;
 $("vTalk").onclick = () => listener.listenOnce();
 $("vCont").onchange = () => listener.setContinuous($("vCont").checked);
+
+// ---- hand gestures (gesture.js) -> a command phrase (run like a voice command) or "listen" ----
+const G_NAME = { tap2: "손등 두 번 톡톡", hold: "손 세우고 1초 멈춤", twist: "손목 빠르게 두 번 비틀기", shake: "세 번 흔들기" };
+const G_DEFAULT = { tap2: "__listen", hold: "방금 거 어때", twist: "굿샷", shake: "취소" };
+const G_CHOICES = [["__listen", "듣기 시작 (말로 하기)"], ["방금 거 어때", "방금 거 어때"], ["굿샷", "굿샷"], ["뒤땅", "뒤땅"], ["취소", "취소"],
+  ["오늘 요약", "오늘 요약"], ["무슨 채야", "무슨 채야"], ["배터리", "배터리"], ["기록 시작", "기록 시작"], ["그만", "기록 그만"], ["", "끄기"]];
+const gLoad = () => { try { const v = JSON.parse(localStorage.getItem("pg-gesture-v1")); if (v && v.map) return v; } catch (e) {} return { on: true, map: { ...G_DEFAULT }, holdRef: null }; };
+let gCfg = gLoad(), lastHandAcc = null;
+const gSave = () => { try { localStorage.setItem("pg-gesture-v1", JSON.stringify(gCfg)); } catch (e) {} };
+const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef });
+function gLabel(v) { const c = G_CHOICES.find((x) => x[0] === v); return c ? c[1] : v ? `"${v}"` : "끄기"; }
+function onGesture(g) {
+  const act = gCfg.map[g.name];
+  qEvent("gesture", { gesture: g.name, action: act || null }, "gesture");
+  if (!act) return;
+  $("gLast").textContent = `${G_NAME[g.name]} → ${gLabel(act)}`;
+  if (act === "__listen") { try { navigator.vibrate && navigator.vibrate(80); } catch (e) {} listener.listenOnce(); return; }
+  runVoice([act]);
+}
+function gRender() {
+  $("gOn").checked = gCfg.on; $("gBody").style.display = gCfg.on ? "" : "none";
+  $("gRows").innerHTML = "";
+  for (const k of ["tap2", "hold", "twist", "shake"]) {
+    const tr = document.createElement("tr");
+    const v = gCfg.map[k] ?? "";
+    const opts = G_CHOICES.map(([val, txt]) => `<option value="${val}"${val === v ? " selected" : ""}>${txt}</option>`).join("")
+      + (G_CHOICES.some((c) => c[0] === v) ? "" : `<option value="${v.replace(/"/g, "&quot;")}" selected>"${v}"</option>`) + `<option value="__custom">직접 입력…</option>`;
+    tr.innerHTML = `<td style="white-space:normal">${G_NAME[k]}${k === "hold" ? `<br><button class="chip" data-reg="1" style="margin-top:4px">${gCfg.holdRef ? "자세 다시 등록" : "자세 등록"}</button>` : ""}</td>` +
+      `<td><select data-k="${k}" style="width:100%;padding:8px">${opts}</select></td>`;
+    $("gRows").appendChild(tr);
+  }
+  $("gRows").querySelectorAll("select").forEach((el) => el.onchange = () => {
+    let v = el.value;
+    if (v === "__custom") { v = (prompt("이 손짓에 붙일 명령 (음성 명령처럼, 예: 7번 하프)") || "").trim(); if (!v) { gRender(); return; } }
+    gCfg.map[el.dataset.k] = v; gSave(); gRender();
+  });
+  const reg = $("gRows").querySelector("[data-reg]");
+  if (reg) reg.onclick = () => {
+    if (!lastHandAcc) { say("장갑을 연결한 뒤에 자세를 잡고 눌러 주세요."); return; }
+    gCfg.holdRef = lastHandAcc.slice(); gestDet.setHoldRef(gCfg.holdRef); gSave(); gRender();
+    say("자세를 등록했어요. 이 자세로 1초 멈추면 알아들어요."); speak("자세 등록");
+  };
+}
+$("gOn").onchange = () => { gCfg.on = $("gOn").checked; gSave(); gRender(); };
+gRender();
+window.__pgTest.onGesture = onGesture;
+
+// heartbeat: with the 2026-10-26 firmware the glove drops a link whose host stopped sending these (stale-link guard);
+// older firmware ignores the command
+setInterval(() => { if (gloveConnected()) glove.send("hb").catch(() => {}); }, 2000);
 
 // ---- keep the link clean (range 2026-10-26: screen-off / back left the glove "connected" to a page that had
 // stopped, so it never advertised again until RST) ----
@@ -803,7 +866,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26i", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26j", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };
