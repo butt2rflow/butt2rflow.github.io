@@ -59,6 +59,11 @@ a { color: var(--accent); }
 .live td { text-align: right; padding: 3px 2px; border-top: 1px solid #2d353b; white-space: nowrap; overflow: hidden; }
 .live td:first-child, .live th:first-child { text-align: left; }
 .key i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.sw { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: clamp(11px, 3.2vw, 14px); table-layout: fixed; }
+.sw th { color: var(--muted); font-weight: 400; font-size: 0.85em; text-align: right; padding: 2px; white-space: normal; line-height: 1.2; }
+.sw td { text-align: right; padding: 4px 2px; border-top: 1px solid #2d353b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sw td:first-child, .sw th:first-child { text-align: left; }
+.sw td.sat { color: var(--warn); }
 </style>
 </head>
 <body>
@@ -142,6 +147,15 @@ a { color: var(--accent); }
       <canvas id="impCv"></canvas>
       <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span><span class="key"><i style="background:#ff4fa3"></i>손 833 Hz</span></span><span id="impNote"></span></div>
     </div>
+    <div class="chart" id="swingBox">
+      <div class="head"><span id="swTitle">스윙 분석 (스윙이 끝나면 한 줄씩 생겨요)</span><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="swSpeak" type="checkbox"> 스윙마다 말하기</label></div>
+      <table class="sw">
+        <colgroup><col style="width:2.6em"><col><col><col><col><col><col></colgroup>
+        <tr><th>#</th><th>클럽</th><th>템포 (백:다운)</th><th>손목 풀림 (ms)</th><th>꺾임 최대 (°)</th><th>손 최고 (°/s)</th><th>임팩트 기준</th></tr>
+        <tbody id="swRows"><tr><td colspan="7" style="text-align:left;color:var(--muted)">아직 스윙이 없어요</td></tr></tbody>
+      </table>
+      <div class="head"><span id="swNote" style="white-space:normal;line-height:1.5">템포 = 백스윙 시간 ÷ 다운스윙 시간. 손목 풀림 = 꺾인 손목이 반쯤 풀린 순간(− = 임팩트 전). 꺾임은 어드레스 기준 상대값이에요.</span></div>
+    </div>
     <div class="chart">
       <div class="head"><span id="clipTitle">장갑 소리 클립 (임팩트·목소리가 오면 그려져요)</span></div>
       <canvas id="clipCv"></canvas>
@@ -164,7 +178,8 @@ a { color: var(--accent); }
       <li><b>장갑 속도:</b> 휴대폰 블루투스로는 새 펌웨어(2026-10-25부터)가 약 250 Hz까지 고르게 보내요(S25 측정). 그래서 기본은 240 Hz예요. 400 Hz를 고르면 장갑이 보내지 못한 샘플을 건너뛰어 간격이 고르지 않아요. 옛 펌웨어는 180 Hz로 두세요.</li>
       <li><b>센서 장갑:</b> 장갑 LED가 파랗게 깜빡일 때 "센서 장갑 연결" → 목록에서 SensorGlove 선택. 휴대폰 블루투스 설정에서 따로 페어링하지 마세요(연결을 잡고 있어서 장갑이 안 보여요). 안드로이드 Chrome에서 돼요. 아이폰 Safari는 웹 블루투스가 없어요.</li>
       <li><b>기록:</b> "기록 시작" → 스윙 → "기록 멈추고 저장". 장갑 프레임(장갑 시계 + 휴대폰 도착 시각), 자세 프레임(휴대폰 시각), 배터리, 소리 클립이 json 파일 하나로 저장돼요. 카메라 없이 장갑만 기록해도 돼요.</li>
-      <li>시험판이라 아직 시간 맞추기·손목 각도는 없어요. 숫자는 받는 상태 확인용이에요(장갑 수신 약 180 Hz, 빠진 프레임 0이면 정상).</li>
+      <li><b>스윙 분석:</b> 장갑을 연결하면 스윙이 끝날 때마다 표에 한 줄이 생겨요. 템포(백스윙 시간 ÷ 다운스윙 시간), 손목 풀림(꺾였던 손목이 반쯤 풀린 순간, − = 임팩트 전), 손목 꺾임 최대, 손 회전 최고 속도예요. 임팩트 시각은 장갑이 들은 소리로 잡고(약 1.5초 뒤에 도착해서 그만큼 늦게 나와요), 소리가 없으면 움직임으로 잡아요. "스윙마다 말하기"를 켜면 한 줄로 읽어 줘요. 기록 파일에도 들어가요.</li>
+      <li>손목 꺾임은 어드레스를 0으로 둔 상대값이에요("정렬 시작"을 붙이면 실제 각도가 돼요). 템포는 시뮬레이션에서 실제보다 0.2~0.3쯤 낮게 나와요(백스윙 시작을 조금 늦게 잡아서). 스윙끼리 비교하는 데는 문제없어요. 장갑 수신 약 240 Hz, 빠진 프레임 0이면 정상이에요.</li>
     </ul>
   </details>
 </div>
@@ -172,6 +187,7 @@ a { color: var(--accent); }
 <script type="module">
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs";
 import { Glove, clipSamples, motionFrames, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
+import { SwingDetector, swingLine } from "./swing.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -382,6 +398,8 @@ function onGlove(r) {
       gyroBuf.push([f[2] / 1e6, h, a]); lastFrame = f;
       gyroLong.push([f[2], h, a]); if (gyroLong.length > 1400) gyroLong.shift();
       if (logging) log.glove.push(f);
+      swingDet.frame([f[2] / 1e6, f[3] * GYRO_DPS, f[4] * GYRO_DPS, f[5] * GYRO_DPS, f[6] * ACC_G, f[7] * ACC_G, f[8] * ACC_G,
+                      f[9] * GYRO_DPS, f[10] * GYRO_DPS, f[11] * GYRO_DPS, f[12] * ACC_G, f[13] * ACC_G, f[14] * ACC_G]);
     }
   } else if (r.type === "status") {
     gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? "팔 IMU 있음" : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
@@ -392,7 +410,7 @@ function onGlove(r) {
     if (logging) log.motion.push({ id: c.id, t_us: c.t_us, impactFrame: c.pre, frames: m.t.length, rate: c.rate / 10, flags: c.peak, t: m.t, g: Array.from(m.g) });
   } else if (r.type === "clip") {
     gStats.clips++; gloveText("gClips", String(gStats.clips));
-    const c = r.clip; drawClip(c); if (c.kind === "impact") setTimeout(() => drawImpact(c), 0); gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
+    const c = r.clip; drawClip(c); if (c.kind === "impact") { swingDet.sound(c.t_us / 1e6); setTimeout(() => drawImpact(c), 0); } gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
     if (logging) log.clips.push({ kind: c.kind, id: c.id, t_us: c.t_us, pre: c.pre, total: c.total, rate: c.rate, peak: c.peak, firstNow: c.firstNow, lastNow: c.lastNow, samples: Array.from(clipSamples(c)) });
   }
 }
@@ -433,6 +451,32 @@ $("glove").onclick = async () => {
         e.name === "NotFoundError" ? "장갑을 고르지 않았거나 찾지 못했어요. 장갑 LED가 파랗게 깜빡이는지 확인해 주세요." : "장갑 연결 실패: " + e.message);
   }
 };
+
+// ---- swing analysis (swing.js, ported from sensor-glove/src/swing_eye.py) ----
+const swings = [];
+const swingDet = new SwingDetector(onSwing);
+function onSwing(sw) {
+  const ck = glove && glove.parser.clock;
+  const row = { ...sw, impactPhoneMs: ck && ck.ready() ? +ck.toPhone(sw.t_imp * 1e6).toFixed(1) : null,
+                player: cur.player, club: cur.club, swing: cur.swing };
+  for (const k of Object.keys(row)) if (typeof row[k] === "number" && !Number.isInteger(row[k])) row[k] = +row[k].toFixed(k === "t_imp" ? 6 : 3);
+  swings.push(row); if (swings.length > 200) swings.shift();
+  if (logging) log.swings.push(row);
+  renderSwings();
+  if ($("swSpeak").checked && window.speechSynthesis) {
+    speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(swingLine(sw)); u.lang = "ko-KR"; u.rate = 1.05; speechSynthesis.speak(u);
+  }
+}
+window.__pgTest = { onGlove, swingDet, swings };   // headless test: replay a log without Bluetooth
+const SRC = { sound: "소리", accel: "움직임", "arm peak": "팔 최고속" };
+function renderSwings() {
+  const last = swings.slice(-8).reverse();
+  $("swRows").innerHTML = last.map((w) => `<tr><td>${w.n}</td><td>${w.club || "–"}</td><td>${w.tempo.toFixed(1)}</td>` +
+    `<td>${(w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0)}</td><td>${w.hinge_top.toFixed(0)}</td>` +
+    `<td class="${w.saturated ? "sat" : ""}">${w.hand_dps_peak.toFixed(0)}${w.saturated ? " (한계)" : ""}</td><td>${SRC[w.source] || w.source}</td></tr>`).join("");
+  const tp = swings.slice(-10).map((w) => w.tempo).sort((a, b) => a - b);
+  $("swTitle").textContent = `스윙 ${swings.length}번 · 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}`;
+}
 
 // ---- live charts ----
 const gyroBuf = [], gyroLong = []; let lastFrame = null;
@@ -653,9 +697,10 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26e", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26f", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
-    pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
+    pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
+    swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
   a.download = `swing-glove-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`; a.click();
@@ -665,7 +710,7 @@ function stopLog() {
 $("log").onclick = () => {
   if (logging) { stopLog(); return; }
   gStats.hand = 0; gStats.arm = 0;
-  log = { cap: [], impacts: [], motion: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
+  log = { cap: [], impacts: [], motion: [], swings: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
   logging = true; $("log").textContent = "기록 멈추고 저장"; speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
 };
 
