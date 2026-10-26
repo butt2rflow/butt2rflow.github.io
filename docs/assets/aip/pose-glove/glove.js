@@ -46,7 +46,7 @@ export class GloveParser {
     return { type: "imu", frames: got };
   }
   clipChunk(dv, now) {
-    const id = dv.getUint16(0, true), ch = dv.getUint16(2, true), kind = dv.getUint8(5) === 1 ? "voice" : "impact";
+    const id = dv.getUint16(0, true), ch = dv.getUint16(2, true), kind = ({ 1: "voice", 2: "motion" })[dv.getUint8(5)] || "impact";
     const key = `${kind}${id}`;
     let c = this.clips.get(key);
     if (!c) { c = { kind, id, parts: new Map(), firstNow: now }; this.clips.set(key, c); }
@@ -54,13 +54,32 @@ export class GloveParser {
       c.t_us = dv.getUint32(6, true); c.pre = dv.getUint16(10, true); c.total = dv.getUint16(12, true);
       c.rate = dv.getUint16(14, true); c.peak = dv.getUint16(16, true);
     } else {
-      c.parts.set(ch, new Int16Array(dv.buffer.slice(dv.byteOffset + 6, dv.byteOffset + dv.byteLength)));
+      const raw = dv.buffer.slice(dv.byteOffset + 6, dv.byteOffset + dv.byteLength);
+      c.parts.set(ch, kind === "motion" ? new Uint8Array(raw) : new Int16Array(raw));
     }
     c.lastNow = now;
-    const done = clipDone(c);
+    const done = kind === "motion" ? motionDone(c) : clipDone(c);
     if (done && !c.reported) { c.reported = true; return { type: "clip", clip: c }; }
     return { type: "chunk" };
   }
+}
+
+// Motion clip (kind 2): 833 Hz gyro around an impact. Chunk 0 = t_us u32, impact frame u16, frames u16, rate x10 u16,
+// flags u16 (bit0 arm present); chunks 1.. = 14-byte frames: time offset u16 (10 us units), 6 x int16
+// (hand gx gy gz, arm gx gy gz, 70 mdps/LSB). Same rule as host/stream.py Take.motion_done.
+export function motionDone(c) {
+  if (c.total === undefined || c.parts.size === 0) return false;
+  let got = 0, per = 1; for (const p of c.parts.values()) { got += Math.floor(p.length / 14); per = Math.max(per, Math.floor(p.length / 14)); }
+  const last = Math.ceil(c.total / per);
+  return got >= c.total || (c.parts.has(last) && c.total - got <= 2 * per);
+}
+export function motionFrames(c) {   // -> { t: glove us per frame, g: Int16Array(6 * n) }
+  const t = [], g = [];
+  for (const k of [...c.parts.keys()].sort((a, b) => a - b)) {
+    const b = c.parts.get(k), dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+    for (let o = 0; o + 14 <= b.length; o += 14) { t.push(c.t_us + dv.getUint16(o, true) * 10); for (let j = 0; j < 6; j++) g.push(dv.getInt16(o + 2 + 2 * j, true)); }
+  }
+  return { t, g: Int16Array.from(g) };
 }
 
 // Same rule as host/stream.py: header seen, last chunk seen, at most 2 chunks lost (left silent).

@@ -112,7 +112,7 @@ a { color: var(--accent); }
       <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
       <canvas id="impImg" style="height:auto;aspect-ratio:3/4"></canvas>
       <canvas id="impCv"></canvas>
-      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span></span><span id="impNote"></span></div>
+      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span><span class="key"><i style="background:#e1f5fe;height:1px"></i>손 833 Hz</span></span><span id="impNote"></span></div>
     </div>
     <div class="chart">
       <div class="head"><span id="clipTitle">장갑 소리 클립 (임팩트·목소리가 오면 그려져요)</span></div>
@@ -142,7 +142,7 @@ a { color: var(--accent); }
 
 <script type="module">
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs";
-import { Glove, clipSamples, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
+import { Glove, clipSamples, motionFrames, GYRO_DPS, ACC_G, SAT_DPS } from "./glove.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -357,6 +357,10 @@ function onGlove(r) {
   } else if (r.type === "status") {
     gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? "팔 IMU 있음" : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
     if (logging) log.status.push(r);
+  } else if (r.type === "clip" && r.clip.kind === "motion") {   // 833 Hz gyro around the impact, after its sound clip
+    const c = r.clip, m = motionFrames(c); motionById.set(c.id, m);
+    if (lastImpact && lastImpact.id === c.id) setTimeout(() => drawImpact(lastImpact), 0);
+    if (logging) log.motion.push({ id: c.id, t_us: c.t_us, impactFrame: c.pre, frames: m.t.length, rate: c.rate / 10, flags: c.peak, t: m.t, g: Array.from(m.g) });
   } else if (r.type === "clip") {
     gStats.clips++; gloveText("gClips", String(gStats.clips));
     const c = r.clip; drawClip(c); if (c.kind === "impact") setTimeout(() => drawImpact(c), 0); gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
@@ -499,13 +503,15 @@ function drawClip(c) {
   $("clipTitle").textContent = c.kind === "voice" ? `목소리 클립 #${c.id} · ${(c.total / c.rate).toFixed(1)}초` : `임팩트 #${c.id} · 앞뒤 0.25초 · 주황 선 = 가장 큰 순간 · 최대 ${(c.peak / 32768 * 100).toFixed(0)}%`;
 }
 
+const motionById = new Map(); let lastImpact = null;
 const EDGE2 = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
 function drawImpact(c) {
+  lastImpact = c;
   const clock = glove.parser.clock; if (!clock.ready()) return;
   const ti = clock.toPhone(c.t_us);
   let best = null; for (const f of ring) if (!best || Math.abs(f.t - ti) < Math.abs(best.t - ti)) best = f;
   const note = { id: c.id, impactPhoneMs: +ti.toFixed(1), frameMs: best ? +best.t.toFixed(1) : null };
-  if (logging) log.impacts.push(note);
+  if (logging && !log.impacts.some((x) => x.id === note.id)) log.impacts.push(note);
   // frame + skeleton (right wrist red)
   const im = $("impImg"), gi = im.getContext("2d");
   if (best) {
@@ -529,6 +535,16 @@ function drawImpact(c) {
     for (const r of gyroLong) { const t = clock.toPhone(r[0]); if (t < ti - 1000 || t > ti + 1000) continue; first ? g.moveTo(X(t), Y(r[k], 2400)) : g.lineTo(X(t), Y(r[k], 2400)); first = false; }
     g.stroke();
   }
+  const mo = motionById.get(c.id);
+  if (mo) {   // 833 Hz hand gyro from the glove's FIFO: thin light line over the 240 Hz trace
+    g.strokeStyle = "#e1f5fe"; g.lineWidth = 1 * d; g.beginPath(); let f1 = true;
+    for (let i = 0; i < mo.t.length; i++) {
+      const t = clock.toPhone(mo.t[i]); if (t < ti - 1000 || t > ti + 1000) continue;
+      const v = Math.hypot(mo.g[6 * i], mo.g[6 * i + 1], mo.g[6 * i + 2]) * GYRO_DPS;
+      f1 ? g.moveTo(X(t), Y(v, 2400)) : g.lineTo(X(t), Y(v, 2400)); f1 = false;
+    }
+    g.stroke();
+  }
   const sp = []; for (let i = 1; i < wristBuf.length; i++) { const [t0, x0, y0, v0] = wristBuf[i - 1], [t1, x1, y1, v1] = wristBuf[i]; if (v0 > 0.3 && v1 > 0.3 && t1 > t0) sp.push([t1, Math.hypot(x1 - x0, y1 - y0) / (t1 - t0) * 1000]); }
   const top = Math.max(0.5, ...sp.filter((r) => Math.abs(r[0] - ti) < 1000).map((r) => r[1]));
   g.strokeStyle = "#eef1f3"; g.lineWidth = 2 * d; g.beginPath(); let first = true;
@@ -537,7 +553,8 @@ function drawImpact(c) {
   g.strokeStyle = "#ff5252"; g.lineWidth = 2 * d; g.beginPath(); g.moveTo(X(ti), 0); g.lineTo(X(ti), H); g.stroke();
   if (best) { g.setLineDash([4 * d, 3 * d]); g.strokeStyle = "#eef1f3"; g.beginPath(); g.moveTo(X(best.t), 0); g.lineTo(X(best.t), H); g.stroke(); g.setLineDash([]); }
   $("impTitle").textContent = `임팩트 #${c.id} · 빨간 선 = 장갑이 들은 임팩트(휴대폰 시계로 바꾼 시각)`;
-  $("impNote").textContent = best ? `화면은 임팩트 ${(best.t - ti >= 0 ? "+" : "") + (best.t - ti).toFixed(0)} ms 프레임 (점선)` : "카메라 화면 없음";
+  if (mo) $("impNote").textContent = "";
+  $("impNote").textContent = (mo ? `833 Hz ${mo.t.length}프레임 · ` : "") + (best ? `화면 ${(best.t - ti >= 0 ? "+" : "") + (best.t - ti).toFixed(0)} ms (점선)` : "카메라 화면 없음");
 }
 
 $("hz").onchange = async () => { if (glove && glove.device && glove.device.gatt.connected) { await glove.stop().catch(() => {}); await glove.start(+$("hz").value, 1); } };
@@ -546,7 +563,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-25b", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26a", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
@@ -558,7 +575,7 @@ function stopLog() {
 $("log").onclick = () => {
   if (logging) { stopLog(); return; }
   gStats.hand = 0; gStats.arm = 0;
-  log = { cap: [], impacts: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
+  log = { cap: [], impacts: [], motion: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
   logging = true; $("log").textContent = "기록 멈추고 저장"; speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
 };
 
