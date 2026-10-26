@@ -48,7 +48,11 @@ export function analyse(fr, tImp, sat = 2290, handOnly = false) {
   const w = fr.filter((f) => f[0] >= tImp - PRE_S && f[0] <= tImp + POST_S);
   if (w.length < 50) return null;
   const tt = w.map((f) => f[0] - tImp);
-  const wh = axisRate(w.map((f) => [f[1], f[2], f[3]])), wa = handOnly ? wh : axisRate(w.map((f) => [f[7], f[8], f[9]]));
+  // sign: positive in the DOWNSWING, judged by the mean rate 0.30-0.04 s before impact. On real ball strikes (range
+  // 2026-10-26) the biggest peak was the impact jolt / recoil, pointing the other way, and one jolt came ~30 ms before
+  // the sound time, so a peak-based rule flipped the phases; a short jolt can't outweigh the sustained downswing.
+  const downPos = (x) => { let m = 0; for (let i = 0; i < x.length; i++) if (tt[i] > -0.30 && tt[i] < -0.04) m += x[i]; return m < 0 ? x.map((v) => -v) : x; };
+  const wh = downPos(axisRate(w.map((f) => [f[1], f[2], f[3]]))), wa = handOnly ? wh : downPos(axisRate(w.map((f) => [f[7], f[8], f[9]])));
   const beta = [0];                      // trail-wrist hinge (deg): integral of forearm minus hand rate
   for (let i = 1; i < w.length; i++) {
     const dt = tt[i] - tt[i - 1];
@@ -75,7 +79,11 @@ export function analyse(fr, tImp, sat = 2290, handOnly = false) {
   while (a1 < i0 && phi[a1 + 1] <= phi[imin] + 0.01 * amp) a1++;
   const tTop = 0.5 * (tt[a0] + tt[a1]);
   let top = a0; while (top < a1 && tt[top] < tTop) top++;
-  let take = 0; for (let i = 0; i < imin; i++) if (phi[i] >= pAddr - 0.01 * amp) take = i;   // last moment still at address
+  // takeaway: the last moment within 1 % of the highest angle in the 1.2 s before the furthest-back point (a hand
+  // that settles slightly off its starting angle at address made "1 % of the window's first 0.4 s" fire 0.7 s early)
+  let pRef = -Infinity; for (let i = 0; i < imin; i++) if (tt[i] >= tt[imin] - 1.2) pRef = Math.max(pRef, phi[i]);
+  if (pRef === -Infinity) pRef = pAddr;
+  let take = 0; for (let i = 0; i < imin; i++) if (phi[i] >= pRef - 0.01 * amp) take = i;   // last moment still at address
   let bmax = -Infinity; for (let i = take; i <= i0; i++) bmax = Math.max(bmax, beta[i]);
   let rel = 0; for (let i = top; i <= i0; i++) if (beta[i] < 0.5 * bmax) { rel = tt[i] * 1000; break; }
   let hp = 0; for (let i = 1; i < wh.length; i++) if (wh[i] > wh[hp]) hp = i;
