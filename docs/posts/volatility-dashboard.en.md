@@ -65,14 +65,15 @@ When COR90D rises sharply, synchronization is spreading even into the deep-OTM r
 
 SKEW measures **the tail-risk premium** the S&P 500 options market is paying for extreme downside protection. When fire-insurance premiums suddenly rise, it means insurers are pricing in higher fire risk. When SKEW rises, institutions are paying more for "crash insurance."
 
-| SKEW level | What it means |
+| SKEW level (1-year percentile) | What it means |
 |:-----------|:--------------|
-| ≤ ~145 | Normal regime (post-2020 median ≈ 145) |
-| 150–158 | Caution — institutions are loading up on puts (p75 band) |
-| 158+ | High tail-risk pricing (above p95) |
+| Below 75% | Normal |
+| 75–95% | Caution — institutions are loading up on puts |
+| 95% and above | High tail-risk pricing |
 
-!!! note "SKEW's historical shift — thresholds recalibrated (2026-05)"
-    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally: over 2020–2026 the **median is ≈ 140, p75 ≈ 147, p95 ≈ 160**, and the last two years (2024-10 on) sit higher still at median ≈ 146, p75 ≈ 152, p95 ≈ 168. The legacy 140/150 thresholds became "normal state" and lost their signal value, so the daily dashboard now uses **150 caution / 158 stress**. The table above reflects that recalibration. The distribution keeps moving, so check the **1-year percentile** too before calling a level high.
+!!! note "Why a 1-year percentile instead of fixed numbers"
+    SKEW's distribution moves a lot from one period to the next. Before 2020 it averaged ~115 and 140+ readings were rare. Over 2020–2026 the **median is ≈ 140, p75 ≈ 147, p95 ≈ 160**; over the last two years (2024-10 on) it is median ≈ 146, p75 ≈ 152, p95 ≈ 168. Any fixed number tuned to one period ends up "always on" or "always off" a few years later.
+    So the reading is judged by **where today sits within the last year (252 sessions)**: top 25% is caution, top 5% is stress. As of October 2026 those lines are about **149** and **156**. In the sheet, `=PERCENTRANK.INC(last 252 rows, today's value)` gives it directly.
 
 !!! note "The SKEW paradox"
     SKEW can actually be **higher during the recovery** than right before the crash. That's because during the crash, institutions already own their puts. After the recovery, they buy fresh puts to hedge against "the next crash." A *low* SKEW reading can therefore be a market-bottom signal.
@@ -112,7 +113,7 @@ Combining all three signals into one chart lets you read structural stress at a 
 
 ![Volatility dashboard — Term Structure + Delta Skew + SKEW combined](../assets/diagrams_en/vol_dashboard.png)
 
-Top: COR1M–COR1Y term structure (when the spacing tightens, that's caution; the red region marks inversion). Middle: COR10D–COR90D delta skew (COR90D above the orange 50 line = caution, above the red 60 line = stress). Bottom: SKEW index (150+ is caution, 158+ is stress).
+Top: COR1M–COR1Y term structure (when the spacing tightens, that's caution; the red region marks inversion). Middle: COR10D–COR90D delta skew (orange and red dashed lines = COR90D's top-25% and top-5% lines over the last year; above them is caution and stress). Bottom: SKEW index (the same 1-year top-25% and top-5% lines).
 
 ---
 
@@ -154,19 +155,20 @@ Watch the **absolute level of COR90D** and the **gap between COR90D and COR10D**
 
 | Metric | Normal | Caution | Stressed |
 |:-------|:-------|:--------|:---------|
-| **COR90D level** | ≤ ~45 | 50–60 | **≥ 60** |
+| **COR90D level (1-year percentile)** | Below 75% | 75–95% | **95% and above** |
 | **COR90D − COR10D gap** | 25+ (well dispersed) | Narrowing | Converged (all strikes near 1.0) |
 
-When COR90D (deep-OTM call region) rises above **60**, the entire market is synchronizing in one direction. When the gap narrows, correlations across all strikes converge toward 1.0 — you spread your eggs across many baskets, but every basket is sitting on the same shelf, and the shelf is tipping. Diversification stops working.
+When COR90D (deep-OTM call region) rises into **its top 5% of the last year**, the entire market is synchronizing in one direction. When the gap narrows, correlations across all strikes converge toward 1.0 — you spread your eggs across many baskets, but every basket is sitting on the same shelf, and the shelf is tipping. Diversification stops working.
 
-!!! note "Threshold recalibration (2026-05)"
-    The legacy 35/50 thresholds were calibrated against the pre-2020 distribution. In the post-2020 regime, COR90D's **median is around 50**, p75 ≈ 62, p95 ≈ 79 — so a 50 reading is now the *typical* state, not stress. Updated to 50/60 (p75/p95) so the signal actually marks "top quartile / top ventile" rather than "above average."
-    Since late 2024 the level has dropped a long way again. Over the last two years (2024-10 on) the **median is ≈ 38, p75 ≈ 42, p95 ≈ 51**, so a reading has to be above the top 5% before 50/60 even calls it caution. Read COR90D with its **1-year percentile** and 5-day change, not the fixed bands alone. A 39 is "below the median" by the post-2020 numbers but right in the middle of the last two years.
+!!! note "Why COR90D is read by its 1-year percentile too"
+    COR90D moves even more than SKEW. Its median was about 66 over 2010–2019, **≈ 49 (p75 ≈ 62, p95 ≈ 79)** over 2020–2026, and **≈ 38 (p75 ≈ 42, p95 ≈ 51)** over the last two years (2024-10 on). A fixed "50 and up is caution" line was on for 76% of days in 2010–2026 (anywhere from 0% to 100% depending on the year) and for only 5% of the last two years.
+    On 2010–2026 data, the 1-year percentile rule (top 25% caution, top 5% stress) turns on 0–47% of days by year, and the share of signals followed by a drop of more than 2% within 10 sessions was similar to the fixed rule (25% vs 28%, not a meaningful difference). Under either rule, **drops were no more frequent after the signal than on other days**. Read it as a state ("the market is moving as one"), not a warning of a fall.
+    As of October 2026 the caution and stress lines are about **38** and **48**.
 
-**Example — caution (2025-10-16):**
+**Example — stressed (2025-10-16):**
 
 ```
-COR90D = 54.60 ← between 50 and 60, caution (early single-factor regime)
+COR90D = 54.60 ← 1-year percentile 96%, stressed (early single-factor regime)
 COR10D = 10.57
 ```
 
@@ -176,11 +178,11 @@ SKEW is logged on the Delta Skew tab.
 
 **Example trajectory:**
 
-| Date | SKEW | S&P 500 | Reading |
-|:-----|-----:|--------:|:--------|
-| Oct 6 | 142.5 | 6,740 | Normal |
-| Oct 10 | 138.9 | 6,553 | Down — put cost actually fell |
-| Oct 22 | 152.9 | 6,699 | Institutions buying puts |
+| Date | SKEW | 1-year percentile | S&P 500 | Reading |
+|:-----|-----:|-----:|--------:|:--------|
+| Oct 6 | 142.5 | 29% | 6,740 | Normal |
+| Oct 10 | 138.9 | 17% | 6,553 | Down — put cost actually fell |
+| Oct 22 | 152.9 | 67% | 6,699 | Institutions buying puts (still below caution) |
 
 Data source: Cboe Global Indices
 
@@ -190,9 +192,9 @@ Data source: Cboe Global Indices
 
 | Term Structure | COR90D | SKEW | Market state | Response |
 |:---------------|:-------|:-----|:-------------|:---------|
-| Wide (10+) | ≤ ~45 | < 150 | **Calm** | Rebalance normally |
-| Narrowing (< 5) | 50–60 | 150–158 | **Caution** | Mind the rebalancing timing |
-| Inverted | **≥ 60** | **≥ 158** | **Stressed** | Volatility incoming, hold the rules |
+| Wide (10+) | 1y below 75% | 1y below 75% | **Calm** | Rebalance normally |
+| Narrowing (< 5) | 1y 75–95% | 1y 75–95% | **Caution** | Mind the rebalancing timing |
+| Inverted | **1y 95%+** | **1y 95%+** | **Stressed** | Volatility incoming, hold the rules |
 | Recovering after inversion | Falling | Falling | **Recovery** | Rebalancing opportunity |
 
 The takeaway: **all three signals deteriorating at once is structural stress**. Just one of them moving could be noise.
@@ -212,8 +214,8 @@ The takeaway: **all three signals deteriorating at once is structural stress**. 
 The checklist:
 
 - [ ] Term-structure spread: wide / narrowing / inverted
-- [ ] COR90D level: ≤ ~45 (normal) / 50–60 (caution) / ≥ 60 (stressed)
-- [ ] SKEW: normal / caution / high
+- [ ] COR90D 1-year percentile: below 75% (normal) / 75–95% (caution) / 95%+ (stressed)
+- [ ] SKEW 1-year percentile: below 75% (normal) / 75–95% (caution) / 95%+ (high)
 - [ ] Are all three deteriorating at once?
 
 ---
@@ -260,8 +262,9 @@ axes[1].grid(alpha=0.3)
 
 # 3. SKEW
 axes[2].plot(skew['DATE'], skew['SKEW'], color='#9C27B0', linewidth=2, label='SKEW')
-axes[2].axhline(140, color='orange', ls='--', alpha=0.5, label='Caution (140)')
-axes[2].axhline(150, color='red', ls='--', alpha=0.5, label='High (150)')
+# Top-25% and top-5% lines over the last year (252 sessions) — needs a year of data
+axes[2].plot(skew['DATE'], skew['SKEW'].rolling(252).quantile(0.75), color='orange', ls='--', alpha=0.6, label='1y top 25% (caution)')
+axes[2].plot(skew['DATE'], skew['SKEW'].rolling(252).quantile(0.95), color='red', ls='--', alpha=0.6, label='1y top 5% (high)')
 axes[2].set_ylabel('SKEW Index')
 axes[2].set_title('SKEW — Tail-risk indicator')
 axes[2].legend(loc='upper left', fontsize=8)
@@ -291,13 +294,15 @@ spread = latest['spread']
 print(f"Term-structure spread: {spread:.1f}", end="")
 print("  ← deeply inverted!" if spread < -5 else "  ← inverted · caution" if spread < 0 else "  ← normal")
 
-cor90d = latest_skew['COR90D']
-print(f"COR90D: {cor90d:.1f}", end="")
-print("  ← stressed" if cor90d > 60 else "  ← caution" if cor90d > 50 else "  ← normal")
+def pct_1y(s):
+    """Today's percentile within the last 252 sessions (same idea as the sheet's PERCENTRANK.INC)"""
+    w = s.dropna().tail(252)
+    return (w <= w.iloc[-1]).mean()
 
-skew_val = latest_skew['SKEW']
-print(f"SKEW: {skew_val:.1f}", end="")
-print("  ← stressed" if skew_val > 158 else "  ← caution" if skew_val > 150 else "  ← normal")
+for name in ('COR90D', 'SKEW'):
+    v, p = latest_skew[name], pct_1y(skew[name])
+    print(f"{name}: {v:.1f} (1y {p:.0%})", end="")
+    print("  ← stressed" if p >= 0.95 else "  ← caution" if p >= 0.75 else "  ← normal")
 ```
 
 </details>

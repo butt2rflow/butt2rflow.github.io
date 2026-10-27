@@ -98,6 +98,16 @@ TENOR_INDICES = ["COR1M", "COR3M", "COR6M", "COR9M", "COR1Y"]
 # COR3M doubles as the ATM baseline on the Delta Skew chart (Cboe doesn't
 # publish a COR3MD index — the 50-delta ATM is COR3M itself).
 SKEW_INDICES = ["COR10D", "COR30D", "COR3M", "COR70D", "COR90D", "SKEW"]
+# COR90D and SKEW states use their trailing 1-year percentile (caution >= p75,
+# danger >= p95), changed 2026-10-26 from fixed 50/60 and 150/158. The fixed
+# COR90D levels fired caution on 76% of days 2010-2026 and 0-100% by year
+# (almost always on before 2020, 5% in the last two years); the percentile
+# rule fires 0-47% by year with the same 10-session drawdown rate. Neither
+# rule was followed by more drawdowns than all days (scripts/study_corskew.py,
+# brief_playbook.md). PCT_WINDOW sessions; the fixed levels remain only as
+# the fallback when there is less than a year of history.
+PCT_WINDOW = 252
+PCT_CAUTION, PCT_DANGER = 0.75, 0.95
 SKEW_RENAME = {"COR3M": "COR3MD"}
 
 CBOE_SETTLEMENT_URL = "https://www.cboe.com/us/futures/market_statistics/settlement/csv/"
@@ -183,6 +193,16 @@ def fetch_cor_skew():
     tenor = tenor.dropna(how="all").reset_index()
 
     skew_data = {SKEW_RENAME.get(name, name): _fetch_cboe_index(name) for name in SKEW_INDICES}
+    # Percentile and moving p75/p95 lines need a year of history, so compute
+    # them before the frame is trimmed to the chart lookback.
+    for col in ("COR90D", "SKEW"):
+        s = skew_data.get(col)
+        if s is None or len(s) < PCT_WINDOW:
+            continue
+        roll = s.rolling(PCT_WINDOW, min_periods=PCT_WINDOW)
+        skew_data[f"{col}_PCT"] = roll.apply(lambda w: (w <= w[-1]).mean(), raw=True)
+        skew_data[f"{col}_P75"] = roll.quantile(PCT_CAUTION)
+        skew_data[f"{col}_P95"] = roll.quantile(PCT_DANGER)
     skew = pd.DataFrame(skew_data)
     skew.index.name = "DATE"
     skew = skew.dropna(how="all").reset_index()
@@ -685,19 +705,25 @@ def render_cor_skew(tenor: pd.DataFrame, skew: pd.DataFrame, out_path: Path,
     ]:
         if col in skew.columns:
             skew_ax.plot(skew["DATE"], skew[col], label=col, linewidth=lw, color=color)
-    skew_ax.axhline(50, color="orange", ls="--", alpha=0.4, label="COR90D caution (50)")
-    skew_ax.axhline(60, color="red", ls="--", alpha=0.4, label="COR90D stress (60)")
+    if "COR90D_P75" in skew.columns:
+        skew_ax.plot(skew["DATE"], skew["COR90D_P75"], color="orange", ls="--", alpha=0.6,
+                     label="COR90D 1y p75 (caution)")
+        skew_ax.plot(skew["DATE"], skew["COR90D_P95"], color="red", ls="--", alpha=0.6,
+                     label="COR90D 1y p95 (stress)")
     skew_ax.set_ylabel("Implied Correlation (%)", fontsize=10)
-    skew_ax.set_title("Delta Skew — COR10D to COR90D (COR90D > 60 = stressed)", fontsize=11)
+    skew_ax.set_title("Delta Skew — COR10D to COR90D (COR90D above its 1-year p95 = stressed)", fontsize=11)
     skew_ax.legend(loc="upper left", fontsize=8, ncol=3)
     skew_ax.grid(alpha=0.3)
 
     if "SKEW" in skew.columns:
         skew_idx_ax.plot(skew["DATE"], skew["SKEW"], color="#9C27B0", linewidth=2, label="SKEW")
-        skew_idx_ax.fill_between(skew["DATE"], skew["SKEW"], 158,
-                                 where=skew["SKEW"] > 158, alpha=0.15, color="red")
-    skew_idx_ax.axhline(150, color="orange", ls="--", alpha=0.5, label="Caution (150)")
-    skew_idx_ax.axhline(158, color="red", ls="--", alpha=0.5, label="Stress (158)")
+        if "SKEW_P95" in skew.columns:
+            skew_idx_ax.fill_between(skew["DATE"], skew["SKEW"], skew["SKEW_P95"],
+                                     where=skew["SKEW"] > skew["SKEW_P95"], alpha=0.15, color="red")
+            skew_idx_ax.plot(skew["DATE"], skew["SKEW_P75"], color="orange", ls="--", alpha=0.6,
+                             label="1y p75 (caution)")
+            skew_idx_ax.plot(skew["DATE"], skew["SKEW_P95"], color="red", ls="--", alpha=0.6,
+                             label="1y p95 (stress)")
     skew_idx_ax.set_ylabel("SKEW Index", fontsize=10)
     skew_idx_ax.set_title("SKEW — tail-risk indicator", fontsize=11)
     skew_idx_ax.legend(loc="upper left", fontsize=8)
@@ -913,6 +939,10 @@ def render_volvol(vv: pd.DataFrame, out_path: Path):
 def compute_cor_skew_signals(tenor, skew):
     latest_t = tenor.dropna(subset=["COR1M", "COR1Y"]).iloc[-1]
     latest_s = skew.dropna(subset=["COR90D", "SKEW"]).iloc[-1]
+    def pct(col):
+        v = latest_s.get(f"{col}_PCT")
+        return float(v) if v is not None and pd.notna(v) else None
+    cor90d_pct, skew_pct = pct("COR90D"), pct("SKEW")
     spread = latest_t["COR1Y"] - latest_t["COR1M"]
     cor90d = latest_s["COR90D"]
     skew_v = latest_s["SKEW"]
@@ -942,30 +972,32 @@ def compute_cor_skew_signals(tenor, skew):
             return "caution"
         return "ok"
 
-    # Threshold notes — recalibrated 2026-05 against the full Cboe daily
-    # history, restricted to the post-2020 regime (n ≈ 1600 days). The
-    # pre-2020 distribution looks materially different (SKEW median ~120
-    # vs post-2020 ~140; COR90D similarly elevated) and isn't a useful
-    # baseline for sizing today's risk.
-    # - SKEW (full history 1990–): post-2020 p75 ≈ 148, p95 ≈ 160.
-    #   150/158 fires ~19%/~6% — close to the intended "caution = top
-    #   quartile, danger = top ventile" buckets.
+    # Threshold notes.
+    # - COR90D, SKEW: trailing 1-year percentile, caution >= p75, danger >= p95
+    #   (see PCT_WINDOW). Fixed levels drift with the regime: COR90D's
+    #   2020– median was 50 but 38 since 2024-10, SKEW's 140 then 146. The
+    #   old 50/60 and 150/158 are only the fallback below a year of history.
     # - Spread (COR1Y − COR1M): reverse signal (negative = inverted curve).
     #   Post-2020 <0 fires ~19%, <-5 fires ~8%.
-    # - COR90D (history from 2006–): post-2020 median 50 — meaning the old
-    #   40/50 thresholds fired caution 72%, danger 51% of days, so "stress"
-    #   was almost always on. Bumped to 50/60 (post-2022 p75/p95) so the
-    #   signal actually distinguishes elevated correlation regimes.
     return {
         "date": pd.Timestamp(max(latest_t["DATE"], latest_s["DATE"])).strftime("%Y-%m-%d"),
         "spread": spread,
         "spread_state": state(spread, 0, -5, reverse=True),
         "cor1m": latest_t["COR1M"], "cor1y": latest_t["COR1Y"],
         "cor90d": cor90d,
-        "cor90d_state": state(cor90d, 50, 60),
+        "cor90d_state": (state(cor90d_pct, PCT_CAUTION, PCT_DANGER) if cor90d_pct is not None
+                         else state(cor90d, 50, 60)),
+        "cor90d_pct": cor90d_pct,
         "skew": skew_v,
-        "skew_state": state(skew_v, 150, 158),
+        "skew_state": (state(skew_pct, PCT_CAUTION, PCT_DANGER) if skew_pct is not None
+                       else state(skew_v, 150, 158)),
+        "skew_pct": skew_pct,
     }
+
+
+def _pct_txt(p: float | None, label: str) -> str:
+    """' (1년 83%)' after a value whose state is judged by its 1-year percentile."""
+    return f" ({label} {p:.0%})" if p is not None else ""
 
 
 def compute_volvol_signal(vv: pd.DataFrame):
@@ -2662,9 +2694,9 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "|:-----|---:|:-----|",
         f"| **Term Structure** (COR1Y − COR1M) | {cs['spread']:.1f} | "
         f"{EMOJI[cs['spread_state']]} {spread_label} |",
-        f"| **COR90D** (동조화 수준) | {cs['cor90d']:.1f} | "
+        f"| **COR90D** (동조화 수준) | {cs['cor90d']:.1f}{_pct_txt(cs.get('cor90d_pct'), '1년')} | "
         f"{EMOJI[cs['cor90d_state']]} {KO_LABEL[cs['cor90d_state']]} |",
-        f"| **SKEW** (꼬리 위험) | {cs['skew']:.1f} | "
+        f"| **SKEW** (꼬리 위험) | {cs['skew']:.1f}{_pct_txt(cs.get('skew_pct'), '1년')} | "
         f"{EMOJI[cs['skew_state']]} {KO_LABEL[cs['skew_state']]} |",
         "",
         "</div>",
@@ -2917,9 +2949,9 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "|:-------|------:|:------|",
         f"| **Term Structure** (COR1Y − COR1M) | {cs['spread']:.1f} | "
         f"{EMOJI[cs['spread_state']]} {spread_label} |",
-        f"| **COR90D** (synchronization) | {cs['cor90d']:.1f} | "
+        f"| **COR90D** (synchronization) | {cs['cor90d']:.1f}{_pct_txt(cs.get('cor90d_pct'), '1y')} | "
         f"{EMOJI[cs['cor90d_state']]} {EN_LABEL[cs['cor90d_state']]} |",
-        f"| **SKEW** (tail risk) | {cs['skew']:.1f} | "
+        f"| **SKEW** (tail risk) | {cs['skew']:.1f}{_pct_txt(cs.get('skew_pct'), '1y')} | "
         f"{EMOJI[cs['skew_state']]} {EN_LABEL[cs['skew_state']]} |",
         "",
         "</div>",

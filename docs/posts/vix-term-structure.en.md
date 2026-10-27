@@ -141,8 +141,8 @@ Cboe publishes settlement prices each business day after the close (typically 16
 Don't trade off VIX term structure alone. Pair it with the other signals from the [Volatility Dashboard](volatility-dashboard.md):
 
 - **COR term-structure inversion (COR1M > COR1Y)**: short-term fear surging — usually fires near-simultaneously with VIX TS backwardation *(COR1M = 1-month, COR1Y = 1-year implied correlation; short over long = crowding into near-term fear)*
-- **COR90D > 50**: synchronization broadening — diversification breaking down *(COR90D = 90-day implied correlation)*
-- **SKEW > 150**: institutional tail-risk pricing rising
+- **COR90D in its top 25% of the last year**: synchronization broadening — diversification breaking down *(COR90D = implied correlation at the 90-delta, deep-OTM call region of 3-month options)*
+- **SKEW in its top 25% of the last year**: institutional tail-risk pricing rising
 
 All three deteriorating + VIX backwardation = **unmistakable crisis signal**.
 
