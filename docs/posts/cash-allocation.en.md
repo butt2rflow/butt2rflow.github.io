@@ -15,7 +15,7 @@ lang: en
 
 > **Cut cash when vol is low, raise cash when vol rises** — Kelly's formula makes this intuition quantitative.
 
-**f\* = (μ − r) / σ²** — substitute σ with VIX, and a *doubling* of volatility *quarters* the suggested equity weight (the σ² in the denominator does the work). On top of that base, three extra risk-signal groups (COR/SKEW, VIX TS backwardation, VolVol) layer multiplicative discounts when they fire, raising cash one more notch.
+**f\* = (μ − r) / σ²** — substitute σ with VIX, and a *doubling* of volatility *quarters* the suggested equity weight (the σ² in the denominator does the work). On top of that base, a VolVol signal adds one more discount when it fires. COR/SKEW and the VIX futures curve are shown but not applied: tested, they gave no reason to cut the weight (§5).
 
 ---
 
@@ -269,28 +269,34 @@ Even if the tactical bucket fully deploys, its impact on the *total* portfolio d
 
 ---
 
-## 5. Why VIX alone isn't enough
+## 5. Should other signals cut the weight too?
 
-VIX alone misses **"smoke without fire"** setups. Example:
+It's natural to suspect that VIX alone misses **"smoke without fire"** setups. Say VIX is a calm 17, but SKEW and COR90D are high and VIX futures are in backwardation. Is it fine to ride Kelly@VIX as is?
 
-- VIX 17 (looks calm)
-- But SKEW = 155 (tail risk priced rich)
-- COR90D = 55 (correlation regime breaking down)
-- VIX futures in backwardation (front > spot)
-
-VIX itself didn't move, but the options market is quietly pricing panic into other surfaces. Riding Kelly@VIX = 86% here usually ends badly within a few days.
-
-Fix: **when other risk-signal groups fire, apply a multiplicative discount to the Kelly base.**
-
-The three groups on the dashboard:
+So the dashboard computes three risk-signal groups alongside the base:
 
 | Group | What it watches | 🟢 Normal | 🟡 Caution | 🔴 Stressed |
 |:---|:---|:---|:---|:---|
-| **COR/SKEW** | Term-structure spread · COR90D · SKEW | All sub-signals normal | Any one caution | Any one danger |
-| **VIX TS shape** | M1 vs VIX spot, M2 − M1 | Contango (M2 > M1, spot < M1) | Mixed (M2 ≤ M1 but spot ≤ M1) | Backwardation (spot > M1) |
+| **COR/SKEW** | Term-structure spread · COR90D · SKEW (COR90D and SKEW by 1-year percentile) | All sub-signals normal | Any one caution | Any one danger |
+| **VIX TS shape** | VIX futures M2 − M1 | Contango (M2 > M1) | — | Backwardation (M2 < M1) |
 | **VolVol** | VVIX/VIX 5DMA vs 20-day BB middle | 5DMA > middle | Cross within last 5 days | 5DMA < middle |
 
-Each group's worst sub-signal sets the group state, and the state maps to a multiplier on the Kelly base.
+Whether these groups actually carry information worth cutting the weight for was tested on 2013–2026 data: the ¾ Kelly weight from VIX times each group's discount, against the same weight cut by a **constant** amount of the same average size (cash at the 3-month T-bill, SPX price return only).
+
+| Strategy | CAGR | Sharpe | Max drawdown |
+|:---|---:|---:|---:|
+| VIX Kelly only | 9.6% | 0.68 | −20.6% |
+| All three group discounts | 7.9% | 0.67 | −15.2% |
+| No discount, weight × 0.81 constant | 8.2% | 0.68 | −16.7% |
+
+The discounts didn't pick the timing of drops; the result matched "hold a bit less equity all the time." Split by VIX level, COR/SKEW and the VIX futures curve didn't sort later drawdowns either. **The VIX level itself does**: the share of days followed by a drop of more than 2% within 10 sessions was 19% with VIX under 16 and 45% with VIX at 25–35. That's the part of the base that has evidence behind it.
+
+So the dashboard now uses them this way:
+
+- **COR/SKEW, VIX futures curve**: shown as market state only, not multiplied into the weight.
+- **VolVol**: within the same VIX band it showed a consistent tilt toward more drops when on, so its discount stays until it gets its own test. A return improvement hasn't been shown yet.
+
+If you want less risk, lowering the **Kelly fraction (¾ → ½)** gets the same effect more simply and transparently than adding signal discounts.
 
 > **Indicator deep-dives**: COR/SKEW in the [Implied Correlation article](implied-correlation.md), VIX TS shape in the [VIX Futures Term Structure article](vix-term-structure.md), VolVol (VVIX/VIX ratio with 5DMA + 20-day BB) in the [live-dashboard VolVol card](../index.md) and upcoming Execution series Part 3 — *Vol-of-vol and market sentiment* (paid).
 
@@ -298,19 +304,19 @@ Each group's worst sub-signal sets the group state, and the state maps to a mult
 
 ## 6. Risk sensitivity — the second user toggle
 
-How aggressively those multipliers bite is **your risk-aversion choice**. Three profiles:
+How hard the VolVol discount bites is **your risk-aversion choice**. Three profiles:
 
-| Profile | 🟡 caution | 🔴 danger | All-red cumulative |
-|:---|---:|---:|---:|
-| **Loose** | × 0.95 | × 0.85 | 0.85³ ≈ 0.61 |
-| **Standard ← default** | × 0.90 | × 0.75 | 0.75³ ≈ 0.42 |
-| **Tight** | × 0.85 | × 0.65 | 0.65³ ≈ 0.27 |
+| Profile | 🟡 caution | 🔴 danger |
+|:---|---:|---:|
+| **Loose** | × 0.95 | × 0.85 |
+| **Standard ← default** | × 0.90 | × 0.75 |
+| **Tight** | × 0.85 | × 0.65 |
 
 Reading:
 
-- **Loose**: weak reaction to signals. Even all-red leaves you at 61% of the Kelly base. For people who don't want to rotate frequently.
-- **Standard (default)**: matches the [Principles series](../series/index.md) conservative tone. All-red reduces to ~42% of base — e.g., ¾ Kelly at 100% (cap) becomes ~42%.
-- **Tight**: strong reaction. All-red drops to 27% of base. For people whose top priority is avoiding tail losses.
+- **Loose**: weak reaction to the signal. Red leaves you at 85% of the Kelly base. For people who don't want to rotate frequently.
+- **Standard (default)**: matches the [Principles series](../series/index.md) conservative tone. Red reduces to 75% of base — e.g., ¾ Kelly at 100% (cap) becomes 75%.
+- **Tight**: strong reaction. Red drops to 65% of base. For people whose top priority is avoiding tail losses.
 
 > **Picking**: if you hate frequent rebalancing → *Loose*; if "risk signal = big cash" is your philosophy → *Tight*; otherwise → *Standard*.
 
@@ -371,7 +377,7 @@ The Kelly × VIX curve below the card is rendered as three separate PNGs (one pe
 ## 7. Final formula — one line
 
 ```
-Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
+Equity Weight = min( f × (μ − r) / σ², 100% ) × d_VV
 ```
 
 | Term | Meaning | User toggle |
@@ -379,9 +385,9 @@ Equity Weight = min( f × (μ − r) / σ², 100% ) × d_CS × d_VTS × d_VV
 | **f** | Kelly fraction (¼ / ½ / ¾ / 1) | **First toggle** |
 | **μ−r** | Expected equity premium (5% / 7% / 9%) | **Third toggle** |
 | **σ = VIX/100** | Forward-looking vol | (auto) |
-| **d_CS** | COR/SKEW group multiplier | **Second toggle sets the strength** |
-| **d_VTS** | VIX TS shape multiplier | same |
-| **d_VV** | VolVol multiplier | same |
+| **d_VV** | VolVol multiplier | **Second toggle sets the strength** |
+
+The COR/SKEW and VIX TS states are shown on the card but don't enter the formula (§5).
 
 **Cash weight = 100% − Equity weight.**
 
@@ -394,9 +400,9 @@ The first card on the [daily dashboard](../index.md) recomputes this every day.
 **What you can do inside the card** (defaults marked with †):
 
 1. **Kelly fraction toggle** (¼ / ½ / **¾†** / Full) — set once and rarely change. Full comparison in §4.
-2. **Risk sensitivity toggle** (Loose / **Standard†** / Tight) — how aggressively signals discount. Full comparison in §6.
+2. **Risk sensitivity toggle** (Loose / **Standard†** / Tight) — how hard the VolVol signal discounts. Full comparison in §6.
 3. **Equity premium μ−r toggle** (5% / **7%†** / 9%) — your view on long-run SPX premium. Full comparison in §6½.
-4. **Decision table** — base value, each group's multiplier, final equity/cash split at a glance.
+4. **Decision table** — base value, the three group states (only VolVol applied), final equity/cash split at a glance.
 5. **Kelly curve chart** — visualises the VIX → weight relationship. **Syncs with the μ−r toggle** (three pre-rendered PNG variants, JS swaps `src`). Current-VIX marker included.
 6. **Master-bar split selector** (80/20 · **90/10†** · 95/5) — main/tactical bucket ratio. Full comparison in §4 "Choosing the split."
 
@@ -405,10 +411,9 @@ All selections persist in browser `localStorage` and carry over between visits.
 **Typical workflow:**
 
 - Check the dashboard ~weekly
-- All 🟢 → "stay at current suggested allocation"
-- One group flips 🟡 → "start trimming slowly"
-- Two or more 🔴 → "raise cash hard, de-risk now"
-- After the storm passes → re-deploy gradually as signals normalise
+- Move the position slowly toward the suggested weight (VIX base × VolVol multiplier)
+- COR/SKEW or VIX TS turning 🟡/🔴 doesn't change the weight — it's context for reading the market
+- When VIX rises the base shrinks on its own; as things calm and VIX falls, exposure comes back gradually
 
 ---
 
@@ -419,21 +424,21 @@ The framework's value lies in the *cascade* that follows the first shock, not th
 | Phase | Market | Auto-response |
 |:---|:---|:---|
 | **Day 1 gap** | Sudden −5% | Taken at full position (entry cost of a reactive framework) |
-| **Day 2 ~ N** | VIX spikes → σ² × 4 → Kelly base ÷ 4 + all-red signals × 0.42 | Subsequent drops hit an *already shrunken* equity base |
+| **Day 2 ~ N** | VIX spikes → σ² × 4 → Kelly base ÷ 4 (+ × 0.75 if VolVol is red) | Subsequent drops hit an *already shrunken* equity base |
 
 ### Historical examples
 
 **March 2020 COVID crash** *(scenario uses Half-Kelly @ μ−r=5% — the most conservative toggle combo)*:
 
-| Date | VIX | Half-Kelly @ 5% base | Signals | Suggested mix |
+| Date | VIX close | Half-Kelly @ 5% base | VolVol | Suggested mix |
 |:---|---:|---:|:---|---:|
-| Feb 14 (calm) | 14 | 100% (cap) | All 🟢 | Equity 100% / Cash 0% |
-| Feb 24 (−3.4% first gap) | 28 | 32% | Some 🟡 | Equity ~25% / Cash ~75% |
-| Mar 16 (bottom) | 82 | 4% | All 🔴 | **Equity ~2% / Cash ~98%** |
+| Feb 14 (calm) | 13.7 | 100% (cap) | 🟡 | Equity 90% / Cash 10% |
+| Feb 24 (−3.4% first gap) | 25.0 | 40% | 🟡 | Equity 36% / Cash 64% |
+| Mar 16 (near the bottom) | 82.7 | 4% | 🔴 | **Equity 3% / Cash 97%** |
 
-VIX 14 → 82 (6×) cuts the suggested weight from 100% to 2%. The additional ~−25% drawdown across this month lands on a *much smaller* equity base, dramatically reducing cumulative loss vs a static fully-invested position.
+VIX 14 → 83 (6×) cuts the suggested weight from 90% to 3%, almost all of it through the VIX base. The additional ~−25% drawdown across this month lands on a *much smaller* equity base, dramatically reducing cumulative loss vs a static fully-invested position.
 
-> **Under the new defaults (¾ Kelly @ μ−r=7%)** the same VIX path produces a base of 67% at VIX 28 and 8% at VIX 82 — starting higher, but deleveraging at the same rate. The absolute numbers differ, but the *slope* of the response is identical. The scenario's lesson — cascade absorption — is invariant to which toggle combo you pick; only the starting point shifts.
+> **Under the new defaults (¾ Kelly @ μ−r=7%)** the same VIX path produces a base of 84% at VIX 25 and 8% at VIX 83 — starting higher, but deleveraging at the same rate. The absolute numbers differ, but the *slope* of the response is identical. The scenario's lesson — cascade absorption — is invariant to which toggle combo you pick; only the starting point shifts.
 
 **September 2008 Lehman week:**
 
@@ -450,7 +455,7 @@ This framework **automates a mathematical intuition** — it is not a back-teste
 1. **μ − r assumption is uncertain**: academic estimates of the equity-risk premium span 3–9% across studies. The daily dashboard's **μ−r toggle (5% / 7%(default) / 9%)** lets you swap your own view (full breakdown in §6½). 5% is conservative and effectively bakes in the VIX vol-risk-premium drag; default 7% is the long-run SPX historical average and the closest match to realised-vol Kelly; 9% is a post-1990 bullish view.
 2. **VRP bias**: VIX averages 3–5 vol points *above* realised vol (the Volatility Risk Premium). So Kelly base with μ−r=5% runs *substantially* conservative — the default 7% is closer to realised-vol Kelly, and 9% approaches the "VRP fully recoverable" assumption. The toggle is the explicit handle for this trade-off.
 3. **VIX is 30-day forward**: longer holding horizons (6+ months) would want a different σ proxy (e.g., VIX futures average).
-4. **Signals aren't independent**: COR/SKEW, VIX TS, and VolVol all view the same underlying stress through different lenses. The multiplicative discount could over-react. The chosen multipliers (≥ 0.75 in Standard) are deliberately mild for this reason.
+4. **Evidence for signal discounts**: in a 2013–2026 backtest the COR/SKEW and VIX futures curve discounts did no better than a constant cut of the same size, so they were taken out of the weight (§5). The remaining VolVol discount hasn't shown a return improvement yet either.
 5. **Post-crisis false positive**: signals like VolVol mechanically lag during recoveries, which can delay re-entry.
 
 > **This is not investment advice.** It is an *educational visualisation* of how Kelly and vol interact. Real decisions need to factor in your risk tolerance, taxes, liquidity, and behavioural limits.

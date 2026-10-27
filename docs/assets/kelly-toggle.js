@@ -66,9 +66,15 @@
     const sVTS = card.dataset.stateVixts || "ok";
     const sVV = card.dataset.stateVolvol || "ok";
 
-    const dCS = profile[sCS];
-    const dVTS = profile[sVTS];
-    const dVV = profile[sVV];
+    // Only the groups Python lists in data-discount-groups cut the weight
+    // (since 2026-10-27: VolVol only; COR/SKEW and VIX TS are shown, not
+    // applied: a 2013-2026 backtest found they add nothing over holding a
+    // constant smaller weight). Without the attribute every group applies.
+    const groups = (card.dataset.discountGroups || "corskew vixts volvol").split(/\s+/);
+    const applied = (g, s) => (groups.includes(g) ? profile[s] : 1);
+    const dCS = applied("corskew", sCS);
+    const dVTS = applied("vixts", sVTS);
+    const dVV = applied("volvol", sVV);
     const equity = Math.min(Math.round(base * dCS * dVTS * dVV), KELLY_CAP);
     const cash = 100 - equity;
 

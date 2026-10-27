@@ -564,8 +564,13 @@ def build_text(d: dict) -> str:
              + f" · COR1M {m['cor1m']:.1f}")
     if ks:
         base = ks["base_pct"].get(ud.KELLY_DEFAULT)
-        L.append(f"• 대시보드: 위험신호 {ud.EMOJI[ks['state']]} · ¾ Kelly 기본 비중 {base}% · "
-                 f"전술 {ts['label_ko']}")
+        # Only DISCOUNT_GROUPS cut the weight (VolVol since 2026-10-27); the
+        # others are context. Standard profile, mu-r 5% base as before.
+        mult = 1.0
+        for g in ud.DISCOUNT_GROUPS:
+            mult *= ud.RISK_DISCOUNT_PROFILES[ud.RISK_DISCOUNT_DEFAULT][ks[f"{g}_state"]]
+        L.append(f"• 대시보드: ¾ Kelly 비중 {base}% × VolVol {ud.EMOJI[ks['volvol_state']]} {mult:.2f}"
+                 f" = {round(base * mult)}% · 전술 {ts['label_ko']}")
     return "\n".join(L)
 
 

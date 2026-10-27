@@ -80,6 +80,13 @@ RISK_DISCOUNT_PROFILES = {
     "tight":    {"ok": 1.00, "caution": 0.85, "danger": 0.65},
 }
 RISK_DISCOUNT_DEFAULT = "standard"
+# Groups whose state actually cuts the equity weight. COR/SKEW and VIX TS were
+# taken out 2026-10-27: in a 2013-2026 backtest (scripts/study_discounts.py)
+# each discount matched a constant cut of the same average size (no timing),
+# and neither group sorted drawdowns within VIX bands. VolVol stays until it
+# gets its own test (it alone showed a consistent within-band direction).
+# The other groups are still computed and shown as market state.
+DISCOUNT_GROUPS = ("volvol",)
 
 # Capital layering — the Cash card's percentages apply to the MAIN portion;
 # the Tactical bucket is a separate reserve sized at TACTICAL_FRAC of total.
@@ -1247,7 +1254,8 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'     data-base-full="{bp["full"]}"\n'
         f'     data-state-corskew="{cs_state}"\n'
         f'     data-state-vixts="{vts_state}"\n'
-        f'     data-state-volvol="{vv_state}">\n'
+        f'     data-state-volvol="{vv_state}"\n'
+        f'     data-discount-groups="{" ".join(DISCOUNT_GROUPS)}">\n'
         f'  <div class="kelly-controls">\n'
         f'    <span class="kelly-label">Kelly:</span>\n'
         f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
@@ -1273,9 +1281,9 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         f'      <tr><td>① Kelly × VIX 베이스 (VIX {vix:.1f})</td>'
         f'<td><strong><span data-kelly-base>{init_eq}</span>%</strong></td></tr>\n'
         f'      <tr><td>② COR/SKEW {EMOJI[cs_state]} {KO_LABEL[cs_state]}</td>'
-        f'<td>× <span data-kelly-d="corskew">1.00</span></td></tr>\n'
+        f'<td>표시만</td></tr>\n'
         f'      <tr><td>③ VIX TS {SHAPE_EMOJI.get(ks["vix_ts_shape"], "—")} {shape_ko}</td>'
-        f'<td>× <span data-kelly-d="vixts">1.00</span></td></tr>\n'
+        f'<td>표시만</td></tr>\n'
         f'      <tr><td>④ VolVol {EMOJI[vv_state]} {VOLVOL_STATE_KO[vv_state]}</td>'
         f'<td>× <span data-kelly-d="volvol">1.00</span></td></tr>\n'
         f'      <tr class="kelly-final"><td><strong>권장 비중</strong></td>'
@@ -1293,7 +1301,8 @@ def render_kelly_card_ko(ks: dict, diagrams_path: str) -> list[str]:
         "<small>*위 비중은 **메인 자본 내부 기준** — 공격 자본은 다음 카드, "
         "전체 자산 환산과 분할 비율(80/20·90/10·95/5)은 페이지 상단 마스터 바에서 선택. "
         "공식: f* = μ−r ÷ (VIX/100)² (최대 100% cap). Kelly 분수(¼·½·¾·Full) × 프리미엄(5·7·9%) × "
-        "위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. "
+        "VolVol 위험 민감도(loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) 조합으로 최종 비중 산출. "
+        "COR/SKEW·VIX TS는 상태만 보여 주고 비중에는 곱하지 않음(2013~2026 검증에서 같은 크기로 비중을 일정하게 줄인 것과 차이가 없었음). "
         "곡선 그림과 카드 숫자 모두 선택한 Kelly 분수·μ−r에 동기화됨 — 선택한 분수의 라인이 굵게 강조됨. "
         "**교육 목적 · 투자 권유 아님** · "
         "[자세히 →](posts/cash-allocation.md)*</small>",
@@ -2789,7 +2798,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'     data-base-full="{bp["full"]}"\n'
         f'     data-state-corskew="{cs_state}"\n'
         f'     data-state-vixts="{vts_state}"\n'
-        f'     data-state-volvol="{vv_state}">\n'
+        f'     data-state-volvol="{vv_state}"\n'
+        f'     data-discount-groups="{" ".join(DISCOUNT_GROUPS)}">\n'
         f'  <div class="kelly-controls">\n'
         f'    <span class="kelly-label">Kelly:</span>\n'
         f'    <button class="kelly-pill" data-kelly-set="quarter">¼</button>\n'
@@ -2815,9 +2825,9 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         f'      <tr><td>① Kelly × VIX base (VIX {vix:.1f})</td>'
         f'<td><strong><span data-kelly-base>{init_eq}</span>%</strong></td></tr>\n'
         f'      <tr><td>② COR/SKEW {EMOJI[cs_state]} {EN_LABEL[cs_state]}</td>'
-        f'<td>× <span data-kelly-d="corskew">1.00</span></td></tr>\n'
+        f'<td>shown only</td></tr>\n'
         f'      <tr><td>③ VIX TS {SHAPE_EMOJI.get(ks["vix_ts_shape"], "—")} {shape_en}</td>'
-        f'<td>× <span data-kelly-d="vixts">1.00</span></td></tr>\n'
+        f'<td>shown only</td></tr>\n'
         f'      <tr><td>④ VolVol {EMOJI[vv_state]} {VOLVOL_STATE_EN[vv_state]}</td>'
         f'<td>× <span data-kelly-d="volvol">1.00</span></td></tr>\n'
         f'      <tr class="kelly-final"><td><strong>Suggested mix</strong></td>'
@@ -2835,7 +2845,8 @@ def render_kelly_card_en(ks: dict, diagrams_path: str) -> list[str]:
         "<small>*This mix is **internal to the main bucket** — the tactical bucket is sized in the next card, "
         "and the whole-portfolio composite plus the split (80/20·90/10·95/5) live in the master bar at the top. "
         "Formula: f* = (μ−r) ÷ (VIX/100)², capped at 100%. Kelly fraction (¼·½·¾·Full) × premium (5·7·9%) × "
-        "risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. "
+        "VolVol risk sensitivity (loose 0.95/0.85 · standard 0.90/0.75 · tight 0.85/0.65) compose the final weight. "
+        "COR/SKEW and VIX TS are shown but not applied (in a 2013–2026 test they did no better than a constant cut of the same size). "
         "The curve chart and card numbers sync with both the selected Kelly fraction and μ−r — the chosen fraction's line is highlighted. "
         "**Educational — not investment advice.** "
         "[Read more →](posts/cash-allocation.md)*</small>",
