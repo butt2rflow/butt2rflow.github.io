@@ -135,5 +135,91 @@ def main() -> None:
     print("## Within VIX bands"); print(band_table(d, cols).to_markdown())
 
 
+# ------------------------------------------------------------------
+# Big drops (added 2026-10-27): does the COR/SKEW state help with declines
+# of 10% or more, the case a Kelly discount would actually exist for?
+# ------------------------------------------------------------------
+BIG = -10.0       # % peak-to-trough
+FWD = 60          # sessions for the forward max-drawdown test
+
+
+def states_full() -> pd.DataFrame:
+    """Daily states on the full Cboe history (not limited to the backfill)."""
+    spx = ud.fetch_spx()
+    tenor = {k: ud._fetch_cboe_index(k) for k in ("COR1M", "COR1Y")}
+    x = pd.DataFrame({"spx": spx, "cor90d": ud._fetch_cboe_index("COR90D"),
+                      "skew": ud._fetch_cboe_index("SKEW"),
+                      "spread": tenor["COR1Y"] - tenor["COR1M"]}).sort_index()
+    x = x[x.spx.notna()].ffill(limit=3)
+    x["cor90d_pct"], x["skew_pct"] = pct_1y(x.cor90d.dropna()), pct_1y(x["skew"].dropna())
+    x = x.dropna(subset=["cor90d_pct", "skew_pct", "spread"])
+    sp = bucket(x.spread, 0, -5, reverse=True)
+    x["fix_group"] = worst(sp, bucket(x.cor90d, 50, 60), bucket(x["skew"], 150, 158))
+    x["pct_group"] = worst(sp, bucket(x.cor90d_pct, 0.75, 0.95), bucket(x.skew_pct, 0.75, 0.95))
+    x["skew_top5"] = x.skew_pct >= 0.95
+    # forward FWD-session max drawdown from each close
+    s = x.spx.values
+    fwd = np.full(len(s), np.nan)
+    for i in range(len(s) - FWD):
+        fwd[i] = (s[i + 1:i + 1 + FWD].min() / s[i] - 1) * 100
+    x["fwd_dd"] = fwd
+    x["pos"] = np.arange(len(x))
+    return x
+
+
+def drawdown_episodes(spx: pd.Series, th=BIG) -> list[dict]:
+    """Zigzag: every fall of at least |th|% from a local peak, where a peak is
+    the high since the previous such trough (so 2010, 2011 and 2023 count on
+    their own instead of merging into the 2007-13 and 2022-24 recoveries)."""
+    v, idx = spx.values, spx.index
+    out, peak_i, trough_i, falling = [], 0, 0, False
+    for i in range(1, len(v)):
+        if not falling:
+            if v[i] > v[peak_i]:
+                peak_i = i
+            elif (v[i] / v[peak_i] - 1) * 100 <= th:
+                falling, trough_i = True, i
+        else:
+            if v[i] < v[trough_i]:
+                trough_i = i
+            elif (v[i] / v[trough_i] - 1) * 100 >= -th:      # rebound of |th|% ends the fall
+                seg = v[peak_i:trough_i + 1]
+                five = peak_i + int(np.argmax((seg / v[peak_i] - 1) * 100 <= -5))
+                out.append({"peak": idx[peak_i], "minus5": idx[five], "trough": idx[trough_i],
+                            "depth": (v[trough_i] / v[peak_i] - 1) * 100})
+                falling, peak_i = False, i
+    return out
+
+
+def big_drops() -> None:
+    x = states_full()
+    on = lambda c, d0, d1: x.loc[d0:d1, c].isin(["caution", "danger"]).mean()  # noqa: E731
+    rows = []
+    for e in drawdown_episodes(x.spx):
+        pre = x.index[max(0, x.index.get_loc(e["peak"]) - 20)]
+        rows.append({"peak": e["peak"].date(), "trough": e["trough"].date(), "depth": f"{e['depth']:.0f}%",
+                     "fixed: 20d before peak on": f"{on('fix_group', pre, e['peak']):.0%}",
+                     "pct: 20d before peak on": f"{on('pct_group', pre, e['peak']):.0%}",
+                     "fixed @ -5%": x.loc[e["minus5"], "fix_group"], "pct @ -5%": x.loc[e["minus5"], "pct_group"],
+                     "SKEW 1y @ peak": f"{x.loc[e['peak'], 'skew_pct']:.0%}",
+                     "COR90D 1y @ peak": f"{x.loc[e['peak'], 'cor90d_pct']:.0%}"})
+    print(f"## Declines of {abs(BIG):.0f}%+ since {x.index[0].date()} (states need a year of history)")
+    print(pd.DataFrame(rows).to_markdown(index=False), "\n")
+    y = x.dropna(subset=["fwd_dd"])
+    hit = (y.fwd_dd <= BIG).astype(float)
+    base_lo, base_hi = _boot_ci(hit, y.pos)
+    res = {"all days": {"n": len(y), "P(60d dd <= -10%)": f"{hit.mean():.1%} [{base_lo:.1%}–{base_hi:.1%}]"}}
+    for name, m in [("fixed caution+", y.fix_group.isin(["caution", "danger"])), ("fixed danger", y.fix_group.eq("danger")),
+                    ("pct caution+", y.pct_group.isin(["caution", "danger"])), ("pct danger", y.pct_group.eq("danger")),
+                    ("SKEW 1y top 5%", y.skew_top5), ("group ok (no discount)", y.pct_group.eq("ok"))]:
+        g = hit[m]
+        lo, hi = _boot_ci(g, y.pos[m])
+        res[name] = {"n": int(m.sum()), "episodes": _episodes(pd.Series(True, index=g.index), y.pos[m]),
+                     "P(60d dd <= -10%)": f"{g.mean():.1%} [{lo:.1%}–{hi:.1%}]",
+                     "<=2019": f"{hit[m & (y.index < '2020')].mean():.1%}", "2020-": f"{hit[m & (y.index >= '2020')].mean():.1%}"}
+    print(f"## Forward {FWD}-session max drawdown <= {BIG:.0f}% (block bootstrap, block 20)")
+    print(pd.DataFrame(res).T.to_markdown())
+
+
 if __name__ == "__main__":
-    main()
+    big_drops() if "--big" in sys.argv else main()
