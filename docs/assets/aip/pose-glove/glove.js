@@ -105,10 +105,13 @@ export function clipSamples(c) {
 // Web Bluetooth connection (Android Chrome / desktop Chrome). onPacket(result) is called per parsed notification.
 export class Glove {
   constructor(onPacket, onState) { this.parser = new GloveParser(); this.onPacket = onPacket; this.onState = onState || (() => {}); this.batch = 1; }
-  async connect() {
+  // reuse = true: reconnect to the glove picked earlier on this page (no device list, so no tap needed)
+  async connect(reuse = false) {
     if (!navigator.bluetooth) throw new Error("no-web-bluetooth");
-    this.device = await navigator.bluetooth.requestDevice({ filters: [{ name: "SensorGlove" }, { services: [SVC] }], optionalServices: [SVC] });
-    this.device.addEventListener("gattserverdisconnected", () => this.onState("disconnected"));
+    if (!reuse || !this.device) {
+      this.device = await navigator.bluetooth.requestDevice({ filters: [{ name: "SensorGlove" }, { services: [SVC] }], optionalServices: [SVC] });
+      this.device.addEventListener("gattserverdisconnected", () => this.onState("disconnected"));
+    }
     const server = await this.device.gatt.connect();
     const svc = await server.getPrimaryService(SVC);
     this.data = await svc.getCharacteristic(DATA); this.ctrl = await svc.getCharacteristic(CTRL);
