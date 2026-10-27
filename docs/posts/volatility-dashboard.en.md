@@ -72,7 +72,7 @@ SKEW measures **the tail-risk premium** the S&P 500 options market is paying for
 | 158+ | High tail-risk pricing (above p95) |
 
 !!! note "SKEW's historical shift — thresholds recalibrated (2026-05)"
-    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally — **current median ≈ 145, p75 ≈ 150, p95 ≈ 157**. The legacy 140/150 thresholds became "normal state" and lost their signal value, so the daily dashboard now uses **150 caution / 158 stress** (p75/p95 of the current distribution). The table above reflects that recalibration.
+    Pre-2020, SKEW averaged ~115 and 140+ readings were rare. Post-2020 the regime shifted up structurally: over 2020–2026 the **median is ≈ 140, p75 ≈ 147, p95 ≈ 160**, and the last two years (2024-10 on) sit higher still at median ≈ 146, p75 ≈ 152, p95 ≈ 168. The legacy 140/150 thresholds became "normal state" and lost their signal value, so the daily dashboard now uses **150 caution / 158 stress**. The table above reflects that recalibration. The distribution keeps moving, so check the **1-year percentile** too before calling a level high.
 
 !!! note "The SKEW paradox"
     SKEW can actually be **higher during the recovery** than right before the crash. That's because during the crash, institutions already own their puts. After the recovery, they buy fresh puts to hedge against "the next crash." A *low* SKEW reading can therefore be a market-bottom signal.
@@ -161,6 +161,7 @@ When COR90D (deep-OTM call region) rises above **60**, the entire market is sync
 
 !!! note "Threshold recalibration (2026-05)"
     The legacy 35/50 thresholds were calibrated against the pre-2020 distribution. In the post-2020 regime, COR90D's **median is around 50**, p75 ≈ 62, p95 ≈ 79 — so a 50 reading is now the *typical* state, not stress. Updated to 50/60 (p75/p95) so the signal actually marks "top quartile / top ventile" rather than "above average."
+    Since late 2024 the level has dropped a long way again. Over the last two years (2024-10 on) the **median is ≈ 38, p75 ≈ 42, p95 ≈ 51**, so a reading has to be above the top 5% before 50/60 even calls it caution. Read COR90D with its **1-year percentile** and 5-day change, not the fixed bands alone. A 39 is "below the median" by the post-2020 numbers but right in the middle of the last two years.
 
 **Example — caution (2025-10-16):**
 

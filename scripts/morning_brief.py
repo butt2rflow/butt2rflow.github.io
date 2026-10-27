@@ -415,6 +415,7 @@ def collect() -> dict:
         "vvix_pct": _pct_1y(idx["VVIX"]),
         "skew": float(skew.iloc[-1]), "skew_5d": _chg(skew), "skew_pct": _pct_1y(skew),
         "cor90d": float(idx["COR90D"].iloc[-1]), "cor90d_5d": _chg(idx["COR90D"]),
+        "cor90d_pct": _pct_1y(idx["COR90D"]),
         "cor1m": float(idx["COR1M"].iloc[-1]),
         "vix9d_vix": float(r9.iloc[-1]), "vix9d_vix_5d": _chg(r9),
         **vol_risk_premium(vix, spx),
@@ -493,7 +494,7 @@ def build_text(d: dict) -> str:
     # ① 보험 → 딜러 short gamma → 하방 증폭
     L.append("*① 보험과 하방 증폭*")
     L.append(f"• 보험: SKEW {m['skew']:.1f} (5일 {m['skew_5d']:+.1f}, 1년 {m['skew_pct']:.0%}) · "
-             f"COR90D {m['cor90d']:.1f} (5일 {m['cor90d_5d']:+.1f})")
+             f"COR90D {m['cor90d']:.1f} (5일 {m['cor90d_5d']:+.1f}, 1년 {m['cor90d_pct']:.0%})")
     amp = amplifier(d)
     if amp:
         on, desc = amp
@@ -604,6 +605,8 @@ HY 수준이 낮다는 건 '안전하다'가 아니라 '부도 위험에 대한 
 주식과 채권 시장이 다른 얘기를 하고 있다고 그대로 씁니다.
 그 밖에: 보험 수요와 실제 스트레스(VIX/VIX3M·VX 곡선·VVIX)를 구분하고, 지난 5일 변화를 짚습니다.
 각 지표는 playbook의 '블로그 지표 글' 규칙대로 읽고, 그 글과 다르게 해석하지 않습니다.
+SKEW·COR90D의 수준은 1년 백분위(m.skew_pct, m.cor90d_pct)로 말합니다. 고정 구간(150/158, 50/60)은 시기에 따라 분포가 움직여서
+'중앙값 아래', '경계 구간' 같은 판단을 고정 구간만으로 하지 않습니다.
 다만 해설에서 블로그·글·playbook을 출처로 언급하지 않습니다. '블로그 기준으로 보통'이 아니라 'MOVE 80~120은 보통 구간'처럼 기준만 씁니다.
 방향 예측이나 매매 권유는 하지 않습니다. 마크다운 제목·목록 없이 짧은 문장만 씁니다.
 JSON 필드 이름(amp, vrp, pc, base 등)을 그대로 쓰지 말고 '하방 증폭 구조', '풋/콜 비율'처럼 우리말로 씁니다.
