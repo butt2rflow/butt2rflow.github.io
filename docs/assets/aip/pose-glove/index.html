@@ -486,6 +486,7 @@ function onSwing(sw) {
   for (const k of Object.keys(row)) if (typeof row[k] === "number" && !Number.isInteger(row[k])) row[k] = +row[k].toFixed(k === "t_imp" ? 6 : 3);
   swings.push(row); if (swings.length > 200) swings.shift();
   if (logging) log.swings.push(row);
+  for (const [name, source, heard] of heldLabels.splice(0)) labelLast(name, source, heard);
   renderSwings();
   if ($("swSpeak").checked && window.speechSynthesis) {
     speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(swingLine(sw)); u.lang = "ko-KR"; u.rate = 1.05; speechSynthesis.speak(u);
@@ -761,7 +762,13 @@ function setSetting(kind, name, source, heard) {
   if (kind === "player") { try { localStorage.setItem("pg-quick-player", cur.player); } catch (e) {} }
   qEvent(Q_ACTION[kind], cur[kind], source, heard); qRender();
 }
+const heldLabels = [];   // labels said or tapped while a swing was still being analysed (its row comes ~2 s after impact)
 function labelLast(name, source, heard) {
+  // a swing that was just hit isn't in the table yet: hold the label and attach it when that swing's row appears,
+  // otherwise "굿샷" said right after the shot would land on the previous swing
+  if (typeof swingDet !== "undefined" && swingDet.pending) {
+    heldLabels.push([name, source, heard]); $("qLast").textContent = `${name}: 방금 스윙 분석이 끝나면 붙여요`; return true;
+  }
   // the label goes to the latest impact sound and to the latest analysed swing (a practice swing has no sound)
   const sw = typeof swings !== "undefined" && swings.length ? swings[swings.length - 1] : null;
   if (!lastImpact && !sw) { say("아직 스윙이 없어요. 스윙한 뒤에 라벨을 붙여 주세요."); return false; }
@@ -866,7 +873,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-26l", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-27a", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };
