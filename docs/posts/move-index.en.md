@@ -130,9 +130,9 @@ The information comes when they **split.**
 
 Bond insurance prices are worth trusting because of who trades them. The Treasury market is where **banks, pensions, central banks and hedge funds put real money and leverage** to work on rates. When they get tense, it shows up in MOVE right away.
 
-This also connects to the [credit spreads](credit-spreads.md) story. When rate volatility (MOVE) rises, funding gets harder for weak companies and credit spreads start to widen. Stress often travels **MOVE → credit spreads → equities.** That puts bond volatility at the **front** of the chain of warning signals.
+This also connects to the [credit spreads](credit-spreads.md) story. When rate volatility (MOVE) rises, funding gets harder for weak companies and credit spreads start to widen. So read bond insurance (MOVE) and credit insurance (spreads) **together**: which one has gone up changes the response.
 
-You can see this in the data too. On the home [dashboard](../index.md), place the MOVE chart next to the credit-dispersion (CCC−B) chart and you'll notice that **spikes in bond volatility tend to line up with the bottom-rated spread widening.** Both refresh weekly, so check today's picture for yourself.
+You can see this link in the data too. On the home [dashboard](../index.md), place the MOVE chart next to the credit-dispersion (CCC−B) chart and you'll notice that **spikes in bond volatility tend to line up with the bottom-rated spread widening.** Both refresh daily (credit spreads about one business day late), so check today's picture for yourself.
 
 ---
 
@@ -157,7 +157,7 @@ To put it to work:
 | **Levels** | <80 calm · 80–120 normal · 120–160 stressed · >160 convulsion |
 | **History** | 2008 ~264 · 2020 ~164 · 2023 SVB ~200. Above 200 is rare |
 | **Key use** | The **divergence** from VIX. Bond insurance repricing on its own |
-| **Nature** | Magnitude, not direction. Travels MOVE → credit → equities |
+| **Nature** | Magnitude, not direction. Read with credit spreads |
 
 **The one thing to remember**: the world's reference rate is the US 10-year, and MOVE puts how much that rate might swing into a single number. People who watch only stocks find out when the storm hits; people who also watch bond volatility feel the **wind change** a little earlier.
 
