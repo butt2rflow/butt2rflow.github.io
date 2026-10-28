@@ -162,13 +162,32 @@ Excel처럼 숫자가 많은 파일은 맡기지 않아요. 이 모델은 합계
 
 ---
 
-## 검색은 따로 붙였다
+## 검색도 로컬에서
 
-웹 페이지를 **읽는** 건 로컬에서도 돼요. 그런데 **검색**은 처음엔 안 됐어요.
+웹 페이지를 **읽는** 건 처음부터 로컬에서도 됐어요. 그런데 **검색**은 안 됐어요.
 
-Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실행돼요. 로컬 모델로 바꾸면 요청이 그 서버로 가지 않으니 검색도 함께 사라져요. 그래서 검색 엔진 여러 곳을 대신 조회해 주는 공개 프로그램(SearXNG)을 로컬 PC에 띄웠어요. 이것도 위와 같은 MCP 도구로 로컬 세션에 꽂았어요. 메모리는 약 125 MB만 써요.
+Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실행돼요. 로컬 모델로 바꾸면 요청이 그 서버로 가지 않으니 검색도 함께 사라져요. 그래서 검색 엔진 여러 곳을 대신 조회해 주는 공개 프로그램(SearXNG)을 로컬 PC에 띄우고, 위와 같은 MCP 도구로 꽂았어요. 메모리는 약 125 MB만 써요.
 
-시험 삼아 "최신 Ollama 버전을 찾아 줘"라고 했더니, 로컬 AI가 검색하고 GitHub 페이지를 열어서 52초 만에 맞는 버전과 출처를 답했어요. Claude 사용량이 바닥난 날에도 혼자 찾아볼 수 있어요.
+평소 Claude로 일할 때도 웹 조사는 로컬에 맡겨요. 이때는 Claude가 주소를 고르지 않고 질문만 넘겨요.
+
+1. 로컬 PC가 SearXNG로 검색해요.
+2. 위쪽에 나온 페이지 대여섯 장을 로컬 PC가 직접 열어요.
+3. 로컬 AI가 그 페이지만 보고 답을 써요. 문장마다 출처 번호와 원문 인용을 달고, 출처끼리 말이 다르면 그것도 적어요.
+4. Claude는 1,000토큰 안팎의 그 답만 읽어요.
+
+Claude가 직접 찾았다면 검색 결과와 페이지 서너 장을 읽느라 1만 토큰 넘게 썼을 거예요(추정치).
+
+원문으로 맞는지 확인할 수 있는 질문 세 개를 넣어 봤어요.
+
+| 질문 | 로컬 AI의 답 | 원문과 비교 |
+|---|---|---|
+| Ollama 최신 버전은? | 0.40.12(10월 27일). 위키백과는 아직 0.40.11이라고 따로 짚음 | 맞음(GitHub 릴리스 페이지) |
+| Ubuntu 26.04의 기본 Python은? | 3.14 | 맞음. 다만 근거로 든 페이지 하나는 26.04가 아니라 25.10 줄을 읽은 것 |
+| FLUX.2 [klein] 9B를 상업용으로 써도 되나?(한국어로 질문) | 9B는 비상업용, 4B는 상업용으로도 쓸 수 있는 Apache 2.0 | 맞음(Hugging Face 모델 카드 두 곳) |
+
+세 답 모두 결론은 맞았어요. 그래도 그대로 믿지는 않아요. Ubuntu 답처럼 결론은 맞는데 근거를 엉뚱한 줄에 붙이기도 해요. 다른 시험에서는 로봇 드라이버 문서를 정확히 인용했는데, 그 문서가 제가 쓰는 판이 아니라 최신 개발판 문서였어요. 그래서 버전, 날짜, 호환성처럼 결정이 걸린 답은 Claude가 공식 페이지를 직접 열어서 두 가지를 봐요. 인용한 문장이 정말 그 페이지에 있는지, 그 내용이 내가 쓰는 판에도 맞는지예요. 공식 페이지를 미리 알면 처음부터 읽을 목록에 넣어 줘요.
+
+Claude 사용량이 바닥난 날에도 찾아볼 수 있어요. 로컬 세션(`claude-local`)에 "최신 Ollama 버전을 찾아 줘"라고 했더니, 혼자 검색하고 GitHub 페이지를 열어서 52초 만에 맞는 버전과 출처를 답했어요.
 
 ---
 
@@ -178,7 +197,7 @@ Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실�
 
 기준은 단순해요. **읽을 건 많은데 결과는 짧은 일**이면 로컬에 맡겨요.
 
-- 맡겨요: 문서 여러 편 요약, 긴 로그 정리, 웹 페이지 여러 장 읽기, 긴 PDF나 책에서 필요한 내용 찾기, 영상 정리, 사진 1차 거르기
+- 맡겨요: 문서 여러 편 요약, 긴 로그 정리, 웹 조사(검색과 페이지 읽기), 긴 PDF나 책에서 필요한 내용 찾기, 영상 정리, 사진 1차 거르기
 - 맡긴 뒤에는: 결과를 그대로 쓰지 않고, 숫자·이름·핵심 설명을 Claude가 원문과 한 번 더 맞춰 봐요
 - 안 맡겨요: 코드 수정과 디버깅(어차피 Claude가 코드를 읽어야 해요), 사실 확인, 글 리뷰, 최종 편집, 숫자 계산, 작은 일
 
@@ -237,7 +256,7 @@ Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실�
 
 ### 출처와 표기
 
-설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ)(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. 글 첫머리 영상은 FLUX 3 Image Klein으로 첫 장면을 만들고 MiniMax H3로 움직이게 한 AI 영상이에요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고, "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, FLUX는 Black Forest Labs의, MiniMax는 MiniMax의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의 상표이며, 지칭 목적으로만 사용했어요.
+설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ)(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. 글 첫머리 영상은 FLUX 3 Image Klein으로 첫 장면을 만들고 MiniMax H3로 움직이게 한 AI 영상이에요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고(검색 시험은 10월 27일), "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, Ubuntu는 Canonical Ltd.의, Python은 Python Software Foundation의, Hugging Face는 Hugging Face, Inc.의, 위키백과(Wikipedia)는 Wikimedia Foundation의, FLUX는 Black Forest Labs의, MiniMax는 MiniMax의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의 상표이며, 지칭 목적으로만 사용했어요.
 
 ### 용어 설명
 

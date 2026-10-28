@@ -162,13 +162,32 @@ The old Word and PowerPoint formats need a converter that is no longer maintaine
 
 ---
 
-## Search had to be added
+## Search runs locally too
 
-**Reading** web pages works locally. **Searching** didn't, at first.
+**Reading** web pages worked locally from the start. **Searching** didn't.
 
-Claude Code's search runs on Anthropic's servers, not on my computer. Switch to a local model and requests no longer go there, so search disappears with them. So I ran an open-source program on my local PC that queries several search engines for you (SearXNG), and plugged it into the local session as an MCP tool, the same way as above. It uses only about 125 MB of memory.
+Claude Code's search runs on Anthropic's servers, not on my computer. Switch to a local model and requests no longer go there, so search disappears with them. So I ran an open-source program on my local PC that queries several search engines for you (SearXNG), and plugged it in as an MCP tool, the same way as above. It uses only about 125 MB of memory.
 
-As a test I asked, "find the latest Ollama version." The local AI searched, opened the GitHub page and answered with the right version and its source in 52 s. Even on a day with no Claude usage left, it can look things up on its own.
+In normal Claude sessions, web research goes to the local side as well. Here Claude doesn't pick addresses; it only passes the question.
+
+1. The local PC searches with SearXNG.
+2. The local PC opens the top five or six pages itself.
+3. The local AI writes an answer from those pages only. Each sentence carries a source number and a verbatim quote, and it notes where sources disagree.
+4. Claude reads only that answer, around 1,000 tokens.
+
+Had Claude searched itself, reading the results and three or four pages would have cost well over 10,000 tokens (an estimate).
+
+I tried three questions whose answers I could check against the source.
+
+| Question | Local AI's answer | Checked against the source |
+|---|---|---|
+| Latest Ollama version? | 0.40.12 (October 27); noted that Wikipedia still says 0.40.11 | Right (GitHub releases page) |
+| Default Python on Ubuntu 26.04? | 3.14 | Right, but one page it cited was read off the 25.10 row, not 26.04 |
+| Can FLUX.2 [klein] 9B be used commercially? (asked in Korean) | 9B is non-commercial; 4B is Apache 2.0, so commercial use is fine | Right (both Hugging Face model cards) |
+
+All three conclusions were right. I still don't take them as is. As with the Ubuntu answer, it can reach the right conclusion and pin the evidence on the wrong row. In another test it quoted a robot driver's docs exactly, but those docs were for the latest development release, not the one I run. So for answers a decision rests on (versions, dates, compatibility), Claude opens the official page itself and checks two things: that the quoted sentence really is on that page, and that it applies to the version I use. When I already know the official page, I add it to the reading list from the start.
+
+On a day with no Claude usage left, it can still look things up. I asked the local session (`claude-local`) to "find the latest Ollama version." It searched, opened the GitHub page and answered with the right version and its source in 52 s.
 
 ---
 
@@ -178,7 +197,7 @@ As a test I asked, "find the latest Ollama version." The local AI searched, open
 
 The rule is simple. If a job means **reading a lot and returning something short**, it goes to the local AI.
 
-- Hand over: summarizing many documents, condensing long logs, reading several web pages, finding what you need in a long PDF or a book, summarizing a video, a first pass over photos
+- Hand over: summarizing many documents, condensing long logs, web research (search and page reading), finding what you need in a long PDF or a book, summarizing a video, a first pass over photos
 - After handing over: don't use the result as is; Claude checks numbers, names and key explanations against the source once more
 - Keep on Claude: code edits and debugging (Claude has to read the code anyway), fact checks, post reviews, final edits, calculations, small jobs
 
@@ -237,7 +256,7 @@ For anyone trying this, two technical traps:
 
 ### Sources and notices
 
-Settings (KV cache quantization, context length, keep-alive) follow the official Ollama FAQ; the environment variables for running Claude Code on a local model follow the Ollama and Claude Code docs and community guides; tokens per PDF page follow Anthropic's PDF support documentation. The video is NASA's ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ) (public domain). AMD and Mac support is based on Ollama's release files and model library (not tested here). Speeds, times and memory figures are single measurements on my PC on October 25, 2026, and the "if Claude read it itself" figures are estimates from character counts. The photos checked are not real places; I generated them with FLUX.2 [klein]. The clip at the top is AI-made: first frame with FLUX 3 Image Klein, motion with MiniMax H3. Claude and Claude Code are trademarks of Anthropic PBC; Qwen of Alibaba Cloud; Ollama of Ollama, Inc.; NVIDIA, GeForce, RTX and Isaac Sim of NVIDIA Corporation; Docker of Docker, Inc.; Microsoft Word, Excel and PowerPoint of Microsoft Corporation; Hangul (HWP) of Hancom Inc.; GitHub of GitHub, Inc.; FLUX of Black Forest Labs; MiniMax of MiniMax; ComfyUI of Comfy Org; Whisper of OpenAI. They are used for identification only.
+Settings (KV cache quantization, context length, keep-alive) follow the official Ollama FAQ; the environment variables for running Claude Code on a local model follow the Ollama and Claude Code docs and community guides; tokens per PDF page follow Anthropic's PDF support documentation. The video is NASA's ["How NASA Uses Light to Detect Waste From Mines"](https://www.youtube.com/watch?v=Ac36aovF8ZQ) (public domain). AMD and Mac support is based on Ollama's release files and model library (not tested here). Speeds, times and memory figures are single measurements on my PC on October 25, 2026 (the search test on October 27), and the "if Claude read it itself" figures are estimates from character counts. The photos checked are not real places; I generated them with FLUX.2 [klein]. The clip at the top is AI-made: first frame with FLUX 3 Image Klein, motion with MiniMax H3. Claude and Claude Code are trademarks of Anthropic PBC; Qwen of Alibaba Cloud; Ollama of Ollama, Inc.; NVIDIA, GeForce, RTX and Isaac Sim of NVIDIA Corporation; Docker of Docker, Inc.; Microsoft Word, Excel and PowerPoint of Microsoft Corporation; Hangul (HWP) of Hancom Inc.; GitHub of GitHub, Inc.; Ubuntu of Canonical Ltd.; Python of the Python Software Foundation; Hugging Face of Hugging Face, Inc.; Wikipedia of the Wikimedia Foundation; FLUX of Black Forest Labs; MiniMax of MiniMax; ComfyUI of Comfy Org; Whisper of OpenAI. They are used for identification only.
 
 ### Glossary
 
