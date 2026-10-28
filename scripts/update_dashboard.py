@@ -1554,7 +1554,7 @@ def render_cot_card_ko(c: dict) -> list[str]:
         "![기관 포지셔닝 — Asset Manager 숏 vs Leveraged Funds 순](assets/diagrams/cot_sp500.png)",
         "",
         f"<small>*CFTC COT · TFF (화 {c['date']} 포지션 · 금 {c['release']} 발표). **Asset Manager(스마트 머니) 숏이 "
-        "누적되면 기관이 하락 대비, 줄면 상승 예측.** Leveraged Funds(덤 머니)는 반대 성향 참고용 · "
+        "누적되면 기관이 하락 보험을 늘리는 중, 줄면 보험을 푸는 중(방향 예측 아님).** Leveraged Funds(덤 머니)는 반대 성향 참고용 · "
         "[자세히 →](posts/cot.md)*</small>",
         "",
     ]
@@ -1582,7 +1582,7 @@ def render_cot_card_en(c: dict) -> list[str]:
         "![Institutional positioning — Asset Mgr short vs Leveraged Funds net](assets/diagrams_en/cot_sp500.png)",
         "",
         f"<small>*CFTC COT · TFF (Tue {c['date']} positions · Fri {c['release']} release). **Asset Managers (smart money) building "
-        "shorts = hedging for downside; easing shorts = leaning bullish.** Leveraged Funds (fast money) "
+        "shorts = buying more downside insurance; easing shorts = letting it go (not a directional call).** Leveraged Funds (fast money) "
         "shown for contrast · [Read more →](posts/cot.md)*</small>",
         "",
     ]
@@ -1733,7 +1733,7 @@ def render_move_card_ko(m: dict) -> list[str]:
         "![MOVE 추이 (채권 변동성)](assets/diagrams/move_index.png)",
         "",
         f"<small>*ICE BofA MOVE — 미 국채 금리의 예상 변동성(단위 bp), {m['date']} 기준. "
-        "80 미만 평온 · 160 초과 발작. VIX와 갈라지면 채권이 먼저 겁먹은 신호 · "
+        "80 미만 평온 · 160 초과 발작. VIX와 갈라지면 채권 보험료만 따로 오른 상태 · "
         "[자세히 →](posts/move-index.md)*</small>",
         "",
     ]
@@ -1759,7 +1759,7 @@ def render_move_card_en(m: dict) -> list[str]:
         "![MOVE trend (bond volatility)](assets/diagrams_en/move_index.png)",
         "",
         f"<small>*ICE BofA MOVE — implied volatility of US Treasury yields (in bp), as of {m['date']}. "
-        "Below 80 calm · above 160 convulsion. A divergence from VIX means bonds got scared first · "
+        "Below 80 calm · above 160 convulsion. A divergence from VIX means bond insurance has repriced on its own · "
         "[Read more →](posts/move-index.md)*</small>",
         "",
     ]
@@ -1824,7 +1824,7 @@ def render_credit_card_ko(cd: dict) -> list[str]:
         *(["![등급별 스프레드 추이 — HY · 단일B · CCC](assets/diagrams/credit_dispersion.png)", ""]
           if cd.get("series") else []),
         f"<small>*ICE BofA 등급별 OAS (FRED){stamp}. 지수가 잠잠해도 CCC−B 격차가 "
-        "벌어지면 바닥 등급부터 값이 다시 매겨지는 후기 사이클 신호 · "
+        "벌어지면 바닥 등급의 신용 보험료가 이미 오르는 중(시점 예측 아님) · "
         "[자세히 →](posts/credit-spreads.md)*</small>",
         "",
     ]
@@ -1853,7 +1853,7 @@ def render_credit_card_en(cd: dict) -> list[str]:
         *(["![Credit spreads by rating — HY · single-B · CCC](assets/diagrams_en/credit_dispersion.png)", ""]
           if cd.get("series") else []),
         f"<small>*ICE BofA OAS by rating (FRED){stamp}. Even with a calm index, a widening "
-        "CCC−B gap flags the bottom repricing first — a late-cycle signal · "
+        "CCC−B gap means credit insurance on the lowest ratings is already getting pricier (not a timing call) · "
         "[Read more →](posts/credit-spreads.md)*</small>",
         "",
     ]
@@ -2623,6 +2623,10 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         "",
         f"## 📊 일일 대시보드{title_suffix}",
         "",
+        "<small>**다음 움직임을 맞히는 도구가 아닙니다.** 옵션·채권·신용 시장의 보험료와 보험 수요가 "
+        "어떻게 변하는지 보고, 그 변화에 맞춰 대응(주식/현금 비중, 공격 자본 투입)을 정하는 도구입니다. "
+        "색은 '지금 보험료가 어떤 상태인가'를 뜻합니다.</small>",
+        "",
         '??? note "갱신 일정 자세히"',
         "    - **크론**: 매일 03:10 UTC 화–토(장 마감 후 정식 EOD) + **미 장중 매시**"
         "(14~21 UTC 평일) 스냅샷 갱신 — 장중엔 주로 Yahoo 소스(MOVE·FedWatch) 숫자가 "
@@ -2750,7 +2754,7 @@ def render_section_ko(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "</details>",
             "",
             "<small>*5일 이평선이 20일 볼린저밴드 중간선 위에 있으면 변동성이 줄어드는 안도 국면, "
-            "아래면 긴장 국면. 중간선을 가르는 크로스가 시장 심리 전환 신호. "
+            "아래면 긴장 국면. 중간선을 가르는 크로스는 보험료 흐름이 바뀌었다는 확인. "
             "**공식 지표가 아닌 '심리적' 보조 신호** · "
             "[자세히 →](posts/cash-allocation.md)*</small>",
             "",
@@ -2871,6 +2875,10 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
         '<div class="live-dash" markdown>',
         "",
         f"## 📊 Daily Dashboard{title_suffix}",
+        "",
+        "<small>**This is not a tool for calling the next move.** It tracks how insurance premiums and "
+        "hedging demand change in the options, bond and credit markets, and sets the response to that change "
+        "(equity/cash mix, tactical deploy). Colors mean 'where premiums stand now'.</small>",
         "",
         '??? note "Update schedule"',
         "    - **Cron**: daily 03:10 UTC Tue–Sat (clean post-close EOD) + **hourly during "
@@ -3007,7 +3015,7 @@ def render_section_en(cs, vs, vvs, ks, ts=None, *, update_label: str = "",
             "</details>",
             "",
             "<small>*5-day MA above the 20-day BB middle = vol decompressing (calm); "
-            "below = building (stressed); a cross marks a sentiment shift. "
+            "below = building (stressed); a cross confirms the premium trend has turned. "
             "**Not an official index — a 'psychological' confirmation signal** · "
             "[Read more →](posts/cash-allocation.md)*</small>",
             "",
