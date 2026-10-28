@@ -3,7 +3,7 @@ title: "The Bond Market's VIX — How to Read the MOVE Index"
 date: 2026-09-01
 tags: [MOVE, bond-volatility, VIX, treasury, rates, implied-volatility, macro]
 lang: en
-description: Stocks have the VIX; bonds have the MOVE — the fear gauge for US Treasury yields. Why it's in bp not %, how to read the levels, when it diverges from VIX, and why bonds get scared first
+description: Stocks have the VIX; bonds have the MOVE — the fear gauge for US Treasury yields. Why it's in bp not %, how to read the levels, when it diverges from VIX, and how to read bond insurance repricing on its own
 ---
 
 # The Bond Market's VIX — How to Read the MOVE Index
@@ -12,7 +12,7 @@ Equity people watch the VIX. It puts the market's fear into a single number. But
 
 That gauge is called the **MOVE Index.** Just as the equity VIX measures "how much will stocks swing," MOVE measures "how much will *yields* swing." It's commonly called the **bond market's VIX.**
 
-And the bond market often gets scared earlier, and more honestly, than stocks. So if you can read MOVE, you can sense market stress a step ahead.
+MOVE is the price of insurance on bonds. Read it next to the VIX, the price of insurance on stocks, and you can see which market the stress sits in and set your response to match.
 
 ---
 
@@ -23,7 +23,7 @@ And the bond market often gets scared earlier, and more honestly, than stocks. S
 - **It watches the whole curve.** It blends 2, 5, 10 and 30-year Treasury options, with a **40% weight on the 10-year** (the others 20% each). Long-end rates are the point.
 - **A feel for the levels:** roughly **below 80 calm · 80–120 normal · 120–160 stressed · above 160 convulsion.** It's near 75 now — calm.
 - Historic spikes: **2008 Lehman ~264, 2020 COVID ~164, 2023 SVB ~200.** Above 200 only a handful of times.
-- **The divergence from VIX is the signal.** When stocks are calm but MOVE jumps, the bond market has likely smelled rate/Fed risk first.
+- **The divergence from VIX is the signal.** When stocks are calm but MOVE jumps, the bond market is already charging more to insure against rate/Fed risk.
 
 ---
 
@@ -122,13 +122,13 @@ MOVE and VIX usually move together — both rise in a crisis, both fall when thi
 
 The information comes when they **split.**
 
-> **Stocks (VIX) calm but bonds (MOVE) jump** → the market isn't worried about stocks yet, but the bond market may have caught rate / Fed / inflation risk first. The classic "bonds fear first" pattern.
+> **Stocks (VIX) calm but bonds (MOVE) jump** → the market isn't worried about stocks yet, but the bond market is already charging more to insure against rate / Fed / inflation risk. Bond insurance has repriced on its own.
 >
 > **Bonds (MOVE) calm but stocks (VIX) jump** → likely a pure equity issue (earnings, valuations). The rate system is steady.
 
 ![MOVE vs VIX — the divergence is the signal](../assets/diagrams_en/move-vix-diverge.svg)
 
-Bonds are honest first because of who trades them. The Treasury market is where **banks, pensions, central banks and hedge funds put real money and leverage** to work on rates. When they get tense, MOVE moves first.
+Bond insurance prices are worth trusting because of who trades them. The Treasury market is where **banks, pensions, central banks and hedge funds put real money and leverage** to work on rates. When they get tense, it shows up in MOVE right away.
 
 This also connects to the [credit spreads](credit-spreads.md) story. When rate volatility (MOVE) rises, funding gets harder for weak companies and credit spreads start to widen. Stress often travels **MOVE → credit spreads → equities.** That puts bond volatility at the **front** of the chain of warning signals.
 
@@ -143,7 +143,7 @@ To put it to work:
 - **Direction and divergence over level.** That MOVE is 75 matters less than whether it's **rising** and whether it's **splitting from VIX.**
 - **160 is the alarm line.** Above it, treat it as system stress, not a routine dip.
 - **MOVE is magnitude, not direction.** It measures "rates will swing," not "rates will rise/fall." For direction, use other tools (FedWatch, the yield curve).
-- **Read it alongside the VIX and credit spreads.** When all three agree, conviction is high; when they diverge, that itself is information — and the bond side (MOVE, credit) usually moves first.
+- **Read it alongside the VIX and credit spreads.** When all three agree, conviction is high; when they diverge, that itself is information. Which market's insurance went up decides the response.
 
 ---
 
@@ -156,7 +156,7 @@ To put it to work:
 | **Composition** | 2/5/10/30-year weighted, **10-year at 40%** |
 | **Levels** | <80 calm · 80–120 normal · 120–160 stressed · >160 convulsion |
 | **History** | 2008 ~264 · 2020 ~164 · 2023 SVB ~200. Above 200 is rare |
-| **Key use** | The **divergence** from VIX. Bonds fear first |
+| **Key use** | The **divergence** from VIX. Bond insurance repricing on its own |
 | **Nature** | Magnitude, not direction. Travels MOVE → credit → equities |
 
 **The one thing to remember**: the world's reference rate is the US 10-year, and MOVE puts how much that rate might swing into a single number. People who watch only stocks find out when the storm hits; people who also watch bond volatility feel the **wind change** a little earlier.

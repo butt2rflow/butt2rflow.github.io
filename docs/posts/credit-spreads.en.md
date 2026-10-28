@@ -112,7 +112,7 @@ How can the index sit still while only CCC widens? Because **the upper tiers are
 
 This is the classic late-cycle tell (the tail end of an expansion). The market stays optimistic overall while it **quietly re-prices the weakest names first.** Watch only the index and you miss it.
 
-> The index level tells you "how comfortable things are right now." **Dispersion between ratings tells you "what's breaking first."** The predictive one is the latter.
+> The index level tells you "how comfortable things are right now." **Dispersion between ratings tells you "what's breaking first."** The one to set your response by is the latter.
 
 ---
 
@@ -166,7 +166,7 @@ The key signal in this post — the **CCC−B gap** — is just the last two:
 CCC−B gap = BAMLH0A3HYC − BAMLH0A2HYB
 ```
 
-The **direction and speed** of that gap moves ahead of the index level. Gap widening while the index sits still is exactly the situation this post is about.
+The **direction and speed** of that gap show what the index level hides. Gap widening while the index sits still is exactly the situation this post is about.
 
 > **One trap.** Since April 2026, FRED serves these ICE BofA series with **only the last three years of observations.** So context like "long-run median ~450bp" can no longer be read off FRED directly. To compare against history, you have to **start logging the values into your own sheet from today.** If you're going to take the signal seriously, start the record now.
 
@@ -176,7 +176,7 @@ The **direction and speed** of that gap moves ahead of the index level. Gap wide
 
 To put it to work:
 
-- **The direction of dispersion over the level.** That HY sits at 260bp matters less than whether the CCC−B gap is **widening** — that's what flags late cycle first. It's not a timing signal for *when* things break, but the structure — thin pay, open downside — is clear.
+- **The direction of dispersion over the level.** That HY sits at 260bp matters less than whether the CCC−B gap is **widening** — that's what shows insurance on the lowest ratings getting pricier. It's not a timing signal for *when* things break, but the structure — thin pay, open downside — is clear.
 - **A spread is a state, not a forecast.** Tight doesn't mean "about to blow up" — it means "you're thinly paid right now." Tight spreads can persist for a long time. But in that state the **downside dwarfs the upside**: there's little room to tighten from 260bp and a lot of room to widen (600bp+ in stress).
 - **Read it alongside the VIX.** When equity vol is quiet but credit dispersion widens, the two markets are telling different stories. The bond side is usually the honest one first.
 
