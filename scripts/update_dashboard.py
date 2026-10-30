@@ -2402,14 +2402,14 @@ def _gex0_next_rows_ko(n: dict) -> list[str]:
     scen = " · ".join(f"{p:+d}% {v:+.1f}B" if p else f"0% {v:+.1f}B" for p, v in n["scen"])
     d = n["exp_date"][5:].replace("-", "/").lstrip("0")
     return [
-        f"#### 다음 정규장({d}) 0DTE 예상 — 전일 미결제약정 기준",
+        f"#### 다음 정규장({d}) 0DTE 포지션 지형 — 전일 미결제약정 기준",
         "",
         '<div class="dash-tight" markdown>',
         "",
         "| 신호 | 값 | 상태 |",
         "|:-----|---:|:-----|",
-        f"| **예상 국면** (개장 시점 넷 GEX) | {n['net_bn']:+.1f}B | {reg} |",
-        f"| 예상 감마 플립 / 현재가 | {flip_s} / {n['spot']:.0f} | "
+        f"| **개장 시점 국면** (종가 레벨 넷 GEX) | {n['net_bn']:+.1f}B | {reg} |",
+        f"| 감마 플립 / 종가 | {flip_s} / {n['spot']:.0f} | "
         f"{'플립 위에서 출발' if (n.get('flip') and n['spot'] >= n['flip']) else '플립 아래에서 출발' if n.get('flip') else '—'} |",
         f"| 미결제약정 최대 집중 행사가 | {peak_s} | 끌림 후보(위치) |",
         *_gex0_pre_row(n, "ko"),
@@ -2429,14 +2429,14 @@ def _gex0_next_rows_en(n: dict) -> list[str]:
     scen = " · ".join(f"{p:+d}% {v:+.1f}B" if p else f"0% {v:+.1f}B" for p, v in n["scen"])
     t = datetime.strptime(n["exp_date"], "%Y-%m-%d")
     return [
-        f"#### Next session ({t:%b} {t.day}) 0DTE preview — from prior-close open interest",
+        f"#### Next session ({t:%b} {t.day}) 0DTE positioning — from prior-close open interest",
         "",
         '<div class="dash-tight" markdown>',
         "",
         "| Signal | Value | State |",
         "|:-------|------:|:------|",
-        f"| **Expected regime** (net GEX at the open) | {n['net_bn']:+.1f}B | {reg} |",
-        f"| Expected gamma flip / spot | {flip_s} / {n['spot']:.0f} | "
+        f"| **Regime at the open** (net GEX at the close level) | {n['net_bn']:+.1f}B | {reg} |",
+        f"| Gamma flip / close | {flip_s} / {n['spot']:.0f} | "
         f"{'starts above the flip' if (n.get('flip') and n['spot'] >= n['flip']) else 'starts below the flip' if n.get('flip') else '—'} |",
         f"| Largest open-interest strike | {peak_s} | pin candidate (location) |",
         *_gex0_pre_row(n, "en"),
