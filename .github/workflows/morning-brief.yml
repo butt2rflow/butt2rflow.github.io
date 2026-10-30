@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  actions: write    # dispatch deploy.yml after the brief
 
 # Both cron slots (and manual runs) commit to main; never overlap.
 concurrency:
@@ -81,3 +82,14 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python scripts/morning_brief.py --send-pending
+
+      # Refresh the home dashboard with the same pre-market read (ES-implied
+      # SPX in the 0DTE block). GitHub's own deploy crons run hours late here.
+      # A GITHUB_TOKEN workflow_dispatch is allowed to start another workflow.
+      # Only on dispatched runs (cron-job.org on time, or manual), not the
+      # late backup slots.
+      - name: Refresh home dashboard
+        if: always() && github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
