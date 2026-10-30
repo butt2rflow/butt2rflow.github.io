@@ -1875,6 +1875,42 @@ def _bs_gamma(S, K, T, sigma, r=0.043):
     return float(pdf / (S * sigma * np.sqrt(T)))
 
 
+def _yahoo_5m(ticker: str) -> pd.Series:
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+           "?interval=5m&range=5d&includePrePost=true")
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        res = json.load(r)["chart"]["result"][0]
+    idx = pd.to_datetime(res["timestamp"], unit="s", utc=True).tz_convert(NY)
+    return pd.Series(res["indicators"]["quote"][0]["close"], index=idx).dropna()
+
+
+def fetch_es_implied(spx_close: float, close_date: str) -> dict | None:
+    """SPX level implied by ES futures since the last cash close: ES now minus
+    the ES−SPX basis at the 16:00 ET close. Globex trades overnight, so this is
+    what has already moved before the open. An observation, not a forecast.
+    None if ES hasn't printed since the close or the feed fails."""
+    try:
+        close_t = pd.Timestamp(close_date, tz=NY) + pd.Timedelta(hours=16)
+        es = _yahoo_5m("ES%3DF")
+        at_close = es[es.index < close_t]       # the 15:55 bar closes at 16:00
+        if not len(at_close) or es.index[-1] <= close_t:
+            return None
+        basis = float(at_close.iloc[-1]) - spx_close
+        implied = float(es.iloc[-1]) - basis
+        return {
+            "es": float(es.iloc[-1]),
+            "es_chg": float((es.iloc[-1] / at_close.iloc[-1] - 1) * 100),
+            "es_time": es.index[-1].strftime("%m/%d %H:%M ET"),
+            "basis": basis,
+            "spx_implied": implied,
+            "spx_implied_chg": (implied / spx_close - 1) * 100,
+        }
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] ES pre-market unavailable ({e})")
+        return None
+
+
 def fetch_gex(r_rate: float = 0.043) -> dict | None:
     """Live dealer-gamma snapshot from Yahoo ^SPX index option chains.
     Aggregates the nearest ~6 expiries, computes net GEX under the naive
@@ -1903,20 +1939,29 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
         spot = float(oc["quote"]["regularMarketPrice"])
         if not (1000 <= spot <= 10000):
             raise ValueError(f"SPX spot {spot} out of range")
-        expiries = list(oc.get("expirationDates", []))[:6]
+        now = _dt.datetime.now(_dt.timezone.utc)
+        # Yahoo stamps each expiry at 00:00 UTC of its date; the option settles
+        # at that day's 16:00 ET cash close. The next expiry still to settle
+        # (today's 0DTE in the session, tomorrow's after the close) belongs to
+        # the 0DTE tile, so this regime read takes the 5 expiries after it.
+        # Seconds-based T: integer .days used to also drop the following expiry
+        # whenever this ran before ~20:00 ET (brief at 07:30, intraday deploys).
+        closes = []
+        for ed in oc.get("expirationDates", []):
+            d = _dt.datetime.fromtimestamp(ed, _dt.timezone.utc).date()
+            close = _dt.datetime.combine(d, _dt.time(16, 0), tzinfo=NY)
+            if close > now:
+                closes.append((ed, close))
+        expiries = closes[1:6]
         if not expiries:
             raise ValueError("no expiries")
-        now = _dt.datetime.now(_dt.timezone.utc)
         rows = []                       # (strike, call_oi, put_oi, call_iv, put_iv, T)
         coi_by_k: dict = defaultdict(float)
         poi_by_k: dict = defaultdict(float)
         iv_by_k: dict = defaultdict(list)
         T_by_k: dict = defaultdict(list)
-        for ed in expiries:
-            exp = _dt.datetime.fromtimestamp(ed, _dt.timezone.utc)
-            T = (exp - now).days / 365.0
-            if T <= 0:
-                continue
+        for ed, close in expiries:
+            T = (close - now).total_seconds() / (365 * 24 * 3600)
             dd = json.load(op.open(f"{YF_OPTIONS}?date={ed}&crumb={_cq}", timeout=25))
             opt = dd["optionChain"]["result"][0]["options"][0]
             calls = {float(c["strike"]): c for c in opt.get("calls", [])}
@@ -2287,6 +2332,14 @@ def fetch_gex_0dte_next(r_rate: float = 0.043) -> dict | None:
         near = [k for k in sorted(set(coi_by_k) | set(poi_by_k)) if spot * 0.95 <= k <= spot * 1.05]
         oi_peak = max(near, key=lambda k: coi_by_k[k] + poi_by_k[k]) if near else None
         scen = [[pct, round(net_gex_at(spot * (1 + pct / 100)) / 1e9, 2)] for pct in (-2, -1, 0, 1, 2)]
+        # Before the open `spot` is the last cash close; ES has traded since.
+        # Re-read the same open-interest map at the ES-implied level.
+        close_date = _dt.datetime.fromtimestamp(
+            int(oc["quote"]["regularMarketTime"]), NY).strftime("%Y-%m-%d")
+        pre = fetch_es_implied(spot, close_date)
+        if pre:
+            pre["net_bn"] = net_gex_at(pre["spx_implied"]) / 1e9
+            pre["regime"] = "long" if pre["net_bn"] > 0 else "short"
         return {
             "exp_date": exp_date.isoformat(),
             "spot": spot,
@@ -2295,6 +2348,7 @@ def fetch_gex_0dte_next(r_rate: float = 0.043) -> dict | None:
             "flip": flip,
             "oi_peak": oi_peak,
             "scen": scen,
+            "pre": pre,
         }
     except Exception as e:  # noqa: BLE001
         print(f"  [WARN] next-session 0DTE preview unavailable ({e})")
@@ -2323,6 +2377,24 @@ def render_gex0_trend_chart(series: list, out_path: Path) -> bool:
     return True
 
 
+def _gex0_pre_row(n: dict, lang: str) -> list[str]:
+    """Table row: the same prior-close OI map read at the ES-implied SPX level."""
+    pre = n.get("pre")
+    if not pre:
+        return []
+    flip = n.get("flip")
+    above = flip and pre["spx_implied"] >= flip
+    if lang == "ko":
+        reg = "🟢 롱 감마" if pre["regime"] == "long" else "🔴 숏 감마"
+        side = "" if not flip else (" · 플립 위" if above else " · 플립 아래")
+        return [f"| 프리마켓 반영 (ES 환산 SPX, {pre['es_time']}) | "
+                f"{pre['spx_implied']:,.0f} ({pre['spx_implied_chg']:+.1f}%) · {pre['net_bn']:+.1f}B | {reg}{side} |"]
+    reg = "🟢 Long gamma" if pre["regime"] == "long" else "🔴 Short gamma"
+    side = "" if not flip else (" · above the flip" if above else " · below the flip")
+    return [f"| Pre-market (ES-implied SPX, {pre['es_time']}) | "
+            f"{pre['spx_implied']:,.0f} ({pre['spx_implied_chg']:+.1f}%) · {pre['net_bn']:+.1f}B | {reg}{side} |"]
+
+
 def _gex0_next_rows_ko(n: dict) -> list[str]:
     reg = "🟢 롱 감마" if n["regime"] == "long" else "🔴 숏 감마"
     flip_s = f"{n['flip']:.0f}" if n.get("flip") else "—"
@@ -2340,6 +2412,7 @@ def _gex0_next_rows_ko(n: dict) -> list[str]:
         f"| 예상 감마 플립 / 현재가 | {flip_s} / {n['spot']:.0f} | "
         f"{'플립 위에서 출발' if (n.get('flip') and n['spot'] >= n['flip']) else '플립 아래에서 출발' if n.get('flip') else '—'} |",
         f"| 미결제약정 최대 집중 행사가 | {peak_s} | 끌림 후보(위치) |",
+        *_gex0_pre_row(n, "ko"),
         "",
         "</div>",
         "",
@@ -2366,6 +2439,7 @@ def _gex0_next_rows_en(n: dict) -> list[str]:
         f"| Expected gamma flip / spot | {flip_s} / {n['spot']:.0f} | "
         f"{'starts above the flip' if (n.get('flip') and n['spot'] >= n['flip']) else 'starts below the flip' if n.get('flip') else '—'} |",
         f"| Largest open-interest strike | {peak_s} | pin candidate (location) |",
+        *_gex0_pre_row(n, "en"),
         "",
         "</div>",
         "",

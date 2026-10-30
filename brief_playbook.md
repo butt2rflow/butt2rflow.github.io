@@ -12,6 +12,10 @@ The monthly review (`scripts/review_briefs.py`) proposes changes to it as a PR, 
 2. **Event context:** SKEW alone doesn't say who bought insurance or why. Near FOMC, earnings season or an expiry, event hedges may be mixed in, and those unwind once the event passes. VIX9D/VIX > 1 means hedges are crowded into the next few days.
 3. **Historical base rate:** compare against days at the same VIX level and don't overstate the signal.
 
+**Pre-market and 0DTE (added 2026-10-30).** Everything above is read at the cash close. Two display-only lines add what is known at 07:30 ET:
+- **Pre-market flip read:** ES now minus the ES−SPX basis at the 16:00 close gives an ES-implied SPX level, and the regime flip is read again there. Write it as a condition ("if the cash open is at this level, the amplifier is on"), never as a forecast of the open. The close-based amplifier line stays the state of record.
+- **0DTE gamma:** today's expiry only, from prior-close open interest, at the close and at the ES-implied level. The regime GEX leaves this expiry out. Most 0DTE contracts are opened during the session and are not in this OI, so give it little weight and say so.
+
 ## Signals and current thresholds
 | Signal | Definition | Threshold | Status |
 |---|---|---|---|
@@ -22,6 +26,7 @@ The monthly review (`scripts/review_briefs.py`) proposes changes to it as a PR, 
 | Stress (🔴) | VIX/VIX3M | ≥ 0.95 | keep |
 | Stress (🔴) | VVIX 1-year percentile | ≥ 90% | changed 2026-10-18 (was VVIX ≥ 105; see Findings) |
 | Display only | SPX/Equity put/call, VRP, VIX9D/VIX | not used in the state call | collecting data |
+| Display only | Pre-market flip read (`amp_pre`), 0DTE gamma (`gex0`) | not used in the state call | added 2026-10-30, collecting data |
 
 ## Reading rules from the blog's indicator posts (added 2026-10-26)
 The home dashboard links each indicator to a post the owner wrote and checked. The commentary reads each indicator the way its post does and must not contradict it. Where a post and this playbook's backfill findings differ, follow the findings and name the post section in the monthly review as one to update. Fix the post itself, don't keep two readings. Each rule below was checked against the post text. When a post changes, update this section in the same commit. In the commentary, state the rule itself ("MOVE 80–120 is the normal band"); never cite the blog, a post or this playbook as the source.
@@ -91,6 +96,7 @@ Daily rows overlap (10/20-session windows), so judge by **episodes** (runs more 
 - VIX9D/VIX > 1 clears Holm against all days (39%, p<0.005). Check whether it adds information on non-🔴 days and within VIX bands before considering it for the state call.
 - Is GEX recomputed at 07:30 ET any different from the overnight snapshot? Compare `gex.net_bn` and `gex.published_net_bn` in `brief_log`. (On 10-16, a weekend, the two were identical, as expected.)
 - Does Yahoo's ^VIX carry Cboe extended-hours (GTH) values before the open?
+- Does the pre-market flip read (`amp_pre`) differ from the close-based one often enough to matter, and when it does, does the session's realized range differ? Live logs only; check after ~30 briefs.
 - Can put/call and VRP thresholds earn a place in the state call? (Needs history; for now, live logs only.)
 - `FOMC_DATES` in `update_dashboard.py` ends in 2027-06. Extend it before then.
 

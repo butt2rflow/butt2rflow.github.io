@@ -278,33 +278,15 @@ def event_calendar(today: pd.Timestamp, vs: dict | None) -> list[dict]:
     return out
 
 
-def _yahoo_5m(ticker: str) -> pd.Series:
-    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
-           "?interval=5m&range=5d&includePrePost=true")
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=20) as r:
-        res = json.load(r)["chart"]["result"][0]
-    idx = pd.to_datetime(res["timestamp"], unit="s", utc=True).tz_convert(NY)
-    return pd.Series(res["indicators"]["quote"][0]["close"], index=idx).dropna()
-
-
-def fetch_premarket(data_date: str) -> dict | None:
+def fetch_premarket(data_date: str, spx_close: float) -> dict | None:
     """What moved between the last cash close and the briefing: ES futures
-    (Globex trades overnight) and VIX if Cboe's extended-hours calc has
-    printed since the close. Everything else in the brief is end-of-day."""
+    (Globex trades overnight), the SPX level they imply, and VIX if Cboe's
+    extended-hours calc has printed since the close. Everything else in the
+    brief is end-of-day."""
     close_t = pd.Timestamp(data_date, tz=NY) + pd.Timedelta(hours=16)
-    out = {}
+    out = ud.fetch_es_implied(spx_close, data_date) or {}
     try:
-        es = _yahoo_5m("ES%3DF")
-        at_close = es[es.index <= close_t]
-        if len(at_close) and es.index[-1] > close_t:
-            out["es"] = float(es.iloc[-1])
-            out["es_chg"] = float((es.iloc[-1] / at_close.iloc[-1] - 1) * 100)
-            out["es_time"] = es.index[-1].strftime("%m/%d %H:%M ET")
-    except Exception as e:  # noqa: BLE001
-        print(f"  [WARN] ES pre-market unavailable ({e})")
-    try:
-        vx = _yahoo_5m("%5EVIX")
+        vx = ud._yahoo_5m("%5EVIX")
         if vx.index[-1] > close_t + pd.Timedelta(minutes=30):
             out["vix"] = float(vx.iloc[-1])
             out["vix_time"] = vx.index[-1].strftime("%m/%d %H:%M ET")
@@ -424,7 +406,8 @@ def collect() -> dict:
     }
     return {"m": m, "cs": cs, "vs": vs, "vx_stale": vx_stale, "vvs": vvs, "ks": ks,
             "ts": ts, "credit": credit, "move": move, "gex": fetch_gex_fresh(),
-            "pre": fetch_premarket(m["date"]),
+            "pre": fetch_premarket(m["date"], m["spx"]),
+            "gex0": ud.fetch_gex_0dte_next(),
             "pc": fetch_putcall(list(spx.index[-20:])),
             "_series": {k: idx[k] for k in ("SPX", "VIX", "VIX9D", "VIX3M", "SKEW")},
             "freshness": freshness,
@@ -472,6 +455,38 @@ def amplifier(d: dict) -> tuple[bool, str] | None:
     return on, f"GEX {g['net_bn']:+.1f}B ({g['regime']}) · {where}{src}"
 
 
+def amplifier_pre(d: dict) -> tuple[bool, str] | None:
+    """The same flip read at the SPX level ES implies before the open. Below
+    the flip the prior-close OI map is short gamma, so a cash open there would
+    have the amplifier on. Conditional on the open, not a forecast of it."""
+    g, pre = d["gex"], d.get("pre")
+    if not (g and g.get("flip") and pre and "spx_implied" in pre):
+        return None
+    lvl = pre["spx_implied"]
+    gap = (lvl / g["flip"] - 1) * 100
+    on = lvl < g["flip"]
+    then = ("이 수준에서 열리면 증폭 구조 ON" if on
+            else "이 수준에서 열려도 증폭 구조 OFF")
+    return on, (f"ES 환산 SPX {lvl:,.0f} ({pre['spx_implied_chg']:+.2f}%, {pre['es_time']}) · "
+                f"flip {g['flip']:,.0f} {'아래' if on else '위'} ({gap:+.1f}%) → {then}")
+
+
+def zero_dte_line(d: dict) -> str | None:
+    """Today's expiry (0DTE) from prior-close OI, at the close and at the
+    ES-implied level. The regime GEX above leaves this expiry out."""
+    z = d.get("gex0")
+    if not z:
+        return None
+    reg = "long" if z["regime"] == "long" else "short"
+    flip = f" · flip {z['flip']:,.0f}" if z.get("flip") else ""
+    peak = f" · OI 최대 {z['oi_peak']:,.0f}" if z.get("oi_peak") else ""
+    pre = z.get("pre")
+    at_pre = f" · 프리마켓 환산 레벨에서 {pre['net_bn']:+.1f}B ({pre['regime']})" if pre else ""
+    d_s = z["exp_date"][5:].replace("-", "/")
+    return (f"{d_s} 만기 넷 GEX {z['net_bn']:+.1f}B ({reg}){flip}{peak}{at_pre} "
+            "— 전일 미결제약정 기준, 장중 새 포지션 미반영")
+
+
 def build_text(d: dict) -> str:
     m, vs, ks, ts, b = d["m"], d["vs"], d["ks"], d["ts"], d["base"]
     emoji, label, why = classify(d)
@@ -486,6 +501,8 @@ def build_text(d: dict) -> str:
         bits = []
         if "es" in pre:
             bits.append(f"ES {pre['es']:,.0f} (종가 이후 {pre['es_chg']:+.2f}%, {pre['es_time']})")
+        if "spx_implied" in pre:
+            bits.append(f"SPX 환산 {pre['spx_implied']:,.0f} ({pre['spx_implied_chg']:+.2f}%)")
         if "vix" in pre:
             bits.append(f"VIX {pre['vix']:.2f} (종가 대비 {pre['vix'] - m['vix']:+.2f}, {pre['vix_time']})")
         L.append("프리마켓: " + " · ".join(bits))
@@ -501,8 +518,14 @@ def build_text(d: dict) -> str:
         verdict = ("하방 증폭 구조 ON — 하락 시 딜러 헤지 매도가 하락을 키울 수 있음" if on
                    else "증폭 구조 OFF — 딜러 헤지가 변동을 흡수하는 쪽")
         L.append(f"• 딜러: {desc} → {verdict}")
+        pa = amplifier_pre(d)
+        if pa:
+            L.append(f"• 프리마켓 반영: {pa[1]}")
     else:
         L.append("• 딜러: GEX 스냅샷 없음")
+    z = zero_dte_line(d)
+    if z:
+        L.append(f"• 0DTE: {z}")
     pc = d.get("pc")
     if pc:
         L.append(f"• 보험 거래량 (풋/콜): SPX {pc['spx']:.2f} (5일 {pc['spx_5d']:.2f}, 20일 {pc['spx_20d']:.2f}) · "
@@ -615,7 +638,12 @@ SKEW·COR90D의 수준은 1년 백분위(m.skew_pct, m.cor90d_pct)로 말합니�
 다만 해설에서 블로그·글·playbook을 출처로 언급하지 않습니다. '블로그 기준으로 보통'이 아니라 'MOVE 80~120은 보통 구간'처럼 기준만 씁니다.
 방향 예측이나 매매 권유는 하지 않습니다. 마크다운 제목·목록 없이 짧은 문장만 씁니다.
 JSON 필드 이름(amp, vrp, pc, base 등)을 그대로 쓰지 말고 '하방 증폭 구조', '풋/콜 비율'처럼 우리말로 씁니다.
-선물 만기는 '1·2월물'이 아니라 '근월물·차월물'로 씁니다."""
+선물 만기는 '1·2월물'이 아니라 '근월물·차월물'로 씁니다.
+pre.spx_implied는 ES 선물 가격에서 종가 때의 ES−SPX 차이를 뺀 SPX 환산값이고, amp_pre는 같은 flip을 그 레벨에서 읽은 것입니다.
+amp와 amp_pre가 다르면 '종가 기준으로는 OFF지만 프리마켓 환산 레벨은 flip 아래라, 이 수준에서 열리면 증폭 구조가 켜진다'처럼
+조건으로 씁니다. 개장가나 방향을 예측하지 않습니다.
+gex0은 오늘 만기(0DTE) 옵션만의 감마이고 전일 미결제약정 기준입니다. 0DTE 거래는 대부분 장중에 새로 열려서 이 값에 잡히지 않으므로,
+'0DTE 감마는 전일 포지션 기준'이라는 한계를 붙이고 무게를 크게 두지 않습니다. 전체 GEX(gex)에는 오늘 만기가 들어 있지 않습니다."""
 
 
 def playbook_section() -> str:
@@ -634,9 +662,11 @@ def commentary(d: dict) -> str | None:
     except ImportError:
         print("  [WARN] anthropic SDK not installed; commentary skipped")
         return None
-    payload = {k: d[k] for k in ("m", "cs", "vs", "ks", "ts", "credit", "move", "gex", "base", "events", "pre", "pc")}
+    payload = {k: d[k] for k in ("m", "cs", "vs", "ks", "ts", "credit", "move", "gex", "gex0", "base", "events", "pre", "pc")}
     amp = amplifier(d)
     payload["amp"] = {"on": amp[0], "desc": amp[1]} if amp else None
+    pa = amplifier_pre(d)
+    payload["amp_pre"] = {"on": pa[0], "desc": pa[1]} if pa else None
     payload["state"] = classify(d)[1]
     try:
         client = anthropic.Anthropic()
@@ -893,7 +923,7 @@ def write_log(d: dict, text: str, note: str | None) -> None:
         "state": {"emoji": emoji, "label": label, "why": why},
         "amp_on": amp[0] if amp else None,
         "inputs": {k: d[k] for k in ("m", "cs", "vs", "vvs", "ks", "ts", "credit",
-                                       "move", "gex", "base", "events", "pre", "pc", "freshness")},
+                                       "move", "gex", "gex0", "base", "events", "pre", "pc", "freshness")},
         "vx_stale": d["vx_stale"],
         "commentary": note,
         "model": CLAUDE_MODEL if note else None,
