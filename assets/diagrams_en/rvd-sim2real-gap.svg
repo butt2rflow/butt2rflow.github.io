@@ -1,0 +1,35 @@
+<svg width="100%" viewBox="0 0 360 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">The sim-to-real gap — fake is too clean</title>
+<desc id="de">Simulation is noise-free and clean while reality is messy with sensor noise, motion blur, reflections and uneven lighting; that difference is the sim-to-real gap.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:12.5px;font-weight:700}
+.st{font-size:10px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.gap{stroke:var(--red);stroke-width:1.6;stroke-dasharray:5 3;fill:none;marker-start:url(#dot);marker-end:url(#dot)}
+</style>
+<defs>
+<marker id="dot" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5"><circle cx="3" cy="3" r="2.5" fill="var(--red)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="210" rx="12"/>
+<text class="t" x="18" y="22">Simulation (clean) vs reality (messy)</text>
+<rect class="panel" x="16" y="34" width="150" height="120" rx="10"/>
+<text class="lb" x="30" y="54" style="fill:var(--teal)">Simulation</text>
+<circle cx="91" cy="92" r="26" style="fill:var(--teal);opacity:.55"/>
+<text class="st" x="30" y="128">· no noise  · even light</text>
+<text class="st" x="30" y="143">· simple texture · idealized</text>
+<rect class="panel" x="194" y="34" width="150" height="120" rx="10"/>
+<text class="lb" x="208" y="54" style="fill:var(--red)">Reality</text>
+<circle cx="269" cy="92" r="26" style="fill:var(--red);opacity:.4"/>
+<circle cx="258" cy="80" r="2" style="fill:var(--mut)"/><circle cx="280" cy="86" r="2" style="fill:var(--mut)"/><circle cx="264" cy="102" r="2" style="fill:var(--mut)"/><circle cx="278" cy="100" r="2" style="fill:var(--mut)"/>
+<line x1="248" y1="70" x2="292" y2="112" stroke="var(--mut)" stroke-width="1" opacity=".5"/>
+<text class="st" x="208" y="128">· sensor noise · motion blur</text>
+<text class="st" x="208" y="143">· glare/shadow · uneven light</text>
+<line class="gap" x1="120" y1="170" x2="240" y2="170"/>
+<text class="st" x="180" y="164" text-anchor="middle" style="fill:var(--red)">the gap</text>
+<text class="st" x="180" y="196" text-anchor="middle" style="fill:var(--mut)">A sim-only model knows only the "clean world" → it flounders in reality</text>
+</svg>

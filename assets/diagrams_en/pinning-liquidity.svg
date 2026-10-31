@@ -1,0 +1,32 @@
+<svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Why pinning only works on single stocks</title>
+<desc>Pinning needs the option-hedging flow to be large relative to the name's own trading volume to anchor the price at a strike. In a thin single stock the hedge flow exceeds the stock's volume, so price pins to the strike; against an index's ocean of liquidity the same hedge flow is a drop and barely moves it.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+.h{font-size:15px;font-weight:700;}
+.nm{font-size:13px;font-weight:700;}
+.d{font-size:11px;fill:#73726c;}
+.tag{font-size:11px;font-weight:600;}
+.res{font-size:12px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="292" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="36" style="fill:#3d3d3a">Why pinning only works on single stocks</text>
+
+<rect x="34" y="58" width="300" height="214" rx="10" fill="#fff" stroke="#16a34a" stroke-width="1.3"/>
+<text class="nm" x="54" y="86" style="fill:#15803d">Single stock — thin liquidity</text>
+<text class="tag" x="54" y="118" style="fill:#8a6d3b">Option hedge flow</text>
+<rect x="54" y="124" width="230" height="18" rx="4" fill="#f0b64a"/>
+<text class="tag" x="54" y="164" style="fill:#3f4d66">Stock volume</text>
+<rect x="54" y="170" width="110" height="18" rx="4" fill="#8fb3e6"/>
+<text class="res" x="54" y="216" style="fill:#3d3d3a">Hedge ≥ volume</text>
+<text class="res" x="54" y="244" style="fill:#15803d">→ price pins to the strike</text>
+
+<rect x="346" y="58" width="300" height="214" rx="10" fill="#fff" stroke="#d84a3a" stroke-width="1.3"/>
+<text class="nm" x="366" y="86" style="fill:#b23a2c">Index (SPX) — ocean of liquidity</text>
+<text class="tag" x="366" y="118" style="fill:#8a6d3b">Option hedge flow</text>
+<rect x="366" y="124" width="42" height="18" rx="4" fill="#f0b64a"/>
+<text class="tag" x="366" y="164" style="fill:#3f4d66">Index volume</text>
+<rect x="366" y="170" width="260" height="18" rx="4" fill="#8fb3e6"/>
+<text class="res" x="366" y="216" style="fill:#3d3d3a">Hedge ≪ volume (a drop)</text>
+<text class="res" x="366" y="244" style="fill:#b23a2c">→ barely moves it</text>
+</svg>

@@ -1,0 +1,4094 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="1,000쪽 넘는 PDF 앞에서 토큰 걱정을 덜어 준 방법. 로컬 PC의 그래픽카드(RTX 3090)에 Qwen3.6 35B를 띄워 읽기를 맡기니, 블로그 글 131편, 1,069쪽 책, 휴대폰 스크린샷, NASA 3분 영상에서 Claude 사용량이 대부분 90% 넘게 줄었다(직접 읽었을 때의 추정치 대비). 같은 Claude Code 화면에서 두뇌만 로컬 모델로 바꿀 수도 있다. 틀린 요약, 그래픽카드를 같이 쓸 때의 함정까지 담았다.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/posts/local-llm-reading/">
+      
+      
+        <link rel="prev" href="../aip-eye-from-simulation/">
+      
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="ko">
+        
+          <link rel="alternate" href="../../en/posts/local-llm-reading/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>책 1,069쪽을 15분에 읽혔다: 내 GPU 로컬 AI로 Claude 사용량 90% 넘게 줄이기 - butterflow 노트</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1069-15-gpu-ai-claude-90" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="butterflow 노트" class="md-header__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow 노트
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              책 1,069쪽을 15분에 읽혔다: 내 GPU 로컬 AI로 Claude 사용량 90% 넘게 줄이기
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/posts/local-llm-reading/" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  투자 노트
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../aip-robot-senses/" class="md-tabs__link">
+          
+  
+  
+  보는 AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  AI 작업실
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="butterflow 노트" class="md-nav__button md-logo" aria-label="butterflow 노트" data-md-component="logo">
+      
+  <img src="../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow 노트
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    투자 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    투자 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률, 복리, 그리고 로그차트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내 포트폴리오의 수익률은?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수익률의 기댓값
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파생상품의 레버리지 사용료
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    네마녀의 날이 돌아왔다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시장 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    COT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Fund 선물과 CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신용 스프레드를 지표로 읽기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    채권시장의 VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시장 심리 변동성 지수
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    옵션의 기초
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    도구
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    몬테카를로(Monte Carlo) 시뮬레이션 백테스팅
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEX 직접 계산하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE 감마 패턴
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    감마 너머
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 대시보드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변동성 기반 현금 비중
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시리즈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시리즈 안내
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    원칙편 (무료 1편)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    원칙편 (무료 1편)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. 섀넌의 도깨비 (Shannon's Demon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실행편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    심화편 (미리보기)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시작하기
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI를 고르는 법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    학습 정책
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇 비전
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    로봇 비전
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스테레오 비전에서 목표물 잡기까지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    좌표계와 변환
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    세 모델의 안쪽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    모델 해부
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로봇은 왜 '가짜 세계'에서 먼저 배우나
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    카메라는 몇 대, 어디에
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    어떤 3D 카메라를
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    협동로봇
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    협동로봇(cobot)이란
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs 화낙(FANUC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    펜던트에서 ROS 2로
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    펜던트에서 ROS 2로
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · ROS 2 노드와 그래프
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · URDF·TF2·ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4부 · Isaac ROS와 cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    현장 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    현장 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · JetPack부터 ROS 2까지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · Isaac ROS와 파운데이션 모델
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    정정편 · 16GB로도 된다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    튜닝편 · 속도와 라이선스
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스캔편 · CAD 없이 메시 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    모션편 · 경로 계획과 장애물 지도
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실물편 · 실제 로봇 첫 움직임
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시뮬레이터편 · URSim과 세 플래너
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim편 · 3090 PC와 클라우드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    메모리편 · 인식과 모션을 한 대에
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 노트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    실습 노트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0부 · 실물 로봇 없이 배우기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI 투자
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI 투자
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1부 · 가치는 이동한다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2부 · 관절 하나로 보는 가치 이동
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3부 · 휴머노이드의 전력 문제
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보는 AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    보는 AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-robot-senses/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0편 · 로봇은 무엇으로 세상을 느낄까
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-seeing-sound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1편 · 소리를 보다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-teaching-sound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2편 · 소리를 알아듣는 AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-seeing-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3편 · 움직임을 보다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-teaching-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4편 · 움직임을 알아보는 AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-learning-from-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5편 · 레퍼런스만 주면 알아보는 AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-eye-from-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6편 · 시뮬레이션으로 배운 ‘눈’
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI 작업실
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI 작업실
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로컬 AI에게 읽기 맡기기
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로컬 AI에게 읽기 맡기기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        무엇을 설치했나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        같은 화면, 다른 두뇌: Claude Code를 로컬 모델로
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        역할 나누기: 찾기는 Claude, 읽기는 로컬
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#131-1069" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실측: 글 131편, 책 1,069쪽, 그림, 영상
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="실측: 글 131편, 책 1,069쪽, 그림, 영상">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#131" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        블로그 글 131편
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1069" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        책 1,069쪽
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        그림: 스크린샷, 사진 검사, 사진 정리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nasa-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NASA 3분 영상
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PDF, 한글 파일, 웹 페이지도
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        검색도 로컬에서
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        무엇을 맡기고, 무엇은 안 맡기나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35b-27b-bigbang-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 35B인가: 27B, BigBang-v1과 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        함정: 그래픽카드는 하나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30초 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        무엇을 설치했나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        같은 화면, 다른 두뇌: Claude Code를 로컬 모델로
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        역할 나누기: 찾기는 Claude, 읽기는 로컬
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#131-1069" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실측: 글 131편, 책 1,069쪽, 그림, 영상
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="실측: 글 131편, 책 1,069쪽, 그림, 영상">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#131" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        블로그 글 131편
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1069" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        책 1,069쪽
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        그림: 스크린샷, 사진 검사, 사진 정리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nasa-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NASA 3분 영상
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PDF, 한글 파일, 웹 페이지도
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        검색도 로컬에서
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        무엇을 맡기고, 무엇은 안 맡기나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35b-27b-bigbang-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 35B인가: 27B, BigBang-v1과 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        함정: 그래픽카드는 하나
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처와 표기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        용어 설명
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1069-15-gpu-ai-claude-90">책 1,069쪽을 15분에 읽혔다: 내 GPU 로컬 AI로 Claude 사용량 90% 넘게 줄이기<a class="headerlink" href="#1069-15-gpu-ai-claude-90" title="Permanent link">&para;</a></h1>
+<p>1,000쪽이 넘는 PDF 사용자 매뉴얼이 앞에 놓이면 감이 와요. 아, 오늘 토큰 활활 타겠구나.</p>
+<video controls playsinline muted autoplay loop preload="metadata" poster="/assets/llm/local-llm-tokens-poster.jpg" src="/assets/llm/local-llm-tokens.mp4" style="width:100%"></video>
+
+<p>이럴 때 방법은 두 가지예요. 첫 번째는 새로 들어온 신입을 살살 꼬셔서 토큰을 얻어 쓰는 거예요. 신입은 아직 이번 주 한도를 거의 안 썼을지도 모르거든요. 두 번째 방법은 이 글에서 공개해요. 양심에는 이쪽이 덜 찔려요.</p>
+<p>Claude는 요금제마다 쓸 수 있는 양(사용량 한도)이 정해져 있고, 그 사용량은 코드를 고치는 데보다 <strong>읽는 데</strong> 훨씬 많이 들어요. 그래서 로컬 PC의 그래픽카드(RTX 3090)에 AI 모델을 띄우고, 읽기를 그쪽에 맡겼어요. 맡긴 일마다 Claude 사용량이 대부분 90% 넘게 줄었어요.</p>
+<p><img alt="작업별로 Claude 사용량이 줄어든 비율: 블로그 글 131편, 1,069쪽 책, 기사 스크린샷 6장, NASA 3분 영상" src="../../assets/diagrams/llm-cut.svg" /></p>
+<hr />
+<h2 id="30">30초 요약<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>1,000쪽 넘는 책</strong>(1,069쪽)을 15분 만에 장별로 요약했어요. Claude 사용량은 <strong>90% 넘게</strong> 줄었어요.</li>
+<li>블로그 글 <strong>131편</strong>은 4분 38초, 휴대폰으로 찍은 기사 스크린샷 6장은 13초 걸렸고, 둘 다 Claude 사용량이 <strong>90% 넘게</strong> 줄었어요.</li>
+<li><strong>NASA 3분 영상</strong>은 약 40초 만에 받아쓰기와 화면 설명을 합쳐 정리했어요. Claude 사용량은 화면 크기에 따라 <strong>85~95%</strong> 줄었어요.</li>
+<li>줄어든 비율은 Claude가 직접 읽거나 봤을 때의 추정치와 비교한 값이에요. 글 서너 편 정도면 차이가 작아요.</li>
+<li>숫자와 화면 글자는 대체로 정확했지만, 책 요약과 지표 글에서 뽑은 규칙에는 뜻이나 숫자가 달라진 곳이 몇 군데 있었어요. 그래서 <strong>로컬 AI의 요약은 Claude가 원문과 한 번 더 확인해요</strong>.</li>
+<li>모델은 로컬 PC에 띄운 <strong>Qwen3.6 35B</strong>예요. 초당 약 164토큰으로 답하고 그림도 봐요(토큰은 AI가 글을 세는 단위로, 한글은 대략 한두 글자에 하나).</li>
+<li><strong>같은 Claude Code 화면을 그대로 쓰면서 두뇌만 로컬 모델로 바꿀 수 있어요.</strong> <code>claude-local</code> 한 줄이면 파일 수정, 터미널 실행, 웹 검색까지 Claude 사용량 없이 돼요.</li>
+<li>코드 수정과 판단이 필요한 일은 그대로 Claude가 해요.</li>
+</ul>
+<hr />
+<h2 id="_1">무엇을 설치했나<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>그래픽카드</td>
+<td>RTX 3090 (메모리 24 GB)</td>
+</tr>
+<tr>
+<td>실행 프로그램</td>
+<td>Ollama (모델을 내려받고 실행해 주는 무료 프로그램)</td>
+</tr>
+<tr>
+<td>모델</td>
+<td>Qwen3.6 35B (알리바바의 공개 모델. 35B는 모델 안의 숫자가 350억 개라는 뜻. 한 번에 그중 30억 개만 쓰는 구조라 빠르다. 아래 「왜 35B인가」에서 설명)</td>
+</tr>
+<tr>
+<td>모델 파일 크기</td>
+<td>22 GB (숫자 하나를 4비트, 즉 아주 짧게 줄여 저장한 판)</td>
+</tr>
+<tr>
+<td>그래픽카드 메모리 사용</td>
+<td>23.2 GB (24 GB 중)</td>
+</tr>
+<tr>
+<td>한 번에 읽는 양</td>
+<td>6만 5천 토큰 (한글로 책 100쪽이 넘는 양)</td>
+</tr>
+<tr>
+<td>속도</td>
+<td>초당 약 164토큰</td>
+</tr>
+</tbody>
+</table>
+<p>메모리를 아끼는 설정 하나가 효과가 컸어요. 모델이 앞에서 읽은 내용을 기억하는 공간(KV 캐시)을 더 짧은 숫자로 저장하게 하면 메모리가 절반만 들어요. 아낀 만큼 한 번에 읽는 양을 두 배로 늘렸어요.</p>
+<p>NVIDIA 그래픽카드만 되는 건 아니에요. 실행 프로그램(Ollama)은 AMD 그래픽카드와 Apple 실리콘 Mac도 지원하고, Mac용 Qwen3.6 판도 따로 있어요. 중요한 건 상표보다 메모리 크기예요.</p>
+<p>35B(4비트 판)가 한 번에 6만 5천 토큰을 읽게 하면 메모리가 약 23 GB 들어서, 그래픽카드 메모리 24 GB나 메모리 32 GB 이상인 Mac이 필요해요. 메모리가 그보다 작으면 더 작은 모델을 쓰거나(27B는 20.6 GB, 더 작은 판도 있어요) 한 번에 읽는 양을 줄이면 돼요. 속도는 메모리가 데이터를 얼마나 빨리 옮기느냐(메모리 대역폭)에 달려 있어요. 길이 넓을수록 차가 한꺼번에 많이 지나가는 것과 같아요. 그래서 같은 모델이라도 컴퓨터에 따라 이 글의 숫자보다 빠를 수도, 느릴 수도 있어요. 저는 NVIDIA에서만 직접 재 봤어요.</p>
+<hr />
+<h2 id="claude-code">같은 화면, 다른 두뇌: Claude Code를 로컬 모델로<a class="headerlink" href="#claude-code" title="Permanent link">&para;</a></h2>
+<p>가장 쓸모 있었던 건 이거예요. <strong>평소 쓰던 Claude Code 화면을 그대로 두고, 답하는 두뇌만 로컬 PC에 띄운 AI 모델로 바꿀 수 있어요.</strong></p>
+<p><img alt="같은 Claude Code 화면을 Claude와 로컬 모델이 번갈아 쓰는 그림" src="../../assets/diagrams/llm-same-ui.svg" /></p>
+<ul>
+<li>명령 <code>claude</code>로 열면 평소처럼 Anthropic 서버의 Claude가 답해요.</li>
+<li>명령 <code>claude-local</code>로 열면 같은 화면, 같은 도구가 그대로인데, 답은 로컬 PC에 띄운 Qwen3.6 35B가 해요. Claude 사용량은 0이에요.</li>
+<li>파일 고치기, 터미널 명령 실행, 웹 페이지 읽기가 그대로 돼요. 웹 검색은 로컬 PC에 띄운 검색 프로그램으로 연결했어요(아래 「검색은 따로 붙였다」).</li>
+</ul>
+<p>그래서 Claude 사용량이 바닥나도 일이 멈추지 않아요. 한도가 오기 전에 Claude에게 진행 상황을 몇 줄로 정리하게 하고, <code>claude-local</code>로 다시 열어 그 메모를 건네면 같은 화면에서 이어서 일할 수 있어요.</p>
+<p>두 세션은 서로 메시지도 주고받아요. Claude Code에는 같은 컴퓨터에 열린 다른 세션에 메시지를 보내는 기능이 있는데, 로컬 모델로 연 세션도 똑같이 참여해요. 로컬 세션을 열어 Claude 세션에 메시지를 보내기까지 13초가 걸렸고, 메시지는 제대로 도착했어요. 반대로 Claude 세션이 "ping"을 보내면, 작업 중이던 로컬 세션이 읽고 "pong"으로 답했어요. 그래서 진행 메모를 메시지로 넘길 수도 있고, Claude 세션이 긴 작업을 로컬 세션에 맡겨 두고 결과를 메시지로 받을 수도 있어요.</p>
+<p>로컬 모델에게는 지시를 "1단계, 2단계…"처럼 구체적으로 줘야 했어요. 막연하게 "기다려"라고 하면 그 지시를 무시하고 몇 초 만에 끝내 버렸어요. 로컬 세션에서는 다른 컴퓨터나 원격으로 연결한 세션도 보이지 않았어요.</p>
+<p>재 본 숫자예요.</p>
+<ul>
+<li>파일 하나를 만들고 실행해 결과를 보고하는 일: 39초</li>
+<li>여러 페이지에서 날짜와 숫자를 찾아야 하는 어려운 조사 질문 4개: 사실 13개 모두 맞힘, 질문당 평균 68초</li>
+</ul>
+<p>한계도 있어요. 로컬 프로그램에는 앞에서 읽은 지시문을 기억해 두는 기능(프롬프트 캐싱)이 없어서, 한 번 주고받을 때마다 Claude Code의 2만 토큰짜리 기본 지시문을 처음부터 다시 읽어요. 그래서 짧은 일도 수십 초가 걸리고, 수십 단계가 이어지는 큰 작업은 Claude보다 확실히 약해요. 설정할 때 걸리는 함정 두 가지는 아래 「함정」에 적어 뒀어요.</p>
+<hr />
+<h2 id="claude">역할 나누기: 찾기는 Claude, 읽기는 로컬<a class="headerlink" href="#claude" title="Permanent link">&para;</a></h2>
+<p>평소에는 이렇게 써요. Claude로 일하다가 <strong>읽을 게 많은 일만</strong> 로컬에 넘겨요.</p>
+<p><img alt="Claude는 찾고 판단하고 고치고, 로컬 AI는 읽고 짧게 돌려준다" src="../../assets/diagrams/llm-split.svg" /></p>
+<ol>
+<li>Claude가 무엇을 읽을지 정해요. 파일 경로나 웹 주소만 고르고, 내용은 읽지 않아요.</li>
+<li>로컬 AI가 파일과 페이지를 직접 열어서 읽어요.</li>
+<li>로컬 AI는 몇 줄짜리 요약만 돌려줘요.</li>
+<li>Claude는 그 몇 줄을 보고 판단하고, 중요한 대목은 원문과 한 번 더 맞춰 봐요.</li>
+</ol>
+<p>비싼 건 원문이에요. 원문이 Claude를 거치지 않으니 그만큼 사용량이 줄어요.</p>
+<p>이 연결은 MCP로 만들었어요. MCP는 Claude에 도구를 꽂는 표준 플러그예요. 작은 프로그램을 하나 등록하면, Claude는 그것을 "파일 고치기", "명령 실행" 같은 도구 중 하나로 봐요. 저는 "로컬 AI에게 읽히기" 도구를 만들어 꽂았어요. 이 도구가 집 컴퓨터에서 파일을 직접 열기 때문에 원문이 Claude를 거치지 않아요. 도구 설명에 "읽을 게 많으면 이 도구를 써라"라고 적어 두니, 제가 말하지 않아도 Claude가 알아서 넘겨요.</p>
+<table>
+<thead>
+<tr>
+<th>방식</th>
+<th>누가 답하나</th>
+<th>언제 쓰나</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude-local</code></td>
+<td>세션 전체를 로컬 모델이</td>
+<td>Claude 사용량이 바닥났을 때</td>
+</tr>
+<tr>
+<td>MCP 도구</td>
+<td>Claude가 일하고, 읽기만 로컬 모델이</td>
+<td>평소에</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="131-1069">실측: 글 131편, 책 1,069쪽, 그림, 영상<a class="headerlink" href="#131-1069" title="Permanent link">&para;</a></h2>
+<h3 id="131">블로그 글 131편<a class="headerlink" href="#131" title="Permanent link">&para;</a></h3>
+<p><img alt="글 7편과 131편을 요약할 때 Claude 사용량 비교" src="../../assets/diagrams/llm-savings.svg" /></p>
+<p>투자 글 131편(65만 자)은 로컬에서 4분 38초가 걸렸고, Claude 쪽은 요약 결과를 읽는 약 5천 토큰으로 끝났어요. Claude가 직접 읽었다면 수십만 토큰이 들고, 대화창도 거의 꽉 찼을 거예요. 90% 넘게 줄어든 셈이에요.</p>
+<p>양이 적으면 얘기가 달라요. 시리즈 글 7편(5만 2천 자)은 41초가 걸렸는데, 실제로 아낀 양은 2만~3만 토큰 정도였어요. 글 서너 편이면 그냥 Claude가 읽는 게 편해요.</p>
+<p>요약 품질은 쓸 만했어요. 시리즈 요약에 나온 정확도 숫자(95%, 97%)는 원문과 맞았어요. 다만 131편 요약에 중국어 낱말이 서너 군데 섞여 나왔어요. 이 모델 계열에서 가끔 생기는 버릇이에요.</p>
+<p>지표 해설 글 12편에서 "이 지표는 어떻게 읽나"를 규칙 100개로 뽑게 했을 때도 비슷했어요. 대부분은 원문과 뜻이 맞았지만, 적어도 5개는 뜻이 달라졌어요. 구간 숫자가 바뀌고("+1.5 초과"가 "0~1.5"로), "크기 감을 잡는 도구"가 "크기를 감추는 도구"가 되는 식이에요. 그래서 브리핑 규칙처럼 그대로 쓰일 내용은 Claude가 원문에서 다시 확인했어요.</p>
+<h3 id="1069">책 1,069쪽<a class="headerlink" href="#1069" title="Permanent link">&para;</a></h3>
+<p>교과서 한 권을 장별로 요약하게 했어요. 종이책을 스캔해 글자를 입힌 PDF예요. 목차 책갈피가 없어서, 먼저 로컬 AI가 목차 쪽을 읽고 42개 장이 몇 쪽에서 시작하는지 찾았어요(42초). 그다음 장마다 읽고 요약해 목차 표, 책 전체 개요, 장별 요약을 한 파일로 만들었어요. <strong>15분</strong> 걸렸고, 로컬 AI가 읽은 양은 약 63만 토큰이에요. Claude는 프로그램을 짜고 결과를 검사하는 데 약 3만 토큰을 썼어요. 직접 읽었다면 63만 토큰이 넘었을 테니 90% 넘게 줄어든 셈이에요(추정).</p>
+<p>장 두 개를 원문과 맞춰 보니 숫자는 다 맞았어요. 그런데 그중 한 장에 <strong>설명이 거꾸로</strong> 된 곳이 두 군데 있었어요. 책이 "A는 팔고 B는 사라"고 한 원칙을 요약은 "A는 사고 B는 팔라"로 적은 식이에요. 중국어 한자도 다섯 군데 섞였어요. 책의 뼈대를 훑고 필요한 장을 찾는 데는 아주 좋지만, 요약만 믿고 판단하면 위험해요. 그래서 로컬 AI의 요약을 쓸 때는 Claude가 중요한 대목을 원문과 한 번 더 확인해요.</p>
+<h3 id="_2">그림: 스크린샷, 사진 검사, 사진 정리<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>Qwen3.6은 그림도 봐요. Claude도 그림을 잘 보고 판단은 더 정확하지만, 한 장마다 사용량이 들어요. Claude가 사진을 직접 보면 한 장에 약 1천5백 토큰이에요.</p>
+<p><strong>휴대폰 스크린샷.</strong> 저는 휴대폰으로 기사 화면을 찍어 Claude에게 자주 보내요. 그런데 메시지에 사진을 바로 붙이면, 보내는 순간 사진이 Claude에게 그대로 들어가서 사용량이 이미 들어요. 그래서 사진은 클라우드 동기화 폴더에 정해 둔 받은편지함(인박스)에 올리고 "인박스 읽어줘"라고만 말해요. 그러면 로컬 AI가 PC에서 사진을 읽고, Claude는 요약만 받아요. 기사 스크린샷 6장으로 재 보니 Claude 쪽 사용량이 약 1만 2천 토큰(사진 크기로 계산한 추정)에서 약 1천 토큰으로 줄었고, 읽는 데 13초 걸렸어요. 제목, 본문, 숫자도 정확히 옮겨 적었어요. 사진이 몇 장뿐이면 그냥 바로 붙이는 게 편해요. Claude가 직접 보고 판단할 수 있으니까요.</p>
+<p><strong>AI로 만든 사진 검사.</strong> 제가 AI로 만든 사진들로 불량 찾기를 시험했어요.</p>
+<p><img alt="로컬 AI가 AI 생성 사진에서 잡아낸 문제" src="../../assets/diagrams/llm-vision.svg" /></p>
+<p>사진 7장을 19초에 검사했어요. 한 장에 약 2.7초예요. 단풍잎 모양이 일그러진 캐나다 국기, 길도 없는 바위 위에 선 자동차, 들쑥날쑥한 부두 기둥을 한 번에 잡았어요. 그래서 사진을 여러 장 만들면 <strong>로컬 AI가 확실한 불량을 먼저 걸러 내고</strong>, Claude는 남은 몇 장만 봐요. 괜찮은 사진 둘 중 하나를 고르는 일은 맡기지 않아요.</p>
+<p><strong>사진 정리.</strong> 사진 61장에 설명과 태그를 다는 데 97초(한 장에 1.6초) 걸렸고, 5장을 직접 확인해 보니 장면 설명은 모두 맞았어요. "강과 눈 덮인 숲", "돔 지붕 건물"처럼 찾아보는 용도로는 충분해요. 하지만 세부는 약했어요. 사진 속 글자를 지어내기도 했고, 돌담을 다리라고 했고, 사람 수도 대충 셌어요. AI로 만든 사진인지도 5장 중 1장만 알아봤어요.</p>
+<h3 id="nasa-3">NASA 3분 영상<a class="headerlink" href="#nasa-3" title="Permanent link">&para;</a></h3>
+<p><a href="https://www.youtube.com/watch?v=Ac36aovF8ZQ">NASA가 공개한 3분 영상</a>으로 해 봤어요. 위성으로 폐광 오염을 찾는 이야기예요. 음성은 받아쓰기 모델(Whisper)이 글자로 옮기고, 장면이 바뀌는 곳마다 화면 24장을 뽑아 Qwen3.6이 봤어요. 둘을 합쳐 한 줄 요약, 시간대별 표, 화면에만 나온 정보를 정리했어요. 전부 <strong>약 40초</strong> 걸렸어요.</p>
+<p>화면 속 글자도 정확히 읽었어요. "약 5만 개 광산"이라는 자막, 위성 장비 이름의 약자 풀이, 데이터 화면의 숫자까지 원본과 같았어요. 흰 화면을 "말하는 사람"으로 적는 작은 실수는 있었어요. 화면 24장과 받아쓰기를 Claude가 직접 봤다면 화면 크기에 따라 약 1만~3만 토큰이 들었을 텐데(추정), 결과 파일의 요약 부분은 약 1천5백 토큰이에요. 85~95% 줄어든 셈이에요.</p>
+<hr />
+<h2 id="pdf">PDF, 한글 파일, 웹 페이지도<a class="headerlink" href="#pdf" title="Permanent link">&para;</a></h2>
+<p>로컬 AI가 읽을 수 있게 파일을 글자로 바꿔 주는 단계를 붙였어요.</p>
+<table>
+<thead>
+<tr>
+<th>형식</th>
+<th>바꾸는 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF</td>
+<td>쪽마다 글자를 뽑아요. 글자가 없는 쪽(스캔본)은 모델이 그림으로 보고 읽어요</td>
+</tr>
+<tr>
+<td>Word, Excel, PowerPoint</td>
+<td>문단, 표, 시트를 글자로 뽑아요. 옛 형식(.doc, .xls, .ppt)도 돼요</td>
+</tr>
+<tr>
+<td>한글(.hwp, .hwpx)</td>
+<td>공개 도구로 글자를 뽑아요</td>
+</tr>
+<tr>
+<td>웹 페이지</td>
+<td>주소를 주면 본문만 받아 와요</td>
+</tr>
+</tbody>
+</table>
+<p>긴 PDF는 효과가 커요. Claude는 PDF를 읽을 때 쪽마다 글자와 함께 그 쪽의 이미지까지 받아요. 글자만으로도 쪽당 1천5백~3천 토큰이고, 이미지는 따로 더 들어요. 36쪽짜리 영문 기술 매뉴얼이면 5만~11만 토큰이 넘어요. 로컬에 맡기니 16초 만에 제목, 대상 제품, 주요 내용을 정리해 줬어요.</p>
+<p>Excel처럼 숫자가 많은 파일은 맡기지 않아요. 이 모델은 합계나 추세를 틀리기 쉬워요. 숫자는 Claude가 코드로 계산하는 쪽이 정확하고, 원래도 사용량이 적게 들어요.</p>
+<p>옛 Word·PowerPoint 형식은 관리가 끊긴 변환 도구를 써야 해요. 오래된 프로그램은 보안 구멍이 생겨도 고쳐지지 않아요. 출처를 모르는 파일을 다루는 일이라, 인터넷과 쓰기 권한을 막은 격리 컨테이너(Docker) 안에서만 실행해요.</p>
+<hr />
+<h2 id="_3">검색도 로컬에서<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>웹 페이지를 <strong>읽는</strong> 건 처음부터 로컬에서도 됐어요. 그런데 <strong>검색</strong>은 안 됐어요.</p>
+<p>Claude Code의 검색은 내 컴퓨터가 아니라 Anthropic 서버에서 실행돼요. 로컬 모델로 바꾸면 요청이 그 서버로 가지 않으니 검색도 함께 사라져요. 그래서 검색 엔진 여러 곳을 대신 조회해 주는 공개 프로그램(SearXNG)을 로컬 PC에 띄우고, 위와 같은 MCP 도구로 꽂았어요. 메모리는 약 125 MB만 써요.</p>
+<p>평소 Claude로 일할 때도 웹 조사는 로컬에 맡겨요. 이때는 Claude가 주소를 고르지 않고 질문만 넘겨요.</p>
+<ol>
+<li>로컬 PC가 SearXNG로 검색해요.</li>
+<li>위쪽에 나온 페이지 대여섯 장을 로컬 PC가 직접 열어요.</li>
+<li>로컬 AI가 그 페이지만 보고 답을 써요. 문장마다 출처 번호와 원문 인용을 달고, 출처끼리 말이 다르면 그것도 적어요.</li>
+<li>Claude는 1,000토큰 안팎의 그 답만 읽어요.</li>
+</ol>
+<p>Claude가 직접 찾았다면 검색 결과와 페이지 서너 장을 읽느라 1만 토큰 넘게 썼을 거예요(추정치).</p>
+<p>원문으로 맞는지 확인할 수 있는 질문 세 개를 넣어 봤어요.</p>
+<table>
+<thead>
+<tr>
+<th>질문</th>
+<th>로컬 AI의 답</th>
+<th>원문과 비교</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ollama 최신 버전은?</td>
+<td>0.40.12(10월 27일). 위키백과는 아직 0.40.11이라고 따로 짚음</td>
+<td>맞음(GitHub 릴리스 페이지)</td>
+</tr>
+<tr>
+<td>Ubuntu 26.04의 기본 Python은?</td>
+<td>3.14</td>
+<td>맞음. 다만 근거로 든 페이지 하나는 26.04가 아니라 25.10 줄을 읽은 것</td>
+</tr>
+<tr>
+<td>FLUX.2 [klein] 9B를 상업용으로 써도 되나?(한국어로 질문)</td>
+<td>9B는 비상업용, 4B는 상업용으로도 쓸 수 있는 Apache 2.0</td>
+<td>맞음(Hugging Face 모델 카드 두 곳)</td>
+</tr>
+</tbody>
+</table>
+<p>세 답 모두 결론은 맞았어요. 그래도 그대로 믿지는 않아요. Ubuntu 답처럼 결론은 맞는데 근거를 엉뚱한 줄에 붙이기도 해요. 다른 시험에서는 로봇 드라이버 문서를 정확히 인용했는데, 그 문서가 제가 쓰는 판이 아니라 최신 개발판 문서였어요. 그래서 버전, 날짜, 호환성처럼 결정이 걸린 답은 Claude가 공식 페이지를 직접 열어서 두 가지를 봐요. 인용한 문장이 정말 그 페이지에 있는지, 그 내용이 내가 쓰는 판에도 맞는지예요. 공식 페이지를 미리 알면 처음부터 읽을 목록에 넣어 줘요.</p>
+<p>Claude 사용량이 바닥난 날에도 찾아볼 수 있어요. 로컬 세션(<code>claude-local</code>)에 "최신 Ollama 버전을 찾아 줘"라고 했더니, 혼자 검색하고 GitHub 페이지를 열어서 52초 만에 맞는 버전과 출처를 답했어요.</p>
+<hr />
+<h2 id="_4">무엇을 맡기고, 무엇은 안 맡기나<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><img alt="로컬에 맡길 일과 Claude가 할 일을 읽을 양과 판단 필요성으로 나눈 그림" src="../../assets/diagrams/llm-fit.svg" /></p>
+<p>기준은 단순해요. <strong>읽을 건 많은데 결과는 짧은 일</strong>이면 로컬에 맡겨요.</p>
+<ul>
+<li>맡겨요: 문서 여러 편 요약, 긴 로그 정리, 웹 조사(검색과 페이지 읽기), 긴 PDF나 책에서 필요한 내용 찾기, 영상 정리, 사진 1차 거르기</li>
+<li>맡긴 뒤에는: 결과를 그대로 쓰지 않고, 숫자·이름·핵심 설명을 Claude가 원문과 한 번 더 맞춰 봐요</li>
+<li>안 맡겨요: 코드 수정과 디버깅(어차피 Claude가 코드를 읽어야 해요), 사실 확인, 글 리뷰, 최종 편집, 숫자 계산, 작은 일</li>
+</ul>
+<hr />
+<h2 id="35b-27b-bigbang-v1">왜 35B인가: 27B, BigBang-v1과 비교<a class="headerlink" href="#35b-27b-bigbang-v1" title="Permanent link">&para;</a></h2>
+<p>같은 계열의 Qwen3.6 27B, 그리고 검색에 맞게 다듬은 BigBang-v1과 같은 일을 시켜 비교했어요. 35B는 숫자가 더 많은데도 오히려 빨라요. MoE(전문가 혼합)라는 구조 덕분이에요. 회사에 전문가가 100명 있는데, 질문마다 접수 담당이 가장 잘 맞는 두세 명에게만 일을 넘기는 것과 비슷해요. 27B는 토큰 하나를 만들 때마다 270억 개 숫자를 전부 쓰지만, 35B는 350억 개 중 30억 개만 써요. 대신 전문가 전원이 메모리에 대기해야 해서 메모리는 더 많이 들어요.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Qwen3.6 27B</th>
+<th>BigBang-v1</th>
+<th><strong>Qwen3.6 35B</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>속도</td>
+<td>초당 63토큰</td>
+<td>초당 144토큰</td>
+<td><strong>초당 164토큰</strong></td>
+</tr>
+<tr>
+<td>그림 보기</td>
+<td>됨</td>
+<td>안 됨</td>
+<td><strong>됨</strong></td>
+</tr>
+<tr>
+<td>검색 시험 (질문 3개, 사실 7개)</td>
+<td>7개 중 6개, 323초</td>
+<td>7개 모두, 168초</td>
+<td><strong>7개 모두, 128초</strong></td>
+</tr>
+<tr>
+<td>사진 7장 검사</td>
+<td>약 47초</td>
+<td>-</td>
+<td><strong>19초</strong></td>
+</tr>
+<tr>
+<td>글 7편 요약</td>
+<td>1분 56초</td>
+<td>-</td>
+<td><strong>41초</strong></td>
+</tr>
+<tr>
+<td>글 131편 요약</td>
+<td>12분 16초</td>
+<td>-</td>
+<td><strong>4분 38초</strong></td>
+</tr>
+<tr>
+<td><code>claude-local</code> 과제 (파일 만들고 실행)</td>
+<td>1분 42초</td>
+<td>-</td>
+<td><strong>39초</strong></td>
+</tr>
+</tbody>
+</table>
+<p>같은 일이 35B로 1.6~2.8배 빨랐어요. 그래서 요약, 검색, 그림 검사를 모두 35B 하나에 맡겨요. BigBang-v1은 검색은 잘했지만 그림을 못 봤어요. 제가 받은 건 개인이 올린 비공식 판이었는데, Claude Code와 연결하자마자 오류가 났어요. 모델에 딸린 대화 형식 설정이 Claude Code가 보내는 요청 모양과 맞지 않았거든요.</p>
+<p>35B에도 단점은 있어요. 그래픽카드 메모리를 23.2 GB나 써서, 다른 프로그램이 조금만 메모리를 잡아도 느려져요. 바로 다음 함정이에요.</p>
+<hr />
+<h2 id="_5">함정: 그래픽카드는 하나<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p><img alt="그래픽카드 메모리 24 GB를 이미지 생성 프로그램과 로컬 AI가 나눠 쓸 때" src="../../assets/diagrams/llm-gpu.svg" /></p>
+<p>가장 오래 헤맨 문제예요. 같은 그래픽카드로 이미지와 영상도 만들고(ComfyUI), 로봇 시뮬레이터(Isaac Sim)도 돌려요. 이미지 작업을 끝내고 그 프로그램을 끄지 않았더니, 15.8 GB를 계속 잡고 있었어요. 그 상태로 27B를 실행하니 모델의 4분의 3이 그래픽카드에 못 들어가고 CPU로 밀렸어요. CPU는 이런 계산을 그래픽카드보다 훨씬 느리게 해요. 오류는 없었어요. 초당 63토큰이 7토큰으로 느려졌을 뿐이에요. 속도가 이상해서 그래픽카드 메모리를 누가 쓰는지 확인(<code>nvidia-smi</code>)하고 나서야 원인을 찾았어요. 35B는 23.2 GB를 써서 여유가 더 없어요.</p>
+<p>그래서 규칙을 정했어요.</p>
+<ol>
+<li>이미지 작업이 끝나면 이미지 프로그램을 꼭 꺼요.</li>
+<li>로컬 AI를 쓰기 전에 모델이 그래픽카드에 100% 올라갔는지 확인해요(<code>ollama ps</code>).</li>
+<li>이미지를 다시 만들기 전에는 로컬 모델을 내려요(<code>ollama stop</code>).</li>
+</ol>
+<p>사람이 매번 기억하기는 어려워서, 확인을 프로그램에 넣었어요. <code>claude-local</code>과 요약 도구는 시작하기 전에 그래픽카드를 누가 쓰는지 봐요. ComfyUI나 Isaac Sim 같은 다른 작업이 메모리를 잡고 있으면 모델을 띄우지 않고 "누가 몇 GB를 쓰고 있다"고 알려 준 뒤 멈춰요. 그 작업을 대신 끄지도 않아요. 그때는 그냥 Claude로 하거나, 그 작업이 끝난 뒤에 다시 해요. 3 GB짜리 가짜 작업을 띄워 시험해 보니 세 곳 모두 제대로 멈췄어요.</p>
+<p>직접 해 볼 분을 위해, 기술적인 함정 두 가지도 적어 둘게요.</p>
+<ul>
+<li>Claude Code를 로컬 모델로 실행하면 세션 중간에 "모델을 찾을 수 없음" 오류가 날 수 있어요. 배경 작업에 쓰는 작은 모델 이름(haiku)까지 로컬 모델로 연결해 줘야 해요.</li>
+<li>Claude Code는 모르는 모델이면 한 번에 20만 토큰을 읽는다고 가정해요. 실제 크기(6만 5천)를 알려 주지 않으면 대화가 길어졌을 때 로컬 프로그램이 요청을 거절해요.</li>
+</ul>
+<hr />
+<h2 id="_6">정리<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<ul>
+<li>로컬 AI가 Claude를 대신하지는 못해도, <strong>읽는 일꾼</strong>으로는 충분해요.</li>
+<li>효과는 읽을 양에 비례해요. 글 서너 편이면 그냥 Claude가 낫고, 수십 편이나 책 한 권이면 Claude 사용량이 90% 넘게 줄어요.</li>
+<li>결과는 초안이에요. 설명이 거꾸로 나올 수도 있으니, 숫자·이름·핵심 설명은 Claude가 원문과 한 번 더 확인하고, 판단과 수정도 Claude가 해요.</li>
+<li>그래픽카드를 다른 작업과 같이 쓴다면, 누가 메모리를 잡고 있는지부터 확인해요. 프로그램이 대신 확인하게 해 두면 편해요.</li>
+<li>Qwen3.6 35B 하나로 요약, 검색, 그림 검사, 영상 정리를 다 맡길 수 있었어요. 대신 세부와 판단은 여전히 약해요.</li>
+</ul>
+<hr />
+<h3 id="_7">출처와 표기<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>설정 값(KV 캐시 양자화, 컨텍스트 길이, keep-alive)은 Ollama 공식 FAQ를, Claude Code를 로컬 모델로 실행하는 환경 변수는 Ollama와 Claude Code 문서 및 커뮤니티 안내 글을, PDF 쪽당 토큰은 Anthropic의 PDF 지원 문서를 참고했어요. 영상은 NASA의 <a href="https://www.youtube.com/watch?v=Ac36aovF8ZQ">"How NASA Uses Light to Detect Waste From Mines"</a>(퍼블릭 도메인)예요. 검사한 사진은 실제 장소가 아니라 제가 FLUX.2 [klein]으로 만든 이미지예요. 글 첫머리 영상은 FLUX 3 Image Klein으로 첫 장면을 만들고 MiniMax H3로 움직이게 한 AI 영상이에요. AMD 그래픽카드와 Mac 지원은 Ollama 배포 파일과 모델 라이브러리 기준이에요(직접 시험하지 않음). 속도, 시간, 메모리 숫자는 2026년 10월 25일 제 컴퓨터에서 한 번씩 잰 값이고(검색 시험은 10월 27일), "Claude가 직접 읽었다면"은 글자 수로 계산한 추정치예요. Claude·Claude Code는 Anthropic PBC의, Qwen은 Alibaba Cloud의, Ollama는 Ollama, Inc.의, NVIDIA·GeForce·RTX·Isaac Sim은 NVIDIA Corporation의, Docker는 Docker, Inc.의, Microsoft Word·Excel·PowerPoint는 Microsoft Corporation의, 한글(HWP)은 한글과컴퓨터의, GitHub는 GitHub, Inc.의, Ubuntu는 Canonical Ltd.의, Python은 Python Software Foundation의, Hugging Face는 Hugging Face, Inc.의, 위키백과(Wikipedia)는 Wikimedia Foundation의, FLUX는 Black Forest Labs의, MiniMax는 MiniMax의, ComfyUI는 Comfy Org의, Whisper는 OpenAI의 상표이며, 지칭 목적으로만 사용했어요.</p>
+<h3 id="_8">용어 설명<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>로컬 AI</em>: 인터넷의 서비스가 아니라 내 컴퓨터에서 실행하는 AI 모델</li>
+<li><em>세션</em>: Claude Code 창 하나를 열어 이어 가는 대화 한 묶음</li>
+<li><em>토큰</em>: AI가 글을 읽고 쓰는 단위. 한글은 대략 한두 글자에 토큰 하나 (모델마다 다르다)</li>
+<li><em>Claude 사용량</em>: Claude가 읽고 쓴 토큰의 양. 요금제마다 한도가 있다</li>
+<li><em>Ollama</em>: AI 모델을 내려받고 내 컴퓨터에서 실행해 주는 무료 프로그램</li>
+<li><em>4비트로 줄인 판(양자화)</em>: 모델 숫자를 짧게 줄여 메모리를 아낀 판. 품질이 조금 떨어진다</li>
+<li><em>KV 캐시</em>: 모델이 앞에서 읽은 내용을 기억해 두는 메모리 공간</li>
+<li><em>프롬프트 캐싱</em>: 같은 지시문을 다시 읽지 않도록 기억해 두는 기능. 로컬 프로그램에는 없었다</li>
+<li><em>컨테이너(Docker)</em>: 프로그램을 나머지 시스템과 떼어 놓고 실행하는 상자</li>
+<li><em>SearXNG</em>: 여러 검색 엔진에 대신 물어보고 결과를 모아 주는 공개 프로그램</li>
+<li><em>MCP</em>: Claude 같은 AI에 외부 도구를 연결하는 표준 방식. 등록한 프로그램이 AI가 쓰는 도구 목록에 나타난다</li>
+<li><em>MoE(전문가 혼합)</em>: 모델 안을 여러 "전문가"로 나눠, 일마다 그중 일부만 쓰는 구조. 크기에 비해 빠르다</li>
+<li><em>Whisper</em>: 말소리를 글자로 옮기는 공개 받아쓰기 모델</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../assets/external-links.js"></script>
+      
+        <script src="../../assets/vix-history-player.js"></script>
+      
+        <script src="../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>VIX vs MOVE — different thing, different unit (% vs bp)</title>
+<desc>VIX expresses equity volatility in percent; MOVE expresses rate volatility in basis points. Dividing MOVE by the square root of 12 gives the expected one-month move. MOVE 75 means the 10-year yield is expected to move about 22bp in a month.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.badge { font-size:15px; font-weight:600; }
+.d { font-size:13px; font-weight:400; fill:var(--tp); }
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="40">VIX vs MOVE — different thing, different unit</text>
+
+<rect x="60" y="80" width="96" height="46" rx="8" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.6"/>
+<text class="badge" x="108" y="109" text-anchor="middle" fill="#0F3D30">VIX</text>
+<text class="d" x="180" y="100">Equity volatility · unit <tspan font-weight="600">%</tspan></text>
+<text class="s" x="180" y="119">VIX 20 → S&amp;P 500 ±20% / year</text>
+
+<rect x="60" y="150" width="96" height="46" rx="8" fill="#EEEDFE" stroke="#7c3aed" stroke-width="0.6"/>
+<text class="badge" x="108" y="179" text-anchor="middle" fill="#4a2f9e">MOVE</text>
+<text class="d" x="180" y="170">Rate volatility · unit <tspan font-weight="600">bp</tspan></text>
+<text class="s" x="180" y="189">MOVE 75 → 10yr ±22bp / month</text>
+
+<line x1="60" y1="228" x2="620" y2="228" stroke="var(--br)" stroke-width="0.5"/>
+<text class="th" x="340" y="256" text-anchor="middle">Make it concrete: MOVE ÷ √12 ≈ expected 1-month move (bp)</text>
+<text class="s" x="340" y="276" text-anchor="middle">Measures magnitude, not direction — up or down, big swings raise it</text>
+</svg>

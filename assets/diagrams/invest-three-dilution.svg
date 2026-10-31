@@ -1,0 +1,41 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>세 갈래, 세 가지 희석 — 로봇 관련 매출 비중</title>
+<desc>NVIDIA는 로봇 관련이 매출의 약 1%(나머지는 데이터센터), Teradyne은 로보틱스가 약 10%(나머지는 반도체 테스트), 화낙은 로봇이 약 41%(그마저 대부분 전통 산업로봇)이다. 셋 다 로봇 순수 노출은 절반 이하이고, 이익 대비 밸류(P/E)는 오히려 NVIDIA가 제일 싸고 Teradyne이 제일 비싸다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.nm{font-size:13.5px;font-weight:700;fill:#3d3d3a;}
+.s{font-size:11px;fill:#73726c;}
+.pe{font-size:12px;font-weight:700;fill:#3d3d3a;}
+.pct{font-size:12px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="320" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">세 갈래, 세 가지 희석 — 로봇 관련 매출 비중</text>
+
+<!-- NVDA row -->
+<text class="nm" x="40" y="92">NVIDIA</text>
+<rect x="130" y="80" width="410" height="20" rx="5" fill="#e7e4da"/>
+<rect x="130" y="80" width="6" height="20" rx="3" style="fill:#16a34a"/>
+<text class="pct" x="146" y="95" style="fill:#15803d">~1%</text>
+<text class="pe" x="640" y="95" text-anchor="end">P/E ~29x</text>
+<text class="s" x="130" y="118">Physical AI ~1% · 데이터센터 90% — 두뇌를 모두에게 파는 곡괭이·삽</text>
+
+<!-- TER row -->
+<text class="nm" x="40" y="170">Teradyne</text>
+<text class="s" x="40" y="185">(UR)</text>
+<rect x="130" y="158" width="410" height="20" rx="5" fill="#e7e4da"/>
+<rect x="130" y="158" width="41" height="20" rx="5" style="fill:#16a34a"/>
+<text class="pct" x="179" y="173" style="fill:#15803d">~10%</text>
+<text class="pe" x="640" y="173" text-anchor="end">P/E ~47x</text>
+<text class="s" x="130" y="196">로보틱스 ~10% · 반도체 테스트 79% — 개방성 승자(UR)를 반도체에 싸서</text>
+
+<!-- FANUC row -->
+<text class="nm" x="40" y="248">화낙</text>
+<rect x="130" y="236" width="410" height="20" rx="5" fill="#e7e4da"/>
+<rect x="130" y="236" width="168" height="20" rx="5" style="fill:#16a34a"/>
+<text class="pct" x="306" y="251" style="fill:#15803d">~41%</text>
+<text class="pe" x="640" y="251" text-anchor="end">P/E ~31x</text>
+<text class="s" x="130" y="274">로봇 41%(그마저 대부분 전통 산업로봇) · CNC·서비스 등 나머지 — 가장 순수하나 닫힘</text>
+
+<text class="s" x="40" y="304" style="fill:#8a6d3b">초록 = 로봇 관련 비중. 셋 다 절반 이하 — 그런데 값(P/E)은 곡괭이 장수가 제일 싸다.</text>
+</svg>

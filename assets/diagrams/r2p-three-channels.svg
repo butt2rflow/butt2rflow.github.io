@@ -1,0 +1,79 @@
+<svg width="100%" viewBox="0 0 680 378" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">노드끼리 말하는 세 가지 방식</title>
+<desc id="de">토픽은 한쪽이 계속 내보내고 여럿이 듣는 방송, 서비스는 한 번 묻고 한 번 답하는 질의응답, 액션은 오래 걸리는 일을 맡기고 중간 진행 상황을 받으며 도중에 취소할 수 있는 방식. 각 줄 왼쪽에 로봇 프로그래머에게 익숙한 비유를 함께 적었다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:13px;font-weight:700}
+.st{font-size:11px;fill:var(--mut)}
+.nd{font-size:11.5px;font-weight:600}
+.row{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.fam{fill:var(--chip);stroke:none}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.4}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.dash{stroke-dasharray:3 3}
+.mk{fill:var(--blue)}
+.mka{fill:var(--amber)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="378" rx="12"/>
+<text class="t" x="18" y="26">노드끼리 말하는 세 가지 방식</text>
+<text class="st" x="120" y="46" text-anchor="middle">익숙한 것으로 치면</text>
+<text class="st" x="460" y="46" text-anchor="middle">ROS 2에서는</text>
+<!-- topic -->
+<rect class="row" x="16" y="56" width="648" height="90" rx="10"/>
+<rect class="fam" x="26" y="66" width="190" height="70" rx="8"/>
+<text class="lb" x="38" y="88" style="fill:var(--blue)">토픽 (topic)</text>
+<text class="st" x="38" y="108">늘 켜져 있는 상태 신호.</text>
+<text class="st" x="38" y="124">누가 보든 계속 흘러나온다.</text>
+<rect class="bx" x="250" y="82" width="110" height="38" rx="8"/>
+<text class="nd" x="305" y="105" text-anchor="middle">카메라 드라이버</text>
+<line class="ar" x1="362" y1="94" x2="478" y2="74"/>
+<line class="ar" x1="362" y1="101" x2="478" y2="101"/>
+<line class="ar" x1="362" y1="108" x2="478" y2="128"/>
+<text class="st" x="305" y="137" text-anchor="middle">이미지, 초당 30장</text>
+<text class="nd" x="484" y="78">부품 찾기</text>
+<text class="nd" x="484" y="105">화면 표시</text>
+<text class="nd" x="484" y="132">녹화</text>
+<text class="st" x="600" y="105">듣는 쪽은</text>
+<text class="st" x="600" y="119">몇이든 OK</text>
+<!-- service -->
+<rect class="row" x="16" y="154" width="648" height="82" rx="10"/>
+<rect class="fam" x="26" y="164" width="190" height="62" rx="8"/>
+<text class="lb" x="38" y="186" style="fill:var(--teal)">서비스 (service)</text>
+<text class="st" x="38" y="206">한 번 묻고 한 번 답 받기.</text>
+<text class="st" x="38" y="220">"그리퍼 열려 있어?"</text>
+<rect class="bx" x="250" y="176" width="110" height="38" rx="8"/>
+<text class="nd" x="305" y="199" text-anchor="middle">작업 순서</text>
+<rect class="bx" x="478" y="176" width="120" height="38" rx="8"/>
+<text class="nd" x="538" y="199" text-anchor="middle">그리퍼 드라이버</text>
+<line class="ar" x1="362" y1="186" x2="474" y2="186"/>
+<text class="st" x="418" y="181" text-anchor="middle">요청</text>
+<line class="ar dash" x1="476" y1="206" x2="364" y2="206"/>
+<text class="st" x="418" y="222" text-anchor="middle">응답</text>
+<!-- action -->
+<rect class="row" x="16" y="244" width="648" height="120" rx="10"/>
+<rect class="fam" x="26" y="254" width="190" height="100" rx="8"/>
+<text class="lb" x="38" y="280" style="fill:var(--amber)">액션 (action)</text>
+<text class="st" x="38" y="302">CALL로 부르는 긴 작업.</text>
+<text class="st" x="38" y="318">중간 진행 상황이 오고,</text>
+<text class="st" x="38" y="334">도중에 멈출 수도 있다.</text>
+<rect class="bxa" x="250" y="285" width="110" height="38" rx="8"/>
+<text class="nd" x="305" y="308" text-anchor="middle">플래너</text>
+<rect class="bxa" x="478" y="285" width="120" height="38" rx="8"/>
+<text class="nd" x="538" y="308" text-anchor="middle">로봇 드라이버</text>
+<text class="st" x="419" y="270" text-anchor="middle">① 목표: 이 궤적 따라가</text>
+<line class="ara" x1="362" y1="278" x2="474" y2="278"/>
+<text class="st" x="419" y="300" text-anchor="middle">② 진행: 40%… 80%…</text>
+<line class="ara dash" x1="476" y1="308" x2="364" y2="308"/>
+<line class="ara" x1="476" y1="334" x2="364" y2="334"/>
+<text class="st" x="419" y="352" text-anchor="middle">③ 결과: 완료 (또는 취소)</text>
+</svg>

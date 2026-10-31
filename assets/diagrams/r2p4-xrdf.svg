@@ -1,0 +1,93 @@
+<svg width="100%" viewBox="0 0 680 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">XRDF: 팔을 공으로 근사하기</title>
+<desc id="de">cuMotion은 URDF에 더해 XRDF라는 보조 파일이 필요하다. 가장 큰 부분은 로봇 각 링크를 여러 개의 공으로 근사한 충돌 모델로, 공끼리의 거리는 계산이 매우 빨라 GPU가 수많은 후보를 빠르게 검사할 수 있다. 관절 가속도 한계와 툴 좌표계도 함께 적는다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="256" rx="12"/>
+<text class="t" x="18" y="26">충돌 검사를 공 몇십 개로 단순화</text>
+<rect class="panel" x="16" y="42" width="330" height="198" rx="10"/>
+<path class="lnb" d="M 70 214 L 70 170 L 170 110 L 270 130"/>
+<circle class="jt" cx="70" cy="170" r="4"/>
+<circle class="jt" cx="170" cy="110" r="4"/>
+<circle class="jt" cx="270" cy="130" r="4"/>
+<circle class="sph" cx="70.0" cy="214.0" r="13"/>
+<circle class="sph" cx="70.0" cy="199.3" r="13"/>
+<circle class="sph" cx="70.0" cy="184.7" r="13"/>
+<circle class="sph" cx="70.0" cy="170.0" r="13"/>
+<circle class="sph" cx="70.0" cy="170.0" r="12"/>
+<circle class="sph" cx="84.3" cy="161.4" r="12"/>
+<circle class="sph" cx="98.6" cy="152.9" r="12"/>
+<circle class="sph" cx="112.9" cy="144.3" r="12"/>
+<circle class="sph" cx="127.1" cy="135.7" r="12"/>
+<circle class="sph" cx="141.4" cy="127.1" r="12"/>
+<circle class="sph" cx="155.7" cy="118.6" r="12"/>
+<circle class="sph" cx="170.0" cy="110.0" r="12"/>
+<circle class="sph" cx="170.0" cy="110.0" r="10"/>
+<circle class="sph" cx="184.3" cy="112.9" r="10"/>
+<circle class="sph" cx="198.6" cy="115.7" r="10"/>
+<circle class="sph" cx="212.9" cy="118.6" r="10"/>
+<circle class="sph" cx="227.1" cy="121.4" r="10"/>
+<circle class="sph" cx="241.4" cy="124.3" r="10"/>
+<circle class="sph" cx="255.7" cy="127.1" r="10"/>
+<circle class="sph" cx="270.0" cy="130.0" r="10"/>
+<line class="ln" x1="30" y1="228" x2="330" y2="228"/>
+<text class="sm" x="180" y="72" text-anchor="middle" style="fill:var(--teal)">청록 원 = 충돌용 공</text>
+<rect class="fam" x="362" y="42" width="300" height="198" rx="10"/>
+<text class="lb" x="378" y="66">XRDF에 들어가는 것</text>
+<text class="st" x="378" y="96">• 링크마다 충돌용 공 (중심, 반지름)</text>
+<text class="st" x="378" y="118">• 서로 부딪혀도 되는 링크 쌍</text>
+<text class="st" x="378" y="140">• 툴 좌표계</text>
+<text class="st" x="378" y="162">• 관절 가속도·저크 한계</text>
+<text class="sm" x="378" y="196" style="fill:var(--fg)">NVIDIA 문서에 UR10e 예시가 있고,</text>
+<text class="sm" x="378" y="212" style="fill:var(--fg)">다른 로봇은 Isaac Sim 편집기로 만든다</text>
+</svg>

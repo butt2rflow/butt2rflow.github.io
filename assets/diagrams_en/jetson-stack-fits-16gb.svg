@@ -1,0 +1,49 @@
+<svg width="100%" viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>The open-vocab 4-model chain co-resides within the 16 GB budget</title>
+<desc>With stereo depth (FoundationStereo), detection (SyntheticaDETR), mask (SAM2) and pose (FoundationPose) all resident at once, peak memory is 8.2 GB — inside the 15.6 GB usable budget with 7.4 GB to spare. Beyond each model building on its own, they fit together within 16 GB.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.m{font-size:11px;font-weight:700;fill:#3f4d66;}
+.s{font-size:9px;fill:#73726c;}
+.fill{font-size:11px;font-weight:700;fill:#ffffff;}
+.free{font-size:11px;font-weight:700;fill:#5f6b57;}
+.ax{font-size:9.5px;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="200" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="30">Open-vocab 4-model chain — co-resident within 16 GB</text>
+
+<!-- pipeline chips -->
+<rect x="40" y="48" width="135" height="42" rx="8" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<text class="m" x="52" y="70">Depth</text>
+<text class="s" x="52" y="85">FoundationStereo</text>
+<path d="M177 69 L193 69" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+
+<rect x="195" y="48" width="135" height="42" rx="8" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<text class="m" x="207" y="70">Detect</text>
+<text class="s" x="207" y="85">SyntheticaDETR</text>
+<path d="M332 69 L348 69" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+
+<rect x="350" y="48" width="135" height="42" rx="8" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<text class="m" x="362" y="70">Mask</text>
+<text class="s" x="362" y="85">SAM2</text>
+<path d="M487 69 L503 69" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+
+<rect x="505" y="48" width="135" height="42" rx="8" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<text class="m" x="517" y="70">Pose</text>
+<text class="s" x="517" y="85">FoundationPose</text>
+
+<!-- memory budget bar -->
+<text class="ax" x="40" y="116">Memory budget · 16 GB unified (15.6 GB usable)</text>
+<rect x="40" y="124" width="600" height="28" rx="6" fill="#ece9e0"/>
+<rect x="40" y="124" width="315" height="28" rx="6" fill="#16a34a"/>
+<rect x="345" y="124" width="10" height="28" fill="#16a34a"/>
+<text class="fill" x="197" y="142" text-anchor="middle">4 models · 8.2 GB</text>
+<text class="free" x="497" y="142" text-anchor="middle">7.4 GB free</text>
+<text class="ax" x="40" y="170">0</text>
+<text class="ax" x="640" y="170" text-anchor="end">15.6 GB</text>
+
+<text class="s" x="40" y="190">Beyond each model building alone — all four resident together, still inside 16 GB. (measured peak)</text>
+
+<defs><marker id="a" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#9a988f"/></marker></defs>
+</svg>
