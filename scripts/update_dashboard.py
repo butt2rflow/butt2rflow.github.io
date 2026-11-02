@@ -1225,9 +1225,12 @@ def _dash_card(lines: list[str], chart_summary: str = "📈 차트 보기") -> l
     return ['<div class="dash-card" markdown>', ""] + out + ["", "</div>"]
 KO_LABEL = {"ok": "정상", "caution": "경계", "danger": "스트레스"}
 EN_LABEL = {"ok": "Normal", "caution": "Caution", "danger": "Stressed"}
-SHAPE_KO = {"contango": "콘탱고 (정상)", "backwardation": "백워데이션 (스트레스)", "mixed": "혼합"}
-SHAPE_EN = {"contango": "Contango (normal)", "backwardation": "Backwardation (stress)", "mixed": "Mixed"}
-SHAPE_EMOJI = {"contango": "🟢", "backwardation": "🔴", "mixed": "🟡"}
+# Backwardation is shown as context, not as a stress state: on days VIX/VIX3M
+# and VVIX hadn't already flagged stress, an inversion added nothing
+# (scripts/study_vxcurve.py, 2026-11-01). The brief's 🔴 no longer uses it either.
+SHAPE_KO = {"contango": "콘탱고 (정상)", "backwardation": "백워데이션 (역전 · 맥락)", "mixed": "혼합"}
+SHAPE_EN = {"contango": "Contango (normal)", "backwardation": "Backwardation (inverted · context)", "mixed": "Mixed"}
+SHAPE_EMOJI = {"contango": "🟢", "backwardation": "⚪", "mixed": "🟡"}
 
 
 VOLVOL_STATE_KO = {"ok": "안도", "caution": "전환", "danger": "긴장"}
