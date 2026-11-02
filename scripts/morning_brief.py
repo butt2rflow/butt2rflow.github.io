@@ -419,10 +419,11 @@ def collect() -> dict:
 # Read
 # ============================================================
 def classify(d: dict) -> tuple[str, str, list[str]]:
-    m, vs = d["m"], d["vs"]
+    # The VX curve is shown as context, not used here: on days VIX/VIX3M and
+    # VVIX hadn't already called 🔴, an inversion added nothing
+    # (scripts/study_vxcurve.py, 2026-11-01; playbook Findings).
+    m = d["m"]
     stress = []
-    if vs and vs["shape"] == "backwardation":
-        stress.append(f"VX 곡선 역전 (M2−M1 {vs['spread_2_1']:+.2f})")
     if m["vix_vix3m"] >= STRESS_VIX_VIX3M:
         stress.append(f"VIX/VIX3M {m['vix_vix3m']:.2f} ≥ {STRESS_VIX_VIX3M}")
     if m["vvix_pct"] >= STRESS_VVIX_PCT:
@@ -453,6 +454,27 @@ def amplifier(d: dict) -> tuple[bool, str] | None:
     where = f"flip {g['flip']:,.0f} {'아래' if gap < 0 else '위'} ({gap:+.1f}%)"
     src = "" if g.get("source") == "live" else f" [{g.get('date')} 스냅샷]"
     return on, f"GEX {g['net_bn']:+.1f}B ({g['regime']}) · {where}{src}"
+
+
+GEX_ZERO_BN = 0.01   # snapshots within ±0.01B are read as ≈0 (likely broken), not as a sign
+
+
+def gex_conflict(d: dict) -> dict | None:
+    """Compare the 07:30 recompute with the site's overnight snapshot (they
+    disagreed in sign on 6–7 of 10 briefs in 2026-10, cause unknown).
+    kind "sign": opposite signs, so the amplifier verdict is low-confidence.
+    kind "zero": the snapshot is ≈0, most likely broken; the recompute stands."""
+    g = d["gex"]
+    if not g or g.get("source") != "live" or g.get("published_net_bn") is None:
+        return None
+    live, pub = g["net_bn"], g["published_net_bn"]
+    if abs(pub) < GEX_ZERO_BN:
+        return {"kind": "zero", "live_bn": live, "snapshot_bn": pub,
+                "text": f"스냅샷 {pub:+.3f}B ≈0 (이상값 가능, 재계산 기준 유지)"}
+    if abs(live) >= GEX_ZERO_BN and (pub < 0) != (live < 0):
+        return {"kind": "sign", "live_bn": live, "snapshot_bn": pub,
+                "text": f"재계산 {live:+.1f}B vs 스냅샷 {pub:+.1f}B 부호 불일치"}
+    return None
 
 
 def amplifier_pre(d: dict) -> tuple[bool, str] | None:
@@ -517,7 +539,12 @@ def build_text(d: dict) -> str:
         on, desc = amp
         verdict = ("하방 증폭 구조 ON — 하락 시 딜러 헤지 매도가 하락을 키울 수 있음" if on
                    else "증폭 구조 OFF — 딜러 헤지가 변동을 흡수하는 쪽")
+        conflict = gex_conflict(d)
+        if conflict and conflict["kind"] == "sign":
+            verdict = f"{'ON' if on else 'OFF'}(재계산 기준) — 딜러 감마 부호 불확실, 증폭 판단은 낮은 신뢰"
         L.append(f"• 딜러: {desc} → {verdict}")
+        if conflict:
+            L.append(f"  ⚠️ GEX {conflict['text']}")
         pa = amplifier_pre(d)
         if pa:
             L.append(f"• 프리마켓 반영: {pa[1]}")
@@ -631,7 +658,8 @@ gap_state가 caution·danger이거나 gap_bbb_pct가 90 이상이면, HY 수준�
 추측하지 않고, 얼마나 이례적인지(올해 변화, 1년 백분위)와 다른 스트레스 지표와 같은 쪽인지만 말합니다.
 HY 수준이 낮다는 건 '안전하다'가 아니라 '부도 위험에 대한 보상이 얇다'는 뜻입니다. VIX는 잠잠한데 격차가 벌어지면
 주식과 채권 시장이 다른 얘기를 하고 있다고 그대로 씁니다.
-그 밖에: 보험 수요와 실제 스트레스(VIX/VIX3M·VX 곡선·VVIX)를 구분하고, 지난 5일 변화를 짚습니다.
+그 밖에: 보험 수요와 실제 스트레스(VIX/VIX3M·VVIX)를 구분하고, 지난 5일 변화를 짚습니다. VX 곡선은 상태 판정에 쓰지 않는 맥락입니다. 곡선만으로 스트레스라고 하지 않습니다.
+amp.gex_conflict가 'sign'이면(재계산과 스냅샷의 딜러 감마 부호가 다름) 증폭 구조 ON/OFF를 단정하지 말고 '딜러 감마 부호가 불확실하다'고 씁니다. 'zero'(스냅샷이 ≈0, 이상값 가능)면 재계산 값으로 읽습니다.
 각 지표는 playbook의 '블로그 지표 글' 규칙대로 읽고, 그 글과 다르게 해석하지 않습니다.
 SKEW·COR90D의 수준은 1년 백분위(m.skew_pct, m.cor90d_pct)로 말합니다. 대시보드도 같은 기준(75% 이상 경계, 95% 이상 스트레스)으로 판정합니다.
 고정 숫자(150, 50 등)로 '경계 구간', '중앙값 아래'라고 하지 않습니다.
@@ -664,7 +692,9 @@ def commentary(d: dict) -> str | None:
         return None
     payload = {k: d[k] for k in ("m", "cs", "vs", "ks", "ts", "credit", "move", "gex", "gex0", "base", "events", "pre", "pc")}
     amp = amplifier(d)
-    payload["amp"] = {"on": amp[0], "desc": amp[1]} if amp else None
+    conflict = gex_conflict(d)
+    payload["amp"] = {"on": amp[0], "desc": amp[1],
+                      "gex_conflict": conflict and conflict["kind"]} if amp else None
     pa = amplifier_pre(d)
     payload["amp_pre"] = {"on": pa[0], "desc": pa[1]} if pa else None
     payload["state"] = classify(d)[1]
@@ -922,6 +952,7 @@ def write_log(d: dict, text: str, note: str | None) -> None:
         "sent_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "state": {"emoji": emoji, "label": label, "why": why},
         "amp_on": amp[0] if amp else None,
+        "gex_conflict": gex_conflict(d),
         "inputs": {k: d[k] for k in ("m", "cs", "vs", "vvs", "ks", "ts", "credit",
                                        "move", "gex", "gex0", "base", "events", "pre", "pc", "freshness")},
         "vx_stale": d["vx_stale"],
