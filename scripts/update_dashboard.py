@@ -1925,6 +1925,9 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
     import http.cookiejar
     from collections import defaultdict
     try:
+        if not _gex_window_open():
+            raise ValueError("outside the 07:00–16:15 ET trading-day window "
+                             "(Yahoo's after-close chain is unreliable); keeping the last good read")
         # Yahoo's v7 options endpoint now needs a cookie + crumb (the v8 chart
         # API used elsewhere doesn't). Do the standard handshake once.
         cj = http.cookiejar.CookieJar()
@@ -2033,6 +2036,7 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
                 g_one = _bs_gamma(spot, k, Tm, ivm, r_rate) if ivm > 0 else 0.0
                 prof.append((k, (g_one * coi_by_k[k] - g_one * poi_by_k[k])
                              * 100 * spot * spot * 0.01))
+        ivs = [iv for (k, coi, poi, civ, piv, T) in rows for iv in (civ, piv) if iv > 0]
         result = {
             "spot": spot,
             "net_bn": cur / 1e9,
@@ -2040,6 +2044,12 @@ def fetch_gex(r_rate: float = 0.043) -> dict | None:
             "flip": flip,
             "max_pain": max_pain,
             "date": now.strftime("%Y-%m-%d"),
+            "asof_et": now.astimezone(NY).strftime("%Y-%m-%d %H:%M"),
+            # Diagnostics, so a bad read can be traced to OI or IV.
+            "usable": usable,
+            "call_oi": float(sum(coi_by_k.values())),
+            "put_oi": float(sum(poi_by_k.values())),
+            "iv_med": float(np.median(ivs)) if ivs else None,
             "profile": prof,
         }
         if not _gex_plausible(result):
@@ -2062,9 +2072,14 @@ def _gex_plausible(g: dict) -> bool:
     try:
         spot = float(g["spot"])
         mp = g.get("max_pain")
-        if mp is None or not (spot * 0.85 <= float(mp) <= spot * 1.15):
+        # ±12%: the degraded evening reads of 2026-10-27/28 had max pain 6,700
+        # against spot ~7,720 (−13%) and still carried a flip; tighter would
+        # risk rejecting real reads after a fast ~10% drop. The evening
+        # signature (small positive net, flip just below spot) is caught by the
+        # time window, not here.
+        if mp is None or not (spot * 0.88 <= float(mp) <= spot * 1.12):
             return False
-        if g.get("flip") is None and abs(float(g.get("net_bn") or 0.0)) < 0.05:
+        if abs(float(g.get("net_bn") or 0.0)) < 0.05:
             return False
         return True
     except Exception:  # noqa: BLE001
@@ -2452,6 +2467,35 @@ def _gex0_next_rows_en(n: dict) -> list[str]:
     ]
 
 
+# Regime GEX is read only on weekdays 07:00–16:15 ET. After the close Yahoo's
+# chain changes within the hour (2026-10-19 → 10-30: every evening read jumped
+# far more positive than the session reads at the same closing spot, e.g. 10-26
+# −22.7B at 17:08 ET → +13.9B at 17:51 ET; late-evening and weekend reads
+# degraded to ≈0 with max pain ~6,700), and those reads became the snapshot the
+# home tile and the 07:30 brief fell back to. Max pain (OI only) didn't move
+# across the jumps, so most likely Yahoo's after-hours IV. Pre-open reads
+# (07:57–09:19 ET in the logs) matched the session's sign and size.
+GEX_WINDOW_ET = ((7, 0), (16, 15))
+# NYSE holidays and 1:00 p.m. early closes (nyse.com/markets/hours-calendars,
+# read 2026-11-01). Extend before 2028.
+MARKET_HOLIDAYS = {
+    "2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25", "2026-06-19",
+    "2026-07-03", "2026-09-07", "2026-11-26", "2026-12-25",
+    "2027-01-01", "2027-01-18", "2027-02-15", "2027-03-26", "2027-05-31", "2027-06-18",
+    "2027-07-05", "2027-09-06", "2027-11-25", "2027-12-24",
+}
+EARLY_CLOSES = {"2026-11-27", "2026-12-24", "2027-11-26"}   # options close 13:15 ET
+
+
+def _gex_window_open(t: datetime | None = None) -> bool:
+    t = t or datetime.now(NY)
+    day = t.strftime("%Y-%m-%d")
+    if t.weekday() >= 5 or day in MARKET_HOLIDAYS:
+        return False
+    end = (13, 15) if day in EARLY_CLOSES else GEX_WINDOW_ET[1]
+    return GEX_WINDOW_ET[0] <= (t.hour, t.minute) < end
+
+
 def _ny_in_session() -> bool:
     """True during the regular SPX session (Mon–Fri 09:30–16:00 America/New_York; holidays not modelled)."""
     t = datetime.now(NY)
@@ -2486,6 +2530,11 @@ def _load_gex_cache() -> dict | None:
     try:
         req = urllib.request.Request(GEX_CACHE_URL, headers={"User-Agent": "Mozilla/5.0"})
         g = json.load(urllib.request.urlopen(req, timeout=15))
+        if not g.get("asof_et"):
+            # Untimed caches predate the 07:00–16:15 ET window and may be
+            # after-close reads; show nothing until the first timed read.
+            print("  [WARN] cached GEX has no asof_et (pre-window read); tile omitted")
+            return None
         if not _gex_plausible(g):
             print("  [WARN] cached GEX implausible; tile omitted (self-heals on next good fetch)")
             return None
@@ -2528,7 +2577,7 @@ def render_gex_chart(g: dict, out_path: Path) -> bool:
         ax.text(0.5, 0.52, "SNAPSHOT", transform=ax.transAxes,
                 fontsize=54, color="#9aa0a6", alpha=0.20, rotation=16,
                 ha="center", va="center", fontweight="bold", zorder=5)
-        d = g.get("date", "")
+        d = g.get("asof_et") or g.get("date", "")
         if d:
             ax.text(0.5, 0.40, f"cached · {d}", transform=ax.transAxes,
                     fontsize=13, color="#9aa0a6", alpha=0.45, rotation=16,
@@ -2626,7 +2675,8 @@ def render_gex_card_ko(g: dict) -> list[str]:
     mp_s = f"{g['max_pain']:.0f}" if g.get("max_pain") else "—"
     pos = ("플립 위 = 롱 감마" if (g.get("flip") and g["spot"] >= g["flip"])
            else "플립 아래 = 숏 감마" if g.get("flip") else "—")
-    stamp = f" · {g['date']} 기준" + ("" if g.get("live", True) else " (스냅샷)")
+    stamp = (f" · {_gex0_asof_ko(g) if 'asof_et' in g else g['date']} 기준"
+             + ("" if g.get("live", True) else " (스냅샷)"))
     return [
         "---",
         "",
@@ -2658,7 +2708,8 @@ def render_gex_card_en(g: dict) -> list[str]:
     mp_s = f"{g['max_pain']:.0f}" if g.get("max_pain") else "—"
     pos = ("above flip = long gamma" if (g.get("flip") and g["spot"] >= g["flip"])
            else "below flip = short gamma" if g.get("flip") else "—")
-    stamp = f" · as of {g['date']}" + ("" if g.get("live", True) else " (snapshot)")
+    stamp = (f" · as of {_gex0_asof_en(g) if 'asof_et' in g else g['date']}"
+             + ("" if g.get("live", True) else " (snapshot)"))
     return [
         "---",
         "",
@@ -3212,7 +3263,7 @@ def main():
     else:
         gex = _load_gex_cache()          # Yahoo empty-chain window → last good snapshot
     if gex:
-        tag = "" if gex.get("live") else f" [cached, as of {gex.get('date')}]"
+        tag = "" if gex.get("live") else f" [cached, as of {gex.get('asof_et') or gex.get('date')}]"
         print(f"  GEX: net {gex['net_bn']:+.1f}B ({gex['regime']}), "
               f"flip {gex['flip']}, max_pain {gex['max_pain']} (spot {gex['spot']:.0f}){tag}")
 

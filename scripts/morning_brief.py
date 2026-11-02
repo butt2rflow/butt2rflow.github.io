@@ -301,6 +301,15 @@ def fetch_gex_fresh() -> dict | None:
     session's OCC open interest by 07:30 ET; if it doesn't, both numbers
     match. The log keeps both so the brief_log answers that question."""
     pub = fetch_gex_published()
+    if pub and not pub.get("asof_et"):
+        # Untimed snapshots predate update_dashboard.GEX_WINDOW_ET and may be
+        # after-close reads: don't compare with them or fall back to them.
+        print("  [WARN] GEX snapshot has no asof_et (pre-window read); ignored")
+        pub = None
+    if pub and not ud._gex_plausible(pub):
+        print(f"  [WARN] GEX snapshot implausible (net {pub.get('net_bn')}, max pain "
+              f"{pub.get('max_pain')}, spot {pub.get('spot')}); ignored")
+        pub = None
     g = None
     try:
         g = ud.fetch_gex()
@@ -311,6 +320,7 @@ def fetch_gex_fresh() -> dict | None:
         g["source"] = "live"
         g["published_net_bn"] = pub["net_bn"] if pub else None
         g["published_flip"] = pub["flip"] if pub else None
+        g["published_asof"] = pub["asof_et"] if pub else None
         return g
     if pub:
         pub["source"] = "published"
