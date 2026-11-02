@@ -6,7 +6,7 @@ Inputs:  brief_log/*.json (live, scored by score_briefs.py)
          brief_log/backfill.csv (template replayed over history, scored)
          brief_playbook.md (current rules)
 Outputs: brief_review/<YYYY-MM>.md (report: tables + Claude's read)
-         brief_playbook.md (Claude's proposed revision — lands via PR)
+         brief_playbook.md (Claude's edits to Findings / Open questions — lands via PR)
 
 Run from project root (after score_briefs.py):
     python scripts/review_briefs.py            # needs ANTHROPIC_API_KEY
@@ -194,7 +194,10 @@ def backfill_tables(bf: pd.DataFrame) -> str:
     return "\n\n".join(parts)
 
 
-THRESH_HEADER = "## Signals and current thresholds"
+# The review may rewrite only these playbook sections. Thresholds are code
+# constants (morning_brief.HEDGE_*/STRESS_*), so the threshold table and
+# every other section are out of its reach; it can only propose in the report.
+EDITABLE = {"Findings": "## Findings to date", "Open questions": "## Open questions"}
 
 
 def _section(md: str, header: str) -> str | None:
@@ -205,14 +208,16 @@ def _section(md: str, header: str) -> str | None:
     return md[i:] if j < 0 else md[i:j]
 
 
-def guard_thresholds(old: str, new: str) -> tuple[str, bool]:
-    """The thresholds are code constants (morning_brief.HEDGE_*/STRESS_*);
-    the review may only *propose* changing them, in the report. Keep the
-    playbook's threshold table as it was so it can't drift from the code."""
-    o, n = _section(old, THRESH_HEADER), _section(new, THRESH_HEADER)
-    if o is None or n is None or o.strip() == n.strip():
-        return new, False
-    return new.replace(n, o), True
+def apply_edits(playbook: str, edits: list[dict]) -> str:
+    """Replace the body of each edited section, keeping its header line."""
+    for e in edits:
+        old = _section(playbook, EDITABLE[e["section"]])
+        if old is None:
+            print(f"  [WARN] playbook has no section {EDITABLE[e['section']]!r}; edit skipped")
+            continue
+        head = old.split("\n", 1)[0]
+        playbook = playbook.replace(old, f"{head}\n\n{e['new_body'].strip()}\n", 1)
+    return playbook
 
 
 def live_section(month: str | None) -> tuple[str, list[dict]]:
@@ -254,12 +259,13 @@ REVIEW_SYSTEM = """당신은 변동성·보험료 관점의 아침 브리핑을 
    (예: gex_live와 gex_published가 실제로 다른지, 프리마켓 VIX가 찍혔는지).
    임계값·판정 규칙을 바꿔야 한다고 판단하면 '제안'으로 보고서에만 쓰고 근거(에피소드 수, CI,
    2019 이전/2020 이후 각각의 결과)를 붙입니다. 실제 변경은 사람이 코드와 함께 합니다.
-2. playbook_md: 수정된 playbook 전체. 'Change rules'를 반드시 지킵니다.
-   'Signals and current thresholds' 표는 코드 상수와 같아야 하므로 고치지 않습니다(코드가 되돌립니다).
-   'Findings'와 'Open questions'만 근거가 있을 때 갱신합니다. 판단은 '전 기간' 표로만 하고,
+2. playbook_edits: 'Findings to date'와 'Open questions' 중 근거가 있어 바꿀 섹션만,
+   섹션 이름(section)과 그 섹션의 새 본문 전체(new_body, 제목 줄 제외)로 씁니다.
+   playbook 전체를 다시 쓰지 않습니다. 다른 섹션(임계값 표 포함)은 고칠 수 없습니다.
+   'Change rules'를 반드시 지킵니다. 판단은 '전 기간' 표로만 하고,
    '최근 12개월' 표는 서술용입니다. n(겹치는 일수)이 아니라 에피소드 수와 95% CI를 근거로 쓰고,
    9개 신호를 매달 보는 다중비교라는 점을 감안해 우연한 차이를 발견으로 올리지 않습니다.
-   범위를 변동성·보험료 밖으로 넓히지 않습니다. 바꿀 근거가 없으면 기존 내용을 그대로 둡니다.
+   범위를 변동성·보험료 밖으로 넓히지 않습니다. 바꿀 근거가 없으면 빈 목록을 냅니다.
 3. changes: playbook에서 바꾼 점을 한 줄씩. 없으면 빈 목록.
 백필은 GEX·풋/콜·VX 곡선 이력이 없어 일부 신호만 담고 있다는 한계를 감안합니다.
 🔴 상태는 상당 부분 VIX 수준의 대리변수이므로 'VIX 밴드별 상태' 표로 수준 효과를 걷어내고 읽습니다."""
@@ -268,10 +274,21 @@ SCHEMA = {
     "type": "object",
     "properties": {
         "report_md": {"type": "string"},
-        "playbook_md": {"type": "string"},
+        "playbook_edits": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "section": {"type": "string", "enum": list(EDITABLE)},
+                    "new_body": {"type": "string"},
+                },
+                "required": ["section", "new_body"],
+                "additionalProperties": False,
+            },
+        },
         "changes": {"type": "array", "items": {"type": "string"}},
     },
-    "required": ["report_md", "playbook_md", "changes"],
+    "required": ["report_md", "playbook_edits", "changes"],
     "additionalProperties": False,
 }
 
@@ -285,7 +302,7 @@ def ask_claude(playbook: str, tables: str, live_md: str, live: list[dict]) -> di
     try:
         with client.beta.messages.stream(
             model=MODEL,
-            max_tokens=32000,
+            max_tokens=64000,
             output_config={"effort": "high",
                            "format": {"type": "json_schema", "schema": SCHEMA}},
             betas=["server-side-fallback-2026-07-01"],
@@ -328,17 +345,19 @@ def main():
               f"_생성 {now:%Y-%m-%d %H:%M} UTC · 백필 {len(bf):,}일 · 실제 기록 "
               f"{len(list(mb.LOG_DIR.glob('????-??-??.json')))}건_", ""]
     changes: list[str] = []
-    if not args.no_llm and os.environ.get("ANTHROPIC_API_KEY"):
+    if not args.no_llm:
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            sys.exit("ANTHROPIC_API_KEY not set (use --no-llm for tables only)")
         out = ask_claude(playbook, tables, live_md, live)
-        if out:
-            report += ["## 복기", "", out["report_md"], ""]
-            changes = out["changes"]
-            new_pb, reverted = guard_thresholds(playbook, out["playbook_md"])
-            if reverted:
-                changes.append("(코드가 되돌림) 임계값 표 수정 시도 — 임계값은 코드 상수라 보고서의 제안으로만 남김")
-            if new_pb.strip() != playbook.strip():
-                mb.PLAYBOOK.write_text(new_pb.rstrip() + "\n", encoding="utf-8")
-            report += ["## playbook 변경 제안", ""] + ([f"- {c}" for c in changes] or ["- 없음"]) + [""]
+        if out is None:
+            # A tables-only report would read as "0 playbook changes"; stop instead.
+            sys.exit("Claude review failed; no report written")
+        report += ["## 복기", "", out["report_md"], ""]
+        changes = out["changes"]
+        new_pb = apply_edits(playbook, out["playbook_edits"])
+        if new_pb.strip() != playbook.strip():
+            mb.PLAYBOOK.write_text(new_pb.rstrip() + "\n", encoding="utf-8")
+        report += ["## playbook 변경 제안", ""] + ([f"- {c}" for c in changes] or ["- 없음"]) + [""]
     report += ["## 실제 브리핑과 결과", "", live_md, "", "## 백필 통계", "", tables, ""]
 
     REVIEW_DIR.mkdir(exist_ok=True)

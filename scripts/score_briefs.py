@@ -81,6 +81,7 @@ def score_live(h: pd.DataFrame) -> int:
     recs = {p: json.loads(p.read_text(encoding="utf-8")) for p in logs}
     states = {r["data_date"]: STATE_RANK.get(r["state"]["emoji"], 0) for r in recs.values()}
     inv = {v: k for k, v in STATE_RANK.items()}
+    last_logged = max(states) if states else ""
     updated = 0
     for p, r in recs.items():
         out = r.get("outcome") or {}
@@ -94,6 +95,10 @@ def score_live(h: pd.DataFrame) -> int:
                 continue
             o = outcome_at(h, t, n)
             if o is None:
+                continue
+            # The end day's own log is written the next morning; scoring
+            # before it exists would freeze worst_state without that day.
+            if o["end"] > last_logged:
                 continue
             later = [s for d, s in states.items() if r["data_date"] < d <= o["end"]]
             o["worst_state"] = inv[max(later)] if later else None

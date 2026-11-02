@@ -60,13 +60,28 @@ jobs:
           git commit -m "Briefing review ${MONTH} (playbook changes: ${CHANGES})"
           git push -f origin "$branch"
           repo="${GITHUB_REPOSITORY}"
+          link="PR에서 검토·병합"
           url=$(gh pr view "$branch" --json url -q .url 2>/dev/null || true)
-          [ -z "$url" ] && url=$(gh pr create --base main --head "$branch" \
+          if [ -z "$url" ] && ! url=$(gh pr create --base main --head "$branch" \
                 --title "Briefing review ${MONTH}" \
                 --body "Monthly review of the morning briefing. Report: brief_review/${MONTH}.md · proposed playbook changes: ${CHANGES}. Merge to apply." \
-                2>/dev/null || true)
-          [ -z "$url" ] && url="https://github.com/${repo}/compare/main...${branch}?expand=1"
+                2>pr_err); then
+            # Expected while "Allow GitHub Actions to create and approve pull requests" is off.
+            echo "::warning::gh pr create failed: $(cat pr_err)"
+            url="https://github.com/${repo}/compare/main...${branch}?expand=1"
+            link="PR 자동 생성 실패 — 비교 화면에서 PR 만들기"
+          fi
           report="https://github.com/${repo}/blob/${branch}/brief_review/${MONTH}.md"
-          msg="*📋 브리핑 월간 복기 — ${MONTH}*\nplaybook 변경 제안 ${CHANGES}건\n<${report}|보고서 보기> · <${url}|PR에서 검토·병합>"
-          curl -s -X POST -H 'Content-Type: application/json' \
+          msg="*📋 브리핑 월간 복기 — ${MONTH}*\nplaybook 변경 제안 ${CHANGES}건\n<${report}|보고서 보기> · <${url}|${link}>"
+          curl -fsS -X POST -H 'Content-Type: application/json' \
+               --data "$(printf '{"text":"%s"}' "$msg")" "$SLACK_WEBHOOK_URL" >/dev/null
+
+      - name: Tell Slack the review failed
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          msg="*⚠️ 브리핑 월간 복기 실패*\n<${RUN_URL}|실행 로그 보기>"
+          curl -fsS -X POST -H 'Content-Type: application/json' \
                --data "$(printf '{"text":"%s"}' "$msg")" "$SLACK_WEBHOOK_URL" >/dev/null
