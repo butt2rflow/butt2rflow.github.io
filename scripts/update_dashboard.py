@@ -2601,7 +2601,9 @@ def render_gex_0dte_card_ko(g: dict) -> list[str]:
     note = ([] if live else
             [f"<small>**마지막 장중 값 · {_gex0_asof_ko(g)}** — "
              + ("실시간 조회에 실패해 직전 값을 보여 줍니다. 다음 갱신 때 다시 계산합니다.</small>" if _ny_in_session()
-                else "지금은 장중이 아니라 갱신되지 않습니다. 다음 정규장(09:30 ET)부터 다시 실시간으로 계산합니다.</small>"), ""])
+                # The page is static: say when it was built, not "now".
+                else f"이 페이지를 만든 {datetime.now(NY):%m/%d %H:%M} ET에는 장중이 아니었습니다. "
+                     "정규장(09:30 ET) 중 다음 갱신 때 실시간 값으로 바뀝니다.</small>"), ""])
     return [
         "---",
         "",
@@ -2641,7 +2643,8 @@ def render_gex_0dte_card_en(g: dict) -> list[str]:
     note = ([] if live else
             [f"<small>**Last intraday read · {_gex0_asof_en(g)}** — "
              + ("the live read failed, so this is the previous value; it retries on the next refresh.</small>" if _ny_in_session()
-                else "the market is not in session, so this is not updating. Live values resume at the next regular open (09:30 ET).</small>"), ""])
+                else f"the market was not in session when this page was built ({datetime.now(NY):%b} {datetime.now(NY).day}, "
+                     f"{datetime.now(NY).strftime('%I:%M %p').lstrip('0')} ET). Live values return with the next refresh during the session (from 09:30 ET).</small>"), ""])
     return [
         "---",
         "",
