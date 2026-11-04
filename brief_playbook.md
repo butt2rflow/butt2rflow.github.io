@@ -14,7 +14,7 @@ The monthly review (`scripts/review_briefs.py`) proposes changes to it as a PR, 
 
 **Pre-market and 0DTE (added 2026-10-30).** Everything above is read at the cash close. Two display-only lines add what is known at 07:30 ET:
 - **Pre-market flip read:** ES now minus the ES−SPX basis at the 16:00 close gives an ES-implied SPX level, and the regime flip is read again there. Write it as a condition ("if the cash open is at this level, the amplifier is on"), never as a forecast of the open. The close-based amplifier line stays the state of record.
-- **0DTE gamma:** today's expiry only, from prior-close open interest, at the close and at the ES-implied level. The regime GEX leaves this expiry out. Most 0DTE contracts are opened during the session and are not in this OI, so give it little weight and say so.
+- **0DTE gamma:** today's expiry only, from prior-close open interest, at the close and at the ES-implied level. The regime GEX leaves this expiry out. Most 0DTE contracts are opened during the session and are not in this OI, so give it little weight. The brief line already states that limit; the commentary mentions 0DTE only when its sign differs from the regime GEX, and doesn't repeat the caveat every day (Jae, 2026-11-04).
 
 ## Signals and current thresholds
 | Signal | Definition | Threshold | Status |
