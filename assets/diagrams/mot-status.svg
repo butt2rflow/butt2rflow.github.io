@@ -1,0 +1,88 @@
+<svg width="100%" viewBox="0 0 680 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">자세에서 움직임까지, 이번에 확인한 것과 못 한 것</title>
+<desc id="de">같은 Orin NX 16GB에서 자세 다음 단계들을 시험했다. cuMotion 경로 계획은 동작(약 186 ms). nvblox 장애물 지도는 합성 깊이와 라이브 카메라 모두 통과(평평한 장면 중앙값 5 mm)했고, 그 지도를 읽은 cuMotion은 장애물 속 목표를 거부했다. UR ROS 2 드라이버는 가상 하드웨어로 컨트롤러 13개가 모두 올라옴. 실제 로봇을 움직이거나 힘을 잰 것은 없다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="345" rx="12"/>
+<text class="t" x="18" y="26">자세 다음 단계들, 이번 결과</text>
+<rect class="bxgr" x="16" y="46" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="69">물체 자세</text>
+<text class="it" x="270" y="69">이전 글들 (FoundationPose)</text>
+<text class="nd" x="650" y="69" text-anchor="end" style="fill:var(--green)">동작</text>
+<line class="arg" x1="140" y1="82" x2="140" y2="90"/>
+<rect class="bxgr" x="16" y="90" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="113">경로 계획 · cuMotion</text>
+<text class="it" x="270" y="113">UR10e 설정, 계획 1회 약 186 ms</text>
+<text class="nd" x="650" y="113" text-anchor="end" style="fill:var(--green)">동작</text>
+<line class="arg" x1="140" y1="126" x2="140" y2="134"/>
+<rect class="bxgr" x="16" y="134" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="157">장애물 지도 · nvblox (합성)</text>
+<text class="it" x="270" y="157">벽·상자를 2 cm 칸 안에</text>
+<text class="nd" x="650" y="157" text-anchor="end" style="fill:var(--green)">통과</text>
+<line class="arg" x1="140" y1="170" x2="140" y2="178"/>
+<rect class="bxgr" x="16" y="178" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="201">장애물 지도 · nvblox (라이브)</text>
+<text class="it" x="270" y="201">평평한 장면 중앙값 5 mm, 카메라 속도 따라감</text>
+<text class="nd" x="650" y="201" text-anchor="end" style="fill:var(--green)">통과</text>
+<line class="arg" x1="140" y1="214" x2="140" y2="222"/>
+<rect class="bxgr" x="16" y="222" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="245">지도 → 경로 계획</text>
+<text class="it" x="270" y="245">장애물 속 목표는 거부, 빈 공간은 통과</text>
+<text class="nd" x="650" y="245" text-anchor="end" style="fill:var(--green)">통과</text>
+<line class="arg" x1="140" y1="258" x2="140" y2="266"/>
+<rect class="bxa" x="16" y="266" width="648" height="36" rx="8"/>
+<text class="lb" x="30" y="289">로봇 드라이버 · UR ROS 2</text>
+<text class="it" x="270" y="289">가상 하드웨어, 컨트롤러 13개</text>
+<text class="nd" x="650" y="289" text-anchor="end" style="fill:var(--amber)">가상만</text>
+<text class="st" x="18" y="330" style="fill:var(--fg)">실제 로봇을 움직이거나 실제 힘을 잰 단계는 아직 없다</text>
+</svg>

@@ -1,0 +1,60 @@
+<svg width="100%" viewBox="0 0 680 254" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>CAD 없는 물체를 스캔하는 흐름</title>
+<desc>물체를 인쇄한 ChArUco 보드 가운데 올리고, 고정된 카메라 앞에서 보드를 돌리며 멈춰 있고 새 각도일 때만 자동 저장한다. 뷰마다 보드 자세, 깊이, 물체 마스크를 얻어 보드 좌표계로 합치고, 1mm 칸 높이 지도로 메시를 만든 뒤(4.5초) FoundationPose가 CAD 대신 이 메시로 물체를 추적한다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.sub{font-size:10.5px;fill:#73726c;}
+.m{font-size:11.5px;font-weight:700;fill:#3f4d66;}
+.s{font-size:9.5px;fill:#73726c;}
+.v{font-size:10.5px;font-weight:700;fill:#5f5e58;}
+.g{font-size:10.5px;font-weight:700;fill:#15803d;}
+.r{font-size:10.5px;font-weight:700;fill:#b91c1c;}
+.num{font-size:10px;font-weight:700;fill:#ffffff;}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#9a988f"/></marker></defs>
+<rect x="0" y="0" width="680" height="254" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="32">인쇄한 보드 한 장으로 메시 만들기</text>
+<text class="sub" x="40" y="50">카메라는 고정하고 보드를 돌린다 · 조건이 맞을 때 자동으로 한 장씩 저장</text>
+<rect x="40" y="70" width="190" height="64" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<circle cx="56" cy="87" r="9" fill="#5b6b86"/>
+<text class="num" x="56" y="90.5" text-anchor="middle">1</text>
+<text class="m" x="71" y="91">보드 위에 물체</text>
+<text class="s" x="52" y="110">인쇄한 ChArUco 보드 가운데</text>
+<text class="s" x="52" y="124">카메라에서 35~40cm</text>
+<rect x="245" y="70" width="190" height="64" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<circle cx="261" cy="87" r="9" fill="#5b6b86"/>
+<text class="num" x="261" y="90.5" text-anchor="middle">2</text>
+<text class="m" x="276" y="91">보드를 돌리며 촬영</text>
+<text class="s" x="257" y="110">멈춰 있고(3mm·1° 이내)</text>
+<text class="s" x="257" y="124">새 각도일 때(12°·40mm 이상)만 저장</text>
+<rect x="450" y="70" width="190" height="64" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<circle cx="466" cy="87" r="9" fill="#5b6b86"/>
+<text class="num" x="466" y="90.5" text-anchor="middle">3</text>
+<text class="m" x="481" y="91">뷰마다 세 가지</text>
+<text class="s" x="462" y="110">보드 자세(ChArUco 코너)</text>
+<text class="s" x="462" y="124">깊이 + 물체 마스크</text>
+<rect x="450" y="170" width="190" height="64" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<circle cx="466" cy="187" r="9" fill="#5b6b86"/>
+<text class="num" x="466" y="190.5" text-anchor="middle">4</text>
+<text class="m" x="481" y="191">보드 좌표계로 합치기</text>
+<text class="s" x="462" y="210">모든 점을 보드 기준으로</text>
+<text class="s" x="462" y="224">깊이로 보드 평면 다시 맞춤</text>
+<rect x="245" y="170" width="190" height="64" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<circle cx="261" cy="187" r="9" fill="#5b6b86"/>
+<text class="num" x="261" y="190.5" text-anchor="middle">5</text>
+<text class="m" x="276" y="191">높이 지도 → 메시</text>
+<text class="s" x="257" y="210">1mm 칸마다 높이 하나</text>
+<text class="s" x="257" y="224">4.5초</text>
+<rect x="40" y="170" width="190" height="64" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<circle cx="56" cy="187" r="9" fill="#5b6b86"/>
+<text class="num" x="56" y="190.5" text-anchor="middle">6</text>
+<text class="m" x="71" y="191">FoundationPose 추적</text>
+<text class="s" x="52" y="210">스캔한 메시를 CAD 대신</text>
+<text class="s" x="52" y="224">초당 약 7프레임</text>
+<path d="M232 102 L243 102" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M437 102 L448 102" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M545 136 L545 168" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M448 202 L437 202" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M243 202 L232 202" stroke="#9a988f" stroke-width="1.4" marker-end="url(#a)"/>
+</svg>

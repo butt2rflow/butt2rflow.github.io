@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>엣지 스택 — 바닥부터 인식까지</title>
+<desc>Jetson 엣지 스택은 아래부터 하드웨어(Orin NX 16GB + NVMe SSD), JetPack 6.2.2(L4T R36.5, Ubuntu 22.04), CUDA 12.6, 그 위에 ROS 2 Humble과 PyTorch(Jetson 전용 인덱스), 맨 위 인식 파이프라인으로 쌓인다. 다음 단계인 Isaac ROS는 ROS 2 위에 얹히는 GPU 가속 인식 층으로, 2부의 주제다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:13px;font-weight:700;fill:#3d3d3a;}
+.s{font-size:10.5px;fill:#73726c;}
+.next{font-size:11.5px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="360" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">엣지 스택 — 바닥부터 인식까지</text>
+
+<!-- L5 perception (top) -->
+<rect x="60" y="66" width="400" height="42" rx="8" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<text class="t" x="80" y="86" style="fill:#15803d">인식 파이프라인</text>
+<text class="s" x="80" y="101">스테레오 깊이 · 세그멘테이션 · 6-DoF 포즈</text>
+
+<!-- L4 split: ROS2 | PyTorch -->
+<rect x="60" y="118" width="196" height="42" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="80" y="138">ROS 2 Humble</text>
+<text class="s" x="80" y="153">로봇 미들웨어 (공통어)</text>
+<rect x="264" y="118" width="196" height="42" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="284" y="138">PyTorch</text>
+<text class="s" x="284" y="153">Jetson 전용 인덱스 빌드</text>
+
+<!-- L3 CUDA -->
+<rect x="60" y="170" width="400" height="38" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="80" y="193">CUDA 12.6</text>
+
+<!-- L2 JetPack -->
+<rect x="60" y="218" width="400" height="38" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="t" x="80" y="241">JetPack 6.2.2  ·  L4T R36.5  ·  Ubuntu 22.04</text>
+
+<!-- L1 hardware -->
+<rect x="60" y="266" width="400" height="42" rx="8" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.2"/>
+<text class="t" x="80" y="286" style="fill:#3f4d66">하드웨어</text>
+<text class="s" x="80" y="301">Jetson Orin NX 16GB  ·  NVMe SSD</text>
+
+<!-- next: Isaac ROS badge, pointing at ROS 2 layer -->
+<rect x="486" y="118" width="150" height="42" rx="8" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.3" stroke-dasharray="5 3"/>
+<text class="next" x="561" y="136" text-anchor="middle" style="fill:#a9791f">다음: Isaac ROS</text>
+<text class="s" x="561" y="151" text-anchor="middle">GPU 가속 인식 (2부)</text>
+<line x1="486" y1="139" x2="462" y2="139" stroke="#c9a24a" stroke-width="1.6" stroke-dasharray="4 3"/>
+<path d="M470,134 L462,139 L470,144" fill="none" stroke="#c9a24a" stroke-width="1.6"/>
+
+<text class="s" x="40" y="336" style="fill:#8a6d3b">아래층이 위층을 받친다 — 버전이 한 줄로 맞물려서, 한 칸만 어긋나도 위가 안 선다.</text>
+</svg>

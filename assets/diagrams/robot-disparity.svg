@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>두 눈, 하나의 어긋남 — 시차가 깊이가 된다</title>
+<desc>같은 물체를 좌 렌즈와 우 렌즈로 보면 가로 위치가 살짝 달라진다. 그 어긋남이 시차다. 어긋남이 클수록 물체가 가깝다. 이미지 전체의 시차를 깊이 맵으로 바꾸고, 가까운 곳부터 먼 곳까지를 색 막대로 나타낸다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.s{font-size:12px;fill:var(--ts);}
+.lb{font-size:11px;font-weight:600;fill:var(--ts);}
+.cap{font-size:11px;fill:var(--ts);}
+</style>
+<rect x="0" y="0" width="680" height="280" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">두 눈, 하나의 어긋남 — 시차가 깊이가 된다</text>
+
+<rect x="48" y="66" width="380" height="164" rx="10" fill="#fff" stroke="var(--br)" stroke-width="1"/>
+<text class="lb" x="66" y="90">같은 물체 · 좌 렌즈 vs 우 렌즈</text>
+
+<circle cx="180" cy="150" r="18" fill="#2f6fed" opacity="0.28"/>
+<text class="s" x="180" y="192" text-anchor="middle">왼쪽 시점</text>
+<circle cx="264" cy="150" r="18" fill="#2f6fed"/>
+<text class="s" x="264" y="192" text-anchor="middle">오른쪽 시점</text>
+<line x1="180" y1="122" x2="264" y2="122" stroke="#0d9488" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="180" y1="116" x2="180" y2="128" stroke="#0d9488" stroke-width="1.4"/>
+<line x1="264" y1="116" x2="264" y2="128" stroke="#0d9488" stroke-width="1.4"/>
+<text class="cap" x="222" y="110" text-anchor="middle" style="fill:#0d9488">어긋남 = 시차</text>
+
+<text class="h" x="452" y="154" fill="var(--ts)">→</text>
+
+<defs>
+<linearGradient id="dz" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#e0870b"/><stop offset="0.5" stop-color="#eab308"/><stop offset="1" stop-color="#2f6fed"/>
+</linearGradient>
+</defs>
+<rect x="486" y="66" width="146" height="164" rx="10" fill="url(#dz)" stroke="var(--br)" stroke-width="1"/>
+<text class="lb" x="559" y="90" text-anchor="middle" style="fill:#ffffff">깊이</text>
+<text class="s" x="559" y="120" text-anchor="middle" style="fill:#ffffff">가까움</text>
+<text class="s" x="559" y="212" text-anchor="middle" style="fill:#ffffff">멀리</text>
+</svg>

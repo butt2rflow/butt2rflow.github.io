@@ -1,0 +1,84 @@
+<svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">학습 정책을 만드는 네 단계</title>
+<desc id="de">사람이 리더 팔을 움직이면 팔로워 팔이 똑같이 따라 움직이고, 그동안 관절 각도와 카메라 영상이 에피소드 하나로 기록된다. 수십 개 에피소드로 정책을 학습시키고, 실행할 때는 카메라 영상과 현재 관절 각도를 넣으면 다음 관절 목표가 나온다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="250" rx="12"/>
+<text class="t" x="18" y="26">보여 주고, 기록하고, 학습하고, 실행한다</text>
+<rect class="bxa" x="16" y="50" width="150" height="58" rx="8"/>
+<text class="nd" x="91.0" y="76.0" text-anchor="middle">① 리더 팔 조종</text>
+<text class="sm" x="91.0" y="91.0" text-anchor="middle">사람이 손으로</text>
+<line class="ara" x1="168" y1="79" x2="180" y2="79"/>
+<rect class="bxa" x="182" y="50" width="150" height="58" rx="8"/>
+<text class="nd" x="257.0" y="76.0" text-anchor="middle">② 팔로워가 따라 함</text>
+<text class="sm" x="257.0" y="91.0" text-anchor="middle">같은 동작을 실제로</text>
+<line class="ara" x1="334" y1="79" x2="346" y2="79"/>
+<rect class="bxa" x="348" y="50" width="150" height="58" rx="8"/>
+<text class="nd" x="423.0" y="76.0" text-anchor="middle">③ 에피소드 기록</text>
+<text class="sm" x="423.0" y="91.0" text-anchor="middle">관절 + 카메라</text>
+<line class="ara" x1="500" y1="79" x2="512" y2="79"/>
+<rect class="hi" x="514" y="50" width="150" height="58" rx="8"/>
+<text class="nd" x="589.0" y="76.0" text-anchor="middle">④ 정책 학습</text>
+<text class="sm" x="589.0" y="91.0" text-anchor="middle">GPU에서 몇 시간</text>
+<rect class="panel" x="16" y="136" width="646" height="96" rx="10"/>
+<text class="lb" x="30" y="158">실행할 때</text>
+<rect class="bx" x="30" y="170" width="170" height="46" rx="8"/>
+<text class="nd" x="115.0" y="197.0" text-anchor="middle">카메라 영상 + 현재 관절</text>
+<line class="ar" x1="202" y1="193" x2="244" y2="193"/>
+<rect class="hi" x="248" y="170" width="170" height="46" rx="8"/>
+<text class="nd" x="333.0" y="190.0" text-anchor="middle">학습된 정책</text>
+<text class="sm" x="333.0" y="205.0" text-anchor="middle">예: ACT</text>
+<line class="ar" x1="420" y1="193" x2="462" y2="193"/>
+<rect class="bxa" x="466" y="170" width="180" height="46" rx="8"/>
+<text class="nd" x="556.0" y="197.0" text-anchor="middle">다음 관절 목표</text>
+</svg>

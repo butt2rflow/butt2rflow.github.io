@@ -1,0 +1,87 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Simulators on the PC, the brain on the edge computer</title>
+<desc id="de">Two UR simulators (a UR12e on PolyScope 5 and a UR20 on PolyScope X) run in Docker inside WSL2 on a Windows PC. The edge computer (Jetson Orin NX) runs the same UR driver, cuMotion and MoveIt 2 (OMPL and Pilz) that moved the real UR20. One reverse SSH tunnel opened from the PC carries the simulators' ports to the edge computer, and the simulators connect straight to the driver's reverse ports on the edge computer. RViz and PlotJuggler are watched on the PC.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
+<text class="t" x="18" y="26">The stack from the real robot, with simulators instead</text>
+<rect class="bx" x="16" y="46" width="300" height="236" rx="10"/>
+<text class="lb" x="30" y="70">Windows PC · WSL2 · Docker</text>
+<rect class="bxa" x="32" y="86" width="268" height="52" rx="8"/>
+<text class="lb" x="166.0" y="109.0" text-anchor="middle">URSim UR12e</text>
+<text class="st" x="166.0" y="124.0" text-anchor="middle">PolyScope 5</text>
+<rect class="bxa" x="32" y="148" width="268" height="52" rx="8"/>
+<text class="lb" x="166.0" y="171.0" text-anchor="middle">URSim UR20</text>
+<text class="st" x="166.0" y="186.0" text-anchor="middle">PolyScope X</text>
+<rect class="bx" x="32" y="214" width="268" height="52" rx="8"/>
+<text class="lb" x="166.0" y="237.0" text-anchor="middle">RViz · PlotJuggler</text>
+<text class="st" x="166.0" y="252.0" text-anchor="middle">view only</text>
+<rect class="bxgr" x="364" y="46" width="300" height="236" rx="10"/>
+<text class="lb" x="378" y="70">Edge computer · Jetson Orin NX</text>
+<rect class="bx" x="380" y="86" width="268" height="52" rx="8"/>
+<text class="lb" x="514.0" y="109.0" text-anchor="middle">UR driver × 2</text>
+<text class="st" x="514.0" y="124.0" text-anchor="middle">one per robot</text>
+<rect class="bx" x="380" y="148" width="268" height="52" rx="8"/>
+<text class="lb" x="514.0" y="171.0" text-anchor="middle">cuMotion</text>
+<text class="st" x="514.0" y="186.0" text-anchor="middle">GPU path planning</text>
+<rect class="bx" x="380" y="214" width="268" height="52" rx="8"/>
+<text class="lb" x="514.0" y="237.0" text-anchor="middle">MoveIt 2</text>
+<text class="st" x="514.0" y="252.0" text-anchor="middle">OMPL + Pilz together</text>
+<line class="ar" x1="316" y1="120" x2="362" y2="120"/>
+<text class="sm" x="339" y="108" text-anchor="middle">tunnel</text>
+<line class="ar" x1="316" y1="176" x2="362" y2="176"/>
+<text class="sm" x="339" y="166" text-anchor="middle">direct</text>
+<line class="ar" x1="362" y1="240" x2="316" y2="240"/>
+<text class="sm" x="339" y="230" text-anchor="middle">view</text>
+<text class="sm" x="18" y="306">The reverse SSH tunnel is opened outward from the PC: no admin rights, no firewall change</text>
+</svg>

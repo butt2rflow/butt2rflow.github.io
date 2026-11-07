@@ -1,0 +1,66 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>하드웨어 등급 — 어디까지가 증명용이고, 어디가 실전용인가</title>
+<desc>Orin NX 16GB는 증명용으로 엔진을 못 만들고 느리다. AGX Orin 64GB($1,999)가 정답으로 16GB의 벽을 넘어 한 대에서 전체 파이프라인을 실행한다. Jetson Thor는 초 단위 픽엔 과하고, 데스크톱 RTX 4090은 개발·검증용이지만 엔진이 젯슨으로 옮겨지지 않는다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.m{font-size:12.5px;font-weight:700;}
+.p{font-size:13px;font-weight:700;fill:#3d3d3a;}
+.s{font-size:10px;fill:#73726c;}
+.pill{font-size:10.5px;font-weight:700;}
+.tag{font-size:11px;font-weight:700;fill:#15803d;}
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">하드웨어 등급 — 증명은 16GB, 실전은 64GB</text>
+
+<!-- Orin NX 16GB (ours) -->
+<rect x="40" y="78" width="135" height="164" rx="9" fill="#fff" stroke="#5b6b86" stroke-width="1.1"/>
+<rect x="40" y="78" width="135" height="32" rx="9" fill="#eef1f6"/>
+<rect x="40" y="94" width="135" height="16" fill="#eef1f6"/>
+<text class="m" x="52" y="99" style="fill:#3f4d66">Orin NX 16GB</text>
+<text class="p" x="52" y="134">$800–1,400</text>
+<text class="s" x="52" y="156">우리가 가진 것</text>
+<text class="s" x="52" y="172">증명용 — 된다</text>
+<text class="s" x="52" y="188">엔진 못 만듦 · 느림</text>
+<rect x="52" y="204" width="111" height="24" rx="12" fill="#eef1f6" stroke="#5b6b86" stroke-width="1"/>
+<text class="pill" x="107" y="220" text-anchor="middle" style="fill:#3f4d66">증명용</text>
+
+<!-- AGX Orin 64GB (the pick, raised) -->
+<text class="tag" x="262" y="66" text-anchor="middle">★ 정답</text>
+<rect x="195" y="72" width="135" height="170" rx="9" fill="#fff" stroke="#16a34a" stroke-width="1.8"/>
+<rect x="195" y="72" width="135" height="32" rx="9" fill="#e3f6ea"/>
+<rect x="195" y="88" width="135" height="16" fill="#e3f6ea"/>
+<text class="m" x="207" y="93" style="fill:#15803d">AGX Orin 64GB</text>
+<text class="p" x="207" y="130">$1,999</text>
+<text class="s" x="207" y="152">한 대로 전체</text>
+<text class="s" x="207" y="168">16GB의 벽을 넘음</text>
+<text class="s" x="207" y="184">엔진이 여기서 빌드</text>
+<rect x="207" y="200" width="111" height="24" rx="12" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.1"/>
+<text class="pill" x="262" y="216" text-anchor="middle" style="fill:#15803d">실전 한 대</text>
+
+<!-- Jetson Thor -->
+<rect x="350" y="78" width="135" height="164" rx="9" fill="#fff" stroke="#c9c6bc" stroke-width="1.1"/>
+<rect x="350" y="78" width="135" height="32" rx="9" fill="#f2efe6"/>
+<rect x="350" y="94" width="135" height="16" fill="#f2efe6"/>
+<text class="m" x="362" y="99" style="fill:#6b6a63">Jetson Thor</text>
+<text class="p" x="362" y="134">$5,499</text>
+<text class="s" x="362" y="156">최상위 성능</text>
+<text class="s" x="362" y="172">초 단위 픽엔</text>
+<text class="s" x="362" y="188">과함</text>
+<rect x="362" y="204" width="111" height="24" rx="12" fill="#f2efe6" stroke="#c9c6bc" stroke-width="1"/>
+<text class="pill" x="417" y="220" text-anchor="middle" style="fill:#8a8980">과함</text>
+
+<!-- RTX 4090 (dev only, dashed) -->
+<rect x="505" y="78" width="135" height="164" rx="9" fill="#fff" stroke="#c9c6bc" stroke-width="1.1" stroke-dasharray="6 3"/>
+<rect x="505" y="78" width="135" height="32" rx="9" fill="#f2efe6"/>
+<rect x="505" y="94" width="135" height="16" fill="#f2efe6"/>
+<text class="m" x="517" y="99" style="fill:#6b6a63">데스크톱 RTX 4090</text>
+<text class="p" x="517" y="134">~$2,800</text>
+<text class="s" x="517" y="156">개발 · 검증용</text>
+<text class="s" x="517" y="172">엔진이 젯슨으로</text>
+<text class="s" x="517" y="188">안 옮겨짐</text>
+<rect x="517" y="204" width="111" height="24" rx="12" fill="#f2efe6" stroke="#c9c6bc" stroke-width="1"/>
+<text class="pill" x="572" y="220" text-anchor="middle" style="fill:#8a8980">개발용</text>
+
+<text class="s" x="40" y="278" style="fill:#8a6d3b">같은 젯슨 소프트웨어 식구라 16GB에서 배운 게 64GB로 그대로 통한다 — 값싸게 증명하고, 필요할 때 한 칸 올린다.</text>
+</svg>

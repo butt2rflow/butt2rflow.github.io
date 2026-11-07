@@ -1,0 +1,3909 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Part 5 named simulation as the next step toward a broadly trained eye. I tried it. A small eye taught only on fake sounds and vibrations did worse on other tables than simply overlaying two pictures and checking how alike they are (no eye at all). What worked best overall was an AI that had heard lots of real sounds, given a few references recorded on the spot. The pictures show how I found out.">
+      
+      
+        <meta name="author" content="butterflow">
+      
+      
+        <link rel="canonical" href="https://butt2rflow.github.io/en/posts/aip-eye-from-simulation/">
+      
+      
+        <link rel="prev" href="../aip-learning-from-reference/">
+      
+      
+        <link rel="next" href="../local-llm-reading/">
+      
+      
+        
+          <link rel="alternate" href="../../../posts/aip-eye-from-simulation/" hreflang="ko">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/butterflow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>AI in Pictures Part 6: An Eye Taught in Simulation - butterflow Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ai-in-pictures-part-6-an-eye-taught-in-simulation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="butterflow Notes" class="md-header__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            butterflow Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AI in Pictures Part 6: An Eye Taught in Simulation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../posts/aip-eye-from-simulation/" hreflang="ko" class="md-select__link">
+              🇰🇷 한국어
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              🇺🇸 English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../log-return/" class="md-tabs__link">
+          
+  
+  
+  Investing
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../choosing-physical-ai/" class="md-tabs__link">
+          
+  
+  
+  Physical AI
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../aip-robot-senses/" class="md-tabs__link">
+          
+  
+  
+  AI in Pictures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../local-llm-reading/" class="md-tabs__link">
+          
+  
+  
+  AI Workbench
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="butterflow Notes" class="md-nav__button md-logo" aria-label="butterflow Notes" data-md-component="logo">
+      
+  <img src="../../../assets/butterflow.png" alt="logo">
+
+    </a>
+    butterflow Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Returns 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Returns, Compounding, and Log Charts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How is my portfolio actually doing?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expected-return/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Return
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../derivatives-leverage-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost of Leverage in Derivatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssf-relaunch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quadruple Witching Is Whole Again
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Market Data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The COT Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fedwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fed Funds Futures and the CME FedWatch Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credit-spreads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading Credit Spreads as an Indicator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../move-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bond Market's VIX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implied-correlation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market-Sentiment Volatility Indices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options 101
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Options 101
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Skew
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hedging-wings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hedging the Wings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monte-carlo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monte Carlo Simulation Backtesting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../almanac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Almanac Trader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-calculator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculating GEX Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gex-0dte-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0DTE Gamma Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanna-charm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beyond Gamma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volatility-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vix-term-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIX Futures Term Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cash-allocation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vol-Based Cash Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_2" id="__nav_2_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Principles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s1-shannons-demon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Shannon's Demon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s2-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s3-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extension (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../series/s4-preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth (preview)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start Here
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-physical-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Physical AI Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learned-policy-track-b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learned Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Robot Vision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Robot Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stereo-to-grasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Stereo to Grasp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frames-transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frames & Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inside-the-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inside the Three Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-anatomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Anatomy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../robot-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Robots Learn in a 'Fake World' First
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Many Cameras, and Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../depth-camera-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Depth Camera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cobots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cobots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is a Collaborative Robot (Cobot)?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-ur-vs-fanuc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UR vs FANUC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pendant to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pendant to ROS 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-for-robot-programmers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · ROS 2 nodes and graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ros2-robot-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · URDF, TF2, ros2_control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moveit2-goals-not-points/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · MoveIt 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-ros-gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Isaac ROS and cuMotion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Field Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ros2-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · From JetPack to ROS 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-isaac-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Isaac ROS and foundation models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-foundationpose-16gb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correction · 16 GB is enough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-tuning-licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tuning · Speed and Licensing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-scan-no-cad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanning · A Mesh Without CAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-pose-to-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion · Planning and the Obstacle Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-real-robot-first-move/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real robot · first motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-ursim-planners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulators · URSim and three planners
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isaac-sim-pc-and-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Sim · a 3090 PC and the cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-memory-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory budget · perception + motion on one box
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hands-on Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hands-on Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learn-without-industrial-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · Learning without a real robot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical AI Investing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Physical AI Investing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobot-investing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · The value is moving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-actuators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Value shifts in one joint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-ai-investing-power/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · The humanoid power problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI in Pictures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI in Pictures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-robot-senses/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 0 · How Robots Feel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-seeing-sound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1 · Seeing Sound
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-teaching-sound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2 · Teaching Sound
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-seeing-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3 · Seeing Motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-teaching-motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 4 · Teaching Motion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aip-learning-from-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 5 · Learning from a Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 6 · An Eye Taught in Simulation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 6 · An Eye Taught in Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#picture-1-a-phone-becomes-a-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 1 · A phone becomes a lab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-2-why-not-learn-from-fake-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 2 · Why not learn from fake sounds?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-3-fakes-with-randomized-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 3 · Fakes with randomized conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-4-two-ways-to-a-broadly-trained-eye" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 4 · Two ways to a broadly trained eye
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-5-the-first-exam-looked-perfect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 5 · The first exam looked perfect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-6-what-about-other-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 6 · What about other tables?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-7-where-did-it-go-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 7 · Where did it go wrong?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-8-references-from-that-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 8 · References from that table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-9-what-about-an-ai-that-heard-lots-of-real-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 9 · What about an AI that heard lots of real sounds?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-10-so-are-simulators-useless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 10 · So are simulators useless?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-whole-thing-in-five-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The whole thing in five lines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself-choosing-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it yourself: choosing references
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Try it yourself: choosing references">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Workbench
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Workbench
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local-llm-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handing the reading to a local AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#picture-1-a-phone-becomes-a-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 1 · A phone becomes a lab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-2-why-not-learn-from-fake-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 2 · Why not learn from fake sounds?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-3-fakes-with-randomized-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 3 · Fakes with randomized conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-4-two-ways-to-a-broadly-trained-eye" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 4 · Two ways to a broadly trained eye
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-5-the-first-exam-looked-perfect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 5 · The first exam looked perfect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-6-what-about-other-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 6 · What about other tables?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-7-where-did-it-go-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 7 · Where did it go wrong?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-8-references-from-that-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 8 · References from that table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-9-what-about-an-ai-that-heard-lots-of-real-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 9 · What about an AI that heard lots of real sounds?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#picture-10-so-are-simulators-useless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Picture 10 · So are simulators useless?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-whole-thing-in-five-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The whole thing in five lines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself-choosing-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it yourself: choosing references
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Try it yourself: choosing references">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-and-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and notices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ai-in-pictures-part-6-an-eye-taught-in-simulation">AI in Pictures Part 6: An Eye Taught in Simulation<a class="headerlink" href="#ai-in-pictures-part-6-an-eye-taught-in-simulation" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>AI in Pictures · Part 6.</strong> A picture-first series on sound and motion AI. <a href="../aip-robot-senses/">Start from part 0</a></p>
+</blockquote>
+<p>Part 5 named simulation as the next step toward a broadly trained eye. I tried it. A small eye taught only on fake sounds and vibrations did worse on other tables than simply overlaying two pictures and checking how alike they are (no eye at all). What worked best overall was an AI that had heard lots of real sounds, given a few references recorded on the spot. The pictures show how I found out.</p>
+<p><em>10 pictures · no formulas · real experiments · try it with one phone · about 10 minutes</em></p>
+<hr />
+<h2 id="picture-1-a-phone-becomes-a-lab">Picture 1 · A phone becomes a lab<a class="headerlink" href="#picture-1-a-phone-becomes-a-lab" title="Permanent link">&para;</a></h2>
+<p>phyphox is a free app from RWTH Aachen University in Germany. It turns the sensors already in your phone, like the microphone and the accelerometer, into lab instruments. You can also design your own experiment screens, so for this part I made five experiments that record sound and vibration together.</p>
+<p><img alt="Picture 1 · A phone becomes a lab" src="../../../assets/aip/aip-eye-from-simulation-a817b6e861.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Left: the five experiments added to phyphox (the app screens are in Korean): knock, cup down, clap, rub and quiet.</li>
+<li>Middle: put the phone on the table, press ▶ and let go. Then tap the table.</li>
+<li>Right: what a real recording looks like. Top: the sound picture (the spectrogram from <a href="../aip-seeing-sound/">part 1</a>). Bottom: the table's vibration (the accelerometer from <a href="../aip-seeing-motion/">part 3</a>). Every knock makes a stripe and a spike at the same moment.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>One phone measures sound and vibration together. All the real data in this part was collected this way.</p>
+</div>
+<p><em>But recording lots of examples is tedious. Could we fake them instead?</em></p>
+<h2 id="picture-2-why-not-learn-from-fake-sounds">Picture 2 · Why not learn from fake sounds?<a class="headerlink" href="#picture-2-why-not-learn-from-fake-sounds" title="Permanent link">&para;</a></h2>
+<p>I wrote a small program (a simulator) that imitates a table's sounds and vibrations. A knock goes ‘tock’ and the table rings; a cup goes ‘clink’ and then its base touches down once more; a clap is sound only; a rub is a long ‘shhh’. It can make thousands of fake sounds in seconds.</p>
+<p><img alt="Picture 2 · Why not learn from fake sounds?" src="../../../assets/aip/aip-eye-from-simulation-e10ad85e1d.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Top two rows: fakes from the simulator. Bottom two rows: real recordings from my phone on my table.</li>
+<li>All the vibration rows use the same scale (set by the knock). A clap doesn't shake the table, so its vibration is almost flat, in the fakes and in the real recording.</li>
+<li>They look alike, but not the same. Real sound has room echo and noise, and a real rub barely shakes the table.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>Fakes are unlimited, but each one is a little off from the real thing.</p>
+</div>
+<p><em>Instead of one kind of fake, I deliberately varied them.</em></p>
+<h2 id="picture-3-fakes-with-randomized-conditions">Picture 3 · Fakes with randomized conditions<a class="headerlink" href="#picture-3-fakes-with-randomized-conditions" title="Permanent link">&para;</a></h2>
+<p>Every fake gets a random table material, room echo, background noise, distance from the phone and strength. The idea: an AI that has seen enough variety might treat a real table it has never met as just one more variation. This is the next step <a href="../aip-learning-from-reference/">part 5</a> ended on.</p>
+<p><img alt="Picture 3 · Fakes with randomized conditions" src="../../../assets/aip/aip-eye-from-simulation-50d0954d1e.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Top: a narrow range. The six knocks look nearly the same.</li>
+<li>Bottom: a wide range. The same knock, with different echo, noise and pitch each time.</li>
+<li>With 6,000 of these fakes I trained a small AI that looks at sound and vibration together (the same kind I trained from scratch in <a href="../aip-teaching-sound/">part 2</a>). Training it takes about 5 seconds on a graphics card. Cups were deliberately left out of training.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>Learn from fakes with widely randomized conditions, and real sounds may land inside that range.</p>
+</div>
+<h2 id="picture-4-two-ways-to-a-broadly-trained-eye">Picture 4 · Two ways to a broadly trained eye<a class="headerlink" href="#picture-4-two-ways-to-a-broadly-trained-eye" title="Permanent link">&para;</a></h2>
+<p>Part 5 said an ‘eye’ (an AI that only describes features) works better the more variety it has learned from. There are two main ways to get such an eye. In <a href="../aip-learning-from-reference/">part 5</a>'s detective terms:</p>
+<p><img alt="Picture 4 · Two ways to a broadly trained eye" src="../../../assets/aip/aip-eye-from-simulation-bc28bdc7a0.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>(a) Let it hear huge numbers of real sounds: a veteran detective who has seen countless real faces. That's AST, the AI borrowed in parts 2 and 5. It learned from about 2 million YouTube sound clips.</li>
+<li>(b) Teach it with fakes whose conditions are randomized: a rookie who practiced only on drawn faces. That's this part's small eye.</li>
+<li>Using (b) on real data is called sim-to-real (learn in simulation, use it for real). It's common in robotics, and there are many cases where it has worked (picture 10).</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>This part's question: does an eye taught only on fakes work on a real table?</p>
+</div>
+<p><em>First, I tested it on my own table.</em></p>
+<h2 id="picture-5-the-first-exam-looked-perfect">Picture 5 · The first exam looked perfect<a class="headerlink" href="#picture-5-the-first-exam-looked-perfect" title="Permanent link">&para;</a></h2>
+<p>I ran two tests: one on fake sounds from the simulator, one on real sounds recorded on my table. For the real exam I gave a few of my recordings of each kind as references (the <a href="../aip-learning-from-reference/">part 5</a> method) and labeled each new sound with the kind of its closest reference. I also set a baseline: no eye at all, just laying two sound-and-vibration pictures on top of each other and measuring how alike they are.</p>
+<p><img alt="Picture 5 · The first exam looked perfect" src="../../../assets/aip/aip-eye-from-simulation-54f21eae31.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Fake exam: 91%. My table: almost 100%.</li>
+<li>But look at the gray bar. With no eye, comparing raw pictures also scores 100%.</li>
+<li>The references and the exam came from the same room, day and person, so the exam was too easy, like reusing the practice questions on the test. It can't tell us whether the eye helped.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>Without the baseline, I would have taken 100% as a success.</p>
+</div>
+<p><em>So I tried other tables.</em></p>
+<h2 id="picture-6-what-about-other-tables">Picture 6 · What about other tables?<a class="headerlink" href="#picture-6-what-about-other-tables" title="Permanent link">&para;</a></h2>
+<p>A friend recorded at home on a wooden table with a glass cup, and I recorded on a coated hotel table with a stainless steel tumbler. The references were still my own recordings from my table.</p>
+<p><img alt="Picture 6 · What about other tables?" src="../../../assets/aip/aip-eye-from-simulation-fd47933378.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Friend's table: the eye from the simulator 70%, no eye 80%.</li>
+<li>Hotel table: the eye 72%, no eye 85%.</li>
+<li>Both times the eye scored lower. The eye trained on fakes actually got in the way.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>The small eye trained only on fakes didn't carry over to other tables.</p>
+</div>
+<h2 id="picture-7-where-did-it-go-wrong">Picture 7 · Where did it go wrong?<a class="headerlink" href="#picture-7-where-did-it-go-wrong" title="Permanent link">&para;</a></h2>
+<p>The most visible mistake was on the friend's knocks: the eye called about half of them cups (rubs were almost all wrong, too).</p>
+<p><img alt="Picture 7 · Where did it go wrong?" src="../../../assets/aip/aip-eye-from-simulation-2bbeb1ff1a.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Left: with no eye, 96% of the friend's knocks are called knocks. The eye from the simulator gets only 52% right and calls 48% cups.</li>
+<li>Right: I measured how hard the table shakes. On my table the cup (19) is stronger than the knock (12). On the friend's table they're about the same (knock 5, cup 4). In the hotel the tumbler (29) is about three times as strong as the knock (9).</li>
+<li>The simulator assumed a cup lands about half as hard as a knock. On real tables it was about the same or harder.</li>
+<li>So I changed the simulator to let knock and cup strengths overlap, and retrained. The change made things worse: the friend's-table score fell from 70% to 64%. Strength alone doesn't explain it, and I don't know the real cause yet.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>The simulator was built on my guesses, and only real recordings showed which guesses were wrong.</p>
+</div>
+<p><em>What if it gets references recorded on that table?</em></p>
+<h2 id="picture-8-references-from-that-table">Picture 8 · References from that table<a class="headerlink" href="#picture-8-references-from-that-table" title="Permanent link">&para;</a></h2>
+<p>This time the references came from the table being tested. Each table was recorded twice, so one recording served as references and the other as the exam; then I swapped them. I also varied the number of references from one to five per kind.</p>
+<p><img alt="Picture 8 · References from that table" src="../../../assets/aip/aip-eye-from-simulation-92822aff26.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Friend's table: the eye scores 83% with 1 reference and 93% with 5. No eye: 87% and 91%.</li>
+<li>Hotel table: the eye 84–87%, no eye 96–100%.</li>
+<li>On-site references lift the eye a lot. Still, at every number of references it only matches or trails comparing raw pictures. A gap of a few points means nothing here; look only at big differences.</li>
+<li>The eye that never learned cups still recognized them from cup references: 97% on the friend's table and 100% in the hotel. But the no-eye comparison also got every cup right, so this alone doesn't show the eye is better.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>The biggest effect came from recording a few examples on the spot. Adding the eye trained on fakes didn't improve on that.</p>
+</div>
+<p><em>What about way (a), an AI that heard lots of real sounds?</em></p>
+<h2 id="picture-9-what-about-an-ai-that-heard-lots-of-real-sounds">Picture 9 · What about an AI that heard lots of real sounds?<a class="headerlink" href="#picture-9-what-about-an-ai-that-heard-lots-of-real-sounds" title="Permanent link">&para;</a></h2>
+<p>I gave AST, the AI from parts 2 and 5, the same exam. AST never learned from my recordings; it only got the same references.</p>
+<p><img alt="Picture 9 · What about an AI that heard lots of real sounds?" src="../../../assets/aip/aip-eye-from-simulation-ee879b93c9.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>The teal line is AST. On the friend's table it scores 98% with one reference and 100% with five, ahead of the other two.</li>
+<li>On the hotel table it scores 96%, slightly below comparing raw pictures (100%), but above the eye trained on fakes.</li>
+<li>When the references were my own recordings (a plastic cup), even AST recognized the friend's glass cup only 2% of the time. A different cup sounds different, so on-site references are still needed.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>Overall, AST worked best as the eye, as long as the references came from the table being tested.</p>
+</div>
+<h2 id="picture-10-so-are-simulators-useless">Picture 10 · So are simulators useless?<a class="headerlink" href="#picture-10-so-are-simulators-useless" title="Permanent link">&para;</a></h2>
+<p>No. This result covers one case: table sounds. Simulators do well at other jobs. The picture below is a concept drawing of my own view, not an experimental result.</p>
+<p><img alt="Picture 10 · So are simulators useless?" src="../../../assets/aip/aip-eye-from-simulation-cc44f682f1.png" /></p>
+<p><strong>How to read the picture</strong></p>
+<ul>
+<li>Top right (simulator pays off): easy to imitate, and real data is costly or risky to collect. Many walking robots today walk on real ground with gaits learned only in simulation. FoundationPose finds an object's position and orientation from its 3D model (or a few photos), and it learned from huge numbers of computer-made (synthetic) images.</li>
+<li>Bottom right (mix fake and real): hard to imitate, yet real data is costly. If collecting data means crashing a robot dozens of times or breaking things, learn broadly from fakes and mix in a few real examples (part 8).</li>
+<li>Bottom left: this part and the golf impact sound (part 7). Sound changes with every table, cup and room, so it's hard to imitate, and a few knocks take seconds to record. Here a pretrained AI plus a few on-site recordings works better.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">In one line</p>
+<p>A simulator is the tool for things that are easy to imitate and costly or risky to collect for real.</p>
+</div>
+<h2 id="the-whole-thing-in-five-lines">The whole thing in five lines<a class="headerlink" href="#the-whole-thing-in-five-lines" title="Permanent link">&para;</a></h2>
+<ol>
+<li>With a phone and phyphox you can record sound and vibration together.</li>
+<li>A small eye trained on fakes with randomized conditions did well on the fake exam, but on real tables it did worse than comparing raw pictures.</li>
+<li>Looking at its mistakes showed the simulator's assumptions didn't match reality. Without a baseline and a test somewhere else, I'd never have known.</li>
+<li>An AI that heard lots of real sounds (AST), given a few on-site references, did best overall.</li>
+<li>Simulators pay off for things that are easy to imitate and costly or risky to collect. The table sounds tested here were the opposite.</li>
+</ol>
+<h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h2>
+<p>Part 7 is about my golf swing. A sensor glove on my right hand records sound and motion together, with references recorded separately for each player, club and swing type. In part 8 the same eye goes on a robot gripper.</p>
+<h2 id="try-it-yourself-choosing-references">Try it yourself: choosing references<a class="headerlink" href="#try-it-yourself-choosing-references" title="Permanent link">&para;</a></h2>
+<p>For FoundationPose, the 3D model is the reference. For sound and motion, a few recordings made on the spot play that role.</p>
+<ol>
+<li>Record where it will actually be used: the same table, the same objects, the same phone position.</li>
+<li>One to five per kind is enough. With a pretrained AI, even one works well.</li>
+<li>Include ‘nothing happening’ as a reference. Once it knows what the background sounds like, it can tell the other sounds apart.</li>
+<li>Vary the strength and position a little: mix soft knocks with hard ones.</li>
+<li>Re-record when the table or cup changes. The glass-cup miss (picture 9) is a case in point.</li>
+</ol>
+<p>Recording kit (phyphox experiment files and guide, in Korean): <a href="https://butt2rflow.github.io/assets/aip/kit/">https://butt2rflow.github.io/assets/aip/kit/</a></p>
+<p>Limits: the exams are small (23–57 one-second clips per place, two people, one phone model, the Galaxy S25, and five kinds of sound). More tables, people and phones, and mixing a few real examples into the fakes (the plan sketched in <a href="../aip-learning-from-reference/">part 5</a>), haven't been tested yet.</p>
+<hr />
+<p><strong>Series</strong> · <a href="../aip-learning-from-reference/">← Part 5, Learning from a Reference</a> · <a href="../aip-robot-senses/">Back to part 0, How Robots Feel</a></p>
+<p><em>Related: <a href="../robot-simulation/">Why Robots Learn in a 'Fake World' First</a> · <a href="../jetson-isaac-foundation-models/">Field Notes, Part 2: Isaac ROS, Foundation Models</a></em></p>
+<h3 id="sources-and-notices">Sources and notices<a class="headerlink" href="#sources-and-notices" title="Permanent link">&para;</a></h3>
+<p>Recording: phyphox (RWTH Aachen University), Galaxy S25. The app screens are my own screenshots. The real recordings were made in a private home and a hotel room, so to protect privacy they appear only as pictures, never as sound. Pretrained AI: AST (Gong, Chung, Glass, 2021; MIT/ast-finetuned-audioset-10-10-0.4593, BSD-3-Clause); AudioSet © Google, CC BY 4.0. FoundationPose: Wen et al. (NVIDIA), CVPR 2024. Experiments ran on one RTX 3090. Training one eye took about 5 seconds on the GPU and about 2.5 minutes on the CPU (16 threads); one exam (27 eyes) took about 3 minutes on the GPU and would take over an hour on the CPU. Picture 10 is a concept drawing. phyphox is a trademark of RWTH Aachen University, YouTube of Google LLC, Galaxy of Samsung Electronics Co., Ltd., and NVIDIA and GeForce RTX of NVIDIA Corporation, used here only to refer to them.</p>
+<h3 id="terms">Terms<a class="headerlink" href="#terms" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>the program that makes fakes</em>: simulator</li>
+<li><em>fakes with randomized conditions</em>: domain randomization</li>
+<li><em>learning in simulation, using it for real</em>: sim-to-real</li>
+<li><em>a broadly trained eye</em>: foundation model (general-purpose representation)</li>
+<li><em>small AI</em>: CNN (convolutional neural network)</li>
+<li><em>AI that heard lots of real sounds</em>: AST (Audio Spectrogram Transformer, pretrained on AudioSet)</li>
+<li><em>recognizing from a few references</em>: few-shot (one-shot with a single reference)</li>
+<li><em>comparing raw pictures, no eye</em>: baseline: nearest prototype on raw features</li>
+<li><em>score (share of clips labeled correctly)</em>: accuracy. Rankings are the same with macro-F1, which balances precision and recall for each kind (AST not included)</li>
+<li><em>what was mistaken for what</em>: confusion matrix</li>
+<li><em>leave one kind out of training, recognize it from references</em>: leave-one-out (LOO), held-out class</li>
+<li><em>one recording as references, the other as the exam, then swap</em>: 2-fold cross-validation</li>
+<li><em>the table's vibration</em>: acceleration (accelerometer)</li>
+<li><em>finding an object's position and orientation from a 3D model or photos</em>: 6D pose estimation (FoundationPose: model-based and model-free)</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2020-2026 butterflow. All rights reserved. | Butter curl image by <a href='https://www.vecteezy.com'>Vecteezy</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/butt2rflow" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "search.suggest", "search.highlight", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../../assets/external-links.js"></script>
+      
+        <script src="../../../assets/vix-history-player.js"></script>
+      
+        <script src="../../../assets/kelly-toggle.js"></script>
+      
+        <script src="../../../assets/dashboard-wizard.js"></script>
+      
+        <script src="../../../assets/home-sidebar.js"></script>
+      
+    
+  </body>
+</html>

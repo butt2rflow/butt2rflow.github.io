@@ -1,0 +1,36 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>MOVE 구성 — 곡선 가중 (10년물 40%)</title>
+<desc>MOVE는 2년, 5년, 10년, 30년 국채 옵션의 변동성을 가중평균한다. 비중은 2년 20%, 5년 20%, 10년 40%, 30년 20%로 10년물이 가장 크다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.v { font-size:14px; font-weight:600; }
+.lab { font-size:13px; font-weight:500; fill:var(--tp); }
+</style>
+<rect x="0" y="0" width="680" height="340" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="40">MOVE 구성 — 곡선 가중 (10년물이 40%)</text>
+
+<line x1="120" y1="280" x2="600" y2="280" stroke="var(--br)" stroke-width="0.5"/>
+
+<!-- bars: baseline 280, 4.5px per % -->
+<rect x="150" y="190" width="80" height="90" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="v" x="190" y="178" text-anchor="middle" fill="#5c5a52">20%</text>
+<text class="lab" x="190" y="300" text-anchor="middle">2년</text>
+
+<rect x="270" y="190" width="80" height="90" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="v" x="310" y="178" text-anchor="middle" fill="#5c5a52">20%</text>
+<text class="lab" x="310" y="300" text-anchor="middle">5년</text>
+
+<rect x="390" y="100" width="80" height="180" rx="4" fill="#EEEDFE" stroke="#7c3aed" stroke-width="0.8"/>
+<text class="v" x="430" y="88" text-anchor="middle" fill="#4a2f9e">40%</text>
+<text class="lab" x="430" y="300" text-anchor="middle" fill="#4a2f9e">10년</text>
+
+<rect x="510" y="190" width="80" height="90" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="v" x="550" y="178" text-anchor="middle" fill="#5c5a52">20%</text>
+<text class="lab" x="550" y="300" text-anchor="middle">30년</text>
+
+<text class="s" x="40" y="326">10년 국채가 대출·회사채·주식 밸류에이션의 기준금리 → MOVE의 무게중심</text>
+</svg>

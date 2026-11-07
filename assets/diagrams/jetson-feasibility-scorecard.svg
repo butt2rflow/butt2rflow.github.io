@@ -1,0 +1,63 @@
+<svg width="100%" viewBox="0 0 680 322" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>구성요소별 점수표 — 무엇이 실전 가능하고 무엇이 느린가</title>
+<desc>Orin NX 16GB에서 ESS와 cuMotion은 실전 가능(44 FPS, 210 ms). FoundationStereo와 FoundationPose는 가속 엔진을 못 만들어 느린 우회로로만 돈다. SAM 2는 별도 경로로 초 단위로 돈다. 큰 트랜스포머 모델만 16GB 천장에 막힌다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.th{font-size:11px;font-weight:700;fill:#73726c;}
+.c{font-size:12.5px;font-weight:700;fill:#3d3d3a;}
+.cs{font-size:11px;fill:#73726c;}
+.pill{font-size:11px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="322" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">구성요소별 점수표 · Orin NX 16GB</text>
+
+<!-- header -->
+<text class="th" x="52" y="74">구성요소</text>
+<text class="th" x="250" y="74">가속 엔진 (16GB)</text>
+<text class="th" x="410" y="74">도는가</text>
+<text class="th" x="520" y="74">판정</text>
+<line x1="40" y1="82" x2="640" y2="82" stroke="#c9c6bc" stroke-width="1"/>
+
+<!-- row backgrounds (alt) -->
+<rect x="40" y="90" width="600" height="42" fill="#ffffff" opacity="0.55"/>
+<rect x="40" y="174" width="600" height="42" fill="#ffffff" opacity="0.55"/>
+<rect x="40" y="258" width="600" height="42" fill="#ffffff" opacity="0.55"/>
+
+<!-- r1 ESS -->
+<text class="c" x="52" y="117">ESS <tspan class="cs">(스테레오)</tspan></text>
+<text class="cs" x="250" y="117">✅ 만들어짐 · 1.9 GB</text>
+<text class="cs" x="410" y="117">✅ 44 FPS</text>
+<rect x="512" y="102" width="104" height="24" rx="12" fill="#e3f6ea" stroke="#16a34a" stroke-width="1"/>
+<text class="pill" x="564" y="118" text-anchor="middle" style="fill:#15803d">실전 가능</text>
+
+<!-- r2 cuMotion -->
+<text class="c" x="52" y="159">cuMotion <tspan class="cs">(경로)</tspan></text>
+<text class="cs" x="250" y="159">— 기하학 계산</text>
+<text class="cs" x="410" y="159">✅ 210 ms</text>
+<rect x="512" y="144" width="104" height="24" rx="12" fill="#e3f6ea" stroke="#16a34a" stroke-width="1"/>
+<text class="pill" x="564" y="160" text-anchor="middle" style="fill:#15803d">실전 가능</text>
+
+<!-- r3 FoundationStereo -->
+<text class="c" x="52" y="201">FoundationStereo</text>
+<text class="cs" x="250" y="201">❌ 16GB 천장 막힘</text>
+<text class="cs" x="410" y="201">✅ ~0.1 FPS</text>
+<rect x="512" y="186" width="104" height="24" rx="12" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1"/>
+<text class="pill" x="564" y="202" text-anchor="middle" style="fill:#a9791f">돌지만 느림</text>
+
+<!-- r4 FoundationPose -->
+<text class="c" x="52" y="243">FoundationPose</text>
+<text class="cs" x="250" y="243">❌ 엔진 못 만듦</text>
+<text class="cs" x="410" y="243">✅ 초 / 프레임</text>
+<rect x="512" y="228" width="104" height="24" rx="12" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1"/>
+<text class="pill" x="564" y="244" text-anchor="middle" style="fill:#a9791f">돌지만 느림</text>
+
+<!-- r5 SAM 2 -->
+<text class="c" x="52" y="285">SAM 2</text>
+<text class="cs" x="250" y="285">— 별도 경로</text>
+<text class="cs" x="410" y="285">✅ 초 단위</text>
+<rect x="512" y="270" width="104" height="24" rx="12" fill="#eef1f6" stroke="#5b6b86" stroke-width="1"/>
+<text class="pill" x="564" y="286" text-anchor="middle" style="fill:#3f4d66">돎</text>
+
+<text class="cs" x="40" y="314" style="fill:#8a6d3b">가벼운 신경망(ESS)과 계산식 계획기(cuMotion)는 멀쩡 — 덩치 큰 트랜스포머 둘만 벽에 부딪힌다.</text>
+</svg>

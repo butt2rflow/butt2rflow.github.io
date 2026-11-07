@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 360 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">FoundationPose의 세 단계</title>
+<desc id="de">렌더-비교 방식의 세 단계. ① CAD를 수백 자세로 렌더링해 가설을 뿌리고, ② 정제 네트워크가 실제 사진과의 차이를 보고 각 가설을 제자리로 밀어주고, ③ 채점 네트워크가 후보를 서로 비교해 순위를 매겨 최종 6-DoF 포즈를 낸다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="330" rx="12"/>
+<text class="t" x="18" y="22">가설 → 정제 → 채점</text>
+<rect class="bx" x="16" y="34" width="328" height="80" rx="10"/>
+<text class="lb" x="30" y="54" style="fill:var(--amber)">① 가설 뿌리기</text>
+<text class="st" x="30" y="73">CAD를 수백 가지 자세로 돌려 렌더링</text>
+<g opacity=".9">
+<rect x="30" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".75"/>
+<rect x="60" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".55" transform="rotate(18,71,94)"/>
+<rect x="90" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".7" transform="rotate(-24,101,94)"/>
+<rect x="120" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".5" transform="rotate(42,131,94)"/>
+<rect x="150" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".65" transform="rotate(-8,161,94)"/>
+<rect x="180" y="84" width="22" height="20" rx="3" fill="var(--amber)" opacity=".45" transform="rotate(66,191,94)"/>
+</g>
+<text class="st" x="222" y="99">… 수백 개</text>
+<path class="ar" d="M180,114 L180,130"/>
+<rect class="bx" x="16" y="132" width="328" height="76" rx="10"/>
+<text class="lb" x="30" y="152" style="fill:var(--amber)">② 정제 네트워크</text>
+<text class="st" x="30" y="171">렌더 결과와 실제 사진(색+깊이)의 차이를 보고</text>
+<text class="st" x="30" y="188">"조금 왼쪽, 조금 더 돌려"를 예측해 각 가설을 밀어준다</text>
+<text class="lb" x="30" y="202" style="fill:var(--teal)">거친 가설도 여기서 제자리를 찾아간다</text>
+<path class="ar" d="M180,208 L180,224"/>
+<rect class="bx" x="16" y="226" width="328" height="66" rx="10"/>
+<text class="lb" x="30" y="246" style="fill:var(--amber)">③ 채점 네트워크</text>
+<text class="st" x="30" y="265">남은 후보들을 서로 비교해 순위를 매긴다</text>
+<text class="st" x="30" y="282">"A와 B 중 어느 쪽이 더 잘 맞나"를 학습한 모델</text>
+<text class="lb" x="180" y="314" text-anchor="middle" style="fill:var(--amber)">최종 : x, y, z + 회전 — 숫자 여섯 개</text>
+</svg>

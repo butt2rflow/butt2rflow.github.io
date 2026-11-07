@@ -1,0 +1,75 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">용량 경쟁에서 가동률 경쟁으로</title>
+<desc id="de">업계의 초점은 배터리 용량에서 가동률로 옮겨 가고 있다. 세 가지 방식이 있다. 사람이 배터리를 갈아 끼우는 핫스왑(Apptronik Apollo, Unitree G1). 로봇이 스스로 약 3분 만에 배터리를 교체하는 자율 교체(Boston Dynamics Atlas, UBTech Walker S2). 짧게 자주 충전하는 도킹·무선 충전(Agility Digit은 가동 대 충전 10대 1, Figure 03은 발에 2 kW 무선 충전 코일).</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
+<text class="t" x="18" y="26">배터리를 키우는 대신, 멈추지 않게 만든다</text>
+<rect class="bx" x="16" y="50" width="210" height="150" rx="10"/>
+<text class="lb" x="121" y="80" text-anchor="middle">사람이 교체 (핫스왑)</text>
+<text class="it" x="121" y="114" text-anchor="middle">Apptronik Apollo</text>
+<text class="it" x="121" y="140" text-anchor="middle">Unitree G1</text>
+<text class="sm" x="121" y="180" text-anchor="middle">사람 손이 필요</text>
+<rect class="hi" x="234" y="50" width="210" height="150" rx="10"/>
+<text class="lb" x="339" y="80" text-anchor="middle">로봇이 스스로 교체</text>
+<text class="it" x="339" y="114" text-anchor="middle">BD Atlas: 약 3분</text>
+<text class="it" x="339" y="140" text-anchor="middle">Walker S2: 약 3분</text>
+<text class="sm" x="339" y="180" text-anchor="middle">24시간 가동 목표</text>
+<rect class="bxa" x="452" y="50" width="210" height="150" rx="10"/>
+<text class="lb" x="557" y="80" text-anchor="middle">도킹·무선 충전</text>
+<text class="it" x="557" y="114" text-anchor="middle">Digit: 가동:충전 10:1</text>
+<text class="it" x="557" y="140" text-anchor="middle">Figure 03: 발에 2 kW 코일</text>
+<text class="sm" x="557" y="180" text-anchor="middle">충전 설비가 필요</text>
+<text class="st" x="18" y="230" style="fill:var(--fg)">돈이 흐르는 곳도 셀만이 아니다: 교체 스테이션, 충전 설비, 배터리 관리(BMS)</text>
+<text class="sm" x="18" y="252">가동 시간과 교체 시간은 회사 발표·보도 기준</text>
+</svg>

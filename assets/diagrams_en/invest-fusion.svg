@@ -1,0 +1,46 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Fusion — AI narrows, determinism confirms</title>
+<desc>A varied reality (variation and noise) is read flexibly by AI, which narrows the candidates; deterministic geometry and measurement then fix the exact answer and pass it to a trusted verdict and action. The robot-vision pipeline is the real instance: FoundationStereo and SAM find where and what, PnP and geometry fix exactly how much, and force confirms. Value settles not in pure AI or pure legacy, but in whoever bridges the two.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.b{font-size:12px;font-weight:700;}
+.s{font-size:10px;fill:#73726c;}
+.lbl{font-size:11px;font-weight:600;}
+</style>
+<rect x="0" y="0" width="680" height="280" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">Fusion — AI narrows, determinism confirms</text>
+
+<rect x="34" y="78" width="128" height="62" rx="9" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="b" x="98" y="104" text-anchor="middle" style="fill:#3d3d3a">Varied reality</text>
+<text class="s" x="98" y="122" text-anchor="middle">variation · noise</text>
+
+<line x1="166" y1="109" x2="206" y2="109" stroke="#a9791f" stroke-width="2"/>
+<path d="M198,104 L206,109 L198,114" fill="none" stroke="#a9791f" stroke-width="2"/>
+<text class="lbl" x="186" y="98" text-anchor="middle" style="fill:#a9791f">narrow</text>
+
+<rect x="210" y="78" width="128" height="62" rx="9" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.2"/>
+<text class="b" x="274" y="104" text-anchor="middle" style="fill:#a9791f">AI perception</text>
+<text class="s" x="274" y="122" text-anchor="middle">flexible · probabilistic</text>
+
+<line x1="342" y1="109" x2="382" y2="109" stroke="#3f4d66" stroke-width="2"/>
+<path d="M374,104 L382,109 L374,114" fill="none" stroke="#3f4d66" stroke-width="2"/>
+<text class="lbl" x="362" y="98" text-anchor="middle" style="fill:#3f4d66">confirm</text>
+
+<rect x="386" y="78" width="128" height="62" rx="9" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.2"/>
+<text class="b" x="450" y="104" text-anchor="middle" style="fill:#3f4d66">geometry · metrology</text>
+<text class="s" x="450" y="122" text-anchor="middle">deterministic</text>
+
+<line x1="518" y1="109" x2="558" y2="109" stroke="#16a34a" stroke-width="2"/>
+<path d="M550,104 L558,109 L550,114" fill="none" stroke="#16a34a" stroke-width="2"/>
+
+<rect x="562" y="78" width="104" height="62" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<text class="b" x="614" y="104" text-anchor="middle" style="fill:#15803d">verdict · act</text>
+<text class="s" x="614" y="122" text-anchor="middle">trusted</text>
+
+<text class="s" x="40" y="182" style="fill:#8a6d3b">Real instance — the robot-vision pipeline:</text>
+<text class="s" x="40" y="200">FoundationStereo·SAM (find where·what) → PnP·geometry (fix exactly how much) → force confirms</text>
+
+<line x1="40" y1="220" x2="640" y2="220" stroke="#e0ddd3" stroke-width="1"/>
+<text class="b" x="40" y="248" style="fill:#3d3d3a">Not pure AI, not pure legacy — the moat forms with whoever bridges the two.</text>
+</svg>

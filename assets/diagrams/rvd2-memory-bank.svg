@@ -1,0 +1,39 @@
+<svg width="100%" viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">메모리 뱅크 구성</title>
+<desc id="de">뱅크에는 최근 프레임 큐·프롬프트 프레임·물체 포인터 세 종류가 들어간다. 단기 기억·장기 기억·정체성을 각각 담당한다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="250" rx="12"/>
+<text class="t" x="18" y="22">뱅크에 들어가는 세 가지</text>
+<rect class="bx" x="16" y="34" width="328" height="58" rx="10"/>
+<text class="lb" x="30" y="53" style="fill:var(--teal)">① 최근 프레임 N개 — 밀려나는 큐(FIFO)</text>
+<text class="st" x="30" y="72">직전의 모습과 위치. 짧은 시간의 연속성 담당.</text>
+<text class="st" x="30" y="87">오래되면 자동으로 빠진다.</text>
+<rect class="bx" x="16" y="100" width="328" height="58" rx="10"/>
+<text class="lb" x="30" y="119" style="fill:var(--amber)">② 사람이 프롬프트를 준 프레임 — 안 밀려남</text>
+<text class="st" x="30" y="138">"이게 그 물체다"라는 확실한 근거. 계속 붙잡아 둔다.</text>
+<text class="st" x="30" y="153">긴 가림 뒤 복귀할 때 이게 결정적.</text>
+<rect class="bx" x="16" y="166" width="328" height="58" rx="10"/>
+<text class="lb" x="30" y="185" style="fill:var(--blue)">③ 물체 포인터 — 고수준 요약 벡터</text>
+<text class="st" x="30" y="204">픽셀이 아니라 "이 물체의 정체성"을 압축한 토큰.</text>
+<text class="st" x="30" y="219">모양이 변해도 같은 물체임을 잇는다.</text>
+<text class="lb" x="180" y="242" text-anchor="middle">①은 단기 기억, ②는 장기 기억, ③은 정체성</text>
+</svg>
