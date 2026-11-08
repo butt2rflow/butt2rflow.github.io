@@ -17,7 +17,7 @@ In [part 1](aip-seeing-sound.md) we turned sound into pictures to look at. Movem
 
 ---
 
-<video controls playsinline preload="metadata" src="/assets/aip/aip-seeing-motion-video-0433a93496.mp4" style="width:100%"></video>
+<video controls playsinline preload="metadata" src="/assets/aip/aip-seeing-motion-video-948af771a2.mp4" style="width:100%"></video>
 
 *AI-generated video. Underneath, the picture of its sound (a spectrogram, as in [part 1](aip-seeing-sound.md)): the “tock” appears at the same moment the glove passes the bottom of its path.*
 

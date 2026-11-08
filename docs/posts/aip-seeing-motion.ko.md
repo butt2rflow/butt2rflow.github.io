@@ -17,7 +17,7 @@ description: "1편에서 소리를 그림으로 바꿔 ‘봤죠’. 움직임�
 
 ---
 
-<video controls playsinline preload="metadata" src="/assets/aip/aip-seeing-motion-video-91b3008d09.mp4" style="width:100%"></video>
+<video controls playsinline preload="metadata" src="/assets/aip/aip-seeing-motion-video-d691e53e35.mp4" style="width:100%"></video>
 
 *AI로 만든 영상이에요. 아래는 이 영상 소리의 그림([1편](aip-seeing-sound.md)의 스펙트로그램)이에요. 장갑이 궤적의 가장 아래를 지나는 순간, 소리 그림에 ‘딱’이 나타나요.*
 
