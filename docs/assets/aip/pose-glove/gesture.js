@@ -9,14 +9,20 @@
 //   twist : twist the wrist back and forth quickly: one gyro axis crosses +-400 deg/s with alternating sign 3+ times in 1 s
 //           (300 let a firm 350 deg/s waggle through; with only the hand IMU a waggle and a twist differ only in size)
 //   shake : shake the hand: one accel axis (gravity removed) crosses +-1.5 g with alternating sign 3+ times in 0.8 s
+//   dial  : turn the wrist one way like a dial, out of >= 0.4 s of calm: the rotation (as a 3D vector, so the IMU's angle on the
+//           glove doesn't matter) reaches >= 90 deg in 0.25-1.0 s (Jae's turns 110-193 deg; a 72 deg hand turn between range shots was a false dial at 60) with a peak >= 300 deg/s (Jae's real turns: 440-850 deg/s, 0.3-0.8 s;
+//           a slow 105 deg hand turn after a swing, 170 deg/s over 1.3 s, was a false dial at 150 / 1.5), the net turn is >= 50 % of the
+//           turning path (real dials 0.59-0.96 with a bounce-back; swings 0.07-0.24; a twist ~0), accel within 1.5 g of 1 g, then settled (< 80 deg/s) for 0.15 s.
+//           Reports dir (+1/-1 along the glove's turn axis, learnt from the first dial; the page maps it to clockwise) and
+//           steps (1 per ~150 deg, at most 3). It skips the 1.5 s cool-down so club changes can follow each other.
 // Frame = [t_s, hand gx gy gz (deg/s), hand ax ay az (g), arm gx gy gz, arm ax ay az] (same as swing.js).
 
-export const GESTURES = ["tap2", "hold", "twist", "shake"];
+export const GESTURES = ["tap2", "hold", "twist", "shake", "dial"];
 
 export class GestureDetector {
   constructor(onGesture, opts = {}) {
     this.on = onGesture;
-    this.enabled = { tap2: true, hold: true, twist: true, shake: true, ...(opts.enabled || {}) };
+    this.enabled = { tap2: true, hold: true, twist: true, shake: true, dial: true, ...(opts.enabled || {}) };
     this.holdRef = opts.holdRef || null;           // unit gravity vector of the taught pose, or null (hold off)
     this.armOk = !!opts.armOk;
     this.hist = [];                                  // ~0.1 s of frames for the tap "5 ms back" check
@@ -25,6 +31,8 @@ export class GestureDetector {
     this.lp = null; this.cand = null; this.calmSince = null;
     this.busyStart = -Infinity; this.preCalm = 0;     // start of the current motion, and how long it was calm before it
     this.holdSince = null; this.holdArmed = true; this.last = null;
+    this.dl = null; this.prevT = null; this.handLock = -Infinity; this.dialAxis = opts.dialAxis || null;   // dial in progress; swing lock from the hand IMU only
+    this.dialLog = [];                              // last few dial checks, accepted or not, with the reason (for tuning on a real glove)
   }
   setHoldRef(v) { const n = Math.hypot(...v); this.holdRef = n ? v.map((x) => x / n) : null; }
 
@@ -34,12 +42,53 @@ export class GestureDetector {
     if (this.lastBusy === -Infinity) this.lastBusy = t;   // the stream's start doesn't count as calm
     const armFast = this.armOk && Math.hypot(f[7], f[8], f[9]) > 400;
     if (gm > (this.armOk ? 1200 : 800) || armFast) { this.lock = t + 2; this.cand = null; this.taps = []; }
+    // the dial is a forearm roll, so the forearm IMU races past 400 deg/s on every dial; only the hand lock applies to it
+    if (gm > (this.armOk ? 1200 : 800)) this.handLock = t + 2;
     const busy = gm > 150 || Math.abs(am - 1) > 0.35;
     const quietFor = t - this.lastBusy;               // calm time BEFORE this frame
     // gravity estimate (slow low-pass) for the shake check
     if (!this.lp) this.lp = a.slice(); else for (let k = 0; k < 3; k++) this.lp[k] += 0.02 * (a[k] - this.lp[k]);
     this.hist.push(f); while (this.hist.length && this.hist[0][0] < t - 0.1) this.hist.shift();
     const open = t >= this.lock && t >= this.cool;
+    const dt = this.prevT === null ? 0 : Math.min(0.05, t - this.prevT); this.prevT = t;
+
+    // dial: its own small state machine, so a candidate of another gesture doesn't block it. The rotation is followed as a
+    // 3D vector because the hand IMU sits at an angle on the glove: a real wrist turn showed up split between x and z
+    // (e.g. +122 / -98 deg, 2026-11-13), so "one gyro axis" rejected every turn.
+    if (this.enabled.dial && t >= this.handLock) {
+      if (!this.dl) {
+        if (gm > 60 && quietFor >= 0.4) this.dl = { t0: t, tEnd: t, ang: [0, 0, 0], path: 0, peak: 0, accDev: 0, calm: null };
+        else if (gm > 300 && quietFor < 0.4 && t - (this.noCalmAt || -9) > 1.5) {   // a fast turn that started without a pause: log it for tuning
+          this.noCalmAt = t; this.dialLog.push({ why: `no pause before (calm ${quietFor.toFixed(2)} s, needs 0.4)`, peak: Math.round(gm) });
+          if (this.dialLog.length > 12) this.dialLog.shift();
+        }
+      } else {
+        const d = this.dl;
+        for (let k = 0; k < 3; k++) d.ang[k] += g[k] * dt;
+        d.path += gm * dt; d.peak = Math.max(d.peak, gm); d.accDev = Math.max(d.accDev, Math.abs(am - 1));
+        if (gm < 80) { if (d.calm === null) d.calm = t; } else { d.calm = null; d.tEnd = t; }   // a hand held in the air drifts ~20-40 deg/s; after a turn it settles slower
+        if (t - d.t0 > 2.0) { this.dialNote(d, "too long (no stop within 2 s)"); this.dl = null; }
+        else if (d.calm !== null && t - d.calm >= 0.15) {
+          const mag = Math.hypot(...d.ang), straight = d.path ? mag / d.path : 0, dur = d.tEnd - d.t0;
+          this.dl = null;
+          const why = mag < 90 ? "angle < 90" : d.peak < 300 ? "too slow (peak < 300 deg/s)" : straight < 0.5 ? "not one way (back-and-forth or wobbly)"
+            : dur < 0.25 ? "too quick (< 0.25 s)" : dur > 1.0 ? "too long (> 1.0 s)" : d.accDev >= 1.5 ? "too jerky (accel)" : "ok";
+          this.dialNote(d, why, dur, straight);
+          if (why === "ok") {
+            // which way: the sign along the glove's own turn axis. The first dial sets the axis (sign fixed so its largest
+            // component is positive, so it doesn't depend on which way that first turn went); later dials refine it.
+            const u = d.ang.map((x) => x / mag);
+            if (!this.dialAxis) { const big = u.reduce((m, x, k) => (Math.abs(x) > Math.abs(u[m]) ? k : m), 0); this.dialAxis = u.map((x) => x * Math.sign(u[big])); }
+            const dot = u[0] * this.dialAxis[0] + u[1] * this.dialAxis[1] + u[2] * this.dialAxis[2], dir = dot >= 0 ? 1 : -1;
+            const ax = this.dialAxis.map((x, k) => 0.8 * x + 0.2 * dir * u[k]), n = Math.hypot(...ax); this.dialAxis = ax.map((x) => x / n);
+            this.cand = null; this.calmSince = null; this.gyroX = [null, null, null]; this.accX = [null, null, null]; this.taps = [];
+            this.last = { name: "dial", t };
+            this.on({ name: "dial", t, dir, deg: Math.round(dir * mag), steps: Math.max(1, Math.min(3, Math.floor((mag + 70) / 150))) });
+            return;
+          }
+        }
+      }
+    } else this.dl = null;
 
     // a candidate waits for 0.4 s of calm, then fires; big motion meanwhile cancels it
     if (this.cand) {
@@ -104,6 +153,11 @@ export class GestureDetector {
         else if (t - this.holdSince >= 1.0) { this.holdArmed = false; this.holdSince = null; this.fire("hold", t); }
       } else this.holdSince = null;
     }
+  }
+  dialNote(d, why, dur = null, straight = null) {
+    this.dialLog.push({ why, ang: d.ang.map((x) => Math.round(x)), mag: Math.round(Math.hypot(...d.ang)), peak: Math.round(d.peak),
+      dur: dur === null ? null : +dur.toFixed(2), straight: straight === null ? null : +straight.toFixed(2), accDev: +d.accDev.toFixed(2) });
+    if (this.dialLog.length > 12) this.dialLog.shift();
   }
   fire(name, t) {
     this.cand = null; this.calmSince = null; this.cool = t + 1.5; this.last = { name, t };

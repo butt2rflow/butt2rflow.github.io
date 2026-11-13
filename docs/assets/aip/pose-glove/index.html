@@ -107,12 +107,24 @@ body.recording #recDot { display: inline-block; }
 #impOv figure { margin: 0; background: rgba(10, 13, 15, .78); border-radius: 8px; padding: 4px; }
 #impOv canvas { position: static; inset: auto; display: block; width: 100%; height: 64px; border-radius: 4px; }
 #impOv figcaption { font-size: 11px; color: var(--fg); padding: 2px 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#clubWheel { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(8,10,12,.82) 0%, rgba(8,10,12,.55) 70%, rgba(8,10,12,0) 100%);
+  opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+#clubWheel.show { opacity: 1; }
+#clubWheel .cw-stage { width: 100%; height: 260px; perspective: 420px; display: flex; align-items: center; justify-content: center; }
+#clubWheel .cw-ring { position: relative; width: 0; height: 0; transform-style: preserve-3d; transition: transform .75s cubic-bezier(.22, 1.25, .36, 1); }
+#clubWheel .ci { position: absolute; left: -60px; top: -44px; width: 120px; height: 88px; border-radius: 16px; display: flex; align-items: center;
+  justify-content: center; font-weight: 800; font-size: 26px; color: #eef1f3; background: #1f262b; border: 2px solid #2d353b;
+  backface-visibility: hidden; transition: opacity .4s ease, background .3s, border-color .3s, box-shadow .3s; }
+#clubWheel .ci.sel { background: #4fc3f7; color: #002433; border-color: #b3e5fc; box-shadow: 0 0 34px rgba(79,195,247,.85); }
+#clubWheel .cw-name { margin-top: 18px; font-size: 40px; font-weight: 800; color: #fff; text-shadow: 0 2px 18px rgba(79,195,247,.9); }
 details.note{margin-top:6px} details.note summary{font-size:13px;color:var(--muted);cursor:pointer}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div id="dockRim" aria-hidden="true"></div>
+<div id="clubWheel" aria-hidden="true"><div class="cw-stage"><div class="cw-ring" id="cwRing"></div></div><div class="cw-name" id="cwName"></div></div>
 <button id="dockTab" aria-label="메뉴 열기">▾ 메뉴<span id="recDot"></span></button>
 
   <div class="dock" id="dock">
@@ -736,16 +748,52 @@ $("vTalk").onclick = () => listener.listenOnce();
 $("vCont").onchange = () => listener.setContinuous($("vCont").checked);
 
 // ---- hand gestures (gesture.js) -> a command phrase (run like a voice command) or "listen" ----
-const G_NAME = { tap2: "손등 두 번 톡톡", hold: "손 세우고 1초 멈춤", twist: "손목 빠르게 두 번 비틀기", shake: "세 번 흔들기" };
+const G_NAME = { tap2: "손등 두 번 톡톡", hold: "손 세우고 1초 멈춤", twist: "손목 빠르게 두 번 비틀기", shake: "세 번 흔들기", dial: "다이얼처럼 손목 돌리기" };
 const G_DEFAULT = { tap2: "__listen", hold: "방금 거 어때", twist: "굿샷", shake: "취소" };
 const G_CHOICES = [["__listen", "듣기 시작 (말로 하기)"], ["방금 거 어때", "방금 거 어때"], ["굿샷", "굿샷"], ["뒤땅", "뒤땅"], ["취소", "취소"],
   ["오늘 요약", "오늘 요약"], ["무슨 채야", "무슨 채야"], ["배터리", "배터리"], ["기록 시작", "기록 시작"], ["그만", "기록 그만"], ["", "끄기"]];
 const gLoad = () => { try { const v = JSON.parse(localStorage.getItem("pg-gesture-v1")); if (v && v.map) return v; } catch (e) {} return { on: true, map: { ...G_DEFAULT }, holdRef: null }; };
 let gCfg = gLoad(), lastHandAcc = null;
 const gSave = () => { try { localStorage.setItem("pg-gesture-v1", JSON.stringify(gCfg)); } catch (e) {} };
-const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef });
+const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef, dialAxis: gCfg.dialAxis || null, enabled: { dial: gCfg.dialOn !== false } });
 function gLabel(v) { const c = G_CHOICES.find((x) => x[0] === v); return c ? c[1] : v ? `"${v}"` : "끄기"; }
+// ---- club wheel: a dial-like wrist turn steps the club, shown as a spinning 3D carousel ----
+// Clubs come from commands.json (set_club, in bag order: driver ... wedges, putter) under the names the quick buttons use.
+// The ring wraps both ways: one step past the driver comes back round to the shortest club, and the other way round.
+// Which way is "clockwise" depends on how the glove sits, so gCfg.dialRev flips it.
+const CW_SHORT = { "드라이버": "1W", "3번 우드": "3W", "5번 우드": "5W", "유틸": "UT", "피칭": "PW", "갭 웨지": "GW", "샌드": "SW", "로브 웨지": "LW", "퍼터": "PT" };
+let cwPos = 0, cwTimer = null, cwBuilt = false;
+function cwClubs() { return vc ? vc.commands.filter((c) => c.action === "set_club").map((c) => shown("club", c)) : []; }
+function cwBuild(clubs) {
+  const n = clubs.length, step = 360 / n, R = Math.round(70 / Math.tan(Math.PI / n));   // ~140 px between neighbours
+  $("cwRing").innerHTML = clubs.map((c, i) => `<div class="ci" data-i="${i}" style="transform: rotateY(${i * step}deg) translateZ(${R}px)">${CW_SHORT[c] || c.replace("번", "")}</div>`).join("");
+  cwBuilt = true;
+}
+function clubDial(g) {
+  const clubs = cwClubs(); if (!clubs.length) return;
+  if (!cwBuilt) cwBuild(clubs);
+  const n = clubs.length, step = 360 / n;
+  let idx = clubs.indexOf(cur.club); if (idx < 0) idx = clubs.indexOf("7번") >= 0 ? clubs.indexOf("7번") : 0;
+  if (((cwPos % n) + n) % n !== idx) cwPos = idx;                   // the club was changed some other way: jump there quietly
+  const dir = (gCfg.dialRev ? -1 : 1) * g.dir, steps = g.steps || 1;
+  cwPos += dir * steps;                                              // unbounded, so the ring always spins the way the wrist turned
+  const sel = ((cwPos % n) + n) % n, name = clubs[sel];
+  const ring = $("cwRing"); ring.style.transform = `translateZ(-${Math.round(70 / Math.tan(Math.PI / n))}px) rotateY(${-cwPos * step}deg)`;
+  ring.querySelectorAll(".ci").forEach((el) => {
+    const i = +el.dataset.i; let d = Math.abs(((i - cwPos) % n + n) % n); d = Math.min(d, n - d);
+    el.classList.toggle("sel", i === sel); el.style.opacity = d === 0 ? 1 : d <= 2 ? 0.7 - 0.2 * d : 0.12;
+  });
+  $("cwName").textContent = name;
+  $("clubWheel").classList.add("show"); clearTimeout(cwTimer); cwTimer = setTimeout(() => $("clubWheel").classList.remove("show"), 2200);
+  try { navigator.vibrate && navigator.vibrate(40); } catch (e) {}
+  setSetting("club", name, "gesture", `dial ${g.deg}°`); speak(name);
+}
 function onGesture(g) {
+  if (g.name === "dial") {
+    // keep the glove's learnt turn axis, so "clockwise" means the same thing next session
+    if (gestDet.dialAxis) { gCfg.dialAxis = gestDet.dialAxis.map((x) => +x.toFixed(3)); gSave(); }
+    qEvent("gesture", { gesture: "dial", deg: g.deg, steps: g.steps }, "gesture"); if (gCfg.dialOn !== false) clubDial(g); return;
+  }
   const act = gCfg.map[g.name];
   qEvent("gesture", { gesture: g.name, action: act || null }, "gesture");
   if (!act) return;
@@ -756,6 +804,14 @@ function onGesture(g) {
 function gRender() {
   $("gOn").checked = gCfg.on; $("gBody").style.display = gCfg.on ? "" : "none";
   $("gRows").innerHTML = "";
+  {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td style="white-space:normal">${G_NAME.dial}</td><td style="white-space:normal"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-dial="on"${gCfg.dialOn !== false ? " checked" : ""}> 채 바꾸기</label>` +
+      `<label style="display:flex;gap:6px;align-items:center;margin-top:4px"><input type="checkbox" data-dial="rev"${gCfg.dialRev ? " checked" : ""}> 방향 반대로</label></td>`;
+    $("gRows").appendChild(tr);
+    tr.querySelector('[data-dial="on"]').onchange = (e) => { gCfg.dialOn = e.target.checked; gestDet.enabled.dial = gCfg.dialOn; gSave(); };
+    tr.querySelector('[data-dial="rev"]').onchange = (e) => { gCfg.dialRev = e.target.checked; gSave(); };
+  }
   for (const k of ["tap2", "hold", "twist", "shake"]) {
     const tr = document.createElement("tr");
     const v = gCfg.map[k] ?? "";
@@ -779,7 +835,7 @@ function gRender() {
 }
 $("gOn").onchange = () => { gCfg.on = $("gOn").checked; gSave(); gRender(); };
 gRender();
-window.__pgTest.onGesture = onGesture;
+window.__pgTest.onGesture = onGesture; window.__pgTest.clubDial = clubDial; window.__pgTest.gestDet = gestDet;
 
 // heartbeat: with the 2026-10-26 firmware the glove drops a link whose host stopped sending these (stale-link guard);
 // older firmware ignores the command
@@ -1086,7 +1142,7 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작"; document.body.classList.remove("recording");
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-11-13s", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-11-13y", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: GLOVE_HZ, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address",
