@@ -169,6 +169,16 @@ a { color: var(--accent); }
       </table>
       <div class="head"><span id="swNote" style="white-space:normal;line-height:1.5">손 최고 속도 뒤 ! = 자이로 한계(2293 °/s)에 닿음. 템포 = 백스윙 시간 ÷ 다운스윙 시간. 손목 풀림 = 꺾인 손목이 반쯤 풀린 순간(− = 임팩트 전). 꺾임은 어드레스 기준 상대값이에요.</span></div>
     </div>
+    <div class="chart" id="r10Box">
+      <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="r10On" type="checkbox"> R10 결과 받기 (R10 Bridge 앱)</label><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="r10Speak" type="checkbox"> 결과 말하기</label></div>
+      <div class="head"><span id="r10State" style="font-size:13px">꺼짐</span></div>
+      <table class="sw">
+        <colgroup><col style="width:2.6em"><col><col><col><col><col><col></colgroup>
+        <tr><th>#</th><th>볼 (m/s)</th><th>출발 (°)</th><th>스핀축 (°)</th><th>패스 (°)</th><th>페이스 (°)</th><th>짝 스윙</th></tr>
+        <tbody id="r10Rows"><tr><td colspan="7" style="text-align:left;color:var(--muted)">아직 R10 샷이 없어요</td></tr></tbody>
+      </table>
+      <div class="head"><span style="white-space:normal;line-height:1.5">R10 Bridge 앱에서 "수신 켜기", Garmin Golf 앱 Manage Connection은 127.0.0.1 : 2483. 샷이 오면 그 직전 임팩트의 스윙과 짝지어요(짝 스윙 옆 숫자 = 임팩트에서 샷 도착까지 ms). + = 오른쪽/인아웃.</span></div>
+    </div>
     <div class="chart">
       <div class="head"><span id="clipTitle">장갑 소리 클립 (임팩트·목소리가 오면 그려져요)</span></div>
       <canvas id="clipCv"></canvas>
@@ -206,6 +216,7 @@ import { Glove, clipSamples, motionFrames, GYRO_DPS, ACC_G, SAT_DPS } from "./gl
 import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
 import { GestureDetector } from "./gesture.js";
+import { R10Link, pairShots, shotLine } from "./r10.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -490,6 +501,7 @@ function onSwing(sw) {
   for (const k of Object.keys(row)) if (typeof row[k] === "number" && !Number.isInteger(row[k])) row[k] = +row[k].toFixed(k === "t_imp" ? 6 : 3);
   swings.push(row); if (swings.length > 200) swings.shift();
   if (logging) log.swings.push(row);
+  r10Pair();
   for (const [name, source, heard] of heldLabels.splice(0)) labelLast(name, source, heard);
   renderSwings();
   if ($("swSpeak").checked && window.speechSynthesis) {
@@ -506,6 +518,34 @@ function renderSwings() {
   const tp = swings.slice(-10).map((w) => w.tempo).sort((a, b) => a - b);
   $("swTitle").textContent = `스윙 ${swings.length}번 · 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}` + (swings[swings.length - 1].hand_only ? " · 팔 IMU 없음: 템포는 대략값" : "");
 }
+
+// ---- R10 shots from the R10 Bridge app (r10.js), paired with glove swings ----
+const r10Shots = [];   // {arrivalMs, swing, lagMs, gaveUp, msg}; the same objects go into log.r10, so pairings made later are saved too
+let r10Timer = null;
+const r10Link = new R10Link((msg, arrivalMs) => {
+  const s = { arrivalMs: +arrivalMs.toFixed(1), swing: null, msg };
+  r10Shots.push(s); if (r10Shots.length > 200) r10Shots.shift();
+  if (logging) log.r10.push(s);
+  r10Pair(); renderR10();
+  if (s.swing == null && !r10Timer) r10Timer = setInterval(() => { r10Pair(); if (!r10Shots.some((x) => x.swing == null && !x.gaveUp)) { clearInterval(r10Timer); r10Timer = null; } renderR10(); }, 1000);
+}, (text, ok) => { $("r10State").textContent = text; $("r10State").style.color = ok ? "var(--fg)" : "var(--muted)"; });
+function r10Pair() {
+  for (const s of pairShots(swings, r10Shots, performance.now())) {
+    renderR10();
+    if ($("r10Speak").checked) speak(shotLine(s.msg));
+  }
+}
+function renderR10() {
+  const f = (v) => (Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(1) : "–");
+  $("r10Rows").innerHTML = r10Shots.slice(-8).reverse().map((s) => {
+    const b = s.msg.ball || {}, c = s.msg.club || {};
+    const pair = s.swing != null ? `#${s.swing} <small>${s.lagMs.toFixed(0)}</small>` : s.gaveUp ? "없음" : "기다림";
+    return `<tr><td>${s.msg.shot}</td><td>${Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–"}</td><td>${f(b.LaunchDirection)}</td><td>${f(b.SpinAxis)}</td>` +
+      `<td>${f(c.ClubAnglePath)}</td><td>${f(c.ClubAngleFace)}</td><td>${pair}</td></tr>`;
+  }).join("");
+}
+$("r10On").onchange = () => { if ($("r10On").checked) r10Link.start(); else r10Link.stop(); };
+window.__pgTest.r10 = { r10Shots, r10Pair };
 
 // ---- voice commands (voice.js: voice.py's matcher; Chrome speech-to-text) ----
 let vc = null;
@@ -896,10 +936,11 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작";
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-10-27c", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-11-12a", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
-    swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address" } };
+    swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address",
+    r10: "R10 Bridge shots: arrivalMs = phone ms when the page got it; swing = paired swing n (null = none), lagMs = arrival - swing impactPhoneMs; msg = app message {shot, t_wall_ms, ball{BallSpeed m/s, LaunchAngle, LaunchDirection, TotalSpin rpm, SpinAxis}, club{ClubHeadSpeed, ClubAnglePath, ClubAngleFace}} as the Garmin app sends them" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
   a.download = `swing-glove-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`; a.click();
@@ -909,7 +950,7 @@ function stopLog() {
 $("log").onclick = () => {
   if (logging) { stopLog(); return; }
   gStats.hand = 0; gStats.arm = 0;
-  log = { cap: [], impacts: [], motion: [], swings: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
+  log = { cap: [], impacts: [], motion: [], swings: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], r10: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
   logging = true; $("log").textContent = "기록 멈추고 저장"; speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
 };
 
