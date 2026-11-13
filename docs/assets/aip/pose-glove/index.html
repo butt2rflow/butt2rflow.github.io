@@ -163,7 +163,7 @@ details.note{margin-top:6px} details.note summary{font-size:13px;color:var(--mut
       <div class="num"><span>손목 풀림 ms</span><b id="lsRelease">–</b></div>
       <div class="num"><span>꺾임 °</span><b id="lsHinge">–</b></div>
       <div class="num"><span>손 최고 °/s</span><b id="lsHand">–</b></div>
-      <div class="num r10"><span>볼 m/s</span><b id="lsBall">–</b></div>
+      <div class="num r10"><span>볼 mph</span><b id="lsBall">–</b></div>
       <div class="num r10"><span>출발 °</span><b id="lsDir">–</b></div>
       <div class="num r10"><span>패스 °</span><b id="lsPath">–</b></div>
       <div class="num r10"><span>페이스 °</span><b id="lsFace">–</b></div>
@@ -199,10 +199,10 @@ details.note{margin-top:6px} details.note summary{font-size:13px;color:var(--mut
       <div class="head"><span>R10 샷 (최근 4개)</span><span id="r10State" style="font-size:13px">꺼짐</span></div>
       <table class="sw">
         <colgroup><col style="width:2.6em"><col><col><col><col><col><col></colgroup>
-        <tr><th>#</th><th>볼 (m/s)</th><th>출발 (°)</th><th>스핀축 (°)</th><th>패스 (°)</th><th>페이스 (°)</th><th>짝 스윙</th></tr>
+        <tr><th>#</th><th>볼 (mph)</th><th>출발 (°)</th><th>스핀축 (°)</th><th>패스 (°)</th><th>페이스 (°)</th><th>짝 스윙</th></tr>
         <tbody id="r10Rows"><tr><td colspan="7" style="text-align:left;color:var(--muted)">아직 R10 샷이 없어요</td></tr></tbody>
       </table>
-      <details class="note"><summary>설명</summary><span style="white-space:normal;line-height:1.5;font-size:13px;color:var(--muted)">R10 Bridge 앱에서 "수신 켜기", Garmin Golf 앱 Manage Connection은 127.0.0.1 : 2483. 샷이 오면 그 직전 임팩트의 스윙과 짝지어요(짝 스윙 옆 숫자 = 임팩트에서 샷 도착까지 ms). + = 오른쪽/인아웃.</span></details>
+      <details class="note"><summary>설명</summary><span style="white-space:normal;line-height:1.5;font-size:13px;color:var(--muted)">R10 Bridge 앱에서 "수신 켜기", Garmin Golf 앱 Manage Connection은 127.0.0.1 : 2483 → 초록 체크 → Garmin 앱에서 세션 시작(안 하면 샷이 안 와요). 샷이 오면 그 직전 임팩트의 스윙과 짝지어요(짝 스윙 옆 숫자 = 임팩트에서 샷 도착까지 ms). + = 오른쪽/인아웃.</span></details>
     </div>
     <div class="chart">
       <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
@@ -289,6 +289,7 @@ import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
 import { GestureDetector } from "./gesture.js";
 import { R10Link, pairShots, shotLine } from "./r10.js";
+const PAGE_VER = "2026-11-14c";
 const GLOVE_HZ = 240;   // the glove firmware's rate (was a menu with 400 for PC tests and 180 for old firmware)
 
 const $ = (id) => document.getElementById(id);
@@ -516,7 +517,10 @@ function onGlove(r) {
   } else if (r.type === "clip") {
     gStats.clips++; gloveText("gClips", String(gStats.clips));
     const c = r.clip; drawClip(c); if (c.kind === "impact") { swingDet.sound(c.t_us / 1e6); setTimeout(() => drawImpact(c), 0); ovSound(c); } gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
-    if (logging) log.clips.push({ kind: c.kind, id: c.id, t_us: c.t_us, pre: c.pre, total: c.total, rate: c.rate, peak: c.peak, firstNow: c.firstNow, lastNow: c.lastNow, samples: Array.from(clipSamples(c)) });
+    if (logging) log.clips.push({ kind: c.kind, id: c.id, t_us: c.t_us, pre: c.pre, total: c.total, rate: c.rate, peak: c.peak, firstNow: c.firstNow, lastNow: c.lastNow,
+      partial: !!c.partial, missingChunks: c.missingN ?? null, chunks: c.chunks ?? null, samples: Array.from(clipSamples(c)) });
+  } else if (r.type === "clipLost") {   // a sound clip with too few chunks (or no header) to keep
+    if (logging) log.clipsLost.push({ ...r.lost, phoneMs: +performance.now().toFixed(1) });
   }
 }
 setInterval(() => {
@@ -565,7 +569,15 @@ $("glove").onclick = async () => {
 // ---- swing analysis (swing.js, ported from sensor-glove/src/swing_eye.py) ----
 const swings = [];
 const swingDet = new SwingDetector(onSwing);
+// A dial turn or handling the club spins the forearm IMU past swing.js's 400 deg/s, so it reported "swings" with the hand
+// at 290-980 deg/s (range, 2026-11-13: 18 of 32 rows); real swings were 1290-2350. Those rows would also steal the R10
+// pairing, so a row needs the hand at SWING_MIN_HAND or an impact sound; the rest go to log.swingsDropped.
+const SWING_MIN_HAND = 1100;
 function onSwing(sw) {
+  if (sw.hand_dps_peak < SWING_MIN_HAND && sw.source !== "sound") {
+    if (logging && log.swingsDropped) log.swingsDropped.push({ t_imp: +sw.t_imp.toFixed(3), hand: Math.round(sw.hand_dps_peak), source: sw.source, back_s: +(sw.back_s || 0).toFixed(2), down_s: +(sw.down_s || 0).toFixed(2) });
+    return;
+  }
   const ck = glove && glove.parser.clock;
   const row = { ...sw, impactPhoneMs: ck && ck.ready() ? +ck.toPhone(sw.t_imp * 1e6).toFixed(1) : null,
                 player: cur.player, club: cur.club, swing: cur.swing };
@@ -617,7 +629,7 @@ function renderR10() {
   $("r10Rows").innerHTML = r10Shots.slice(-4).reverse().map((s) => {
     const b = s.msg.ball || {}, c = s.msg.club || {};
     const pair = s.swing != null ? `#${s.swing} <small>${s.lagMs.toFixed(0)}</small>` : s.gaveUp ? "없음" : "기다림";
-    return `<tr><td>${s.msg.shot}</td><td>${Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–"}</td><td>${f(b.LaunchDirection)}</td><td>${f(b.SpinAxis)}</td>` +
+    return `<tr><td>${s.msg.shot}</td><td>${Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–"}</td><td>${f(b.LaunchDirection)}</td><td>${f(Number.isFinite(b.SpinAxis) && b.SpinAxis > 180 ? b.SpinAxis - 360 : b.SpinAxis)}</td>` +
       `<td>${f(c.ClubAnglePath)}</td><td>${f(c.ClubAngleFace)}</td><td>${pair}</td></tr>`;
   }).join("");
 }
@@ -642,7 +654,11 @@ const dock = (() => {
   $("dockRim").addEventListener("pointerdown", unfold);
   return { fold, unfold };
 })();
-$("r10On").onchange = () => { if ($("r10On").checked) r10Link.start(); else r10Link.stop(); };
+// on by default and remembered: with R10 Bridge not running the link just keeps retrying quietly every 3 s
+const r10Pref = (() => { try { return localStorage.getItem("pg-r10-on"); } catch (e) { return null; } })();
+$("r10On").checked = r10Pref !== "0";
+$("r10On").onchange = () => { try { localStorage.setItem("pg-r10-on", $("r10On").checked ? "1" : "0"); } catch (e) {} if ($("r10On").checked) r10Link.start(); else r10Link.stop(); };
+if ($("r10On").checked) r10Link.start();
 window.__pgTest.r10 = { r10Shots, r10Pair };
 window.__pgTest.ov = { ovSpec, ovShow };
 
@@ -660,7 +676,7 @@ function renderLast() {
     $("swOvTitle").textContent = `스윙 #${w.n}` + (r ? ` · R10 샷 #${r.msg.shot}` : " · R10 기다리는 중");
     $("swOvRow").innerHTML = t("템포", w.tempo.toFixed(1)) + t("손목 풀림", Number.isFinite(w.release_ms) ? (w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0) : "–") +
       t("꺾임 °", Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–") + t("손 °/s", w.hand_dps_peak.toFixed(0)) +
-      t("볼 m/s", Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–", "r10") + t("출발 °", sg1(b.LaunchDirection), "r10") +
+      t("볼 mph", Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–", "r10") + t("출발 °", sg1(b.LaunchDirection), "r10") +
       t("패스 °", sg1(c.ClubAnglePath), "r10") + t("페이스 °", sg1(c.ClubAngleFace), "r10");
     $("swOv").classList.add("show"); clearTimeout(swOvTimer); swOvTimer = setTimeout(() => $("swOv").classList.remove("show"), SWOV_MS);
   }
@@ -755,7 +771,14 @@ const G_CHOICES = [["__listen", "듣기 시작 (말로 하기)"], ["방금 거 �
 const gLoad = () => { try { const v = JSON.parse(localStorage.getItem("pg-gesture-v1")); if (v && v.map) return v; } catch (e) {} return { on: true, map: { ...G_DEFAULT }, holdRef: null }; };
 let gCfg = gLoad(), lastHandAcc = null;
 const gSave = () => { try { localStorage.setItem("pg-gesture-v1", JSON.stringify(gCfg)); } catch (e) {} };
-const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef, dialAxis: gCfg.dialAxis || null, enabled: { dial: gCfg.dialOn !== false } });
+// every dial check (accepted or not) is kept on the phone (last 100, survives a reload or a closed tab) and in the session log
+const DIAL_KEEP = 100;
+function dialNote(n) {
+  const row = { at: new Date().toISOString(), phoneMs: +performance.now().toFixed(1), page: PAGE_VER, ...n };
+  try { const a = JSON.parse(localStorage.getItem("pg-dial-log") || "[]"); a.push(row); localStorage.setItem("pg-dial-log", JSON.stringify(a.slice(-DIAL_KEEP))); } catch (e) {}
+  if (logging && log.dialChecks) log.dialChecks.push(row);
+}
+const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef, dialAxis: gCfg.dialAxis || null, enabled: { dial: gCfg.dialOn !== false }, onDialNote: dialNote });
 function gLabel(v) { const c = G_CHOICES.find((x) => x[0] === v); return c ? c[1] : v ? `"${v}"` : "끄기"; }
 // ---- club wheel: a dial-like wrist turn steps the club, shown as a spinning 3D carousel ----
 // Clubs come from commands.json (set_club, in bag order: driver ... wedges, putter) under the names the quick buttons use.
@@ -994,7 +1017,7 @@ function ovSpec(cv, x, N, hop) {   // x: samples (any scale); paints a heat-map 
 }
 function ovSound(c) {
   ovSpec($("ovSnd"), clipSamples(c), 256, c.rate >= 16000 ? 32 : 16);
-  $("ovSndCap").textContent = `타격음 · 0–${(c.rate / 2000).toFixed(0)} kHz`;
+  $("ovSndCap").textContent = `타격음 · 0–${(c.rate / 2000).toFixed(0)} kHz` + (c.partial ? ` · 일부 (${c.chunks - c.missingN}/${c.chunks})` : "");
   const v = $("ovVib"), [W, H] = sizeCv(v), g = v.getContext("2d"); g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
   $("ovVibCap").textContent = "타격 진동 · 오는 중…";
   ovShow();
@@ -1142,11 +1165,11 @@ function stopLog() {
   logging = false; $("log").textContent = "기록 시작"; document.body.classList.remove("recording");
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-11-13y", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: PAGE_VER, batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
     missing: glove && glove.parser.missing - log.missing0, hz: GLOVE_HZ, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address",
-    r10: "R10 Bridge shots: arrivalMs = phone ms when the page got it; swing = paired swing n (null = none), lagMs = arrival - swing impactPhoneMs; msg = app message {shot, t_wall_ms, ball{BallSpeed m/s, LaunchAngle, LaunchDirection, TotalSpin rpm, SpinAxis}, club{ClubHeadSpeed, ClubAnglePath, ClubAngleFace}} as the Garmin app sends them" } };
+    r10: "R10 Bridge shots: arrivalMs = phone ms when the page got it; swing = paired swing n (null = none), lagMs = arrival - swing impactPhoneMs; msg = app message {shot, t_wall_ms, ball{BallSpeed mph (R10 via E6), LaunchAngle, LaunchDirection, TotalSpin rpm, SpinAxis}, club{ClubHeadSpeed, ClubAnglePath, ClubAngleFace}} as the Garmin app sends them" } };
   const blob = new Blob([JSON.stringify({ meta, ...log })], { type: "application/json" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
   a.download = `swing-glove-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`; a.click();
@@ -1156,7 +1179,7 @@ function stopLog() {
 $("log").onclick = () => {
   if (logging) { stopLog(); return; }
   gStats.hand = 0; gStats.arm = 0;
-  log = { cap: [], impacts: [], motion: [], swings: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], r10: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
+  log = { cap: [], impacts: [], motion: [], swings: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], r10: [], dialChecks: [], swingsDropped: [], clipsLost: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
   logging = true; $("log").textContent = "기록 멈추고 저장"; document.body.classList.add("recording");
   dock.fold(); speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
 };

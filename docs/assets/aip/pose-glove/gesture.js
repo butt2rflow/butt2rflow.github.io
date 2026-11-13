@@ -33,6 +33,7 @@ export class GestureDetector {
     this.holdSince = null; this.holdArmed = true; this.last = null;
     this.dl = null; this.prevT = null; this.handLock = -Infinity; this.dialAxis = opts.dialAxis || null;   // dial in progress; swing lock from the hand IMU only
     this.dialLog = [];                              // last few dial checks, accepted or not, with the reason (for tuning on a real glove)
+    this.onDialNote = opts.onDialNote || null;      // page hook: keep each check beyond this page's life
   }
   setHoldRef(v) { const n = Math.hypot(...v); this.holdRef = n ? v.map((x) => x / n) : null; }
 
@@ -61,6 +62,7 @@ export class GestureDetector {
         else if (gm > 300 && quietFor < 0.4 && t - (this.noCalmAt || -9) > 1.5) {   // a fast turn that started without a pause: log it for tuning
           this.noCalmAt = t; this.dialLog.push({ why: `no pause before (calm ${quietFor.toFixed(2)} s, needs 0.4)`, peak: Math.round(gm) });
           if (this.dialLog.length > 12) this.dialLog.shift();
+          if (this.onDialNote) this.onDialNote(this.dialLog[this.dialLog.length - 1]);
         }
       } else {
         const d = this.dl;
@@ -158,6 +160,7 @@ export class GestureDetector {
     this.dialLog.push({ why, ang: d.ang.map((x) => Math.round(x)), mag: Math.round(Math.hypot(...d.ang)), peak: Math.round(d.peak),
       dur: dur === null ? null : +dur.toFixed(2), straight: straight === null ? null : +straight.toFixed(2), accDev: +d.accDev.toFixed(2) });
     if (this.dialLog.length > 12) this.dialLog.shift();
+    if (this.onDialNote) this.onDialNote(this.dialLog[this.dialLog.length - 1]);
   }
   fire(name, t) {
     this.cand = null; this.calmSince = null; this.cool = t + 1.5; this.last = { name, t };

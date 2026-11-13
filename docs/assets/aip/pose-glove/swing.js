@@ -110,6 +110,7 @@ export function impactFromMotion(fr, tPeak) {
   return Math.sqrt(best) > 0.8 ? { t: w[bi][0], source: "accel" } : { t: tPeak, source: "arm peak" };
 }
 
+export const WEAK_HAND = 1100;   // deg/s: real swings 1290-3100 on the range, waggles / wrist turns 290-1044
 export class SwingDetector {
   // onSwing(result) is called once per swing: { n, t_imp (s, glove clock), source, ...analyse() }
   constructor(onSwing, opts = {}) {
@@ -134,6 +135,10 @@ export class SwingDetector {
       const w = this.buf.filter((r) => r[0] >= this.pending.t0 && r[0] <= this.pending.t0 + 0.5);
       const s = gauss(Float64Array.from(w.map((r) => this.armSeen ? Math.hypot(r[7], r[8], r[9]) : Math.hypot(r[1], r[2], r[3]))), 4 * (w.length / 0.5) / 400);
       let pk = 0; for (let i = 1; i < s.length; i++) if (s[i] > s[pk]) pk = i;
+      // A waggle or a wrist turn can pass the forearm threshold too. If the hand never got near swing speed in this window,
+      // drop the candidate without the GAP_S lock, so the real downswing that follows can start its own (range 2026-11-13:
+      // waggles ~0.8 s before two hits took the "swing" and the real ones, hand 2400-3100 deg/s, were skipped).
+      if (this.armSeen && Math.max(...w.map((r) => Math.hypot(r[1], r[2], r[3]))) < WEAK_HAND) { this.pending = null; this.nextOk = f[0]; return; }
       this.pending.peak = w[pk][0];
     }
     if (this.pending && this.pending.peak && !this.pending.est && f[0] >= this.pending.peak + 0.3) {

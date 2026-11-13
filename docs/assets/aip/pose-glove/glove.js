@@ -60,8 +60,23 @@ export class GloveParser {
       c.parts.set(ch, kind === "motion" ? new Uint8Array(raw) : new Int16Array(raw));
     }
     c.lastNow = now;
+    // The motion clip is sent right after its sound clip, so when it starts, the sound clip with the same id won't get
+    // any more chunks. On the phone with the camera and pose running, most sound clips lost more than 2 of ~72 chunks and
+    // were never shown (range 2026-11-13: 10 cut, 1 arrived). Keep one that has the header and >= PARTIAL_MIN of its chunks
+    // (gaps left silent, marked partial); report the rest as lost, with counts.
+    if (kind === "motion") {
+      const snd = this.clips.get(`impact${id}`);
+      if (snd && !snd.reported) {
+        snd.reported = true;
+        const L = clipLayout(snd), got = snd.parts.size;
+        if (L && got >= PARTIAL_MIN * L.n) { snd.partial = true; snd.missingN = L.missing.length; snd.chunks = L.n; this.queued = snd; }
+        else this.lost = { id, header: snd.total !== undefined, got, of: L ? L.n : null };
+      }
+    }
     const done = kind === "motion" ? motionDone(c) : clipDone(c);
     if (done && !c.reported) { c.reported = true; return { type: "clip", clip: c }; }
+    if (this.queued) { const q = this.queued; this.queued = null; return { type: "clip", clip: q }; }
+    if (this.lost) { const l = this.lost; this.lost = null; return { type: "clipLost", lost: l }; }
     return { type: "chunk" };
   }
 }
@@ -84,6 +99,7 @@ export function motionFrames(c) {   // -> { t: glove us per frame, g: Int16Array
   return { t, g: Int16Array.from(g) };
 }
 
+export const PARTIAL_MIN = 0.6;   // share of chunks a sound clip needs to be kept as "partial" (see clipChunk)
 // Same rule as host/stream.py: header seen, last chunk seen, at most 2 chunks lost (left silent).
 export function clipLayout(c) {
   if (c.total === undefined || c.parts.size === 0) return null;
