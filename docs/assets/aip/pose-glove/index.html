@@ -34,7 +34,10 @@ button, select, label.file { white-space: nowrap;  background: var(--panel); col
 button.primary { background: var(--accent); color: #002433; border-color: var(--accent); font-weight: 700; }
 button:disabled { opacity: .5; }
 label.file input { display: none; }
-#msg { color: var(--warn); font-size: 14px; line-height: 1.4; height: 2.8em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+#msg { position: fixed; left: 50%; top: 40px; transform: translateX(-50%); width: min(92vw, 520px); z-index: 25; color: var(--fg); font-size: 14px; line-height: 1.45;
+  background: rgba(26, 31, 35, .95); border: 1px solid #2d353b; border-left: 4px solid var(--warn); border-radius: 10px; padding: 8px 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.5); opacity: 0; transition: opacity .4s ease; pointer-events: none; }
+#msg.show { opacity: 1; }
 details { background: var(--panel); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted); }
 details summary { color: var(--fg); cursor: pointer; }
 details li { margin: 4px 0; }
@@ -64,30 +67,68 @@ a { color: var(--accent); }
 .sw td { text-align: right; padding: 4px 2px; border-top: 1px solid #2d353b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sw td:first-child, .sw th:first-child { text-align: left; }
 .sw td.sat { color: var(--warn); }
+#lastShot .ls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+#lastShot .num { padding: 5px 7px; border-left: 3px solid #4fc3f7; }
+#lastShot .num.r10 { border-left-color: #81c784; } #lastShot .num.body { border-left-color: #ffb74d; }
+#lastShot .num span { font-size: 11px; } #lastShot .num b { font-size: clamp(16px, 4.6vw, 22px); }
+#lastShot .num small { font-size: 11px; min-height: 0; }
+.lskey { display: flex; gap: 12px; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.lskey span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; background: #4fc3f7; }
+.lskey .r10::before { background: #81c784; } .lskey .body::before { background: #ffb74d; }
+.stage { aspect-ratio: auto; height: max(300px, calc(100dvh - 310px)); }   /* camera takes the screen; the result card still fits below */
+.stage canvas { width: 100%; height: 100%; object-fit: contain; }
+.wrap > .row button, .wrap > .row label.file { padding: 7px 11px; font-size: 14px; }
+.wrap > .row { gap: 6px; }
+.dock { display: flex; flex-direction: column; gap: 6px; }
+#dock { position: fixed; top: 0; left: 50%; transform: translate(-50%, 0); width: min(100%, 900px); z-index: 30;
+  background: var(--panel); border: 1px solid #2d353b; border-top: none; border-radius: 0 0 14px 14px; padding: 10px 14px 14px;
+  box-shadow: 0 6px 22px rgba(0,0,0,.6); transition: transform .25s ease; }
+body.docked #dock { transform: translate(-50%, -110%); }
+#dockTab { position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 29; display: none; align-items: center; gap: 6px;
+  border-top: none; border-radius: 0 0 12px 12px; padding: 4px 18px 7px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+body.docked #dockTab { display: flex; }
+.wrap { padding-top: 30px; }   /* room for the menu tab */
+#dockRim { position: fixed; top: 0; left: 0; right: 0; height: 22px; z-index: 28; display: none; }
+body.docked #dockRim { display: block; }
+#recDot { display: none; width: 9px; height: 9px; border-radius: 50%; background: #ef5350; }
+body.recording #recDot { display: inline-block; }
+#swOv { position: absolute; left: 8px; right: 8px; top: 44px; background: rgba(10, 13, 15, .8); border-radius: 10px; padding: 6px 8px 8px;
+  opacity: 0; transition: opacity .6s ease; pointer-events: none; }
+#swOv.show { opacity: 1; }
+#swOvTitle { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+#swOv .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+#swOv .row4 div { border-left: 3px solid #4fc3f7; padding-left: 5px; }
+#swOv .row4 div.r10 { border-left-color: #81c784; }
+#swOv .row4 span { display: block; font-size: 10px; color: var(--muted); white-space: nowrap; }
+#swOv .row4 b { font-size: 18px; font-variant-numeric: tabular-nums; }
+#impOv { position: absolute; left: 8px; right: 8px; bottom: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+#impOv.show { opacity: 1; }
+#impOv figure { margin: 0; background: rgba(10, 13, 15, .78); border-radius: 8px; padding: 4px; }
+#impOv canvas { position: static; inset: auto; display: block; width: 100%; height: 64px; border-radius: 4px; }
+#impOv figcaption { font-size: 11px; color: var(--fg); padding: 2px 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+details.note{margin-top:6px} details.note summary{font-size:13px;color:var(--muted);cursor:pointer}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>스윙 카메라 + 센서 장갑 <small style="font-size:13px;color:var(--warn)">시험판</small></h1>
-  <p>카메라로 몸의 점 33개를 찾고, 블루투스로 센서 장갑(손·팔뚝 IMU)을 함께 받아요. "기록 시작"을 누르면 두 데이터에 휴대폰 시각을 붙여 한 파일에 저장해요. 시간 맞추기와 분석은 다음 단계예요. 영상은 휴대폰 밖으로 나가지 않아요.</p>
+<div id="dockRim" aria-hidden="true"></div>
+<button id="dockTab" aria-label="메뉴 열기">▾ 메뉴<span id="recDot"></span></button>
 
+  <div class="dock" id="dock">
   <div class="row">
     <button id="start" class="primary">카메라 시작</button>
     <button id="base" disabled>어드레스 기준 잡기</button>
     <button id="rec" disabled>녹화</button>
-    <select id="aspect" aria-label="화면 비율"><option value="4:3" selected>4:3 (위아래가 더 넓게)</option><option value="16:9">16:9</option></select>
     <label class="file" style="display:flex;align-items:center;gap:6px"><input id="speak" type="checkbox" checked style="display:inline">음성 안내</label>
-    <select id="model" aria-label="모델"><option value="full" selected>정확한 모델</option><option value="lite">빠른 모델 (손목이 부정확)</option></select>
     <label class="file">영상 파일로 시험<input id="file" type="file" accept="video/*"></label>
   </div>
   <div class="row">
     <button id="glove">센서 장갑 연결</button>
-    <select id="hz" aria-label="장갑 속도"><option value="240" selected>장갑 240 Hz</option><option value="400">장갑 400 Hz (PC용 시험)</option><option value="180">장갑 180 Hz (옛 펌웨어)</option></select>
     <button id="log" disabled>기록 시작</button>
+    <label class="file" style="display:flex;align-items:center;gap:6px"><input id="r10On" type="checkbox" style="display:inline">R10 결과 받기</label>
+    <label class="file" style="display:flex;align-items:center;gap:6px"><input id="r10Speak" type="checkbox" style="display:inline">결과 말하기</label>
   </div>
-  <div class="row" id="lensRow" style="display:none;align-items:center">
-    <select id="lens" aria-label="렌즈" style="width:220px;max-width:100%;overflow:hidden;text-overflow:ellipsis"></select>
-    <label id="zoomBox" style="display:none;align-items:center;gap:6px;font-size:14px;color:var(--muted)">줌 <input id="zoom" type="range" step="0.1" style="width:140px"> <span id="zoomV" style="display:inline-block;width:8.5em;white-space:nowrap"></span></label>
   </div>
   <div id="msg"></div>
 
@@ -95,15 +136,45 @@ a { color: var(--accent); }
     <video id="video" playsinline muted></video>
     <canvas id="canvas"></canvas>
     <div class="hud"><span class="chip" id="fps">준비</span><span class="chip" id="vis"></span></div>
+    <div id="swOv" aria-hidden="true"><div id="swOvTitle"></div><div class="row4" id="swOvRow"></div></div>
+    <div id="impOv" aria-hidden="true">
+      <figure><canvas id="ovSnd"></canvas><figcaption id="ovSndCap">타격음</figcaption></figure>
+      <figure><canvas id="ovVib"></canvas><figcaption id="ovVibCap">타격 진동</figcaption></figure>
+    </div>
   </div>
 
-  <div class="nums">
-    <div class="num"><span>어깨 회전</span><b id="sh">–</b><small id="shMax"></small></div>
-    <div class="num"><span>골반 회전</span><b id="hp">–</b><small id="hpMax"></small></div>
-    <div class="num"><span>꼬임 (어깨 − 골반)</span><b id="xf">–</b><small id="xfMax"></small></div>
-    <div class="num"><span>머리 좌우 이동 (머리 폭)</span><b id="hd">–</b><small id="hdMax"></small></div>
+  <!-- results: the last swing and what the ball did, in one place -->
+  <div class="chart" id="lastShot">
+    <div class="head"><span id="lsTitle" style="font-size:15px;color:var(--fg)">마지막 스윙: 아직 없어요</span><span id="lsPair" style="font-size:13px"></span></div>
+    <div class="ls">
+      <div class="num"><span>템포</span><b id="lsTempo">–</b></div>
+      <div class="num"><span>손목 풀림 ms</span><b id="lsRelease">–</b></div>
+      <div class="num"><span>꺾임 °</span><b id="lsHinge">–</b></div>
+      <div class="num"><span>손 최고 °/s</span><b id="lsHand">–</b></div>
+      <div class="num r10"><span>볼 m/s</span><b id="lsBall">–</b></div>
+      <div class="num r10"><span>출발 °</span><b id="lsDir">–</b></div>
+      <div class="num r10"><span>패스 °</span><b id="lsPath">–</b></div>
+      <div class="num r10"><span>페이스 °</span><b id="lsFace">–</b></div>
+      <div class="num body"><span>어깨 회전</span><b id="sh">–</b><small id="shMax"></small></div>
+      <div class="num body"><span>골반 회전</span><b id="hp">–</b><small id="hpMax"></small></div>
+      <div class="num body"><span>꼬임</span><b id="xf">–</b><small id="xfMax"></small></div>
+      <div class="num body"><span>머리 이동</span><b id="hd">–</b><small id="hdMax"></small></div>
+    </div>
+    <div class="lskey"><span>장갑</span><span class="r10">R10</span><span class="body">카메라</span></div>
+  </div>
+  <div class="charts">
+    <div class="chart" id="swingBox">
+      <div class="head"><span id="swTitle">스윙 분석 (스윙이 끝나면 한 줄씩 생겨요)</span><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="swSpeak" type="checkbox"> 스윙마다 말하기</label></div>
+      <table class="sw">
+        <colgroup><col style="width:2.6em"><col><col><col><col><col><col><col></colgroup>
+        <tr><th>#</th><th>템포</th><th>손목 풀림</th><th>꺾임</th><th>손 최고</th><th>R10 볼</th><th>R10 출발</th><th>기준</th></tr>
+        <tbody id="swRows"><tr><td colspan="8" style="text-align:left;color:var(--muted)">아직 스윙이 없어요</td></tr></tbody>
+      </table>
+      <details class="note"><summary>설명</summary><span id="swNote" style="white-space:normal;line-height:1.5;font-size:13px;color:var(--muted)">손 최고 속도 뒤 ! = 자이로 한계(2293 °/s)에 닿음. 템포 = 백스윙 시간 ÷ 다운스윙 시간. 손목 풀림 = 꺾인 손목이 반쯤 풀린 순간(− = 임팩트 전). 꺾임은 어드레스 기준 상대값이에요.</span></details>
+    </div>
   </div>
 
+  <!-- glove status and raw signals -->
   <div class="nums" id="gnums">
     <div class="num"><span>장갑 수신</span><b id="gHz">–</b><small id="gState">연결 안 됨</small></div>
     <div class="num"><span>빠진 프레임</span><b id="gMiss">–</b><small id="gBatch"></small></div>
@@ -111,30 +182,22 @@ a { color: var(--accent); }
     <div class="num"><span>배터리</span><b id="gBat">–</b><small id="gArm"></small></div>
     <div class="num"><span>소리 클립</span><b id="gClips">0</b><small id="gLog"></small></div>
   </div>
-
-  <div class="chart" id="voiceBox">
-    <div class="head"><span>음성 명령</span><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="vCont" type="checkbox"> 계속 듣기</label></div>
-    <div class="row"><button id="vTalk">말로 하기</button><span id="vHeard" style="font-size:14px;color:var(--muted);align-self:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">예: "7번 하프", "굿샷", "플레이어 민수", "방금 거 어때"</span></div>
-  </div>
-
-  <div class="chart" id="gestBox">
-    <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="gOn" type="checkbox"> 손짓 명령</label><span id="gLast" style="font-size:13px"></span></div>
-    <div id="gBody" style="display:none">
-      <table class="sw" id="gTable"><colgroup><col style="width:40%"><col></colgroup><tbody id="gRows"></tbody></table>
-      <div class="head"><span style="white-space:normal;line-height:1.5">손짓은 1초쯤 가만히 있다가 하고, 한 뒤에도 잠깐 멈추면 알아들어요. 스윙 중이나 직후 2초는 안 받아요. 명령은 음성 명령과 같은 문장이라 "직접 입력"으로 무엇이든 붙일 수 있어요.</span></div>
-    </div>
-  </div>
-
-  <div class="chart" id="quick">
-    <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="qOn" type="checkbox"> 빠른 선택 (음성 명령 대신 눌러서)</label><button id="qEdit" style="padding:6px 10px;font-size:13px;flex:none;display:none">편집</button></div>
-    <div id="qBody" style="display:none">
-      <div id="nowSet">지금: –</div>
-      <div class="chips" id="qChips"></div>
-      <div class="head"><span id="qLast">라벨은 가장 최근 임팩트에 붙어요</span></div>
-    </div>
-  </div>
-
   <div class="charts">
+    <div class="chart" id="r10Box">
+      <div class="head"><span>R10 샷 (최근 4개)</span><span id="r10State" style="font-size:13px">꺼짐</span></div>
+      <table class="sw">
+        <colgroup><col style="width:2.6em"><col><col><col><col><col><col></colgroup>
+        <tr><th>#</th><th>볼 (m/s)</th><th>출발 (°)</th><th>스핀축 (°)</th><th>패스 (°)</th><th>페이스 (°)</th><th>짝 스윙</th></tr>
+        <tbody id="r10Rows"><tr><td colspan="7" style="text-align:left;color:var(--muted)">아직 R10 샷이 없어요</td></tr></tbody>
+      </table>
+      <details class="note"><summary>설명</summary><span style="white-space:normal;line-height:1.5;font-size:13px;color:var(--muted)">R10 Bridge 앱에서 "수신 켜기", Garmin Golf 앱 Manage Connection은 127.0.0.1 : 2483. 샷이 오면 그 직전 임팩트의 스윙과 짝지어요(짝 스윙 옆 숫자 = 임팩트에서 샷 도착까지 ms). + = 오른쪽/인아웃.</span></details>
+    </div>
+    <div class="chart">
+      <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
+      <canvas id="impImg" style="height:auto;aspect-ratio:3/4"></canvas>
+      <canvas id="impCv"></canvas>
+      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span><span class="key"><i style="background:#ff4fa3"></i>손 833 Hz</span></span><span id="impNote"></span></div>
+    </div>
     <div class="chart">
       <div class="head"><span>장갑 센서 지금 값 (자이로 °/s, 가속 g, 초당 5번)</span></div>
       <table class="live">
@@ -155,47 +218,44 @@ a { color: var(--accent); }
       <canvas id="specCv"></canvas>
     </div>
     <div class="chart">
-      <div class="head"><span id="impTitle">임팩트 순간 (임팩트 소리가 오면 그 순간의 카메라 화면과 ±1초 그래프가 나와요)</span></div>
-      <canvas id="impImg" style="height:auto;aspect-ratio:3/4"></canvas>
-      <canvas id="impCv"></canvas>
-      <div class="head"><span><span class="key"><i style="background:#4fc3f7"></i>손 회전</span><span class="key"><i style="background:#ffb74d"></i>팔뚝 회전</span><span class="key"><i style="background:#eef1f3"></i>카메라 오른손목 속도</span><span class="key"><i style="background:#ff4fa3"></i>손 833 Hz</span></span><span id="impNote"></span></div>
-    </div>
-    <div class="chart" id="swingBox">
-      <div class="head"><span id="swTitle">스윙 분석 (스윙이 끝나면 한 줄씩 생겨요)</span><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="swSpeak" type="checkbox"> 스윙마다 말하기</label></div>
-      <table class="sw">
-        <colgroup><col style="width:2.6em"><col><col><col><col><col><col></colgroup>
-        <tr><th>#</th><th>클럽</th><th>템포 (백:다운)</th><th>손목 풀림 (ms)</th><th>꺾임 최대 (°)</th><th>손 최고 (°/s)</th><th>임팩트 기준</th></tr>
-        <tbody id="swRows"><tr><td colspan="7" style="text-align:left;color:var(--muted)">아직 스윙이 없어요</td></tr></tbody>
-      </table>
-      <div class="head"><span id="swNote" style="white-space:normal;line-height:1.5">손 최고 속도 뒤 ! = 자이로 한계(2293 °/s)에 닿음. 템포 = 백스윙 시간 ÷ 다운스윙 시간. 손목 풀림 = 꺾인 손목이 반쯤 풀린 순간(− = 임팩트 전). 꺾임은 어드레스 기준 상대값이에요.</span></div>
-    </div>
-    <div class="chart" id="r10Box">
-      <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="r10On" type="checkbox"> R10 결과 받기 (R10 Bridge 앱)</label><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="r10Speak" type="checkbox"> 결과 말하기</label></div>
-      <div class="head"><span id="r10State" style="font-size:13px">꺼짐</span></div>
-      <table class="sw">
-        <colgroup><col style="width:2.6em"><col><col><col><col><col><col></colgroup>
-        <tr><th>#</th><th>볼 (m/s)</th><th>출발 (°)</th><th>스핀축 (°)</th><th>패스 (°)</th><th>페이스 (°)</th><th>짝 스윙</th></tr>
-        <tbody id="r10Rows"><tr><td colspan="7" style="text-align:left;color:var(--muted)">아직 R10 샷이 없어요</td></tr></tbody>
-      </table>
-      <div class="head"><span style="white-space:normal;line-height:1.5">R10 Bridge 앱에서 "수신 켜기", Garmin Golf 앱 Manage Connection은 127.0.0.1 : 2483. 샷이 오면 그 직전 임팩트의 스윙과 짝지어요(짝 스윙 옆 숫자 = 임팩트에서 샷 도착까지 ms). + = 오른쪽/인아웃.</span></div>
-    </div>
-    <div class="chart">
       <div class="head"><span id="clipTitle">장갑 소리 클립 (임팩트·목소리가 오면 그려져요)</span></div>
       <canvas id="clipCv"></canvas>
     </div>
   </div>
 
-  <details open>
+  <!-- settings -->
+  <div class="chart" id="voiceBox">
+    <div class="head"><span>음성 명령</span><label style="display:flex;align-items:center;gap:6px;flex:none;font-size:13px;color:var(--fg)"><input id="vCont" type="checkbox"> 계속 듣기</label></div>
+    <div class="row"><button id="vTalk">말로 하기</button><span id="vHeard" style="font-size:14px;color:var(--muted);align-self:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">예: "7번 하프", "굿샷", "플레이어 민수", "방금 거 어때"</span></div>
+  </div>
+  <div class="chart" id="gestBox">
+    <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="gOn" type="checkbox"> 손짓 명령</label><span id="gLast" style="font-size:13px"></span></div>
+    <div id="gBody" style="display:none">
+      <table class="sw" id="gTable"><colgroup><col style="width:40%"><col></colgroup><tbody id="gRows"></tbody></table>
+      <div class="head"><span style="white-space:normal;line-height:1.5">손짓은 1초쯤 가만히 있다가 하고, 한 뒤에도 잠깐 멈추면 알아들어요. 스윙 중이나 직후 2초는 안 받아요. 명령은 음성 명령과 같은 문장이라 "직접 입력"으로 무엇이든 붙일 수 있어요.</span></div>
+    </div>
+  </div>
+  <div class="chart" id="quick">
+    <div class="head"><label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px;cursor:pointer"><input id="qOn" type="checkbox"> 빠른 선택 (음성 명령 대신 눌러서)</label><button id="qEdit" style="padding:6px 10px;font-size:13px;flex:none;display:none">편집</button></div>
+    <div id="qBody" style="display:none">
+      <div id="nowSet">지금: –</div>
+      <div class="chips" id="qChips"></div>
+      <div class="head"><span id="qLast">라벨은 가장 최근 임팩트에 붙어요</span></div>
+    </div>
+  </div>
+
+  <details>
     <summary>쓰는 법</summary>
+    <p>카메라로 몸의 점 33개를 찾고, 블루투스로 센서 장갑(손·팔뚝 IMU)을 함께 받아요. "기록 시작"을 누르면 두 데이터에 휴대폰 시각을 붙여 한 파일에 저장해요. 시간 맞추기와 분석은 다음 단계예요. 영상은 휴대폰 밖으로 나가지 않아요.</p>
     <ul>
       <li><b>카메라 위치:</b> 정면(얼굴 쪽)에서 2.5~3 m, 허리 높이, 휴대폰은 가로. 발부터 머리, 클럽 끝까지 화면에 다 들어오게 해요.</li>
-      <li><b>후면 카메라</b>를 써요. 화면을 좌우로 뒤집지 않아서 오른손잡이는 오른손잡이로 보여요.</li>
+      <li><b>전면 카메라</b>만 써요. 치면서 화면을 볼 수 있게요. 갤럭시 S25에서는 넓게 찍히는 camera 1을 자동으로 고르고, 다른 휴대폰은 기본 전면 카메라를 써요. 화면은 거울처럼 좌우로 뒤집어 보여 주지만, 분석·녹화·기록 파일은 뒤집지 않아서 오른손잡이는 오른손잡이로 남아요. 빠른 동작(임팩트)은 장갑이 맡으니 카메라는 30 fps면 충분해요.</li>
       <li>어드레스 자세에서 <b>"어드레스 기준 잡기"</b>를 누르면 그 자세를 0으로 두고, 스윙하는 동안 가장 큰 값을 작은 글씨로 보여 줘요. 다음 스윙 전에 다시 누르면 돼요.</li>
       <li>회전은 화면에서 어깨선·골반선이 짧아진 정도로 계산한 <b>대략값</b>이에요. 다운스윙과 임팩트는 너무 빨라서 점이 튈 수 있어요. 정확한 손목과 임팩트는 센서 장갑이 맡아요.</li>
       <li>녹화는 점이 그려진 화면을 휴대폰에 저장해요(webm).</li>
-      <li>S25에서 정확한 모델은 약 26 fps, 손목 신뢰도 약 86%였어요. 빠른 모델은 더 빠르지만 손목 신뢰도가 50% 아래로 떨어져서 기본은 정확한 모델이에요.</li>
-      <li><b>화면이 좁을 때:</b> 화면 비율을 "4:3"으로 두면 위아래가 더 넓게 찍혀요(기본). 카메라를 켜면 렌즈 목록이 나와요. 앞뒤 카메라가 모두 들어 있고, 초광각 렌즈가 따로 보이는 휴대폰도 있어요. 처음에는 후면 카메라로 시작해요. 줌 막대가 보이면 왼쪽 끝이 가장 넓어요. 고른 렌즈와 줌은 이 휴대폰에 기억돼요. 갤럭시 S25에서는 <b>camera 2 (후면)</b>와 <b>camera 1 (전면)</b>이 넓게 찍혀요.</li>
-      <li><b>화면이 안 보일 때:</b> "음성 안내"를 켜 두면 카메라가 몸 전체를 보는지 소리로 알려 줘요("전신이 보여요", "발이 잘려요", "머리가 잘려요"). 휴대폰을 세워 두고 소리를 들으며 자리를 잡으면 돼요. 책상에서 시험할 때는 렌즈 목록에서 전면 카메라를 골라도 돼요(화면을 뒤집지 않아요).</li>
+      <li>자세 AI는 항상 정확한 모델(MediaPipe Pose full)을 써요. S25에서 약 26 fps, 손목 신뢰도 약 86%였어요(빠른 모델은 손목 신뢰도가 50% 아래라 뺐어요).</li>
+      <li><b>화면이 좁을 때:</b> 화면 비율은 4:3으로 고정이에요(센서 높이를 다 써서 위아래가 넓어요). 몸이 다 안 들어오면 휴대폰을 조금 더 멀리 두세요.</li>
+      <li><b>화면이 안 보일 때:</b> "음성 안내"를 켜 두면 카메라가 몸 전체를 보는지 소리로 알려 줘요("전신이 보여요", "발이 잘려요", "머리가 잘려요"). 휴대폰을 세워 두고 소리를 들으며 자리를 잡으면 돼요.</li>
       <li><b>빠른 선택:</b> 체크하면 펼쳐지고, 평소에는 접혀 있어요. 음성 명령과 같은 일을 버튼으로 해요. 선수·클럽·스윙 종류를 고르면 그다음 임팩트부터 그 설정이 기록에 붙고, 결과 라벨(굿샷, 뒤땅…)은 가장 최근 임팩트에 붙어요. "편집"으로 버튼을 더하거나 지울 수 있고, 바꾼 목록은 이 휴대폰에 기억돼요.</li>
       <li><b>그래프:</b> 장갑 회전 속도는 실시간이에요. 휴대폰 마이크 스펙트로그램은 "마이크 켜기"를 누르면 실시간으로 흘러요(가로 = 시간, 세로 = 소리 높낮이, 밝을수록 큰 소리). 장갑 마이크는 블루투스로 소리를 계속 보낼 수 없어서, 임팩트나 목소리 클립이 도착할 때마다(임팩트 뒤 약 1.5초) 아래 칸에 그려져요.</li>
       <li><b>장갑 속도:</b> 휴대폰 블루투스로는 새 펌웨어(2026-10-25부터)가 약 250 Hz까지 고르게 보내요(S25 측정). 그래서 기본은 240 Hz예요. 400 Hz를 고르면 장갑이 보내지 못한 샘플을 건너뛰어 간격이 고르지 않아요. 옛 펌웨어는 180 Hz로 두세요.</li>
@@ -217,6 +277,7 @@ import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
 import { GestureDetector } from "./gesture.js";
 import { R10Link, pairShots, shotLine } from "./r10.js";
+const GLOVE_HZ = 240;   // the glove firmware's rate (was a menu with 400 for PC tests and 180 for old firmware)
 
 const $ = (id) => document.getElementById(id);
 const video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d");
@@ -229,12 +290,18 @@ let pose = null, running = false, base = null, peaks = null, recorder = null, ch
 let lastT = performance.now(), fpsAvg = 0, frames = 0;
 window.__stats = { frames: 0, found: 0, fps: 0, last: null };
 
-const say = (t) => { $("msg").textContent = t || ""; };
+// Messages are a toast near the top that fades out after MSG_MS (they used to take a fixed two-line row above the camera).
+const MSG_MS = 4500; let msgTimer = null;
+const say = (t) => {
+  const m = $("msg"); m.textContent = t || ""; clearTimeout(msgTimer);
+  if (!t) { m.classList.remove("show"); return; }
+  m.classList.add("show"); msgTimer = setTimeout(() => m.classList.remove("show"), MSG_MS);
+};
 
 async function loadModel() {
   say("AI 모델을 불러오는 중…");
   const files = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm");
-  const opts = (delegate) => ({ baseOptions: { modelAssetPath: MODELS[$("model").value], delegate }, runningMode: "VIDEO", numPoses: 1 });
+  const opts = (delegate) => ({ baseOptions: { modelAssetPath: MODELS.full, delegate }, runningMode: "VIDEO", numPoses: 1 });
   try { pose = await PoseLandmarker.createFromOptions(files, opts("GPU")); }
   catch (e) { pose = await PoseLandmarker.createFromOptions(files, opts("CPU")); }
   say("");
@@ -258,13 +325,13 @@ function measure(p) {
 function show(id, v, unit = "°", digits = 0) { $(id).textContent = v == null || isNaN(v) ? "–" : v.toFixed(digits) + unit; }
 
 function draw(P) {
-  ctx.lineWidth = Math.max(2, canvas.width / 300); ctx.strokeStyle = "#4fc3f7";
+  ctx.lineWidth = Math.max(3, canvas.width / 240); ctx.strokeStyle = "#ff3b30";   // red: the light blue was hard to see
   for (const [a, b] of EDGES) {
     if (P[a].v > 0.4 && P[b].v > 0.4) { ctx.beginPath(); ctx.moveTo(P[a].x, P[a].y); ctx.lineTo(P[b].x, P[b].y); ctx.stroke(); }
   }
   for (let k = 0; k < 33; k++) {
     if (P[k].v < 0.4) continue;
-    ctx.fillStyle = k === 15 || k === 16 ? "#ff5252" : "#ffffff";
+    ctx.fillStyle = k === 15 || k === 16 ? "#ffeb3b" : "#ffffff";   // wrists yellow on the red skeleton
     ctx.beginPath(); ctx.arc(P[k].x, P[k].y, Math.max(3, canvas.width / 250), 0, 2 * Math.PI); ctx.fill();
   }
 }
@@ -361,44 +428,36 @@ async function begin(source) {
   } catch (e) { say("AI 모델을 불러오지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요."); console.error(e); }
 }
 
-// Wider view: 4:3 keeps the sensor's full height (16:9 crops top and bottom); some phones also list their
-// ultra-wide lens as a separate camera, and Chrome can zoom out (zoom < 1) on some. Saved per phone.
-const pref = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+// Camera: front only (the golfer watches the screen), 4:3 (the sensor's full height, more room head to toe).
+// On a Galaxy S25 "camera 1, facing front" is the wide front lens (camera 3 is narrow). Other phones name their
+// cameras differently, so anywhere else we take the phone's default front camera.
+const WIDE_FRONT = /^camera 1, facing front$/i;
 let camStream = null;
-async function openCamera(deviceId) {
+async function wideFront() {
+  try { return (await navigator.mediaDevices.enumerateDevices()).find((d) => d.kind === "videoinput" && WIDE_FRONT.test(d.label)) || null; }
+  catch (e) { return null; }
+}
+async function openCamera() {
   if (camStream) camStream.getTracks().forEach((t) => t.stop());
-  const [w, h] = $("aspect").value === "4:3" ? [1280, 960] : [1280, 720];
-  const v = { width: { ideal: w }, height: { ideal: h }, frameRate: { ideal: 30 } };
-  if (deviceId) v.deviceId = { exact: deviceId }; else v.facingMode = { ideal: "environment" };   // first time: a back camera; after that the remembered lens
-  camStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: v });
+  const base = { width: { ideal: 1280 }, height: { ideal: 960 }, frameRate: { ideal: 30 } };
+  const get = (d) => navigator.mediaDevices.getUserMedia({ audio: false, video: d ? { ...base, deviceId: { exact: d.deviceId } } : { ...base, facingMode: "user" } });
+  let wide = await wideFront();
+  camStream = await get(wide);
+  if (!wide) {   // camera names appear only after permission: the first time, switch to the wide lens if there is one
+    wide = await wideFront();
+    if (wide && !WIDE_FRONT.test(camStream.getVideoTracks()[0].label)) { camStream.getTracks().forEach((t) => t.stop()); camStream = await get(wide); }
+  }
   video.srcObject = camStream; await video.play();
   if (video.videoWidth) $("impImg").style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
-  const track = camStream.getVideoTracks()[0], caps = track.getCapabilities ? track.getCapabilities() : {}, set = track.getSettings();
-  // lens list (labels exist only after permission)
-  const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "videoinput");
-  const sel = $("lens"); sel.innerHTML = "";
-  cams.forEach((d, i) => { const o = document.createElement("option"); o.value = d.deviceId; o.textContent = (d.label || `카메라 ${i + 1}`).replace(/facing back/, "후면").replace(/facing front/, "전면"); if (d.deviceId === set.deviceId) o.selected = true; sel.appendChild(o); });
-  $("lensRow").style.display = "flex";
-  if (caps.zoom) {
-    const z = $("zoom"); z.min = caps.zoom.min; z.max = Math.min(caps.zoom.max, 4); z.step = caps.zoom.step || 0.1;
-    const saved = parseFloat(pref("pg-zoom")); z.value = isFinite(saved) ? Math.max(caps.zoom.min, Math.min(z.max, saved)) : (set.zoom ?? caps.zoom.min);
-    $("zoomV").textContent = `${(+z.value).toFixed(1)}x (최소 ${caps.zoom.min})`; $("zoomBox").style.display = "flex"; $("zoomBox").style.visibility = "visible";
-    await track.applyConstraints({ advanced: [{ zoom: +z.value }] }).catch(() => {});
-  } else { $("zoomBox").style.display = "flex"; $("zoomBox").style.visibility = "hidden"; }
-  say(`카메라: ${set.width}×${set.height}${caps.zoom ? "" : " · 이 렌즈는 줌 조절이 안 돼요"}. 더 넓게 보려면 렌즈 목록에서 다른 후면 카메라(초광각)를 골라 보세요.`);
+  // Mirror only what's on screen (CSS), like a mirror. The canvas pixels, the landmarks, the recording and the saved
+  // log stay as the camera sees, so a right-handed golfer stays right-handed in the data.
+  for (const id of ["canvas", "impImg"]) $(id).style.transform = "scaleX(-1)";
+  const set = camStream.getVideoTracks()[0].getSettings();
+  say(`카메라: 전면 ${set.width}×${set.height}. 화면만 거울처럼 뒤집어 보여요.`);
 }
 $("start").onclick = async () => {
-  try { await openCamera(pref("pg-lens") || null); if (!running) await begin("camera"); }
-  catch (e) {
-    try { pref("pg-lens", ""); await openCamera(null); if (!running) await begin("camera"); }
-    catch (e2) { say("카메라를 열지 못했어요. 브라우저의 카메라 권한을 허용하고 다시 눌러 주세요."); console.error(e2); }
-  }
-};
-$("lens").onchange = async () => { pref("pg-lens", $("lens").value); try { await openCamera($("lens").value); } catch (e) { say("그 카메라는 열 수 없어요."); console.error(e); } };
-$("aspect").onchange = async () => { if (camStream) await openCamera($("lens").value || null).catch(console.error); };
-$("zoom").oninput = async () => {
-  const z = +$("zoom").value; pref("pg-zoom", String(z)); $("zoomV").textContent = `${z.toFixed(1)}x`;
-  const t = camStream && camStream.getVideoTracks()[0]; if (t) await t.applyConstraints({ advanced: [{ zoom: z }] }).catch(() => {});
+  try { await openCamera(); if (!running) await begin("camera"); }
+  catch (e) { say("카메라를 열지 못했어요. 브라우저의 카메라 권한을 허용하고 다시 눌러 주세요. 다른 탭에서 이 페이지가 카메라를 쓰고 있으면 그 탭을 닫아 주세요."); console.error(e); }
 };
 
 $("file").onchange = async (ev) => {
@@ -413,7 +472,6 @@ $("base").onclick = () => {
   say("기준을 잡았어요. 이제 스윙해 보세요.");
 };
 
-$("model").onchange = async () => { if (pose) { pose.close(); pose = null; if (running) await loadModel(); } };
 
 // ---- sensor glove (Web Bluetooth) ----
 let lastStatus = null;
@@ -440,11 +498,12 @@ function onGlove(r) {
     if (logging) log.status.push(r);
   } else if (r.type === "clip" && r.clip.kind === "motion") {   // 833 Hz gyro around the impact, after its sound clip
     const c = r.clip, m = motionFrames(c); motionById.set(c.id, m);
+    if (lastImpact && lastImpact.id === c.id) ovVibration(c, m);
     if (lastImpact && lastImpact.id === c.id) setTimeout(() => drawImpact(lastImpact), 0);
     if (logging) log.motion.push({ id: c.id, t_us: c.t_us, impactFrame: c.pre, frames: m.t.length, rate: c.rate / 10, flags: c.peak, t: m.t, g: Array.from(m.g) });
   } else if (r.type === "clip") {
     gStats.clips++; gloveText("gClips", String(gStats.clips));
-    const c = r.clip; drawClip(c); if (c.kind === "impact") { swingDet.sound(c.t_us / 1e6); setTimeout(() => drawImpact(c), 0); } gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
+    const c = r.clip; drawClip(c); if (c.kind === "impact") { swingDet.sound(c.t_us / 1e6); setTimeout(() => drawImpact(c), 0); ovSound(c); } gloveText("gLog", `${c.kind === "voice" ? "목소리" : "임팩트"} ${(c.total / c.rate).toFixed(1)}초`);
     if (logging) log.clips.push({ kind: c.kind, id: c.id, t_us: c.t_us, pre: c.pre, total: c.total, rate: c.rate, peak: c.peak, firstNow: c.firstNow, lastNow: c.lastNow, samples: Array.from(clipSamples(c)) });
   }
 }
@@ -474,7 +533,7 @@ function gloveState(st) {
 async function afterConnect(p) {   // after a first connect or an automatic reconnect
   gloveText("gBatch", p.probeLen ? `패킷 ${p.probeLen} B · ${p.batch}프레임씩` : "패킷 크기 확인 실패 · 1프레임씩");
   gStats = { n: 0, t0: performance.now(), hand: 0, arm: 0, clips: 0 };
-  await glove.start(+$("hz").value, 1); await glove.send("status");
+  await glove.start(GLOVE_HZ, 1); await glove.send("status");
 }
 $("glove").onclick = async () => {
   resume = null;
@@ -511,10 +570,16 @@ function onSwing(sw) {
 window.__pgTest = { onGlove, swingDet, swings };   // headless test: replay a log without Bluetooth
 const SRC = { sound: "소리", accel: "움직임", "arm peak": "팔 최고속" };
 function renderSwings() {
-  const last = swings.slice(-8).reverse();
-  $("swRows").innerHTML = last.map((w) => `<tr><td>${w.n}</td><td>${w.club || "–"}</td><td>${w.tempo.toFixed(1)}</td>` +
-    `<td>${Number.isFinite(w.release_ms) ? (w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0) : "–"}</td><td>${Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–"}</td>` +
-    `<td class="${w.saturated ? "sat" : ""}">${w.hand_dps_peak.toFixed(0)}${w.saturated ? "!" : ""}</td><td>${SRC[w.source] || w.source}</td></tr>`).join("");
+  const last = swings.slice(-4).reverse();
+  const f1 = (v) => (Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(1) : "–");
+  $("swRows").innerHTML = last.map((w) => {
+    const r = r10Of(w.n), b = (r && r.msg.ball) || {};
+    return `<tr><td>${w.n}</td><td>${w.tempo.toFixed(1)}</td>` +
+      `<td>${Number.isFinite(w.release_ms) ? (w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0) : "–"}</td><td>${Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–"}</td>` +
+      `<td class="${w.saturated ? "sat" : ""}">${w.hand_dps_peak.toFixed(0)}${w.saturated ? "!" : ""}</td>` +
+      `<td>${Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–"}</td><td>${f1(b.LaunchDirection)}</td><td>${SRC[w.source] || w.source}</td></tr>`;
+  }).join("");
+  renderLast();
   const tp = swings.slice(-10).map((w) => w.tempo).sort((a, b) => a - b);
   $("swTitle").textContent = `스윙 ${swings.length}번 · 템포 중앙값 ${tp[Math.floor(tp.length / 2)].toFixed(1)}` + (swings[swings.length - 1].hand_only ? " · 팔 IMU 없음: 템포는 대략값" : "");
 }
@@ -531,21 +596,74 @@ const r10Link = new R10Link((msg, arrivalMs) => {
 }, (text, ok) => { $("r10State").textContent = text; $("r10State").style.color = ok ? "var(--fg)" : "var(--muted)"; });
 function r10Pair() {
   for (const s of pairShots(swings, r10Shots, performance.now())) {
-    renderR10();
+    renderR10(); if (swings.length) renderSwings();
     if ($("r10Speak").checked) speak(shotLine(s.msg));
   }
 }
 function renderR10() {
   const f = (v) => (Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(1) : "–");
-  $("r10Rows").innerHTML = r10Shots.slice(-8).reverse().map((s) => {
+  $("r10Rows").innerHTML = r10Shots.slice(-4).reverse().map((s) => {
     const b = s.msg.ball || {}, c = s.msg.club || {};
     const pair = s.swing != null ? `#${s.swing} <small>${s.lagMs.toFixed(0)}</small>` : s.gaveUp ? "없음" : "기다림";
     return `<tr><td>${s.msg.shot}</td><td>${Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–"}</td><td>${f(b.LaunchDirection)}</td><td>${f(b.SpinAxis)}</td>` +
       `<td>${f(c.ClubAnglePath)}</td><td>${f(c.ClubAngleFace)}</td><td>${pair}</td></tr>`;
   }).join("");
 }
+// ---- floating button menu: shown at first, slides up out of view by itself; the tab or the top edge brings it back ----
+// Hides after FOLD_MS without a touch on the buttons, and right away when recording starts. It floats over the page,
+// so nothing underneath moves.
+const FOLD_MS = 6000;
+const dock = (() => {
+  const body = document.body, panel = $("dock");
+  let timer = null;
+  const fold = () => { clearTimeout(timer); body.classList.add("docked"); };
+  const unfold = () => { body.classList.remove("docked"); clearTimeout(timer); timer = setTimeout(fold, FOLD_MS); };
+  timer = setTimeout(fold, FOLD_MS);
+  const touched = () => { if (!body.classList.contains("docked")) { clearTimeout(timer); timer = setTimeout(fold, FOLD_MS); } };
+  panel.addEventListener("pointerdown", touched);
+  panel.addEventListener("change", touched);
+  $("dockTab").onclick = (ev) => { ev.stopPropagation(); unfold(); };
+  // a tap anywhere outside the menu hides it right away
+  document.addEventListener("pointerdown", (ev) => {
+    if (!body.classList.contains("docked") && !ev.target.closest("#dock, #dockTab, #dockRim")) fold();
+  });
+  $("dockRim").addEventListener("pointerdown", unfold);
+  return { fold, unfold };
+})();
 $("r10On").onchange = () => { if ($("r10On").checked) r10Link.start(); else r10Link.stop(); };
 window.__pgTest.r10 = { r10Shots, r10Pair };
+window.__pgTest.ov = { ovSpec, ovShow };
+
+// the paired R10 shot of swing n (r10Shots is filled by the R10 link below)
+function r10Of(n) { return typeof r10Shots === "undefined" ? null : r10Shots.find((x) => x.swing === n) || null; }
+const SWOV_MS = 5000; let swOvKey = "", swOvTimer = null;
+function renderLast() {
+  const w = swings[swings.length - 1]; if (!w) return;
+  const r = r10Of(w.n), b = (r && r.msg.ball) || {}, c = (r && r.msg.club) || {};
+  // the camera usually fills the screen, so the key numbers of a new swing (and of its R10 shot when it pairs) fade in over it
+  const key = `${w.n}|${r ? r.msg.shot : ""}`;
+  if (key !== swOvKey) {
+    swOvKey = key;
+    const t = (l, v, cls = "") => `<div class="${cls}"><span>${l}</span><b>${v}</b></div>`, sg1 = (v) => (Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(1) : "–");
+    $("swOvTitle").textContent = `스윙 #${w.n}` + (r ? ` · R10 샷 #${r.msg.shot}` : " · R10 기다리는 중");
+    $("swOvRow").innerHTML = t("템포", w.tempo.toFixed(1)) + t("손목 풀림", Number.isFinite(w.release_ms) ? (w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0) : "–") +
+      t("꺾임 °", Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–") + t("손 °/s", w.hand_dps_peak.toFixed(0)) +
+      t("볼 m/s", Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–", "r10") + t("출발 °", sg1(b.LaunchDirection), "r10") +
+      t("패스 °", sg1(c.ClubAnglePath), "r10") + t("페이스 °", sg1(c.ClubAngleFace), "r10");
+    $("swOv").classList.add("show"); clearTimeout(swOvTimer); swOvTimer = setTimeout(() => $("swOv").classList.remove("show"), SWOV_MS);
+  }
+  const sg = (v, d = 1) => (Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(d) : "–");
+  $("lsTitle").textContent = `마지막 스윙 #${w.n}` + (w.club ? ` · ${w.club}` : "");
+  $("lsPair").textContent = r ? `R10 샷 #${r.msg.shot}` : (Number.isFinite(w.impactPhoneMs) ? "R10 결과 기다리는 중" : "");
+  $("lsTempo").textContent = w.tempo.toFixed(1);
+  $("lsRelease").textContent = Number.isFinite(w.release_ms) ? sg(w.release_ms, 0) : "–";
+  $("lsHinge").textContent = Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–";
+  $("lsHand").textContent = w.hand_dps_peak.toFixed(0) + (w.saturated ? "!" : "");
+  $("lsBall").textContent = Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–";
+  $("lsDir").textContent = sg(b.LaunchDirection);
+  $("lsPath").textContent = sg(c.ClubAnglePath);
+  $("lsFace").textContent = sg(c.ClubAngleFace);
+}
 
 // ---- voice commands (voice.js: voice.py's matcher; Chrome speech-to-text) ----
 let vc = null;
@@ -800,6 +918,39 @@ function drawClip(c) {
   $("clipTitle").textContent = c.kind === "voice" ? `목소리 클립 #${c.id} · ${(c.total / c.rate).toFixed(1)}초` : `임팩트 #${c.id} · 앞뒤 0.25초 · 주황 선 = 가장 큰 순간 · 최대 ${(c.peak / 32768 * 100).toFixed(0)}%`;
 }
 
+// ---- impact overlay: sound and vibration spectrograms pop up over the camera for a few seconds ----
+const OV_MS = 4000; let ovTimer = null;
+function ovShow() { $("impOv").classList.add("show"); clearTimeout(ovTimer); ovTimer = setTimeout(() => $("impOv").classList.remove("show"), OV_MS); }
+function ovSpec(cv, x, N, hop) {   // x: samples (any scale); paints a heat-map spectrogram over the whole canvas
+  const [W, H] = sizeCv(cv), g = cv.getContext("2d");
+  g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+  const frames = Math.floor((x.length - N) / hop); if (frames < 2) return;
+  const win = new Float32Array(N).map((_, i) => 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1)));
+  let mean = 0; for (const v of x) mean += v; mean /= x.length;
+  let mx = 1e-9; for (const v of x) mx = Math.max(mx, Math.abs(v - mean));
+  const specs = []; let peak = -1e9;
+  for (let f = 0; f < frames; f++) {
+    const seg = new Float32Array(N); for (let i = 0; i < N; i++) seg[i] = (x[f * hop + i] - mean) / mx * win[i];
+    const m = fftMag(seg).map((v) => 20 * Math.log10(v + 1e-6)); for (let k = 1; k < N / 2; k++) peak = Math.max(peak, m[k]); specs.push(m);
+  }
+  const cw = W / frames, bh = H / (N / 2);
+  specs.forEach((m, f) => { for (let k = 0; k < N / 2; k++) { g.fillStyle = heat((m[k] - peak + 60) / 60); g.fillRect(f * cw, H - (k + 1) * bh, cw + 1, bh + 1); } });
+}
+function ovSound(c) {
+  ovSpec($("ovSnd"), clipSamples(c), 256, c.rate >= 16000 ? 32 : 16);
+  $("ovSndCap").textContent = `타격음 · 0–${(c.rate / 2000).toFixed(0)} kHz`;
+  const v = $("ovVib"), [W, H] = sizeCv(v), g = v.getContext("2d"); g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+  $("ovVibCap").textContent = "타격 진동 · 오는 중…";
+  ovShow();
+}
+function ovVibration(c, m) {   // 833 Hz hand IMU around the impact: accel magnitude (frame = gx gy gz ax ay az)
+  const n = m.g.length / 6, a = new Float32Array(n);
+  for (let i = 0; i < n; i++) { const x = m.g[6 * i + 3], y = m.g[6 * i + 4], z = m.g[6 * i + 5]; a[i] = Math.sqrt(x * x + y * y + z * z); }
+  ovSpec($("ovVib"), a, 64, 4);
+  $("ovVibCap").textContent = `타격 진동 · 0–${Math.round(c.rate / 20)} Hz`;
+  ovShow();
+}
+
 const motionById = new Map(); let lastImpact = null;
 
 // ---- quick select: the voice-command actions as buttons (same action names as host/commands.example.yaml) ----
@@ -892,9 +1043,9 @@ function drawImpact(c) {
     gi.drawImage(best.c, 0, 0);
     if (best.lm) {
       const P = best.lm.map((q) => [q.x * im.width, q.y * im.height, q.visibility ?? 1]);
-      gi.strokeStyle = "#4fc3f7"; gi.lineWidth = 2;
+      gi.strokeStyle = "#ff3b30"; gi.lineWidth = 2;
       for (const [a, b] of EDGE2) if (P[a][2] > 0.4 && P[b][2] > 0.4) { gi.beginPath(); gi.moveTo(P[a][0], P[a][1]); gi.lineTo(P[b][0], P[b][1]); gi.stroke(); }
-      for (const k of [15, 16]) if (P[k][2] > 0.2) { gi.fillStyle = k === 16 ? "#ff5252" : "#ffffff"; gi.beginPath(); gi.arc(P[k][0], P[k][1], 4, 0, 7); gi.fill(); }
+      for (const k of [15, 16]) if (P[k][2] > 0.2) { gi.fillStyle = k === 16 ? "#ffeb3b" : "#ffffff"; gi.beginPath(); gi.arc(P[k][0], P[k][1], 4, 0, 7); gi.fill(); }
     }
   } else { gi.clearRect(0, 0, im.width, im.height); }
   // +-1 s chart on the phone clock
@@ -930,14 +1081,13 @@ function drawImpact(c) {
   $("impNote").textContent = (mo ? `833 Hz ${mo.t.length}프레임 · ` : "") + (best ? `화면 ${(best.t - ti >= 0 ? "+" : "") + (best.t - ti).toFixed(0)} ms (점선)` : "카메라 화면 없음");
 }
 
-$("hz").onchange = async () => { if (glove && glove.device && glove.device.gatt.connected) { await glove.stop().catch(() => {}); await glove.start(+$("hz").value, 1); } };
 
 function stopLog() {
-  logging = false; $("log").textContent = "기록 시작";
+  logging = false; $("log").textContent = "기록 시작"; document.body.classList.remove("recording");
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
-  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-11-12a", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
-    missing: glove && glove.parser.missing - log.missing0, hz: +$("hz").value, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
+  const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: "2026-11-13s", batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,
+    missing: glove && glove.parser.missing - log.missing0, hz: GLOVE_HZ, units: { glove: "[phone_ms, seq, glove_t_us, hand gx gy gz ax ay az, arm gx gy gz ax ay az] raw: gyro 0.07 dps/LSB, acc 0.000488 g/LSB",
     pose: "[phone_ms, 33 x (x, y, visibility)] normalized image coords; [phone_ms] alone = frame with no person", cap: "camera capture time per pose row (phone ms; = detect time if the browser gives none)",
     swings: "swing.js per swing: t_imp = glove s, source = sound|accel|arm peak, tempo = back_s/down_s, release_ms from impact (- = before), hinge deg relative to address",
     r10: "R10 Bridge shots: arrivalMs = phone ms when the page got it; swing = paired swing n (null = none), lagMs = arrival - swing impactPhoneMs; msg = app message {shot, t_wall_ms, ball{BallSpeed m/s, LaunchAngle, LaunchDirection, TotalSpin rpm, SpinAxis}, club{ClubHeadSpeed, ClubAnglePath, ClubAngleFace}} as the Garmin app sends them" } };
@@ -951,7 +1101,8 @@ $("log").onclick = () => {
   if (logging) { stopLog(); return; }
   gStats.hand = 0; gStats.arm = 0;
   log = { cap: [], impacts: [], motion: [], swings: [], events: [{ phoneMs: +performance.now().toFixed(1), action: "settings", value: { ...cur }, source: "log start" }], labels: [], r10: [], t0: performance.now(), glove: [], pose: [], status: [], clips: [], missing0: glove ? glove.parser.missing : 0 };
-  logging = true; $("log").textContent = "기록 멈추고 저장"; speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
+  logging = true; $("log").textContent = "기록 멈추고 저장"; document.body.classList.add("recording");
+  dock.fold(); speak("기록 시작"); say("기록 중… 장갑 데이터" + (running ? "와 자세" : "") + "를 모으고 있어요.");
 };
 
 $("rec").onclick = () => {
