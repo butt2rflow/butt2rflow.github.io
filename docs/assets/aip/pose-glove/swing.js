@@ -7,7 +7,7 @@
 //   release_ms   when the trail-wrist hinge drops below half its top value, ms from impact (negative = before)
 //   hinge_top / hinge_imp   wrist hinge (deg) at its biggest and at impact, from the gyros alone: zero = the wrist at
 //                address, so it is a relative angle until the "정렬" routine gives a real zero
-//   arm_dps_imp, hand_dps_peak, hand_peak_ms, saturated (samples at the gyro limit)
+//   arm_dps_imp, hand_dps_peak, hand_peak_ms, saturated (samples at the gyro limit; sat_hand + sat_arm)
 // Times are glove time (t_us), so missing frames or a 240 vs 400 Hz stream don't change the numbers.
 
 export const SWING_THRESH = 400, PRE_S = 2.2, POST_S = 0.4, GAP_S = 3.0, WAIT_CLIP_S = 2.5;
@@ -87,11 +87,14 @@ export function analyse(fr, tImp, sat = 2290, handOnly = false) {
   let bmax = -Infinity; for (let i = take; i <= i0; i++) bmax = Math.max(bmax, beta[i]);
   let rel = 0; for (let i = top; i <= i0; i++) if (beta[i] < 0.5 * bmax) { rel = tt[i] * 1000; break; }
   let hp = 0; for (let i = 1; i < wh.length; i++) if (wh[i] > wh[hp]) hp = i;
-  let saturated = 0; for (const f of w) for (const j of [1, 2, 3, 7, 8, 9]) if (Math.abs(f[j]) >= sat) saturated++;
+  // clipped samples per IMU (hand = cols 1-3, forearm = cols 7-9); `saturated` stays the total for old readers
+  let sat_hand = 0, sat_arm = 0;
+  for (const f of w) { for (const j of [1, 2, 3]) if (Math.abs(f[j]) >= sat) sat_hand++; for (const j of [7, 8, 9]) if (Math.abs(f[j]) >= sat) sat_arm++; }
+  const saturated = sat_hand + sat_arm;
   const down = -tTop, back = tTop - tt[take];
   return { tempo: back / Math.max(1e-3, down), back_s: back, down_s: down, release_ms: handOnly ? NaN : rel,
            hinge_top: handOnly ? NaN : bmax, hinge_imp: handOnly ? NaN : beta[i0], hand_only: handOnly,
-           arm_back_deg: amp, pause_ms: (tt[a1] - tt[a0]) * 1000, arm_dps_imp: wa[i0], hand_dps_peak: wh[hp], hand_peak_ms: tt[hp] * 1000, saturated, frames: w.length,
+           arm_back_deg: amp, pause_ms: (tt[a1] - tt[a0]) * 1000, arm_dps_imp: wa[i0], hand_dps_peak: wh[hp], hand_peak_ms: tt[hp] * 1000, saturated, sat_hand, sat_arm, frames: w.length,
            rate_hz: (w.length - 1) / (tt[tt.length - 1] - tt[0]) };
 }
 

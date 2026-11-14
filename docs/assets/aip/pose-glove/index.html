@@ -182,7 +182,7 @@ details.note{margin-top:6px} details.note summary{font-size:13px;color:var(--mut
         <tr><th>#</th><th>템포</th><th>손목 풀림</th><th>꺾임</th><th>손 최고</th><th>R10 볼</th><th>R10 출발</th><th>기준</th></tr>
         <tbody id="swRows"><tr><td colspan="8" style="text-align:left;color:var(--muted)">아직 스윙이 없어요</td></tr></tbody>
       </table>
-      <details class="note"><summary>설명</summary><span id="swNote" style="white-space:normal;line-height:1.5;font-size:13px;color:var(--muted)">손 최고 속도 뒤 ! = 자이로 한계(2293 °/s)에 닿음. 템포 = 백스윙 시간 ÷ 다운스윙 시간. 손목 풀림 = 꺾인 손목이 반쯤 풀린 순간(− = 임팩트 전). 꺾임은 어드레스 기준 상대값이에요.</span></details>
+      <details class="note"><summary>설명</summary><span id="swNote" style="white-space:normal;line-height:1.5;font-size:13px;color:var(--muted)">손 최고 속도 뒤 ! = 손 자이로가 한계(2293 °/s)에 닿음, 팔! = 팔뚝 자이로가 닿음. 템포 = 백스윙 시간 ÷ 다운스윙 시간. 손목 풀림 = 꺾인 손목이 반쯤 풀린 순간(− = 임팩트 전). 꺾임은 어드레스 기준 상대값이에요.</span></details>
     </div>
   </div>
 
@@ -289,7 +289,7 @@ import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
 import { GestureDetector } from "./gesture.js";
 import { R10Link, pairShots, shotLine } from "./r10.js";
-const PAGE_VER = "2026-11-14c";
+const PAGE_VER = "2026-11-14d";
 const GLOVE_HZ = 240;   // the glove firmware's rate (was a menu with 400 for PC tests and 180 for old firmware)
 
 const $ = (id) => document.getElementById(id);
@@ -600,7 +600,7 @@ function renderSwings() {
     const r = r10Of(w.n), b = (r && r.msg.ball) || {};
     return `<tr><td>${w.n}</td><td>${w.tempo.toFixed(1)}</td>` +
       `<td>${Number.isFinite(w.release_ms) ? (w.release_ms > 0 ? "+" : "") + w.release_ms.toFixed(0) : "–"}</td><td>${Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–"}</td>` +
-      `<td class="${w.saturated ? "sat" : ""}">${w.hand_dps_peak.toFixed(0)}${w.saturated ? "!" : ""}</td>` +
+      `<td class="${w.saturated ? "sat" : ""}">${w.hand_dps_peak.toFixed(0)}${(w.sat_hand ?? w.saturated) ? "!" : ""}${w.sat_arm ? " 팔!" : ""}</td>` +
       `<td>${Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–"}</td><td>${f1(b.LaunchDirection)}</td><td>${SRC[w.source] || w.source}</td></tr>`;
   }).join("");
   renderLast();
@@ -686,7 +686,7 @@ function renderLast() {
   $("lsTempo").textContent = w.tempo.toFixed(1);
   $("lsRelease").textContent = Number.isFinite(w.release_ms) ? sg(w.release_ms, 0) : "–";
   $("lsHinge").textContent = Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–";
-  $("lsHand").textContent = w.hand_dps_peak.toFixed(0) + (w.saturated ? "!" : "");
+  $("lsHand").textContent = w.hand_dps_peak.toFixed(0) + ((w.sat_hand ?? w.saturated) ? "!" : "") + (w.sat_arm ? " 팔!" : "");
   $("lsBall").textContent = Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–";
   $("lsDir").textContent = sg(b.LaunchDirection);
   $("lsPath").textContent = sg(c.ClubAnglePath);
