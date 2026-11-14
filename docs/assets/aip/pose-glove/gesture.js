@@ -45,10 +45,11 @@ export class GestureDetector {
     this.onDialNote = opts.onDialNote || null;      // page hook: keep each check beyond this page's life
     this.mode = null;                               // club-change mode state, or null
   }
-  startClubMode(t) { this.mode = { t0: t, ang: [0, 0, 0], biasSum: [0, 0, 0], biasN: 0, lastStep: -Infinity, lastAny: -Infinity, on: false, wait: 0, lastAct: t }; this.dl = null; }
+  startClubMode(t) { this.mode = { t0: t, ang: [0, 0, 0], th: 0, g0: null, glp: null, biasSum: [0, 0, 0], biasN: 0, lastStep: -Infinity, lastAny: -Infinity, on: false, wait: 0, lastAct: t }; this.dl = null; }
   stopClubMode() { this.mode = null; }
-  clubMode(t, g, gm, dt) {
+  clubMode(t, g, gm, dt, acc) {
     const M = this.mode;
+    if (!M.glp) M.glp = acc.slice(); else for (let k = 0; k < 3; k++) M.glp[k] += 0.05 * (acc[k] - M.glp[k]);   // gravity, ~80 ms low-pass
     if (gm > (this.armOk ? 1200 : 800)) { this.mode = null; this.on({ name: "clubmode", on: false, why: "swing", t }); return; }
     if (t - M.t0 < 0.25) { if (gm < 30) { for (let k = 0; k < 3; k++) M.biasSum[k] += g[k]; M.biasN++; } return; }
     for (let k = 0; k < 3; k++) M.ang[k] += (g[k] - (M.biasN ? M.biasSum[k] / M.biasN : 0)) * dt;
@@ -57,7 +58,27 @@ export class GestureDetector {
       const u = M.ang.map((x) => x / mag), big = u.reduce((m, x, k) => (Math.abs(x) > Math.abs(u[m]) ? k : m), 0);
       this.dialAxis = u.map((x) => x * Math.sign(u[big]));
     }
-    const th = this.dialAxis ? M.ang[0] * this.dialAxis[0] + M.ang[1] * this.dialAxis[1] + M.ang[2] * this.dialAxis[2] : 0, a = Math.abs(th);
+    // the turn angle: the gyro rate about the dial axis, integrated, and pulled towards the angle gravity has turned
+    // about the same axis since the mode began (drift-free while the axis isn't near vertical). Gyro alone drifted to
+    // -370 deg in 35 s on the real glove (2026-11-14) and the club never stopped stepping.
+    let th = 0;
+    if (this.dialAxis) {
+      const ax = this.dialAxis, dot = (u, v) => u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
+      const b = M.biasN ? M.biasSum.map((x) => x / M.biasN) : [0, 0, 0];
+      M.th += dot(g.map((x, k) => x - b[k]), ax) * dt;
+      const gd = dot(M.glp, ax), gp = M.glp.map((x, k) => x - gd * ax[k]), gn = Math.hypot(...gp);
+      if (gn > 0.4) {
+        const gu = gp.map((x) => x / gn);
+        if (!M.g0) M.g0 = gu;
+        else {
+          const cr = [M.g0[1] * gu[2] - M.g0[2] * gu[1], M.g0[2] * gu[0] - M.g0[0] * gu[2], M.g0[0] * gu[1] - M.g0[1] * gu[0]];
+          const thG = -Math.atan2(dot(cr, ax), dot(M.g0, gu)) * 180 / Math.PI;   // the body turns opposite to gravity seen from it
+          M.th += 0.02 * (thG - M.th);                                          // ~0.2 s to settle at 240 Hz
+        }
+      }
+      th = M.th;
+    }
+    const a = Math.abs(th);
     // stepping starts past 25 deg and stops under 15 deg, so a wrist resting near the edge doesn't flick the club
     // back and forth (first real try, 2026-11-13: -,+,-,+ at 20-21 deg); re-starting within 0.6 s of the last step waits
     if (!M.on && a >= 25) { M.on = true; M.lastStep = -Infinity; M.wait = M.lastAny + 0.6; }
@@ -84,7 +105,7 @@ export class GestureDetector {
     this.hist.push(f); while (this.hist.length && this.hist[0][0] < t - 0.1) this.hist.shift();
     const open = t >= this.lock && t >= this.cool;
     const dt = this.prevT === null ? 0 : Math.min(0.05, t - this.prevT); this.prevT = t;
-    if (this.mode) this.clubMode(t, g, gm, dt);
+    if (this.mode) this.clubMode(t, g, gm, dt, a);
 
     // dial: its own small state machine, so a candidate of another gesture doesn't block it. The rotation is followed as a
     // 3D vector because the hand IMU sits at an angle on the glove: a real wrist turn showed up split between x and z
