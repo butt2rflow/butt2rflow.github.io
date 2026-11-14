@@ -1,0 +1,57 @@
+<svg width="100%" viewBox="0 0 360 428" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">FoundationStereo tensor flow</title>
+<desc id="de">A left-right image pair passes through feature extraction, cost volume, filtering, and refinement to become a disparity map. The key is the 4D tensor with an added disparity axis.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="428" rx="12"/>
+<text class="t" x="18" y="22">From input to output</text>
+<rect class="bx" x="16" y="32" width="150" height="40" rx="8"/>
+<text class="st" x="91" y="50" text-anchor="middle">Left image</text>
+<text class="lb" x="91" y="64" text-anchor="middle">[3, H, W]</text>
+<rect class="bx" x="194" y="32" width="150" height="40" rx="8"/>
+<text class="st" x="269" y="50" text-anchor="middle">Right image</text>
+<text class="lb" x="269" y="64" text-anchor="middle">[3, H, W]</text>
+<path class="ar" d="M91,72 L91,88"/><path class="ar" d="M269,72 L269,88"/>
+<rect class="bxc" x="16" y="90" width="328" height="52" rx="8"/>
+<text class="lb" x="30" y="108" style="fill:var(--blue)">Feature extraction (weight-shared CNN + frozen mono model)</text>
+<text class="st" x="30" y="126">Multi-scale features — 1/4, 1/8, 1/16</text>
+<text class="lb" x="30" y="138">[C, H/4, W/4] × 2</text>
+<path class="ar" d="M180,142 L180,158"/>
+<rect class="bxc" x="16" y="160" width="328" height="52" rx="8"/>
+<text class="lb" x="30" y="178" style="fill:var(--amber)">Cost volume construction</text>
+<text class="st" x="30" y="196">Match left-right features for each of D candidate disparities</text>
+<text class="lb" x="30" y="208">[C', D/4, H/4, W/4] ← 4D</text>
+<path class="ar" d="M180,212 L180,228"/>
+<rect class="bxc" x="16" y="230" width="328" height="52" rx="8"/>
+<text class="lb" x="30" y="248" style="fill:var(--amber)">AHCF — volume filtering (APC + DT)</text>
+<text class="st" x="30" y="266">Rewrites the scoreboard with wider context</text>
+<text class="lb" x="30" y="278">[C'', D/4, H/4, W/4]</text>
+<path class="ar" d="M180,282 L180,298"/>
+<rect class="bxc" x="16" y="300" width="328" height="40" rx="8"/>
+<text class="lb" x="30" y="318" style="fill:var(--teal)">soft-argmin → initial disparity</text>
+<text class="lb" x="30" y="333">[1, H/4, W/4]</text>
+<path class="ar" d="M180,340 L180,356"/>
+<rect class="bx" x="16" y="358" width="328" height="44" rx="8"/>
+<text class="lb" x="30" y="376" style="fill:var(--teal)">ConvGRU iterative refinement × N (re-reads the volume)</text>
+<text class="lb" x="30" y="394">upsample → [1, H, W] disparity map</text>
+<path class="ln dash" d="M348,380 C364,380 364,254 348,254"/>
+<text class="lb" x="356" y="316" text-anchor="middle" transform="rotate(90,356,316)">volume lookup each iteration</text>
+</svg>

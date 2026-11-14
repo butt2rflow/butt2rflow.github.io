@@ -1,0 +1,41 @@
+<svg width="100%" viewBox="0 0 360 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">논문 읽는 순서</title>
+<desc id="de">구조 그림 → 절제 실험 표 → 제로샷 성능 표 → 실패 사례 순으로 읽는다. 특히 절제 실험이 '무엇을 신경 써야 하나'의 답이다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="262" rx="12"/>
+<text class="t" x="18" y="22">이 순서로 보면 30분이면 된다</text>
+<rect class="bx" x="16" y="34" width="328" height="44" rx="9"/>
+<text class="lb" x="30" y="53">1 · 구조 그림 (Figure 2 근처)</text>
+<text class="st" x="30" y="70">블록 이름과 화살표만. 이 글의 블록도와 대조하며.</text>
+<path class="ar" d="M180,78 L180,92"/>
+<rect class="bx" x="16" y="94" width="328" height="44" rx="9"/>
+<text class="lb" x="30" y="113">2 · 절제 실험 표 (Ablation)</text>
+<text class="st" x="30" y="130">블록을 하나씩 빼봤을 때 성능 하락폭 = 중요도 순위</text>
+<path class="ar" d="M180,138 L180,152"/>
+<rect class="bx" x="16" y="154" width="328" height="44" rx="9"/>
+<text class="lb" x="30" y="173">3 · 제로샷 성능 표</text>
+<text class="st" x="30" y="190">학습에 안 쓴 데이터셋의 숫자만 — 현장 기대치에 가깝다</text>
+<path class="ar" d="M180,198 L180,212"/>
+<rect class="bx" x="16" y="214" width="328" height="44" rx="9"/>
+<text class="lb" x="30" y="233">4 · 실패 사례 (Limitations)</text>
+<text class="st" x="30" y="250">대개 맨 끝에 짧게. 현장 적용에서는 여기가 제일 중요하다.</text>
+</svg>

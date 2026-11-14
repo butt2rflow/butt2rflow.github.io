@@ -1,0 +1,44 @@
+<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>휴머노이드 vs 코봇 — 서사는 위, 돈은 오른쪽</title>
+<desc>가로축은 배치 현실(지금 얼마나 깔렸나), 세로축은 범용성(뭐든 하는가). 휴머노이드는 범용성은 높지만 배치가 거의 안 된 좌상단(서사·밸류가 쏠린 곳), 코봇·산업로봇은 특화됐지만 이미 널리 배치된 우하단(매출·현금이 나오는 곳). 기술은 코봇에서 휴머노이드 쪽으로 느리게 이동 중.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.b{font-size:13px;font-weight:600;}
+.s{font-size:11px;fill:#73726c;}
+.ax{font-size:12px;font-weight:600;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="430" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="38" style="fill:#3d3d3a">서사는 위(휴머노이드), 돈은 오른쪽(코봇)</text>
+
+<!-- axes -->
+<line x1="110" y1="360" x2="635" y2="360" stroke="#c9c6bc" stroke-width="1.5"/>
+<line x1="110" y1="360" x2="110" y2="72" stroke="#c9c6bc" stroke-width="1.5"/>
+<text class="ax" x="372" y="392" text-anchor="middle">배치 현실 — 지금 얼마나 깔렸나 →</text>
+<text class="ax" x="70" y="216" text-anchor="middle" transform="rotate(-90 70 216)">범용성 — 뭐든 하는가 ↑</text>
+
+<!-- diagonal direction arrow: cobot -> humanoid -->
+<line x1="545" y1="300" x2="220" y2="140" stroke="#a9a69c" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M229,133 L218,139 L226,148" fill="none" stroke="#a9a69c" stroke-width="1.6"/>
+<text class="s" x="392" y="208" text-anchor="middle" transform="rotate(-26 392 208)">기술이 가는 방향 (느리게)</text>
+
+<!-- humanoid (top-left) -->
+<circle cx="205" cy="122" r="11" style="fill:#d84a3a"/>
+<text class="b" x="224" y="119" style="fill:#d84a3a">휴머노이드</text>
+<text class="s" x="224" y="135">시제품·파일럿 · 대부분 비상장</text>
+<rect x="162" y="150" width="176" height="26" rx="13" fill="#f7dcd6" stroke="#d84a3a" stroke-width="0.8"/>
+<text class="s" x="250" y="167" text-anchor="middle" style="fill:#b23a2c">← 서사·밸류가 여기</text>
+
+<!-- AMR (middle) -->
+<circle cx="368" cy="252" r="9" style="fill:#8a8781"/>
+<text class="b" x="384" y="250" style="fill:#3d3d3a">이동로봇(AMR)</text>
+<text class="s" x="384" y="265">물류 자동화</text>
+
+<!-- cobot + industrial cluster (bottom-right) -->
+<circle cx="518" cy="320" r="8" style="fill:#3d7a4a"/>
+<circle cx="558" cy="302" r="12" style="fill:#16a34a"/>
+<text class="b" x="500" y="300" text-anchor="end" style="fill:#16a34a">코봇 · 산업로봇</text>
+<text class="s" x="500" y="316" text-anchor="end">특화 · 수만 대 배치</text>
+<rect x="470" y="334" width="168" height="26" rx="13" fill="#e3f6ea" stroke="#16a34a" stroke-width="0.8"/>
+<text class="s" x="554" y="351" text-anchor="middle" style="fill:#15803d">매출·현금이 여기 →</text>
+</svg>

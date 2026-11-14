@@ -1,0 +1,53 @@
+<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>신용 등급 간 분산 — 지수도 단일B도 잠잠한데 CCC만 벌어진다</title>
+<desc>올해 하이일드 지수(약 260bp)와 단일B(약 275bp)는 둘 다 바닥권에서 거의 평평하다. 반면 CCC 이하는 약 1,000bp 이상으로 홀로 가파르게 올라, CCC와 단일B의 격차가 700bp를 넘어섰다. 지수는 평온해 보여도 가장 낮은 등급은 이미 값이 다시 매겨지고 있다는 뜻이다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.ax { stroke:var(--br); stroke-width:0.5; }
+.gr { stroke:var(--br); stroke-width:0.5; stroke-dasharray:3 4; opacity:0.6; }
+</style>
+<rect x="0" y="0" width="680" height="430" rx="12" fill="#FAF8F2"/>
+
+<text class="s" x="40" y="40">등급별 스프레드 (bp), 올해 추이</text>
+
+<line class="ax" x1="90" y1="60" x2="90" y2="340"/>
+<line class="ax" x1="90" y1="340" x2="628" y2="340"/>
+<line class="gr" x1="90" y1="86" x2="620" y2="86"/>
+<line class="gr" x1="90" y1="213" x2="620" y2="213"/>
+
+<text class="s" x="80" y="90" text-anchor="end">1,000</text>
+<text class="s" x="80" y="217" text-anchor="end">500</text>
+<text class="s" x="80" y="344" text-anchor="end">0</text>
+
+<!-- CCC-B gap shaded region (widening) -->
+<path d="M90,142 L196,129 L302,114 L408,98 L514,87 L620,78 L620,268 L514,268 L408,269 L302,270 L196,270 L90,271 Z" fill="#D85A30" opacity="0.09"/>
+
+<!-- CCC 이하 -->
+<path d="M90,142 L196,129 L302,114 L408,98 L514,87 L620,78" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+<!-- 단일B (HY 바로 위, 눌려 있음) -->
+<path d="M90,271 L196,270 L302,270 L408,269 L514,268 L620,268" fill="none" stroke="#C99A2E" stroke-width="2.5" stroke-linecap="round"/>
+<!-- HY 전체 (잠잠) -->
+<path d="M90,275 L196,274 L302,274 L408,274 L514,274 L620,274" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+
+<text class="th" x="250" y="104">CCC 이하 — 혼자 벌어진다</text>
+<text class="s" x="300" y="258" text-anchor="middle">단일B ~275bp</text>
+<text class="th" x="250" y="296">HY 지수 ~260bp — 잠잠</text>
+
+<!-- gap annotation -->
+<text class="s" x="486" y="180" text-anchor="middle">CCC−B 격차</text>
+<text class="s" x="486" y="196" text-anchor="middle">~750bp (올해 +150bp)</text>
+
+<text class="s" x="90" y="362">연초</text>
+<text class="s" x="620" y="362" text-anchor="end">현재 · 2026.08</text>
+
+<rect x="90" y="392" width="10" height="10" rx="2" fill="#1D9E75" opacity="0.9"/>
+<text class="s" x="108" y="401">HY 전체</text>
+<rect x="196" y="392" width="10" height="10" rx="2" fill="#C99A2E" opacity="0.9"/>
+<text class="s" x="214" y="401">단일B</text>
+<rect x="286" y="392" width="10" height="10" rx="2" fill="#D85A30" opacity="0.9"/>
+<text class="s" x="304" y="401">CCC 이하</text>
+<text class="s" x="410" y="401">— 지수도 단일B도 잠잠, CCC만 벌어진다</text>
+</svg>

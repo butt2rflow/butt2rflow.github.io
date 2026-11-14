@@ -1,0 +1,87 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">가상 카메라와 가상 팔을 ROS 2 토픽으로</title>
+<desc id="de">왼쪽 PC(RTX 3090)의 Isaac Sim이 UR20과 상자 더미, 실제 카메라와 같은 자리의 가상 스테레오 카메라를 계산한다. 물리는 60 Hz, 카메라는 30 Hz. ROS 2 토픽으로 스테레오 흑백 640×400 두 장과 컬러 1280×720(약 28 Hz), 관절 상태와 시계(약 56 Hz)를 내보내고, 관절 명령을 받는다. 오른쪽 엣지 컴퓨터는 같은 토픽을 실제 카메라와 로봇 대신 받게 될 쪽으로, 이번에는 PC 쪽만 만들고 토픽 검사기로 확인했다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="340" rx="12"/>
+<text class="t" x="18" y="26">엣지 컴퓨터가 보기엔 진짜 카메라와 진짜 로봇처럼</text>
+<rect class="bxt" x="16" y="46" width="270" height="236" rx="10"/>
+<text class="lb" x="30" y="70">PC · Isaac Sim (RTX 3090)</text>
+<rect class="bxg" x="32" y="86" width="238" height="52" rx="8"/>
+<text class="lb" x="151.0" y="109.0" text-anchor="middle">가상 스테레오 카메라</text>
+<text class="st" x="151.0" y="124.0" text-anchor="middle">기준선 75 mm, 30 Hz</text>
+<rect class="bxg" x="32" y="148" width="238" height="52" rx="8"/>
+<text class="lb" x="151.0" y="171.0" text-anchor="middle">UR20 모델 + 상자 40개</text>
+<text class="st" x="151.0" y="186.0" text-anchor="middle">물리 60 Hz</text>
+<rect class="bxg" x="32" y="210" width="238" height="52" rx="8"/>
+<text class="lb" x="151.0" y="233.0" text-anchor="middle">ROS 2 브리지</text>
+<text class="st" x="151.0" y="248.0" text-anchor="middle">내장 Humble, UDP만</text>
+<rect class="ctl" x="470" y="46" width="194" height="236" rx="10"/>
+<text class="lb" x="484" y="70">엣지 컴퓨터 (다음 단계)</text>
+<text class="it" x="484" y="104">깊이·자세 모델</text>
+<text class="sm" x="484" y="122">FoundationStereo 등</text>
+<text class="it" x="484" y="162">경로 계획</text>
+<text class="sm" x="484" y="180">cuMotion</text>
+<text class="it" x="484" y="220">토픽 기반 하드웨어</text>
+<text class="sm" x="484" y="238">topic_based_ros2_control</text>
+<line class="art" x1="288" y1="96" x2="466" y2="96"/>
+<text class="sm" x="377" y="90" text-anchor="middle">/oak/left·right 흑백 640×400</text>
+<line class="art" x1="288" y1="128" x2="466" y2="128"/>
+<text class="sm" x="377" y="122" text-anchor="middle">/oak/rgb 컬러 1280×720 · 약 28 Hz</text>
+<line class="art" x1="288" y1="170" x2="466" y2="170"/>
+<text class="sm" x="377" y="164" text-anchor="middle">joint_states · clock · 약 56 Hz</text>
+<line class="ara" x1="466" y1="222" x2="288" y2="222"/>
+<text class="sm" x="377" y="216" text-anchor="middle">/isaac_joint_commands</text>
+<text class="sm" x="18" y="306">스테레오 네 토픽의 타임스탬프가 모두 같다(224/224). 명령 시험: +0.300 rad 그대로 반영</text>
+<text class="sm" x="18" y="326">화살표는 토픽이 흐르는 방향. 컬러 한 프레임이 2.7 MB라 UDP 버퍼를 16 MB로 키웠다</text>
+</svg>

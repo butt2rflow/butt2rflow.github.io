@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>OPEX 서사 — 어디까지가 사실인가</title>
+<desc>JPM(콜라노비치)가 대중화한 'OPEX 전 상승, OPEX 후 취약 구간' 서사를 실증과 이야기로 가른다. 딜러 감마의 장중 효과(Barbon·Buraschi 2021)와 개별주 만기 핀닝(Ni·Pearson·Poteshman 2005)은 실증됐지만, OPEX로의 체계적 상승 드리프트와 OPEX 후 취약 구간은 탄탄한 1차 출처가 없어 미검증. 게다가 0DTE가 SPX 옵션의 약 59%(2025)로 월간 효과를 재분배했고, CBOE 연구상 딜러 순감마는 하루 유동성의 0.04~0.17%에 불과하다.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
+.h{font-size:15px;font-weight:700;}
+.claim{font-size:13px;font-weight:700;}
+.s{font-size:11px;fill:#5c5b55;}
+.bt{font-size:11px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="292" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34" style="fill:#3d3d3a">OPEX 서사 — 어디까지가 사실인가</text>
+
+<rect x="40" y="50" width="600" height="52" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<rect x="40" y="50" width="7" height="52" rx="3" fill="#16a34a"/>
+<text class="claim" x="62" y="72" style="fill:#15803d">딜러 감마의 장중 효과</text>
+<text class="s" x="62" y="90">Barbon·Buraschi 2021 — 단, 변동성 증폭/억제 채널이지 'OPEX 상승'이 아님</text>
+<rect x="556" y="63" width="66" height="24" rx="12" fill="#16a34a"/>
+<text class="bt" x="589" y="79" text-anchor="middle" style="fill:#ffffff">실증</text>
+
+<rect x="40" y="110" width="600" height="52" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<rect x="40" y="110" width="7" height="52" rx="3" fill="#16a34a"/>
+<text class="claim" x="62" y="132" style="fill:#15803d">개별주 만기 핀닝</text>
+<text class="s" x="62" y="150">Ni·Pearson·Poteshman 2005 — 개별주에 한함(지수 아님)</text>
+<rect x="556" y="123" width="66" height="24" rx="12" fill="#16a34a"/>
+<text class="bt" x="589" y="139" text-anchor="middle" style="fill:#ffffff">실증</text>
+
+<rect x="40" y="170" width="600" height="52" rx="9" fill="#f7dcd6" stroke="#d84a3a" stroke-width="1.2"/>
+<rect x="40" y="170" width="7" height="52" rx="3" fill="#d84a3a"/>
+<text class="claim" x="62" y="192" style="fill:#b23a2c">OPEX 상승 드리프트 + OPEX 후 '취약 구간'</text>
+<text class="s" x="62" y="210">탄탄한 1차 출처를 찾지 못함 — 그럴듯하지만 미검증</text>
+<rect x="552" y="183" width="74" height="24" rx="12" fill="#d84a3a"/>
+<text class="bt" x="589" y="199" text-anchor="middle" style="fill:#ffffff">미검증</text>
+
+<rect x="40" y="232" width="600" height="44" rx="9" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.2"/>
+<text class="s" x="62" y="251" style="fill:#8a6d3b">게다가 0DTE ~59%(2025)로 월간 효과가 매일로 재분배 —</text>
+<text class="s" x="62" y="267" style="fill:#8a6d3b">CBOE: 딜러 순감마 = 하루 S&amp;P 선물 유동성의 0.04~0.17%뿐</text>
+</svg>

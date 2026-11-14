@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">세 모델의 조건 입력 비교</title>
+<desc id="de">새 부품이 오면 세 모델이 무엇을 조건으로 받는지 비교한다. FoundationStereo는 기하 그 자체, SAM 2는 클릭 한 번, FoundationPose는 CAD 파일이라 신규 품번 추가가 학습이 아니라 파일 열기가 된다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="250" rx="12"/>
+<text class="t" x="18" y="22">새 부품이 오면 무엇을 주는가</text>
+<rect class="bx" x="16" y="34" width="328" height="62" rx="10"/>
+<text class="lb" x="30" y="54" fill="var(--blue)">FOUNDATIONSTEREO</text>
+<text class="st" x="30" y="73">조건 = <tspan style="fill:var(--blue);font-weight:700">기하 그 자체</tspan></text>
+<text class="st" x="30" y="88">두 카메라의 간격과 초점거리. 부품별 입력 없음.</text>
+<rect class="bx" x="16" y="104" width="328" height="62" rx="10"/>
+<text class="lb" x="30" y="124" fill="var(--teal)">SAM 2</text>
+<text class="st" x="30" y="143">조건 = <tspan style="fill:var(--teal);font-weight:700">클릭 한 번 (또는 박스)</tspan></text>
+<text class="st" x="30" y="158">사람이 "이거"라고 찍어주는 점 하나.</text>
+<rect class="bx" x="16" y="174" width="328" height="62" rx="10"/>
+<text class="lb" x="30" y="194" fill="var(--amber)">FOUNDATIONPOSE</text>
+<text class="st" x="30" y="213">조건 = <tspan style="fill:var(--amber);font-weight:700">CAD 파일</tspan></text>
+<text class="st" x="30" y="228">이미 있는 3D 도면. 새로 만들 게 없다.</text>
+</svg>

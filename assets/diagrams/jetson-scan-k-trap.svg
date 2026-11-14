@@ -1,0 +1,34 @@
+<svg width="100%" viewBox="0 0 680 288" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>1080p 모드의 렌즈 값 함정</title>
+<desc>센서 전체를 1920으로 줄였다고 가정한 기본 렌즈 값은 fx 1465.5이지만, 실제 1080p 모드는 가운데 3840×2160을 잘라 반으로 줄이므로 fx 1547.9가 맞다. 기본값을 쓰면 체커보드까지 거리가 298.8mm로 나오고, 맞는 값은 315.4mm로 스테레오 측정 315.2mm와 일치한다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.sub{font-size:10.5px;fill:#73726c;}
+.m{font-size:11.5px;font-weight:700;fill:#3f4d66;}
+.s{font-size:9.5px;fill:#73726c;}
+.v{font-size:10.5px;font-weight:700;fill:#5f5e58;}
+.g{font-size:10.5px;font-weight:700;fill:#15803d;}
+.r{font-size:10.5px;font-weight:700;fill:#b91c1c;}
+.num{font-size:10px;font-weight:700;fill:#ffffff;}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#9a988f"/></marker></defs>
+<rect x="0" y="0" width="680" height="288" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="32">1080p 영상의 렌즈 값(K), 계산을 잘못하면 거리가 약 5% 짧아진다</text>
+<text class="sub" x="40" y="50">같은 센서(4056×3040)에서 1080p 영상을 만드는 두 가지 생각</text>
+<text class="m" x="40" y="78">기본값의 가정: 전체를 줄였다</text>
+<text class="s" x="40" y="93">4056 → 1920 (× 0.473)</text>
+<rect x="40" y="104" width="160" height="120" fill="#ece9e0" stroke="#9a988f"/>
+<rect x="40" y="119" width="160" height="90" fill="#fecaca" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text class="s" x="44" y="220">4056×3040</text>
+<text class="r" x="216" y="150" style="font-size:13px">fx 1465.5</text>
+<text class="r" x="40" y="244">체커보드까지 298.8mm로 계산</text>
+<text class="m" x="350" y="78">실제 1080p 모드: 가운데를 자르고 반으로</text>
+<text class="s" x="350" y="93">3840×2160으로 자른 뒤 × 0.5</text>
+<rect x="350" y="104" width="160" height="120" fill="#ece9e0" stroke="#9a988f"/>
+<rect x="354.3" y="121.4" width="151.5" height="85.3" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+<text class="s" x="354" y="220">4056×3040</text>
+<text class="g" x="526" y="150" style="font-size:13px">fx 1547.9</text>
+<text class="g" x="350" y="244">315.4mm (스테레오로 잰 값 315.2mm와 일치)</text>
+<text class="s" x="40" y="272">FoundationPose는 거리를 K로 계산하므로, 틀린 K를 넣으면 모든 자세가 약 5% 가깝게 나온다</text>
+</svg>

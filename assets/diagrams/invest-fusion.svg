@@ -1,0 +1,54 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>융합 — AI가 좁히고, 결정론이 확정한다</title>
+<desc>다양한 현실(변이·노이즈)을 AI가 유연하게 인식해 후보를 좁히고, 결정론적 기하·계측이 정확히 확정해 판정·실행으로 넘긴다. 로봇 비전 파이프라인이 그 실물 예다: FoundationStereo와 SAM이 어디·무엇을 찾고, PnP와 기하가 정확히 얼마인지 확정하고, 힘으로 확인한다. 순수 AI도 순수 전통도 아닌, 둘을 잇는 쪽에 가치가 앉는다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.b{font-size:12.5px;font-weight:700;}
+.s{font-size:10.5px;fill:#73726c;}
+.lbl{font-size:11px;font-weight:600;}
+</style>
+<rect x="0" y="0" width="680" height="280" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">융합 — AI가 좁히고, 결정론이 확정한다</text>
+
+<!-- box 1: reality -->
+<rect x="34" y="78" width="128" height="62" rx="9" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="b" x="98" y="104" text-anchor="middle" style="fill:#3d3d3a">다양한 현실</text>
+<text class="s" x="98" y="122" text-anchor="middle">변이 · 노이즈</text>
+
+<!-- arrow 1 -->
+<line x1="166" y1="109" x2="206" y2="109" stroke="#a9791f" stroke-width="2"/>
+<path d="M198,104 L206,109 L198,114" fill="none" stroke="#a9791f" stroke-width="2"/>
+<text class="lbl" x="186" y="98" text-anchor="middle" style="fill:#a9791f">좁힘</text>
+
+<!-- box 2: AI -->
+<rect x="210" y="78" width="128" height="62" rx="9" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.2"/>
+<text class="b" x="274" y="104" text-anchor="middle" style="fill:#a9791f">AI 인식</text>
+<text class="s" x="274" y="122" text-anchor="middle">유연 · 확률적</text>
+
+<!-- arrow 2 -->
+<line x1="342" y1="109" x2="382" y2="109" stroke="#3f4d66" stroke-width="2"/>
+<path d="M374,104 L382,109 L374,114" fill="none" stroke="#3f4d66" stroke-width="2"/>
+<text class="lbl" x="362" y="98" text-anchor="middle" style="fill:#3f4d66">확정</text>
+
+<!-- box 3: deterministic -->
+<rect x="386" y="78" width="128" height="62" rx="9" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.2"/>
+<text class="b" x="450" y="104" text-anchor="middle" style="fill:#3f4d66">기하 · 계측</text>
+<text class="s" x="450" y="122" text-anchor="middle">결정론적</text>
+
+<!-- arrow 3 -->
+<line x1="518" y1="109" x2="558" y2="109" stroke="#16a34a" stroke-width="2"/>
+<path d="M550,104 L558,109 L550,114" fill="none" stroke="#16a34a" stroke-width="2"/>
+
+<!-- box 4: verdict -->
+<rect x="562" y="78" width="104" height="62" rx="9" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.2"/>
+<text class="b" x="614" y="104" text-anchor="middle" style="fill:#15803d">판정 · 실행</text>
+<text class="s" x="614" y="122" text-anchor="middle">신뢰</text>
+
+<!-- real-world instance -->
+<text class="s" x="40" y="182" style="fill:#8a6d3b">실물 예 — 로봇 비전 파이프라인:</text>
+<text class="s" x="40" y="200">FoundationStereo·SAM (어디·무엇을 찾음) → PnP·기하 (정확히 얼마인지 확정) → 힘으로 확인</text>
+
+<line x1="40" y1="220" x2="640" y2="220" stroke="#e0ddd3" stroke-width="1"/>
+<text class="b" x="40" y="248" style="fill:#3d3d3a">순수 AI도, 순수 전통도 아닌 — 둘을 잇는 쪽에 해자가 생긴다.</text>
+</svg>

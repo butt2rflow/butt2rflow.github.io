@@ -1,0 +1,36 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Letting an agentic AI into the board over SSH</title>
+<desc>An agentic AI (2nd-gen, Claude) on the desktop connects directly into the Jetson edge board over SSH, running commands, reading output and logs, and fixing blockers on its own. The 2nd-gen agentic AI goes in over SSH and builds the place where 3rd-gen Physical AI will stand.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:13px;font-weight:700;}
+.s{font-size:10.5px;fill:#73726c;}
+.lbl{font-size:11px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">Letting an agentic AI into the board over SSH</text>
+
+<rect x="40" y="82" width="250" height="128" rx="10" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.3"/>
+<text class="t" x="165" y="110" text-anchor="middle" style="fill:#3f4d66">Desktop / laptop</text>
+<rect x="66" y="128" width="198" height="58" rx="9" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1.3"/>
+<text class="t" x="165" y="154" text-anchor="middle" style="fill:#a9791f">Agentic AI · Claude</text>
+<text class="s" x="165" y="172" text-anchor="middle">2nd-gen (uses tools itself)</text>
+
+<text class="lbl" x="340" y="104" text-anchor="middle" style="fill:#16a34a">SSH</text>
+<line x1="292" y1="122" x2="386" y2="122" stroke="#16a34a" stroke-width="2.4"/>
+<path d="M378,117 L386,122 L378,127" fill="none" stroke="#16a34a" stroke-width="2.4"/>
+<text class="s" x="340" y="138" text-anchor="middle" style="fill:#16a34a">run commands →</text>
+<line x1="386" y1="164" x2="292" y2="164" stroke="#16a34a" stroke-width="2.4"/>
+<path d="M300,159 L292,164 L300,169" fill="none" stroke="#16a34a" stroke-width="2.4"/>
+<text class="s" x="340" y="180" text-anchor="middle" style="fill:#16a34a">← output · logs</text>
+
+<rect x="388" y="82" width="252" height="128" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.6"/>
+<text class="t" x="514" y="110" text-anchor="middle" style="fill:#15803d">Jetson Orin NX</text>
+<text class="s" x="514" y="132" text-anchor="middle">edge board (headless)</text>
+<text class="s" x="514" y="156" text-anchor="middle">the AI sets it up directly</text>
+<text class="s" x="514" y="174" text-anchor="middle">reads logs, fixes on its own</text>
+
+<text class="t" x="40" y="258" style="fill:#3d3d3a">2nd-gen (agentic) goes in over SSH → builds the place 3rd-gen (Physical AI) will stand.</text>
+<text class="s" x="40" y="280" style="fill:#8a6d3b">Even work beyond my own knowledge — with an AI beside me, I could step over it.</text>
+</svg>
