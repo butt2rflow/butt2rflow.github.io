@@ -27,6 +27,7 @@
 // Frame = [t_s, hand gx gy gz (deg/s), hand ax ay az (g), arm gx gy gz, arm ax ay az] (same as swing.js).
 
 export const GESTURES = ["tap2", "tap4", "hold", "twist", "shake", "dial"];
+export const SWING_FRAMES = 6;   // ~25 ms at 240 Hz: a real downswing stays over the limit for tens of ms, a knock for one sample
 
 export class GestureDetector {
   constructor(onGesture, opts = {}) {
@@ -50,7 +51,7 @@ export class GestureDetector {
   clubMode(t, g, gm, dt, acc) {
     const M = this.mode;
     if (!M.glp) M.glp = acc.slice(); else for (let k = 0; k < 3; k++) M.glp[k] += 0.05 * (acc[k] - M.glp[k]);   // gravity, ~80 ms low-pass
-    if (gm > (this.armOk ? 1200 : 800)) { this.mode = null; this.on({ name: "clubmode", on: false, why: "swing", t }); return; }
+    if (this.fastN >= SWING_FRAMES) { this.mode = null; this.on({ name: "clubmode", on: false, why: "swing", t }); return; }
     if (t - M.t0 < 0.25) { if (gm < 30) { for (let k = 0; k < 3; k++) M.biasSum[k] += g[k]; M.biasN++; } return; }
     for (let k = 0; k < 3; k++) M.ang[k] += (g[k] - (M.biasN ? M.biasSum[k] / M.biasN : 0)) * dt;
     const mag = Math.hypot(...M.ang);
@@ -95,9 +96,14 @@ export class GestureDetector {
     const gm = Math.hypot(...g), am = Math.hypot(...a);
     if (this.lastBusy === -Infinity) this.lastBusy = t;   // the stream's start doesn't count as calm
     const armFast = this.armOk && Math.hypot(f[7], f[8], f[9]) > 1000;
-    if (gm > (this.armOk ? 1200 : 800) || armFast) { this.lock = t + 2; this.cand = null; this.taps = []; }
+    // a swing = the hand stays fast for SWING_FRAMES samples in a row. One sample over the limit is a knock's jolt: a hard
+    // tap read 1,347 deg/s for one sample (12.7 g) and closed club mode as a "swing" (2026-11-14).
+    // Outside club mode one sample still locks (a desk bang otherwise let a false shake through in two old logs); in club
+    // mode only tap4 counts, so there the lock waits for a real swing and the closing knocks aren't locked out.
+    this.fastN = gm > (this.armOk ? 1200 : 800) ? (this.fastN || 0) + 1 : 0;
+    if ((this.mode ? this.fastN >= SWING_FRAMES : this.fastN >= 1) || armFast) { this.lock = t + 2; this.cand = null; this.taps = []; }
     // the dial is a forearm roll, so the forearm IMU races past 400 deg/s on every dial; only the hand lock applies to it
-    if (gm > (this.armOk ? 1200 : 800)) this.handLock = t + 2;
+    if (this.fastN >= 1) this.handLock = t + 2;   // dial (off now): unchanged
     const busy = gm > 150 || Math.abs(am - 1) > 0.35;
     const quietFor = t - this.lastBusy;               // calm time BEFORE this frame
     // gravity estimate (slow low-pass) for the shake check
