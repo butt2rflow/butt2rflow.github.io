@@ -2,7 +2,8 @@
 // Gestures are fixed; what each one DOES is set by the user on the page (a command phrase run through voice.js, or
 // "listen"). Every gesture is only taken after ~1 s without big motion, and only acted on after the hand is calm
 // again for 0.4 s, so a swing, a waggle or walking shouldn't fire one. A swing (hand faster than 1200 deg/s with a
-// forearm IMU, 800 without one; or the forearm IMU faster than 400 deg/s) locks gestures out for 2 s.
+// forearm IMU, 800 without one; or the forearm IMU faster than 1000 deg/s;
+// it was 400 until 2026-11-13, but lifting the hand to knock moved the wrist 680-980 deg/s and locked out every tap) locks gestures out for 2 s.
 //   tap2  : two sharp knocks on the back of the hand (accel jump > 1.2 g vs ~5 ms back), 0.10-0.45 s apart
 //           (the firmware uses 1.5 g; at 240 Hz a knock's peak can fall between samples, one made-up knock read 1.24 g)
 //   hold  : hold a taught pose still for 1 s (gravity within 25 deg of the taught direction, < 25 deg/s)
@@ -15,7 +16,7 @@
 //           turning path (real dials 0.59-0.96 with a bounce-back; swings 0.07-0.24; a twist ~0), accel within 1.5 g of 1 g, then settled (< 80 deg/s) for 0.15 s.
 //           Reports dir (+1/-1 along the glove's turn axis, learnt from the first dial; the page maps it to clockwise) and
 //           steps (1 per ~150 deg, at most 3). It skips the 1.5 s cool-down so club changes can follow each other.
-//   tap4  : four knocks in a row (each 0.10-0.45 s after the last; the run ends 0.5 s after the last knock, so two knocks
+//   tap4  : four knocks in a row, no calm needed before (each 0.10-0.45 s after the last; the run ends 0.5 s after the last knock, so two knocks
 //           = tap2, four = tap4, three or five = nothing). The page uses tap4 to switch club-change mode on and off.
 // Club-change mode (2026-11-13, Jae; replaces the one-shot dial for the club): after startClubMode() the wrist turn away
 // from where it was when the mode began works like a jog dial. The turn is followed along the learnt dial axis (gyro
@@ -72,7 +73,7 @@ export class GestureDetector {
     const t = f[0], g = [f[1], f[2], f[3]], a = [f[4], f[5], f[6]];
     const gm = Math.hypot(...g), am = Math.hypot(...a);
     if (this.lastBusy === -Infinity) this.lastBusy = t;   // the stream's start doesn't count as calm
-    const armFast = this.armOk && Math.hypot(f[7], f[8], f[9]) > 400;
+    const armFast = this.armOk && Math.hypot(f[7], f[8], f[9]) > 1000;
     if (gm > (this.armOk ? 1200 : 800) || armFast) { this.lock = t + 2; this.cand = null; this.taps = []; }
     // the dial is a forearm roll, so the forearm IMU races past 400 deg/s on every dial; only the hand lock applies to it
     if (gm > (this.armOk ? 1200 : 800)) this.handLock = t + 2;
@@ -136,7 +137,7 @@ export class GestureDetector {
     // a run of knocks ends 0.5 s after the last one: 2 = tap2, 4 = tap4 (in club-change mode only tap4 counts)
     if (this.taps.length && t - this.taps[this.taps.length - 1] > 0.5) {
       const n = this.taps.length; this.taps = [];
-      const name = n === 2 ? "tap2" : n === 4 ? "tap4" : null;
+      const name = n === 2 && this.tapsCalm ? "tap2" : n === 4 ? "tap4" : null;
       if (name && this.enabled[name] && open && !this.cand && (!this.mode || name === "tap4")) { this.cand = { name, t }; this.calmSince = null; }
     }
     if (!open || this.cand) { this.gyroX = [null, null, null]; this.accX = [null, null, null]; return; }
@@ -145,11 +146,13 @@ export class GestureDetector {
     if (this.enabled.tap2 || this.enabled.tap4) {
       const old = this.hist.find((h) => h[0] >= t - 0.0055) || this.hist[0];
       const jump = Math.max(...[4, 5, 6].map((j) => Math.abs(f[j] - old[j])));
-      if (jump > 1.2 && gm < 400) {
+      if (jump > 1.2 && gm < 800) {   // 800 (was 400): knocks on a hand that is still turning showed 450-790 deg/s (2026-11-13)
         const prev = this.taps[this.taps.length - 1];
         if (!prev || t - prev > 0.06) {              // one knock rings for ~10-20 ms: count it once
           if (prev && t - prev <= 0.45) { if (t - prev >= 0.10) this.taps.push(t); }
-          else if (fromCalm(t) || this.mode) this.taps = [t];   // a run starts out of >= 1 s of calm (in the mode the wrist may have just turned)
+          else { this.taps = [t]; this.tapsCalm = fromCalm(t) || !!this.mode; }   // tap2 needs the run to start out of >= 1 s of calm;
+          // tap4 doesn't: the hand is usually still moving up when the knocking starts (2026-11-13: 0.1-0.3 s of calm), and
+          // four even knocks are rare by accident (none in any real log)
         }
       }
     }
