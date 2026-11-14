@@ -19,9 +19,9 @@
 //           = tap2, four = tap4, three or five = nothing). The page uses tap4 to switch club-change mode on and off.
 // Club-change mode (2026-11-13, Jae; replaces the one-shot dial for the club): after startClubMode() the wrist turn away
 // from where it was when the mode began works like a jog dial. The turn is followed along the learnt dial axis (gyro
-// integrated, its bias taken in the first 0.25 s): under 20 deg nothing happens; 20-50 deg steps one club every 0.9 s;
+// integrated, its bias taken in the first 0.25 s): stepping starts past 25 deg and stops under 15 deg (no flicking at the edge); up to 50 deg steps one club every 0.9 s;
 // 50-90 deg every 0.45 s; over 90 deg every 0.2 s; the sign picks next/previous ("clubstep" events). Turning back under
-// 20 deg stops. A swing or 20 s with no movement ends the mode ("clubmode" with on:false); tap4 again ends it on the page.
+// 15 deg stops. A swing or 20 s with no movement ends the mode ("clubmode" with on:false); tap4 again ends it on the page.
 // While the mode is on, only tap4 is recognised.
 // Frame = [t_s, hand gx gy gz (deg/s), hand ax ay az (g), arm gx gy gz, arm ax ay az] (same as swing.js).
 
@@ -44,7 +44,7 @@ export class GestureDetector {
     this.onDialNote = opts.onDialNote || null;      // page hook: keep each check beyond this page's life
     this.mode = null;                               // club-change mode state, or null
   }
-  startClubMode(t) { this.mode = { t0: t, ang: [0, 0, 0], biasSum: [0, 0, 0], biasN: 0, lastStep: -Infinity, lastAct: t }; this.dl = null; }
+  startClubMode(t) { this.mode = { t0: t, ang: [0, 0, 0], biasSum: [0, 0, 0], biasN: 0, lastStep: -Infinity, lastAny: -Infinity, on: false, wait: 0, lastAct: t }; this.dl = null; }
   stopClubMode() { this.mode = null; }
   clubMode(t, g, gm, dt) {
     const M = this.mode;
@@ -57,10 +57,13 @@ export class GestureDetector {
       this.dialAxis = u.map((x) => x * Math.sign(u[big]));
     }
     const th = this.dialAxis ? M.ang[0] * this.dialAxis[0] + M.ang[1] * this.dialAxis[1] + M.ang[2] * this.dialAxis[2] : 0, a = Math.abs(th);
-    const every = a < 20 ? null : a < 50 ? 0.9 : a < 90 ? 0.45 : 0.2;
+    // stepping starts past 25 deg and stops under 15 deg, so a wrist resting near the edge doesn't flick the club
+    // back and forth (first real try, 2026-11-13: -,+,-,+ at 20-21 deg); re-starting within 0.6 s of the last step waits
+    if (!M.on && a >= 25) { M.on = true; M.lastStep = -Infinity; M.wait = M.lastAny + 0.6; }
+    else if (M.on && a < 15) M.on = false;
+    const every = !M.on ? null : a < 50 ? 0.9 : a < 90 ? 0.45 : 0.2;
     if (gm > 30) M.lastAct = t;
-    if (every !== null && t - M.lastStep >= every) { M.lastStep = t; M.lastAct = t; this.on({ name: "clubstep", dir: th > 0 ? 1 : -1, deg: Math.round(th), t }); }
-    if (every === null) M.lastStep = -Infinity;      // back near the start: the next turn steps at once
+    if (every !== null && t >= M.wait && t - M.lastStep >= every) { M.lastStep = t; M.lastAny = t; M.lastAct = t; this.on({ name: "clubstep", dir: th > 0 ? 1 : -1, deg: Math.round(th), t }); }
     if (t - M.lastAct > 20) { this.mode = null; this.on({ name: "clubmode", on: false, why: "idle", t }); }
   }
   setHoldRef(v) { const n = Math.hypot(...v); this.holdRef = n ? v.map((x) => x / n) : null; }
