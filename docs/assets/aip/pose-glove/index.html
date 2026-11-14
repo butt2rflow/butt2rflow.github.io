@@ -289,7 +289,7 @@ import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
 import { GestureDetector } from "./gesture.js";
 import { R10Link, pairShots, shotLine } from "./r10.js";
-const PAGE_VER = "2026-11-14e";
+const PAGE_VER = "2026-11-14f";
 const GLOVE_HZ = 240;   // the glove firmware's rate (was a menu with 400 for PC tests and 180 for old firmware)
 
 const $ = (id) => document.getElementById(id);
@@ -764,7 +764,7 @@ $("vTalk").onclick = () => listener.listenOnce();
 $("vCont").onchange = () => listener.setContinuous($("vCont").checked);
 
 // ---- hand gestures (gesture.js) -> a command phrase (run like a voice command) or "listen" ----
-const G_NAME = { tap2: "손등 두 번 톡톡", hold: "손 세우고 1초 멈춤", twist: "손목 빠르게 두 번 비틀기", shake: "세 번 흔들기", dial: "다이얼처럼 손목 돌리기" };
+const G_NAME = { tap2: "손등 두 번 톡톡", tap4: "손등 네 번 톡톡", hold: "손 세우고 1초 멈춤", twist: "손목 빠르게 두 번 비틀기", shake: "세 번 흔들기", dial: "다이얼처럼 손목 돌리기" };
 const G_DEFAULT = { tap2: "__listen", hold: "방금 거 어때", twist: "굿샷", shake: "취소" };
 const G_CHOICES = [["__listen", "듣기 시작 (말로 하기)"], ["방금 거 어때", "방금 거 어때"], ["굿샷", "굿샷"], ["뒤땅", "뒤땅"], ["취소", "취소"],
   ["오늘 요약", "오늘 요약"], ["무슨 채야", "무슨 채야"], ["배터리", "배터리"], ["기록 시작", "기록 시작"], ["그만", "기록 그만"], ["", "끄기"]];
@@ -778,7 +778,7 @@ function dialNote(n) {
   try { const a = JSON.parse(localStorage.getItem("pg-dial-log") || "[]"); a.push(row); localStorage.setItem("pg-dial-log", JSON.stringify(a.slice(-DIAL_KEEP))); } catch (e) {}
   if (logging && log.dialChecks) log.dialChecks.push(row);
 }
-const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef, dialAxis: gCfg.dialAxis || null, enabled: { dial: gCfg.dialOn !== false }, onDialNote: dialNote });
+const gestDet = new GestureDetector(onGesture, { holdRef: gCfg.holdRef, dialAxis: gCfg.dialAxis || null, enabled: { dial: false, tap4: gCfg.dialOn !== false }, onDialNote: dialNote });
 function gLabel(v) { const c = G_CHOICES.find((x) => x[0] === v); return c ? c[1] : v ? `"${v}"` : "끄기"; }
 // ---- club wheel: a dial-like wrist turn steps the club, shown as a spinning 3D carousel ----
 // Clubs come from commands.json (set_club, in bag order: driver ... wedges, putter) under the names the quick buttons use.
@@ -792,13 +792,31 @@ function cwBuild(clubs) {
   $("cwRing").innerHTML = clubs.map((c, i) => `<div class="ci" data-i="${i}" style="transform: rotateY(${i * step}deg) translateZ(${R}px)">${CW_SHORT[c] || c.replace("번", "")}</div>`).join("");
   cwBuilt = true;
 }
-function clubDial(g) {
+// club-change mode (2026-11-13, Jae): four taps on the back of the hand open it, the wheel stays up, turning the wrist a
+// little steps the club slowly and turning it further steps faster, four taps again close it (and say the club).
+let clubMode = false;
+function clubModeOn(t) {
+  clubMode = true; gestDet.startClubMode(t);
+  qEvent("gesture", { gesture: "tap4", action: "club mode on" }, "gesture");
+  clubDial({ dir: 0, steps: 0, deg: 0 }, true);
+  try { navigator.vibrate && navigator.vibrate([60, 60, 60]); } catch (e) {}
+}
+function clubModeOff(why) {
+  if (!clubMode) return;
+  clubMode = false; gestDet.stopClubMode();
+  qEvent("gesture", { gesture: "tap4", action: `club mode off (${why})` }, "gesture");
+  if (gestDet.dialAxis) { gCfg.dialAxis = gestDet.dialAxis.map((x) => +x.toFixed(3)); gSave(); }
+  clearTimeout(cwTimer); cwTimer = setTimeout(() => $("clubWheel").classList.remove("show"), 1200);
+  try { navigator.vibrate && navigator.vibrate(150); } catch (e) {}
+  if (cur.club) speak(cur.club);
+}
+function clubDial(g, inMode = false) {
   const clubs = cwClubs(); if (!clubs.length) return;
   if (!cwBuilt) cwBuild(clubs);
   const n = clubs.length, step = 360 / n;
   let idx = clubs.indexOf(cur.club); if (idx < 0) idx = clubs.indexOf("7번") >= 0 ? clubs.indexOf("7번") : 0;
   if (((cwPos % n) + n) % n !== idx) cwPos = idx;                   // the club was changed some other way: jump there quietly
-  const dir = (gCfg.dialRev ? -1 : 1) * g.dir, steps = g.steps || 1;
+  const dir = (gCfg.dialRev ? -1 : 1) * g.dir, steps = g.steps ?? 1;
   cwPos += dir * steps;                                              // unbounded, so the ring always spins the way the wrist turned
   const sel = ((cwPos % n) + n) % n, name = clubs[sel];
   const ring = $("cwRing"); ring.style.transform = `translateZ(-${Math.round(70 / Math.tan(Math.PI / n))}px) rotateY(${-cwPos * step}deg)`;
@@ -807,11 +825,17 @@ function clubDial(g) {
     el.classList.toggle("sel", i === sel); el.style.opacity = d === 0 ? 1 : d <= 2 ? 0.7 - 0.2 * d : 0.12;
   });
   $("cwName").textContent = name;
-  $("clubWheel").classList.add("show"); clearTimeout(cwTimer); cwTimer = setTimeout(() => $("clubWheel").classList.remove("show"), 2200);
-  try { navigator.vibrate && navigator.vibrate(40); } catch (e) {}
-  setSetting("club", name, "gesture", `dial ${g.deg}°`); speak(name);
+  $("clubWheel").classList.add("show"); clearTimeout(cwTimer);
+  if (!inMode) cwTimer = setTimeout(() => $("clubWheel").classList.remove("show"), 2200);   // in the mode the wheel stays up
+  if (!steps) return;
+  try { navigator.vibrate && navigator.vibrate(30); } catch (e) {}
+  setSetting("club", name, "gesture", `${inMode ? "club mode" : "dial"} ${g.deg}°`);
+  if (!inMode) speak(name);                                          // in the mode the club is said once, when it closes
 }
 function onGesture(g) {
+  if (g.name === "tap4") { if (gCfg.dialOn === false) return; if (clubMode) clubModeOff("tap4"); else clubModeOn(g.t); return; }
+  if (g.name === "clubstep") { if (clubMode) clubDial({ dir: g.dir, steps: 1, deg: g.deg }, true); return; }
+  if (g.name === "clubmode") { clubModeOff(g.why); return; }
   if (g.name === "dial") {
     // keep the glove's learnt turn axis, so "clockwise" means the same thing next session
     if (gestDet.dialAxis) { gCfg.dialAxis = gestDet.dialAxis.map((x) => +x.toFixed(3)); gSave(); }
@@ -829,10 +853,10 @@ function gRender() {
   $("gRows").innerHTML = "";
   {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td style="white-space:normal">${G_NAME.dial}</td><td style="white-space:normal"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-dial="on"${gCfg.dialOn !== false ? " checked" : ""}> 채 바꾸기</label>` +
+    tr.innerHTML = `<td style="white-space:normal">${G_NAME.tap4} → 손목 돌리기 (조금 = 천천히, 많이 = 빠르게) → 네 번 톡톡</td><td style="white-space:normal"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-dial="on"${gCfg.dialOn !== false ? " checked" : ""}> 채 바꾸기</label>` +
       `<label style="display:flex;gap:6px;align-items:center;margin-top:4px"><input type="checkbox" data-dial="rev"${gCfg.dialRev ? " checked" : ""}> 방향 반대로</label></td>`;
     $("gRows").appendChild(tr);
-    tr.querySelector('[data-dial="on"]').onchange = (e) => { gCfg.dialOn = e.target.checked; gestDet.enabled.dial = gCfg.dialOn; gSave(); };
+    tr.querySelector('[data-dial="on"]').onchange = (e) => { gCfg.dialOn = e.target.checked; gestDet.enabled.tap4 = gCfg.dialOn; if (!gCfg.dialOn) clubModeOff("off"); gSave(); };
     tr.querySelector('[data-dial="rev"]').onchange = (e) => { gCfg.dialRev = e.target.checked; gSave(); };
   }
   for (const k of ["tap2", "hold", "twist", "shake"]) {

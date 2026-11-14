@@ -15,14 +15,22 @@
 //           turning path (real dials 0.59-0.96 with a bounce-back; swings 0.07-0.24; a twist ~0), accel within 1.5 g of 1 g, then settled (< 80 deg/s) for 0.15 s.
 //           Reports dir (+1/-1 along the glove's turn axis, learnt from the first dial; the page maps it to clockwise) and
 //           steps (1 per ~150 deg, at most 3). It skips the 1.5 s cool-down so club changes can follow each other.
+//   tap4  : four knocks in a row (each 0.10-0.45 s after the last; the run ends 0.5 s after the last knock, so two knocks
+//           = tap2, four = tap4, three or five = nothing). The page uses tap4 to switch club-change mode on and off.
+// Club-change mode (2026-11-13, Jae; replaces the one-shot dial for the club): after startClubMode() the wrist turn away
+// from where it was when the mode began works like a jog dial. The turn is followed along the learnt dial axis (gyro
+// integrated, its bias taken in the first 0.25 s): under 20 deg nothing happens; 20-50 deg steps one club every 0.9 s;
+// 50-90 deg every 0.45 s; over 90 deg every 0.2 s; the sign picks next/previous ("clubstep" events). Turning back under
+// 20 deg stops. A swing or 20 s with no movement ends the mode ("clubmode" with on:false); tap4 again ends it on the page.
+// While the mode is on, only tap4 is recognised.
 // Frame = [t_s, hand gx gy gz (deg/s), hand ax ay az (g), arm gx gy gz, arm ax ay az] (same as swing.js).
 
-export const GESTURES = ["tap2", "hold", "twist", "shake", "dial"];
+export const GESTURES = ["tap2", "tap4", "hold", "twist", "shake", "dial"];
 
 export class GestureDetector {
   constructor(onGesture, opts = {}) {
     this.on = onGesture;
-    this.enabled = { tap2: true, hold: true, twist: true, shake: true, dial: true, ...(opts.enabled || {}) };
+    this.enabled = { tap2: true, tap4: true, hold: true, twist: true, shake: true, dial: true, ...(opts.enabled || {}) };
     this.holdRef = opts.holdRef || null;           // unit gravity vector of the taught pose, or null (hold off)
     this.armOk = !!opts.armOk;
     this.hist = [];                                  // ~0.1 s of frames for the tap "5 ms back" check
@@ -34,6 +42,26 @@ export class GestureDetector {
     this.dl = null; this.prevT = null; this.handLock = -Infinity; this.dialAxis = opts.dialAxis || null;   // dial in progress; swing lock from the hand IMU only
     this.dialLog = [];                              // last few dial checks, accepted or not, with the reason (for tuning on a real glove)
     this.onDialNote = opts.onDialNote || null;      // page hook: keep each check beyond this page's life
+    this.mode = null;                               // club-change mode state, or null
+  }
+  startClubMode(t) { this.mode = { t0: t, ang: [0, 0, 0], biasSum: [0, 0, 0], biasN: 0, lastStep: -Infinity, lastAct: t }; this.dl = null; }
+  stopClubMode() { this.mode = null; }
+  clubMode(t, g, gm, dt) {
+    const M = this.mode;
+    if (gm > (this.armOk ? 1200 : 800)) { this.mode = null; this.on({ name: "clubmode", on: false, why: "swing", t }); return; }
+    if (t - M.t0 < 0.25) { if (gm < 30) { for (let k = 0; k < 3; k++) M.biasSum[k] += g[k]; M.biasN++; } return; }
+    for (let k = 0; k < 3; k++) M.ang[k] += (g[k] - (M.biasN ? M.biasSum[k] / M.biasN : 0)) * dt;
+    const mag = Math.hypot(...M.ang);
+    if (!this.dialAxis && mag > 25) {                 // no axis learnt yet: the first clear turn sets it (largest component positive)
+      const u = M.ang.map((x) => x / mag), big = u.reduce((m, x, k) => (Math.abs(x) > Math.abs(u[m]) ? k : m), 0);
+      this.dialAxis = u.map((x) => x * Math.sign(u[big]));
+    }
+    const th = this.dialAxis ? M.ang[0] * this.dialAxis[0] + M.ang[1] * this.dialAxis[1] + M.ang[2] * this.dialAxis[2] : 0, a = Math.abs(th);
+    const every = a < 20 ? null : a < 50 ? 0.9 : a < 90 ? 0.45 : 0.2;
+    if (gm > 30) M.lastAct = t;
+    if (every !== null && t - M.lastStep >= every) { M.lastStep = t; M.lastAct = t; this.on({ name: "clubstep", dir: th > 0 ? 1 : -1, deg: Math.round(th), t }); }
+    if (every === null) M.lastStep = -Infinity;      // back near the start: the next turn steps at once
+    if (t - M.lastAct > 20) { this.mode = null; this.on({ name: "clubmode", on: false, why: "idle", t }); }
   }
   setHoldRef(v) { const n = Math.hypot(...v); this.holdRef = n ? v.map((x) => x / n) : null; }
 
@@ -52,11 +80,12 @@ export class GestureDetector {
     this.hist.push(f); while (this.hist.length && this.hist[0][0] < t - 0.1) this.hist.shift();
     const open = t >= this.lock && t >= this.cool;
     const dt = this.prevT === null ? 0 : Math.min(0.05, t - this.prevT); this.prevT = t;
+    if (this.mode) this.clubMode(t, g, gm, dt);
 
     // dial: its own small state machine, so a candidate of another gesture doesn't block it. The rotation is followed as a
     // 3D vector because the hand IMU sits at an angle on the glove: a real wrist turn showed up split between x and z
     // (e.g. +122 / -98 deg, 2026-11-13), so "one gyro axis" rejected every turn.
-    if (this.enabled.dial && t >= this.handLock) {
+    if (this.enabled.dial && t >= this.handLock && !this.mode) {
       if (!this.dl) {
         if (gm > 60 && quietFor >= 0.4) this.dl = { t0: t, tEnd: t, ang: [0, 0, 0], path: 0, peak: 0, accDev: 0, calm: null };
         else if (gm > 300 && quietFor < 0.4 && t - (this.noCalmAt || -9) > 1.5) {   // a fast turn that started without a pause: log it for tuning
@@ -97,31 +126,31 @@ export class GestureDetector {
       if (!open) this.cand = null;
       else if (busy) this.calmSince = null;
       else if (this.calmSince === null) this.calmSince = t;
-      else if (t - this.calmSince >= 0.4 && !(this.cand.name === "tap2" && t - this.cand.t < 0.5)) this.fire(this.cand.name, t);
+      else if (t - this.calmSince >= 0.4) this.fire(this.cand.name, t);
     }
     if (busy) { if (quietFor > 0.05) { this.busyStart = t; this.preCalm = quietFor; } this.lastBusy = t; }
     const fromCalm = (t0) => this.preCalm >= 1.0 && t0 - this.busyStart < 0.6;   // began within 0.6 s of leaving >= 1 s of calm
+    // a run of knocks ends 0.5 s after the last one: 2 = tap2, 4 = tap4 (in club-change mode only tap4 counts)
+    if (this.taps.length && t - this.taps[this.taps.length - 1] > 0.5) {
+      const n = this.taps.length; this.taps = [];
+      const name = n === 2 ? "tap2" : n === 4 ? "tap4" : null;
+      if (name && this.enabled[name] && open && !this.cand && (!this.mode || name === "tap4")) { this.cand = { name, t }; this.calmSince = null; }
+    }
     if (!open || this.cand) { this.gyroX = [null, null, null]; this.accX = [null, null, null]; return; }
 
-    // tap2
-    if (this.enabled.tap2) {
+    // knocks (tap2 / tap4 are decided when the run ends, above)
+    if (this.enabled.tap2 || this.enabled.tap4) {
       const old = this.hist.find((h) => h[0] >= t - 0.0055) || this.hist[0];
       const jump = Math.max(...[4, 5, 6].map((j) => Math.abs(f[j] - old[j])));
       if (jump > 1.2 && gm < 400) {
         const prev = this.taps[this.taps.length - 1];
         if (!prev || t - prev > 0.06) {              // one knock rings for ~10-20 ms: count it once
-          if (prev || fromCalm(t)) {   // the first knock must come out of >= 1 s of calm
-            this.taps.push(t); this.taps = this.taps.filter((x) => x > t - 0.6);
-            const n = this.taps.length;
-            if (n >= 2) {
-              const d = this.taps[n - 1] - this.taps[n - 2];
-              if (d >= 0.10 && d <= 0.45) { this.cand = { name: "tap2", t }; this.calmSince = null; this.taps = []; return; }
-            }
-          }
+          if (prev && t - prev <= 0.45) { if (t - prev >= 0.10) this.taps.push(t); }
+          else if (fromCalm(t) || this.mode) this.taps = [t];   // a run starts out of >= 1 s of calm (in the mode the wrist may have just turned)
         }
       }
-      if (this.taps.length && t - this.taps[this.taps.length - 1] > 0.6) this.taps = [];
     }
+    if (this.mode) return;                            // in club-change mode nothing else is recognised
     // shake: gravity-removed accel alternating past +-1.5 g
     if (this.enabled.shake) {
       for (let k = 0; k < 3; k++) {
