@@ -289,7 +289,7 @@ import { SwingDetector, swingLine } from "./swing.js";
 import { VoiceCommands, Listener } from "./voice.js";
 import { GestureDetector } from "./gesture.js";
 import { R10Link, pairShots, shotLine } from "./r10.js";
-const PAGE_VER = "2026-11-14j";
+const PAGE_VER = "2026-11-15c";
 const GLOVE_HZ = 240;   // the glove firmware's rate (was a menu with 400 for PC tests and 180 for old firmware)
 
 const $ = (id) => document.getElementById(id);
@@ -355,20 +355,37 @@ function speak(t) {
   if (!$("speak").checked || !window.speechSynthesis) return;
   speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = "ko-KR"; u.rate = 1.1; speechSynthesis.speak(u);
 }
+// Framing is judged only while the golfer is still. In a swing or waggle the hands blur and MediaPipe drops the wrists
+// even with the whole body in view, so "손이 잘려요" kept coming during swings (Jae 2026-11-15). Moving = glove gyro over
+// FRAME_MOVE_DPS (hand or forearm), or a wrist jumping across the image, within the last FRAME_QUIET_MS.
+const FRAME_HOLD_MS = 2000, FRAME_GAP_MS = 10000, FRAME_REPEAT_MS = 30000, FRAME_QUIET_MS = 3000, FRAME_MOVE_DPS = 250;
+let lastMoveMs = -Infinity, lastWrist = null;
 function framing(lm) {
+  const now = performance.now();
+  if (lm) {
+    const w = [lm[15], lm[16]];
+    // only well-seen wrists count: an off-screen wrist is guessed and jitters, which would keep "손이 잘려요" quiet forever
+    if (lastWrist && w.some((q, i) => (q.visibility ?? 1) > 0.5 && lastWrist[i].v > 0.5 &&
+        Math.hypot(q.x - lastWrist[i].x, q.y - lastWrist[i].y) > 0.05)) lastMoveMs = now;
+    lastWrist = w.map((q) => ({ x: q.x, y: q.y, v: q.visibility ?? 1 }));
+  }
+  if (now - lastMoveMs < FRAME_QUIET_MS) { frameState = ""; return; }   // moving: say nothing, start the hold afresh
   let st;
   if (!lm) st = "사람이 안 보여요";
   else {
-    const ok = (k) => (lm[k].visibility ?? 1) > 0.5 && lm[k].x > 0.02 && lm[k].x < 0.98 && lm[k].y > 0.02 && lm[k].y < 0.98;
-    if (![0, 7, 8].some(ok)) st = "머리가 잘려요";
-    else if (![27, 28, 31, 32].every(ok)) st = "발이 잘려요";
-    else if (![15, 16].every(ok)) st = "손이 잘려요";
+    const ok = (k, v = 0.5) => (lm[k].visibility ?? 1) > v && lm[k].x > 0.02 && lm[k].x < 0.98 && lm[k].y > 0.02 && lm[k].y < 0.98;
+    if (![0, 7, 8].some((k) => ok(k))) st = "머리가 잘려요";
+    else if (![27, 28, 31, 32].every((k) => ok(k))) st = "발이 잘려요";
+    else if (![15, 16].every((k) => ok(k, 0.3))) st = "손이 잘려요";   // wrists in front of the body often score 0.3-0.5
     else st = "전신이 보여요";
   }
-  const now = performance.now();
   if (st !== frameState) { frameState = st; frameSince = now; }
-  // say it once it has held for 0.8 s; repeat a problem every 6 s, the OK message only once
-  if (now - frameSince > 800 && (st !== frameSaid || (st !== "전신이 보여요" && now - frameSaidAt > 6000))) { speak(st); frameSaid = st; frameSaidAt = now; }
+  // Was: said after 0.8 s and a problem repeated every 6 s, which nagged ("목소리 너무 자주 반복돼"). Now a state must
+  // hold FRAME_HOLD_MS, framing lines are FRAME_GAP_MS apart, the same problem comes back only after FRAME_REPEAT_MS,
+  // "nobody there" and "all in view" are said once, and a framing line never cuts off other speech.
+  const repeat = st !== "전신이 보여요" && st !== "사람이 안 보여요" && now - frameSaidAt > FRAME_REPEAT_MS;
+  if (now - frameSince > FRAME_HOLD_MS && now - frameSaidAt > FRAME_GAP_MS && (st !== frameSaid || repeat) &&
+      !(window.speechSynthesis && speechSynthesis.speaking)) { speak(st); frameSaid = st; frameSaidAt = now; }
 }
 
 // Camera frame time: the capture time Chrome reports for this frame (requestVideoFrameCallback), when it has one.
@@ -497,17 +514,18 @@ function onGlove(r) {
       const h = Math.max(Math.abs(f[3]), Math.abs(f[4]), Math.abs(f[5])) * GYRO_DPS, a = Math.max(Math.abs(f[9]), Math.abs(f[10]), Math.abs(f[11])) * GYRO_DPS;
       gStats.hand = Math.max(gStats.hand, h); gStats.arm = Math.max(gStats.arm, a);
       gyroBuf.push([f[2] / 1e6, h, a]); lastFrame = f;
+      if (h > FRAME_MOVE_DPS || a > FRAME_MOVE_DPS) lastMoveMs = performance.now();   // framing stays quiet while moving
       gyroLong.push([f[2], h, a]); if (gyroLong.length > 1400) gyroLong.shift();
       if (logging) log.glove.push(f);
       const fu = [f[2] / 1e6, f[3] * GYRO_DPS, f[4] * GYRO_DPS, f[5] * GYRO_DPS, f[6] * ACC_G, f[7] * ACC_G, f[8] * ACC_G,
                   f[9] * GYRO_DPS, f[10] * GYRO_DPS, f[11] * GYRO_DPS, f[12] * ACC_G, f[13] * ACC_G, f[14] * ACC_G];
-      swingDet.frame(fu);
+      swingDet.frame(fu); armWatch();
       if (gCfg.on) { gestDet.armOk = !!(glove && glove.parser.armOk); gestDet.frame(fu); }
       lastHandAcc = [fu[4], fu[5], fu[6]];
     }
   } else if (r.type === "status") {
     lastStatus = r;
-    gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? "팔 IMU 있음" : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
+    gloveText("gBat", (r.mv / 1000).toFixed(2) + " V"); gloveText("gArm", (r.armOk ? (armDead ? "팔 IMU 값 0 — 케이블!" : "팔 IMU 있음") : "팔 IMU 없음!") + (r.charging ? " · 충전 중" : ""));
     if (logging) log.status.push(r);
   } else if (r.type === "clip" && r.clip.kind === "motion") {   // 833 Hz gyro around the impact, after its sound clip
     const c = r.clip, m = motionFrames(c); motionById.set(c.id, m);
@@ -539,12 +557,22 @@ setInterval(() => {
   }
 }, 250);
 
+let dropByUs = false;   // true while the page itself drops the link (button, page hidden, reconnect retry); any other drop is unexpected
 function gloveState(st) {
   gloveText("gState", st === "connected" ? "연결됨" : "연결 끊김");
   if (st === "connected") keepAwake(); else releaseAwake();
   $("glove").textContent = st === "connected" ? "장갑 연결 끊기" : "센서 장갑 연결";
   $("log").disabled = st !== "connected";
-  if (st !== "connected" && logging) stopLog();
+  const wasLogging = logging;
+  if (st !== "connected" && logging) { qEvent("glove_drop", { byUs: dropByUs }, "glove"); stopLog(); }
+  // Unexpected drop (glove RST or watchdog, out of range, radio hiccup; range 2026-11-15: after an RST the page sat at
+  // "연결 끊김" until Jae noticed): reconnect to the same glove by itself, as after the screen comes back on.
+  if (st !== "connected" && !dropByUs && glove && !resume) {
+    resume = { log: wasLogging };
+    // hidden (the glove can drop a backgrounded page whose heartbeats stalled): reconnect when it is shown again
+    if (document.visibilityState === "visible") setTimeout(() => { if (resume && !gloveConnected()) reconnect(); }, 1000);
+  }
+  if (st !== "connected") dropByUs = false;
 }
 async function afterConnect(p) {   // after a first connect or an automatic reconnect
   gloveText("gBatch", p.probeLen ? `패킷 ${p.probeLen} B · ${p.batch}프레임씩` : "패킷 크기 확인 실패 · 1프레임씩");
@@ -553,7 +581,7 @@ async function afterConnect(p) {   // after a first connect or an automatic reco
 }
 $("glove").onclick = async () => {
   resume = null;
-  if (glove && glove.device && glove.device.gatt.connected) { await glove.stop().catch(() => {}); glove.disconnect(); return; }
+  if (glove && glove.device && glove.device.gatt.connected) { dropByUs = true; await glove.stop().catch(() => {}); glove.disconnect(); return; }
   try {
     glove = new Glove(onGlove, gloveState);
     say("장갑을 찾는 중… 목록에서 SensorGlove를 골라 주세요.");
@@ -678,6 +706,7 @@ function renderLast() {
       t("꺾임 °", Number.isFinite(w.hinge_top) ? w.hinge_top.toFixed(0) : "–") + t("손 °/s", w.hand_dps_peak.toFixed(0)) +
       t("볼 mph", Number.isFinite(b.BallSpeed) ? b.BallSpeed.toFixed(1) : "–", "r10") + t("출발 °", sg1(b.LaunchDirection), "r10") +
       t("패스 °", sg1(c.ClubAnglePath), "r10") + t("페이스 °", sg1(c.ClubAngleFace), "r10");
+    stageInView();
     $("swOv").classList.add("show"); clearTimeout(swOvTimer); swOvTimer = setTimeout(() => $("swOv").classList.remove("show"), SWOV_MS);
   }
   const sg = (v, d = 1) => (Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(d) : "–");
@@ -900,7 +929,7 @@ let resume = null;          // { log } while the link was dropped only because t
 function leaveCleanly(e) {   // save what was recorded, stop the stream, drop the link so the glove advertises again
   const wasLogging = logging, wasConnected = gloveConnected();
   if (logging) { try { stopLog(); } catch (e) {} }
-  if (wasConnected) { try { glove.stop().catch(() => {}); } catch (e) {} try { glove.disconnect(); } catch (e) {} }
+  if (wasConnected) { dropByUs = true; try { glove.stop().catch(() => {}); } catch (e) {} try { glove.disconnect(); } catch (e) {} }
   if (wasConnected && e && e.type === "visibilitychange") resume = { log: wasLogging };
 }
 const within = (ms, p) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("timeout")), ms))]);
@@ -910,18 +939,57 @@ async function reconnect() {
   for (let i = 0; i < 6 && document.visibilityState === "visible"; i++) {   // the glove needs ~1 s to advertise again
     try {
       await within(10000, (async () => afterConnect(await glove.connect(true)))());
+      dropByUs = false;
       if (r.log) $("log").onclick();
       say(r.log ? "다시 연결됐어요. 앞 기록은 저장했고 새 기록을 시작했어요." : "다시 연결됐어요.");
       return;
-    } catch (err) { console.warn("reconnect", i + 1, err); try { glove.disconnect(); } catch (e) {} await new Promise((ok) => setTimeout(ok, 1500)); }
+    } catch (err) { console.warn("reconnect", i + 1, err); dropByUs = true; try { glove.disconnect(); } catch (e) {} await new Promise((ok) => setTimeout(ok, 1500)); }
   }
+  dropByUs = false;
   say("자동으로 다시 연결하지 못했어요. '센서 장갑 연결'을 눌러 주세요.");
 }
+// Short app switches keep the link and the recording (range 2026-11-15: every switch to Garmin Golf / R10 Bridge
+// dropped the glove and split the session into 10 files). The link is dropped only after HIDE_GRACE_MS hidden (screen
+// off for long), when Chrome freezes the tab, or on pagehide. While hidden the recording is checkpointed to IndexedDB,
+// so if Android kills the tab (it did at 16:41 under memory pressure) the next page load saves it.
+const HIDE_GRACE_MS = 120000;
+let hideTimer = null;
 document.addEventListener("visibilitychange", (e) => {
-  if (document.visibilityState === "visible") { if (gloveConnected()) keepAwake(); else if (resume && glove) reconnect(); }
-  else if (gloveConnected()) leaveCleanly(e);     // screen off despite the wake lock, app switch, or back
+  if (document.visibilityState === "visible") {
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; qEvent("shown", {}, "page"); ckptDrop(); }
+    if (gloveConnected()) keepAwake(); else if (resume && glove) reconnect();
+  } else if (gloveConnected() && !hideTimer) {      // screen off despite the wake lock, app switch, or back
+    qEvent("hidden", {}, "page"); ckptSave();
+    hideTimer = setTimeout(() => { hideTimer = null; if (document.visibilityState !== "visible") { ckptDrop(); leaveCleanly(e); } }, HIDE_GRACE_MS);
+  }
 });
-window.addEventListener("pagehide", leaveCleanly);
+function leaveNow(e) { if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; } ckptDrop(); leaveCleanly(e); }
+window.addEventListener("pagehide", leaveNow);
+document.addEventListener("freeze", () => { const was = gloveConnected(); leaveNow({ type: "freeze" }); if (was) resume = resume || { log: false }; });
+document.addEventListener("resume", () => { if (document.visibilityState === "visible" && resume && glove && !gloveConnected()) reconnect(); });
+
+// ---- checkpoint of the recording while the page is hidden (IndexedDB "pg-ckpt", one record) ----
+function ckptDb() {
+  return new Promise((ok, no) => { const r = indexedDB.open("pg-ckpt", 1); r.onupgradeneeded = () => r.result.createObjectStore("c"); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); });
+}
+let ckptQ = Promise.resolve();   // saves and drops run in order, so a quick hide → show never leaves a stale checkpoint
+const ckptTx = (fn) => (ckptQ = ckptQ.then(async () => {
+  try { const db = await ckptDb(); await new Promise((ok) => { const tx = db.transaction("c", "readwrite"); fn(tx.objectStore("c")); tx.oncomplete = tx.onerror = tx.onabort = ok; }); } catch (e) { console.warn("ckpt", e); }
+}));
+function ckptSave() { if (logging) { const rec = { saved: new Date().toISOString(), page: PAGE_VER, log }; ckptTx((s) => s.put(rec, "last")); } }
+function ckptDrop() { ckptTx((s) => s.delete("last")); }
+(async () => {   // a checkpoint left by a tab that was killed while hidden: save it as a file now
+  try {
+    const db = await ckptDb(), req = db.transaction("c").objectStore("c").get("last");
+    req.onsuccess = () => {
+      const c = req.result; if (!c || !c.log) return;
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify({ meta: { recovered: true, saved: c.saved, page: c.page, hz: GLOVE_HZ }, ...c.log })], { type: "application/json" }));
+      a.download = `swing-glove-${c.saved.slice(0, 19).replace(/[:T]/g, "-")}-recovered.json`; a.click();
+      say("지난번에 앱이 꺼지면서 남은 기록을 저장했어요 (recovered)."); ckptDrop();
+    };
+  } catch (e) {}
+})();
 
 // ---- live charts ----
 const gyroBuf = [], gyroLong = []; let lastFrame = null;
@@ -1023,7 +1091,19 @@ function drawClip(c) {
 
 // ---- impact overlay: sound and vibration spectrograms pop up over the camera for a few seconds ----
 const OV_MS = 4000; let ovTimer = null;
-function ovShow() { $("impOv").classList.add("show"); clearTimeout(ovTimer); ovTimer = setTimeout(() => $("impOv").classList.remove("show"), OV_MS); }
+// The overlays sit on the camera; with the page scrolled down even 100 px the swing card (top of the camera) was off
+// screen (range 2026-11-15: "R10 오버레이 안 보여"). Bring the camera's top back into view when one fades in.
+function stageInView() { const r = $("stage").getBoundingClientRect(); if (r.top < 0 && r.bottom > 0) $("stage").scrollIntoView({ block: "start" }); }
+// Forearm IMU reading all zeros while the firmware still says armOk (loose plug): swing.js falls back to the hand; tell Jae.
+let armDead = false, armLostSeen = 0;
+function armWatch() {
+  const dead = swingDet.armSeen === false && (swingDet.armLost || 0) > 0;
+  if (dead && (swingDet.armLost || 0) > armLostSeen) {
+    armLostSeen = swingDet.armLost; armDead = true; qEvent("arm_lost", {}, "glove");
+    say("손목 센서 값이 0이에요. 케이블을 다시 꽂고, 안 되면 장갑 RST를 눌러 주세요."); speak("손목 센서 끊김");
+  } else if (!dead && armDead && swingDet.armSeen) { armDead = false; qEvent("arm_back", {}, "glove"); say("손목 센서 다시 들어와요."); }
+}
+function ovShow() { stageInView(); $("impOv").classList.add("show"); clearTimeout(ovTimer); ovTimer = setTimeout(() => $("impOv").classList.remove("show"), OV_MS); }
 function ovSpec(cv, x, N, hop) {   // x: samples (any scale); paints a heat-map spectrogram over the whole canvas
   const [W, H] = sizeCv(cv), g = cv.getContext("2d");
   g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
@@ -1186,7 +1266,7 @@ function drawImpact(c) {
 
 
 function stopLog() {
-  logging = false; $("log").textContent = "기록 시작"; document.body.classList.remove("recording");
+  logging = false; $("log").textContent = "기록 시작"; document.body.classList.remove("recording"); ckptDrop();
   const ck = glove && glove.parser.clock;
   log.sync = ck && ck.ready() ? { note: "phone_ms = glove_ms + b + a * (glove_ms - t0), glove_ms = t_us / 1000", a: ck.a, b: ck.b, t0: ck.t0 } : null;
   const meta = { saved: new Date().toISOString(), userAgent: navigator.userAgent, micSpectrogram: !!analyser, camera: running, page: PAGE_VER, batch: glove && glove.batch, probeLen: glove && glove.parser.probeLen,

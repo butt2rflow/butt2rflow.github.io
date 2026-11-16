@@ -114,6 +114,7 @@ export function impactFromMotion(fr, tPeak) {
 }
 
 export const WEAK_HAND = 1100;   // deg/s: real swings 1290-3100 on the range, waggles / wrist turns 290-1044
+export const ARM_LOST_S = 1.0;   // s of all-zero forearm frames before the detector falls back to the hand IMU
 export class SwingDetector {
   // onSwing(result) is called once per swing: { n, t_imp (s, glove clock), source, ...analyse() }
   constructor(onSwing, opts = {}) {
@@ -121,11 +122,27 @@ export class SwingDetector {
     this.buf = []; this.keep = PRE_S + WAIT_CLIP_S + 2;
     this.sm = []; this.pending = null; this.nextOk = -Infinity; this.n = 0; this.sounds = [];
   }
+  // glove clock went backwards (reboot): forget everything tied to the old clock; swing numbers keep counting
+  reset() {
+    this.buf = []; this.sm = []; this.pending = null; this.nextOk = -Infinity; this.sounds = []; this.armZeroT = null;
+    this.clockResets = (this.clockResets || 0) + 1;
+  }
   // f = [t_s, 12 values in dps / g]
   frame(f) {
+    // The glove clock restarts at 0 when the glove reboots (RST, watchdog). Without this the old GAP_S lock (nextOk) and the
+    // old frames at the head of buf stayed in the future: no swing was found again and buf grew without bound (range
+    // 2026-11-15: four recordings after an RST had real hits with sound but 0 swings).
+    const lastT = this.buf.length ? this.buf[this.buf.length - 1][0] : -Infinity;
+    if (f[0] < lastT - 1) this.reset();
     this.buf.push(f);
     while (this.buf.length && this.buf[0][0] < f[0] - this.keep) this.buf.shift();
-    if (Math.abs(f[7]) + Math.abs(f[8]) + Math.abs(f[9]) + Math.abs(f[10]) + Math.abs(f[11]) + Math.abs(f[12]) > 0) this.armSeen = true;
+    // The forearm IMU can drop out mid-session and read all zeros while the firmware still says armOk (a loose STEMMA QT
+    // plug after a hit, 2026-11-15, twice). After ARM_LOST_S of zeros fall back to the hand, as with no forearm IMU at all.
+    if (Math.abs(f[7]) + Math.abs(f[8]) + Math.abs(f[9]) + Math.abs(f[10]) + Math.abs(f[11]) + Math.abs(f[12]) > 0) { this.armSeen = true; this.armZeroT = null; }
+    else if (this.armSeen) {
+      if (this.armZeroT == null) this.armZeroT = f[0];
+      else if (f[0] - this.armZeroT > ARM_LOST_S) { this.armSeen = false; this.armLost = (this.armLost || 0) + 1; }
+    }
     const arm = this.armSeen ? [f[7], f[8], f[9]] : [f[1], f[2], f[3]];   // no forearm IMU: use the hand (as the firmware does)
     this.sm.push([f[0], Math.hypot(...arm)]);   // forearm speed, smoothed over ~20 ms
     while (this.sm.length && this.sm[0][0] < f[0] - 0.02) this.sm.shift();
