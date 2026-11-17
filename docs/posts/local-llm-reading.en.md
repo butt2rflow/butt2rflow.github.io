@@ -273,3 +273,6 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 - *MCP*: a standard way to connect outside tools to an AI like Claude. A registered program shows up in the AI's tool list
 - *MoE (mixture of experts)*: a model split into many "experts," using only some of them for each job. Fast for its size
 - *Whisper*: an open speech-to-text model
+
+
+**Follow-up:** [Claude oversees; Codex, local AI and Muse share the work](ai-workbench-routing.md) · [Muse as an MCP server](muse-mcp-shopping.md)

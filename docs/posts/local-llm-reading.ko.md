@@ -273,3 +273,6 @@ Claude 사용량이 바닥난 날에도 찾아볼 수 있어요. 로컬 세션(`
 - *MCP*: Claude 같은 AI에 외부 도구를 연결하는 표준 방식. 등록한 프로그램이 AI가 쓰는 도구 목록에 나타난다
 - *MoE(전문가 혼합)*: 모델 안을 여러 "전문가"로 나눠, 일마다 그중 일부만 쓰는 구조. 크기에 비해 빠르다
 - *Whisper*: 말소리를 글자로 옮기는 공개 받아쓰기 모델
+
+
+**후속 글:** [Claude가 감독하고, Codex·로컬 AI·Muse가 나눠 일하기](ai-workbench-routing.md) · [Muse에게 쇼핑 맡기기](muse-mcp-shopping.md)
