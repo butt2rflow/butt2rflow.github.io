@@ -13,6 +13,9 @@ from unittest.mock import patch
 import coop
 
 
+FAKE_SESSION_ID = '01234567-89ab-4def-8123-0123456789ab'
+
+
 class BridgeTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -35,6 +38,12 @@ import sys, pathlib, os, time, json
 args=sys.argv[1:]
 prompt=sys.stdin.read()
 pathlib.Path(args[args.index('--cd')+1], 'invocation.json').write_text(json.dumps({'args':args,'prompt':prompt}))
+if '--json' in args and not os.environ.get('FAKE_NO_SESSION'):
+    print('not JSON')
+    print(json.dumps({'type':'item.completed','thread_id':'ffffffff-ffff-ffff-ffff-ffffffffffff'}))
+    print(json.dumps({'type':'thread.started','thread_id':'--last'}))
+    session_id = os.environ.get('FAKE_SESSION_ID', '01234567-89AB-4DEF-8123-0123456789AB')
+    print(json.dumps({'type':'thread.started','thread_id':session_id}), flush=True)
 time.sleep(float(os.environ.get('FAKE_DELAY','0')))
 if os.environ.get('FAKE_FAIL'):
     pathlib.Path(args[args.index('--cd')+1], 'partial.txt').write_text('partial')
@@ -98,6 +107,87 @@ pathlib.Path(args[args.index('--output-last-message')+1]).write_text(answer)
         self.assertNotIn('-c', invocation['args'])
         self.assertNotIn('--dangerously-bypass-approvals-and-sandbox', invocation['args'])
         self.assertIn('at most 8 short lines and 800 characters', invocation['prompt'])
+
+    def test_continue_job_keeps_session_and_allows_new_sandbox(self):
+        first = self.cli('start', '--cwd', str(self.project), '--task', 'Initial task')
+        self.assertTrue(self.wait(first['id'])['resumable'])
+        state = self.cli('result', first['id'], '--detail')
+        self.assertEqual(state['session_id'], FAKE_SESSION_ID)
+
+        alias = self.root / 'project-alias'
+        alias.symlink_to(self.project, target_is_directory=True)
+        followup = self.cli('start', '--cwd', str(alias), '--continue-job', first['id'],
+                            '--task', 'Follow-up task', '--write', '--effort', 'high',
+                            '--model', 'gpt-6.2-sol', FAKE_WRITE='1')
+        self.assertNotEqual(followup['id'], first['id'])
+        result = self.wait(followup['id'])
+        self.assertEqual(result['status'], 'completed')
+        self.assertEqual(result['continued_from'], first['id'])
+        self.assertTrue(result['resumable'])
+        self.assertEqual(self.cli('result', followup['id'], '--detail')['session_id'], FAKE_SESSION_ID)
+        self.assertTrue((self.project / 'generated.txt').exists())
+
+        invocation = json.loads((self.project / 'invocation.json').read_text())
+        args = invocation['args']
+        resume = args.index('resume')
+        self.assertEqual(args[:4], ['-a', 'never', 'exec', '--cd'])
+        self.assertEqual(args[args.index('--sandbox') + 1], 'workspace-write')
+        self.assertLess(args.index('--sandbox'), resume)
+        self.assertGreater(args.index('--output-last-message'), resume)
+        self.assertEqual(args[args.index('-m') + 1], 'gpt-6.2-sol')
+        self.assertEqual(args[-2:], [FAKE_SESSION_ID, '-'])
+        self.assertFalse(any('bypass' in arg for arg in args))
+        self.assertIn('Follow-up task', invocation['prompt'])
+        self.assertNotIn('Initial task', invocation['prompt'])
+        with patch.object(coop, 'qwen_status', return_value={}):
+            recent = next(s for s in coop.status()['recent_jobs'] if s['id'] == followup['id'])
+        self.assertEqual(recent['continued_from'], first['id'])
+        self.assertTrue(recent['resumable'])
+
+    def test_continue_job_rejections(self):
+        job_id = 'a' * 32
+        state_path = self.bridge / 'runs' / job_id / 'state.json'
+        other = self.root / 'other'
+        other.mkdir()
+        original = dict(id=job_id, cwd=str(self.project), target='codex',
+                        status='completed', session_id=FAKE_SESSION_ID)
+        for fields, message in (
+            ({'status': 'running'}, 'queued or running'),
+            ({'status': 'queued'}, 'queued or running'),
+            ({'target': 'qwen'}, 'reference a Codex job'),
+            ({'session_id': None}, 'no recorded Codex session id'),
+            ({'cwd': str(other)}, 'same real cwd'),
+        ):
+            with self.subTest(fields=fields):
+                coop.save(state_path, dict(original, **fields))
+                with self.assertRaisesRegex(ValueError, message):
+                    coop.call_tool('delegate_task', dict(cwd=str(self.project),
+                                   task='Follow-up', continue_job=job_id))
+        with self.assertRaisesRegex(ValueError, 'requires target=codex'):
+            coop.start(self.project, 'Follow-up', target='auto', continue_job=job_id)
+        self.assertEqual(list(state_path.parent.parent.iterdir()), [state_path.parent])
+
+    def test_followup_requires_confirmation_of_same_session(self):
+        first = self.cli('start', '--cwd', str(self.project), '--task', 'Initial task')
+        self.assertTrue(self.wait(first['id'])['resumable'])
+        for env in ({'FAKE_NO_SESSION': '1'},
+                    {'FAKE_SESSION_ID': 'ffffffff-ffff-ffff-ffff-ffffffffffff'}):
+            with self.subTest(env=env):
+                followup = self.cli('start', '--cwd', str(self.project), '--task', 'Follow-up task',
+                                    '--continue-job', first['id'], **env)
+                result = self.wait(followup['id'])
+                self.assertEqual(result['status'], 'needs_review')
+                self.assertFalse(result['resumable'])
+                self.assertEqual(result['continued_from'], first['id'])
+                self.assertIsNone(self.cli('result', followup['id'], '--detail')['session_id'])
+
+    def test_no_session_event_records_null_and_reason(self):
+        job = self.cli('start', '--cwd', str(self.project), '--task', 'Initial task', FAKE_NO_SESSION='1')
+        result = self.wait(job['id'])
+        self.assertEqual(result['status'], 'completed')
+        self.assertFalse(result['resumable'])
+        self.assertIn('No valid thread.started id', result['session_id_reason'])
+        self.assertIsNone(self.cli('result', job['id'], '--detail')['session_id'])
 
     def test_model_cache_aliases_validation_and_reload(self):
         models = [{'slug': slug} for slug in
@@ -394,7 +484,7 @@ pathlib.Path(args[args.index('--output-last-message')+1]).write_text(answer)
         (p / 'result.md').write_text('partial output should not be repeated')
         with coop.lock(self.project):
             state = coop.job_status(job_id)
-        self.assertEqual(set(state), {'id', 'target', 'status'})
+        self.assertEqual(set(state), {'id', 'target', 'status', 'continued_from', 'resumable'})
 
     def test_mcp_initialize_discovery_status_and_error(self):
         messages = [
@@ -416,7 +506,7 @@ pathlib.Path(args[args.index('--output-last-message')+1]).write_text(answer)
         self.assertEqual(responses[0]['result']['protocolVersion'], '2025-11-25')
         self.assertEqual(len(responses[1]['result']['tools']), 3)
         delegation = next(t for t in responses[1]['result']['tools'] if t['name'] == 'delegate_task')
-        for option in ('model', 'effort'):
+        for option in ('model', 'effort', 'continue_job'):
             self.assertEqual(delegation['inputSchema']['properties'][option]['type'], 'string')
             self.assertNotIn(option, delegation['inputSchema']['required'])
         self.assertFalse(responses[2]['result']['isError'])

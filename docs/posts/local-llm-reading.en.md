@@ -275,4 +275,4 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 - *Whisper*: an open speech-to-text model
 
 
-**Follow-up:** [Build an MCP bridge from Claude Code to Codex and local Qwen](ai-workbench-routing.md) · [How to connect Claude Code and Codex to Muse over MCP](muse-mcp-shopping.md)
+**Follow-up:** [Max 5x Was Too Expensive. I Only Needed Twice as Much: The Night I Put Codex to Work in Claude Code](ai-workbench-routing.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md)

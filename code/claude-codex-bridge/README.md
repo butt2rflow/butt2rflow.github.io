@@ -42,6 +42,28 @@ python3 coop.py start --cwd /path/to/project --task 'Read README.md and report m
 python3 coop.py result JOB_ID --detail
 ```
 
+## Follow up in the same Codex conversation
+
+When `job_result` shows `resumable: true`, pass that job ID as
+`continue_job` to `delegate_task` and provide the new request in `task`.
+The CLI equivalent is:
+
+```bash
+python3 coop.py start --cwd /path/to/project --continue-job JOB_ID --task 'Summarize the remaining setup steps.'
+```
+
+The bridge runs `codex exec resume` with the recorded session ID (tested
+with Codex CLI 0.169.0). Each follow-up has its own job ID and records the
+prior job as `continued_from`. Use the same resolved directory as the earlier
+job. Only finished Codex jobs with a recorded session can be continued.
+Jobs recorded before session tracking need a fresh start. Set `write` again
+if the new request authorizes edits. If Codex doesn't confirm the same
+session, inspect the job record before retrying.
+
+Codex diagnostics go to `codex.log`, and its JSON events go to
+`codex.events.jsonl`. The detailed result shows the captured session ID
+or explains why none was recorded.
+
 ## Safety and limits
 
 Use trusted callers and personal projects only. Review and investigation use

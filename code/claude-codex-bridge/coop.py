@@ -121,6 +121,31 @@ def get_run(job_id):
     return p
 
 
+def valid_session_id(value):
+    return isinstance(value, str) and re.fullmatch(
+        r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', value, re.IGNORECASE) is not None
+
+
+def resumable(state):
+    return (state['target'] == 'codex' and state['status'] in ('completed', 'needs_review', 'failed')
+            and valid_session_id(state.get('session_id')))
+
+
+def codex_session(events_path):
+    if events_path.exists():
+        with events_path.open(encoding='utf-8', errors='replace') as events:
+            for line in events:
+                try:
+                    event = json.loads(line)
+                except ValueError:
+                    continue
+                if isinstance(event, dict) and event.get('type') == 'thread.started':
+                    session_id = event.get('thread_id')
+                    if valid_session_id(session_id):
+                        return session_id.lower()
+    return None
+
+
 def job_status(job_id, detail=False):
     p = get_run(job_id)
     state = json.loads((p / 'state.json').read_text())
@@ -134,13 +159,18 @@ def job_status(job_id, detail=False):
                 if state['status'] in ('queued', 'running'):
                     state.update(status='needs_review', finished_at=now(),
                                  error='Worker exited without a terminal record; inspect changes before retrying.')
+                    if state['target'] == 'codex' and not valid_session_id(state.get('session_id')):
+                        state.update(session_id=None, session_id_reason='Worker exited before recording a session id')
                     (p / 'HANDOFF.md').write_text(
                         '# Interrupted task\n\nInspect state.json, request.json, logs and actual project changes before retrying.\n')
                     save(p / 'state.json', state)
         except ValueError:
             pass
     result = {key: state[key] for key in ('id', 'target', 'status')}
-    result.update(codex_selection(state))
+    result.update(codex_selection(state), continued_from=state.get('continued_from'),
+                  resumable=resumable(state))
+    if state.get('session_id_reason'):
+        result['session_id_reason'] = state['session_id_reason']
     if 'error' in state:
         result['error'] = state['error'][:500]
     if detail:
@@ -162,7 +192,8 @@ def status():
         for p in sorted(RUNS.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)[:10]:
             if (p / 'state.json').exists():
                 s = job_status(p.name, detail=True)
-                jobs.append({k: s[k] for k in ('id', 'target', 'cwd', 'status', 'model', 'effort') if k in s})
+                jobs.append({k: s[k] for k in ('id', 'target', 'cwd', 'status', 'model', 'effort',
+                                               'continued_from', 'resumable') if k in s})
     return {'qwen': qwen_status(), 'recent_jobs': jobs}
 
 
@@ -206,7 +237,9 @@ def resolve_codex_selection(model, effort):
 
 
 def start(cwd, task, target='codex', write=False, files=None, timeout=1800,
-          model=None, effort=None):
+          model=None, effort=None, continue_job=None):
+    if continue_job is not None and target != 'codex':
+        raise ValueError('continue_job requires target=codex')
     if target not in ('codex', 'qwen', 'auto'):
         raise ValueError('target must be codex, qwen, or auto')
     if (model is not None or effort is not None) and target != 'codex':
@@ -217,6 +250,17 @@ def start(cwd, task, target='codex', write=False, files=None, timeout=1800,
     if not 30 <= timeout <= 7200:
         raise ValueError('timeout must be 30..7200 seconds')
     cwd = project(cwd)
+    if continue_job is not None:
+        previous = json.loads((get_run(continue_job) / 'state.json').read_text())
+        if previous['target'] != 'codex':
+            raise ValueError('continue_job must reference a Codex job')
+        if previous['status'] in ('queued', 'running'):
+            raise ValueError('continue_job is still queued or running; inspect job_result first')
+        if not resumable(previous):
+            raise ValueError('continue_job has no recorded Codex session id')
+        # start() stores the canonical cwd at submission time.
+        if Path(previous['cwd']) != cwd:
+            raise ValueError('continue_job requires the same real cwd')
     if write and target == 'qwen':
         raise ValueError('Qwen only returns analysis/drafts; it cannot write project files')
     paths = []
@@ -245,9 +289,14 @@ def start(cwd, task, target='codex', write=False, files=None, timeout=1800,
         request = dict(id=job_id, cwd=str(cwd), task=task, target=target,
                        write=write, files=paths, timeout=timeout, created_at=now(), route=route,
                        **selection)
+        state = dict(id=job_id, cwd=str(cwd), target=target, status='queued', created_at=now(), **selection)
+        if target == 'codex':
+            state.update(session_id=None, session_id_reason='No Codex session recorded yet')
+        if continue_job is not None:
+            request.update(continued_from=continue_job, resume_session_id=previous['session_id'].lower())
+            state['continued_from'] = continue_job
         save(p / 'request.json', request)
         save(p / 'before.json', git_snapshot(cwd))
-        state = dict(id=job_id, cwd=str(cwd), target=target, status='queued', created_at=now(), **selection)
         save(p / 'state.json', state)
         with (p / 'worker.log').open('w') as log:
             try:
@@ -257,6 +306,8 @@ def start(cwd, task, target='codex', write=False, files=None, timeout=1800,
                                  pass_fds=(held.fileno(),), start_new_session=True)
             except Exception as e:
                 state.update(status='failed', error=str(e))
+                if target == 'codex':
+                    state['session_id_reason'] = 'Bridge worker did not launch'
                 save(p / 'state.json', state)
                 raise
     return {'id': job_id, 'target': target, 'route': route, 'directory': str(p),
@@ -268,6 +319,10 @@ def worker(job_id, lock_fd):
     request = json.loads((p / 'request.json').read_text())
     state = dict(id=job_id, cwd=request['cwd'], target=request['target'],
                  status='running', started_at=now(), worker_pid=os.getpid(), **codex_selection(request))
+    if request['target'] == 'codex':
+        state.update(session_id=None, session_id_reason='Session id is collected when execution ends')
+    if 'continued_from' in request:
+        state['continued_from'] = request['continued_from']
     save(p / 'state.json', state)
     try:
         if request['target'] == 'qwen':
@@ -317,15 +372,22 @@ def worker(job_id, lock_fd):
                       '\nTask:\n' + request['task'] + '\nRelevant files:\n' + '\n'.join(request['files']))
             command = ['codex', '-a', 'never', 'exec', '--cd', request['cwd'],
                        '--sandbox', 'workspace-write' if request['write'] else 'read-only',
-                       '--skip-git-repo-check', '--color', 'never',
-                       '--output-last-message', str(p / 'result.md')]
+                       '--skip-git-repo-check', '--color', 'never']
+            resume_id = request.get('resume_session_id')
+            if resume_id is not None:
+                # Codex 0.169 accepts cwd and sandbox on exec, before the resume subcommand.
+                command.append('resume')
+                prompt += '\nContinue the earlier conversation. Its instructions still apply. This turn has only the authority granted above.\n'
+            command.extend(['--json', '--output-last-message', str(p / 'result.md')])
             if 'model' in request:
                 command.extend(['-m', request['model']])
             if 'effort' in request:
                 command.extend(['-c', f'model_reasoning_effort="{request["effort"]}"'])
+            if resume_id is not None:
+                command.append(resume_id)
             command.append('-')
-            with (p / 'codex.log').open('w') as log:
-                child = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=log, stderr=log,
+            with (p / 'codex.log').open('w') as log, (p / 'codex.events.jsonl').open('w') as events:
+                child = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=events, stderr=log,
                                          text=True, start_new_session=True, pass_fds=(lock_fd,))
                 state['child_pid'] = child.pid
                 save(p / 'state.json', state)
@@ -340,13 +402,32 @@ def worker(job_id, lock_fd):
                         child.wait()
                     raise ValueError('Codex timed out; process group stopped. Inspect partial changes; no automatic retry.')
                 if child.returncode:
-                    raise ValueError(f'Codex exit {child.returncode}; inspect codex.log and partial changes')
+                    raise ValueError(f'Codex exit {child.returncode}; inspect codex.log, codex.events.jsonl and partial changes')
             if not (p / 'result.md').exists() or not (p / 'result.md').read_text().strip():
                 raise ValueError('Codex produced no final result')
         state['status'] = 'completed'
     except Exception as e:
         state.update(status='needs_review', error=str(e))
     finally:
+        if request['target'] == 'codex':
+            try:
+                session_id = codex_session(p / 'codex.events.jsonl')
+                expected = request.get('resume_session_id')
+                if expected is not None and session_id is not None and session_id != expected:
+                    state.update(status='needs_review',
+                                 error='Codex reported a different thread than requested; inspect codex.events.jsonl',
+                                 session_id_reason='Resumed thread id did not match the requested session')
+                elif session_id is None:
+                    state['session_id_reason'] = 'No valid thread.started id in codex.events.jsonl; inspect codex.log'
+                    if expected is not None and state['status'] == 'completed':
+                        state.update(status='needs_review', error='Could not verify the resumed Codex thread id')
+                else:
+                    state['session_id'] = session_id
+                    state.pop('session_id_reason', None)
+            except OSError as exc:
+                state['session_id_reason'] = f'Cannot read Codex events: {exc}'
+                if request.get('resume_session_id') and state['status'] == 'completed':
+                    state.update(status='needs_review', error='Could not verify the resumed Codex thread id')
         state['finished_at'] = now()
         try:
             save(p / 'after.json', git_snapshot(request['cwd']))
@@ -373,6 +454,7 @@ TOOLS = [
      'inputSchema': {'type': 'object', 'properties': {
          'cwd': {'type': 'string', 'description': 'Absolute project directory'},
          'task': {'type': 'string'},
+         'continue_job': {'type': 'string', 'description': 'Finished Codex bridge job ID at the same cwd'},
          'target': {'type': 'string', 'enum': ['codex', 'qwen', 'auto'], 'default': 'codex'},
          'model': {'type': 'string', 'description': 'Codex model slug or sol/astra/terra alias'},
          'effort': {'type': 'string', 'description': 'Codex reasoning effort, e.g. low, medium, high, xhigh'},
@@ -482,6 +564,7 @@ def main():
     p.add_argument('--target', choices=['auto', 'codex', 'qwen'], default='codex')
     p.add_argument('--model', help='Codex model slug or sol/astra/terra alias')
     p.add_argument('--effort', help='Codex reasoning effort (e.g. low, medium, high, xhigh)')
+    p.add_argument('--continue-job', help='Finished Codex bridge job ID at the same cwd')
     p.add_argument('--write', action='store_true')
     p.add_argument('--file', action='append', default=[])
     p.add_argument('--timeout', type=int, default=1800)
@@ -511,7 +594,7 @@ def main():
         result = {'qwen_disabled': marker.exists(), 'note': 'No GPU model was started or stopped; running tasks are unaffected.'}
     else:
         result = start(args.cwd, args.task, args.target, args.write, args.file, args.timeout,
-                       model=args.model, effort=args.effort)
+                       model=args.model, effort=args.effort, continue_job=args.continue_job)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
