@@ -9,6 +9,8 @@ description: "Claude가 코드와 로그를 전부 읽느라 쓰는 사용량을
 
 # Max 5x는 비싸고, 딱 2배만 필요했다: Claude Code에 Codex를 일꾼으로 붙인 밤
 
+<video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster.jpg" src="/assets/demos/bridge-opening.mp4" style="width:100%" aria-label="작은 감독 로봇이 지시서를 실은 손수레를 두고 기다리는 동안 일꾼 로봇들이 다리 판을 놓고, 완성된 다리로 손수레가 건너가는 짧은 애니메이션"></video>
+
 Claude Code Pro로 개인 프로젝트를 하다 보면 사용량이 모자랐어요. Max 5x로 올리자니 제게는 요금이 너무 크게 뛰었고요. 제가 바란 건 딱 두 배였어요.
 
 ## 30초 요약
