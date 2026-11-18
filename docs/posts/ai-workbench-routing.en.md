@@ -9,7 +9,7 @@ description: "I wanted Claude to spend less of its usage allowance reading code 
 
 # Max 5x Was Too Expensive. I Only Needed Twice as Much: The Night I Put Codex to Work in Claude Code
 
-<video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster.jpg" src="/assets/demos/bridge-opening.mp4" style="width:100%" aria-label="A short animation: worker robots lay the last planks, then a handcart with a work order rolls across the finished bridge"></video>
+<video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster-en.jpg" src="/assets/demos/bridge-opening-en.mp4" style="width:100%" aria-label="A short animation: the Codex crew lays the last planks, a handcart with a work order rolls across to them, and a ticket returns to Claude, the boss; Qwen sits on a stack of books"></video>
 
 I kept running short on my personal Claude Code Pro plan. Max 5x was more than I wanted to spend. I just wanted twice as much room.
 
