@@ -9,7 +9,7 @@ description: "I wanted Muse to research products while I kept coding. Instead, I
 
 # Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance
 
-Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. Muse was good at shopping, and its free allowance gave me plenty of room. I figured I could send over my criteria and get back to coding.
+Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. Muse was good at shopping, and its free allowance is generous. I figured I could send over my criteria and get back to coding.
 
 ## The short version
 
