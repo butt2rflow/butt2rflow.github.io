@@ -9,7 +9,7 @@ description: "I wanted Muse to research products while I kept coding. Instead, I
 
 # Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance
 
-Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. Muse was good at shopping, and its free allowance is generous. I figured I could send over my criteria and get back to coding.
+Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. Muse was good at shopping, and its free allowance is generous. I figured I could send over my criteria and get back to coding. Shopping would go to a purchasing subcontractor. I'd still be the one who signs off on any purchase.
 
 ## The short version
 
@@ -126,7 +126,7 @@ Even with the name fixed, a Codex process launched somewhere else won't inherit 
 MUSE_SHOPPING_TOKEN="$(cat /path/to/private/token)" codex --no-daemon
 ```
 
-When `/mcp` showed `unknown (0 tools)`, the tool list was unavailable in that session. I checked the public health endpoint and the authenticated tool list separately. In the end both Claude Code and Codex connected with this setup. When I forgot the environment variable and opened Claude Code, a 401 came straight back. Codex, started fresh with the token handed over, brought back a finished result. Why the old session showed `unknown`, I never found out.
+In the end both Claude Code and Codex connected with this setup. When I forgot the environment variable and opened Claude Code, a 401 came straight back.
 
 ### 3. Look up the same request ID
 

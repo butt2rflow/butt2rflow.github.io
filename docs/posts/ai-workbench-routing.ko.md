@@ -23,7 +23,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보면 사용량이 모자랐�
 
 ![RTX 3090 한 장을 두고 Qwen과 FLUX, MiniMax H3, Isaac Sim이 차례를 기다리는 모습](../assets/diagrams/workbench-gpu.png)
 
-그러다 이미 쓰던 ChatGPT 플랜에 Codex가 있다는 게 생각났어요. 제 작업에선 Claude Code보다 Codex가 조금 아쉽게 느껴졌지만, 사용량에는 훨씬 여유가 있는 느낌이었어요. 익숙한 Claude Code 화면에서 Claude는 맡길 범위를 정하고 마지막 판단을 해요. Codex는 파일 조사부터 구현, 테스트, 1차 리뷰까지 맡아요. Qwen은 카드가 빌 때 긴 글을 읽고, 쇼핑 조사는 Muse에게 보내요.
+그러다 이미 쓰던 ChatGPT 플랜에 Codex가 있다는 게 생각났어요. 제 작업에선 Claude Code보다 Codex가 조금 아쉽게 느껴졌지만, 사용량에는 훨씬 여유가 있는 느낌이었어요. 익숙한 Claude Code 화면에서 Claude는 맡길 범위를 정하고 마지막 판단을 해요. Codex는 파일 조사부터 구현, 테스트, 1차 리뷰까지 맡아요. Qwen은 카드가 빌 때 긴 글을 읽고, 쇼핑 조사는 Muse에게 보내요. 말하자면 Claude가 원청, Codex가 하청이에요. 단가는 싸지만, 검수는 끝까지 원청 몫이에요.
 
 ![Claude가 판단하고 Codex는 코딩, Qwen은 읽기, Muse는 쇼핑 조사를 맡는 분담](../assets/diagrams/workbench-crew.png)
 
@@ -31,7 +31,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보면 사용량이 모자랐�
 
 어느 저녁, Claude Code에 브리지를 붙여 첫 일을 맡겨 봤어요. 잠깐이면 될 줄 알았는데 밤까지 붙들고 있었어요.
 
-기록에는 `Read-only file system`이 찍혀 있었어요. 프로젝트를 읽기 전용으로 열어 달라고 한 건 저였지만, 실제로 막힌 건 그 바깥이었어요. 처음 시험한 환경에선 Codex가 시작할 때 자기 설정 디렉터리에 쓸 수 없었어요. 모델을 부르기 전이었으니 사용량 한도와는 관계없는 오류였어요. Codex가 제대로 뜰 수 있는 자리로 옮겨 다시 돌리니 그제야 일을 시작했어요. 조사할 때는 여전히 프로젝트를 읽기 전용으로 열었고요.
+첫 두 건은 Codex가 일을 시작하기도 전에 멈췄어요. 실행 환경 문제였고, 자리를 옮겨 다시 돌리니 그제야 일을 시작했어요.
 
 수선집에 옷을 맡기고 번호표를 받으면 그 자리에서 기다릴 필요가 없잖아요. 저도 Claude가 일을 맡기고 번호만 받아 오게 하고 싶었어요. 그러려면 접수 창구를 닫아도 뒤에서 일하는 프로그램이 살아 있어야 했어요.
 
@@ -97,7 +97,6 @@ claude mcp add --transport stdio --scope user ai-cooperation -- /usr/bin/python3
 
 | 증상 | 살펴볼 곳 |
 | --- | --- |
-| 시작하자마자 `Read-only file system` | Codex가 자기 설정 디렉터리에 쓸 수 있는지 확인해요. |
 | 쓰기 작업 실패 | 재시도 전에 작업 기록과 남은 변경을 살펴봐요. |
 | Qwen을 건너뜀 | `cooperation_status`와 GPU 점유 상태를 확인해요. |
 

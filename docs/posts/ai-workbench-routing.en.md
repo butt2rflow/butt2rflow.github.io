@@ -23,7 +23,7 @@ In the [previous post](local-llm-reading.md), I handed a long book to Qwen on my
 
 ![Qwen, FLUX, MiniMax H3, and Isaac Sim take turns with one RTX 3090](../assets/diagrams_en/workbench-gpu.png)
 
-Then I remembered I already had Codex on my ChatGPT plan. In my own work, Codex felt a little less capable than Claude Code, but its allowance felt much roomier. I kept my usual Claude Code window. Claude set the scope and made the final call, and Codex dug through files, implemented changes, tested them, and did the first review. Qwen could read long documents when the card was free. For shopping research, I sent Muse.
+Then I remembered I already had Codex on my ChatGPT plan. In my own work, Codex felt a little less capable than Claude Code, but its allowance felt much roomier. I kept my usual Claude Code window. Claude set the scope and made the final call, and Codex dug through files, implemented changes, tested them, and did the first review. Qwen could read long documents when the card was free. For shopping research, I sent Muse. Put simply, Claude is the general contractor and Codex is the subcontractor. The sub is cheaper, but inspection stays with the general contractor.
 
 ![Claude makes decisions while Codex codes, Qwen reads, and Muse researches purchases](../assets/diagrams_en/workbench-crew.png)
 
@@ -31,7 +31,7 @@ Then I remembered I already had Codex on my ChatGPT plan. In my own work, Codex 
 
 I hooked up the bridge one evening and sent it a job. I thought it would take a minute. I was still at it that night.
 
-The logs said `Read-only file system`. I'd asked Codex to open the project read-only, but it was blocked somewhere else. In that first test environment, Codex couldn't write to its own configuration directory during startup. The logs showed a startup error before any model call. Once I moved it somewhere Codex could actually start, it finally got to work, with the project still read-only for investigation.
+The first two jobs stopped before Codex even started working. It was a problem with where Codex was running, and once I moved it, it finally got to work.
 
 When I drop off clothes for alterations, I get a ticket and leave. I wanted Claude to be able to do the same. That meant the program doing the work had to stay alive after the counter closed.
 
@@ -97,7 +97,6 @@ At first I thought a detailed report would be reassuring. But if Claude reads th
 
 | Symptom | What to check |
 | --- | --- |
-| `Read-only file system` at startup | Check whether Codex can write to its own configuration directory. |
 | An edit fails | Check the job record and any edits it left before retrying. |
 | Qwen was skipped | Check `cooperation_status` and see what’s using the GPU. |
 
