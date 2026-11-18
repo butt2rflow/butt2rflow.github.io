@@ -36,11 +36,27 @@ acceptance criteria, and checks to run. Request a short report with failures
 first, changed paths or review findings, and PASS, FAIL, or NOT RUN for checks.
 Review the actual changes and evidence before accepting a completed job.
 
+## CLI
+
 ```bash
 python3 coop.py status
-python3 coop.py start --cwd /path/to/project --task 'Read README.md and report missing setup steps.'
+python3 coop.py start --cwd /path/to/project --target codex --timeout 600 \
+  --file README.md --file notes.txt --task 'Report missing setup steps.'
 python3 coop.py result JOB_ID --detail
 ```
+
+`start` and MCP's `delegate_task` share request validation.
+
+- `--target {codex,qwen,auto}` defaults to `codex`.
+- `--write` authorizes project edits and routes `auto` to Codex. The default
+  is read-only. Qwen rejects write requests.
+- `--timeout` accepts 30–7,200 seconds and defaults to 1,800.
+- Repeat `--file` for each input file inside `--cwd`, up to 180,000 bytes total.
+  Relative paths are resolved from `--cwd`.
+- `--model` accepts a Codex model slug or a local cache alias (`sol`, `astra`,
+  `terra`). `--effort` accepts a supported reasoning level such as `high`.
+  Both flags are optional and require the `codex` target.
+- `--continue-job` resumes a finished Codex job as described below.
 
 ## Follow up in the same Codex conversation
 
@@ -56,8 +72,8 @@ The bridge runs `codex exec resume` with the recorded session ID (tested
 with Codex CLI 0.169.0). Each follow-up has its own job ID and records the
 prior job as `continued_from`. Use the same resolved directory as the earlier
 job. Only finished Codex jobs with a recorded session can be continued.
-Jobs recorded before session tracking need a fresh start. Set `write` again
-if the new request authorizes edits. If Codex doesn't confirm the same
+Jobs recorded before session tracking need a fresh start. Set MCP `write=true`
+or CLI `--write` again if the new request authorizes edits. If Codex doesn't confirm the same
 session, inspect the job record before retrying.
 
 Codex diagnostics go to `codex.log`, and its JSON events go to

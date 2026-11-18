@@ -561,13 +561,14 @@ def main():
     p = sub.add_parser('start')
     p.add_argument('--cwd', required=True)
     p.add_argument('--task', required=True)
+    p.add_argument('--continue-job', help='Finished Codex bridge job ID at the same cwd')
     p.add_argument('--target', choices=['auto', 'codex', 'qwen'], default='codex')
     p.add_argument('--model', help='Codex model slug or sol/astra/terra alias')
     p.add_argument('--effort', help='Codex reasoning effort (e.g. low, medium, high, xhigh)')
-    p.add_argument('--continue-job', help='Finished Codex bridge job ID at the same cwd')
-    p.add_argument('--write', action='store_true')
-    p.add_argument('--file', action='append', default=[])
-    p.add_argument('--timeout', type=int, default=1800)
+    p.add_argument('--write', action='store_true', help='Allow project edits (default: read-only)')
+    p.add_argument('--file', dest='files', action='append', default=[],
+                   help='Input file inside cwd (repeatable)')
+    p.add_argument('--timeout', type=int, default=1800, help='Job timeout in seconds')
     p = sub.add_parser('result')
     p.add_argument('job_id')
     p.add_argument('--detail', action='store_true')
@@ -593,7 +594,8 @@ def main():
             marker.unlink(missing_ok=True)
         result = {'qwen_disabled': marker.exists(), 'note': 'No GPU model was started or stopped; running tasks are unaffected.'}
     else:
-        result = start(args.cwd, args.task, args.target, args.write, args.file, args.timeout,
+        result = start(cwd=args.cwd, task=args.task, target=args.target, write=args.write,
+                       files=args.files, timeout=args.timeout,
                        model=args.model, effort=args.effort, continue_job=args.continue_job)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

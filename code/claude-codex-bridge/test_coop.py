@@ -116,10 +116,21 @@ pathlib.Path(args[args.index('--output-last-message')+1]).write_text(answer)
 
         alias = self.root / 'project-alias'
         alias.symlink_to(self.project, target_is_directory=True)
+        inputs = [self.project / 'first.txt', self.project / 'second.txt']
+        for path in inputs:
+            path.write_text(path.name, encoding='utf-8')
         followup = self.cli('start', '--cwd', str(alias), '--continue-job', first['id'],
-                            '--task', 'Follow-up task', '--write', '--effort', 'high',
+                            '--task', 'Follow-up task', '--target', 'codex', '--write',
+                            '--timeout', '42', '--file', inputs[0].name, '--file', str(inputs[1]),
+                            '--effort', 'high',
                             '--model', 'gpt-6.2-sol', FAKE_WRITE='1')
         self.assertNotEqual(followup['id'], first['id'])
+        request = json.loads((Path(followup['directory']) / 'request.json').read_text(encoding='utf-8'))
+        expected = dict(cwd=str(self.project.resolve()), task='Follow-up task', target='codex',
+                        write=True, timeout=42, files=[str(path.resolve()) for path in inputs],
+                        model='gpt-6.2-sol', effort='high', continued_from=first['id'],
+                        resume_session_id=FAKE_SESSION_ID)
+        self.assertEqual({key: request[key] for key in expected}, expected)
         result = self.wait(followup['id'])
         self.assertEqual(result['status'], 'completed')
         self.assertEqual(result['continued_from'], first['id'])
@@ -143,6 +154,25 @@ pathlib.Path(args[args.index('--output-last-message')+1]).write_text(answer)
             recent = next(s for s in coop.status()['recent_jobs'] if s['id'] == followup['id'])
         self.assertEqual(recent['continued_from'], first['id'])
         self.assertTrue(recent['resumable'])
+
+    def test_cli_and_mcp_reject_the_same_invalid_start_requests(self):
+        cwd = str(self.project)
+        task = 'Review'
+        for flags, fields in (
+            (['--timeout', '29'], {'timeout': 29}),
+            (['--target', 'qwen', '--write'], {'target': 'qwen', 'write': True}),
+            (['--target', 'auto', '--effort', 'high'], {'target': 'auto', 'effort': 'high'}),
+        ):
+            with self.subTest(flags=flags):
+                with self.assertRaises(ValueError) as mcp_error:
+                    coop.call_tool('delegate_task', dict(cwd=cwd, task=task, **fields))
+                result = subprocess.run(
+                    [sys.executable, str(self.bridge / 'coop.py'), 'start',
+                     '--cwd', cwd, '--task', task, *flags],
+                    env=self.env, capture_output=True, text=True, timeout=10)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertEqual(json.loads(result.stderr), {'error': str(mcp_error.exception)})
+        self.assertFalse(coop.RUNS.exists())
 
     def test_continue_job_rejections(self):
         job_id = 'a' * 32
