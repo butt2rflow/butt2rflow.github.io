@@ -31,6 +31,7 @@ gumroad/
 _archive/
 *.zip
 *.py
+!/code/claude-codex-bridge/*.py
 # But the live-dashboard updater needs to run in CI, so track it
 !scripts/update_dashboard.py
 # Plus the one-off backfill helper for the VIX TS history archive

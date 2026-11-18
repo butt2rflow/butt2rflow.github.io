@@ -267,8 +267,8 @@ A picture-first series on sound and motion AI for readers who dislike math. No f
 Hands-on notes from installing AI tools, measuring them and putting them to work.
 
 - [**A 1,069-page book in 15 minutes: over 90% less Claude usage**](posts/local-llm-reading.md) — having Qwen3.6 on an RTX 3090 read 131 posts, a whole book and a 3-minute video, and swapping only the brain behind the same Claude Code screen
-- [**Shopping from the coding screen: Muse as an MCP server**](posts/muse-mcp-shopping.md) — remote tools, queued research, approvals and recovery after a broken session
-- [**Claude oversees; Codex, local AI and Muse share the work**](posts/ai-workbench-routing.md) — large-PDF reading, execution, output review and shopping without repeatedly passing the same source
+- [**How to connect Claude Code and Codex to Muse over MCP**](posts/muse-mcp-shopping.md) — Set up the MCP server, tunnel, client connections, and shopping queue lookup.
+- [**Build an MCP bridge from Claude Code to Codex and local Qwen**](posts/ai-workbench-routing.md) — Delegate jobs over Python stdio and recover results by ID after reconnecting.
 
 ---
 

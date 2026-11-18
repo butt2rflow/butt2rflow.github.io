@@ -1,126 +1,128 @@
 ---
-title: "Claude oversees; Codex, local AI and Muse share the work"
-nav_title: "Local AI, Codex and Muse"
+title: "Build an MCP bridge from Claude Code to Codex and local Qwen"
+nav_title: "Build a Codex and Qwen MCP bridge"
 date: 2026-11-17
 tags: [local-llm, qwen, ollama, claude-code, codex, muse, mcp]
 lang: en
-description: "A continuation of local GPU reading: Claude Code oversees, Codex executes and reviews first, Qwen handles large documents, and Muse researches products. Verified paths are separated from new workflow plans."
+description: "Build a Python stdio bridge that runs Codex for Claude Code, saves jobs across reconnects, and optionally sends reading tasks to an already loaded Qwen model."
 ---
 
-# Claude oversees; Codex, local AI and Muse share the work
+# Build an MCP bridge from Claude Code to Codex and local Qwen
 
-In the [previous article](local-llm-reading.md), I passed file paths to a local AI and received short summaries instead of putting an entire book into Claude's conversation. The next question was how to share other work without spending the savings on repeated handoffs.
+## 1. Set up the handoff
 
-My current division is: **Claude Code oversees the work and makes important judgments; Codex handles execution; local Qwen reads large inputs; Muse researches products.** Some paths are verified, while others remain operating plans.
+Keep Claude Code as the coordinator. It sends a scoped task over MCP, gets a job ID, and looks up the result later. Codex handles investigation, edits, tests, and first-pass review. An optional local Qwen route handles long-document reading, outlines, and summaries. Claude Code keeps responsibility for important decisions and final review.
 
-![Claude Code oversees and reviews final decisions, with Codex executing, local Qwen reading large documents and Muse researching products](../assets/diagrams_en/muse-workbench.svg)
+![Claude Code stays in charge and calls tools to delegate part of a task](../assets/diagrams_en/muse-model-or-tool.svg)
 
-## The short version
+Use a Linux host with Python 3, Git, Claude Code, and a signed-in Codex CLI. Put the bridge script `coop.py` in a trusted directory such as `~/ai-cooperation`, outside projects it can edit, and use a disposable personal Git project for the examples. Delegate personal projects only. Keep work code and documents out of requests. This scope rule is applied by the caller.
 
-- Claude Code retains overall oversight, important judgments and final review. User approvals for actions such as purchasing or publishing still belong to me.
-- Codex allowance is used first for research, implementation, tests and first-pass review. On confirmed quota exhaustion, Claude Code takes over the existing work.
-- Local Qwen is reserved for large PDFs and long documents—tables of contents, reading and summaries—and basic web research support.
-- FLUX/H3 execution and initial visual review are assigned to Codex to avoid loading a review model into the same local VRAM. This new assignment has not yet been tested with a generation run.
-- I plan to update this article with a Qwen 4.0 migration and comparison after release. No release date or performance is assumed here.
+**Check.** Run `python3 --version`, `git --version`, `claude --version`, and `codex --version` in the host shell. Confirm the disposable project is separate from the bridge directory.
 
-## Replacing a model differs from using a tool
+The [core reference implementation](https://github.com/butt2rflow/butt2rflow.github.io/tree/main/code/claude-codex-bridge) includes the bridge and tests. The GPU recipe runner is outside the scope of this release.
 
-The earlier article described both replacing the model behind the coding interface and leaving Claude in charge while delegating reading. This article follows the second pattern. MCP supplies a common way to call tools, but each client still needs its own registration, credentials and working execution environment.
+## 2. Build the Python stdio server
 
-![Replacing the model changes who answers; delegation lets the original coding AI keep control and receive a tool's result](../assets/diagrams_en/muse-model-or-tool.svg)
+Build `coop.py` with the Python standard library. Use `argparse` for the `serve` and internal worker subcommands, `json` and `pathlib` for records, and `subprocess` for worker launches. Read one JSON-RPC message per line from stdin, preserve the request ID in each reply, and flush newline-delimited JSON to stdout. Send diagnostics to stderr. Handle `initialize`, `ping`, `tools/list`, and `tools/call`. Publish input schemas and validate arguments before calling a handler. [MCP stdio transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports)
 
-For a camera driver, Codex investigates, edits and tests. Claude Code handles important choices and final review. A long manual goes to the local reader for a table of contents and relevant sections; shopping goes to Muse. Running Qwen does not create permission to access Muse's catalog.
-
-## Let the local tool read the source
-
-Pasting a document into the coding conversation before delegating it already sends the document to that model. Passing an accessible file path lets the local program open it directly and return a short result.
-
-![Passing the source through chat duplicates reading; passing a path lets the local tool read it and send only a summary and selected evidence](../assets/diagrams_en/muse-read-route.svg)
-
-My local tool accepts fields including `task`, `file_paths`, `urls` and `model`, and calls Ollama, the local model runner. The current local MCP code and operating record identify Qwen 3.8 as its default. I did not run a fresh speed test for this article.
-
-```text
-Have local_llm read this manual using its file path.
-Do not paste the full document into chat first.
-Build a table of contents, then summarize USB support,
-resolutions and warnings, with source locations for key figures.
-```
-
-The path must be accessible on the machine running that tool. The same-looking path on my PC and Muse's remote VM does not identify shared storage. Important figures still need checking against the source. The previous article's usage estimates do not establish a new savings percentage for Codex or Muse.
-
-## Claude Code delegates execution to Codex
-
-I built a separate cooperation MCP server. Claude Code sends a goal and working directory with `delegate_task`; the bridge starts a Codex job and records it. Claude Code retrieves a short result using `job_result`.
-
-```text
-Goal: check resolution handling in the camera settings.
-Allowed changes: this personal project's configuration and relevant tests.
-Completion: report the change, actual test results and unresolved issues.
-```
-
-The retained November 16 host verification record reports successful live Codex reading and reconnection, editing and tests, and a review finding a deliberately introduced defect. Those live checks are separate from 27 automated tests using fake responses. I did not rerun paid model calls while writing this article.
-
-**Qwen inference through the new bridge remains unverified.** Its check skipped the call because another GPU workload was active. Successful reading with the older local tool does not establish successful inference through the new bridge.
-
-Claude Code reads the short result first and opens additional evidence for important judgments. This does not replace the human approvals required for purchases or publication.
-
-## Do not spend the savings on handoffs
-
-If two models read the same full source and then reread each other's long answers, delegation can become expensive. My request contains the objective, directory, allowed changes, completion checks and source locations. The response contains the result, changed files, verification status, unresolved issues and detailed evidence paths.
-
-The report target is eight lines and about 800 characters; the bridge's short result is limited to 1,200 characters. Detailed output remains in files. Truncation or an important decision is a reason to inspect more evidence, not to hide a failure or invent a passing test.
-
-Ideally a program would poll progress and notify the model only on completion, failure or needed input. That new notification mechanism is not implemented here. Current manual checks are spaced out and use the existing job ID rather than submitting duplicate work.
-
-Characters are not tokens. When actual input/output/cached-token usage is available, I will retain it; otherwise estimates stay labeled as estimates. API prices and subscription allowances are also different. The goal is less duplicate reading and calling without weakening necessary checks.
-
-## Muse returns research to the original screen
-
-Claude Code submitted a revised SO-101 camera search and received its final answer. A fresh Codex launched with a credential-forwarding wrapper retrieved a completed RAM job. The [Muse MCP article](muse-mcp-shopping.md) covers the server, tunnel and session problems.
-
-```text
-Use ask_muse_to_shop for research only, with intent=find.
-Compare Canadian shipping and CAD totals. Do not buy.
-Keep the job ID for check_shopping_request.
-```
-
-`pending` means waiting; `done` means complete. My worker checked the queue every five minutes, but the camera conversation took about ten minutes from submission to receipt of the completed result on November 17, Toronto time. Required catalog permission is handled in Muse chat and remains separate from purchase approval.
-
-## Review outputs without evicting the generation model
-
-I had tried using local Qwen 3.8 to inspect FLUX and MiniMax H3 outputs. They shared the GPU's memory, so loading the reviewer meant unloading another model. Switching back and forth was a practical problem.
-
-The new plan assigns execution and first visual review to Codex, with Claude Code overseeing and reviewing final decisions. With an available image-input tool, Codex can inspect the output without loading Qwen into the local GPU. Images are sent to the model service; this is different from keeping inference local.
-
-![The local GPU generates FLUX/H3 outputs; Codex reviews images and Claude Code oversees. Video also needs temporal checks](../assets/diagrams_en/muse-gpu-review.svg)
-
-A few extracted frames can show distorted objects but miss flicker and motion discontinuities. The review must record frame timestamps and distinguish sampled-frame checks from continuous temporal inspection.
-
-This assignment is **not a finding that Codex has universally better vision**. [OpenAI reports GPT-6.1 Sol advantages on GDP.pdf against Opus 5.5 with fallbacks](https://openai.com/index/introducing-gpt-6-1-sol/). [Anthropic reports chart-recognition results for Opus 5.5](https://www.anthropic.com/claude-opus-5-5), but that table does not supply the corresponding GPT score. These evaluations do not establish which detects FLUX/H3 defects better.
-
-The clear operational benefit is avoiding another reviewer model in the same VRAM. Accuracy needs a separate comparison: identical images and video segments, human-labeled defects, and matched review conditions. If Codex quota is exhausted, Claude Code inherits the current job and outputs; a connection error is not grounds to classify quota as exhausted or submit generation again.
-
-## What is verified
-
-![Verified Codex and Muse calls are distinguished from unverified Qwen inference through the new bridge and a future Qwen comparison](../assets/diagrams_en/muse-checks.svg)
-
-| Path | Evidence or limit |
+| Tool | What to implement |
 |---|---|
-| Claude Code → local AI | Prior reading with the existing tool; new-bridge Qwen inference unverified |
-| Claude Code → Codex | Prior host checks for reading, reconnecting, editing, testing and review |
-| Claude Code → Muse | Camera submission, polling and final result |
-| Fresh Codex → Muse | Retrieval of a completed RAM result |
-| FLUX/H3 execution and initial review → Codex | New operating rule; no generation/review run verified yet |
-| Qwen 4.0 migration | Planned comparison after release |
+| `cooperation_status()` | Return recent jobs and Qwen readiness. |
+| `delegate_task(cwd, task, ...)` | Validate the request, acquire the project lock, save the job, and start a detached worker. Return its ID without waiting for the model. |
+| `job_result(job_id, detail=false)` | Read persisted status and return a compact final summary when available. |
 
-## When the next Qwen is available
+Resolve `cwd` and any input files, and reject files that resolve outside `cwd`, including through symlinks. Use a nonblocking exclusive `fcntl.flock` keyed by the Git working-tree root, or by the resolved directory outside Git. Keep the requested `cwd` for execution. Pass the lock descriptor to the worker and its Codex child so the lock survives a worker crash while that child is still running. Interactive editors and CLI sessions must coordinate separately.
 
-I want the caller to keep passing file paths while the local tool's model choice changes. Compatibility with the runner and tools still needs checking; a tag substitution is not a guaranteed migration.
+Under `runs/<id>/`, write `request.json` and a queued `state.json` before spawning the worker with `start_new_session=True` and redirected standard streams. Replace state files atomically. Save the final message in `result.md`, and write the Git snapshots, logs, and handoff before publishing terminal state. Keep these records private and omit secrets from requests.
 
-I will compare similar documents for missed figures, omitted conditions, truncated inputs, response time and GPU memory. Local model migration and Muse shopping remain separate checks. This article records the current arrangement; the changed configuration and measured results will be added after the upgrade.
+**Check.** From the bridge directory, send a handshake and discovery request. Expect two JSON replies, with the three tools in the second.
 
----
+```bash
+python3 coop.py serve <<'JSON'
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"smoke","version":"1"}}}
+{"jsonrpc":"2.0","method":"notifications/initialized"}
+{"jsonrpc":"2.0","id":2,"method":"tools/list"}
+JSON
+```
 
-*Configuration and operating decisions recorded November 17, 2026. Qwen 4.0 is a planned upgrade target, not a release or performance announcement. Product names identify the tools and imply no affiliation. Diagrams are original.*
+## 3. Register the bridge in Claude Code
 
-**Previous:** [Local GPU AI for reading](local-llm-reading.md) · **Related:** [Muse as an MCP server](muse-mcp-shopping.md)
+Add a user-scope stdio server. The arguments after `--` start the server. Adjust the script location if you put it elsewhere. [Claude Code MCP documentation](https://code.claude.com/docs/en/mcp)
+
+```bash
+claude mcp add --transport stdio --scope user ai-cooperation \
+  -- /usr/bin/python3 "$HOME/ai-cooperation/coop.py" serve
+```
+
+**Check.** Start Claude Code in that project, open `/mcp`, and look for a connected `ai-cooperation` server. Ask Claude to call `cooperation_status`. A Qwen-unavailable reason can appear even when the bridge is connected.
+
+## 4. Run Codex from the worker
+
+Build an argument list and pass the task on stdin, using `-` as the prompt argument. Redirect Codex output to `codex.log` and capture the final message separately. Here is the equivalent of the core read-only invocation. The worker supplies the project and result paths.
+
+```bash
+codex -a never exec --cd "$project_dir" --sandbox read-only \
+  --output-last-message "$result_path" -
+```
+
+Use `read-only` for investigation and reviews. Select `workspace-write` only for an authorized `write=true` task. The allowed files in the task constrain the model by instruction. The sandbox applies workspace-level permissions. Keep the sandbox enabled and use no bypass flags.
+
+Start Codex in its own process group. The bridge defaults to 1,800 seconds and accepts 30–7,200 seconds. If the deadline expires, send SIGTERM to the group, wait up to 10 seconds for Codex, and send SIGKILL to the group if Codex still has not exited. Save `needs_review` and retain partial changes for inspection.
+
+**Check.** Delegate a read-only README task in the disposable project and check its output and unchanged working tree. Then try an authorized one-file edit and run its acceptance check independently. With a fake Codex, test that a timeout records `needs_review` and that a second job in the same working tree is refused while the first holds the lock.
+
+## 5. Add local Qwen if you need it
+
+![A local tool reads the file from its path and returns a short summary](../assets/diagrams_en/muse-read-route.svg)
+
+For the bridge’s `target=qwen` route, set `AI_COOP_QWEN_MODEL` in the server environment to override the default `qwen3.8:27b`. Use `urllib.request` to call the local Ollama API. Preflight with `nvidia-smi` and Ollama’s `/api/ps`. Refuse if a non-Ollama compute process holds the GPU, the configured model is absent, model metadata indicates CPU offload, or the probes fail. Require valid sizes with `size > 0` and `size_vram >= size`. Recheck just before sending a non-streaming `/api/chat` request with the task and selected text. Return the draft in `result.md`. Use extracted text for PDFs on this route.
+
+The bridge issues no automatic model load, unload, or workload stop commands. The check and chat request are separate. Ollama can still load a model if it drops out between the two, and an external GPU job can start after the check. Use `qwen-disable` before starting a competing workload and wait for existing Qwen jobs to finish. `qwen-enable` only clears the block.
+
+The default route is Codex. Explicit `qwen` refuses an unavailable GPU route. For eligible reading tasks, `auto` may pick Codex before launch if Qwen is unavailable. A failure after launch calls for inspection. The worker never switches models mid-job.
+
+The existing `local_llm` tool is a separate MCP connection that also uses Ollama. For an existing installation, call `local_llm` with `task` and absolute `file_paths` for PDF or office extraction. It uses its own GPU checks. The new bridge’s guard and job records apply to calls through `delegate_task`. [Local GPU AI for reading](local-llm-reading.md)
+
+**Check.** Confirm busy GPU, missing model, and CPU offload cases are rejected with fixtures. On the host, use `cooperation_status` to check readiness. If ready, submit a read-only task with `target=qwen` and a small project-relative text file in `files` and compare the summary against the source. Record SKIP if the preflight blocks it.
+
+## 6. Send a concrete task and verify the result
+
+Set `cwd` to the actual absolute project path. Give the goal, allowed changes, completion criteria, checks, and evidence paths the worker can access. For example, call `delegate_task` with `target=codex` and `write=true` in the disposable project.
+
+- Goal — Fix the broken setup command.
+- Allowed changes — README.md only. Preserve existing edits.
+- Done — The command works from the project root.
+- Checks — Run the command and `git diff --check`. Report the result and evidence paths.
+
+Ask for up to eight short lines and 800 characters. Put failures first, then report the outcome, changed files or review findings, checks marked `PASS`, `FAIL`, or `NOT RUN`, and any open decision or evidence path. The bridge caps the default summary at 1,200 characters and sets `summary_truncated` when needed. Request `job_result(job_id, detail=true)` for up to 12,000 characters, or open the full `result.md` on disk.
+
+**Check.** Save the ID and poll `job_result` every 30–60 seconds for long tasks. While the job runs, expect status without a running report. For Codex, `completed` means it exited successfully and produced a final message. Confirm the reported checks and inspect the required files or test evidence before accepting the work.
+
+## 7. Recover from the job record
+
+| What you see | What to do |
+|---|---|
+| `Read-only file system` during startup | Two early runs stopped before model execution because the outer environment mounted `~/.codex` read-only. Check `codex.log` and the Git snapshots. Use a host session where Codex can initialize while keeping the requested project sandbox. |
+| Connection error or timeout | Check `/mcp` or the job log for the failing layer. Treat quota as exhausted only when Codex reports an explicit usage-limit error. After confirmed exhaustion, Claude can take over from the saved record. |
+| Caller disconnected | The detached worker continues. Reconnect and look up the same ID. If you lost it, check recent jobs with `cooperation_status` before sending anything again. |
+| `needs_review` | Open `state.json`, the logs, and `HANDOFF.md`. Compare the before/after snapshots with the actual Git diff. A failed or interrupted run can leave partial edits, and the snapshots also include preexisting work. Decide whether to finish from that state or retry. |
+
+**Check.** Close the caller after a disposable job returns its ID. Reopen it and confirm the same ID reaches terminal state without a second submission. If MCP is unavailable, run `python3 coop.py result JOB_ID` from the bridge directory.
+
+## 8. Check what your setup actually verifies
+
+| Path | Recorded result |
+|---|---|
+| Claude Code registration and tool discovery | PASS. Claude Code showed Connected, and the host verifier found all three tools. |
+| MCP → live Codex | PASS. Read and reconnect, edit with an independent acceptance test, and read-only review of a seeded defect. |
+| Job handling and GPU denial | PASS in automated fixtures. The host also detected a busy GPU and skipped Qwen. |
+| MCP → live Qwen through this bridge | SKIP in host verification because the GPU was busy. Inference remains unverified. |
+
+**Check.** Run these commands from `code/claude-codex-bridge` in the blog repository. The first uses fixtures for model and GPU behavior. The second is optional. It makes live Codex calls on disposable inputs and saves a report under `verification/host-*/REPORT.md`. Record any unrun checks separately.
+
+```bash
+python3 -m unittest -v test_coop.py
+python3 verify_host.py
+```
+
+For shopping delegation, see [How to connect Claude Code and Codex to Muse over MCP](muse-mcp-shopping.md).

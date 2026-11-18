@@ -1,185 +1,206 @@
 ---
-title: "코딩하다 카메라 쇼핑까지: Muse를 MCP 서버로 연결한 밤"
-nav_title: "Muse에게 쇼핑 맡기기"
+title: "Claude Code와 Codex를 MCP로 Muse에 연결하는 법"
+nav_title: "Muse 쇼핑 MCP 설정하기"
 date: 2026-11-17
-tags: [muse, mcp, claude-code, codex, cloudflare, so-101]
+tags: [muse, mcp, claude-code, codex, cloudflare]
 lang: ko
-description: "Claude Code와 Codex에서 Muse에게 상품 검색을 맡겼다. Cloudflare Tunnel로 원격 MCP 서버를 연결하고, 검색 접수와 완료를 구분하며, 토큰과 끊어진 세션 문제를 추적한 실제 기록."
+description: "Muse VM에 쇼핑 MCP 서버를 띄우고 Cloudflare Tunnel을 거쳐 내 PC의 Claude Code와 Codex를 연결하는 방법이에요."
 ---
 
-# 코딩하다 카메라 쇼핑까지: Muse를 MCP 서버로 연결한 밤
+# Claude Code와 Codex를 MCP로 Muse에 연결하는 법
 
-작은 로봇팔 SO-101의 손목에 달 카메라를 찾고 있었어요. 오토포커스는 빼고, USB로 연결되고, 너무 크지 않아야 했어요. 검색창을 열면 제품마다 화각도 다르고, 초점 방식도 제각각이에요. 카메라를 달려고 시작한 일이 어느새 쇼핑몰 비교가 돼요.
+저는 Muse에게 상품 조사를 맡겨요. 이 구성을 쓰면 Claude Code나 Codex에서 검색을 맡기고 나중에 결과를 확인할 수 있어요. MCP는 코딩 도구가 Muse의 도구 목록을 받아 보고 필요한 도구를 호출하는 데 쓰는 프로토콜이에요.
 
-코드를 고치던 화면에서 이렇게 말하고 싶었어요.
+## 1. 어느 컴퓨터에서 무엇을 실행할지 정해요
 
-> Muse한테 SO-101 손목용 고정초점 카메라를 찾아 달라고 해줘. 어안렌즈는 빼고, 캐나다 배송과 CAD 가격도 비교해줘. 구매는 하지 마.
+- **Muse VM**에서는 MCP 서버, 쇼핑 큐 워커, Cloudflare 터널 커넥터를 실행해요. 중간에서 요청을 전달하는 서버가 Muse 내부 쇼핑 도구에 접근할 수 있어야 해요. 제가 만든 서버는 제 Muse 환경에 맞춘 것이고 공개 설치 패키지는 없어요. 직접 만들려면 VM에서 같은 종류의 기능을 호출할 수 있어야 해요.
+- **내 PC**에서는 Claude Code나 Codex를 실행해요. 두 클라이언트는 같은 공개 HTTPS MCP 주소와 bearer 토큰을 써요.
 
-Muse는 제가 상품 검색을 맡기는 AI 비서예요. Claude Code와 Codex는 평소 코드를 고칠 때 쓰는 AI 도구고요. **Muse의 쇼핑 기능을 MCP 서버로 연결했어요.** Claude Code에서 요청을 보내고 결과를 받았고, Codex에서도 기존 검색 결과를 조회하는 데 성공했어요. 중간에는 토큰을 못 읽고, 터널이 끊기고, 검색이 끝났는데도 아직 진행 중인 줄 아는 일도 있었어요.
+요청은 **Claude Code 또는 Codex → HTTPS MCP → Cloudflare Tunnel → Muse VM 안 MCP 서버 → Muse 쇼핑 도구** 순서로 전달돼요. 아래 예제의 `muse.example.com`은 내 호스트 이름으로 바꿔요.
 
-![코딩 화면에서 검색 조건을 전달하면 원격 Muse가 상품을 조사하고 결과를 돌려주는 구조. 구매는 사람이 별도로 승인한다](../assets/diagrams/muse-delegate.svg)
+**확인해요.** VM에서 프로그램을 실행해 Muse 쇼핑 기능을 호출할 수 있고, PC에서 쓸 클라이언트에 로그인할 수 있어야 해요.
 
-## 30초 요약
+## 2. 토큰을 만들고 보관해요
 
-- **쓰던 코딩 화면에서 쇼핑을 맡겼어요.** Claude Code가 카메라 검색을 접수하고 최종 결과까지 받았어요. Codex는 토큰을 전달해 새로 시작한 뒤 기존 RAM 검색 결과를 받았어요.
-- MCP는 AI가 외부 도구를 호출하는 공통 연결 방식이에요. 이번에는 Muse 쪽에 별도 서버를 만들어 붙였어요. 누구나 설치하면 바로 같은 쇼핑 기능이 생기는 공개 패키지는 아니에요.
-- 검색 방법은 두 가지예요. 바로 검색하거나, 작업을 접수해 두고 나중에 결과를 조회해요. 저는 큐에 맡기는 쪽을 주로 썼어요.
-- **접수됐다는 답은 검색이 끝났다는 뜻이 아니에요.** 요청 번호를 보관하고 완료 결과를 직접 확인했어요.
-- 카탈로그 검색 승인과 구매 승인은 별개예요. 이번 기록에서는 상품을 구입하지 않았어요.
+VM의 서버 디렉터리에서 무작위 토큰을 한 번 만들어요. 아래 Bash 명령은 소유자만 접근할 수 있는 `.token` 파일을 만들어요. 파일이 이미 있으면 덮어쓰지 않아요.
 
-## 같은 화면에서, 다른 AI에게 부탁하기
+```bash
+(umask 077; set -o noclobber; openssl rand -hex 32 > .token)
+```
 
-[앞선 글](local-llm-reading.md)에서는 Claude가 읽을 자료를 로컬 AI에게 넘겼어요. 이번에는 상품 조사를 Muse에게 넘겨요. Claude Code나 Codex가 조건을 정리하고, Muse 쪽 도구가 상품과 판매처를 확인하는 식이에요.
+서버가 시작할 때 이 파일을 읽게 해요. PC로는 신뢰할 수 있는 비밀 저장소나 안전한 파일 전송으로 옮겨요. 아래 예제에선 비공개 디렉터리의 `~/.config/muse-shopping/token`에 파일 권한 `0600`으로 저장해요. 파일에는 토큰 값만 넣어요. 채팅, 명령 인자, 로그, 스크린샷, Git에 토큰을 남기지 않아요.
 
-MCP는 여기서 주문서 양식 같은 역할을 해요. Claude Code나 Codex가 말로 한 부탁을 `ask_muse_to_shop` 같은 도구 호출로 바꿔 보내면, 같은 규칙으로 결과를 받아요. 두 AI가 서로의 화면을 대신 클릭하는 구조는 아니에요.
+**확인해요.** 두 컴퓨터에서 `ls -l`로 토큰 파일을 확인해요. 권한은 `-rw-------`로 표시돼야 해요. 인증은 서버를 띄운 다음 단계에서 확인해요.
 
-제가 연결한 서버에는 도구가 여섯 개 있었어요.
+## 3. Muse VM에 MCP 서버를 만들어요
 
-| 하고 싶은 일 | 서버가 제공한 도구 |
-|---|---|
-| 상품 후보 바로 찾기 | `search_products` |
-| 특정 상품의 옵션·재고 확인 | `product_details` |
-| 저장된 쇼핑 선호 확인 | `search_memory` |
-| 판매처 확인을 포함한 조사 맡기기 | `ask_muse_to_shop` |
-| 접수한 작업의 상태·결과 확인 | `check_shopping_request` |
-| 사람이 검토할 구매 요청 만들기 | `file_purchase_request` |
+Python MCP SDK로 아래 여섯 도구를 등록해요. 각 도구의 처리 함수는 VM 안에서 쓸 수 있는 Muse 기능을 호출하도록 연결해요.
 
-이 이름들은 **이번에 만든 서버의 도구 이름**이에요. MCP 자체가 정한 쇼핑 명령은 아니에요. 마지막 도구도 결제하는 버튼이 아니라 승인받을 요청을 만드는 도구예요.
+| 도구 | 하는 일 |
+| --- | --- |
+| `search_products` | 호출한 자리에서 카탈로그 검색 결과를 받아요. 판매처 재고와 배송은 따로 확인해야 해요. |
+| `product_details` | 상품 ID로 카탈로그 항목 하나와 세부 옵션을 확인해요. |
+| `search_memory` | 저장된 쇼핑 선호를 읽어요. 수정 기능은 두지 않아요. |
+| `ask_muse_to_shop` | 판매처, 재고, 배송까지 포함한 총액을 조사하도록 큐에 넣고 요청 ID를 바로 돌려줘요. |
+| `check_shopping_request` | 요청 ID로 상태와 결과를 읽어요. |
+| `file_purchase_request` | 사람이 Muse 채팅에서 검토할 구매 요청을 큐에 넣어요. 서버는 주문하거나 결제하지 않아요. |
 
-## 원격 Muse까지 가는 길 만들기
+VM의 루프백 인터페이스에서 포트 `8765`로만 요청을 받아요. `/mcp`는 **Streamable HTTP**로 열고, 이 경로의 모든 요청에서 `Authorization: Bearer <token>`을 검사해요. 토큰이 없거나 틀리면 HTTP 401을 돌려줘요. 별도의 `GET /healthz`는 인증 없이 서버가 살아 있는지만 알려줘요.
 
-Muse는 원격 가상머신(VM)에 있었어요. 그 안의 MCP 서버가 로컬 주소로만 기다리고 있으면, 제 PC에서는 부를 수 없어요. 그래서 Cloudflare Tunnel을 연결했어요.
+아래는 **최소 예제**예요. 실제 Muse 서버와 별개로, Python MCP SDK 2.x의 `MCPServer`로 조회 도구 하나만 등록해요. `server.py`로 저장하고 서버 디렉터리에서 `python3 server.py`로 실행하면 `.token`을 읽고, 요청 ID에 해당하는 `queue/<ID>.json` 파일을 조회해요. [공식 Python SDK 문서](https://py.sdk.modelcontextprotocol.io/run/asgi/)
 
-![내 PC의 HTTPS 요청이 Cloudflare와 터널을 거쳐 VM 안 MCP 서버에 도달하는 경로. 서버에서 바깥으로 터널을 연결한다](../assets/diagrams/muse-tunnel.svg)
+Claude가 예제 코드를 그대로 실행해 Python MCP SDK 2.3.0(pip 패키지 `mcp`)에서 확인했어요. `GET /healthz`는 200, 토큰 없는 `/mcp` 요청은 401을 반환했어요. 인증된 세션에서 `initialize`가 성공했고, `tools/call`로 `check_shopping_request`를 호출하니 큐 파일 내용이 돌아왔어요.
 
-터널은 VM 쪽에서 Cloudflare로 연결을 만들어 두고, 공개 주소로 들어오는 요청을 내부 서버까지 전달해요. 외부에서 VM 포트를 직접 여는 대신 이 경로를 쓰는 거예요. 공개 호스트 이름을 내부 서비스에 연결하는 방식은 [Cloudflare 공식 설명](https://developers.cloudflare.com/tunnel/)에서도 확인할 수 있어요.
+```python
+import json
+import re
+from pathlib import Path
+from secrets import compare_digest
 
-여기서 두 가지를 따로 해야 했어요. 터널이 살아 있어야 하고, 공개 주소가 **그 터널의 어느 내부 서버로 갈지**도 정해야 해요. 대시보드에 Healthy가 떠도 공개 주소의 연결 대상이 없으면 쇼핑 도구까지 도착하지 않아요.
+import uvicorn
+from mcp.server import MCPServer
+from mcp.server.transport_security import TransportSecuritySettings
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import JSONResponse
 
-제 VM은 외부 통신도 프록시를 거쳐야 했어요. 초기 구축 기록에는 임시 터널 연결 실패, DNS 조회 문제, 엣지 연결 실패가 차례로 남았어요. 마지막에는 VM이 허용하는 통신 경로로 터널을 보내는 중계 프로그램을 함께 썼어요. 연결 방식은 HTTP/2로 맞추고, 이름을 주소로 바꾸는 DNS 조회도 따로 처리했어요. **보통 PC에서 그대로 따라 할 설치 목록은 아니에요.**
+token = Path(".token").read_bytes().strip()
+if not token:
+    raise SystemExit("The .token file is empty.")
+mcp = MCPServer("Muse shopping example")
 
-독자가 같은 연결을 만든다면 순서는 이래요. 먼저 Muse 쪽에서 허용된 쇼핑 도구를 호출하는 서버를 준비하고, 내부에서 도구 호출이 되는지 확인해요. 그다음 원격 접속 경로와 인증을 붙이고, 마지막으로 코딩 도구에 등록해요. 이번 글에 서버 소스 전체를 공개한 것은 아니라서, 아래 설정만 복사해 같은 서비스를 재현할 수는 없어요.
+@mcp.tool()
+def check_shopping_request(request_id: str) -> dict:
+    """Read the status and result for a shopping request."""
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", request_id):
+        raise ValueError("Invalid request ID")
+    return json.loads((Path("queue") / f"{request_id}.json").read_text(encoding="utf-8"))
 
-## 비밀번호와 명찰을 헷갈렸어요
+@mcp.custom_route("/healthz", methods=["GET"])
+async def health(request):
+    return JSONResponse({"status": "ok"})
 
-Codex에서 오래 걸린 부분은 터널보다 토큰 전달이었어요. 토큰은 서버에 접속할 때 제시하는 비밀번호 같은 값이에요. 환경변수에는 이름을 붙여 값을 담아 두고, 프로그램이 그 이름으로 값을 읽어요.
+async def require_token(request, call_next):
+    header = request.headers.get("authorization", "").encode("latin-1")
+    if request.url.path.rstrip("/") == "/mcp" and not compare_digest(header, b"Bearer " + token):
+        return JSONResponse({"error": "Unauthorized"}, 401, headers={"WWW-Authenticate": "Bearer"})
+    return await call_next(request)
 
-![토큰 값과 환경변수 이름은 다르다. 설정에는 이름을 적고 실행되는 Codex 프로세스가 실제 값을 읽을 수 있어야 한다](../assets/diagrams/muse-token.svg)
+security = TransportSecuritySettings(allowed_hosts=["127.0.0.1:*", "localhost:*", "muse.example.com"])
+app = mcp.streamable_http_app(transport_security=security)
+app.add_middleware(BaseHTTPMiddleware, dispatch=require_token)
+uvicorn.run(app, host="127.0.0.1", port=8765)
+```
 
-제 Codex 설정은 이런 형태예요. 주소는 예시로 바꿨어요.
+큐에 넣은 요청은 ID별로 디스크에 저장해요. 워커를 주기적으로 실행해 대기 중인 요청을 처리하고 같은 ID에 결과를 저장해요. 제 워커는 5분마다 실행돼요. 조사가 한 주기보다 오래 걸릴 수 있고, MCP 서버만 재시작해도 요청 ID는 그대로예요.
+
+**확인해요.** VM에서 `curl -fsS http://localhost:8765/healthz`가 성공해야 해요. 토큰 없이 `/mcp`로 요청하면 401이 나와요. 인증된 MCP 테스트 클라이언트로 `initialize`를 호출하고 `notifications/initialized`를 보낸 뒤, 같은 세션에서 `tools/list`를 호출해요. 전체 서버에서는 도구 여섯 개, 위 예제에서는 하나가 보여요.
+
+## 4. Cloudflare Tunnel로 접속 주소를 만들어요
+
+1. 내 Cloudflare 계정에서 관리하는 도메인을 준비해요. Cloudflare One 대시보드에서 이름이 있는 터널을 만들고, 커넥터 자격 증명으로 Muse VM에서 `cloudflared`를 실행해요. 커넥터 자격 증명은 비공개로 보관하고 MCP bearer 토큰과 구분해요.
+2. 터널의 **Routes** 탭에서 **Published application** 라우트(공개 호스트 이름)를 추가해요. 쓸 서브도메인을 지정하고 서비스 URL은 `http://localhost:8765`로 적어요. `/mcp`와 `/healthz`가 모두 전달되도록 라우트의 Path는 비워요. VM 안 서버는 일반 HTTP로 받고, PC는 Cloudflare에 HTTPS로 접속해요.
+3. 터널에 라우트가 표시되는지 봐요. **Healthy인데 Routes가 0**이면 커넥터는 연결됐지만 공개 호스트 이름 라우트가 비어 있어요. DNS 레코드만 추가하면 라우트는 여전히 비어 있어요. [Cloudflare 공개 라우트 가이드](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/routing-to-tunnel/)
+
+![PC는 Cloudflare에 HTTPS로 연결해요. VM이 터널을 열고 요청을 내부 MCP 서버에 전달해요.](../assets/diagrams/muse-tunnel.svg)
+
+제 VM처럼 외부 연결이 제한된 경우에만 DNS 조회와 터널 접속을 따로 확인해요. 제 환경에서는 커넥터 전용 마운트 네임스페이스 안에서 로컬 DNS 스텁을 썼고, HTTP/2 연결은 `socat` 포워더를 거쳐 VM의 외부 연결용 프록시로 보냈어요. 프록시 자격 증명은 실행 세션에 묶여 있어서 포워더와 커넥터를 함께 시작했어요. 워치독은 살아 있는 터널 연결이 0일 때만 둘을 다시 시작했어요.
+
+**확인해요.** PC에서 `curl -fsS https://muse.example.com/healthz`가 성공해야 해요. 이어서 `https://muse.example.com/mcp`로 인증된 `initialize`와 `tools/list` 검사를 반복해요. 서버 상태 응답과 도구 여섯 개가 보이는지는 별도로 확인해요.
+
+## 5. PC의 Claude Code에 Muse를 등록해요
+
+Bash에서 실행 환경에 토큰을 읽어 들이고 사용자 범위로 서버를 등록해요. 헤더를 작은따옴표로 감싸면 셸이 변수 참조를 그대로 전달해요. Claude Code가 접속할 때 실제 값을 읽어요. [Claude Code MCP 공식 문서](https://code.claude.com/docs/en/mcp)
+
+```bash
+export MUSE_SHOPPING_TOKEN="$(cat "$HOME/.config/muse-shopping/token")"
+claude mcp add --transport http --scope user muse-shopping https://muse.example.com/mcp \
+  --header 'Authorization: Bearer ${MUSE_SHOPPING_TOKEN}'
+claude
+```
+
+사용자 설정 파일 `~/.claude.json`의 `mcpServers.muse-shopping`에 아래 항목이 생겨요. 연결할 때 실제로 보내는 헤더는 `Authorization: Bearer <token>`이에요.
+
+```json
+{
+  "type": "http",
+  "url": "https://muse.example.com/mcp",
+  "headers": {
+    "Authorization": "Bearer ${MUSE_SHOPPING_TOKEN}"
+  }
+}
+```
+
+**확인해요.** 새 Claude Code 세션에서 `/mcp`를 열어 `muse-shopping`이 연결됐고 도구 목록이 보이는지 확인해요. 다음에 실행할 때도 Claude Code를 열기 전에 같은 환경변수를 읽어 들여요.
+
+## 6. PC의 Codex에 Muse를 등록해요
+
+`~/.codex/config.toml`에 아래를 추가해요. Muse 항목이 이미 있으면 그 항목을 수정해요. 제 설정에서 `approval_mode = "approve"`는 Codex가 이 세 도구 호출을 사전 승인하도록 해요. Muse 카탈로그 접근 권한과 사람의 구매 승인은 별개예요. [Codex MCP 설정 문서](https://developers.openai.com/codex/mcp)
 
 ```toml
 [mcp_servers.muse-shopping]
 url = "https://muse.example.com/mcp"
 bearer_token_env_var = "MUSE_SHOPPING_TOKEN"
+
+[mcp_servers.muse-shopping.tools.search_products]
+approval_mode = "approve"
+
+[mcp_servers.muse-shopping.tools.ask_muse_to_shop]
+approval_mode = "approve"
+
+[mcp_servers.muse-shopping.tools.check_shopping_request]
+approval_mode = "approve"
 ```
 
-`bearer_token_env_var`에 넣는 것은 **토큰 값이 아니라 환경변수 이름**이에요. Codex가 실제로 실행되는 환경에 그 이름으로 값이 있어야 해요. [Codex 공식 문서](https://developers.openai.com/codex/mcp/)도 이 설정을 토큰을 읽을 환경변수의 이름으로 설명해요.
+`bearer_token_env_var`에는 Codex가 찾을 환경변수 **이름**을 적어요. 실제로 실행되는 Codex 프로세스는 환경변수에서 토큰 값을 읽고 인증 헤더를 만들어요. 한 터미널에서 `export`하면 그 환경에서 시작한 프로그램에만 전달돼요. GUI 실행기나 이미 떠 있는 백그라운드 프로세스에 값이 없다면, 토큰을 명시적으로 전달해 새 CLI를 실행해요.
 
-제 로그에는 `MUSE_SHOPPING_TOKEN`이 없다는 경고가 반복됐어요. 백그라운드 프로세스를 쓰지 않는 실행에서도 나타났어요. 그래서 백그라운드 프로세스 하나만 원인이라고 결론 내릴 수 없었어요.
+![Codex는 설정에서 변수 이름을, 실행 환경에서 토큰 값을 읽어요.](../assets/diagrams/muse-token.svg)
 
-결국 이미 저장해 둔 인증 토큰을 읽어 **새 Codex 프로세스의 환경에 직접 전달하는 Python 실행기**를 썼어요. 토큰 값을 화면이나 명령 인자에 넣지 않고, 그 실행기가 Codex를 시작하게 했어요. 마우스 오른쪽 버튼으로 여는 일반 Codex 실행 메뉴에는 이 처리가 없어서, 제 환경에서는 같은 결과를 보장하지 못했어요.
+아래 리눅스 예제를 `start-codex-muse.py`로 저장하고 프로젝트 폴더에서 `python3 start-codex-muse.py`로 실행해요. 비공개 파일을 읽어 프로세스 환경으로 토큰을 넘겨요. 제가 쓴 Codex CLI 0.169.0에서는 `--no-daemon`으로 CLI를 직접 실행할 수 있어요.
 
-Claude Code에는 원격 HTTP MCP 서버로 등록했어요. 연결 방식과 인증 헤더 설정은 [Claude Code 공식 문서](https://code.claude.com/docs/en/mcp)에 나와 있어요. 이번 사용에서는 Claude Code가 검색 접수부터 카메라 결과 수신까지 성공했어요. 아래 장애에서도 보듯, 어떤 환경에서 실행했고 어떤 세션을 썼는지가 결과에 영향을 줬어요.
+```python
+import os
+from pathlib import Path
+import sys
 
-## 바로 찾기와 맡겨 두기의 차이
+token = (Path.home() / ".config/muse-shopping/token").read_text().strip()
+if not token:
+    sys.exit("The Muse token file is empty.")
 
-처음에는 검색이 끝날 때까지 한 번에 기다리면 될 줄 알았어요. 그런데 세션 첫 검색에 승인 카드가 나타날 수 있었고, 대기 중에 요청이 실패하기도 했어요. 그래서 주로 큐를 썼어요. 큐는 처리할 일을 줄 세워 두는 대기 목록이에요.
-
-![직접 검색은 같은 호출에서 상품 결과를 받는다. 큐 검색은 요청 번호와 pending을 먼저 받고 나중에 같은 번호로 done 결과를 조회한다](../assets/diagrams/muse-queue.svg)
-
-| 방식 | 처음 받는 답 | 그다음 할 일 |
-|---|---|---|
-| `search_products` | 상품 후보 또는 오류 | 상세 조건 확인 |
-| `ask_muse_to_shop` | 요청 번호와 `pending`(대기 중) | 같은 번호로 결과 조회 |
-
-제 환경에서는 5분마다 대기 중인 작업을 확인하도록 예약해 뒀어요. **5분마다 확인한다는 것과 5분 안에 조사가 끝난다는 것은 달라요.** 실제 카메라 검색도 00:20 접수 뒤 00:24와 00:29에는 대기 중이었고, 00:30에 완료 결과를 받았어요. 시각은 모두 11월 17일 Toronto 현지 시각이며, 보관한 Claude Code 대화 기록 기준이에요.
-
-이렇게 부탁하면 경로가 분명해져요.
-
-```text
-검색은 ask_muse_to_shop으로 보내줘.
-intent는 find, 캐나다 배송과 CAD 총액을 비교해줘.
-구매는 하지 말고 요청 번호를 알려줘.
+env = os.environ.copy()
+env["MUSE_SHOPPING_TOKEN"] = token
+os.execvpe("codex", ["codex", "--no-daemon", *sys.argv[1:]], env)
 ```
 
-나중에는 새 검색을 시키는 대신 이렇게 확인해요.
+**확인해요.** 새 Codex 세션에서 `/mcp`를 열어 `muse-shopping: connected (6 tools)`가 보이는지 확인해요. `unknown (0 tools)`는 그 세션에서 도구 목록을 사용할 수 없다는 뜻이에요. 큐 작업의 상태를 판단하기 전에 실행 환경과 연결부터 확인해요.
 
-```text
-새 검색 없이 check_shopping_request로
-앞서 받은 요청 번호의 결과만 조회해줘.
-```
+## 7. 첫 조사 요청을 큐에 넣어요
 
-결과를 기다리다 연결이 끊겨도 작업까지 사라졌다고 생각하면 안 돼요. 제 RAM 검색도 한동안 조회하지 못했지만, 나중에 같은 번호로 `done`(완료)과 상품 목록을 받았어요. 번호를 버리고 다시 접수하면 같은 조사를 중복해서 맡길 수 있어요.
+> Muse로 캐나다 배송을 포함해 50캐나다달러 이하인 책상 조명 후보를 비교해 줘. 결과만 알려주고 구매는 하지 마.
 
-## 휴대폰에 뜨는 승인 카드, 무엇을 승인하나
+`ask_muse_to_shop`을 `intent: "find"`로 호출해요. 결정에 필요한 조건을 요청 본문에 적고, 확인하지 못한 항목은 미확인으로 표시해 달라고 해요. 응답에서 `request_id`를 저장해요. `pending`은 큐에 접수됐다는 뜻이에요. 결과가 필요할 때 `check_shopping_request`에 그 ID를 넘겨요. 대기 중에는 같은 ID만 조회하고 검색을 추가로 보내지 않아요. 조건이 바뀌면 새 요청에 “이전 요청 `<ID>`를 대체”라고 적으면 Muse가 이전 요청을 대체된 상태로 표시할 수 있어요.
 
-승인에는 두 종류가 있었어요. 하나는 Muse의 상품 카탈로그를 검색하도록 허용하는 것이고, 다른 하나는 구매를 승인하는 것이에요.
+카탈로그 접근 승인이 필요하면 **Muse 채팅**에 카드가 뜰 수 있어요. 첫 검색 전에 Muse 채팅을 열어 두고 카드가 나타나면 바로 확인해요. 제 환경에서는 응답 시간이 약 1분이었어요. 이 카드는 카탈로그 검색에 대한 권한을 줘요. 구매 요청은 사람이 Muse 채팅에서 별도로 승인해야 하고, 서버는 구매하지 않아요.
 
-![검색 접근 승인과 구매 승인 사이의 경계. 검색을 허용해도 이 서버에서 결제가 실행되는 것은 아니다](../assets/diagrams/muse-approval.svg)
+![카탈로그 접근은 조사를 위한 권한이에요. 구매 요청은 사람이 따로 검토해요.](../assets/diagrams/muse-approval.svg)
 
-Muse의 안내에 따르면 검색 승인이 필요하면 Muse 채팅에 카드가 나타나요. 휴대폰에서 그 채팅을 열어두면 볼 수 있고, 약 60초 안에 선택하지 않으면 해당 요청이 만료된다고 했어요. 실제로 Allow를 누르지 못하고 Deny를 선택한 사례도 있었어요.
+**확인해요.** 먼저 요청 ID를 받았는지 확인해요. 나중에 같은 ID를 조회했을 때 `done`과 조사 결과가 오면 완료예요.
 
-다만 **앱을 닫아 둬도 휴대폰 푸시 알림이 온다는 것까지 확인한 것은 아니에요.** 또 한 번 카드 없이 처리됐다고 다음 요청도 반드시 승인 없이 된다고 보장할 수 없어요. 이 카드의 안내는 Muse 쪽 동작 설명이며, MCP를 쓰는 모든 서비스에 같은 제한이 있는 것은 아니에요.
+## 8. VM부터 클라이언트까지 점검해요
 
-이번에는 검색만 했어요. 구매 요청 도구가 있더라도, 실제 구매는 사람이 Muse 채팅에서 검토하고 승인하는 절차로 남겨 뒀어요.
+| 증상 | 해결 방법 |
+| --- | --- |
+| `unknown (0 tools)` | 공개 `/healthz`를 확인하고, 인증된 MCP 초기화와 도구 목록 조회를 해 봐요. 둘 다 성공하면 새 클라이언트 세션을 열어 `/mcp`를 확인해요. |
+| `MUSE_SHOPPING_TOKEN` 누락 또는 401 | 설정의 변수 이름, 토큰 파일, 클라이언트를 실제로 시작한 프로세스를 확인해요. 서버와 같은 토큰을 쓰는지 확인하고 진단 출력에는 값을 남기지 않아요. |
+| Claude Code에서 `Failed to connect ... HTTP 401` | 시작 환경에 `MUSE_SHOPPING_TOKEN`이 빠져 있어요. 5단계처럼 환경변수를 읽어 들인 뒤 Claude Code를 다시 시작해요. |
+| HTTP 502 | VM 안의 `/healthz`와 공개 주소의 응답을 비교해요. VM에서도 실패하면 MCP 프로세스를 확인해요. VM에선 되면 터널 연결과 서비스 URL을 확인해요. 복구 후 같은 ID로 결과를 다시 조회해요. |
+| 재시작 후 MCP 세션 만료 | 재연결하거나 클라이언트를 새로 열어 MCP 세션을 다시 초기화해요. 디스크에 저장된 쇼핑 요청은 기존 ID로 조회해요. |
+| 카탈로그 승인 시간 초과 또는 Allow 오류 | Muse 채팅을 미리 열고 카드가 뜨면 바로 확인해요. 제 환경에서는 실패한 Allow가 Deny로 기록됐고, 새 컨텍스트에서 MCP 서버를 재시작하니 해결됐어요. |
+| 터널은 Healthy인데 Routes가 0 | `http://localhost:8765`로 Published application 라우트를 만들고 공개 `/healthz`를 다시 확인해요. |
 
-## 정말 쓸 만했나: 손목 카메라 검색
+**확인해요.** 조치한 뒤 공개 서버 상태와 도구 여섯 개를 확인해요. 이미 검색을 접수했다면 같은 ID를 조회해 연결이 복구됐는지 확인해요.
 
-첫 요청에는 화각을 넓게 잡았어요. 막상 생각해 보니 어안렌즈처럼 가장자리가 휘는 화면은 원하지 않았어요. 그래서 **대각선 화각 약 60~90°, 어안렌즈 제외, 왜곡이 적은 렌즈**로 바꿨어요. 대각선 화각은 화면의 대각선 방향으로 얼마나 넓게 보이는지를 나타내요. 수평 화각과 섞어서 비교하면 제품을 잘못 고를 수 있어요.
-
-고정초점, USB UVC, 리눅스 지원, 손목에 달 수 있는 작은 크기라는 조건은 유지했어요. UVC는 USB 카메라의 표준 연결 규격이에요. 렌즈가 고정돼 있다는 것만으로 가까운 물체가 선명하게 보인다는 뜻은 아니니, 실제 작업 거리에서 선명하게 보이는지도 나중에 확인하기로 했어요.
-
-Muse가 최종적으로 추천한 첫 후보는 Arducam B0196이었어요. 다만 이 글은 제품 구매 가이드가 아니에요. 아래는 **그날 받은 결과를 어떻게 읽었는지** 보여주는 예예요.
-
-| 결과에 적힌 것 | 그 답만으로 결정하지 않은 것 |
-|---|---|
-| B0196, 고정초점·UVC, 대각 75° / 수평 60°라고 보고 | 모델·렌즈 조합과 공식 사양 재확인 |
-| 보드 31×31mm라고 보고 | 같은 결과에 38×38mm 표기도 있어 실제 치수 확인 필요 |
-| US$29.99, 약 CA$42라고 보고 | 배송비·수입 비용이 빠져 있어 도착 총액은 미확정 |
-
-결과가 문장으로 잘 정리돼 있다고 치수 충돌까지 없어지는 건 아니었어요. 그래도 살펴볼 후보와 남은 질문이 모였어요. **마운트를 출력하기 전에 치수부터 확인할 수 있는 목록**이 된 거예요. 카메라 사양과 가격은 이 글을 위해 판매처에서 별도 재검증하지 않았으므로, 현재 구매 추천으로 쓰지는 않았어요.
-
-## 터널은 살아났는데 왜 계속 실패했을까
-
-가장 헷갈린 순간은 서버가 복구됐다는 설명을 듣고도 Codex에 `unknown (0 tools)`가 보였을 때예요. 상태를 알 수 없고 쓸 도구가 없다는 표시였어요. 한 번은 결과 조회에서 HTTP 502도 받았어요. 요청을 중계하는 경로에서 정상 응답을 받지 못했다는 오류예요.
-
-![세 단계로 나눈 장애 확인: 터널 연결, 인증 토큰, MCP 세션. 한 단계의 성공이 나머지의 성공을 보장하지 않는다](../assets/diagrams/muse-recovery.svg)
-
-Muse에게 11월 17일 00:00~00:20(Toronto 현지 시각)의 터널·서버·자동 복구 작업 로그를 함께 확인해 달라고 했어요. 전달받은 분석은 이랬어요.
-
-- **00:03:15:** 서버가 알 수 없거나 만료된 세션 ID를 한 번 거부했어요.
-- **00:08경:** 여러 프로세스의 로그가 함께 멈췄고, VM 가동 시간도 초기화된 것으로 보고됐어요. Muse는 VM 교체가 원인이라고 설명했어요.
-- **00:10~00:11:** 자동 복구 작업이 서버와 터널을 다시 시작했고, 엣지 연결 2개와 공개 상태 확인이 정상이라고 보고됐어요.
-- **그 이후:** 새 세션도 생겼지만, 오래된 세션 ID를 쓴 요청의 거부도 반복됐어요. 어떤 클라이언트의 요청인지는 로그에서 구분되지 않았어요.
-
-이것은 **Muse가 로그를 읽고 전달한 분석**이에요. 제가 원본 로그와 VM 관리 기록을 직접 대조한 것은 아니에요. 여러 프로세스의 동시 중단은 VM 재시작이나 교체와 맞아떨어지지만, 그것만으로 정확히 어떤 일이었는지 확정할 수는 없어요. 세션 거부가 중단 전에도 있었다는 점도 남아요.
-
-세션은 여러 요청을 같은 대화로 묶는 번호예요. 상품 조사를 찾아가는 검색 요청 번호와는 달라요. 접속을 새로 만들어도 기존 검색 요청 번호로 맡겨 둔 작업을 조회할 수 있었어요. 서버가 재시작되면 이전 MCP 세션 번호를 더는 모를 수 있어요. MCP의 Streamable HTTP 명세는 세션을 쓰는 서버가 종료된 세션에 404를 반환할 때 클라이언트가 다시 초기화하도록 정하고 있어요. [MCP 전송 명세](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#session-management)
-
-그래서 새 검색을 보내는 대신, 토큰을 전달하는 실행기로 Codex를 새로 시작하고 **이미 끝난 RAM 검색 결과만 조회**했어요. 00:29 대화 기록에 `done`(완료)과 상품 목록이 왔어요. Claude Code도 00:30에 카메라 검색 완료 결과를 받았어요.
-
-이 확인으로 양쪽 모두 실제 도구 호출이 된다는 것은 알았어요. 하지만 Codex에서는 토큰 전달과 새 세션 생성이 동시에 바뀌었어요. 어느 변경 덕분에 다시 연결됐는지, 기존 `unknown` 표시가 정확히 왜 남았는지는 분리해서 입증하지 못했어요.
-
-비슷한 불편은 다른 사용자도 보고했어요. [Codex #30125](https://github.com/openai/codex/issues/30125)는 설정과 실행 프로세스의 토큰 환경변수가 어긋나는 사례이고, [#4955](https://github.com/openai/codex/issues/4955)는 MCP 개별 재연결을 요구하는 논의예요. 제 오류의 원인이 같다는 증거로 삼지는 않았어요.
-
-## 다음 쇼핑 때는 이렇게 쓸 거예요
-
-저는 큐에 검색을 맡기고 요청 번호를 받는 방법을 계속 쓰려 해요. 카메라처럼 조건이 많은 물건은 처음부터 화각의 기준, 크기, 초점 방식, 배송 국가를 적어 주는 편이 낫겠어요.
-
-```text
-SO-101 손목용 USB UVC 카메라를 찾아줘.
-고정초점, 640×480 30fps 이상, 작은 보드 우선.
-어안렌즈 제외, 대각선 화각 60~90° 정도.
-제품별로 화각 기준·보드 크기·초점이 맞는 작업 거리를 확인해줘.
-캐나다 배송비와 세금을 포함한 총액은 확인된 항목만 적어줘.
-검색은 큐로 맡기고 구매는 하지 마.
-```
-
-이렇게 쓰면 코딩 화면을 떠나지 않고 후보 조사를 맡길 수 있어요. 결과를 받을 때는 멋진 추천 문장보다 **확인된 사양과 아직 답이 없는 항목**을 먼저 볼 거예요. 이번 카메라도 주문보다 치수 확인이 먼저였어요.
+2026년 11월 17일에 이 구성으로 두 클라이언트를 실제 Muse 서버에서 확인했어요. Claude Code는 `${MUSE_SHOPPING_TOKEN}` 헤더로 연결됐고 환경변수 없이 시작하면 HTTP 401이 나왔으며, Codex는 토큰 실행기로 시작한 뒤 도구 호출에서 완료된 결과를 받았어요.
 
 ---
 
-*2026년 11월 16~17일의 개인 구축·사용 기록이에요. Claude Code 2.1.296과 Codex CLI 0.169.0 환경에서 관찰한 내용을 담았어요. Muse와 각 제품명은 해당 서비스·제품을 식별하기 위해 사용했으며, 공식 연동이나 제휴를 뜻하지 않아요. 그림은 이 글을 위해 직접 만들었어요. 상품 예시는 당시 Muse 응답이며 현재 재고·가격을 보장하지 않아요.*
-
-**관련 글:** [로컬 AI에게 읽기 맡기기](local-llm-reading.md) · [Claude가 감독하고, Codex·로컬 AI·Muse가 나눠 일하기](ai-workbench-routing.md)
+**관련 글** [로컬 AI에게 읽기 맡기기](local-llm-reading.md) · [Claude Code에서 Codex와 로컬 Qwen에 일을 맡기는 MCP 브리지 만들기](ai-workbench-routing.md)

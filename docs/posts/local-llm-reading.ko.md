@@ -275,4 +275,4 @@ Claude 사용량이 바닥난 날에도 찾아볼 수 있어요. 로컬 세션(`
 - *Whisper*: 말소리를 글자로 옮기는 공개 받아쓰기 모델
 
 
-**후속 글:** [Claude가 감독하고, Codex·로컬 AI·Muse가 나눠 일하기](ai-workbench-routing.md) · [Muse에게 쇼핑 맡기기](muse-mcp-shopping.md)
+**후속 글:** [Claude Code에서 Codex와 로컬 Qwen에 일을 맡기는 MCP 브리지 만들기](ai-workbench-routing.md) · [Claude Code와 Codex를 MCP로 Muse에 연결하는 법](muse-mcp-shopping.md)

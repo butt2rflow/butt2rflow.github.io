@@ -267,8 +267,8 @@ title: Home
 AI 도구를 직접 설치하고, 재 보고, 일에 붙여 쓴 기록이에요.
 
 - [**책 1,069쪽을 15분에 읽혔다: Claude 사용량 90% 넘게 줄이기**](posts/local-llm-reading.md) — RTX 3090의 Qwen3.6에게 글 131편, 책 한 권, 3분 영상을 읽히고, 같은 Claude Code 화면에서 두뇌만 바꿔 쓴 하루
-- [**코딩하다 카메라 쇼핑까지: Muse를 MCP 서버로 연결한 밤**](posts/muse-mcp-shopping.md) — 원격 쇼핑 도구 연결, 검색 큐, 승인 카드와 끊어진 세션을 확인한 기록
-- [**Claude가 감독하고, Codex·로컬 AI·Muse가 나눠 일하기**](posts/ai-workbench-routing.md) — 큰 PDF의 목차와 요약, Codex 실행·1차 감수, Muse 쇼핑을 나누고 중복 전달을 줄이는 구성
+- [**Claude Code와 Codex를 MCP로 Muse에 연결하는 법**](posts/muse-mcp-shopping.md) — Muse VM의 MCP 서버, 터널, 클라이언트 등록과 쇼핑 큐 조회를 따라 해요.
+- [**Claude Code에서 Codex와 로컬 Qwen에 일을 맡기는 MCP 브리지 만들기**](posts/ai-workbench-routing.md) — Python stdio 브리지로 작업을 위임하고, 재접속 후 같은 ID로 결과를 확인해요.
 
 ---
 
