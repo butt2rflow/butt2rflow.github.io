@@ -35,7 +35,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보면 사용량이 모자랐�
 
 수선집에 옷을 맡기고 번호표를 받으면 그 자리에서 기다릴 필요가 없잖아요. 저도 Claude가 일을 맡기고 번호만 받아 오게 하고 싶었어요. 그러려면 접수 창구를 닫아도 뒤에서 일하는 프로그램이 살아 있어야 했어요.
 
-![Claude Code를 다시 열어도 같은 번호로 작업 결과를 조회하는 흐름](../assets/diagrams/workbench-ticket.png)
+![수선집처럼 일을 맡기고 번호표를 받은 뒤, 창을 닫았다가 같은 번호로 결과를 찾는 흐름](../assets/diagrams/workbench-ticket.png)
 
 Qwen 차례가 왔을 땐 로봇 시뮬레이터인 Isaac Sim이 이미 GPU를 쓰고 있었어요. 브리지는 Qwen을 부르지 않고 조용히 비켜 갔어요. 시뮬레이터를 끄지도 않았고요.
 
@@ -81,7 +81,7 @@ claude mcp add --transport stdio --scope user ai-cooperation -- /usr/bin/python3
 
 처음엔 자세히 보고받으면 마음이 놓일 줄 알았어요. 그런데 Claude에게 파일도 읽히고 로그도 읽히면 일을 넘긴 보람이 없잖아요. 그래서 보고는 8줄, 800자 이내로 부탁해요. 실패가 있으면 맨 위에 두고, 바꾼 파일과 실제로 실행한 검사를 적게 해요. 길면 `job_result`에 `detail=true`를 주거나 디스크의 `result.md`를 열어요. `completed`는 Codex가 정상 종료해서 답을 저장했다는 뜻이에요. 고친 명령이 정말 동작하는지는 테스트 기록을 봐야 알아요.
 
-![작업 종료 표시 뒤 실제 변경과 테스트 기록을 확인하는 순서](../assets/diagrams/workbench-verified.png)
+![Codex가 다 했다고 해도 Claude가 실패, 바뀐 파일, 실제 테스트를 검수하고 통과시키거나 같은 Codex에 다시 맡기는 흐름](../assets/diagrams/workbench-verified.png)
 
 **해 본 일**
 

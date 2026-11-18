@@ -35,7 +35,7 @@ The first two jobs stopped before Codex even started working. It was a problem w
 
 When I drop off clothes for alterations, I get a ticket and leave. I wanted Claude to be able to do the same. That meant the program doing the work had to stay alive after the counter closed.
 
-![A saved job ID lets Claude Code retrieve the result after reconnecting](../assets/diagrams_en/workbench-ticket.png)
+![Like a tailor shop: drop off the job, get ticket #42, close the window and pick up the result with the same number](../assets/diagrams_en/workbench-ticket.png)
 
 When Qwen's turn came, the Isaac Sim robot simulator already had the GPU. The bridge quietly skipped Qwen and left the simulator alone.
 
@@ -81,7 +81,7 @@ For a reading job, `target=auto` can pick Codex before launch if Qwen isn't read
 
 At first I thought a detailed report would be reassuring. But if Claude reads the files and logs again, I've bought myself very little. I ask for eight lines and at most 800 characters, with failures up top, the files changed, and the checks actually run. For more, I can use `detail=true` with `job_result` or open `result.md` on disk. `completed` means Codex exited successfully and saved an answer. To tell whether the corrected command works, I look at the test evidence.
 
-![After a job completes, check the changes and test evidence](../assets/diagrams_en/workbench-verified.png)
+![Even after Codex says it is done, Claude inspects failures, changed files and tests, then accepts or sends it back to the same Codex](../assets/diagrams_en/workbench-verified.png)
 
 **What I've done**
 

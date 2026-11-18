@@ -17,7 +17,7 @@ Picking a single camera for my robot was eating into my Claude allowance. I comp
 - A healthy tunnel still needs a route from the public hostname to the server. My service URL inside the VM also needed plain HTTP.
 - Muse gives you a request ID first. Mine survived a disconnect, so I could pick up the result in a fresh session.
 
-![Send criteria from Claude Code or Codex and pick up Muse’s research later](../assets/diagrams_en/muse-errand.png)
+![Send a note of criteria while coding; Muse checks the catalog, sellers and shipping and returns a report, and I sign off on any purchase](../assets/diagrams_en/muse-errand.png)
 
 ## The tunnel came up, and then I saw zero routes
 
@@ -47,7 +47,7 @@ When I sent research to the queue, I got `pending` and a request ID. Later that 
 
 In the new session, I looked up the **same request ID** and got `done` and the result. I'd opened and closed plenty of windows that night. At least I didn't have to ask Muse to shop twice.
 
-![The request ID from pending retrieves the done result in a fresh session](../assets/diagrams_en/muse-ticket.png)
+![The receipt from a pending request still finds the done result after a midnight 502 and a fresh connection](../assets/diagrams_en/muse-ticket.png)
 
 ## If you’d like to try it
 
