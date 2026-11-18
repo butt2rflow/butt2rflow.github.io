@@ -15,6 +15,8 @@ Picking a single camera for my robot was eating into my Claude allowance. I comp
 
 *While Muse works, Jollybot taps away at a laptop, and it confirms the requests from Claude Code are arriving (Korean chat). Screenshot of the Muse app; Muse and Jollybot are Meta's service and character.*
 
+The fun part came next. On my phone I asked Muse, "Looks like the requests from Claude Code were taken into account?" It rattled off every request it had received that night. The coding session may end, but Muse keeps the shopping context. The next day I can pick up on my phone with "Which of those two cameras is better?"
+
 ## The short version
 
 - I put the shopping tools on Muse's virtual machine and called them from Claude Code and Codex through Cloudflare Tunnel.
