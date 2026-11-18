@@ -23,7 +23,7 @@ In the [previous post](local-llm-reading.md), I handed a long book to Qwen on my
 
 ![Qwen, FLUX, MiniMax H3, and Isaac Sim take turns with one RTX 3090](../assets/diagrams_en/workbench-gpu.png)
 
-Then I remembered I already had Codex on my ChatGPT plan. In my own work, Codex felt a little less capable than Claude Code, but its allowance felt much roomier. I kept my usual Claude Code window. Claude set the scope and made the final call, and Codex dug through files, implemented changes, tested them, and did the first review. Qwen could read long documents when the card was free. For shopping research, I sent Muse. Put simply, Claude is the general contractor and Codex is the subcontractor. The sub is cheaper, but inspection stays with the general contractor.
+Running short on tokens, I decided to try Codex, which I'd never used before. In my own work, Codex felt a little less capable than Claude Code, but its allowance felt much roomier. I kept my usual Claude Code window. Claude set the scope and made the final call, and Codex dug through files, implemented changes, tested them, and did the first review. Qwen could read long documents when the card was free. For shopping research, I sent Muse. Put simply, Claude is the general contractor and Codex is the subcontractor. The sub is cheaper, but inspection stays with the general contractor.
 
 ![Claude makes decisions while Codex codes, Qwen reads, and Muse researches purchases](../assets/diagrams_en/workbench-crew.png)
 

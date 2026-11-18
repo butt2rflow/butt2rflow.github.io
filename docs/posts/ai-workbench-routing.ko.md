@@ -23,7 +23,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보면 사용량이 모자랐�
 
 ![RTX 3090 한 장을 두고 Qwen과 FLUX, MiniMax H3, Isaac Sim이 차례를 기다리는 모습](../assets/diagrams/workbench-gpu.png)
 
-그러다 이미 쓰던 ChatGPT 플랜에 Codex가 있다는 게 생각났어요. 제 작업에선 Claude Code보다 Codex가 조금 아쉽게 느껴졌지만, 사용량에는 훨씬 여유가 있는 느낌이었어요. 익숙한 Claude Code 화면에서 Claude는 맡길 범위를 정하고 마지막 판단을 해요. Codex는 파일 조사부터 구현, 테스트, 1차 리뷰까지 맡아요. Qwen은 카드가 빌 때 긴 글을 읽고, 쇼핑 조사는 Muse에게 보내요. 말하자면 Claude가 원청, Codex가 하청이에요. 단가는 싸지만, 검수는 끝까지 원청 몫이에요.
+토큰이 모자라 고민하다가, 그동안 써 본 적 없는 Codex에 도전해 보기로 했어요. 제 작업에선 Claude Code보다 Codex가 조금 아쉽게 느껴졌지만, 사용량에는 훨씬 여유가 있는 느낌이었어요. 익숙한 Claude Code 화면에서 Claude는 맡길 범위를 정하고 마지막 판단을 해요. Codex는 파일 조사부터 구현, 테스트, 1차 리뷰까지 맡아요. Qwen은 카드가 빌 때 긴 글을 읽고, 쇼핑 조사는 Muse에게 보내요. 말하자면 Claude가 원청, Codex가 하청이에요. 단가는 싸지만, 검수는 끝까지 원청 몫이에요.
 
 ![Claude가 판단하고 Codex는 코딩, Qwen은 읽기, Muse는 쇼핑 조사를 맡는 분담](../assets/diagrams/workbench-crew.png)
 
