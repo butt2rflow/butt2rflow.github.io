@@ -71,6 +71,10 @@ Once the earlier job has finished and `job_result` shows `resumable: true`, call
 
 I only set `write=true` when I've authorized edits. For a broken install command, I'd give Codex the absolute project path and say, “Edit only the README and preserve existing changes. Run the corrected command from the project and tell me what happened.” The file list is part of the task instructions. The sandbox grants write access at the workspace level. A failed job may leave edits behind, so I check the records and the actual changes before retrying.
 
+These days Claude also picks the Codex model and how hard it should think (`model`, `effort`) when it hands off a job. Below, another Claude Code window passes Codex the job of building a video-prompt skill, and decides Astra at medium effort is enough. A general contractor picking the right sub for each job.
+
+![Another Claude Code window hands a job to Codex, choosing the Astra model at medium effort and listing four tasks (Korean)](../assets/diagrams/codex-model-pick.png)
+
 For a long document, I send a path to the file. Qwen reads the source inside the project on my PC. Claude gets the summary and goes back to the source for the evidence it needs.
 
 The bridge sends the request to Ollama, the program that runs the local model, only when the configured model is already fully in GPU memory and no competing compute process is using the card.

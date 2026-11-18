@@ -71,6 +71,10 @@ claude mcp add --transport stdio --scope user ai-cooperation -- /usr/bin/python3
 
 수정을 맡길 때만 `write=true`를 줘요. 예를 들어 README의 설치 명령을 고치려면 프로젝트의 절대 경로와 함께 “README만 고치고 기존 변경은 보존해 줘. 고친 명령을 프로젝트에서 실행해 보고 결과를 적어 줘”라고 써요. 파일 범위는 작업 지시이고, 쓰기 권한은 작업 공간 단위로 제한돼요. 실패한 작업에 수정이 남을 수 있어서 다시 맡기기 전에 기록과 실제 변경부터 확인해요.
 
+요즘은 Claude가 일을 넘길 때 Codex의 모델과 생각 강도까지 골라요(`model`, `effort`). 아래는 옆 Claude Code 창이 영상 프롬프트 스킬을 만드는 일을 Codex에 넘긴 화면이에요. 이 일엔 Astra 모델에 보통 강도(medium)면 된다고 본 거죠. 일감마다 맞는 하청을 고르는 원청인 셈이에요.
+
+![다른 Claude Code 창이 Codex에 일을 넘기며 Astra 모델과 medium 강도를 고르고, 맡긴 일 네 가지를 정리한 화면](../assets/diagrams/codex-model-pick.png)
+
 긴 글은 파일 위치만 넘겨요. 로컬 Qwen이 프로젝트 안에서 원문을 읽고, Claude는 요약을 받은 뒤 판단에 필요한 대목만 원문에서 확인해요.
 
 브리지는 그래픽카드(GPU)에 지정한 모델이 전부 올라와 있고 다른 계산 작업이 없을 때만 Ollama에 요청을 보내요. Ollama는 제 PC에서 모델을 실행하는 프로그램이에요.
