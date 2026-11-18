@@ -9,7 +9,11 @@ description: "I wanted Muse to research products while I kept coding. Instead, I
 
 # Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance
 
-Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. Muse was good at shopping, and its free allowance is generous. I figured I could send over my criteria and get back to coding. Shopping would go to a purchasing subcontractor. I'd still be the one who signs off on any purchase.
+Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. [Muse](https://muse.ai) was good at shopping, and its free allowance is generous. Muse even has a character, Jollybot. I figured I could send over my criteria and get back to coding. Shopping would go to a purchasing subcontractor. I'd still be the one who signs off on any purchase.
+
+![The Muse app: Jollybot in headphones types on a laptop under "Muse is working", and in the chat Muse says the requests Claude Code queued tonight are coming in through the bridge](../assets/diagrams/muse-chat.png){ width="360" }
+
+*While Muse works, Jollybot taps away at a laptop, and it confirms the requests from Claude Code are arriving (Korean chat). Screenshot of the Muse app; Muse and Jollybot are Meta's service and character.*
 
 ## The short version
 
