@@ -9,13 +9,13 @@ description: "I wanted Muse to research products while I kept coding. Instead, I
 
 # Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance
 
-Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. [Muse](https://muse.ai) was good at shopping, and its free allowance is generous. Muse even has a character, Jollybot. I figured I could send over my criteria and get back to coding. Shopping would go to a purchasing subcontractor. I'd still be the one who signs off on any purchase.
+Picking a single camera for my robot was eating into my Claude allowance. I compared fields of view, sellers, and shipping costs without fixing a line of code. Then I thought of [Muse](https://muse.ai). It was good at shopping and had a generous free allowance. I could send over my criteria and get back to coding. Muse could look for the camera, and I’d still decide whether to buy it.
 
 ![The Muse app: Jollybot in headphones types on a laptop under "Muse is working", and in the chat Muse says the requests Claude Code queued tonight are coming in through the bridge](../assets/diagrams/muse-chat.png){ width="360" }
 
 *While Muse works, Jollybot taps away at a laptop, and it confirms the requests from Claude Code are arriving (Korean chat). Screenshot of the Muse app; Muse and Jollybot are Meta's service and character.*
 
-The fun part came next. On my phone I asked Muse, "Looks like the requests from Claude Code were taken into account?" It rattled off every request it had received that night. The coding session may end, but Muse keeps the shopping context. The next day I can pick up on my phone with "Which of those two cameras is better?"
+The fun part came next. On my phone I asked Muse if it remembered the requests from Claude Code. It rattled off the requests it had received that night. Even after I close the coding window, Muse remembers which cameras we looked at. The next day I can pick up on my phone with “Which of those two cameras is better?”
 
 ## The short version
 
@@ -55,7 +55,7 @@ In the new session, I looked up the **same request ID** and got `done` and the r
 
 ![The receipt from a pending request still finds the done result after a midnight 502 and a fresh connection](../assets/diagrams_en/muse-ticket.png)
 
-The queue could take a request and return a result even when a seller's page was out of reach. When I sent a camera search from Windows 11, Amazon.ca blocked Muse's page read with a 403. I opened the same page with Claude's Chrome extension and could see the price and stock. In the shopping request I ask Muse to check other Canadian retailers too.
+When I sent a camera search from Windows 11, I got my ticket and could look up the result just fine. The snag was at the retailer. Amazon.ca returned a 403 when Muse tried to open the product page. I opened the same page with Claude’s Chrome extension and could see the price and stock. So when I send Muse shopping, I ask it to check other Canadian retailers too.
 
 ## If you’d like to try it
 

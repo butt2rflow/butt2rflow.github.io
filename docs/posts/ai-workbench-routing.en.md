@@ -11,23 +11,23 @@ description: "I wanted Claude to spend less of its usage allowance reading code 
 
 <video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster-en.jpg" src="/assets/demos/bridge-opening-en.mp4" style="width:100%" aria-label="A short animation: the Codex crew lays the last planks, a handcart with a work order rolls across to them, and a ticket returns to Claude, the boss; Qwen sits on a stack of books"></video>
 
-I kept running short on my personal Claude Code Pro plan. Max 5x was more than I wanted to spend. I just wanted twice as much room.
+I kept hitting my Claude Code Pro limit on personal projects. Twice the allowance felt like plenty. Max 5x was more than I needed or wanted to spend. I was considering a second Pro subscription when I got curious about Codex. I’d never tried it.
+
+![How much room I wanted between Pro and Max 5x](../assets/diagrams_en/workbench-twice.png)
+
+In the [previous post](local-llm-reading.md), I saved some of my Claude allowance by having Qwen read a long book on my PC. Could Claude and Codex split the work like that when I was coding? I had a reason to try it. My single RTX 3090 already had a queue. While Qwen occupied its memory, FLUX, MiniMax H3, and Isaac Sim all had to wait.
+
+![Qwen, FLUX, MiniMax H3, and Isaac Sim take turns with one RTX 3090](../assets/diagrams_en/workbench-gpu.png)
+
+On my projects, Codex felt a little less capable than Claude Code, but its allowance felt much more generous. I set things up so Claude scopes each job from my usual Claude Code window and Codex reads the files, implements the changes, runs the tests, and does the first review. Claude is the general contractor and Codex is the subcontractor. The sub costs less, and Claude still does the final inspection. Qwen reads long documents when the GPU is free, and I send shopping research to Muse.
+
+![Claude makes decisions while Codex codes, Qwen reads, and Muse researches purchases](../assets/diagrams_en/workbench-crew.png)
 
 ## The short version
 
 - A Python bridge lets Claude Code hand a job to Codex. I can close the window and use the same job ID to check the result later.
 - I ask for an eight-line report with failures first. When I see `completed`, I still check the changes and test evidence I need.
 - Codex read files, fixed a README and even did a review. On Windows 11 I could also delegate to Codex and use Muse tools. I kept Qwen on the Ubuntu side.
-
-![How much room I wanted between Pro and Max 5x](../assets/diagrams_en/workbench-twice.png)
-
-In the [previous post](local-llm-reading.md), I handed a long book to Qwen on my PC. I only have one RTX 3090. While Qwen occupied its memory, I couldn’t run FLUX, MiniMax H3, or Isaac Sim. Saving Claude usage had left the work I wanted to do waiting for a turn on the GPU.
-
-![Qwen, FLUX, MiniMax H3, and Isaac Sim take turns with one RTX 3090](../assets/diagrams_en/workbench-gpu.png)
-
-Running short on tokens, I decided to try Codex, which I'd never used before. In my own work, Codex felt a little less capable than Claude Code, but its allowance felt much roomier. I kept my usual Claude Code window. Claude set the scope and made the final call, and Codex dug through files, implemented changes, tested them, and did the first review. Qwen could read long documents when the card was free. For shopping research, I sent Muse. Put simply, Claude is the general contractor and Codex is the subcontractor. The sub is cheaper, but inspection stays with the general contractor.
-
-![Claude makes decisions while Codex codes, Qwen reads, and Muse researches purchases](../assets/diagrams_en/workbench-crew.png)
 
 ## The first two jobs stopped at startup
 
@@ -41,7 +41,7 @@ When I drop off clothes for alterations, I get a ticket and leave. I wanted Clau
 
 When Qwen's turn came, the Isaac Sim robot simulator already had the GPU. The bridge quietly skipped Qwen and left the simulator alone. On Windows 11, Qwen is unavailable through the bridge even if the card is free. Its WDDM driver doesn't report GPU memory use per process, so the bridge declines to call Qwen. The protected MCP for launching GPU jobs is Linux-only by design and refuses requests on Windows.
 
-I meant to save Claude some log reading. I also found that I liked being able to close the window and come back with just a number. A claim ticket came in handy when I sent Muse shopping, too. On Windows, both Claude and Codex in a delegated job could use Muse tools. The bridge launches Codex with `-a never`, so it can't stop to ask for permission. I approved only the Muse tools I needed in `config.toml`. On Ubuntu I keep the Muse token out of Codex and call Muse directly from Claude Code.
+I originally just wanted Claude to spend less time reading logs. What I came to appreciate was being able to close the window and find the result later with a single number. The ticket came in handy when I sent Muse shopping, too. On Ubuntu I keep the Muse token out of Codex and call Muse directly from Claude Code. On Windows I set things up so both Claude and a delegated Codex job could use Muse. The bridge launches Codex with `-a never`, so it can’t pause for approval. I approved just the Muse tools I needed in `config.toml` ahead of time.
 
 Later I made it possible to send a quick follow-up to the same Codex conversation. It felt like taking the same ticket back to the tailor to ask for one more alteration. On my PC, I asked Codex to “read `note.txt` and reply only with the secret word.” It said `pineapple`. Once the job finished, I asked, “Without reading the file again, reverse the word you reported.” It said `elppaenip`. The Codex session stayed the same, and the new job recorded the earlier job ID in `continued_from`.
 
@@ -75,7 +75,7 @@ I only set `write=true` when I've authorized edits. For a broken install command
 
 In the public version, `start` accepts `--write` to allow edits, `--target` to choose where the job goes, and `--timeout` to set a limit in seconds. Pass `--file` once per input file, and use `--model` and `--effort` to pick the Codex model and reasoning effort.
 
-These days Claude also picks the Codex model and how hard it should think (`model`, `effort`) when it hands off a job. Below, another Claude Code window passes Codex the job of building a video-prompt skill, and decides Astra at medium effort is enough. A general contractor picking the right sub for each job.
+Claude also picks the Codex model and reasoning effort (`model`, `effort`) for each job. In the screenshot below, I asked for a video-prompt skill in another Claude Code window. Claude chose Astra at medium effort and handed the job to Codex.
 
 ![Another Claude Code window hands a job to Codex, choosing the Astra model at medium effort and listing four tasks (Korean)](../assets/diagrams/codex-model-pick.png)
 
@@ -96,7 +96,6 @@ At first I thought a detailed report would be reassuring. But if Claude reads th
 - The three tools showed up in Claude Code.
 - I closed the window, came back, and pulled what Codex had read with the same job number.
 - Codex fixed a README, and I ran the fixed command separately. Reviews ran read-only.
-
 - On Windows 11, I also delegated a read and a follow-up edit. I saw `auto` send the job to Codex when Qwen was unavailable.
 
 On Ubuntu, Isaac Sim was using the GPU, so I still haven't had Qwen read through this bridge.
