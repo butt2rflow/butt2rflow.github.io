@@ -107,4 +107,4 @@ On Ubuntu, Isaac Sim was using the GPU, so I still haven't had Qwen read through
 | An edit fails | Check the job record and any edits it left before retrying. |
 | Qwen was skipped | Check `cooperation_status` and see what’s using the GPU. |
 
-**Related** [Reading a 1,069-page book with local AI](local-llm-reading.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md)
+**Related** [Reading a 1,069-page book with local AI](local-llm-reading.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md) · [Why I Used LTX for the Robot Arm and H3 for the Classroom](ltx-vs-h3.md)

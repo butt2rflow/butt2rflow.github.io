@@ -269,6 +269,7 @@ Hands-on notes from installing AI tools, measuring them and putting them to work
 - [**Saving Claude Tokens by Having Local AI Read a 1,069-Page Book**](posts/local-llm-reading.md) — having Qwen3.8 on an RTX 3090 read 131 posts, a whole book and a 3-minute video, and swapping only the brain behind the same Claude Code screen
 - [**Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance**](posts/muse-mcp-shopping.md) — A late-night tunnel fix and the request ID that survived it.
 - [**Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage**](posts/ai-workbench-routing.md) — I gave Codex a job, kept the claim ticket, and learned why the first two runs never reached a model.
+- [**Why I Used LTX for the Robot Arm and H3 for the Classroom**](posts/ltx-vs-h3.md) — While making a promo on one RTX 3090, I watched the robot arm’s base and the edge of the classroom screen.
 
 ---
 

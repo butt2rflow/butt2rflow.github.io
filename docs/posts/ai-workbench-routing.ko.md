@@ -107,4 +107,4 @@ Ubuntu에서는 Isaac Sim이 GPU를 쓰고 있어서, 이 브리지를 통해 Qw
 | 쓰기 작업 실패 | 재시도 전에 작업 기록과 남은 변경을 살펴봐요. |
 | Qwen을 건너뜀 | `cooperation_status`와 GPU 점유 상태를 확인해요. |
 
-**관련 글** [1,069쪽 책을 로컬 AI에 맡기기](local-llm-reading.md) · [Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기](muse-mcp-shopping.md)
+**관련 글** [1,069쪽 책을 로컬 AI에 맡기기](local-llm-reading.md) · [Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기](muse-mcp-shopping.md) · [로봇 팔은 LTX로, 교실은 H3로 만든 이유](ltx-vs-h3.md)
