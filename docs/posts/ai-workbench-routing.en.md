@@ -17,7 +17,7 @@ I kept running short on my personal Claude Code Pro plan. Max 5x was more than I
 
 - A Python bridge lets Claude Code hand a job to Codex. I can close the window and use the same job ID to check the result later.
 - I ask for an eight-line report with failures first. When I see `completed`, I still check the changes and test evidence I need.
-- Codex read files, fixed a README and even did a review. When Qwen's turn came, Isaac Sim already had the GPU, so the bridge politely stepped aside.
+- Codex read files, fixed a README and even did a review. On Windows 11 I could also delegate to Codex and use Muse tools. I kept Qwen on the Ubuntu side.
 
 ![How much room I wanted between Pro and Max 5x](../assets/diagrams_en/workbench-twice.png)
 
@@ -39,9 +39,9 @@ When I drop off clothes for alterations, I get a ticket and leave. I wanted Clau
 
 ![Like a tailor shop: drop off the job, get ticket #42, close the window and pick up the result with the same number](../assets/diagrams_en/workbench-ticket.png)
 
-When Qwen's turn came, the Isaac Sim robot simulator already had the GPU. The bridge quietly skipped Qwen and left the simulator alone.
+When Qwen's turn came, the Isaac Sim robot simulator already had the GPU. The bridge quietly skipped Qwen and left the simulator alone. On Windows 11, Qwen is unavailable through the bridge even if the card is free. Its WDDM driver doesn't report GPU memory use per process, so the bridge declines to call Qwen. The protected MCP for launching GPU jobs is Linux-only by design and refuses requests on Windows.
 
-I meant to save Claude some log reading. I also found that I liked being able to close the window and come back with just a number. A claim ticket came in handy when I sent Muse shopping, too.
+I meant to save Claude some log reading. I also found that I liked being able to close the window and come back with just a number. A claim ticket came in handy when I sent Muse shopping, too. On Windows, both Claude and Codex in a delegated job could use Muse tools. The bridge launches Codex with `-a never`, so it can't stop to ask for permission. I approved only the Muse tools I needed in `config.toml`. On Ubuntu I keep the Muse token out of Codex and call Muse directly from Claude Code.
 
 Later I made it possible to send a quick follow-up to the same Codex conversation. It felt like taking the same ticket back to the tailor to ask for one more alteration. On my PC, I asked Codex to “read `note.txt` and reply only with the secret word.” It said `pineapple`. Once the job finished, I asked, “Without reading the file again, reverse the word you reported.” It said `elppaenip`. The Codex session stayed the same, and the new job recorded the earlier job ID in `continued_from`.
 
@@ -59,7 +59,7 @@ The counter is `coop.py`. Claude Code uses MCP to discover and call the bridge�
 
 The bridge saves each request in `runs/<id>/` and starts a separate program to do the work, called a worker. The worker saves its status and final answer there, so I can reopen Claude Code and look up the same ID. A lock keeps two bridge jobs from working on the same Git working tree together, even if the requests name different subfolders. I still have to coordinate edits in an editor I open myself.
 
-On Linux, I used Python 3, Git, Claude Code, and a signed-in Codex CLI. I kept the bridge in a private, writable directory outside the projects I hand off. To register the bridge, replace `/path/to/coop.py` with its actual path. The connection shows up under `/mcp` in Claude Code. The public directory contains the core bridge and its tests. I kept the GPU recipe runner out of it. [Public code](https://github.com/butt2rflow/butt2rflow.github.io/tree/main/code/claude-codex-bridge) · [Claude Code MCP docs](https://code.claude.com/docs/en/mcp)
+On Linux, I used Python 3, Git, Claude Code, and a signed-in Codex CLI. I kept the bridge in a private, writable directory outside the projects I hand off. To register the bridge, replace `/path/to/coop.py` with its actual path. The connection shows up under `/mcp` in Claude Code. The public directory contains the core bridge and its tests. That public version is for Linux. The Windows bridge I tried and the GPU recipe runner are still outside the public code. [Public code](https://github.com/butt2rflow/butt2rflow.github.io/tree/main/code/claude-codex-bridge) · [Claude Code MCP docs](https://code.claude.com/docs/en/mcp)
 
 ```bash
 claude mcp add --transport stdio --scope user ai-cooperation -- /usr/bin/python3 /path/to/coop.py serve
@@ -73,13 +73,15 @@ Once the earlier job has finished and `job_result` shows `resumable: true`, call
 
 I only set `write=true` when I've authorized edits. For a broken install command, I'd give Codex the absolute project path and say, “Edit only the README and preserve existing changes. Run the corrected command from the project and tell me what happened.” The file list is part of the task instructions. The sandbox grants write access at the workspace level. A failed job may leave edits behind, so I check the records and the actual changes before retrying.
 
+In the public version, `start` accepts `--write` to allow edits, `--target` to choose where the job goes, and `--timeout` to set a limit in seconds. Pass `--file` once per input file, and use `--model` and `--effort` to pick the Codex model and reasoning effort.
+
 These days Claude also picks the Codex model and how hard it should think (`model`, `effort`) when it hands off a job. Below, another Claude Code window passes Codex the job of building a video-prompt skill, and decides Astra at medium effort is enough. A general contractor picking the right sub for each job.
 
 ![Another Claude Code window hands a job to Codex, choosing the Astra model at medium effort and listing four tasks (Korean)](../assets/diagrams/codex-model-pick.png)
 
 For a long document, I send a path to the file. Qwen reads the source inside the project on my PC. Claude gets the summary and goes back to the source for the evidence it needs.
 
-The bridge sends the request to Ollama, the program that runs the local model, only when the configured model is already fully in GPU memory and no competing compute process is using the card.
+On Ubuntu, the bridge sends the request to Ollama, the program that runs the local model, only when the configured model is already fully in GPU memory and no competing compute process is using the card.
 
 For a reading job, `target=auto` can pick Codex before launch if Qwen isn't ready. An explicit `target=qwen` is rejected when those checks fail. GPU use can change right after a check, so before starting a large job on the same card I use `python3 coop.py qwen-disable` to block new requests and wait for any active reading jobs to finish.
 
@@ -95,9 +97,9 @@ At first I thought a detailed report would be reassuring. But if Claude reads th
 - I closed the window, came back, and pulled what Codex had read with the same job number.
 - Codex fixed a README, and I ran the fixed command separately. Reviews ran read-only.
 
-**What I haven't done yet**
+- On Windows 11, I also delegated a read and a follow-up edit. I saw `auto` send the job to Codex when Qwen was unavailable.
 
-- Have Qwen actually read something through this bridge. Every time I tried, Isaac Sim had the GPU.
+On Ubuntu, Isaac Sim was using the GPU, so I still haven't had Qwen read through this bridge.
 
 ### Where to look when it gets stuck
 

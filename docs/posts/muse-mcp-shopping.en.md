@@ -21,7 +21,7 @@ The fun part came next. On my phone I asked Muse, "Looks like the requests from 
 
 - I put the shopping tools on Muse's virtual machine and called them from Claude Code and Codex through Cloudflare Tunnel.
 - A healthy tunnel still needs a route from the public hostname to the server. My service URL inside the VM also needed plain HTTP.
-- Muse gives you a request ID first. Mine survived a disconnect, so I could pick up the result in a fresh session.
+- Muse gives you a request ID first. Mine survived a disconnect, so I could pick up the result in a fresh session. A Python script now checks while I wait.
 
 ![Send a note of criteria while coding; Muse checks the catalog, sellers and shipping and returns a report, and I sign off on any purchase](../assets/diagrams_en/muse-errand.png)
 
@@ -51,9 +51,11 @@ The first catalog search brought up a permission card in **Muse chat**. I clicke
 
 When I sent research to the queue, I got `pending` and a request ID. Later that night, a lookup hit a 502. Muse reported that the server restarted and its old MCP sessions expired. Whether that restart was the 502's culprit, I still don't know.
 
-In the new session, I looked up the **same request ID** and got `done` and the result. I'd opened and closed plenty of windows that night. At least I didn't have to ask Muse to shop twice.
+In the new session, I looked up the **same request ID** and got `done` and the result. I'd opened and closed plenty of windows that night. At least I didn't have to ask Muse to shop twice. But having Claude check over and over still ate into my allowance while I waited. I gave the ticket to a Python script and had Claude read the result once it was ready.
 
 ![The receipt from a pending request still finds the done result after a midnight 502 and a fresh connection](../assets/diagrams_en/muse-ticket.png)
+
+The queue could take a request and return a result even when a seller's page was out of reach. When I sent a camera search from Windows 11, Amazon.ca blocked Muse's page read with a 403. I opened the same page with Claude's Chrome extension and could see the price and stock. In the shopping request I ask Muse to check other Canadian retailers too.
 
 ## If you’d like to try it
 
@@ -132,11 +134,16 @@ Even with the name fixed, a Codex process launched somewhere else won't inherit 
 MUSE_SHOPPING_TOKEN="$(cat /path/to/private/token)" codex --no-daemon
 ```
 
-In the end both Claude Code and Codex connected with this setup. When I forgot the environment variable and opened Claude Code, a 401 came straight back.
+On Windows 11 I connected both Claude Code and Codex to Muse. When I forgot the environment variable and opened Claude Code, a 401 came straight back. A job sent through the [bridge](ai-workbench-routing.md) needed one more thing. The bridge launches Codex with `-a never`, so a tool call fails if it needs approval and I haven't granted it in advance. The `search_memory` tool worked after I approved it in Codex's `config.toml` like this. I keep the Muse token out of Codex on Ubuntu, where Claude Code calls Muse directly.
+
+```toml
+[mcp_servers.muse-shopping.tools.search_memory]
+approval_mode = "approve"
+```
 
 ### 3. Look up the same request ID
 
-On the real Muse server, save the ID from `ask_muse_to_shop` and give it to `check_shopping_request`. If you see `pending`, check the same ID a little later.
+On the real Muse server, save the ID from `ask_muse_to_shop`. For a single lookup, give it to `check_shopping_request`. To wait for a result, I run a short Python wait script (`muse_wait.py`, not in the public repo yet) in a background shell instead of scheduling repeated model checks. The script polls directly, so the wait spends no model tokens. While the job is pending, it starts with a two-minute interval and doubles it up to ten minutes. When the job finishes, the script prints one line with the ID, status, a short summary, and the path to the full JSON. I open that file only when I need the details.
 
 For a 502, I'd compare `/healthz` inside the VM with the public endpoint. If the local check fails, I'd check the server first. If only the local check works, I'd look at the tunnel and its service URL. An expired MCP session after a restart needs a fresh connection.
 
