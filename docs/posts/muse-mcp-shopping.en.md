@@ -55,7 +55,7 @@ In the new session, I looked up the **same request ID** and got `done` and the r
 
 ![The receipt from a pending request still finds the done result after a midnight 502 and a fresh connection](../assets/diagrams_en/muse-ticket.png)
 
-When I sent a camera search from Windows 11, I got my ticket and could look up the result just fine. The snag was at the retailer. Amazon.ca returned a 403 when Muse tried to open the product page. I opened the same page with Claude’s Chrome extension and could see the price and stock. So when I send Muse shopping, I ask it to check other Canadian retailers too.
+When I sent a camera search from Windows 11, I got my ticket and could look up the result just fine. The snag was at the retailer. Amazon.ca returned a 403 when Muse tried to open the product page. I opened the same page with Claude’s Chrome extension and could see the price and stock. So Claude checks Amazon.ca prices itself through the Chrome extension, and Muse gets other Canadian retailers such as Best Buy.ca.
 
 ## If you’d like to try it
 
@@ -156,4 +156,4 @@ For a 502, I'd compare `/healthz` inside the VM with the public endpoint. If the
 | 502 | Compare `/healthz` inside the VM and at the public hostname. |
 | Search fails after approval | Check the permission card and its record in Muse chat. |
 
-**Related** [Let local AI do the reading](local-llm-reading.md) · [Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage](ai-workbench-routing.md)
+**Related** [Reading a 1,069-page book with local AI](local-llm-reading.md) · [Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage](ai-workbench-routing.md)

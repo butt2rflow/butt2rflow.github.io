@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Splitting the work between Claude and a local AI</title>
-<desc id="de">On the left, Claude chooses what to read, judges and edits. On the right, the local AI (Qwen3.6 35B on an RTX 3090) reads the documents, PDFs and web pages itself. Claude passes only file paths and URLs, and the local AI sends back a few lines of summary. The expensive source text never goes through Claude.</desc>
+<desc id="de">On the left, Claude chooses what to read, judges and edits. On the right, the local AI (Qwen3.8 27B on an RTX 3090) reads the documents, PDFs and web pages itself. Claude passes only file paths and URLs, and the local AI sends back a few lines of summary. The expensive source text never goes through Claude.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -66,7 +66,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <text class="it" x="50" y="172">edit code and text</text>
 <rect class="bxt" x="434" y="46" width="230" height="156" rx="10"/>
 <text class="lb" x="450" y="72">Local AI</text>
-<text class="st" x="450" y="90">Qwen3.6 35B on an RTX 3090, free</text>
+<text class="st" x="450" y="90">Qwen3.8 27B on an RTX 3090, free</text>
 <circle class="dott" cx="456" cy="116" r="3.5"/>
 <text class="it" x="468" y="120">read the source itself</text>
 <circle class="dott" cx="456" cy="142" r="3.5"/>

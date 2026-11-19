@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Claude usage for summarizing 7 and 131 posts</title>
-<desc id="de">Bars show the tokens Claude used. 7 posts (52k characters): about 30-38K tokens if Claude read them itself (estimate), about 6-8K when delegated. 131 posts (650k characters): about 350-420K tokens read directly (estimate), about 5K delegated. The 7-post case drops a lot in percentage but saves only 20-30K tokens; the 131-post case saves hundreds of thousands.</desc>
+<desc id="de">Seven posts: 30–38K estimated input tokens or 870 for the overview. For 131 posts: 350–420K or 2,300 for the overview.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -60,21 +60,20 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <rect class="bxa" x="176" y="56" width="29.952380952380953" height="18" rx="3" style="fill:var(--amber);fill-opacity:.35"/>
 <line class="ln" x1="202.42857142857142" y1="65" x2="209.47619047619048" y2="65"/>
 <text class="sm" x="217.47619047619048" y="69" style="fill:var(--fg)">~30-38K (est.)</text>
-<rect class="bxt" x="176" y="84" width="6.166666666666666" height="18" rx="3" style="fill:var(--teal);fill-opacity:.35"/>
-<line class="ln" x1="181.28571428571428" y1="93" x2="183.04761904761904" y2="93"/>
-<text class="sm" x="191.04761904761904" y="97" style="fill:var(--fg)">~6-8K</text>
-<text class="it" x="18" y="124" style="fill:var(--teal)">20-30K tokens saved</text>
+<rect class="bxt" x="176" y="84" width="0.76" height="18" rx="3" style="fill:var(--teal);fill-opacity:.35"/>
+<text class="sm" x="191.04761904761904" y="97" style="fill:var(--fg)">~870</text>
+<text class="it" x="18" y="124" style="fill:var(--teal)">About 29–37K fewer tokens reading the overview</text>
 <text class="lb" x="18" y="170">131 posts</text>
 <text class="st" x="18" y="187">650k characters</text>
 <rect class="bxa" x="176" y="154" width="339.16666666666663" height="18" rx="3" style="fill:var(--amber);fill-opacity:.35"/>
 <line class="ln" x1="484.3333333333333" y1="163" x2="546.0" y2="163"/>
 <text class="sm" x="554.0" y="167" style="fill:var(--fg)">~350-420K (est.)</text>
-<rect class="bxt" x="176" y="182" width="4.404761904761904" height="18" rx="3" style="fill:var(--teal);fill-opacity:.35"/>
-<text class="sm" x="188.4047619047619" y="195" style="fill:var(--fg)">~5K</text>
-<text class="it" x="18" y="222" style="fill:var(--teal)">hundreds of thousands saved, over 90%</text>
+<rect class="bxt" x="176" y="182" width="2.04" height="18" rx="3" style="fill:var(--teal);fill-opacity:.35"/>
+<text class="sm" x="188.4047619047619" y="195" style="fill:var(--fg)">~2,300</text>
+<text class="it" x="18" y="222" style="fill:var(--teal)">Over 99% less input for the overview</text>
 <rect class="bxa" x="176" y="252" width="14" height="12" rx="2" style="fill:var(--amber);fill-opacity:.35"/>
 <text class="sm" x="196" y="262" style="fill:var(--fg)">Claude reads it itself</text>
 <rect class="bxt" x="372" y="252" width="14" height="12" rx="2" style="fill:var(--teal);fill-opacity:.35"/>
 <text class="sm" x="392" y="262" style="fill:var(--fg)">delegated to the local AI</text>
-<text class="sm" x="18" y="288">Thin lines show the estimate range. Direct-read values are estimates from character counts; delegated values were measured.</text>
+<text class="sm" x="18" y="288">Both bars estimate reading input. Thin lines show the direct-read range.</text>
 </svg>

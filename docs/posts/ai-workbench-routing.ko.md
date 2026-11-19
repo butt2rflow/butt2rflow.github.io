@@ -15,7 +15,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보니 자꾸 사용 한도에 
 
 ![Pro와 Max 5x 사이에서 제가 원했던 두 배의 여유](../assets/diagrams/workbench-twice.png)
 
-[지난 글](local-llm-reading.md)에서는 긴 책을 읽는 일을 제 PC의 Qwen에 맡겨 Claude 사용량을 아꼈어요. 코딩할 때도 Claude와 Codex가 그렇게 일을 나누면 어떨까 싶었어요. Qwen에 더 맡기기엔 RTX 3090이 한 장뿐이었어요. Qwen이 GPU 메모리를 쓰는 동안엔 FLUX도, MiniMax H3도, Isaac Sim도 차례를 기다려야 했거든요.
+[1,069쪽 책을 로컬 AI에 맡기기](local-llm-reading.md)에서는 긴 책을 읽는 일을 제 PC의 Qwen에 맡겨 Claude 사용량을 아꼈어요. 코딩할 때도 Claude와 Codex가 그렇게 일을 나누면 어떨까 싶었어요. Qwen에 더 맡기기엔 RTX 3090이 한 장뿐이었어요. Qwen이 GPU 메모리를 쓰는 동안엔 FLUX도, MiniMax H3도, Isaac Sim도 차례를 기다려야 했거든요.
 
 ![RTX 3090 한 장을 두고 Qwen과 FLUX, MiniMax H3, Isaac Sim이 차례를 기다리는 모습](../assets/diagrams/workbench-gpu.png)
 
@@ -107,4 +107,4 @@ Ubuntu에서는 Isaac Sim이 GPU를 쓰고 있어서, 이 브리지를 통해 Qw
 | 쓰기 작업 실패 | 재시도 전에 작업 기록과 남은 변경을 살펴봐요. |
 | Qwen을 건너뜀 | `cooperation_status`와 GPU 점유 상태를 확인해요. |
 
-**관련 글** [로컬 AI에게 읽기 맡기기](local-llm-reading.md) · [Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기](muse-mcp-shopping.md)
+**관련 글** [1,069쪽 책을 로컬 AI에 맡기기](local-llm-reading.md) · [Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기](muse-mcp-shopping.md)

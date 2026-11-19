@@ -55,7 +55,7 @@ Codex 설정에서는 이름과 값을 헷갈렸어요. 환경변수로 토큰�
 
 ![조사를 맡기고 받은 접수증으로, 한밤중 502로 세션이 끊긴 뒤에도 새로 접속해 done 결과를 찾는 흐름](../assets/diagrams/muse-ticket.png)
 
-Windows 11에서 카메라 조사를 맡겼을 때도 접수부터 결과 조회까지는 잘됐어요. 막힌 곳은 판매처였어요. Muse가 Amazon.ca 상품 페이지를 열려고 하자 403 오류가 돌아왔거든요. 같은 페이지를 Claude의 Chrome 확장으로 열어 보니 가격과 재고를 확인할 수 있었어요. 그래서 쇼핑 조사를 맡길 때는 다른 캐나다 판매처도 함께 살펴 달라고 해요.
+Windows 11에서 카메라 조사를 맡겼을 때도 접수부터 결과 조회까지는 잘됐어요. 막힌 곳은 판매처였어요. Muse가 Amazon.ca 상품 페이지를 열려고 하자 403 오류가 돌아왔거든요. 같은 페이지를 Claude의 Chrome 확장으로 열어 보니 가격과 재고를 확인할 수 있었어요. 그래서 Amazon.ca 가격은 Claude가 Chrome 확장으로 직접 확인하고, Muse에는 Best Buy.ca 같은 다른 캐나다 판매처를 맡겨요.
 
 ## 직접 해 보고 싶다면
 
@@ -156,4 +156,4 @@ approval_mode = "approve"
 | 502 | VM 안과 공개 주소의 `/healthz`를 비교해요. |
 | 승인 뒤에도 검색 실패 | Muse 채팅에서 승인 카드와 기록을 살펴봐요. |
 
-**관련 글** [로컬 AI에게 읽기 맡기기](local-llm-reading.md) · [Claude는 감독, Codex는 일꾼: 사용량 아끼려고 만든 작업 브리지](ai-workbench-routing.md)
+**관련 글** [1,069쪽 책을 로컬 AI에 맡기기](local-llm-reading.md) · [Claude는 감독, Codex는 일꾼: 사용량 아끼려고 만든 작업 브리지](ai-workbench-routing.md)

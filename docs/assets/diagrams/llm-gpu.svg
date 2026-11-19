@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">그래픽카드 메모리 24 GB를 나눠 쓸 때</title>
-<desc id="de">위: 로컬 AI(그때 쓰던 27B 모델)만 실행하면 모델과 기억 공간 20.6 GB가 24 GB 안에 다 들어가 초당 63토큰. 아래: 이미지 생성 프로그램(ComfyUI)을 끄지 않아 15.8 GB를 잡고 있으면, 로컬 AI 모델의 4분의 3이 그래픽카드에 못 들어가 CPU로 밀리고 초당 7토큰으로 느려진다. 오류는 나지 않는다.</desc>
+<desc id="de">위: 로컬 AI(그때 쓰던 Qwen3.6 27B 모델)만 실행하면 모델과 기억 공간 20.6 GB가 24 GB 안에 다 들어가 초당 63토큰. 아래: 이미지 생성 프로그램(ComfyUI)을 끄지 않아 15.8 GB를 잡고 있으면, 로컬 AI 모델의 4분의 3이 그래픽카드에 못 들어가 CPU로 밀리고 초당 7토큰으로 느려진다. 오류는 나지 않는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="260" rx="12"/>
-<text class="t" x="18" y="26">오류 없이 아홉 배 느려진다</text>
+<text class="t" x="18" y="26">예전 Qwen3.6 27B에서 GPU 메모리가 부족했을 때</text>
 <text class="it" x="18" y="84">로컬 AI(27B)만</text>
 <rect class="ctl" x="196" y="62" width="360" height="34" rx="6"/>
 <rect class="bxt" x="198" y="65" width="305.0" height="28" rx="4"/>

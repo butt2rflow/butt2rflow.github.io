@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Sharing the GPU's 24 GB</title>
-<desc id="de">Top: with only the local AI running (the 27B model used then), the model and its memory (20.6 GB) fit inside 24 GB and it answers at 63 tokens per second. Bottom: with the image generator (ComfyUI) left running and holding 15.8 GB, three quarters of the model can't fit on the GPU, spill onto the CPU, and speed drops to 7 tokens per second. No error appears.</desc>
+<desc id="de">Top: with only the local AI running (the older Qwen3.6 27B), the model and its memory (20.6 GB) fit inside 24 GB and it answers at 63 tokens per second. Bottom: with the image generator (ComfyUI) left running and holding 15.8 GB, three quarters of the model can't fit on the GPU, spill onto the CPU, and speed drops to 7 tokens per second. No error appears.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -54,7 +54,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
 </defs>
 <rect class="bg" x="0" y="0" width="680" height="260" rx="12"/>
-<text class="t" x="18" y="26">Nine times slower, with no error</text>
+<text class="t" x="18" y="26">When the older Qwen3.6 27B ran out of GPU memory</text>
 <text class="it" x="18" y="84">local AI (27B) only</text>
 <rect class="ctl" x="196" y="62" width="360" height="34" rx="6"/>
 <rect class="bxt" x="198" y="65" width="305.0" height="28" rx="4"/>

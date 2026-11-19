@@ -15,7 +15,7 @@ I kept hitting my Claude Code Pro limit on personal projects. Twice the allowanc
 
 ![How much room I wanted between Pro and Max 5x](../assets/diagrams_en/workbench-twice.png)
 
-In the [previous post](local-llm-reading.md), I saved some of my Claude allowance by having Qwen read a long book on my PC. Could Claude and Codex split the work like that when I was coding? I had a reason to try it. My single RTX 3090 already had a queue. While Qwen occupied its memory, FLUX, MiniMax H3, and Isaac Sim all had to wait.
+In the [Reading a 1,069-page book with local AI](local-llm-reading.md), I saved some of my Claude allowance by having Qwen read a long book on my PC. Could Claude and Codex split the work like that when I was coding? I had a reason to try it. My single RTX 3090 already had a queue. While Qwen occupied its memory, FLUX, MiniMax H3, and Isaac Sim all had to wait.
 
 ![Qwen, FLUX, MiniMax H3, and Isaac Sim take turns with one RTX 3090](../assets/diagrams_en/workbench-gpu.png)
 
@@ -107,4 +107,4 @@ On Ubuntu, Isaac Sim was using the GPU, so I still haven't had Qwen read through
 | An edit fails | Check the job record and any edits it left before retrying. |
 | Qwen was skipped | Check `cooperation_status` and see what’s using the GPU. |
 
-**Related** [Let local AI do the reading](local-llm-reading.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md)
+**Related** [Reading a 1,069-page book with local AI](local-llm-reading.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md)

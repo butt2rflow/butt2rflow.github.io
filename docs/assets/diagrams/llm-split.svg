@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
 <title id="ti">Claude와 로컬 AI의 역할 나누기</title>
-<desc id="de">왼쪽 Claude는 무엇을 읽을지 고르고, 판단하고, 고친다. 오른쪽 로컬 AI(RTX 3090의 Qwen3.6 35B)는 문서, PDF, 웹 페이지 원문을 직접 읽는다. Claude는 파일 경로와 웹 주소만 넘기고, 로컬 AI는 몇 줄짜리 요약만 돌려준다. 비싼 원문은 Claude를 거치지 않는다.</desc>
+<desc id="de">왼쪽 Claude는 무엇을 읽을지 고르고, 판단하고, 고친다. 오른쪽 로컬 AI(RTX 3090의 Qwen3.8 27B)는 문서, PDF, 웹 페이지 원문을 직접 읽는다. Claude는 파일 경로와 웹 주소만 넘기고, 로컬 AI는 몇 줄짜리 요약만 돌려준다. 비싼 원문은 Claude를 거치지 않는다.</desc>
 <style>
 :root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
 @media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
@@ -66,7 +66,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sa
 <text class="it" x="50" y="172">코드·글 고치기</text>
 <rect class="bxt" x="434" y="46" width="230" height="156" rx="10"/>
 <text class="lb" x="450" y="72">로컬 AI</text>
-<text class="st" x="450" y="90">RTX 3090의 Qwen3.6 35B, 무료</text>
+<text class="st" x="450" y="90">RTX 3090의 Qwen3.8 27B, 무료</text>
 <circle class="dott" cx="456" cy="116" r="3.5"/>
 <text class="it" x="468" y="120">원문을 직접 읽기</text>
 <circle class="dott" cx="456" cy="142" r="3.5"/>
