@@ -39,6 +39,7 @@ Each Claude plan has a set amount you can use (a usage limit), and that usage go
 | Item | Details |
 |---|---|
 | Graphics card | RTX 3090 (24 GB of memory) |
+| Operating system | Ubuntu 24.04 (every test and tool in this post ran on Ubuntu; I haven't tried them on Windows) |
 | Runtime | Ollama (a free program that downloads and runs models) |
 | Model | Qwen3.6 35B (Alibaba's open model. 35B means 35 billion numbers inside; it uses only about 3 billion of them at a time, which makes it fast; explained under "Why the 35B") |
 | Model file | 22 GB (each number stored in 4 bits, a much shorter form) |
