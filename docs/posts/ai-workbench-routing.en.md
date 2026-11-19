@@ -1,5 +1,5 @@
 ---
-title: "Max 5x Was Too Expensive. I Only Needed Twice as Much: The Night I Put Codex to Work in Claude Code"
+title: "Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage"
 nav_title: "Claude and Codex"
 date: 2026-11-17
 tags: [local-llm, qwen, ollama, claude-code, codex, muse, mcp]
@@ -7,7 +7,7 @@ lang: en
 description: "I wanted Claude to spend less of its usage allowance reading code and logs. I built a bridge that hands jobs to Codex and saves the results by ID. The first two jobs stopped before a model even ran."
 ---
 
-# Max 5x Was Too Expensive. I Only Needed Twice as Much: The Night I Put Codex to Work in Claude Code
+# Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage
 
 <video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster-en.jpg" src="/assets/demos/bridge-opening-en.mp4" style="width:100%" aria-label="A short animation: the Codex crew lays the last planks, a handcart with a work order rolls across to them, and a ticket returns to Claude, the boss; Qwen sits on a stack of books"></video>
 

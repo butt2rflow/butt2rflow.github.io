@@ -1,5 +1,5 @@
 ---
-title: "Max 5x는 비싸고, 딱 2배만 필요했다: Claude Code에 Codex를 일꾼으로 붙인 밤"
+title: "Claude는 감독, Codex는 일꾼: 사용량 아끼려고 만든 작업 브리지"
 nav_title: "Claude와 Codex 협업"
 date: 2026-11-17
 tags: [local-llm, qwen, ollama, claude-code, codex, muse, mcp]
@@ -7,7 +7,7 @@ lang: ko
 description: "Claude가 코드와 로그를 전부 읽느라 쓰는 사용량을 아끼고 싶었어요. Codex에 일을 넘기고 접수 번호로 결과를 받는 브리지를 만들었는데, 첫 두 건은 모델이 답하기도 전에 멈췄어요."
 ---
 
-# Max 5x는 비싸고, 딱 2배만 필요했다: Claude Code에 Codex를 일꾼으로 붙인 밤
+# Claude는 감독, Codex는 일꾼: 사용량 아끼려고 만든 작업 브리지
 
 <video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster.jpg" src="/assets/demos/bridge-opening.mp4" style="width:100%" aria-label="Claude 감독 로봇이 지시서를 실은 손수레를 두고 기다리는 동안 Codex 일꾼 로봇들이 다리 판을 놓고, 완성된 다리로 손수레가 건너가고 번호표가 돌아오는 짧은 애니메이션. 책 위에는 Qwen 로봇이 앉아 있다"></video>
 

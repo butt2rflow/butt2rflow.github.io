@@ -275,4 +275,4 @@ Claude 사용량이 바닥난 날에도 찾아볼 수 있어요. 로컬 세션(`
 - *Whisper*: 말소리를 글자로 옮기는 공개 받아쓰기 모델
 
 
-**후속 글:** [Max 5x는 비싸고, 딱 2배만 필요했다: Claude Code에 Codex를 일꾼으로 붙인 밤](ai-workbench-routing.md) · [Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기](muse-mcp-shopping.md)
+**후속 글:** [Claude는 감독, Codex는 일꾼: 사용량 아끼려고 만든 작업 브리지](ai-workbench-routing.md) · [Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기](muse-mcp-shopping.md)

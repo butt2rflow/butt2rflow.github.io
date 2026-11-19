@@ -156,4 +156,4 @@ For a 502, I'd compare `/healthz` inside the VM with the public endpoint. If the
 | 502 | Compare `/healthz` inside the VM and at the public hostname. |
 | Search fails after approval | Check the permission card and its record in Muse chat. |
 
-**Related** [Let local AI do the reading](local-llm-reading.md) · [Max 5x Was Too Expensive. I Only Needed Twice as Much: The Night I Put Codex to Work in Claude Code](ai-workbench-routing.md)
+**Related** [Let local AI do the reading](local-llm-reading.md) · [Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage](ai-workbench-routing.md)

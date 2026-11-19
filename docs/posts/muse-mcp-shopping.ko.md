@@ -156,4 +156,4 @@ approval_mode = "approve"
 | 502 | VM 안과 공개 주소의 `/healthz`를 비교해요. |
 | 승인 뒤에도 검색 실패 | Muse 채팅에서 승인 카드와 기록을 살펴봐요. |
 
-**관련 글** [로컬 AI에게 읽기 맡기기](local-llm-reading.md) · [Max 5x는 비싸고, 딱 2배만 필요했다: Claude Code에 Codex를 일꾼으로 붙인 밤](ai-workbench-routing.md)
+**관련 글** [로컬 AI에게 읽기 맡기기](local-llm-reading.md) · [Claude는 감독, Codex는 일꾼: 사용량 아끼려고 만든 작업 브리지](ai-workbench-routing.md)

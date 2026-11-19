@@ -275,4 +275,4 @@ Settings (KV cache quantization, context length, keep-alive) follow the official
 - *Whisper*: an open speech-to-text model
 
 
-**Follow-up:** [Max 5x Was Too Expensive. I Only Needed Twice as Much: The Night I Put Codex to Work in Claude Code](ai-workbench-routing.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md)
+**Follow-up:** [Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage](ai-workbench-routing.md) · [Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance](muse-mcp-shopping.md)
