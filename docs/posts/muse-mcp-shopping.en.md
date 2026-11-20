@@ -66,11 +66,17 @@ Building a similar server fresh on another Muse account showed the weak spot. Th
 
 So I split the job. When a request comes in, a first-pass program inside the server, the worker, turns the note into criteria (item type, specs, region, currency, budget). It searches the catalog with a short query and drops items of the wrong type. It saves details for the top candidates and sets the status to `researching`, but it never writes `done`. A Muse scheduled task, the researcher, finishes the job every ten minutes. It checks specs, seller, stock, and the total with shipping and tax on Canadian retailers' product pages, and only then writes `done`. If nothing fits or two hours pass, it closes the job as `failed`. Restarting the server and the tunnel moved to another scheduled task, the watchdog.
 
-![Two scheduled-task cards in Muse chat: Muse shopping MCP researcher, every 10 minutes, and Muse shopping MCP watchdog, every 10 minutes](../assets/diagrams/muse-scheduled-tasks.png){ width="360" }
+I sent my Muse a test: "Canada, 2 m USB-C cable, 100 W, under CA$25." It reached `researching` in two minutes.
 
-*The two scheduled tasks Muse set up: the researcher finishes each job, and the watchdog keeps the server and tunnel up. (Screenshot of the Muse app.)*
+![Muse’s progress note: the test request went in over MCP, moved from pending to researching, and the researcher is verifying sellers and totals; the public /healthz returns 200 and /mcp without a token returns 401](../assets/diagrams/muse-test-progress.png){ width="360" }
 
-I sent my Muse a test: "Canada, 2 m USB-C cable, 100 W, under CA$25." It reached `researching` in two minutes and `done` about twenty minutes after I sent it. Of eight options, the best was an ALOGIC 2 m cable at CA$17.11 delivered. The researcher also caught that a cheaper catalog price was for the 1 m version, and it marked a 1.98 m cable "close, not exact."
+*Muse’s progress note while the researcher checked sellers after the worker’s hand-off. (Screenshot of the Muse app.)*
+
+It reached `done` about twenty minutes after I sent it. Along the way, the worker’s first catalog search stalled for two minutes and timed out, but the researcher ran the search again and the result still came through. Muse changed the worker to give up after 60 seconds and retry once.
+
+![Part of Muse’s report: during the test the worker’s first catalog search timed out at 120 seconds, the researcher re-ran it, and the worker now fails fast at 60 seconds with one retry; below are two scheduled-task cards, the researcher and the watchdog, each every 10 minutes](../assets/diagrams/muse-scheduled-tasks.png){ width="360" }
+
+*The two scheduled tasks Muse set up: the researcher finishes each job, and the watchdog keeps the server and tunnel up. The paragraph above is that timeout. (Screenshot of the Muse app.)* Of eight options, the best was an ALOGIC 2 m cable at CA$17.11 delivered. The researcher also caught that a cheaper catalog price was for the 1 m version, and it marked a 1.98 m cable "close, not exact."
 
 You still have to read the result. Only the ALOGIC option had a delivered total with verified shipping. The others had shipping under `unverified`, and a CA$28.24 cable over budget was still marked as matching. On the other account, a 1.83 m (6 ft) cable was marked as matching a 2 m brief, with the shortfall noted only under `unverified`. Now I read the `unverified` list first.
 

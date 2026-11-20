@@ -66,11 +66,17 @@ Windows 11에서 카메라 조사를 맡겼을 때도 접수부터 결과 조회
 
 그래서 일을 둘로 나눴어요. 요청이 들어오면 서버 안에서 1차로 거르는 프로그램(worker)이 쪽지를 조건(물건 종류, 사양, 지역, 통화, 예산)으로 정리해요. 짧은 검색어로 카탈로그를 찾고, 종류가 다른 물건은 빼요. 상위 후보의 상세 정보까지 저장한 뒤 상태를 `researching`으로 바꾸지만 `done`은 적지 않아요. 마무리는 10분마다 도는 Muse의 예약 작업(researcher)이 맡아요. 캐나다 판매처의 상품 페이지에서 사양, 판매자, 재고, 배송비와 세금을 넣은 총액을 확인하고 나서야 `done`을 적어요. 맞는 게 없거나 두 시간이 지나면 `failed`로 닫고요. 서버와 터널을 다시 띄우는 일은 또 다른 예약 작업(watchdog)에 따로 맡겼어요.
 
-![Muse 채팅의 예약 작업 카드 두 개. 위는 10분마다 도는 Muse shopping MCP researcher, 아래는 10분마다 도는 Muse shopping MCP watchdog](../assets/diagrams/muse-scheduled-tasks.png){ width="360" }
+우리 Muse에 "캐나다, 2 m USB-C 케이블, 100 W, CA$25 이하"로 시험 요청을 넣어 봤어요. 2분 만에 `researching`이 됐어요.
 
-*Muse가 만들어 둔 예약 작업 두 개예요. researcher가 조사를 마무리하고, watchdog이 서버와 터널을 지켜요. (Muse 앱 화면 캡처)*
+![Muse의 중간 보고. 시험 요청을 MCP로 접수했고 pending에서 researching으로 넘어가 researcher가 판매처와 총액을 확인하는 중이며, 공개 주소의 /healthz는 200, 토큰 없는 /mcp는 401이라고 적혀 있다](../assets/diagrams/muse-test-progress.png){ width="360" }
 
-우리 Muse에 "캐나다, 2 m USB-C 케이블, 100 W, CA$25 이하"로 시험 요청을 넣어 봤어요. 2분 만에 `researching`이 됐고, 접수하고 20분쯤 지나 `done`이 떴어요. 후보는 8개, 가장 나은 건 ALOGIC 2 m 케이블로 배송비 포함 CA$17.11이었어요. 카탈로그에 보이던 더 싼 가격이 1 m짜리였다는 것도 researcher가 짚어 냈고, 1.98 m짜리는 "close, not exact"(가깝지만 딱 맞지는 않음)로 표시했어요.
+*worker가 넘긴 뒤 researcher가 판매처를 확인하는 동안 Muse가 보낸 중간 보고예요. (Muse 앱 화면 캡처)*
+
+접수하고 20분쯤 지나 `done`이 떴어요. 그사이 worker의 첫 카탈로그 검색이 2분 동안 멈춰 시간 초과가 났는데, researcher가 검색을 다시 해서 결과는 제대로 나왔어요. Muse는 worker가 60초 안에 포기하고 한 번만 다시 시도하도록 고쳤어요.
+
+![Muse의 보고 일부. 시험 중 worker의 첫 카탈로그 검색이 120초 만에 시간 초과됐지만 researcher가 다시 검색해 끝냈고, worker를 60초·재시도 1번으로 고쳤다는 설명 아래에 10분마다 도는 researcher와 watchdog 예약 작업 카드 두 개가 있다](../assets/diagrams/muse-scheduled-tasks.png){ width="360" }
+
+*Muse가 만들어 둔 예약 작업 두 개예요. researcher가 조사를 마무리하고, watchdog이 서버와 터널을 지켜요. 위 문단이 그 시간 초과 이야기예요. (Muse 앱 화면 캡처)* 후보는 8개, 가장 나은 건 ALOGIC 2 m 케이블로 배송비 포함 CA$17.11이었어요. 카탈로그에 보이던 더 싼 가격이 1 m짜리였다는 것도 researcher가 짚어 냈고, 1.98 m짜리는 "close, not exact"(가깝지만 딱 맞지는 않음)로 표시했어요.
 
 그래도 결과는 직접 읽어야 해요. 배송비까지 확인된 총액은 8개 중 ALOGIC 하나뿐이었어요. 나머지는 배송비가 `unverified`에 들어 있었고, 예산을 넘는 CA$28.24짜리도 조건에 맞는다고 표시돼 있었어요. 다른 계정에서는 1.83 m(6 ft) 케이블이 2 m 조건에 맞는다고 나오고, 모자란 길이는 `unverified`에만 적힌 적도 있어요. 그래서 결과를 받으면 `unverified` 목록부터 봐요.
 
