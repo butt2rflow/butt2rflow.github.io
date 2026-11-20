@@ -107,7 +107,7 @@ The model extracted 166 rules from 12 indicator posts. At least three changed th
 
 ### A 1,069-page book
 
-This textbook is a scan with a text layer. In 36 seconds the model found all 42 real chapter starts but counted five extra entries as chapters. I supplied the verified boundaries. The chapter summaries and overview took **32 min 48 s**, with about 626,000 local input tokens.
+This textbook is a scan with a text layer. In 36 seconds the model found all 42 real chapter starts but counted five extra entries as chapters. I supplied the verified boundaries. The chapter summaries and overview took **32 min 49 s**, with about 626,000 local input tokens.
 
 I estimate over 630,000 tokens for Claude to read the source, or about 46,000 for the entire file including the contents and chapter summaries. That saves over 90%, and some passages still need checking. Eight of nine selected facts matched across two chapters. Chapter 8 preserved the trade directions and example payoffs. Chapter 1 skipped the broker’s role in selecting the customer and said the clearinghouse randomly picks the writer directly.
 
@@ -193,7 +193,7 @@ The rule is simple. If a job means **reading a lot and returning something short
 
 ## Why I keep the 35B for quick reads
 
-I keep just **qwen3.8:27b and qwen3.6:35b**. The 35B activates only some of its parameters for each token and is roughly three times faster on quick jobs. A separate decode benchmark gave 218 versus 57 tokens/s. The whole book took about 15 versus 33 minutes. The 83.5 in the setup table is for the prime-function prompt.
+I keep just **qwen3.8:27b and qwen3.6:35b**. The 35B activates only some of its parameters for each token and is much faster on quick jobs. A separate decode benchmark gave 218 versus 57 tokens/s. The whole book took about 15 versus 33 minutes. The 83.5 in the setup table is for the prime-function prompt.
 
 | For fidelity · 3.8 27B | For speed · 3.6 35B |
 |---|---|

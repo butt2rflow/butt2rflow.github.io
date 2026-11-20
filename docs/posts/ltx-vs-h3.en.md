@@ -27,7 +27,7 @@ There are two arms in S06. A person moves the black leader arm and the white fol
 
 LTX followed the opening image closely, so I went back to the drawing before asking for another move. I used FLUX to erase the stray C-clamp. When I animated that frame with LTX, the black base held its position. Once it sat still, I could see what else was wrong. The real bases are the same part in different colors. The black one in the drawing had a skinny post and a long, thin foot.
 
-On the first repair I masked the black base and asked FLUX to redraw it. I got the same post and foot, plus a pale rectangle at the front of the desk. For the second try, I had the part I needed right there in the picture. I cut out the white base, turned it black and lined it up in perspective under the black arm. I patched the desk and used FLUX to blend the base into its surroundings. The host ran the generation job, and Codex helped inspect the new opening frame. Every pixel outside the repair mask matched the original.
+On the first repair I masked the black base and asked FLUX to redraw it. I got the same post and foot, plus a pale rectangle at the front of the desk. For the second try, I had the part I needed right there in the picture. I cut out the white base, turned it black and lined it up in perspective under the black arm. I patched the desk and used FLUX to blend the base into its surroundings. I ran the generation on my own PC, and Codex helped inspect the new opening frame. Every pixel outside the repair mask matched the original.
 
 <img alt="Repaired S06 opening frame" src="../../../assets/ltx-vs-h3/s06-repaired-first-frame.jpg">
 
@@ -47,12 +47,12 @@ In the classroom, watch the space above the kids’ heads. In the opening image,
 
 *Both frames are from the same moment. H3 is on top and LTX-2.5 (seed 19) is below. The circles in the lower frame mark where the children’s heads overlap the screen edge. The people are AI-generated illustrations.*
 
-I tried fixing this drawing too. A masked edit made the heads easier to see, but added an odd yellow panel. An edit using a reference image gave the kids crowns. I kept the existing H3 classroom shot in v7.
+I tried fixing this drawing too. A masked edit made the heads easier to see, but added an odd yellow panel. An edit using a reference image gave the kids crowns. I kept the existing H3 classroom shot in the final promo (v7).
 
 ## Two shots on one 3090
 
-For the initial comparison, both models got the same opening image for each scene, and I ran three seeds with LTX. Its GPU memory use peaked at about 23 GB for these roughly six-second clips. H3 took about ten minutes on the arm with the motion reference and about two on the classroom. The resolutions and generation settings also differed. The timings tell me how long another take would cost on my machine.
+For the initial comparison, both models got the same opening image for each scene, and I ran LTX with three seeds (random starting points). Its GPU memory use peaked at about 23 GB for these roughly six-second clips. H3 took about ten minutes on the arm with the motion reference and about two on the classroom. The resolutions and generation settings also differed. The timings tell me how long another take would cost on my machine.
 
 Next time I make a robot shot, I’ll look at the two bases side by side in the still. For a classroom, I’ll look for lines running behind the kids’ heads. Once the drawing is ready, picking the take gets easier if I know exactly where to look when the picture starts to move.
 
-**Related** [How Claude and Codex share one RTX 3090](ai-workbench-routing.md) · [Let a local AI do the reading](local-llm-reading.md)
+**Related** [Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage](ai-workbench-routing.md) · [Reading a 1,069-page book with local AI](local-llm-reading.md)
