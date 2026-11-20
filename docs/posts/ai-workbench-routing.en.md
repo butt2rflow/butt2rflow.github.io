@@ -11,7 +11,7 @@ description: "I wanted Claude to spend less of its usage allowance reading code 
 
 <video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster-en.jpg" src="/assets/demos/bridge-opening-en.mp4" style="width:100%" aria-label="A short animation: the Codex crew lays the last planks, a handcart with a work order rolls across to them, and a ticket returns to Claude, the boss; Qwen sits on a stack of books"></video>
 
-I kept hitting my Claude Code Pro limit on personal projects. Twice the allowance felt like plenty. Max 5x was more than I needed or wanted to spend. I was considering a second Pro subscription when I got curious about Codex. I’d never tried it.
+Using Claude Code on the Claude Pro plan for personal projects, I kept hitting the limit. Twice the allowance felt like plenty. Max 5x was more than I needed or wanted to spend. I was considering a second Pro subscription when I got curious about Codex. I’d never tried it.
 
 ![How much room I wanted between Pro and Max 5x](../assets/diagrams_en/workbench-twice.png)
 
@@ -39,7 +39,7 @@ When I drop off clothes for alterations, I get a ticket and leave. I wanted Clau
 
 ![Like a tailor shop: drop off the job, get ticket #42, close the window and pick up the result with the same number](../assets/diagrams_en/workbench-ticket.png)
 
-When Qwen's turn came, the Isaac Sim robot simulator already had the GPU. The bridge quietly skipped Qwen and left the simulator alone. On Windows 11, Qwen is unavailable through the bridge even if the card is free. Its WDDM driver doesn't report GPU memory use per process, so the bridge declines to call Qwen. The protected MCP for launching GPU jobs is Linux-only by design and refuses requests on Windows.
+When Qwen's turn came, the Isaac Sim robot simulator already had the GPU. The bridge quietly skipped Qwen and left the simulator alone. On Windows 11, Qwen is unavailable through the bridge even if the card is free. Its driver model (WDDM) doesn't report GPU memory use per process, so the bridge declines to call Qwen. The protected MCP for launching GPU jobs is Linux-only by design and refuses requests on Windows.
 
 I originally just wanted Claude to spend less time reading logs. What I came to appreciate was being able to close the window and find the result later with a single number. The ticket came in handy when I sent Muse shopping, too. On Ubuntu I keep the Muse token out of Codex and call Muse directly from Claude Code. On Windows I set things up so both Claude and a delegated Codex job could use Muse. The bridge launches Codex with `-a never`, so it can’t pause for approval. I approved just the Muse tools I needed in `config.toml` ahead of time.
 

@@ -11,7 +11,7 @@ description: "Claude가 코드와 로그를 읽는 데 쓰는 토큰을 아끼�
 
 <video autoplay muted loop playsinline controls preload="metadata" poster="/assets/demos/bridge-opening-poster.jpg" src="/assets/demos/bridge-opening.mp4" style="width:100%" aria-label="Claude 감독 로봇이 지시서를 실은 손수레를 두고 기다리는 동안 Codex 일꾼 로봇들이 다리 판을 놓고, 완성된 다리로 손수레가 건너가고 번호표가 돌아오는 짧은 애니메이션. 책 위에는 Qwen 로봇이 앉아 있다"></video>
 
-Claude Code Pro로 개인 프로젝트를 하다 보니 자꾸 사용 한도에 걸렸어요. 쓸 수 있는 토큰이 지금의 딱 두 배면 충분할 것 같았어요. Max 5x까지 올리자니 요금이 부담스러웠고요. Pro를 하나 더 구독할까 생각하던 중에 아직 한 번도 안 써 본 Codex가 궁금해졌어요.
+Claude Pro 플랜으로 Claude Code를 쓰며 개인 프로젝트를 하다 보니 자꾸 사용 한도에 걸렸어요. 쓸 수 있는 토큰이 지금의 딱 두 배면 충분할 것 같았어요. Max 5x까지 올리자니 요금이 부담스러웠고요. Pro를 하나 더 구독할까 생각하던 중에 아직 한 번도 안 써 본 Codex가 궁금해졌어요.
 
 ![Pro와 Max 5x 사이에서 제가 원했던 두 배의 여유](../assets/diagrams/workbench-twice.png)
 
@@ -39,7 +39,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보니 자꾸 사용 한도에 
 
 ![수선집처럼 일을 맡기고 번호표를 받은 뒤, 창을 닫았다가 같은 번호로 결과를 찾는 흐름](../assets/diagrams/workbench-ticket.png)
 
-막상 Qwen에 읽기를 맡기려니 로봇 시뮬레이터인 Isaac Sim이 이미 GPU를 쓰고 있었어요. 브리지는 시뮬레이터를 그대로 두고 Qwen 차례를 건너뛰었어요. Windows 11에서는 GPU가 비어 있어도 마찬가지예요. WDDM 드라이버로는 프로그램마다 GPU 메모리를 얼마나 쓰는지 알 수 없어서 브리지가 Qwen을 호출하지 않거든요. GPU 작업을 안전하게 실행하는 MCP도 Linux 전용이라 Windows에서 보낸 요청은 거부해요.
+막상 Qwen에 읽기를 맡기려니 로봇 시뮬레이터인 Isaac Sim이 이미 GPU를 쓰고 있었어요. 브리지는 시뮬레이터를 그대로 두고 Qwen 차례를 건너뛰었어요. Windows 11에서는 GPU가 비어 있어도 마찬가지예요. Windows의 그래픽 드라이버 방식(WDDM)으로는 프로그램마다 GPU 메모리를 얼마나 쓰는지 알 수 없어서 브리지가 Qwen을 호출하지 않거든요. GPU 작업을 안전하게 실행하는 MCP도 Linux 전용이라 Windows에서 보낸 요청은 거부해요.
 
 처음엔 Claude가 읽을 로그만 줄어도 좋겠다 싶었어요. 써 보니 창을 닫았다가 번호 하나로 결과를 찾는 게 꽤 편하더라고요. Muse에 쇼핑을 맡길 때도 이 번호표가 요긴했어요. Ubuntu에서는 Codex에 Muse 토큰을 두지 않고 Claude Code에서 직접 Muse를 불러요. Windows에서는 Claude뿐 아니라 브리지로 일을 받은 Codex도 Muse를 쓸 수 있게 했어요. 브리지가 `-a never`로 Codex를 실행하면 중간에 승인을 요청할 수 없으니, 필요한 Muse 도구만 `config.toml`에서 미리 승인해 뒀어요.
 
@@ -49,7 +49,7 @@ Claude Code Pro로 개인 프로젝트를 하다 보니 자꾸 사용 한도에 
 
 ### 1. 브리지 연결하기
 
-접수 창구 역할을 하는 스크립트가 `coop.py`예요. Claude Code는 MCP라는 규약에 따라 브리지의 도구를 불러요. 스크립트를 직접 실행해 표준 입력으로 요청을 한 줄씩 보내고 표준 출력으로 답을 받아요. 이 방식을 **stdio**라고 해요. 외부에 접속 주소를 열 필요도 없어요. 표준 출력에는 MCP 메시지만 쓰고 진단 기록은 표준 오류로 보내요. [MCP stdio 사양](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports)
+접수 창구 역할을 하는 스크립트가 `coop.py`예요. Claude Code는 MCP라는 규약에 따라 브리지의 도구를 불러요. Claude Code가 스크립트를 직접 실행해 표준 입력으로 요청을 한 줄씩 보내고 표준 출력으로 답을 받아요. 이 방식을 **stdio**라고 해요. 외부에 접속 주소를 열 필요도 없어요. 표준 출력에는 MCP 메시지만 쓰고 진단 기록은 표준 오류로 보내요. [MCP stdio 사양](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports)
 
 | Claude가 부르는 도구 | 돌아오는 것 |
 | --- | --- |
