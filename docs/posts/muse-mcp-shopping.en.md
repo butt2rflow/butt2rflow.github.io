@@ -21,6 +21,7 @@ The fun part came next. On my phone I asked Muse if it remembered the requests f
 
 - I put the shopping tools on Muse's virtual machine and called them from Claude Code and Codex through Cloudflare Tunnel.
 - A healthy tunnel still needs a route from the public hostname to the server. My service URL inside the VM also needed plain HTTP.
+- Research is split in two. The server picks candidates, and a Muse scheduled task checks sellers and shipping before it marks the job done. I still read the `unverified` list myself.
 - Muse gives you a request ID first. Mine survived a disconnect, so I could pick up the result in a fresh session. A Python script now checks while I wait.
 
 ![Send a note of criteria while coding; Muse checks the catalog, sellers and shipping and returns a report, and I sign off on any purchase](../assets/diagrams_en/muse-errand.png)
@@ -29,7 +30,7 @@ The fun part came next. On my phone I asked Muse if it remembered the requests f
 
 I wanted a little service counter next to my coding window. **MCP** is an agreement that lets an AI app discover and call tools at that counter. Muse could reach its catalog from inside its virtual machine (VM), so that's where I put the Python MCP server. The program that handles queued requests and the tunnel connector ran there too. Claude Code and Codex stayed on my PC.
 
-That evening, I tried a temporary Quick Tunnel and then ngrok. Neither connected. I switched to a named Cloudflare tunnel, but the VM's DNS, which looks up network addresses by name, didn't return the records the connector needed. Fixing that got me as far as the next problem. The VM couldn't connect directly to the outside. Late that night, I got the tunnel up by using `socat` to forward the connection through the VM's outbound proxy. That was specific to this VM.
+That evening, I tried a temporary Quick Tunnel and then ngrok. Neither connected. I switched to a named Cloudflare tunnel, but the VM's DNS, which looks up network addresses by name, didn't return the records the connector needed. Fixing that got me as far as the next problem. The VM couldn't connect directly to the outside. Late that night, I got the tunnel up by using `socat` to forward the connection through the VM's outbound proxy. That was specific to this VM. Later, setting it up again on another Muse account, ngrok worked after all: with direct connections (`other_tcp`) set to Ask in Muse's settings and ngrok started without the proxy, it connected on a free static address. Without a domain, that's the easier route.
 
 The dashboard finally said **Healthy**. Next to it was **Routes 0**. The tunnel was up and had nowhere to send a request.
 
@@ -56,6 +57,22 @@ In the new session, I looked up the **same request ID** and got `done` and the r
 ![The receipt from a pending request still finds the done result after a midnight 502 and a fresh connection](../assets/diagrams_en/muse-ticket.png)
 
 When I sent a camera search from Windows 11, I got my ticket and could look up the result just fine. The snag was at the retailer. Amazon.ca returned a 403 when Muse tried to open the product page. I opened the same page with Claude’s Chrome extension and could see the price and stock. So Claude checks Amazon.ca prices itself through the Chrome extension, and Muse gets other Canadian retailers such as Best Buy.ca.
+
+## One errand runner became two
+
+On my first server, a single scheduled task that ran every five minutes did everything. It took a request off the queue, searched the catalog, checked sellers, and wrote `done`. If the server or the tunnel was down, it restarted them too.
+
+Building the same server fresh on another Muse account showed the weak spot. That server only searched the catalog and wrote `done` right away. Results came back in seconds, which felt great until I opened them. They ignored budget and region: US stores in US dollars for a delivery to Canada, a 3 m cable for a 2 m brief, and desktop graphics cards for a laptop. It was fast because it never checked a single seller.
+
+So I split the job. When a request comes in, a worker inside the server turns the note into criteria (item type, specs, region, currency, budget). It searches the catalog with a short query and drops items of the wrong type. It saves details for the top candidates and sets the status to `researching`, but it never writes `done`. A Muse scheduled task, the researcher, finishes the job every ten minutes. It checks specs, seller, stock, and the total with shipping and tax on Canadian retailers' product pages, and only then writes `done`. If nothing fits or two hours pass, it closes the job as `failed`. Restarting the server and the tunnel moved to a separate scheduled task, a watchdog.
+
+![Two scheduled-task cards in Muse chat: Muse shopping MCP researcher, every 10 minutes, and Muse shopping MCP watchdog, every 10 minutes](../assets/diagrams/muse-scheduled-tasks.png){ width="360" }
+
+*The two scheduled tasks Muse set up: the researcher finishes each job, and the watchdog keeps the server and tunnel up. (Screenshot of the Muse app.)*
+
+I sent my Muse a test: "Canada, 2 m USB-C cable, 100 W, under CA$25." It reached `researching` in two minutes and `done` about twenty minutes later. Of eight options, the best was an ALOGIC 2 m cable at CA$17.11 delivered. The researcher also caught that a cheaper catalog price was for the 1 m version, and it marked a 1.98 m cable "close, not exact."
+
+You still have to read the result. Only the ALOGIC option had a delivered total with verified shipping. The others had shipping under `unverified`, and a CA$28.24 cable over budget was still marked as matching. On the other account, a 1.83 m (6 ft) cable was marked as matching a 2 m brief, with the shortfall noted only under `unverified`. Now I read the `unverified` list first.
 
 ## If you’d like to try it
 
@@ -105,11 +122,11 @@ app.add_middleware(BaseHTTPMiddleware, dispatch=require_token)
 uvicorn.run(app, host="127.0.0.1", port=8765)
 ```
 
-I ran this exact example on my PC (Python MCP SDK 2.3.0). `/healthz` answered 200, `/mcp` without a token slammed the door with a 401, and with the token the queue file opened right up. On the real server another program checks the queue every five minutes and saves results to disk. Research can take longer than one round.
+I ran this exact example on my PC (Python MCP SDK 2.3.0). `/healthz` answered 200, `/mcp` without a token slammed the door with a 401, and with the token the queue file opened right up. On the real server, the worker and researcher above move that file's status from `pending` to `researching` to `done`.
 
 ### 2. Connect the tunnel and register the clients
 
-Point the Cloudflare Published application route at `http://localhost:8765` inside the VM and try `/healthz` on the public hostname first.
+Point the Cloudflare Published application route at `http://localhost:8765` inside the VM and try `/healthz` on the public hostname first. Put the bare public hostname, without a port, in the server's allowed hosts; without it the MCP SDK answers 421. Mine reads them from a `MUSE_ALLOWED_HOSTS` environment variable, so a new address needs no code change.
 
 On my PC, I kept the same token in a private file with `0600` permissions. Replace `/path/to/private/token` with the path to that file and replace `muse.example.com` in the server code and client settings with your public hostname. The Claude Code setting refers to the environment variable by name. The single quotes keep the shell from expanding `${MUSE_SHOPPING_TOKEN}` so Claude Code can read it when it connects. [Claude Code MCP docs](https://code.claude.com/docs/en/mcp)
 
@@ -143,7 +160,7 @@ approval_mode = "approve"
 
 ### 3. Look up the same request ID
 
-On the real Muse server, save the ID from `ask_muse_to_shop`. For a single lookup, give it to `check_shopping_request`. To wait for a result, I run a short Python wait script (`muse_wait.py`, not in the public repo yet) in a background shell instead of scheduling repeated model checks. The script polls directly, so the wait spends no model tokens. While the job is pending, it starts with a two-minute interval and doubles it up to ten minutes. When the job finishes, the script prints one line with the ID, status, a short summary, and the path to the full JSON. I open that file only when I need the details.
+On the real Muse server, save the ID from `ask_muse_to_shop`. For a single lookup, give it to `check_shopping_request`. To wait for a result, I run a short Python wait script (`muse_wait.py`, not in the public repo yet) in a background shell instead of scheduling repeated model checks. The script polls directly, so the wait spends no model tokens. While the job is pending, it starts with a two-minute interval and doubles it up to ten minutes. It treats `researching` as still waiting. When Muse re-researches a request that already shows `done`, `--until-changed` skips the current result and waits for a new one. When the job finishes, the script prints one line with the ID, status, a short summary, and the path to the full JSON. I open that file only when I need the details.
 
 For a 502, I'd compare `/healthz` inside the VM with the public endpoint. If the local check fails, I'd check the server first. If only the local check works, I'd look at the tunnel and its service URL. An expired MCP session after a restart needs a fresh connection.
 
@@ -155,5 +172,8 @@ For a 502, I'd compare `/healthz` inside the VM with the public endpoint. If the
 | 401 or zero tools | Check the authorization header and the launched process’s token environment. |
 | 502 | Compare `/healthz` inside the VM and at the public hostname. |
 | Search fails after approval | Check the permission card and its record in Muse chat. |
+| 421 | Add the public hostname to the server's allowed hosts and restart it. |
+| `done` in seconds, budget ignored | The server only runs a catalog search. Split it into a worker and a researcher. |
+| Stuck at `researching` | Check that the researcher task ran and whether an approval is waiting in Muse. |
 
 **Related** [Reading a 1,069-page book with local AI](local-llm-reading.md) · [Claude Directs, Codex Does the Work: A Bridge to Save Claude Usage](ai-workbench-routing.md)
