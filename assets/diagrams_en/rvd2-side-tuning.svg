@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Side-tuning adapter structure</title>
+<desc id="de">A small trainable adapter is attached beside the frozen single-image depth model, borrowing only its output. Prior knowledge is preserved and training cost falls only on the adapter.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="250" rx="12"/>
+<text class="t" x="18" y="22">Frozen body + trainable adapter</text>
+<rect class="bx" x="16" y="36" width="140" height="120" rx="10"/>
+<text class="lb" x="86" y="56" text-anchor="middle" style="fill:var(--blue)">❄ Frozen</text>
+<text class="st" x="86" y="80" text-anchor="middle">Single-image depth</text>
+<text class="st" x="86" y="98" text-anchor="middle">foundation model</text>
+<text class="lb" x="86" y="122" text-anchor="middle">No weight updates</text>
+<text class="lb" x="86" y="140" text-anchor="middle">→ prior knowledge kept</text>
+<rect class="bx" x="180" y="56" width="110" height="80" rx="10"/>
+<text class="lb" x="235" y="76" text-anchor="middle" style="fill:var(--teal)">🔥 Trained</text>
+<text class="st" x="235" y="98" text-anchor="middle">Adapter</text>
+<text class="lb" x="235" y="118" text-anchor="middle">Lightweight</text>
+<path class="arb" d="M156,96 L178,96"/>
+<path class="arb" d="M235,136 L235,170"/>
+<path class="arb" d="M86,156 L86,170"/>
+<rect class="bxc" x="16" y="172" width="274" height="36" rx="8"/>
+<text class="st" x="153" y="195" text-anchor="middle">Merged into stereo features (concat)</text>
+<text class="lb" x="180" y="232" text-anchor="middle">Training cost only on the adapter · prior knowledge intact</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg width="100%" viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>세 개의 링크, 세 개의 서로 다른 출처 — 부품에서 카메라, 손목, 베이스로</title>
+<desc>부품, 카메라, 손목, 베이스 네 좌표계가 한 줄로 있다. 부품→카메라 링크는 AI 비전 파이프라인(PnP)에서, 카메라→손목 링크는 핸드-아이 캘리브레이션으로 한 번 재는 고정값, 손목→베이스 링크는 로봇 자체 센서에서 실시간으로 온다. 셋을 이으면 베이스 좌표계에서의 부품 포즈가 나온다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:14px;font-weight:600;fill:var(--tp);}
+.n{font-size:13px;font-weight:700;}
+.src{font-size:11px;fill:var(--ts);}
+.cap{font-size:12px;font-weight:600;fill:#16a34a;}
+</style>
+<rect x="0" y="0" width="680" height="220" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">부품 → 카메라 → 손목 → 베이스</text>
+
+<rect x="40" y="66" width="120" height="50" rx="10" fill="#fdf0dc" stroke="#d97a0b" stroke-width="0.8"/>
+<text class="n" x="100" y="96" text-anchor="middle" fill="#d97a0b">부품</text>
+<rect x="204" y="66" width="120" height="50" rx="10" fill="#e7effe" stroke="#2f6fed" stroke-width="0.8"/>
+<text class="n" x="264" y="96" text-anchor="middle" fill="#2f6fed">카메라</text>
+<rect x="368" y="66" width="120" height="50" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.8"/>
+<text class="n" x="428" y="96" text-anchor="middle" fill="#9333ea">손목</text>
+<rect x="532" y="66" width="120" height="50" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="0.8"/>
+<text class="n" x="592" y="96" text-anchor="middle" fill="#16a34a">베이스</text>
+
+<text class="n" x="182" y="97" text-anchor="middle" fill="var(--ts)">→</text>
+<text class="n" x="346" y="97" text-anchor="middle" fill="var(--ts)">→</text>
+<text class="n" x="510" y="97" text-anchor="middle" fill="var(--ts)">→</text>
+
+<text class="src" x="182" y="146" text-anchor="middle">AI에서</text>
+<text class="src" x="182" y="162" text-anchor="middle">(PnP)</text>
+<text class="src" x="346" y="146" text-anchor="middle">고정</text>
+<text class="src" x="346" y="162" text-anchor="middle">(캘리브레이션)</text>
+<text class="src" x="510" y="146" text-anchor="middle">실시간</text>
+<text class="src" x="510" y="162" text-anchor="middle">(로봇 센서)</text>
+
+<text class="cap" x="340" y="200" text-anchor="middle">셋을 이으면 → 베이스 좌표계에서의 부품 포즈</text>
+</svg>

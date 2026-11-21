@@ -1,0 +1,79 @@
+<svg width="100%" viewBox="0 0 680 378" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Three ways nodes talk</title>
+<desc id="de">A topic is a broadcast one side keeps sending and many can hear; a service is one question and one answer; an action hands over a long job, reports progress and can be cancelled. The left of each row gives the closest thing a robot programmer already knows.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:13px;font-weight:700}
+.st{font-size:11px;fill:var(--mut)}
+.nd{font-size:11.5px;font-weight:600}
+.row{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.fam{fill:var(--chip);stroke:none}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.4}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.dash{stroke-dasharray:3 3}
+.mk{fill:var(--blue)}
+.mka{fill:var(--amber)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="378" rx="12"/>
+<text class="t" x="18" y="26">Three ways nodes talk</text>
+<text class="st" x="120" y="46" text-anchor="middle">Closest thing you know</text>
+<text class="st" x="460" y="46" text-anchor="middle">In ROS 2</text>
+<!-- topic -->
+<rect class="row" x="16" y="56" width="648" height="90" rx="10"/>
+<rect class="fam" x="26" y="66" width="190" height="70" rx="8"/>
+<text class="lb" x="38" y="88" style="fill:var(--blue)">Topic</text>
+<text class="st" x="38" y="108">A status signal that's always on.</text>
+<text class="st" x="38" y="124">It never stops flowing.</text>
+<rect class="bx" x="250" y="82" width="110" height="38" rx="8"/>
+<text class="nd" x="305" y="105" text-anchor="middle">camera driver</text>
+<line class="ar" x1="362" y1="94" x2="478" y2="74"/>
+<line class="ar" x1="362" y1="101" x2="478" y2="101"/>
+<line class="ar" x1="362" y1="108" x2="478" y2="128"/>
+<text class="st" x="305" y="137" text-anchor="middle">images, 30 per second</text>
+<text class="nd" x="484" y="78">part finder</text>
+<text class="nd" x="484" y="105">display</text>
+<text class="nd" x="484" y="132">recorder</text>
+<text class="st" x="600" y="105">any number</text>
+<text class="st" x="600" y="119">of listeners</text>
+<!-- service -->
+<rect class="row" x="16" y="154" width="648" height="82" rx="10"/>
+<rect class="fam" x="26" y="164" width="190" height="62" rx="8"/>
+<text class="lb" x="38" y="186" style="fill:var(--teal)">Service</text>
+<text class="st" x="38" y="206">Ask once, get one answer.</text>
+<text class="st" x="38" y="220">"Is the gripper open?"</text>
+<rect class="bx" x="250" y="176" width="110" height="38" rx="8"/>
+<text class="nd" x="305" y="199" text-anchor="middle">task node</text>
+<rect class="bx" x="478" y="176" width="120" height="38" rx="8"/>
+<text class="nd" x="538" y="199" text-anchor="middle">gripper driver</text>
+<line class="ar" x1="362" y1="186" x2="474" y2="186"/>
+<text class="st" x="418" y="181" text-anchor="middle">request</text>
+<line class="ar dash" x1="476" y1="206" x2="364" y2="206"/>
+<text class="st" x="418" y="222" text-anchor="middle">response</text>
+<!-- action -->
+<rect class="row" x="16" y="244" width="648" height="120" rx="10"/>
+<rect class="fam" x="26" y="254" width="190" height="100" rx="8"/>
+<text class="lb" x="38" y="280" style="fill:var(--amber)">Action</text>
+<text class="st" x="38" y="302">A long job, like CALL.</text>
+<text class="st" x="38" y="318">Progress comes back,</text>
+<text class="st" x="38" y="334">and you can stop it midway.</text>
+<rect class="bxa" x="250" y="285" width="110" height="38" rx="8"/>
+<text class="nd" x="305" y="308" text-anchor="middle">planner</text>
+<rect class="bxa" x="478" y="285" width="120" height="38" rx="8"/>
+<text class="nd" x="538" y="308" text-anchor="middle">robot driver</text>
+<text class="st" x="419" y="270" text-anchor="middle">① goal: follow this path</text>
+<line class="ara" x1="362" y1="278" x2="474" y2="278"/>
+<text class="st" x="419" y="300" text-anchor="middle">② feedback: 40%…</text>
+<line class="ara dash" x1="476" y1="308" x2="364" y2="308"/>
+<line class="ara" x1="476" y1="334" x2="364" y2="334"/>
+<text class="st" x="419" y="352" text-anchor="middle">③ result: done (or cancelled)</text>
+</svg>

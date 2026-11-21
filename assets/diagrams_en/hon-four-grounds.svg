@@ -1,0 +1,103 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Four practice grounds compared</title>
+<desc id="de">A real industrial robot, URSim (UR's virtual controller), a FANUC virtual robot (ROBOGUIDE with FANUC's ROS 2 driver) and SO-101 (a small real teaching arm), compared on how easy they are to get, the safety burden, what they teach and what they don't. URSim is free and teaches the industrial driver and safety setup, but has no camera or physics. ROBOGUIDE is paid. SO-101 is cheap and teaches cameras, calibration and learning from demos, but not industrial controller behavior or precision.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
+<text class="t" x="18" y="26">What each teaches barely overlaps</text>
+<rect class="bxg" x="140" y="44" width="124" height="34" rx="8"/>
+<text class="lb" x="202.0" y="65.0" text-anchor="middle">real UR / FANUC</text>
+<rect class="bx" x="270" y="44" width="124" height="34" rx="8"/>
+<text class="lb" x="332.0" y="65.0" text-anchor="middle">URSim</text>
+<rect class="bx" x="400" y="44" width="124" height="34" rx="8"/>
+<text class="lb" x="462.0" y="65.0" text-anchor="middle">FANUC virtual</text>
+<rect class="bxa" x="530" y="44" width="124" height="34" rx="8"/>
+<text class="lb" x="592.0" y="65.0" text-anchor="middle">SO-101</text>
+<text class="it" x="18" y="116">getting it</text>
+<rect class="bxg" x="140" y="88" width="124" height="46" rx="6"/>
+<text class="sm" x="202" y="116" text-anchor="middle" style="fill:var(--fg)">hard</text>
+<rect class="bxg" x="270" y="88" width="124" height="46" rx="6"/>
+<text class="sm" x="332" y="116" text-anchor="middle" style="fill:var(--fg)">free</text>
+<rect class="bxg" x="400" y="88" width="124" height="46" rx="6"/>
+<text class="sm" x="462" y="116" text-anchor="middle" style="fill:var(--fg)">paid (ROBOGUIDE)</text>
+<rect class="bxg" x="530" y="88" width="124" height="46" rx="6"/>
+<text class="sm" x="592" y="116" text-anchor="middle" style="fill:var(--fg)">cheap</text>
+<text class="it" x="18" y="172">safety burden</text>
+<rect class="bxg" x="140" y="144" width="124" height="46" rx="6"/>
+<text class="sm" x="202" y="172" text-anchor="middle" style="fill:var(--fg)">high</text>
+<rect class="bxg" x="270" y="144" width="124" height="46" rx="6"/>
+<text class="sm" x="332" y="172" text-anchor="middle" style="fill:var(--fg)">none</text>
+<rect class="bxg" x="400" y="144" width="124" height="46" rx="6"/>
+<text class="sm" x="462" y="172" text-anchor="middle" style="fill:var(--fg)">none</text>
+<rect class="bxg" x="530" y="144" width="124" height="46" rx="6"/>
+<text class="sm" x="592" y="172" text-anchor="middle" style="fill:var(--fg)">low</text>
+<text class="it" x="18" y="228">teaches</text>
+<rect class="bxg" x="140" y="200" width="124" height="46" rx="6"/>
+<text class="sm" x="202" y="228" text-anchor="middle" style="fill:var(--fg)">everything</text>
+<rect class="bxg" x="270" y="200" width="124" height="46" rx="6"/>
+<text class="sm" x="332" y="228" text-anchor="middle" style="fill:var(--fg)">UR driver, safety setup</text>
+<rect class="bxg" x="400" y="200" width="124" height="46" rx="6"/>
+<text class="sm" x="462" y="228" text-anchor="middle" style="fill:var(--fg)">FANUC driver link</text>
+<rect class="bxg" x="530" y="200" width="124" height="46" rx="6"/>
+<text class="sm" x="592" y="228" text-anchor="middle" style="fill:var(--fg)">camera, physics, demos</text>
+<text class="it" x="18" y="284">doesn't teach</text>
+<rect class="bxg" x="140" y="256" width="124" height="46" rx="6"/>
+<text class="sm" x="202" y="284" text-anchor="middle" style="fill:var(--fg)">-</text>
+<rect class="bxg" x="270" y="256" width="124" height="46" rx="6"/>
+<text class="sm" x="332" y="284" text-anchor="middle" style="fill:var(--fg)">camera, physics, grasps</text>
+<rect class="bxg" x="400" y="256" width="124" height="46" rx="6"/>
+<text class="sm" x="462" y="284" text-anchor="middle" style="fill:var(--fg)">cameras, physics</text>
+<rect class="bxg" x="530" y="256" width="124" height="46" rx="6"/>
+<text class="sm" x="592" y="284" text-anchor="middle" style="fill:var(--fg)">industrial ctrl, precision</text>
+<text class="sm" x="18" y="322" style="fill:var(--fg)">Combine two and they fill each other's gaps: industrial integration on URSim, perception and learning on SO-101</text>
+</svg>

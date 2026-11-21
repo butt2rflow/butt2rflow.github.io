@@ -1,0 +1,72 @@
+<svg width="100%" viewBox="0 0 680 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">The same pick job, two structures</title>
+<desc id="de">Left: one teach-pendant program on the controller holds positions, sequence and I/O. Right: in ROS 2 the same pick job is split across nodes (camera driver, part finder, task node, motion planner, gripper driver, robot driver), while the robot controller at the bottom stays in place.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12px;font-weight:700}
+.st{font-size:11px;fill:var(--mut)}
+.nd{font-size:11.5px;font-weight:600}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.mk{fill:var(--blue)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="372" rx="12"/>
+<text class="t" x="18" y="26">The same pick job, two structures</text>
+<!-- left panel -->
+<rect class="panel" x="16" y="42" width="232" height="314" rx="10"/>
+<text class="lb" x="30" y="64" style="fill:var(--amber)">Today: one program</text>
+<rect class="hi" x="30" y="76" width="204" height="196" rx="8"/>
+<text class="code" x="42" y="98" style="font-weight:700">PICK.TP</text>
+<text class="code" x="42" y="122">J P[1] home</text>
+<text class="code" x="42" y="144">WAIT DI[1]=ON</text>
+<text class="code" x="42" y="166">L P[2] above part</text>
+<text class="code" x="42" y="188">L P[3] pick point</text>
+<text class="code" x="42" y="210">DO[1]=ON  (grip)</text>
+<text class="code" x="42" y="232">L P[2] back out</text>
+<text class="code" x="42" y="254">J P[1]</text>
+<text class="st" x="30" y="296">Positions, sequence and I/O</text>
+<text class="st" x="30" y="312">all in one file, on one controller.</text>
+<text class="st" x="30" y="336">The part position is a taught point.</text>
+<!-- right panel -->
+<rect class="panel" x="264" y="42" width="400" height="314" rx="10"/>
+<text class="lb" x="278" y="64" style="fill:var(--blue)">ROS 2: programs (nodes) in conversation</text>
+<rect class="bx" x="280" y="78" width="150" height="40" rx="8"/>
+<text class="nd" x="355" y="103" text-anchor="middle">camera driver</text>
+<rect class="bx" x="498" y="78" width="150" height="40" rx="8"/>
+<text class="nd" x="573" y="103" text-anchor="middle">part finder</text>
+<line class="ar" x1="432" y1="98" x2="494" y2="98"/>
+<text class="st" x="463" y="90" text-anchor="middle">images</text>
+<rect class="hi" x="386" y="160" width="156" height="46" rx="8"/>
+<text class="nd" x="464" y="181" text-anchor="middle">task node</text>
+<text class="st" x="464" y="197" text-anchor="middle">(= main program)</text>
+<line class="ar" x1="573" y1="120" x2="530" y2="157"/>
+<text class="st" x="590" y="146">part pose</text>
+<rect class="bx" x="280" y="238" width="140" height="40" rx="8"/>
+<text class="nd" x="350" y="263" text-anchor="middle">gripper driver</text>
+<line class="ar" x1="420" y1="208" x2="376" y2="235"/>
+<text class="st" x="352" y="224" text-anchor="middle">grip/release</text>
+<rect class="bx" x="498" y="238" width="150" height="40" rx="8"/>
+<text class="nd" x="573" y="256" text-anchor="middle">motion planner</text>
+<text class="st" x="573" y="271" text-anchor="middle">(MoveIt 2)</text>
+<line class="ar" x1="510" y1="208" x2="548" y2="235"/>
+<text class="st" x="548" y="224">goal pose</text>
+<rect class="bx" x="498" y="302" width="150" height="40" rx="8"/>
+<text class="nd" x="573" y="327" text-anchor="middle">robot driver</text>
+<line class="ar" x1="573" y1="280" x2="573" y2="299"/>
+<text class="st" x="582" y="294">trajectory</text>
+<rect class="ctl" x="280" y="302" width="176" height="40" rx="8"/>
+<text class="nd" x="368" y="320" text-anchor="middle">robot controller (unchanged)</text>
+<text class="st" x="368" y="335" text-anchor="middle">servo + safety live here</text>
+<line class="ar" x1="496" y1="322" x2="460" y2="322"/>
+</svg>

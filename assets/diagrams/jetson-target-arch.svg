@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>목표 아키텍처 — 데스크톱에서 학습, Jetson에서 추론</title>
+<desc>무거운 학습·시뮬레이션은 데스크톱 RTX GPU가 맡고, 거기서 나온 모델·정책을 Jetson Orin NX로 내려 셀에서 실시간 추론(인식→행동)만 돌린다. Jetson은 카메라 입력을 받아 로봇에 명령을 보낸다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;}
+.t{font-size:13.5px;font-weight:700;}
+.s{font-size:11px;fill:#73726c;}
+.lbl{font-size:11px;font-weight:600;fill:#73726c;}
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="40" style="fill:#3d3d3a">목표 — 학습은 데스크톱, 추론은 Jetson</text>
+
+<!-- desktop box -->
+<rect x="40" y="96" width="210" height="120" rx="10" fill="#eef1f6" stroke="#5b6b86" stroke-width="1.3"/>
+<text class="t" x="145" y="130" text-anchor="middle" style="fill:#3f4d66">학습 GPU</text>
+<text class="s" x="145" y="156" text-anchor="middle">데스크톱 RTX / 클라우드 렌털</text>
+<text class="s" x="145" y="174" text-anchor="middle">Isaac Lab / Sim</text>
+<text class="s" x="145" y="196" text-anchor="middle">(젯슨에선 못 함)</text>
+
+<!-- arrow desktop -> jetson -->
+<line x1="250" y1="150" x2="312" y2="150" stroke="#8a8781" stroke-width="2.2"/>
+<path d="M304,145 L312,150 L304,155" fill="none" stroke="#8a8781" stroke-width="2.2"/>
+<text class="lbl" x="281" y="140" text-anchor="middle">모델·정책</text>
+
+<!-- camera -->
+<rect x="322" y="52" width="140" height="30" rx="8" fill="#fff" stroke="#c9c6bc" stroke-width="1"/>
+<text class="s" x="392" y="72" text-anchor="middle">카메라 (인식 입력)</text>
+<line x1="392" y1="82" x2="392" y2="94" stroke="#8a8781" stroke-width="2.2"/>
+<path d="M387,86 L392,94 L397,86" fill="none" stroke="#8a8781" stroke-width="2.2"/>
+
+<!-- jetson box -->
+<rect x="322" y="96" width="180" height="120" rx="10" fill="#e3f6ea" stroke="#16a34a" stroke-width="1.6"/>
+<text class="t" x="412" y="130" text-anchor="middle" style="fill:#15803d">Jetson Orin NX</text>
+<text class="s" x="412" y="156" text-anchor="middle">실시간 추론</text>
+<text class="s" x="412" y="174" text-anchor="middle">인식 → 행동</text>
+<text class="s" x="412" y="196" text-anchor="middle">셀에 붙어서 로컬로</text>
+
+<!-- arrow jetson -> robot -->
+<line x1="502" y1="150" x2="560" y2="150" stroke="#8a8781" stroke-width="2.2"/>
+<path d="M552,145 L560,150 L552,155" fill="none" stroke="#8a8781" stroke-width="2.2"/>
+<text class="lbl" x="531" y="140" text-anchor="middle">명령</text>
+
+<!-- robot box -->
+<rect x="568" y="112" width="80" height="76" rx="10" fill="#fff" stroke="#c9c6bc" stroke-width="1.2"/>
+<text class="t" x="608" y="148" text-anchor="middle" style="fill:#3d3d3a">로봇</text>
+<text class="s" x="608" y="166" text-anchor="middle">팔</text>
+
+<text class="s" x="40" y="276" style="fill:#8a6d3b">무거운 학습은 데스크톱 GPU, 실시간 추론만 엣지의 Jetson에서 — 두 머신 분업.</text>
+</svg>

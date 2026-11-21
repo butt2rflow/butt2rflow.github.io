@@ -1,0 +1,87 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">A virtual camera and arm as ROS 2 topics</title>
+<desc id="de">On the left, Isaac Sim on the PC (RTX 3090) simulates the UR20, a pile of boxes and a virtual stereo camera placed like the real one. Physics runs at 60 Hz, cameras at 30 Hz. Over ROS 2 it publishes two 640×400 mono stereo images and a 1280×720 colour image (about 28 Hz), joint states and the clock (about 56 Hz), and it subscribes to joint commands. On the right, the edge computer will receive these topics in place of the real camera and robot. This time only the PC side was built, checked with a topic checker.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="340" rx="12"/>
+<text class="t" x="18" y="26">To the edge computer, it looks like a real camera and robot</text>
+<rect class="bxt" x="16" y="46" width="270" height="236" rx="10"/>
+<text class="lb" x="30" y="70">PC · Isaac Sim (RTX 3090)</text>
+<rect class="bxg" x="32" y="86" width="238" height="52" rx="8"/>
+<text class="lb" x="151.0" y="109.0" text-anchor="middle">virtual stereo camera</text>
+<text class="st" x="151.0" y="124.0" text-anchor="middle">75 mm baseline, 30 Hz</text>
+<rect class="bxg" x="32" y="148" width="238" height="52" rx="8"/>
+<text class="lb" x="151.0" y="171.0" text-anchor="middle">UR20 model + 40 boxes</text>
+<text class="st" x="151.0" y="186.0" text-anchor="middle">physics 60 Hz</text>
+<rect class="bxg" x="32" y="210" width="238" height="52" rx="8"/>
+<text class="lb" x="151.0" y="233.0" text-anchor="middle">ROS 2 bridge</text>
+<text class="st" x="151.0" y="248.0" text-anchor="middle">bundled Humble, UDP only</text>
+<rect class="ctl" x="470" y="46" width="194" height="236" rx="10"/>
+<text class="lb" x="484" y="70">Edge computer (next)</text>
+<text class="it" x="484" y="104">depth, pose models</text>
+<text class="sm" x="484" y="122">FoundationStereo etc.</text>
+<text class="it" x="484" y="162">path planning</text>
+<text class="sm" x="484" y="180">cuMotion</text>
+<text class="it" x="484" y="220">topic-based hardware</text>
+<text class="sm" x="484" y="238">topic_based_ros2_control</text>
+<line class="art" x1="288" y1="96" x2="466" y2="96"/>
+<text class="sm" x="377" y="90" text-anchor="middle">/oak/left, right mono 640×400</text>
+<line class="art" x1="288" y1="128" x2="466" y2="128"/>
+<text class="sm" x="377" y="122" text-anchor="middle">/oak/rgb 1280×720 · ~28 Hz</text>
+<line class="art" x1="288" y1="170" x2="466" y2="170"/>
+<text class="sm" x="377" y="164" text-anchor="middle">joint_states · clock · ~56 Hz</text>
+<line class="ara" x1="466" y1="222" x2="288" y2="222"/>
+<text class="sm" x="377" y="216" text-anchor="middle">/isaac_joint_commands</text>
+<text class="sm" x="18" y="306">All four stereo topics share one timestamp (224/224). Command test: +0.300 rad arrived exactly</text>
+<text class="sm" x="18" y="326">Arrows show topic direction. One colour frame is 2.7 MB, so the UDP buffers went up to 16 MB</text>
+</svg>

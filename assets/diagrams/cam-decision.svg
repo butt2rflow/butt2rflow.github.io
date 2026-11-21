@@ -1,0 +1,84 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">오버헤드가 필요한가 — 네 가지 질문</title>
+<desc id="de">네 가지 질문 중 하나라도 '예'면 오버헤드를 더할 이유가 있다. 탐색 범위가 관찰 자세의 손목 시야보다 넓은가, 로봇이 움직이는 동안 다음 부품을 찾아야 할 만큼 사이클 타임이 빡빡한가, 경로나 내려놓을 곳이 비었는지 확인하는 관문이 필요한가, 여러 시점이 도움이 되는 학습 학습 정책을 쓰는가. 모두 '아니오'면 손목 카메라 하나로 충분하다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
+<text class="t" x="18" y="26">하나라도 '예'면 오버헤드를 검토, 모두 '아니오'면 손목 하나</text>
+<rect class="bx" x="16" y="50" width="300" height="42" rx="8"/>
+<text class="nd" x="166.0" y="75.0" text-anchor="middle">탐색 범위가 손목 시야보다 넓다</text>
+<line class="ara" x1="318" y1="71" x2="358" y2="71"/>
+<text class="sm" x="338" y="65" text-anchor="middle" style="fill:var(--amber)">예</text>
+<rect class="bxa" x="362" y="50" width="300" height="42" rx="8"/>
+<text class="nd" x="512.0" y="75.0" text-anchor="middle">오버헤드로 대략 위치 → 손목으로 정밀</text>
+<rect class="bx" x="16" y="106" width="300" height="42" rx="8"/>
+<text class="nd" x="166.0" y="131.0" text-anchor="middle">사이클 타임이 빡빡하다</text>
+<line class="ara" x1="318" y1="127" x2="358" y2="127"/>
+<text class="sm" x="338" y="121" text-anchor="middle" style="fill:var(--amber)">예</text>
+<rect class="bxa" x="362" y="106" width="300" height="42" rx="8"/>
+<text class="nd" x="512.0" y="131.0" text-anchor="middle">움직이는 동안 다음 부품 탐색</text>
+<rect class="bx" x="16" y="162" width="300" height="42" rx="8"/>
+<text class="nd" x="166.0" y="187.0" text-anchor="middle">빈 영역 확인 관문이 필요하다</text>
+<line class="ara" x1="318" y1="183" x2="358" y2="183"/>
+<text class="sm" x="338" y="177" text-anchor="middle" style="fill:var(--amber)">예</text>
+<rect class="bxa" x="362" y="162" width="300" height="42" rx="8"/>
+<text class="nd" x="512.0" y="187.0" text-anchor="middle">경로·내려놓을 곳 점검</text>
+<rect class="bx" x="16" y="218" width="300" height="42" rx="8"/>
+<text class="nd" x="166.0" y="243.0" text-anchor="middle">학습 정책을 쓴다</text>
+<line class="ara" x1="318" y1="239" x2="358" y2="239"/>
+<text class="sm" x="338" y="233" text-anchor="middle" style="fill:var(--amber)">예</text>
+<rect class="bxa" x="362" y="218" width="300" height="42" rx="8"/>
+<text class="nd" x="512.0" y="243.0" text-anchor="middle">여러 시점이 정책에 도움</text>
+<rect class="bxgr" x="16" y="280" width="646" height="36" rx="8"/>
+<text class="lb" x="339.0" y="302.0" text-anchor="middle">모두 '아니오' → 손목 카메라 하나 (관찰 자세에서 찍고, 핸드아이 보정 한 벌)</text>
+</svg>

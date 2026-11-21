@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>신용 스프레드의 구성 — 국채 금리 위에 얹힌 보험료</title>
+<desc>미국 국채 금리는 위험 없는 값이다. 하이일드 회사채 금리는 그 위에 스프레드가 얹힌다. 두 금리의 차이가 스프레드이고, 이것이 부도 위험을 떠안는 보험료다. 지금은 약 260bp다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.lb { font-size:13px; font-weight:500; fill:#0F3D30; }
+.lo { font-size:13px; font-weight:500; fill:#7A2E12; }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+</style>
+<rect x="0" y="0" width="680" height="260" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="42">회사채 금리 = 국채 금리 + 스프레드</text>
+
+<!-- 국채 row -->
+<text class="s" x="150" y="93" text-anchor="end">미국 국채</text>
+<rect x="170" y="74" width="300" height="34" rx="5" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="lb" x="320" y="95" text-anchor="middle">위험 없는 값</text>
+
+<!-- 하이일드 row -->
+<text class="s" x="150" y="149" text-anchor="end">하이일드 회사채</text>
+<rect x="170" y="130" width="300" height="34" rx="5" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="lb" x="320" y="151" text-anchor="middle">국채와 같은 부분</text>
+<rect x="470" y="130" width="120" height="34" rx="5" fill="#F6D8C9" stroke="#D85A30" stroke-width="0.5"/>
+<text class="lo" x="530" y="151" text-anchor="middle">스프레드</text>
+
+<!-- brace under spread -->
+<path d="M470,176 L470,182 L590,182 L590,176" fill="none" stroke="#D85A30" stroke-width="1"/>
+<line x1="530" y1="182" x2="530" y2="190" stroke="#D85A30" stroke-width="1"/>
+<text class="th" x="530" y="210" text-anchor="middle">이 차이 = 부도 위험의 보험료</text>
+<text class="s" x="530" y="230" text-anchor="middle">지금 하이일드 ≈ 260bp (2.6%p)</text>
+</svg>

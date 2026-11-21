@@ -1,0 +1,573 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "type": "text",
+      "id": "hw0052_2185",
+      "x": 181.0,
+      "y": 7.0,
+      "width": 358.0,
+      "height": 36,
+      "text": "발상의 전환 — 숏 포지션은 IV 상승 시 수익",
+      "fontSize": 20,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e40af",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 460201,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "baseline": 20
+    },
+    {
+      "type": "rectangle",
+      "id": "hw0053_8025",
+      "x": 30,
+      "y": 55,
+      "width": 320,
+      "height": 200,
+      "strokeColor": "#6b7280",
+      "backgroundColor": "#f3f4f6",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 171385,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "hw0054_5201",
+      "x": 120.85,
+      "y": 57.0,
+      "width": 138.3,
+      "height": 30,
+      "text": "숏 포지션 (IV 고정)",
+      "fontSize": 14,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 266027,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "baseline": 14
+    },
+    {
+      "type": "line",
+      "id": "hw0055_8066",
+      "x": 70,
+      "y": 215,
+      "width": 250,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          250,
+          0
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 615328,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "solid"
+    },
+    {
+      "type": "arrow",
+      "id": "hw0056_9588",
+      "x": 70,
+      "y": 215,
+      "width": 0,
+      "height": 130,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -130
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 585622,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "startBinding": null,
+      "endBinding": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "line",
+      "id": "hw0057_7846",
+      "x": 80,
+      "y": 195,
+      "width": 240,
+      "height": 110,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          5
+        ],
+        [
+          80,
+          20
+        ],
+        [
+          120,
+          60
+        ],
+        [
+          160,
+          20
+        ],
+        [
+          200,
+          -30
+        ],
+        [
+          240,
+          -50
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 745589,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "solid"
+    },
+    {
+      "type": "line",
+      "id": "hw0058_7139",
+      "x": 70,
+      "y": 195,
+      "width": 250,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          250,
+          0
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 699135,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "text",
+      "id": "hw0059_8415",
+      "x": 133.2,
+      "y": 226.0,
+      "width": 113.60000000000001,
+      "height": 28,
+      "text": "어정쩡한 하락 시 손실",
+      "fontSize": 12,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#dc2626",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 757013,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "baseline": 12
+    },
+    {
+      "type": "rectangle",
+      "id": "hw0060_3821",
+      "x": 390,
+      "y": 55,
+      "width": 320,
+      "height": 200,
+      "strokeColor": "#16a34a",
+      "backgroundColor": "#dcfce7",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 512888,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "hw0061_4473",
+      "x": 471.75,
+      "y": 57.0,
+      "width": 156.5,
+      "height": 30,
+      "text": "숏 포지션 (IV 상승 시)",
+      "fontSize": 14,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#16a34a",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 405922,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "baseline": 14
+    },
+    {
+      "type": "line",
+      "id": "hw0062_5064",
+      "x": 430,
+      "y": 215,
+      "width": 250,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          250,
+          0
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 477832,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "solid"
+    },
+    {
+      "type": "arrow",
+      "id": "hw0063_7054",
+      "x": 430,
+      "y": 215,
+      "width": 0,
+      "height": 130,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -130
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 642005,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "startBinding": null,
+      "endBinding": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "line",
+      "id": "hw0064_5848",
+      "x": 440,
+      "y": 175,
+      "width": 240,
+      "height": 70,
+      "points": [
+        [
+          0,
+          -15
+        ],
+        [
+          40,
+          -10
+        ],
+        [
+          80,
+          0
+        ],
+        [
+          120,
+          30
+        ],
+        [
+          160,
+          0
+        ],
+        [
+          200,
+          -25
+        ],
+        [
+          240,
+          -40
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 757490,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "solid"
+    },
+    {
+      "type": "line",
+      "id": "hw0065_5350",
+      "x": 440,
+      "y": 160,
+      "width": 240,
+      "height": 45,
+      "points": [
+        [
+          0,
+          -25
+        ],
+        [
+          40,
+          -25
+        ],
+        [
+          80,
+          -20
+        ],
+        [
+          120,
+          0
+        ],
+        [
+          160,
+          -20
+        ],
+        [
+          200,
+          -35
+        ],
+        [
+          240,
+          -45
+        ]
+      ],
+      "strokeColor": "#16a34a",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 790635,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "solid"
+    },
+    {
+      "type": "line",
+      "id": "hw0066_8463",
+      "x": 430,
+      "y": 175,
+      "width": 250,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          250,
+          0
+        ]
+      ],
+      "strokeColor": "#6b7280",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 568591,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "text",
+      "id": "hw0067_7847",
+      "x": 448.8,
+      "y": 106.0,
+      "width": 82.4,
+      "height": 48,
+      "text": "IV 상승으로\n수익 영역 확대",
+      "fontSize": 12,
+      "fontFamily": 3,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "strokeColor": "#16a34a",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "angle": 0,
+      "seed": 938035,
+      "version": 1,
+      "isDeleted": false,
+      "groupIds": [],
+      "boundElements": null,
+      "link": null,
+      "locked": false,
+      "baseline": 12
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

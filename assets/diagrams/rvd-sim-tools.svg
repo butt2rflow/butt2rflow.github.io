@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">시뮬레이터마다 성격이 다르다</title>
+<desc id="de">네 시뮬레이터를 렌더 품질(세로)과 물리 정확도(가로) 축에 배치하고, 넷 모두 Franka Panda를 기본 제공한다는 공통점을 표시한다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:10px;fill:var(--mut)}
+.ax{font-size:10px;fill:var(--mut);font-weight:700}
+.axis{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ah)}
+.name{font-size:10.5px;font-weight:700}
+.mk{fill:var(--mut)}
+.chip{fill:var(--chip);stroke:var(--bd);stroke-width:1.1}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="300" rx="12"/>
+<text class="t" x="18" y="22">렌더 품질 ↕ vs 물리 정확도 ↔</text>
+<!-- axes -->
+<line class="axis" x1="46" y1="240" x2="46" y2="44"/>
+<line class="axis" x1="46" y1="240" x2="340" y2="240"/>
+<text class="ax" x="42" y="40" text-anchor="end" transform="rotate(-90 42 40)"> </text>
+<text class="ax" x="52" y="52">렌더 품질 높음 ↑</text>
+<text class="ax" x="336" y="256" text-anchor="end">물리 정확도 높음 →</text>
+<!-- points -->
+<!-- Isaac Sim: high render, mid-high physics -->
+<circle cx="250" cy="80" r="6" style="fill:var(--blue)"/>
+<text class="name" x="262" y="78" style="fill:var(--blue)">Isaac Sim / Lab</text>
+<text class="st" x="262" y="92">NVIDIA · 사진급 렌더 · GPU 대량</text>
+<!-- MuJoCo: high physics, lower render -->
+<circle cx="300" cy="170" r="6" style="fill:var(--teal)"/>
+<text class="name" x="292" y="158" text-anchor="end" style="fill:var(--teal)">MuJoCo</text>
+<text class="st" x="292" y="172" text-anchor="end">DeepMind · 접촉 물리 정확</text>
+<!-- Gazebo: mid, ROS -->
+<circle cx="150" cy="150" r="6" style="fill:var(--amber)"/>
+<text class="name" x="162" y="148" style="fill:var(--amber)">Gazebo</text>
+<text class="st" x="162" y="162">ROS 통합 테스트</text>
+<!-- PyBullet: low-mid both -->
+<circle cx="100" cy="210" r="6" style="fill:var(--red)"/>
+<text class="name" x="112" y="208" style="fill:var(--red)">PyBullet</text>
+<text class="st" x="112" y="222">가볍다 · 배우기 쉽다</text>
+<!-- Franka common chip -->
+<rect class="chip" x="16" y="266" width="328" height="24" rx="8"/>
+<text class="st" x="180" y="282" text-anchor="middle" style="fill:var(--fg)">공통점 — 넷 모두 Franka Panda 모델을 기본 무료 제공 (그래서 다들 Franka)</text>
+</svg>

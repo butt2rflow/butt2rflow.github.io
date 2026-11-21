@@ -1,0 +1,33 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 120, "y": 10,
+      "width": 560, "height": 30,
+      "text": "VolVol 지표 — 골든/데드 크로스",
+      "originalText": "VolVol 지표 — 골든/데드 크로스",
+      "fontSize": 22, "fontFamily": 3,
+      "textAlign": "center", "verticalAlign": "top",
+      "strokeColor": "#1e40af", "backgroundColor": "transparent",
+      "fillStyle": "solid", "strokeWidth": 1, "strokeStyle": "solid",
+      "roughness": 0, "opacity": 100, "angle": 0,
+      "seed": 240001, "version": 1, "isDeleted": false,
+      "groupIds": [], "boundElements": null, "link": null, "locked": false,
+      "containerId": null, "lineHeight": 1.25
+    },
+    {"type":"text","id":"sub","x":200,"y":42,"width":400,"height":20,"text":"VolVol = VVIX / VIX  (5일 이평 vs 20일 볼린저밴드)","originalText":"VolVol = VVIX / VIX  (5일 이평 vs 20일 볼린저밴드)","fontSize":12,"fontFamily":3,"textAlign":"center","verticalAlign":"top","strokeColor":"#64748b","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":1,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240002,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"containerId":null,"lineHeight":1.25},
+    {"type":"rectangle","id":"golden_box","x":60,"y":80,"width":320,"height":120,"strokeColor":"#047857","backgroundColor":"#a7f3d0","fillStyle":"solid","strokeWidth":2,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240010,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"roundness":{"type":3}},
+    {"type":"text","id":"golden_title","x":130,"y":90,"width":180,"height":25,"text":"골든 크로스","originalText":"골든 크로스","fontSize":18,"fontFamily":3,"textAlign":"center","verticalAlign":"top","strokeColor":"#047857","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":1,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240011,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"containerId":null,"lineHeight":1.25},
+    {"type":"text","id":"golden_desc","x":75,"y":120,"width":290,"height":72,"text":"5일 이평 > 볼린저밴드 중간선 상승 돌파\n\n투자자 심리 안정 시작\n레버리지 비중 상향 고려\n(분할 매수 시작 시그널)","originalText":"5일 이평 > 볼린저밴드 중간선 상승 돌파\n\n투자자 심리 안정 시작\n레버리지 비중 상향 고려\n(분할 매수 시작 시그널)","fontSize":12,"fontFamily":3,"textAlign":"center","verticalAlign":"top","strokeColor":"#374151","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":1,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240012,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"containerId":null,"lineHeight":1.25},
+    {"type":"rectangle","id":"dead_box","x":420,"y":80,"width":320,"height":120,"strokeColor":"#dc2626","backgroundColor":"#fee2e2","fillStyle":"solid","strokeWidth":2,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240020,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"roundness":{"type":3}},
+    {"type":"text","id":"dead_title","x":490,"y":90,"width":180,"height":25,"text":"데드 크로스","originalText":"데드 크로스","fontSize":18,"fontFamily":3,"textAlign":"center","verticalAlign":"top","strokeColor":"#dc2626","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":1,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240021,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"containerId":null,"lineHeight":1.25},
+    {"type":"text","id":"dead_desc","x":435,"y":120,"width":290,"height":72,"text":"5일 이평 < 볼린저밴드 중간선 하락 돌파\n\n투자자 심리 불안 시작\n포트폴리오 디레버리지\n(긴장 시작 시그널)","originalText":"5일 이평 < 볼린저밴드 중간선 하락 돌파\n\n투자자 심리 불안 시작\n포트폴리오 디레버리지\n(긴장 시작 시그널)","fontSize":12,"fontFamily":3,"textAlign":"center","verticalAlign":"top","strokeColor":"#374151","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":1,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240022,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"containerId":null,"lineHeight":1.25},
+    {"type":"text","id":"caveat","x":160,"y":220,"width":480,"height":20,"text":"주의: 심리적 반등이 주가 반등을 항상 의미하지는 않음 — 절대 지표는 없다","originalText":"주의: 심리적 반등이 주가 반등을 항상 의미하지는 않음 — 절대 지표는 없다","fontSize":12,"fontFamily":3,"textAlign":"center","verticalAlign":"top","strokeColor":"#64748b","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":1,"strokeStyle":"solid","roughness":0,"opacity":100,"angle":0,"seed":240030,"version":1,"isDeleted":false,"groupIds":[],"boundElements":null,"link":null,"locked":false,"containerId":null,"lineHeight":1.25}
+  ],
+  "appState": {"viewBackgroundColor": "#ffffff", "gridSize": 20},
+  "files": {}
+}

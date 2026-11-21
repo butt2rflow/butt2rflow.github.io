@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 360 254" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Why learn in a fake world first</title>
+<desc id="de">The three walls of collecting training data with a real arm (safety, cost, labels) and how simulation clears each, side by side.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:12.5px;font-weight:700}
+.st{font-size:10px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;letter-spacing:.02em}
+.bad{fill:var(--bg);stroke:var(--red);stroke-width:1.2}
+.good{fill:var(--bg);stroke:var(--teal);stroke-width:1.2}
+.ar{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.mk{fill:var(--teal)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="254" rx="12"/>
+<text class="t" x="18" y="22">Three walls of data — simulation clears them</text>
+<text class="lb" x="80" y="42" text-anchor="middle" style="fill:var(--red)">Real arm</text>
+<text class="lb" x="280" y="42" text-anchor="middle" style="fill:var(--teal)">Simulation</text>
+<rect class="bad" x="16" y="50" width="128" height="52" rx="9"/>
+<text class="st" x="26" y="70" style="fill:var(--fg)">1. Safety</text>
+<text class="st" x="26" y="86">a clumsy arm risks</text>
+<text class="st" x="26" y="98">parts, arm, people</text>
+<line class="ar" x1="150" y1="76" x2="210" y2="76"/>
+<rect class="good" x="216" y="50" width="128" height="52" rx="9"/>
+<text class="st" x="226" y="70" style="fill:var(--fg)">just reset</text>
+<text class="st" x="226" y="86">failure has no cost</text>
+<rect class="bad" x="16" y="110" width="128" height="52" rx="9"/>
+<text class="st" x="26" y="130" style="fill:var(--fg)">2. Cost / time</text>
+<text class="st" x="26" y="146">one arm, seconds</text>
+<text class="st" x="26" y="158">each — a million?</text>
+<line class="ar" x1="150" y1="136" x2="210" y2="136"/>
+<rect class="good" x="216" y="110" width="128" height="52" rx="9"/>
+<text class="st" x="226" y="130" style="fill:var(--fg)">hundreds at once</text>
+<text class="st" x="226" y="146">time compresses</text>
+<rect class="bad" x="16" y="170" width="128" height="52" rx="9"/>
+<text class="st" x="26" y="190" style="fill:var(--fg)">3. Labels</text>
+<text class="st" x="26" y="206">hand-labeled; 6-DoF</text>
+<text class="st" x="26" y="218">hard to do by eye</text>
+<line class="ar" x1="150" y1="196" x2="210" y2="196"/>
+<rect class="good" x="216" y="170" width="128" height="52" rx="9"/>
+<text class="st" x="226" y="190" style="fill:var(--fg)">answers for free</text>
+<text class="st" x="226" y="206">the program placed</text>
+<text class="st" x="226" y="218">it, so it knows</text>
+<text class="lb" x="180" y="244" text-anchor="middle" style="fill:var(--mut)">Sim's real value = labeled data, near-infinite, for free</text>
+</svg>

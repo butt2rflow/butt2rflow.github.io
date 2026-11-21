@@ -1,0 +1,82 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">플래닝 씬과 안전의 경계</title>
+<desc id="de">왼쪽: 플래닝 씬에는 로봇 자신과 내가 알려 준 테이블, 지그, 부품만 들어 있고 MoveIt 2는 그것만 피한다. 알려 주지 않은 상자는 모른다. 오른쪽: 플래닝 씬은 경로 계획용이며, 사람과 설비를 지키는 안전 기능은 여전히 컨트롤러의 안전 설정(화낙 DCS, UR 안전 설정)이 맡는다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
+<text class="t" x="18" y="26">MoveIt 2는 알려 준 것만 피한다</text>
+<rect class="panel" x="16" y="42" width="398" height="212" rx="10"/>
+<text class="lb" x="30" y="64" style="fill:var(--blue)">플래닝 씬 (MoveIt 2가 아는 세상)</text>
+<line class="ln" x1="30" y1="222" x2="400" y2="222"/>
+<rect class="bx" x="40" y="190" width="180" height="32" rx="4"/>
+<text class="sm" x="130" y="211" text-anchor="middle">테이블</text>
+<rect class="bx" x="236" y="150" width="60" height="72" rx="4"/>
+<text class="sm" x="266" y="190" text-anchor="middle">지그</text>
+<rect class="bxt" x="100" y="172" width="36" height="18" rx="3"/>
+<text class="sm" x="118" y="166" text-anchor="middle">부품</text>
+<rect class="ctl" x="320" y="176" width="64" height="46" rx="4"/>
+<text class="t" x="352" y="204" text-anchor="middle">?</text>
+<text class="sm" x="352" y="244" text-anchor="middle" style="fill:var(--red)">알려 주지 않은 상자</text>
+<text class="sm" x="40" y="244">파란 테두리 = 씬에 넣은 것</text>
+<path class="ar" d="M 60 150 C 100 90, 220 80, 300 120"/>
+<text class="sm" x="180" y="96" text-anchor="middle">피해서 계획</text>
+<rect class="bxr" x="430" y="42" width="232" height="212" rx="10"/>
+<text class="lb" x="446" y="66" style="fill:var(--red)">안전은 여전히 컨트롤러</text>
+<text class="st" x="446" y="98">플래닝 씬 = 계획용</text>
+<text class="st" x="446" y="118">사람 감지, 비상정지,</text>
+<text class="st" x="446" y="138">속도·영역 제한은</text>
+<text class="st" x="446" y="158">화낙 DCS, UR 안전 설정</text>
+<text class="st" x="446" y="178">에서 그대로</text>
+<text class="sm" x="446" y="222" style="fill:var(--fg)">씬에 없는 물체와 부딪히는 건</text>
+<text class="sm" x="446" y="238" style="fill:var(--fg)">MoveIt 2가 막아 주지 못한다</text>
+</svg>

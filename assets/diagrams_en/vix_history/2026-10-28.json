@@ -1,0 +1,63 @@
+{
+  "settlement_date": "2026-10-28",
+  "vix_spot": 16.91,
+  "shape": "contango",
+  "spread_M2_M1": 0.17700000000000315,
+  "contracts": [
+    {
+      "symbol": "VX/X6",
+      "expiration": "2026-11-18",
+      "dte": 20,
+      "price": 18.5982
+    },
+    {
+      "symbol": "VX/Z6",
+      "expiration": "2026-12-16",
+      "dte": 48,
+      "price": 18.7752
+    },
+    {
+      "symbol": "VX/F7",
+      "expiration": "2027-01-20",
+      "dte": 83,
+      "price": 19.747
+    },
+    {
+      "symbol": "VX/G7",
+      "expiration": "2027-02-17",
+      "dte": 111,
+      "price": 20.2012
+    },
+    {
+      "symbol": "VX/H7",
+      "expiration": "2027-03-17",
+      "dte": 139,
+      "price": 20.4361
+    },
+    {
+      "symbol": "VX/J7",
+      "expiration": "2027-04-21",
+      "dte": 174,
+      "price": 20.825
+    },
+    {
+      "symbol": "VX/K7",
+      "expiration": "2027-05-18",
+      "dte": 201,
+      "price": 20.925
+    },
+    {
+      "symbol": "VX/M7",
+      "expiration": "2027-06-16",
+      "dte": 230,
+      "price": 21.0899
+    },
+    {
+      "symbol": "VX/N7",
+      "expiration": "2027-07-21",
+      "dte": 265,
+      "price": 21.3
+    }
+  ],
+  "source": "Cboe CFE settlement CSV"
+}
