@@ -23,6 +23,7 @@ The fun part came next. On my phone I asked Muse if it remembered the requests f
 - A healthy tunnel still needs a route from the public hostname to the server. My service URL inside the VM also needed plain HTTP.
 - Research is split in two. The server picks candidates, and a Muse scheduled task checks sellers and shipping before it marks the job done. I still read the `unverified` list myself.
 - Muse gives you a request ID first. Mine survived a disconnect, so I could pick up the result in a fresh session. A Python script now checks while I wait.
+- When Muse swaps its VM for a new one, the server and tunnel go down with it. A start script in the home folder and a watchdog task bring them back.
 
 ![Send a note of criteria while coding; Muse checks the catalog, sellers and shipping and returns a report, and I sign off on any purchase](../assets/diagrams_en/muse-errand.png)
 
@@ -30,7 +31,11 @@ The fun part came next. On my phone I asked Muse if it remembered the requests f
 
 I wanted a little service counter next to my coding window. **MCP** is an agreement that lets an AI app discover and call tools at that counter. Muse could reach its catalog from inside its virtual machine (VM), so that's where I put the Python MCP server. The program that handles queued requests and the tunnel connector ran there too. Claude Code and Codex stayed on my PC.
 
-That evening, I tried a temporary Quick Tunnel and then ngrok. Neither connected. I switched to a named Cloudflare tunnel, but the VM's DNS, which looks up network addresses by name, didn't return the records the connector needed. Fixing that got me as far as the next problem. The VM couldn't connect directly to the outside. Late that night, I got the tunnel up by using `socat` to forward the connection through the VM's outbound proxy. That was specific to this VM. Later, setting it up again on another Muse account, ngrok worked after all: with direct connections (`other_tcp`) set to Ask in Muse's settings and ngrok started without the proxy, it connected on a free static address. Without a domain, that's the easier route.
+That evening, I tried a temporary Quick Tunnel and then ngrok. Neither connected. I switched to a named Cloudflare tunnel, but the VM's DNS, which looks up network addresses by name, didn't return the records the connector needed. Fixing that got me as far as the next problem. The VM couldn't connect directly to the outside. Late that night, I got the tunnel up by using `socat` to forward the connection through the VM's outbound proxy. That was specific to this VM. Later, setting it up again on another Muse account, ngrok worked after all: with **Other TCP connections** switched on under **Permissions → Direct network protocols** in Muse's settings and ngrok started without the proxy, it connected on a free static address. Without a domain, that's the easier route.
+
+![Muse settings, Direct network protocols: SSH, email, database, FTP and the other direct connections are all off, and only Other TCP connections is on](../assets/diagrams/muse-other-tcp.png){ width="420" }
+
+*Everything else stays off; only Other TCP connections is on. With it on, Muse asks before each connection. Careful with Reset approvals to defaults on the same page: it can switch this back off. (Screenshot of the Muse app.)*
 
 The dashboard finally said **Healthy**. Next to it was **Routes 0**. The tunnel was up and had nowhere to send a request.
 
@@ -78,7 +83,17 @@ It reached `done` about twenty minutes after I sent it. Along the way, the worke
 
 *The two scheduled tasks Muse set up: the researcher finishes each job, and the watchdog keeps the server and tunnel up. The paragraph above is that timeout. (Screenshot of the Muse app.)* Of eight options, the best was an ALOGIC 2 m cable at CA$17.11 delivered. The researcher also caught that a cheaper catalog price was for the 1 m version, and it marked a 1.98 m cable "close, not exact."
 
-You still have to read the result. Only the ALOGIC option had a delivered total with verified shipping. The others had shipping under `unverified`, and a CA$28.24 cable over budget was still marked as matching. On the other account, a 1.83 m (6 ft) cable was marked as matching a 2 m brief, with the shortfall noted only under `unverified`. Now I read the `unverified` list first.
+You still have to read the result. Only the ALOGIC option had a delivered total with verified shipping. The others had shipping under `unverified`, and a CA$28.24 cable over budget was still marked as matching. The server on the other account once picked an over-budget option as the best one. After I asked Muse to fix it there, the same request marked over-budget options as not matching. On that account, a 1.83 m (6 ft) cable was marked as matching a 2 m brief, with the shortfall noted only under `unverified`. Now I read the `unverified` list first.
+
+## One day the VM had been replaced
+
+I'd been using the server I'd connected through ngrok when, out of nowhere, Claude Code couldn't connect to `muse-shopping`. The public address showed an ngrok page with `ERR_NGROK_3200`, which means the ngrok agent behind the address isn't running. Nothing was wrong on my PC.
+
+Muse had swapped its VM for a new one. The home folder survived, but `/etc`, where system settings live, was empty, and the services I'd registered to start the server and tunnel at boot went with it. Muse brought everything back by running the start script in the home folder (`~/start-all.sh`). The address didn't change, so on my PC I only had to reconnect.
+
+The odd part was that the watchdog, which checks the server every 10 minutes, hadn't brought it back on its own. Muse checked the records. The watchdog had run a few minutes after the swap, most likely before the VM's command service was up, though Muse couldn't prove that part. It couldn't run a single command, yet the task ended as a success. A note even said the server was healthy, and that wasn't a value anything had actually checked.
+
+So the watchdog got three new rules. If the VM booted less than 30 minutes ago, it runs the start script no matter what. The script skips anything already running, so running it twice is harmless. If a command fails or prints nothing, the run reports a failure, not a success. And the log keeps only what the commands in that run actually printed. The next VM swap hasn't come yet, so I haven't seen it recover without help.
 
 ## If you’d like to try it
 
@@ -179,6 +194,8 @@ For a 502, I'd compare `/healthz` inside the VM with the public endpoint. If the
 | 502 | Compare `/healthz` inside the VM and at the public hostname. |
 | Search fails after approval | Check the permission card and its record in Muse chat. |
 | 421 | Add the public hostname to the server's allowed hosts and restart it. |
+| ngrok won't connect | Switch on Other TCP connections in Muse's settings and start ngrok without the proxy. |
+| `ERR_NGROK_3200`, `/healthz` fails from every PC | It's the server side, not your PC. The VM may have been replaced; ask Muse to run the start script. |
 | `done` in seconds, budget ignored | The server only runs a catalog search. Split it into a worker and a researcher. |
 | Stuck at `researching` | Check that the researcher task ran and whether an approval is waiting in Muse. |
 
