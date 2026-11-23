@@ -2,7 +2,7 @@
 title: "Claude 토큰으로 쇼핑하지 마세요: 공짜 토큰 많은 Muse에게 심부름 보내기"
 nav_title: "Muse 쇼핑 심부름"
 date: 2026-11-17
-tags: [muse, mcp, claude-code, codex, cloudflare]
+tags: [muse, mcp, claude-code, codex, cloudflare, ngrok]
 lang: ko
 description: "코딩 화면에서 Muse에게 상품 조사를 맡기려다 밤늦게까지 터널과 씨름했어요. Healthy 옆의 숫자 0부터 Codex에 비밀번호 대신 명찰을 건네기까지, 실제로 연결한 설정을 남겼어요."
 ---

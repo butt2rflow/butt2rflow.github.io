@@ -2,7 +2,7 @@
 title: "Don’t Spend Claude Tokens on Shopping: Send Muse and Use Its Free Allowance"
 nav_title: "Shopping with Muse"
 date: 2026-11-17
-tags: [muse, mcp, claude-code, codex, cloudflare]
+tags: [muse, mcp, claude-code, codex, cloudflare, ngrok]
 lang: en
 description: "I wanted Muse to research products while I kept coding. Instead, I spent an evening fixing a tunnel and learning which box wanted the name of a secret."
 ---
