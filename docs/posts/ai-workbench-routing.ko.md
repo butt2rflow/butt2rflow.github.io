@@ -23,6 +23,10 @@ Claude Pro 플랜으로 Claude Code를 쓰며 개인 프로젝트를 하다 보�
 
 ![Claude가 판단하고 Codex는 코딩, Qwen은 읽기, Muse는 쇼핑 조사를 맡는 분담](../assets/diagrams/workbench-crew.png)
 
+넉넉하게 느껴진 데는 이유가 있었어요. OpenAI가 Codex의 상위 모델 Astra와 기본 모델 Sol 요청 일부를 실제보다 적게 계산하고 있었어요. 이걸 바로잡자 같은 일을 해도 한도에 훨씬 빨리 닿았어요. 한도가 풀리고 30분 만에 다시 찬 적도 있어요. 지금은 어려운 검토에만 Astra를 쓰고 나머지는 Sol에 맡겨요. 처음에 고민했던 Claude 구독을 하나 더 하는 쪽도 다시 저울질하고 있어요.
+
+![OpenAI가 보낸 Codex 사용량 정정 메일: Astra와 Sol 요청 일부가 원래보다 사용량을 적게 썼고, 정정 후에는 한도에 더 빨리 닿을 수 있다는 안내](../assets/screens/codex-usage-email.jpg)
+
 ## 30초 요약
 
 - Claude Code에 Python 브리지를 붙여 Codex에 일을 맡겼어요. 화면을 닫아도 작업은 계속되고, 다시 열어 같은 번호로 결과를 읽어요.

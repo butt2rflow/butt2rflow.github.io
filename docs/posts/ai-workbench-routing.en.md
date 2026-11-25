@@ -23,6 +23,10 @@ On my projects, Codex felt a little less capable than Claude Code, but its allow
 
 ![Claude makes decisions while Codex codes, Qwen reads, and Muse researches purchases](../assets/diagrams_en/workbench-crew.png)
 
+That generous feel had a cause. OpenAI had been undercounting some requests to Astra and Sol, Codex's top and default models. Once it fixed that, the same work hit the limit much sooner. One time the limit filled up again 30 minutes after it reset. Now I save Astra for hard reviews and give the rest to Sol. The idea I started with, a second Claude subscription, is back on the table.
+
+![OpenAI email about Codex usage: some Astra and Sol requests used less of the allowance than intended, so limits may now be reached sooner](../assets/screens/codex-usage-email.jpg)
+
 ## The short version
 
 - A Python bridge lets Claude Code hand a job to Codex. I can close the window and use the same job ID to check the result later.
