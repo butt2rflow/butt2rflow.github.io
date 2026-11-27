@@ -59,6 +59,10 @@ Measuring the swing alone is only half the story. So I added a launch monitor, t
 
 *A real recording of the phone screen. Right after the shot, the swing numbers and the R10 result pop up over the camera. My face is blurred.*
 
+![The screen frozen right after a swing: glove values (blue bars) and R10 values (green bars) on top, the impact sound and impact vibration pictures below](../assets/aip/songyul/real-screen-still.png){ width="360" }
+
+Here it is, frozen. The blue bars on the top card are what the glove measured: tempo, when the wrists released, how far they cocked, and the hand's top spin rate. The green bars are the R10's: ball speed and direction, the club's path and face angle. The two pictures below are the impact as the glove mic heard it and as the glove felt it. Hit a ball, turn your head, and it's all there.
+
 Now each row reads: this is how I swung, and this is how it flew. The R10 is really an answer key. Tag every swing with its answer, and one day an AI can learn from them and tell you how the ball flew, without the R10.
 
 ## Without taking out the phone
