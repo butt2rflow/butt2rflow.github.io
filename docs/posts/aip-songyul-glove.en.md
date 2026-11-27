@@ -37,10 +37,6 @@ On the back of the hand sits a board about the size of a thumbnail. It's tiny, y
 
 ## When a swing becomes a picture
 
-![A swing at an indoor range: the phone screen with the pose skeleton, face blurred](../assets/aip/songyul/real-swing.gif){ width="420" }
-
-*A swing I hit at an indoor range, recorded straight from the phone screen. My face is blurred.*
-
 ![Hand and forearm rotation for the same swing, with address, top, impact and finish marked and the R10 ball speed of 87 mph](../assets/aip/songyul/real-swing-gyro-en.png)
 
 The first day at the range with the glove on, I stared at the graph on my phone for a long time. A slow climb, a brief pause, a fast drop, and a spike the moment the club hits the ball. The motion pictures from [Part 3](aip-seeing-motion.md), drawn by my own swing. This one took a little over a second going back and about a third of that coming down. The ball left at around 87 mph.
