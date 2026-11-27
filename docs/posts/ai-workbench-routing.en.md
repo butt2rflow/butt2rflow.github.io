@@ -27,7 +27,7 @@ OpenAI had been undercounting some requests to Astra and Sol, Codex’s top and 
 
 Then a web search made me rethink what I was handing off. I wanted a robot-arm vendor’s manual and a robot-hand wiki. Claude searched the web itself and sent subagents to read the pages. One run ate about 100,000 tokens. When I saw the count, I asked Claude, “Why aren’t you using Codex?”
 
-Now I send product, seller, kit-content, and manual lookups to Muse with one instruction: “Find it. Don’t buy it.” For code, repos, or tracing a wiki page back to the relevant code, I send Codex a read-only job. Claude does a single quick web search when I only need one fact. Qwen reads long documents when the GPU is free.
+Now I send product, seller, kit-content, and manual lookups to Muse with one instruction: “Find it. Don’t buy it.” For code, repos, or tracing a wiki page back to the relevant code, I send Codex a read-only job. Claude does a single quick web search when I only need one fact. When the GPU is free, local Qwen now gets general web research as well as long documents, and I unload the model as soon as it’s done.
 
 ![Claude sets scope and makes the final call, Codex codes and researches code and wikis, Qwen reads long documents, and Muse handles shopping and lookups](../assets/diagrams_en/workbench-crew.png)
 
