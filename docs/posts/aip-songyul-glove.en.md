@@ -83,9 +83,13 @@ The screen kept changing as I used it at the range. It started out packed with n
 
 A product needs a name. I picked **손결 (Songyul)**. *Son* means hand, and *gyul* means grain or texture: the feel of a hand. It fits a glove that reads how your hand moves. English was the hard part. The official romanization looked hard for English speakers to read, so I went with **Songyul**. Choosing one name took longer than I expected.
 
-## Getting ready to share it
+## Putting it out there
 
-It felt like a waste to keep it to myself, so I'm getting it ready for GitHub, where anyone can take it and build one. Getting ready turned out to be most of the work: filtering out what shouldn't go up, like location data hiding in photos and personal details tucked into notes. The known issues are going in too, not hidden.
+![The Songyul repository on GitHub](../assets/aip/songyul/github-repo.png)
+
+It felt like a waste to keep it to myself, so I put it on GitHub, where anyone can take it and build one. Getting it ready took longer than uploading it. Most of the work was filtering out what shouldn't go up: location data hiding in photos, personal details tucked into notes. The known issues are written down too, not hidden.
+
+[github.com/butt2rflow/songyul](https://github.com/butt2rflow/songyul)
 
 ## And then the ad
 
