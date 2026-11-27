@@ -55,7 +55,11 @@ With a mic in the glove, the sound comes along too. A clean strike cracks with a
 
 ![How the R10, one phone and the glove connect: the R10 sends ball data, the camera sends pose, the glove sends wrist and impact, and the glove page ties each swing into one row](../assets/aip/songyul/glove-r10-flow.png)
 
-Measuring the swing alone is only half the story. So I added a launch monitor, the Garmin R10. When you hit, the R10 sends the ball speed and angles, and the phone pairs them with the swing just before. The first time at the range it missed a few. After a fix, I replayed that day’s recording and it paired all nine. Now each row reads: this is how I swung, and this is how it flew. The R10 is really an answer key. Tag every swing with its answer, and one day an AI can learn from them and tell you how the ball flew, without the R10.
+Measuring the swing alone is only half the story. So I added a launch monitor, the Garmin R10. When you hit, the R10 sends the ball speed and angles, and the phone pairs them with the swing just before. The first time at the range it missed a few. After a fix, I replayed that day’s recording and it paired all nine. ![Phone screen recording: right after the swing, cards with tempo, wrist release, ball speed and launch pop up over the camera along with the impact sound picture, and the last-swing card keeps the same numbers. Face blurred](../assets/aip/songyul/real-screen.gif){ width="300" }
+
+*A real recording of the phone screen. Right after the shot, the swing numbers and the R10 result pop up over the camera. My face is blurred.*
+
+Now each row reads: this is how I swung, and this is how it flew. The R10 is really an answer key. Tag every swing with its answer, and one day an AI can learn from them and tell you how the ball flew, without the R10.
 
 ## Without taking out the phone
 
