@@ -19,17 +19,22 @@ Claude Pro 플랜으로 Claude Code를 쓰며 개인 프로젝트를 하다 보�
 
 ![RTX 3090 한 장을 두고 Qwen과 FLUX, MiniMax H3, Isaac Sim이 차례를 기다리는 모습](../assets/diagrams/workbench-gpu.png)
 
-직접 써 보니 제 작업에서는 Codex가 Claude Code보다 조금 아쉬웠지만, 사용량은 훨씬 넉넉하게 느껴졌어요. 그래서 익숙한 Claude Code 창에서 Claude가 일의 범위를 정하면 Codex가 파일을 살펴보고 구현과 테스트, 1차 리뷰까지 맡도록 했어요. 비유하자면 Claude가 원청, Codex가 하청인 셈이에요. 단가는 내려가도 마지막 검수는 원청 몫이죠. 긴 글은 GPU가 빌 때 Qwen에 맡기고, 쇼핑 조사는 Muse에 보내요.
+직접 써 보니 제 작업에서는 Codex가 Claude Code보다 조금 아쉬웠지만, 사용량은 훨씬 넉넉하게 느껴졌어요. 그래서 익숙한 Claude Code 창에서 Claude가 일의 범위를 정하면 Codex가 파일을 살펴보고 구현과 테스트, 1차 리뷰까지 맡도록 했어요. 비유하자면 Claude가 원청, Codex가 하청인 셈이에요. 단가는 내려가도 마지막 검수는 원청 몫이죠.
 
-![Claude가 판단하고 Codex는 코딩, Qwen은 읽기, Muse는 쇼핑 조사를 맡는 분담](../assets/diagrams/workbench-crew.png)
-
-넉넉하게 느껴진 데는 이유가 있었어요. OpenAI가 Codex의 상위 모델 Astra와 기본 모델 Sol 요청 일부를 실제보다 적게 계산하고 있었어요. 이걸 바로잡자 같은 일을 해도 한도에 훨씬 빨리 닿았어요. 한도가 풀리고 30분 만에 다시 찬 적도 있어요. 지금은 어려운 검토에만 Astra를 쓰고 나머지는 Sol에 맡겨요. 처음에 고민했던 Claude 구독을 하나 더 하는 쪽도 다시 저울질하고 있어요.
+넉넉하게 느껴진 데는 이유가 있었어요. OpenAI가 Codex의 상위 모델 Astra와 기본 모델 Sol 요청 일부를 실제보다 적게 계산하고 있었어요. 이걸 바로잡자 같은 일을 해도 한도에 훨씬 빨리 닿았어요. 한도가 풀리고 30분 만에 다시 찬 적도 있어요. 그 뒤로는 기본 모델인 Sol에 일을 맡기고, Astra는 보안 리뷰나 까다로운 설계 판단이 필요할 때만 불러요. 고칠 곳이 여럿이면 한 작업으로 묶어요. 처음에 고민했던 Claude Pro 구독을 하나 더 하는 쪽도 다시 저울질하고 있어요.
 
 ![OpenAI가 보낸 Codex 사용량 정정 메일: Astra와 Sol 요청 일부가 원래보다 사용량을 적게 썼고, 정정 후에는 한도에 더 빨리 닿을 수 있다는 안내](../assets/screens/codex-usage-email.jpg)
+
+코딩만 나눠 맡기면 될 줄 알았는데 검색에서도 토큰이 샜어요. 로봇 팔 업체의 매뉴얼과 로봇 손 위키를 찾던 Claude가 직접 웹을 검색한 뒤 보조 에이전트들에게 페이지 읽기를 맡겼어요. 그중 한 건에 토큰이 10만 개쯤 들었어요. 그 숫자를 보고 제가 Claude에게 물었어요. “왜 Codex 안 써?”
+
+이제 제품, 판매처, 키트 구성품, 매뉴얼은 Muse에 “찾기만 해 줘. 사지는 마”라고 맡겨요. 코드나 저장소를 살피거나 위키 설명에 해당하는 코드를 찾는 일은 Codex에 읽기 전용으로 보내요. 딱 한 가지만 확인하면 될 때는 Claude가 짧게 웹 검색을 한 번 해요. 긴 글은 GPU가 빌 때 Qwen에 맡겨요.
+
+![Claude는 범위를 정하고 최종 판단을 해요. Codex는 코딩과 코드·위키 조사, Qwen은 긴 글 읽기, Muse는 쇼핑·찾기 조사를 맡아요.](../assets/diagrams/workbench-crew.png)
 
 ## 30초 요약
 
 - Claude Code에 Python 브리지를 붙여 Codex에 일을 맡겼어요. 화면을 닫아도 작업은 계속되고, 다시 열어 같은 번호로 결과를 읽어요.
+- Codex는 Sol이 기본이고, Astra는 보안 리뷰와 까다로운 설계에만 써요. 웹에서도 제품을 찾는 일은 Muse에, 코드를 따라가는 일은 읽기 전용 Codex에 맡겨요.
 - Codex는 실패한 일이 있으면 맨 위에 적어 8줄 이내로 보고해요. Claude는 `completed`가 떠도 실제 변경 내용과 테스트 결과를 살펴봐요.
 - Codex는 파일을 읽고, README를 고치고, 리뷰까지 해냈어요. Windows 11에서도 Codex에 일을 맡기고 Muse 도구를 쓸 수 있었어요. Qwen은 Ubuntu 쪽에 남겨 뒀어요.
 
@@ -37,7 +42,7 @@ Claude Pro 플랜으로 Claude Code를 쓰며 개인 프로젝트를 하다 보�
 
 어느 저녁, Claude Code에 브리지를 붙여 첫 일을 맡겨 봤어요. 잠깐이면 될 줄 알았는데 밤까지 붙들고 있었어요.
 
-첫 두 건은 실행 환경 문제로 Codex가 시작하기도 전에 멈췄어요. 실행할 곳을 옮기고 나서야 첫 작업이 돌아갔어요.
+첫 두 건은 실행 환경 문제로 Codex가 시작하기도 전에 멈췄어요. 실행할 곳을 옮기고 나서야 Codex가 일을 시작했어요.
 
 수선집에 옷을 맡기고 번호표를 받으면 그 자리에서 기다릴 필요가 없잖아요. 저도 Claude가 일을 맡기고 번호만 받아 오게 하고 싶었어요. 그러려면 접수 창구를 닫아도 뒤에서 일하는 프로그램이 살아 있어야 했어요.
 
@@ -55,7 +60,7 @@ Claude Pro 플랜으로 Claude Code를 쓰며 개인 프로젝트를 하다 보�
 
 접수 창구 역할을 하는 스크립트가 `coop.py`예요. Claude Code는 MCP라는 규약에 따라 브리지의 도구를 불러요. Claude Code가 스크립트를 직접 실행해 표준 입력으로 요청을 한 줄씩 보내고 표준 출력으로 답을 받아요. 이 방식을 **stdio**라고 해요. 외부에 접속 주소를 열 필요도 없어요. 표준 출력에는 MCP 메시지만 쓰고 진단 기록은 표준 오류로 보내요. [MCP stdio 사양](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports)
 
-| Claude가 부르는 도구 | 돌아오는 것 |
+| Claude가 부르는 도구 | 응답 |
 | --- | --- |
 | `delegate_task` | 프로젝트 경로와 할 일을 넘기면 작업 번호를 받아요. |
 | `job_result` | 번호로 진행 상태를 읽고, 끝났으면 보고를 받아요. |
@@ -79,7 +84,7 @@ claude mcp add --transport stdio --scope user ai-cooperation -- /usr/bin/python3
 
 공개판에서 `start` 명령을 쓸 때는 `--write`로 수정을 허용하고, `--target`으로 일을 맡길 대상을 골라요. 제한 시간은 `--timeout`에 초 단위로 적어요. 읽을 파일마다 `--file`을 붙이고, Codex의 모델과 추론 강도는 각각 `--model`과 `--effort`로 정해요.
 
-Claude가 일을 넘길 때도 작업에 맞춰 Codex의 모델과 추론 강도를 골라요(`model`, `effort`). 아래는 옆에 열어 둔 Claude Code 창에서 영상 프롬프트 스킬을 만들어 달라고 했을 때예요. Claude는 그 일에 Astra 모델과 중간 강도(medium)면 충분하다고 보고 Codex에 맡겼어요.
+Claude가 일을 넘길 때도 작업에 맞춰 Codex의 모델과 추론 강도를 골라요(`model`, `effort`). 아래는 Sol을 기본으로 쓰기 전에 찍은 화면이에요. 옆에 열어 둔 Claude Code 창에서 영상 프롬프트 스킬을 만들어 달라고 하자 Claude가 Astra와 중간 강도(medium)를 골랐어요.
 
 ![다른 Claude Code 창이 Codex에 일을 넘기며 Astra 모델과 medium 강도를 고르고, 맡긴 일 네 가지를 정리한 화면](../assets/diagrams/codex-model-pick.png)
 
@@ -87,11 +92,11 @@ Claude가 일을 넘길 때도 작업에 맞춰 Codex의 모델과 추론 강도
 
 Ubuntu에서 로컬 모델을 실행할 때는 Ollama를 써요. 브리지는 지정한 모델이 GPU 메모리에 전부 올라와 있고 다른 계산 작업이 GPU를 쓰지 않을 때만 Ollama에 요청을 보내요.
 
-읽기를 맡길 때 `target=auto`로 두면 시작 전에 Qwen을 쓸 수 없을 경우 Codex가 대신 맡을 수 있어요. `target=qwen`으로 지정하면 같은 조건에서 요청을 거부해요. 확인 직후에도 GPU를 쓰는 프로그램은 달라질 수 있어요. 그래서 같은 GPU로 큰 작업을 돌리기 전에는 `python3 coop.py qwen-disable`로 새 요청부터 막고, 이미 시작한 읽기가 끝날 때까지 기다려요.
+읽기를 맡길 때 `target=auto`로 두면 시작 전에 Qwen을 쓸 수 없을 경우 Codex가 대신 맡을 수 있어요. `target=qwen`으로 지정하면 같은 조건에서 요청을 거부해요. 확인 직후에도 GPU를 쓰는 프로그램은 달라질 수 있어요. 그래서 같은 GPU에서 큰 작업을 실행하기 전에는 `python3 coop.py qwen-disable`로 새 요청부터 막고, 이미 시작한 읽기가 끝날 때까지 기다려요.
 
 ### 3. 결과와 테스트 확인하기
 
-처음엔 보고가 자세해야 안심이 될 줄 알았어요. 그런데 Claude가 파일과 로그를 다시 다 읽으면 일을 넘긴 보람이 없잖아요. 그래서 8줄, 800자 이내로 줄이고, 실패한 일이 있으면 제일 먼저 쓰라고 해요. 어떤 파일을 바꿨고 어떤 검사를 실제로 돌렸는지도 적게 하고요. 더 궁금하면 `job_result`에 `detail=true`를 주거나 디스크에 저장된 `result.md`를 열어 봐요. `completed`는 Codex가 정상 종료했고 답변이 저장됐다는 뜻이에요. 고친 명령이 제대로 동작했는지는 테스트 기록에서 확인해요.
+처음엔 보고가 자세해야 안심이 될 줄 알았어요. 그런데 Claude가 파일과 로그를 다시 다 읽으면 일을 넘긴 보람이 없잖아요. 그래서 8줄, 800자 이내로 줄이고, 실패한 일이 있으면 제일 먼저 쓰라고 해요. 바꾼 파일과 실제로 실행한 검사도 적게 하고요. 더 궁금하면 `job_result`에 `detail=true`를 주거나 디스크에 저장된 `result.md`를 열어 봐요. `completed`는 Codex가 정상 종료했고 답변이 저장됐다는 뜻이에요. 고친 명령이 제대로 동작했는지는 테스트 기록에서 확인해요.
 
 ![Codex가 다 했다고 해도 Claude가 실패, 바뀐 파일, 실제 테스트를 검수하고 통과시키거나 같은 Codex에 다시 맡기는 흐름](../assets/diagrams/workbench-verified.png)
 
@@ -99,7 +104,7 @@ Ubuntu에서 로컬 모델을 실행할 때는 Ollama를 써요. 브리지는 �
 
 - Claude Code에 도구 셋이 떴어요.
 - 창을 닫았다 다시 열어도 같은 번호로 Codex가 읽은 내용을 꺼냈어요.
-- Codex가 README를 고쳤고, 고친 명령은 따로 돌려 봤어요. 리뷰는 읽기 전용으로 맡겼어요.
+- Codex가 README를 고쳤고, 고친 명령은 따로 실행해 봤어요. 리뷰는 읽기 전용으로 맡겼어요.
 - Windows 11에서는 파일을 읽힌 뒤 같은 Codex에 수정을 맡겼어요. Qwen을 쓸 수 없을 때 `auto`가 일을 Codex로 넘기는 것도 확인했어요.
 
 Ubuntu에서는 Isaac Sim이 GPU를 쓰고 있어서, 이 브리지를 통해 Qwen에 글을 읽히는 데까지는 못 갔어요.

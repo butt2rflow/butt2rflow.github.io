@@ -19,17 +19,22 @@ In the [Reading a 1,069-page book with local AI](local-llm-reading.md), I saved 
 
 ![Qwen, FLUX, MiniMax H3, and Isaac Sim take turns with one RTX 3090](../assets/diagrams_en/workbench-gpu.png)
 
-On my projects, Codex felt a little less capable than Claude Code, but its allowance felt much more generous. I set things up so Claude scopes each job from my usual Claude Code window and Codex reads the files, implements the changes, runs the tests, and does the first review. Claude is the general contractor and Codex is the subcontractor. The sub costs less, and Claude still does the final inspection. Qwen reads long documents when the GPU is free, and I send shopping research to Muse.
+On my projects, Codex felt a little less capable than Claude Code, but its allowance felt much more generous. I set things up so Claude scopes each job from my usual Claude Code window and Codex reads the files, implements the changes, runs the tests, and does the first review. Claude is the general contractor and Codex is the subcontractor. The sub costs less, and Claude still does the final inspection.
 
-![Claude makes decisions while Codex codes, Qwen reads, and Muse researches purchases](../assets/diagrams_en/workbench-crew.png)
-
-That generous feel had a cause. OpenAI had been undercounting some requests to Astra and Sol, Codex's top and default models. Once it fixed that, the same work hit the limit much sooner. One time the limit filled up again 30 minutes after it reset. Now I save Astra for hard reviews and give the rest to Sol. The idea I started with, a second Claude subscription, is back on the table.
+OpenAI had been undercounting some requests to Astra and Sol, Codex’s top and default models. Once it fixed the count, the same work hit the limit much sooner. I used up the allowance again within 30 minutes of one reset. Now Sol gets the work by default. I save Astra for security reviews and hard design calls, and I bundle fixes into a single job. I’m weighing that second Claude Pro subscription again.
 
 ![OpenAI email about Codex usage: some Astra and Sol requests used less of the allowance than intended, so limits may now be reached sooner](../assets/screens/codex-usage-email.jpg)
+
+Then a web search made me rethink what I was handing off. I wanted a robot-arm vendor’s manual and a robot-hand wiki. Claude searched the web itself and sent subagents to read the pages. One run ate about 100,000 tokens. When I saw the count, I asked Claude, “Why aren’t you using Codex?”
+
+Now I send product, seller, kit-content, and manual lookups to Muse with one instruction: “Find it. Don’t buy it.” For code, repos, or tracing a wiki page back to the relevant code, I send Codex a read-only job. Claude does a single quick web search when I only need one fact. Qwen reads long documents when the GPU is free.
+
+![Claude sets scope and makes the final call, Codex codes and researches code and wikis, Qwen reads long documents, and Muse handles shopping and lookups](../assets/diagrams_en/workbench-crew.png)
 
 ## The short version
 
 - A Python bridge lets Claude Code hand a job to Codex. I can close the window and use the same job ID to check the result later.
+- Sol is my Codex default, with Astra reserved for security reviews and hard design calls. Muse looks up products, and read-only Codex jobs handle code research.
 - I ask for an eight-line report with failures first. When I see `completed`, I still check the changes and test evidence I need.
 - Codex read files, fixed a README and even did a review. On Windows 11 I could also delegate to Codex and use Muse tools. I kept Qwen on the Ubuntu side.
 
@@ -79,7 +84,7 @@ I only set `write=true` when I've authorized edits. For a broken install command
 
 In the public version, `start` accepts `--write` to allow edits, `--target` to choose where the job goes, and `--timeout` to set a limit in seconds. Pass `--file` once per input file, and use `--model` and `--effort` to pick the Codex model and reasoning effort.
 
-Claude also picks the Codex model and reasoning effort (`model`, `effort`) for each job. In the screenshot below, I asked for a video-prompt skill in another Claude Code window. Claude chose Astra at medium effort and handed the job to Codex.
+Claude also picks the Codex model and reasoning effort (`model`, `effort`) for each job. I took the screenshot below before making Sol the default. I asked for a video-prompt skill in another Claude Code window, and Claude chose Astra at medium effort.
 
 ![Another Claude Code window hands a job to Codex, choosing the Astra model at medium effort and listing four tasks (Korean)](../assets/diagrams/codex-model-pick.png)
 
