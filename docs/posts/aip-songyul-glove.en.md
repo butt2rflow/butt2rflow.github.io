@@ -37,9 +37,13 @@ On the back of the hand sits a board about the size of a thumbnail. It's tiny, y
 
 ## When a swing becomes a picture
 
-![A 7-iron swing measured by the hand sensor](../assets/aip/songyul/real-swing-imu.png)
+![A swing at an indoor range: the phone screen with the pose skeleton, face blurred](../assets/aip/songyul/real-swing.gif){ width="420" }
 
-The first day at the range with the glove on, I stared at the graph on my phone for a long time. A slow climb, a brief pause, a fast drop, and a spike the moment the club hits the ball. The motion pictures from [Part 3](aip-seeing-motion.md), drawn by my own swing. Divide the backswing time by the downswing time and you get tempo. My 7-iron came out a bit over 2 to 1.
+*A swing I hit at an indoor range, recorded straight from the phone screen. My face is blurred.*
+
+![Hand and forearm rotation for the same swing, with address, top, impact and finish marked and the R10 ball speed of 87 mph](../assets/aip/songyul/real-swing-gyro-en.png)
+
+The first day at the range with the glove on, I stared at the graph on my phone for a long time. A slow climb, a brief pause, a fast drop, and a spike the moment the club hits the ball. The motion pictures from [Part 3](aip-seeing-motion.md), drawn by my own swing. This one took a little over a second going back and about a third of that coming down. The ball left at around 87 mph.
 
 ## Hearing a fat shot
 
@@ -53,11 +57,17 @@ With a mic in the glove, the sound comes along too. A clean strike cracks with a
 
 Measuring the swing alone is only half the story. So I added a launch monitor, the Garmin R10. When you hit, the R10 sends the ball speed and angles, and the phone pairs them with the swing just before. The first time at the range it missed a few. After a fix, I replayed that day’s recording and it paired all nine. Now each row reads: this is how I swung, and this is how it flew.
 
-## Talking instead of tapping
+## Without taking out the phone
 
 ![Phone screens: swing table, voice commands, fat-shot recorder](../assets/aip/songyul/phone-screens.png)
 
-At the range there's no time to look at a screen. So I made it work by voice. Double-tap the glove and say “seven iron, half” to switch clubs, or “last one was fat” to tag the last shot. If you like, it reads the tempo back after each swing. Along the way it learned English as well as Korean.
+At the range there's no time to look at a screen, and pulling out a phone with a glove on is a hassle. So the glove does it all.
+
+You change clubs the way you switch weapons in a game. Tap the back of your hand four times and club selection starts. Turn your wrist like a dial and it steps through 7-iron, 8-iron, 9-iron. A small turn steps slowly, a big turn flicks through fast. Tap four times again on the club you want, and you're done. Honestly, the four taps still miss more often than I'd like, so I'm working on that.
+
+Voice works too. Double-tap the glove and say “seven iron, half” to switch clubs, or “last one was fat” to tag the shot. If you like, it reads back the tempo and shoulder turn after each swing. Along the way it learned English as well as Korean.
+
+The screen kept changing as I used it at the range. It started out packed with numbers. Now it shows just the swing you hit, big, and keeps it there until the next one, so a glance after the shot is enough.
 
 ## Naming it
 
