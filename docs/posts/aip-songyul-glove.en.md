@@ -53,7 +53,7 @@ With a mic in the glove, the sound comes along too. A clean strike cracks with a
 
 ## Where did the ball go?
 
-![How the R10, one phone and the glove connect: the R10 sends ball data, the camera sends pose, the glove sends wrist and impact, and the glove page ties each swing into one row](../assets/aip/songyul/glove-r10-flow.png)
+![How the R10, one phone and the glove connect: the R10 sends ball data, the camera sends pose, the glove sends wrist and impact, and the glove page ties each swing into one row](../assets/aip/songyul/glove-r10-flow-en.png)
 
 Measuring the swing alone is only half the story. So I added a launch monitor, the Garmin R10. When you hit, the R10 sends the ball speed and angles, and the phone pairs them with the swing just before. The first time at the range it missed a few. After a fix, I replayed that day’s recording and it paired all nine. ![Phone screen recording: right after the swing, cards with tempo, wrist release, ball speed and launch pop up over the camera along with the impact sound picture, and the last-swing card keeps the same numbers. Face blurred](../assets/aip/songyul/real-screen.gif){ width="300" }
 
@@ -68,6 +68,8 @@ Now each row reads: this is how I swung, and this is how it flew. The R10 is rea
 ## Without taking out the phone
 
 ![Phone screens: swing table, voice commands, fat-shot recorder](../assets/aip/songyul/phone-screens.png)
+
+*Real screenshots from my phone, in Korean. The app also runs in English.*
 
 At the range there's no time to look at a screen, and pulling out a phone with a glove on is a hassle. So the glove does it all.
 
