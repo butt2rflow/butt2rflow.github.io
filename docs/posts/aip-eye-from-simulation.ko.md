@@ -195,7 +195,7 @@ phyphox는 독일 아헨공대가 만든 무료 앱이에요. 마이크나 가�
 
 ## 다음 편
 
-7편은 제 골프 스윙이에요. 오른손 센서 장갑으로 소리와 움직임을 함께 재고, 레퍼런스는 사람, 클럽, 스윙 종류마다 따로 녹음해요. 8편에서는 같은 ‘눈’을 로봇 그리퍼에 달아요.
+[7편](aip-songyul-glove.md)은 제 골프 스윙이에요. 오른손 센서 장갑으로 소리와 움직임을 함께 재요. 8편에서는 같은 ‘눈’을 로봇 그리퍼에 달아요.
 
 ## 직접 해 보려면: 레퍼런스 정하는 법
 
@@ -213,7 +213,7 @@ FoundationPose에게 3D 모델이 본보기라면, 소리와 움직임에서는 
 
 ----
 
-**시리즈** · [← 5편, 레퍼런스만 주면 알아보는 AI](aip-learning-from-reference.md) · [처음부터: 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)
+**시리즈** · [← 5편, 레퍼런스만 주면 알아보는 AI](aip-learning-from-reference.md) · [7편, 혼자서 제품 하나를 끝까지 →](aip-songyul-glove.md) · [처음부터: 0편, 로봇은 무엇으로 세상을 느낄까](aip-robot-senses.md)
 
 *관련: [로봇은 왜 '가짜 세계'에서 먼저 배우나](robot-simulation.md) · [현장 노트 2부: Isaac ROS와 파운데이션 모델](jetson-isaac-foundation-models.md)*
 

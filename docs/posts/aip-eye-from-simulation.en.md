@@ -191,7 +191,7 @@ No. This result covers one case: table sounds. Simulators do well at other jobs.
 
 ## Next
 
-Part 7 is about my golf swing. A sensor glove on my right hand records sound and motion together, with references recorded separately for each player, club and swing type. In part 8 the same eye goes on a robot gripper.
+[Part 7](aip-songyul-glove.md) is about my golf swing. A sensor glove on my right hand records sound and motion together. In part 8 the same eye goes on a robot gripper.
 
 ## Try it yourself: choosing references
 
@@ -209,7 +209,7 @@ Limits: the exams are small (23–57 one-second clips per place, two people, one
 
 ----
 
-**Series** · [← Part 5, Learning from a Reference](aip-learning-from-reference.md) · [Back to part 0, How Robots Feel](aip-robot-senses.md)
+**Series** · [← Part 5, Learning from a Reference](aip-learning-from-reference.md) · [Part 7, Building a Product End to End →](aip-songyul-glove.md) · [Back to part 0, How Robots Feel](aip-robot-senses.md)
 
 *Related: [Why Robots Learn in a 'Fake World' First](robot-simulation.md) · [Field Notes, Part 2: Isaac ROS, Foundation Models](jetson-isaac-foundation-models.md)*
 
