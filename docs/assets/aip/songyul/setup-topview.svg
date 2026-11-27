@@ -41,7 +41,7 @@ text { font-family: "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", 
   <rect x="311" y="366" width="40" height="20" rx="4" style="fill:#1f2933"/>
   <path d="M 331 366 L 300 300 L 362 300 Z" style="fill:#4fc3f7;opacity:0.18"/>
 </g>
-<text class="l" x="372" y="382">폰 (삼각대)</text>
+<text class="l" x="372" y="382">폰 (바닥, 미니 삼각대)</text>
 <text class="s" x="372" y="402">정면에서 앞 카메라로 골퍼를 봐요</text>
 <text class="s" x="372" y="420">화면이 골퍼 쪽이라 치고 나서 바로 보여요</text>
 <line x1="458" y1="196" x2="458" y2="362" style="stroke:#7b8794;stroke-width:1.2"/>

@@ -49,7 +49,7 @@ With a mic in the glove, the sound comes along too. A clean strike cracks with a
 
 ## Where did the ball go?
 
-![The range setup from above: a phone on a tripod faces the golfer from the front, and the R10 sits about 2 m behind the ball](../assets/aip/songyul/setup-topview-en.png)
+![The range setup from above: a phone on a mini tripod on the floor faces the golfer from the front, and the R10 sits about 2 m behind the ball](../assets/aip/songyul/setup-topview-en.png)
 
 ![How the R10, one phone and the glove connect: the R10 sends ball data, the camera sends pose, the glove sends wrist and impact, and the glove page ties each swing into one row](../assets/aip/songyul/glove-r10-flow-en.png)
 

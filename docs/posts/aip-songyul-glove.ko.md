@@ -49,7 +49,7 @@ description: "6편 끝에서 다음은 제 골프 스윙이라고 했어요. 장
 
 ## 공은 어디로 갔을까
 
-![연습장 배치를 위에서 본 그림. 골퍼 앞 정면에 삼각대 위 폰, 공 뒤 약 2 m에 R10](../assets/aip/songyul/setup-topview.png)
+![연습장 배치를 위에서 본 그림. 골퍼 앞 정면 바닥에 미니 삼각대 위 폰, 공 뒤 약 2 m에 R10](../assets/aip/songyul/setup-topview.png)
 
 ![R10, 폰 한 대, 장갑이 이어지는 흐름. R10이 공 결과를, 카메라가 자세를, 장갑이 손목과 임팩트를 보내고 장갑 페이지가 스윙마다 한 줄로 묶음](../assets/aip/songyul/glove-r10-flow.png)
 
