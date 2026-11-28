@@ -51,6 +51,10 @@ With a mic in the glove, the sound comes along too. A clean strike cracks with a
 
 ![The range setup from above: a phone on a mini tripod on the floor faces the golfer from the front, and the R10 sits about 2 m behind the ball](../assets/aip/songyul/setup-topview-en.png)
 
+<video controls playsinline muted preload="metadata" width="640" style="max-width:100%" poster="../../../assets/aip/songyul/setup-video-poster.jpg" src="../../../assets/aip/songyul/setup-video-en.mp4"></video>
+
+*The same setup as a short clip: a 3D model marks where the R10 and the phone go, then it turns into an AI-generated swing in front of the golfer. The golfer is AI-generated.*
+
 ![How the R10, one phone and the glove connect: the R10 sends ball data, the camera sends pose, the glove sends wrist and impact, and the glove page ties each swing into one row](../assets/aip/songyul/glove-r10-flow-en.png)
 
 Measuring the swing alone is only half the story. So I added a launch monitor, the Garmin R10. When you hit, the R10 sends the ball speed and angles, and the phone pairs them with the swing just before. The first time at the range it missed a few. After a fix, I replayed that day’s recording and it paired all nine.
