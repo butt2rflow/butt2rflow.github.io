@@ -1,0 +1,46 @@
+<svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">What ROS 2 takes over and what stays on the controller</title>
+<desc id="de">The ROS 2 computer on the left handles seeing, deciding and path planning and sends trajectories. The robot controller on the right keeps servo control, safety functions, the e-stop and the configured speed and area limits. The arrows show trajectories going down and joint states coming back.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.it{font-size:12px;font-weight:600}
+.ros{fill:var(--bg);stroke:var(--blue);stroke-width:1.6}
+.ctl{fill:var(--bg);stroke:var(--red);stroke-width:1.6}
+.ar{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arr{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ag)}
+.mk{fill:var(--blue)}
+.mkg{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="262" rx="12"/>
+<text class="t" x="18" y="26">What ROS 2 takes over, what stays on the controller</text>
+<rect class="ros" x="18" y="44" width="262" height="198" rx="10"/>
+<text class="lb" x="34" y="68" style="fill:var(--blue)">ROS 2 computer (PC, Jetson)</text>
+<text class="it" x="34" y="98">See: find the part with a camera</text>
+<text class="it" x="34" y="124">Decide: what to do next</text>
+<text class="it" x="34" y="150">Plan: a collision-free path</text>
+<text class="st" x="34" y="182">jobs where a few milliseconds</text>
+<text class="st" x="34" y="198">late is no disaster</text>
+<text class="st" x="34" y="224">ordinary Linux, no real-time guarantee</text>
+<line class="ar" x1="286" y1="118" x2="392" y2="118"/>
+<text class="st" x="339" y="108" text-anchor="middle">trajectory</text>
+<line class="arr" x1="392" y1="160" x2="286" y2="160"/>
+<text class="st" x="339" y="178" text-anchor="middle">joint states</text>
+<rect class="ctl" x="398" y="44" width="264" height="198" rx="10"/>
+<text class="lb" x="414" y="68" style="fill:var(--red)">Robot controller (unchanged)</text>
+<text class="it" x="414" y="98">Servo: motors follow the path exactly</text>
+<text class="it" x="414" y="124">Safety: e-stop, protective stop</text>
+<text class="it" x="414" y="150">Limits: speed, area (cobots: force)</text>
+<text class="st" x="414" y="182">jobs that can't be late,</text>
+<text class="st" x="414" y="198">jobs that protect people</text>
+<text class="st" x="414" y="224">the maker's safety functions, as configured</text>
+</svg>

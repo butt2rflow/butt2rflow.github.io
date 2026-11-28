@@ -1,0 +1,43 @@
+<svg width="100%" viewBox="0 0 360 226" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">Disparity-axis attention</title>
+<desc id="de">Attention compares all disparity candidates of one pixel against each other. It filters out the 'false valleys' that arise in repetitive patterns.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--yel:#eab308;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--yel:#fde047;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:11.5px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;fill:var(--mut);letter-spacing:.02em}
+.bx{fill:var(--bg);stroke:var(--bd);stroke-width:1.2}
+.bxc{fill:var(--chip);stroke:var(--bd);stroke-width:1.2}
+.ln{stroke:var(--mut);stroke-width:1.4;fill:none}
+.ar{stroke:var(--mut);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.arb{stroke:var(--blue);stroke-width:1.6;fill:none;marker-end:url(#ahb)}
+.dash{stroke-dasharray:4 3}
+.hi{fill:var(--blue)}.hi2{fill:var(--teal)}.hi3{fill:var(--amber)}.bad{fill:var(--red)}.mk{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--blue)"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="226" rx="12"/>
+<text class="t" x="18" y="22">One pixel's disparity candidates — all compared</text>
+<text class="lb" x="30" y="48">Score vector of one pixel (D candidates)</text>
+<g>
+<rect class="bxc" x="30" y="58" width="28" height="30" rx="4"/><text class="lb" x="44" y="78" text-anchor="middle">d1</text>
+<rect class="bxc" x="66" y="58" width="28" height="30" rx="4"/><text class="lb" x="80" y="78" text-anchor="middle">d2</text>
+<rect class="bxc" x="102" y="58" width="28" height="30" rx="4"/><text class="lb" x="116" y="78" text-anchor="middle">d3</text>
+<rect x="138" y="58" width="28" height="30" rx="4" fill="var(--amber)" opacity=".5" stroke="var(--bd)"/><text class="lb" x="152" y="78" text-anchor="middle">d4</text>
+<text class="lb" x="182" y="78" text-anchor="middle">···</text>
+<rect x="198" y="58" width="28" height="30" rx="4" fill="var(--amber)" opacity=".5" stroke="var(--bd)"/><text class="lb" x="212" y="78" text-anchor="middle">dk</text>
+<rect class="bxc" x="234" y="58" width="28" height="30" rx="4"/><text class="lb" x="248" y="78" text-anchor="middle">··</text>
+<rect class="bxc" x="270" y="58" width="28" height="30" rx="4"/><text class="lb" x="284" y="78" text-anchor="middle">dD</text>
+</g>
+<path class="ln dash" d="M152,96 C152,126 212,126 212,96" stroke="var(--amber)"/>
+<text class="lb" x="182" y="140" text-anchor="middle" style="fill:var(--amber)">Compare two far-apart candidates directly</text>
+<rect class="bx" x="16" y="152" width="328" height="58" rx="10"/>
+<text class="st" x="30" y="172">Convolution: sees only neighbors (local)</text>
+<text class="st" x="30" y="192" style="fill:var(--amber)">Attention: sees all candidates at once (global)</text>
+<text class="lb" x="180" y="222" text-anchor="middle">Its job: filter out 'false valleys' in repetitive patterns</text>
+</svg>

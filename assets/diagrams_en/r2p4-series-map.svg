@@ -1,0 +1,90 @@
+<svg width="100%" viewBox="0 0 680 276" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">The whole series on one map</title>
+<desc id="de">The flow from camera to robot controller, marked with which part covered what: perception and GPU acceleration in Part 4, frame conversion, the robot description and ros2_control in Part 2, planning in Part 3 (MoveIt 2) and Part 4 (cuMotion), and the nodes and topics that connect it all in Part 1.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="276" rx="12"/>
+<text class="t" x="18" y="26">From camera to controller: what each part covered</text>
+<rect class="bxg" x="16" y="52" width="96" height="44" rx="8"/>
+<text class="nd" x="64.0" y="78.0" text-anchor="middle">camera</text>
+<line class="ar" x1="113" y1="74" x2="125" y2="74"/>
+<rect class="bxgr" x="126" y="52" width="96" height="44" rx="8"/>
+<text class="nd" x="174.0" y="78.0" text-anchor="middle">perception</text>
+<text class="lb" x="174" y="114" text-anchor="middle" style="fill:var(--amber)">Part 4</text>
+<text class="sm" x="174" y="128" text-anchor="middle">Isaac ROS</text>
+<line class="ar" x1="223" y1="74" x2="235" y2="74"/>
+<rect class="bx" x="236" y="52" width="96" height="44" rx="8"/>
+<text class="nd" x="284.0" y="78.0" text-anchor="middle">frames</text>
+<text class="lb" x="284" y="114" text-anchor="middle" style="fill:var(--amber)">Part 2</text>
+<text class="sm" x="284" y="128" text-anchor="middle">TF2</text>
+<line class="ar" x1="333" y1="74" x2="345" y2="74"/>
+<rect class="hi" x="346" y="52" width="96" height="44" rx="8"/>
+<text class="nd" x="394.0" y="78.0" text-anchor="middle">planning</text>
+<text class="lb" x="394" y="114" text-anchor="middle" style="fill:var(--amber)">Parts 3–4</text>
+<text class="sm" x="394" y="128" text-anchor="middle">MoveIt 2</text>
+<text class="sm" x="394" y="142" text-anchor="middle">+ cuMotion</text>
+<line class="ar" x1="443" y1="74" x2="455" y2="74"/>
+<rect class="bx" x="456" y="52" width="96" height="44" rx="8"/>
+<text class="nd" x="504.0" y="78.0" text-anchor="middle">drive</text>
+<text class="lb" x="504" y="114" text-anchor="middle" style="fill:var(--amber)">Part 2</text>
+<text class="sm" x="504" y="128" text-anchor="middle">ros2_control</text>
+<line class="ar" x1="553" y1="74" x2="565" y2="74"/>
+<rect class="ctl" x="566" y="52" width="96" height="44" rx="8"/>
+<text class="nd" x="614.0" y="78.0" text-anchor="middle">controller</text>
+<text class="lb" x="614" y="114" text-anchor="middle" style="fill:var(--amber)">unchanged</text>
+<rect class="panel" x="16" y="160" width="646" height="40" rx="10"/>
+<text class="nd" x="339" y="185" text-anchor="middle">Underneath: all connected by nodes, topics, services and actions (Part 1)</text>
+<rect class="fam" x="16" y="208" width="646" height="54" rx="10"/>
+<text class="st" x="30" y="230">The robot blueprint (URDF) and RViz are shared by every step (Part 2)</text>
+<text class="st" x="30" y="250">Safety for the whole cell stays with the controller and risk assessment (Parts 1, 3)</text>
+</svg>

@@ -1,0 +1,90 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">거리에 따른 깊이 오차 — 짧은 베이스라인 vs 긴 베이스라인</title>
+<desc id="de">가로축은 카메라에서 물체까지 거리(cm), 세로축은 깊이 오차(mm)다. 베이스라인 18mm인 D405는 7cm부터 깊이가 나오고 20cm에서 오차가 약 0.4mm지만, 거리의 제곱으로 커져 1m에서는 약 1cm가 된다. 베이스라인 75mm인 OAK-D Pro는 기본 설정에서 약 80cm 안쪽은 깊이가 나오지 않지만, 1m에서 오차가 약 1.2mm로 작다. 해상도를 낮추고 탐색 범위를 넓히면 약 20cm까지 당길 수 있다(점선). 손목 작업 구간 15~40cm를 띠로 표시했다. 서브픽셀 정밀도 0.08px를 가정한 대략값이다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="330" rx="12"/>
+<text class="t" x="18" y="26">가까이는 짧은 베이스라인, 멀리는 긴 베이스라인</text>
+<rect x="142.5" y="56" width="120.8" height="214" style="fill:var(--amber);opacity:0.10"/>
+<text class="sm" x="202.91666666666669" y="70" text-anchor="middle" style="fill:var(--fg)">손목 15~40cm</text>
+<line x1="70" y1="270.0" x2="650" y2="270.0" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="62" y="274.0" text-anchor="end">0</text>
+<line x1="70" y1="216.5" x2="650" y2="216.5" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="62" y="220.5" text-anchor="end">3</text>
+<line x1="70" y1="163.0" x2="650" y2="163.0" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="62" y="167.0" text-anchor="end">6</text>
+<line x1="70" y1="109.5" x2="650" y2="109.5" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="62" y="113.5" text-anchor="end">9</text>
+<line x1="70" y1="56.0" x2="650" y2="56.0" style="stroke:var(--bd);stroke-width:1"/>
+<text class="sm" x="62" y="60.0" text-anchor="end">12</text>
+<text class="sm" x="70.0" y="286" text-anchor="middle">0</text>
+<text class="sm" x="166.66666666666669" y="286" text-anchor="middle">20</text>
+<text class="sm" x="263.33333333333337" y="286" text-anchor="middle">40</text>
+<text class="sm" x="360.0" y="286" text-anchor="middle">60</text>
+<text class="sm" x="456.6666666666667" y="286" text-anchor="middle">80</text>
+<text class="sm" x="553.3333333333333" y="286" text-anchor="middle">100</text>
+<text class="sm" x="650.0" y="286" text-anchor="middle">120</text>
+<text class="sm" x="360.0" y="304" text-anchor="middle">물체까지 거리 (cm)</text>
+<text class="sm" x="18" y="50">깊이 오차 (mm)</text>
+<polyline points="103.8,269.1 108.7,268.9 113.5,268.6 118.3,268.2 123.2,267.8 128.0,267.4 132.8,267.0 137.7,266.5 142.5,266.0 147.3,265.4 152.2,264.8 157.0,264.2 161.8,263.6 166.7,262.9 171.5,262.1 176.3,261.4 181.2,260.6 186.0,259.7 190.8,258.9 195.7,257.9 200.5,257.0 205.3,256.0 210.2,255.0 215.0,253.9 219.8,252.9 224.7,251.7 229.5,250.6 234.3,249.4 239.2,248.2 244.0,246.9 248.8,245.6 253.7,244.2 258.5,242.9 263.3,241.5 268.2,240.0 273.0,238.5 277.8,237.0 282.7,235.5 287.5,233.9 292.3,232.3 297.2,230.6 302.0,228.9 306.8,227.2 311.7,225.4 316.5,223.6 321.3,221.8 326.2,219.9 331.0,218.0 335.8,216.1 340.7,214.1 345.5,212.1 350.3,210.0 355.2,207.9 360.0,205.8 364.8,203.6 369.7,201.4 374.5,199.2 379.3,197.0 384.2,194.7 389.0,192.3 393.8,189.9 398.7,187.5 403.5,185.1 408.3,182.6 413.2,180.1 418.0,177.6 422.8,175.0 427.7,172.3 432.5,169.7 437.3,167.0 442.2,164.3 447.0,161.5 451.8,158.7 456.7,155.9 461.5,153.0 466.3,150.1 471.2,147.1 476.0,144.2 480.8,141.2 485.7,138.1 490.5,135.0 495.3,131.9 500.2,128.7 505.0,125.5 509.8,122.3 514.7,119.1 519.5,115.8 524.3,112.4 529.2,109.1 534.0,105.6 538.8,102.2 543.7,98.7 548.5,95.2 553.3,91.7 558.2,88.1 563.0,84.5 567.8,80.8 572.7,77.1 577.5,73.4 582.3,69.6 587.2,65.8 592.0,62.0 596.8,58.1" style="fill:none;stroke:var(--blue);stroke-width:2;stroke-linejoin:round"/>
+<polyline points="166.7,269.1 171.5,269.0 176.3,269.0 181.2,268.9 186.0,268.8 190.8,268.6 195.7,268.5 200.5,268.4 205.3,268.3 210.2,268.2 215.0,268.1 219.8,267.9 224.7,267.8 229.5,267.6 234.3,267.5 239.2,267.4 244.0,267.2 248.8,267.0 253.7,266.9 258.5,266.7 263.3,266.5 268.2,266.4 273.0,266.2 277.8,266.0 282.7,265.8 287.5,265.6 292.3,265.4 297.2,265.2 302.0,265.0 306.8,264.8 311.7,264.6 316.5,264.4 321.3,264.2 326.2,263.9 331.0,263.7 335.8,263.5 340.7,263.2 345.5,263.0 350.3,262.7 355.2,262.5 360.0,262.2 364.8,262.0 369.7,261.7 374.5,261.4 379.3,261.1 384.2,260.9 389.0,260.6 393.8,260.3 398.7,260.0 403.5,259.7 408.3,259.4 413.2,259.1 418.0,258.8 422.8,258.5 427.7,258.2 432.5,257.8 437.3,257.5 442.2,257.2 447.0,256.8 451.8,256.5 456.7,256.2" style="fill:none;stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4"/>
+<polyline points="456.7,256.2 461.5,255.8 466.3,255.5 471.2,255.1 476.0,254.7 480.8,254.4 485.7,254.0 490.5,253.6 495.3,253.3 500.2,252.9 505.0,252.5 509.8,252.1 514.7,251.7 519.5,251.3 524.3,250.9 529.2,250.5 534.0,250.1 538.8,249.7 543.7,249.2 548.5,248.8 553.3,248.4 558.2,247.9 563.0,247.5 567.8,247.1 572.7,246.6 577.5,246.2 582.3,245.7 587.2,245.3 592.0,244.8 596.8,244.3 601.7,243.8 606.5,243.4 611.3,242.9 616.2,242.4 621.0,241.9 625.8,241.4 630.7,240.9 635.5,240.4 640.3,239.9 645.2,239.4 650.0,238.9" style="fill:none;stroke:var(--amber);stroke-width:2"/>
+<rect x="70.0" y="266" width="33.8" height="4" style="fill:var(--blue);opacity:0.5"/>
+<circle class="dot" cx="166.66666666666669" cy="262.8666666666667" r="4"/>
+<circle class="dot" cx="553.3333333333333" cy="91.66666666666666" r="4"/>
+<circle class="dota" cx="553.3333333333333" cy="248.3838383838384" r="4"/>
+<text class="sm" x="160.66666666666669" y="252.86666666666667" text-anchor="end" style="fill:var(--fg)">20cm: 약 0.4mm</text>
+<text class="nd" x="545.3333333333333" y="87.66666666666666" text-anchor="end">D405 (18mm) · 1m: 약 1cm</text>
+<text class="nd" x="645.1666666666666" y="226.79166666666666" text-anchor="end">OAK-D Pro (75mm) · 1m: 약 1.2mm</text>
+<text class="sm" x="18" y="318">대략값(서브픽셀 정밀도 0.08px 가정). OAK-D Pro 점선은 해상도를 낮추고 탐색을 넓혔을 때만, 기본 설정은 약 80cm부터</text>
+</svg>

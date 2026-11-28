@@ -1,0 +1,432 @@
+{
+ "min_score": 0.75,
+ "prefixes": [
+  {
+   "say": [
+    "플레이어",
+    "선수"
+   ],
+   "action": "set_player",
+   "arg": "name"
+  },
+  {
+   "say": [
+    "라벨",
+    "레이블",
+    "태그"
+   ],
+   "action": "label_last",
+   "arg": "label"
+  }
+ ],
+ "players": [
+  {
+   "name": "me",
+   "say": [
+    "나",
+    "본인",
+    "내 차례"
+   ]
+  },
+  {
+   "name": "friend1",
+   "say": [
+    "친구",
+    "친구 일"
+   ]
+  }
+ ],
+ "commands": [
+  {
+   "say": [
+    "좋은 샷",
+    "굿샷",
+    "나이스샷"
+   ],
+   "action": "label_last",
+   "args": {
+    "label": "good",
+    "add_reference": true
+   }
+  },
+  {
+   "say": [
+    "슬라이스"
+   ],
+   "action": "label_last",
+   "args": {
+    "label": "slice"
+   }
+  },
+  {
+   "say": [
+    "훅"
+   ],
+   "action": "label_last",
+   "args": {
+    "label": "hook"
+   }
+  },
+  {
+   "say": [
+    "뒤땅",
+    "뒷땅",
+    "뒤탕",
+    "뒷탕",
+    "땅 먼저",
+    "땅부터 쳤어"
+   ],
+   "action": "label_last",
+   "args": {
+    "label": "fat"
+   }
+  },
+  {
+   "say": [
+    "탑볼",
+    "얇게 맞았어"
+   ],
+   "action": "label_last",
+   "args": {
+    "label": "thin"
+   }
+  },
+  {
+   "say": [
+    "내 차례",
+    "제 차례"
+   ],
+   "action": "set_player",
+   "args": {
+    "name": "me"
+   }
+  },
+  {
+   "say": [
+    "빈 스윙",
+    "연습 스윙"
+   ],
+   "action": "label_last",
+   "args": {
+    "label": "practice"
+   }
+  },
+  {
+   "say": [
+    "정렬 시작",
+    "보정 시작",
+    "정렬 모드"
+   ],
+   "action": "calibrate",
+   "args": {
+    "seconds": 12
+   }
+  },
+  {
+   "say": [
+    "기록 시작",
+    "시작"
+   ],
+   "action": "start"
+  },
+  {
+   "say": [
+    "기록 그만",
+    "그만",
+    "정지"
+   ],
+   "action": "stop"
+  },
+  {
+   "say": [
+    "방금 거 어때",
+    "방금 스윙"
+   ],
+   "action": "speak_last"
+  },
+  {
+   "say": [
+    "오늘 어때",
+    "오늘 요약"
+   ],
+   "action": "speak_summary"
+  },
+  {
+   "say": [
+    "배터리"
+   ],
+   "action": "speak_battery"
+  },
+  {
+   "say": [
+    "취소",
+    "방금 거 지워"
+   ],
+   "action": "undo_label"
+  },
+  {
+   "say": [
+    "드라이버",
+    "원우드"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "driver"
+   }
+  },
+  {
+   "say": [
+    "3번 우드",
+    "삼번 우드",
+    "스푼",
+    "쓰리 우드"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "wood3"
+   }
+  },
+  {
+   "say": [
+    "5번 우드",
+    "오번 우드",
+    "파이브 우드"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "wood5"
+   }
+  },
+  {
+   "say": [
+    "유틸",
+    "유틸리티",
+    "하이브리드"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "hybrid"
+   }
+  },
+  {
+   "say": [
+    "4번",
+    "4번 아이언",
+    "사번 아이언",
+    "사번",
+    "포 아이언"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "iron4"
+   }
+  },
+  {
+   "say": [
+    "5번",
+    "5번 아이언",
+    "오번 아이언",
+    "오번",
+    "파이브 아이언"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "iron5"
+   }
+  },
+  {
+   "say": [
+    "6번",
+    "6번 아이언",
+    "육번 아이언",
+    "육번",
+    "식스 아이언"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "iron6"
+   }
+  },
+  {
+   "say": [
+    "7번",
+    "7번 아이언",
+    "칠번 아이언",
+    "칠번",
+    "세븐 아이언"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "iron7"
+   }
+  },
+  {
+   "say": [
+    "8번",
+    "8번 아이언",
+    "팔번 아이언",
+    "팔번",
+    "에잇 아이언"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "iron8"
+   }
+  },
+  {
+   "say": [
+    "9번",
+    "9번 아이언",
+    "구번 아이언",
+    "구번",
+    "나인 아이언"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "iron9"
+   }
+  },
+  {
+   "say": [
+    "피칭",
+    "피칭 웨지",
+    "피웨지"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "pw"
+   }
+  },
+  {
+   "say": [
+    "갭 웨지",
+    "52도",
+    "어프로치 웨지"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "gw"
+   }
+  },
+  {
+   "say": [
+    "샌드",
+    "샌드 웨지",
+    "56도"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "sw"
+   }
+  },
+  {
+   "say": [
+    "로브 웨지",
+    "60도"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "lw"
+   }
+  },
+  {
+   "say": [
+    "퍼터"
+   ],
+   "action": "set_club",
+   "args": {
+    "club": "putter"
+   }
+  },
+  {
+   "say": [
+    "풀스윙",
+    "풀 스윙",
+    "풀샷"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "full"
+   }
+  },
+  {
+   "say": [
+    "쓰리쿼터",
+    "쓰리쿼터 스윙",
+    "4분의 3"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "three_quarter"
+   }
+  },
+  {
+   "say": [
+    "하프 스윙",
+    "하프스윙",
+    "하프샷",
+    "하프"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "half"
+   }
+  },
+  {
+   "say": [
+    "칩샷",
+    "칩 샷",
+    "칩핑"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "chip"
+   }
+  },
+  {
+   "say": [
+    "피치샷",
+    "피치 샷",
+    "띄우는 어프로치"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "pitch"
+   }
+  },
+  {
+   "say": [
+    "펀치샷",
+    "펀치 샷",
+    "낮게 치기"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "punch"
+   }
+  },
+  {
+   "say": [
+    "벙커샷",
+    "벙커 샷",
+    "벙커"
+   ],
+   "action": "set_swing",
+   "args": {
+    "swing": "bunker"
+   }
+  },
+  {
+   "say": [
+    "무슨 채",
+    "지금 무슨 채야",
+    "채 뭐야",
+    "지금 설정",
+    "설정 알려줘",
+    "누구 차례"
+   ],
+   "action": "speak_club"
+  }
+ ],
+ "source": "generated from xiao-sense/host/commands.example.yaml by commands_to_json.py"
+}

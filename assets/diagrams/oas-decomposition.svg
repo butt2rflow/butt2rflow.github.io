@@ -1,0 +1,37 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>OAS 분해 vs CDS — 왜 CDS가 더 깨끗한가</title>
+<desc>관측 스프레드(OAS)에는 순수 신용 위험 말고도 유동성 프리미엄과 콜옵션 조정이 섞여 있다. CDS는 부도 위험만 담아서 순수 신용에 더 가깝다. 그래서 부도 위험만 보려면 CDS가 더 깨끗한 척도다. 구성 비율은 개념 설명용 예시다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.seg { font-size:12px; font-weight:500; }
+</style>
+<rect x="0" y="0" width="680" height="340" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="40">관측 스프레드(OAS)엔 신용만 있지 않다</text>
+
+<line x1="90" y1="290" x2="600" y2="290" stroke="var(--br)" stroke-width="0.5"/>
+
+<!-- OAS stacked bar -->
+<rect x="150" y="146" width="110" height="144" rx="4" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.6"/>
+<rect x="150" y="98" width="110" height="48" rx="4" fill="#F0E4C4" stroke="#C99A2E" stroke-width="0.6"/>
+<rect x="150" y="76" width="110" height="22" rx="4" fill="#E2E0D8" stroke="#8A877E" stroke-width="0.6"/>
+<text class="th" x="205" y="312" text-anchor="middle">OAS (관측)</text>
+
+<!-- leader labels -->
+<line x1="260" y1="87" x2="300" y2="87" stroke="#8A877E" stroke-width="0.5"/>
+<text class="seg" x="306" y="91" fill="#5c5a52">콜옵션 조정</text>
+<line x1="260" y1="122" x2="300" y2="122" stroke="#C99A2E" stroke-width="0.5"/>
+<text class="seg" x="306" y="126" fill="#7a5e18">유동성 프리미엄</text>
+<line x1="260" y1="218" x2="300" y2="218" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="seg" x="306" y="222" fill="#0F3D30">순수 신용 위험</text>
+
+<!-- CDS bar -->
+<rect x="430" y="146" width="110" height="144" rx="4" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.6"/>
+<text class="th" x="485" y="312" text-anchor="middle">CDS</text>
+<text class="seg" x="485" y="222" text-anchor="middle" fill="#0F3D30">순수 신용만</text>
+
+<text class="s" x="340" y="332" text-anchor="middle">부도 위험만 보려면 CDS가 더 깨끗하다 · 구성비는 예시</text>
+</svg>

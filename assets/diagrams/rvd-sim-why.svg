@@ -1,0 +1,53 @@
+<svg width="100%" viewBox="0 0 360 254" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">왜 가짜 세계에서 먼저 배우나</title>
+<desc id="de">실제 팔로 학습 데이터를 모을 때의 세 벽(안전·비용·라벨)을 시뮬레이션이 각각 어떻게 넘는지 나란히 대비한다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:13px;font-weight:700}
+.st{font-size:10px;fill:var(--mut)}
+.lb{font-size:10.5px;font-weight:700;letter-spacing:.02em}
+.bad{fill:var(--bg);stroke:var(--red);stroke-width:1.2}
+.good{fill:var(--bg);stroke:var(--teal);stroke-width:1.2}
+.ar{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.mk{fill:var(--teal)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="360" height="254" rx="12"/>
+<text class="t" x="18" y="22">데이터 수집의 세 벽 — 시뮬레이션이 넘는다</text>
+<text class="lb" x="80" y="42" text-anchor="middle" style="fill:var(--red)">실제 팔로 수집</text>
+<text class="lb" x="280" y="42" text-anchor="middle" style="fill:var(--teal)">시뮬레이션</text>
+<!-- Row 1 safety -->
+<rect class="bad" x="16" y="50" width="128" height="52" rx="9"/>
+<text class="st" x="26" y="70" style="fill:var(--fg)">① 안전</text>
+<text class="st" x="26" y="86">서툰 팔이 물건·팔·</text>
+<text class="st" x="26" y="98">사람까지 위협</text>
+<line class="ar" x1="150" y1="76" x2="210" y2="76"/>
+<rect class="good" x="216" y="50" width="128" height="52" rx="9"/>
+<text class="st" x="226" y="70" style="fill:var(--fg)">부서져도 리셋</text>
+<text class="st" x="226" y="86">실패에 대가가 없다</text>
+<!-- Row 2 cost -->
+<rect class="bad" x="16" y="110" width="128" height="52" rx="9"/>
+<text class="st" x="26" y="130" style="fill:var(--fg)">② 비용·시간</text>
+<text class="st" x="26" y="146">팔은 한 대, 한 번에</text>
+<text class="st" x="26" y="158">몇 초 — 백만 번?</text>
+<line class="ar" x1="150" y1="136" x2="210" y2="136"/>
+<rect class="good" x="216" y="110" width="128" height="52" rx="9"/>
+<text class="st" x="226" y="130" style="fill:var(--fg)">수백 대 동시</text>
+<text class="st" x="226" y="146">시간을 압축한다</text>
+<!-- Row 3 labels -->
+<rect class="bad" x="16" y="170" width="128" height="52" rx="9"/>
+<text class="st" x="26" y="190" style="fill:var(--fg)">③ 라벨(정답)</text>
+<text class="st" x="26" y="206">사람이 수동으로,</text>
+<text class="st" x="26" y="218">6-DoF는 눈으로 어렵다</text>
+<line class="ar" x1="150" y1="196" x2="210" y2="196"/>
+<rect class="good" x="216" y="170" width="128" height="52" rx="9"/>
+<text class="st" x="226" y="190" style="fill:var(--fg)">정답을 공짜로</text>
+<text class="st" x="226" y="206">프로그램이 물체를</text>
+<text class="st" x="226" y="218">놓았으니 이미 안다</text>
+<text class="lb" x="180" y="244" text-anchor="middle" style="fill:var(--mut)">시뮬레이션의 진짜 값 = 라벨 달린 데이터를 거의 무한히, 공짜로</text>
+</svg>

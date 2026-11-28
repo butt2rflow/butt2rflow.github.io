@@ -1,0 +1,62 @@
+<svg width="100%" viewBox="0 0 680 392" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>체인 단계별 시간, 최적화 전과 후</title>
+<desc>FoundationPose 6.33→1.25초, FoundationStereo 2.01→1.99초, Grounding DINO 1.94→0.58초, 깊이 재투영 0.62→0.02초, SAM2 0.44→0.10초, 왜곡 보정 0.10→0.09초. 합계 11.42→4.03초(2.8배). 가장 크게 준 건 FoundationPose이고, 남은 병목은 FoundationStereo다.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.sub{font-size:10.5px;fill:#73726c;}
+.m{font-size:11.5px;font-weight:700;fill:#3f4d66;}
+.s{font-size:9.5px;fill:#73726c;}
+.v{font-size:10.5px;font-weight:700;fill:#5f5e58;}
+.vg{font-size:10.5px;font-weight:700;fill:#15803d;}
+.tot{font-size:12px;font-weight:700;fill:#3d3d3a;}
+.tag{font-size:9.5px;font-weight:700;fill:#ffffff;}
+.lane{font-size:12px;font-weight:700;fill:#3d3d3a;}
+</style>
+<rect x="0" y="0" width="680" height="392" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="32">물체 하나에 11.4초 → 4.0초, 어디서 줄었나</text>
+<text class="sub" x="40" y="50">Orin NX 16GB · 한 프로세스에 모델을 한 번만 올림 · 실시간 프레임 4장 평균 · 단위 초</text>
+<rect x="40" y="62" width="12" height="10" rx="2" fill="#a8a69d"/>
+<text class="s" x="58" y="71">최적화 전 (PyTorch 위주)</text>
+<rect x="200" y="62" width="12" height="10" rx="2" fill="#16a34a"/>
+<text class="s" x="218" y="71">최적화 후 (TensorRT + 수정)</text>
+<text class="m" x="40" y="104">FoundationPose</text>
+<text class="s" x="40" y="118">TensorRT 정제·채점 + 느린 단계 수정</text>
+<rect x="230" y="96" width="367.1" height="11" rx="2" fill="#a8a69d"/>
+<text class="v" x="603.1" y="106">6.33</text>
+<rect x="230" y="110" width="72.5" height="11" rx="2" fill="#16a34a"/>
+<text class="vg" x="308.5" y="120">1.25</text>
+<text class="m" x="40" y="144">FoundationStereo</text>
+<text class="s" x="40" y="158">원래 TensorRT</text>
+<rect x="230" y="136" width="116.6" height="11" rx="2" fill="#a8a69d"/>
+<text class="v" x="352.6" y="146">2.01</text>
+<rect x="230" y="150" width="115.4" height="11" rx="2" fill="#16a34a"/>
+<text class="vg" x="351.4" y="160">1.99</text>
+<text class="m" x="40" y="184">Grounding DINO</text>
+<text class="s" x="40" y="198">TensorRT, 540×960 입력</text>
+<rect x="230" y="176" width="112.5" height="11" rx="2" fill="#a8a69d"/>
+<text class="v" x="348.5" y="186">1.94</text>
+<rect x="230" y="190" width="33.6" height="11" rx="2" fill="#16a34a"/>
+<text class="vg" x="269.6" y="200">0.58</text>
+<text class="m" x="40" y="224">깊이 재투영</text>
+<text class="s" x="40" y="238">CPU → GPU</text>
+<rect x="230" y="216" width="36.0" height="11" rx="2" fill="#a8a69d"/>
+<text class="v" x="272.0" y="226">0.62</text>
+<rect x="230" y="230" width="2.0" height="11" rx="2" fill="#16a34a"/>
+<text class="vg" x="238.0" y="240">0.02</text>
+<text class="m" x="40" y="264">SAM2</text>
+<text class="s" x="40" y="278">TensorRT 인코더 + 디코더</text>
+<rect x="230" y="256" width="25.5" height="11" rx="2" fill="#a8a69d"/>
+<text class="v" x="261.5" y="266">0.44</text>
+<rect x="230" y="270" width="5.8" height="11" rx="2" fill="#16a34a"/>
+<text class="vg" x="241.8" y="280">0.10</text>
+<text class="m" x="40" y="304">왜곡 보정</text>
+<text class="s" x="40" y="318">그대로</text>
+<rect x="230" y="296" width="5.8" height="11" rx="2" fill="#a8a69d"/>
+<text class="v" x="241.8" y="306">0.10</text>
+<rect x="230" y="310" width="5.2" height="11" rx="2" fill="#16a34a"/>
+<text class="vg" x="241.2" y="320">0.09</text>
+<line x1="40" y1="336" x2="640" y2="336" stroke="#d8d5ca"/>
+<text class="tot" x="40" y="358">합계  11.42 → <tspan fill="#15803d">4.03</tspan>  (2.8×)</text>
+<text class="s" x="40" y="376">자세 결과는 확인된 방향과 1.5° / 3.4mm 안 · 메모리 7.7GB / 15.6GB</text>
+</svg>

@@ -1,0 +1,64 @@
+<svg width="680" height="470" viewBox="0 0 680 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+<title id="t">Range setup: phone in front, R10 behind the ball</title>
+<desc id="d">Top view. The golfer stands at the ball, a phone on a tripod faces the golfer from the front, and the Garmin R10 sits about 2 m behind the ball facing the target.</desc>
+<style>
+text { font-family: "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.t{font-size:20px;font-weight:800;fill:#1f2933}
+.l{font-size:15px;font-weight:700;fill:#1f2933}
+.s{font-size:13px;fill:#52606d}
+.d{font-size:13px;font-weight:700;fill:#7b8794}
+</style>
+<rect x="1" y="1" width="678" height="468" rx="14" style="fill:#FAF8F2;stroke:#e4dfd3"/>
+<text class="t" x="28" y="40">Range setup · seen from above</text>
+
+<!-- range mat -->
+<rect x="150" y="96" width="300" height="250" rx="8" style="fill:#cfe8c4;stroke:#9cc58f"/>
+<!-- target line -->
+<line x1="80" y1="250" x2="640" y2="250" style="stroke:#9aa5b1;stroke-width:1.5;stroke-dasharray:6 6"/>
+<path d="M 628 243 L 644 250 L 628 257 Z" style="fill:#9aa5b1"/>
+<text class="s" x="572" y="238">target</text>
+
+<!-- ball -->
+<circle cx="330" cy="250" r="7" style="fill:#ffffff;stroke:#52606d;stroke-width:1.5"/>
+<text class="s" x="320" y="276">ball</text>
+
+<!-- golfer (top view): feet, body, head; right-handed, faces the ball (down in this view = toward phone) -->
+<g>
+  <ellipse cx="300" cy="186" rx="16" ry="9" style="fill:#3e4c59"/>
+  <ellipse cx="362" cy="186" rx="16" ry="9" style="fill:#3e4c59"/>
+  <ellipse cx="331" cy="170" rx="46" ry="20" style="fill:#7b8794"/>
+  <circle cx="331" cy="168" r="14" style="fill:#e4c9a8;stroke:#7b8794"/>
+  <!-- glove hand highlight -->
+  <circle cx="318" cy="200" r="9" style="fill:#4fc3f7;stroke:#1971c2;stroke-width:1.5"/>
+  <line x1="318" y1="200" x2="330" y2="243" style="stroke:#3e4c59;stroke-width:3"/>
+</g>
+<text class="l" x="468" y="160">Golfer</text>
+<text class="s" x="468" y="180">glove on the right hand (blue)</text>
+
+<!-- phone in front, facing the golfer -->
+<g>
+  <line x1="331" y1="400" x2="331" y2="380" style="stroke:#52606d;stroke-width:2"/>
+  <rect x="311" y="366" width="40" height="20" rx="4" style="fill:#1f2933"/>
+  <path d="M 331 366 L 300 300 L 362 300 Z" style="fill:#4fc3f7;opacity:0.18"/>
+</g>
+<text class="l" x="372" y="382">Phone on a mini tripod, floor</text>
+<text class="s" x="372" y="402">faces the golfer, front camera</text>
+<text class="s" x="372" y="420">screen faces you: glance after the shot</text>
+<line x1="458" y1="196" x2="458" y2="362" style="stroke:#7b8794;stroke-width:1.2"/>
+<line x1="451" y1="196" x2="465" y2="196" style="stroke:#7b8794;stroke-width:1.2"/>
+<line x1="451" y1="362" x2="465" y2="362" style="stroke:#7b8794;stroke-width:1.2"/>
+<text class="d" x="470" y="300">far enough to</text>
+<text class="d" x="470" y="318">see the whole body</text>
+
+<!-- R10 behind the ball on the target line -->
+<g>
+  <rect x="96" y="238" width="30" height="24" rx="4" style="fill:#f08c00"/>
+  <path d="M 126 250 L 200 230 L 200 270 Z" style="fill:#f08c00;opacity:0.15"/>
+</g>
+<text class="l" x="60" y="204">Garmin R10</text>
+<text class="s" x="60" y="224">behind the ball, facing the target</text>
+<line x1="126" y1="320" x2="330" y2="320" style="stroke:#7b8794;stroke-width:1.2"/>
+<line x1="126" y1="313" x2="126" y2="327" style="stroke:#7b8794;stroke-width:1.2"/>
+<line x1="330" y1="313" x2="330" y2="327" style="stroke:#7b8794;stroke-width:1.2"/>
+<text class="d" x="200" y="340">about 2 m</text>
+</svg>

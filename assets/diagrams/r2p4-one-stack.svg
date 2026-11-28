@@ -1,0 +1,90 @@
+<svg width="100%" viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">한 스택, 여러 로봇</title>
+<desc id="de">작업 순서, 비전, 좌표계, 목표 자세, 잡는 위치는 모든 로봇에서 그대로다. 로봇을 바꿀 때 갈아 끼우는 건 세 가지로, 로봇 설계도(URDF), 드라이버(ros2_control 하드웨어 인터페이스), MoveIt 설정이다. 탁상용 교육 팔, UR, 화낙 각각의 예를 적었다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="292" rx="12"/>
+<text class="t" x="18" y="26">로봇을 바꿔도 위층은 그대로</text>
+<rect class="bxt" x="18" y="44" width="644" height="70" rx="10"/>
+<text class="nd" x="340" y="70" text-anchor="middle">그대로: 작업 순서 · 비전 · 좌표계 · 목표 자세 · 잡는 위치</text>
+<text class="st" x="340" y="92" text-anchor="middle">내가 짠 코드 대부분이 여기 있다</text>
+<text class="lb" x="26" y="138"></text>
+<text class="lb" x="194" y="138">탁상용 교육 팔</text>
+<text class="lb" x="354" y="138">UR</text>
+<text class="lb" x="514" y="138">화낙</text>
+<rect class="bxg" x="18" y="150" width="160" height="32" rx="8"/>
+<text class="nd" x="98.0" y="170.0" text-anchor="middle">설계도 (URDF)</text>
+<rect class="bxa" x="186" y="150" width="152" height="32" rx="8"/>
+<text class="nd" x="262.0" y="170.0" text-anchor="middle">커뮤니티</text>
+<rect class="bxa" x="346" y="150" width="152" height="32" rx="8"/>
+<text class="code" x="422.0" y="170.0" text-anchor="middle">ur_description</text>
+<rect class="bxa" x="506" y="150" width="152" height="32" rx="8"/>
+<text class="nd" x="582.0" y="170.0" text-anchor="middle">화낙 제공</text>
+<rect class="bxg" x="18" y="190" width="160" height="32" rx="8"/>
+<text class="nd" x="98.0" y="210.0" text-anchor="middle">드라이버</text>
+<rect class="bxa" x="186" y="190" width="152" height="32" rx="8"/>
+<text class="nd" x="262.0" y="210.0" text-anchor="middle">서보 드라이버</text>
+<rect class="bxa" x="346" y="190" width="152" height="32" rx="8"/>
+<text class="code" x="422.0" y="210.0" text-anchor="middle">ur_robot_driver</text>
+<rect class="bxa" x="506" y="190" width="152" height="32" rx="8"/>
+<text class="code" x="582.0" y="210.0" text-anchor="middle">fanuc_driver</text>
+<rect class="bxg" x="18" y="230" width="160" height="32" rx="8"/>
+<text class="nd" x="98.0" y="250.0" text-anchor="middle">MoveIt 설정</text>
+<rect class="bxa" x="186" y="230" width="152" height="32" rx="8"/>
+<text class="nd" x="262.0" y="250.0" text-anchor="middle">직접 만듦</text>
+<rect class="bxa" x="346" y="230" width="152" height="32" rx="8"/>
+<text class="code" x="422.0" y="250.0" text-anchor="middle">ur_moveit_config</text>
+<rect class="bxa" x="506" y="230" width="152" height="32" rx="8"/>
+<text class="code" x="582.0" y="250.0" text-anchor="middle">fanuc_moveit_config</text>
+<text class="sm" x="18" y="282">로봇 이름·관절 번호를 내 코드에 박아 두지 않으면 바꿀 곳이 이만큼 줄어든다.</text>
+</svg>

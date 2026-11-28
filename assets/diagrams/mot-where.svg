@@ -1,0 +1,75 @@
+<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">무엇을 어디서 시험할 수 있나</title>
+<desc id="de">Orin 위에서는 UR 드라이버를 가상 하드웨어로 올려 컨트롤러와 연결을 확인할 수 있다. UR 시뮬레이터 URSim(PolyScope X)은 안쪽에 x86 전용 시뮬레이터가 있어 Orin에서 실행되지 않으므로 같은 망의 x86 PC가 필요하다. 녹화한 카메라 기록(ROS bag)과 URSim을 합치면 카메라와 로봇 없이 전체 흐름을 돌려 볼 수 있다. 힘과 접촉은 물리 시뮬레이터(Isaac Sim, RTX GPU)나 실제 로봇이 필요하다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="290" rx="12"/>
+<text class="t" x="18" y="26">가짜는 층마다 다르다: 무엇을 확인하고 싶은가</text>
+<rect class="bxgr" x="16" y="50" width="210" height="170" rx="10"/>
+<text class="lb" x="121" y="80" text-anchor="middle">Orin 위 가상 하드웨어</text>
+<text class="it" x="121" y="116" text-anchor="middle">드라이버·컨트롤러가 뜨나</text>
+<text class="sm" x="121" y="142" text-anchor="middle" style="fill:var(--fg)">명령 연결 확인</text>
+<text class="nd" x="121" y="196" text-anchor="middle">✓ 이번에 함</text>
+<rect class="bxa" x="234" y="50" width="210" height="170" rx="10"/>
+<text class="lb" x="339" y="80" text-anchor="middle">x86 PC의 URSim + ROS bag</text>
+<text class="it" x="339" y="116" text-anchor="middle">실제 컨트롤러 동작 흉내</text>
+<text class="sm" x="339" y="142" text-anchor="middle" style="fill:var(--fg)">카메라·로봇 없이 전체 흐름</text>
+<text class="nd" x="339" y="196" text-anchor="middle">Orin에서는 안 됨</text>
+<rect class="bx" x="452" y="50" width="210" height="170" rx="10"/>
+<text class="lb" x="557" y="80" text-anchor="middle">물리 시뮬레이터 · 실물</text>
+<text class="it" x="557" y="116" text-anchor="middle">힘과 접촉</text>
+<text class="sm" x="557" y="142" text-anchor="middle" style="fill:var(--fg)">Isaac Sim(RTX GPU) 또는 실제 팔</text>
+<text class="nd" x="557" y="196" text-anchor="middle">아직</text>
+<text class="sm" x="18" y="250">URSim(PolyScope X) arm64 이미지 안에 x86 전용 시뮬레이터 컨테이너가 들어 있어 Orin에서 멈춘다</text>
+<text class="st" x="18" y="268" style="fill:var(--fg)">오른쪽으로 갈수록 실제에 가깝고, 준비할 것이 많다</text>
+</svg>

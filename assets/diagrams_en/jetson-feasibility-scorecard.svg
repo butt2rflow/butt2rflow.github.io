@@ -1,0 +1,63 @@
+<svg width="100%" viewBox="0 0 680 322" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Component scorecard — what's usable today and what's slow</title>
+<desc>On the Orin NX 16GB, ESS and cuMotion are usable today (44 FPS, 210 ms). FoundationStereo and FoundationPose can't build an accelerated engine and run only on a slow fallback. SAM 2 runs in seconds on a separate path. Only the big transformer models hit the 16GB ceiling.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.h{font-size:15px;font-weight:700;fill:#3d3d3a;}
+.th{font-size:11px;font-weight:700;fill:#73726c;}
+.c{font-size:12.5px;font-weight:700;fill:#3d3d3a;}
+.cs{font-size:11px;fill:#73726c;}
+.pill{font-size:10.5px;font-weight:700;}
+</style>
+<rect x="0" y="0" width="680" height="322" rx="12" fill="#FAF8F2"/>
+<text class="h" x="40" y="34">Component scorecard · Orin NX 16GB</text>
+
+<!-- header -->
+<text class="th" x="52" y="74">Component</text>
+<text class="th" x="250" y="74">Accel engine (16GB)</text>
+<text class="th" x="410" y="74">Runs</text>
+<text class="th" x="520" y="74">Verdict</text>
+<line x1="40" y1="82" x2="640" y2="82" stroke="#c9c6bc" stroke-width="1"/>
+
+<!-- row backgrounds (alt) -->
+<rect x="40" y="90" width="600" height="42" fill="#ffffff" opacity="0.55"/>
+<rect x="40" y="174" width="600" height="42" fill="#ffffff" opacity="0.55"/>
+<rect x="40" y="258" width="600" height="42" fill="#ffffff" opacity="0.55"/>
+
+<!-- r1 ESS -->
+<text class="c" x="52" y="117">ESS <tspan class="cs">(stereo)</tspan></text>
+<text class="cs" x="250" y="117">✅ builds · 1.9 GB</text>
+<text class="cs" x="410" y="117">✅ 44 FPS</text>
+<rect x="504" y="102" width="120" height="24" rx="12" fill="#e3f6ea" stroke="#16a34a" stroke-width="1"/>
+<text class="pill" x="564" y="118" text-anchor="middle" style="fill:#15803d">usable today</text>
+
+<!-- r2 cuMotion -->
+<text class="c" x="52" y="159">cuMotion <tspan class="cs">(path)</tspan></text>
+<text class="cs" x="250" y="159">— geometric</text>
+<text class="cs" x="410" y="159">✅ 210 ms</text>
+<rect x="504" y="144" width="120" height="24" rx="12" fill="#e3f6ea" stroke="#16a34a" stroke-width="1"/>
+<text class="pill" x="564" y="160" text-anchor="middle" style="fill:#15803d">usable today</text>
+
+<!-- r3 FoundationStereo -->
+<text class="c" x="52" y="201">FoundationStereo</text>
+<text class="cs" x="250" y="201">❌ hits 16GB ceiling</text>
+<text class="cs" x="410" y="201">✅ ~0.1 FPS</text>
+<rect x="504" y="186" width="120" height="24" rx="12" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1"/>
+<text class="pill" x="564" y="202" text-anchor="middle" style="fill:#a9791f">runs, slow</text>
+
+<!-- r4 FoundationPose -->
+<text class="c" x="52" y="243">FoundationPose</text>
+<text class="cs" x="250" y="243">❌ engine won't build</text>
+<text class="cs" x="410" y="243">✅ sec / frame</text>
+<rect x="504" y="228" width="120" height="24" rx="12" fill="#fdf1dc" stroke="#c9a24a" stroke-width="1"/>
+<text class="pill" x="564" y="244" text-anchor="middle" style="fill:#a9791f">runs, slow</text>
+
+<!-- r5 SAM 2 -->
+<text class="c" x="52" y="285">SAM 2</text>
+<text class="cs" x="250" y="285">— separate path</text>
+<text class="cs" x="410" y="285">✅ seconds</text>
+<rect x="504" y="270" width="120" height="24" rx="12" fill="#eef1f6" stroke="#5b6b86" stroke-width="1"/>
+<text class="pill" x="564" y="286" text-anchor="middle" style="fill:#3f4d66">runs</text>
+
+<text class="cs" x="40" y="314" style="fill:#8a6d3b">The light network (ESS) and the compute-only planner (cuMotion) are fine — only the two big transformers hit the wall.</text>
+</svg>

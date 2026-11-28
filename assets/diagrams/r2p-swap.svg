@@ -1,0 +1,62 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">카메라를 바꾸면 무엇을 고쳐야 하나</title>
+<desc id="de">왼쪽: 프로그램 하나 구조에서는 카메라를 바꾸면 통신 설정과 보정값을 받는 부분을 포함해 프로그램 전체를 다시 손봐야 한다. 오른쪽: ROS 2에서는 카메라 드라이버 노드 하나만 새 제조사 것으로 바꾸고, 두 드라이버가 같은 표준 이미지 형식을 내보내므로 부품 찾기, 작업 순서, 플래너, 로봇 드라이버는 그대로 둔다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--chip:#f3efe4;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--chip:#26251e;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.st{font-size:11px;fill:var(--mut)}
+.nd{font-size:11.5px;font-weight:600}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:10.5px;fill:var(--teal)}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.new{fill:var(--card);stroke:var(--teal);stroke-width:2}
+.old{fill:var(--card);stroke:var(--mut);stroke-width:1.2;stroke-dasharray:4 3;opacity:.7}
+.redbx{fill:var(--card);stroke:var(--red);stroke-width:2}
+.ar{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.cross{stroke:var(--red);stroke-width:2}
+.mkg{fill:var(--mut)}
+</style>
+<defs>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="300" rx="12"/>
+<text class="t" x="18" y="26">카메라를 A사에서 B사로 바꾸면</text>
+<!-- left -->
+<rect class="panel" x="16" y="42" width="220" height="242" rx="10"/>
+<text class="lb" x="30" y="64" style="fill:var(--red)">프로그램 하나</text>
+<rect class="redbx" x="32" y="78" width="188" height="130" rx="8"/>
+<text class="nd" x="46" y="100">PICK.TP</text>
+<text class="st" x="46" y="122">카메라 통신 설정</text>
+<text class="st" x="46" y="140">보정값 받는 방식</text>
+<text class="st" x="46" y="158">좌표 맞추는 계산</text>
+<text class="st" x="46" y="176">동작 순서</text>
+<text class="st" x="46" y="194">입출력</text>
+<text class="st" x="30" y="232" style="fill:var(--fg)">한 파일에 얽혀 있어서</text>
+<text class="st" x="30" y="250" style="fill:var(--fg)">여기저기 손봐야 한다</text>
+<!-- right -->
+<rect class="panel" x="252" y="42" width="412" height="242" rx="10"/>
+<text class="lb" x="266" y="64" style="fill:var(--teal)">ROS 2: 노드 하나만 교체</text>
+<rect class="old" x="266" y="80" width="160" height="36" rx="8"/>
+<text class="nd" x="346" y="103" text-anchor="middle" style="fill:var(--mut)">A사 카메라 드라이버</text>
+<line class="cross" x1="274" y1="84" x2="418" y2="112"/>
+<rect class="new" x="266" y="128" width="160" height="36" rx="8"/>
+<text class="nd" x="346" y="151" text-anchor="middle">B사 카메라 드라이버</text>
+<text class="code" x="346" y="182" text-anchor="middle">sensor_msgs/Image</text>
+<text class="st" x="346" y="198" text-anchor="middle">둘 다 같은 표준 형식</text>
+<line class="ar" x1="428" y1="146" x2="460" y2="146"/>
+<rect class="bx" x="464" y="80" width="184" height="34" rx="8"/>
+<text class="nd" x="556" y="102" text-anchor="middle">부품 찾기</text>
+<rect class="bx" x="464" y="120" width="184" height="34" rx="8"/>
+<text class="nd" x="556" y="142" text-anchor="middle">작업 순서</text>
+<rect class="bx" x="464" y="160" width="184" height="34" rx="8"/>
+<text class="nd" x="556" y="182" text-anchor="middle">모션 플래너</text>
+<rect class="bx" x="464" y="200" width="184" height="34" rx="8"/>
+<text class="nd" x="556" y="222" text-anchor="middle">로봇 드라이버</text>
+<text class="lb" x="556" y="258" text-anchor="middle" style="fill:var(--teal)">↑ 전부 그대로</text>
+<text class="st" x="266" y="238">B사 드라이버는 보통</text>
+<text class="st" x="266" y="254">카메라 회사가 만들어 둔다</text>
+</svg>

@@ -1,0 +1,80 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ti de">
+<title id="ti">무늬 없는 면과 반짝이는 면 — 깊이 방식별로</title>
+<desc id="de">패시브 스테레오(D405, Gemini 305, OAK-D SR USB)는 무늬 없는 면에서 대응점을 못 찾아 깊이에 구멍이 나고, 반짝이는 면에서는 깊이가 비거나 엉뚱하게 잡힌다. IR 점 프로젝터가 있는 스테레오(D435, D455, OAK-D Pro)는 무늬 없는 면이 훨씬 낫지만 거울 같은 반사에서는 틀린 깊이에 붙을 수 있다. ToF(OAK-D SR PoE, Femto Bolt)는 무늬 없는 면에 강하지만 반짝이는 금속에서는 빛이 한 번 더 튕겨 돌아와 실제보다 멀게 읽는다.</desc>
+<style>
+:root{--bg:#FAF8F2;--card:#ffffff;--fg:#2f2f2c;--mut:#6f6e68;--bd:#ddd9cc;--blue:#2f6fed;--teal:#0d9488;--amber:#d97706;--red:#dc2626;--green:#15803d;--chip:#f3efe4;--term:#1f2430;--termfg:#d6dbe5;}
+@media (prefers-color-scheme: dark){:root{--bg:#14140f;--card:#1e1e19;--fg:#e8e6df;--mut:#a3a199;--bd:#3a382f;--blue:#7aa5ff;--teal:#4fd1c5;--amber:#fbbf24;--red:#f87171;--green:#4ade80;--chip:#26251e;--term:#0e1016;--termfg:#d6dbe5;}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;fill:var(--fg);}
+.bg{fill:var(--card);}
+.t{font-size:14px;font-weight:700}
+.lb{font-size:12.5px;font-weight:700}
+.nd{font-size:11.5px;font-weight:600}
+.it{font-size:12px;font-weight:600}
+.st{font-size:11px;fill:var(--mut)}
+.sm{font-size:10px;fill:var(--mut)}
+.code{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px}
+.panel{fill:var(--bg);stroke:var(--bd);stroke-width:1}
+.bx{fill:var(--card);stroke:var(--blue);stroke-width:1.4}
+.bxg{fill:var(--card);stroke:var(--bd);stroke-width:1.2}
+.bxa{fill:var(--card);stroke:var(--amber);stroke-width:1.6}
+.bxt{fill:var(--card);stroke:var(--teal);stroke-width:1.8}
+.bxr{fill:var(--card);stroke:var(--red);stroke-width:1.6}
+.bxgr{fill:var(--card);stroke:var(--green);stroke-width:1.8}
+.hi{fill:var(--chip);stroke:var(--amber);stroke-width:1.8}
+.ctl{fill:var(--bg);stroke:var(--mut);stroke-width:1.3;stroke-dasharray:5 4}
+.fam{fill:var(--chip);stroke:none}
+.obs{fill:var(--chip);stroke:var(--mut);stroke-width:1.2}
+.term{fill:var(--term);stroke:none}
+.tc{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:var(--termfg)}
+.tg{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#7ee0a0}
+.tr{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#ff8a8a}
+.dim{font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;font-size:11px;fill:#8a93a6}
+.ar{stroke:var(--blue);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+.ara{stroke:var(--amber);stroke-width:1.5;fill:none;marker-end:url(#aa)}
+.art{stroke:var(--teal);stroke-width:1.6;fill:none;marker-end:url(#at)}
+.arg{stroke:var(--mut);stroke-width:1.4;fill:none;marker-end:url(#ag)}
+.arr{stroke:var(--red);stroke-width:1.5;fill:none;marker-end:url(#ar)}
+.ln{stroke:var(--mut);stroke-width:1.3;fill:none}
+.lnb{stroke:var(--blue);stroke-width:3;fill:none;stroke-linecap:round}
+.lna{stroke:var(--amber);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:6 4}
+.dash{stroke-dasharray:4 3}
+.jt{fill:var(--card);stroke:var(--blue);stroke-width:1.6}
+.dot{fill:var(--blue)}
+.dota{fill:var(--amber)}
+.dott{fill:var(--teal)}
+.dotr{fill:var(--red)}
+.sph{fill:none;stroke:var(--teal);stroke-width:1.3}
+.mk{fill:var(--blue)}.mka{fill:var(--amber)}.mkt{fill:var(--teal)}.mkg{fill:var(--mut)}.mkr{fill:var(--red)}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mka"/></marker>
+<marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkt"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkg"/></marker>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mkr"/></marker>
+</defs>
+<rect class="bg" x="0" y="0" width="680" height="270" rx="12"/>
+<text class="t" x="18" y="26">방식마다 약한 곳이 다르다</text>
+<text class="nd" x="18" y="118">무늬 없는 면</text>
+<text class="nd" x="18" y="180">반짝이는 면</text>
+<text class="lb" x="209" y="58" text-anchor="middle">패시브 스테레오</text>
+<text class="sm" x="209" y="76" text-anchor="middle">D405 · Gemini 305 · OAK-D SR</text>
+<rect class="bxr" x="126" y="96" width="166" height="36" rx="8"/>
+<text class="nd" x="209.0" y="118.0" text-anchor="middle">구멍</text>
+<rect class="bxr" x="126" y="158" width="166" height="36" rx="8"/>
+<text class="nd" x="209.0" y="180.0" text-anchor="middle">비거나 엉뚱</text>
+<text class="lb" x="389" y="58" text-anchor="middle">스테레오 + IR 점</text>
+<text class="sm" x="389" y="76" text-anchor="middle">D435 · D455 · OAK-D Pro</text>
+<rect class="bxgr" x="306" y="96" width="166" height="36" rx="8"/>
+<text class="nd" x="389.0" y="118.0" text-anchor="middle">훨씬 나음</text>
+<rect class="bxa" x="306" y="158" width="166" height="36" rx="8"/>
+<text class="nd" x="389.0" y="180.0" text-anchor="middle">거울 반사에 틀림</text>
+<text class="lb" x="569" y="58" text-anchor="middle">ToF</text>
+<text class="sm" x="569" y="76" text-anchor="middle">OAK-D SR PoE · Femto Bolt</text>
+<rect class="bxgr" x="486" y="96" width="166" height="36" rx="8"/>
+<text class="nd" x="569.0" y="118.0" text-anchor="middle">좋음</text>
+<rect class="bxa" x="486" y="158" width="166" height="36" rx="8"/>
+<text class="nd" x="569.0" y="180.0" text-anchor="middle">금속에서 멀게 읽음</text>
+<text class="sm" x="18" y="228" style="fill:var(--fg)">패시브라면: 무늬 스티커·무늬 매트, 비스듬한 조명, 외부 패턴 프로젝터, 부분 깊이를 견디는 포즈 방법</text>
+<text class="sm" x="18" y="250">신경망이 채운 깊이는 추정값이다. 정밀한 포즈에 쓰기 전에 실측 깊이와 비교한다</text>
+</svg>

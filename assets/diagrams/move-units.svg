@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>VIX와 MOVE — 단위가 다르다 (% vs bp)</title>
+<desc>VIX는 주가 변동성을 퍼센트로 표현하고, MOVE는 금리 변동성을 베이시스포인트로 표현한다. MOVE를 12의 제곱근으로 나누면 한 달 예상 움직임이 나온다. MOVE 75는 10년물이 한 달에 약 22bp 움직인다는 뜻이다.</desc>
+<style>
+:root { --tp:#3d3d3a; --ts:#73726c; --br:#d6d3c8; }
+text { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.th { font-size:14px; font-weight:500; fill:var(--tp); }
+.s { font-size:12px; font-weight:400; fill:var(--ts); }
+.badge { font-size:15px; font-weight:600; }
+.d { font-size:13px; font-weight:400; fill:var(--tp); }
+</style>
+<rect x="0" y="0" width="680" height="300" rx="12" fill="#FAF8F2"/>
+
+<text class="th" x="40" y="40">VIX와 MOVE — 재는 대상도, 단위도 다르다</text>
+
+<!-- VIX row -->
+<rect x="60" y="80" width="96" height="46" rx="8" fill="#CDE7DC" stroke="#1D9E75" stroke-width="0.6"/>
+<text class="badge" x="108" y="109" text-anchor="middle" fill="#0F3D30">VIX</text>
+<text class="d" x="180" y="100">주가 변동성 · 단위 <tspan font-weight="600">%</tspan></text>
+<text class="s" x="180" y="119">VIX 20 → S&amp;P500 연 ±20% 예상</text>
+
+<!-- MOVE row -->
+<rect x="60" y="150" width="96" height="46" rx="8" fill="#EEEDFE" stroke="#7c3aed" stroke-width="0.6"/>
+<text class="badge" x="108" y="179" text-anchor="middle" fill="#4a2f9e">MOVE</text>
+<text class="d" x="180" y="170">금리 변동성 · 단위 <tspan font-weight="600">bp</tspan></text>
+<text class="s" x="180" y="189">MOVE 75 → 10년물 월 ±22bp 예상</text>
+
+<line x1="60" y1="228" x2="620" y2="228" stroke="var(--br)" stroke-width="0.5"/>
+<text class="th" x="340" y="256" text-anchor="middle">숫자를 체감으로: MOVE ÷ √12 ≈ 한 달 예상 움직임(bp)</text>
+<text class="s" x="340" y="276" text-anchor="middle">방향이 아니라 폭을 잰다 — 오르든 내리든 크게 흔들리면 올라간다</text>
+</svg>
